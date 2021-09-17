@@ -30,7 +30,7 @@ package com.blueseer.utl;
 
 import bsmf.MainFrame;
 import com.blueseer.edi.EDI;
-import static bsmf.MainFrame.con;
+
 import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.dbtype;
 import static bsmf.MainFrame.driver;
@@ -111,13 +111,10 @@ import java.nio.charset.StandardCharsets;
 import java.sql.PreparedStatement;
 import java.sql.Savepoint;
 import java.text.DecimalFormatSymbols;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.print.Doc;
 import javax.print.DocFlavor;
 import javax.print.DocPrintJob;
@@ -166,8 +163,8 @@ public class OVData {
    
     public static void updatecounter(String countername, int counterid) {
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
        try {
             st.executeUpdate("update counter c set c.counter_id = " + "'" + counterid + "'" + "where c.counter_name = " + "'" + countername.toString() + "';");
@@ -188,7 +185,7 @@ public class OVData {
     public static boolean isUserDefined(String myuser) {
        boolean r = false;
        try{
-            con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             PreparedStatement ps = null;
             ResultSet res = null;
             try{
@@ -221,7 +218,7 @@ public class OVData {
     public static boolean isAcctNumberValid(String acct) {
        boolean r = false;
        try{
-            con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             PreparedStatement ps = null;
             ResultSet res = null;
             try{
@@ -251,7 +248,7 @@ public class OVData {
     public static boolean isCostCenterValid(String cc) {
        boolean r = false;
        try{
-            con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             PreparedStatement ps = null;
             ResultSet res = null;
             try{
@@ -277,14 +274,13 @@ public class OVData {
         }
        return r;
     }     
-
       
     public static ArrayList getusermstrlist() {
         ArrayList myarray = new ArrayList();
       
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -309,13 +305,12 @@ public class OVData {
         return myarray;
         
     }
-   
-    
+       
     public static int getNextPO() {
        int mypo = 0;
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -348,8 +343,8 @@ public class OVData {
     public static int getNextNbr(String countername) {
        int nbr = 0;
         try{
-           Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+           
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -390,8 +385,8 @@ public class OVData {
     public static void copyUserPerms(String fromuser, String touser) {
          try {
 
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -450,8 +445,8 @@ public class OVData {
     public static boolean copySite(String fromsite, String tosite) {
          boolean r = true;
            try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -513,13 +508,12 @@ public class OVData {
         }  
            return r; 
        }
-       
-    
+        
     public static String addMenuToUser(String menu, String thisuser) {
             String mystring = "";  // 0 = assigned; 1 = already assigned; 2 = error
          try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -565,8 +559,8 @@ public class OVData {
     public static String sampleStringJoin(String menu, String thisuser) {
         String mystring = "";  // 0 = unassigned; 1 = already unassigned; 2 = error
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -627,8 +621,8 @@ public class OVData {
     public static String deleteMenuToUser(String menu, String thisuser) {
         String mystring = "";  // 0 = unassigned; 1 = already unassigned; 2 = error
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -682,8 +676,8 @@ public class OVData {
 
     public static void deleteMenuToAllUsers(String menu) {
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -719,8 +713,8 @@ public class OVData {
 
     public static void addMenuToAllUsers(String menu) {
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -774,8 +768,8 @@ public class OVData {
 
     public static void addMenu(String menu, String desc) {
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -815,8 +809,8 @@ public class OVData {
 
     public static void addItemImage(String item, String file) {
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -861,8 +855,8 @@ public class OVData {
 
     public static void addItemCostRec(String part, String site, String set, Double mtl, Double ovh, Double out, Double tot) {
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -910,8 +904,8 @@ public class OVData {
     public static ArrayList getmenulist() {
         ArrayList myarray = new ArrayList();
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -944,8 +938,8 @@ public class OVData {
 
     public static void disablemenu(String child) {
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -975,8 +969,8 @@ public class OVData {
 
     public static void enablemenu(String child) {
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -1048,8 +1042,8 @@ public class OVData {
         newmap.put(newindex, child);
 
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -1160,8 +1154,8 @@ public class OVData {
     public static ArrayList getmenutree(String parent) {
         ArrayList myarray = new ArrayList();
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -1204,8 +1198,8 @@ public class OVData {
     public static ArrayList getMenuTreeAll(String parent) {
         ArrayList myarray = new ArrayList();
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -1248,8 +1242,8 @@ public class OVData {
     public static ArrayList getpanellist() {
         ArrayList myarray = new ArrayList();
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -1287,8 +1281,8 @@ public class OVData {
     public static ArrayList getUsersOfMenusList(String menu) {
         ArrayList myarray = new ArrayList();
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -1325,8 +1319,8 @@ public class OVData {
     public static ArrayList getMenusOfUsersList(String myuser) {
         ArrayList myarray = new ArrayList();
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -1364,8 +1358,8 @@ public class OVData {
     public static ArrayList getbanklist() {
         ArrayList myarray = new ArrayList();
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -1399,8 +1393,8 @@ public class OVData {
     public static ArrayList getvendmstrlist() {
         ArrayList myarray = new ArrayList();
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -1434,8 +1428,8 @@ public class OVData {
     public static ArrayList getvendmstrlistBetween(String from, String to) {
         ArrayList myarray = new ArrayList();
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -1472,8 +1466,8 @@ public class OVData {
     public static ArrayList getvendtermslist() {
         ArrayList myarray = new ArrayList();
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -1509,8 +1503,8 @@ public class OVData {
     public static String getCustSalesAcct(String cust) {
            String myitem = "";
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -1536,8 +1530,8 @@ public class OVData {
     public static String getCustSalesCC(String cust) {
            String myitem = "";
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -1563,8 +1557,8 @@ public class OVData {
     public static String getCustCurrency(String cust) {
            String myitem = null;
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -1590,8 +1584,8 @@ public class OVData {
     public static String getCustTerms(String cust) {
            String myitem = null;
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -1617,8 +1611,8 @@ public class OVData {
     public static String getCustEmail(String cust) {
         String x = "";
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -1646,8 +1640,8 @@ public class OVData {
     public static String getCustEmailByInvoice(String invoice) {
         String x = "";
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -1677,8 +1671,8 @@ public class OVData {
     public static ArrayList getcustmstrlist() {
        ArrayList myarray = new ArrayList();
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -1708,8 +1702,8 @@ public class OVData {
     public static ArrayList getcustmstrlistBetween(String from, String to) {
         ArrayList myarray = new ArrayList();
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -1745,8 +1739,8 @@ public class OVData {
     public static ArrayList getCustShipToListAll() {
         ArrayList myarray = new ArrayList();
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -1779,8 +1773,8 @@ public class OVData {
     public static ArrayList getcustshipmstrlist(String cust) {
         ArrayList myarray = new ArrayList();
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -1814,8 +1808,8 @@ public class OVData {
     public static String getcustBillTo(String shipto) {
         String mystring = "";
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -1848,8 +1842,8 @@ public class OVData {
     public static ArrayList getcusttermslist() {
         ArrayList myarray = new ArrayList();
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -1884,8 +1878,8 @@ public class OVData {
     public static String getCustAltItem(String cust, String part) {
    String mystring = "";
     try{
-        Class.forName(driver).newInstance();
-        con = DriverManager.getConnection(url + db, user, pass);
+        
+        Connection con = DriverManager.getConnection(url + db, user, pass);
         try{
             Statement st = con.createStatement();
             ResultSet res = null;
@@ -1913,8 +1907,8 @@ public class OVData {
     public static String getCustSku(String cust, String part) {
     String mystring = "";
     try{
-        Class.forName(driver).newInstance();
-        con = DriverManager.getConnection(url + db, user, pass);
+        
+        Connection con = DriverManager.getConnection(url + db, user, pass);
         try{
             Statement st = con.createStatement();
             ResultSet res = null;
@@ -1942,8 +1936,8 @@ public class OVData {
     public static String getCustPartFromPart(String cust, String part) {
     String mystring = "";
     try{
-        Class.forName(driver).newInstance();
-        con = DriverManager.getConnection(url + db, user, pass);
+        
+        Connection con = DriverManager.getConnection(url + db, user, pass);
         try{
             Statement st = con.createStatement();
             ResultSet res = null;
@@ -1971,8 +1965,8 @@ public class OVData {
     public static String getCustFromOrder(String order) {
            String myitem = "";
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -1998,8 +1992,8 @@ public class OVData {
     public static String getCustName(String cust) {
 String myitem = "";
 try{
-Class.forName(driver).newInstance();
-con = DriverManager.getConnection(url + db, user, pass);
+
+Connection con = DriverManager.getConnection(url + db, user, pass);
 try{
     Statement st = con.createStatement();
     ResultSet res = null;
@@ -2025,8 +2019,8 @@ return myitem;
     public static String getCustLabel(String cust) {
 String myitem = "";
 try{
-Class.forName(driver).newInstance();
-con = DriverManager.getConnection(url + db, user, pass);
+
+Connection con = DriverManager.getConnection(url + db, user, pass);
 try{
     Statement st = con.createStatement();
     ResultSet res = null;
@@ -2052,8 +2046,8 @@ return myitem;
     public static String getCustLogo(String cust) {
 String myitem = "";
 try{
-Class.forName(driver).newInstance();
-con = DriverManager.getConnection(url + db, user, pass);
+
+Connection con = DriverManager.getConnection(url + db, user, pass);
 try{
     Statement st = con.createStatement();
     ResultSet res = null;
@@ -2079,8 +2073,8 @@ return myitem;
     public static String getCustInvoiceJasper(String cust) {
            String myitem = "";
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -2106,8 +2100,8 @@ return myitem;
     public static String getCustShipperJasper(String cust) {
            String myitem = "";
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -2134,8 +2128,8 @@ return myitem;
     public static ArrayList getpanelslist() {
         ArrayList myarray = new ArrayList();
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2169,8 +2163,8 @@ return myitem;
     public static ArrayList getScacAll() {
         ArrayList myarray = new ArrayList();
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2204,7 +2198,7 @@ return myitem;
         ArrayList myarray = new ArrayList();
         try {
             Class.forName(bsmf.MainFrame.driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2238,8 +2232,8 @@ return myitem;
     public static ArrayList getScacGroupOnly() {
         ArrayList myarray = new ArrayList();
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2273,8 +2267,8 @@ return myitem;
     public static ArrayList getScacsOfGroup(String code) {
         ArrayList myarray = new ArrayList();
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2308,8 +2302,8 @@ return myitem;
     public static ArrayList getfreighttermslist() {
         ArrayList myarray = new ArrayList();
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2342,8 +2336,8 @@ return myitem;
     public static ArrayList gettaxcodelist() {
         ArrayList myarray = new ArrayList();
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2379,8 +2373,8 @@ return myitem;
 
         ArrayList<String[]> myarray = new ArrayList<String[]>();
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2419,8 +2413,8 @@ return myitem;
 
         ArrayList<String[]> myarray = new ArrayList<String[]>();
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2460,8 +2454,8 @@ return myitem;
         ArrayList<String[]> myarray = new ArrayList();
 
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2501,8 +2495,8 @@ return myitem;
         double taxpercent = 0.00;
 
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2540,8 +2534,8 @@ return myitem;
         double taxpercent = 0.00;
 
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2578,8 +2572,8 @@ return myitem;
     public static double getShipperTrailerCharges(String shipper) {
         double amt = 0.00;
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2613,8 +2607,8 @@ return myitem;
         double taxpercent = 0.00;
 
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2659,8 +2653,8 @@ return myitem;
         double taxpercent = 0.00;
 
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2705,8 +2699,8 @@ return myitem;
         double taxpercent = 0.00;
 
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2751,8 +2745,8 @@ return myitem;
         double taxpercent = 0.00;
 
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2797,8 +2791,8 @@ return myitem;
         double taxpercent = 0.00;
 
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2843,8 +2837,8 @@ return myitem;
         String other = "";
 
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2901,8 +2895,8 @@ return myitem;
         String other = "";
 
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2957,8 +2951,8 @@ return myitem;
     public static ArrayList getvendnamelist() {
         ArrayList myarray = new ArrayList();
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2992,8 +2986,8 @@ return myitem;
     public static ArrayList getempmstrlist() {
         ArrayList myarray = new ArrayList();
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -3026,8 +3020,8 @@ return myitem;
     public static ArrayList getCurrlist() {
         ArrayList myarray = new ArrayList();
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -3061,8 +3055,8 @@ return myitem;
     public static ArrayList getdeptidlist() {
         ArrayList myarray = new ArrayList();
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -3096,8 +3090,8 @@ return myitem;
     public static ArrayList getWeekNbrByDateTimeClock(String mydate) {
         ArrayList myarray = new ArrayList();
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -3131,13 +3125,13 @@ return myitem;
     public static ArrayList getWeekNbrByDate(String mydate, String days) {
         ArrayList myarray = new ArrayList();
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
 
-                if (bsmf.MainFrame.dbtype.equals("sqlite")) {
+                if (dbtype.equals("sqlite")) {
                     res = st.executeQuery("select c.myweek as 'myweek', date(c.mydate,'-6 days') as 'sun' from (select strftime('%W',date(" + "'" + mydate + "'" + ",'+' || mock_nbr || ' days')) as 'myweek',"
                             + " date(" + "'" + mydate + "'" + ",'+' || mock_nbr || ' days') as 'mydate' from mock_mstr where mock_nbr <= " + "'" + days + "'"
                             + " group by myweek) as 'c' ;");
@@ -3172,13 +3166,13 @@ return myitem;
     public static ArrayList getWeekNbrByDate(String mydate) {
         ArrayList myarray = new ArrayList();
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
 
-                if (bsmf.MainFrame.dbtype.equals("sqlite")) {
+                if (dbtype.equals("sqlite")) {
 
                 } else {
                     res = st.executeQuery("select week(tr_eff_date) as 'myweek', date_add(tr_eff_date, interval (8 - dayofweek(tr_eff_date)) % 7 day) as 'sun' from tran_mstr where tr_eff_date >= "
@@ -3211,12 +3205,12 @@ return myitem;
     public static ArrayList getWeekNbrByFromDateToDate(String fromdate, String todate) {
         ArrayList myarray = new ArrayList();
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
-                if (bsmf.MainFrame.dbtype.equals("sqlite")) {
+                if (dbtype.equals("sqlite")) {
                     res = st.executeQuery("with recursive dates(date) as ( values ( "
                             + "'" + fromdate + "'" + " ) union all select date(date, '+7 day') from dates "
                             + " where date < date( " + "'" + todate + "'" + ") ) select date, strftime('%W',date) + 1 as 'myweek' from dates ; ");
@@ -3251,8 +3245,8 @@ return myitem;
     public static ArrayList getdeptanddesclist() {
         ArrayList myarray = new ArrayList();
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -3287,8 +3281,8 @@ return myitem;
         ArrayList myarray = new ArrayList();
 
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -3325,8 +3319,8 @@ return myitem;
         ArrayList<String> mylist = new ArrayList<String>();
 
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -3372,8 +3366,8 @@ return myitem;
         ArrayList<String> mylist = new ArrayList<String>();
 
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -3423,8 +3417,8 @@ return myitem;
     public static ArrayList getNextLevelpsmstr(int level) {
         ArrayList<String> myarray = new ArrayList<String>();
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -3462,8 +3456,8 @@ return myitem;
     public static void updateItemlevel(ArrayList list, int level) {
 
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             try {
 
@@ -3492,8 +3486,8 @@ return myitem;
     public static void createMRPByLevel(int level, String site, String fromitem, String toitem) {
 
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             try {
 
@@ -3527,8 +3521,8 @@ return myitem;
     public static void createMRPZeroLevel(String site) {
 
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             try {
 
@@ -3557,8 +3551,8 @@ return myitem;
     public static void deleteAllMRP(String site, String fromitem, String toitem) {
 
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             try {
 
@@ -3804,8 +3798,8 @@ return myitem;
         ArrayList myarray = new ArrayList();
         String mystring = "";
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -3851,8 +3845,8 @@ return myitem;
         ArrayList myarray = new ArrayList();
         String mystring = "";
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -3886,8 +3880,8 @@ return myitem;
         ArrayList myarray = new ArrayList();
         String mystring = "";
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -3927,8 +3921,8 @@ return myitem;
         ArrayList myarray = new ArrayList();
         String mystring = "";
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -3972,8 +3966,8 @@ return myitem;
         ArrayList myarray = new ArrayList();
         String mystring = "";
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -4022,8 +4016,8 @@ return myitem;
               DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                  
        try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -4111,8 +4105,8 @@ return myitem;
     public static boolean addItemMasterMinimum(String item, String site, String desc, String type, String cost, String date) {
                  boolean myreturn = false;
                   try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -4193,8 +4187,8 @@ return myitem;
     public static boolean addGenericCode(ArrayList<String> list) {
                  boolean myreturn = false;
                   try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -4245,8 +4239,8 @@ return myitem;
     public static boolean addCarrier(ArrayList<String> list) {
                  boolean myreturn = false;
                   try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -4303,8 +4297,8 @@ return myitem;
     public static boolean addBOMMstrRecord(ArrayList<String> list) {
         boolean myreturn = false;
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -4370,8 +4364,8 @@ return myitem;
     public static boolean addCustXref(ArrayList<String> list) {
                  boolean myreturn = false;
                   try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -4428,8 +4422,8 @@ return myitem;
     public static boolean addVendXref(ArrayList<String> list) {
                    boolean myreturn = false;
                   try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -4493,8 +4487,8 @@ return myitem;
             String[] calarray = OVData.getGLCalForDate(dfdate.format(now));
                     
                   try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try {
                 Statement st = con.createStatement(); 
                 String[] ld = null;
@@ -4538,8 +4532,8 @@ return myitem;
                     DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
                     DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                   try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try {
                 Statement st = con.createStatement(); 
                 ResultSet res = null;
@@ -4617,8 +4611,8 @@ return myitem;
     public static boolean addCustPriceList(ArrayList<String> list) {
                   boolean myreturn = false;
                   try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -4679,8 +4673,8 @@ return myitem;
     public static boolean addVendPriceList(ArrayList<String> list) {
                    boolean myreturn = false;
                   try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -4740,8 +4734,8 @@ return myitem;
     public static boolean addVendMstr(ArrayList<String> list) {
         boolean myreturn = false;
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -4826,8 +4820,8 @@ return myitem;
     public static boolean addCustMstr(ArrayList<String> list) {
         boolean myreturn = false;
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -4923,8 +4917,8 @@ return myitem;
        String[] x = new String[]{"","","","","","","", ""}; 
         
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
                         
@@ -5017,8 +5011,8 @@ return myitem;
     public static boolean addCustMstrWShipTo(ArrayList<String> list) {
         boolean myreturn = false;
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -5129,8 +5123,8 @@ return myitem;
     public static boolean addCustShipToMstr(ArrayList<String> list) {
         boolean myreturn = false;
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -5199,8 +5193,8 @@ return myitem;
         ArrayList myarray = new ArrayList();
         String mystring = "";
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -5246,8 +5240,8 @@ return myitem;
         ArrayList fg = new ArrayList();
         String mystring = "";
         try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -5387,8 +5381,8 @@ return myitem;
                     String curr = OVData.getDefaultCurrency();
                     String basecurr = curr;
             
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -5459,8 +5453,8 @@ return myitem;
             String pmcode = "";
             String tranhisttype = "";
             
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -5619,8 +5613,8 @@ return myitem;
                     String basecurr = curr;
             
             
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -5712,8 +5706,8 @@ return myitem;
             
             
             boolean isReportable = false;
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -5854,8 +5848,8 @@ return myitem;
             
             
             boolean isReportable = false;
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -5950,8 +5944,8 @@ return myitem;
       public static ArrayList getCodeMstr(String type) {
        ArrayList myarray = new ArrayList();
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -5978,8 +5972,8 @@ return myitem;
       public static ArrayList getCodeMstrKeyList(String code) {
        ArrayList myarray = new ArrayList();
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -6007,8 +6001,8 @@ return myitem;
       public static ArrayList getPriceGroupList() {
        ArrayList myarray = new ArrayList();
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -6035,8 +6029,8 @@ return myitem;
       public static String getPriceGroupCodeFromCust(String custcode) {
        String myreturn = "";
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -6062,8 +6056,8 @@ return myitem;
       public static String getPriceGroupCodeFromVend(String vend) {
        String myreturn = "";
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -6089,8 +6083,8 @@ return myitem;
     public static ArrayList<String[]> getCodeAndValueMstr(String code) {
        ArrayList<String[]> myarray = new ArrayList<String[]>();
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -6123,8 +6117,8 @@ return myitem;
        ArrayList<String[]> myarray = new ArrayList();
        
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -6153,7 +6147,7 @@ return myitem;
     public static String getJasperFuncByTitle(String group, String title) {
        String x = "";
         try{
-            con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             PreparedStatement ps = null;
             ResultSet res = null;
             try{
@@ -6187,8 +6181,8 @@ return myitem;
        ArrayList<String[]> myarray = new ArrayList();
        
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -6218,8 +6212,8 @@ return myitem;
        public static String getVendPartFromPart(String vend, String part) {
        String mystring = "";
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -6257,8 +6251,8 @@ return myitem;
        String pricecode = "";
       
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -6306,8 +6300,8 @@ return myitem;
        String pricecode = "";
       
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -6363,8 +6357,8 @@ return myitem;
     public static String getCodeDescByCode(String key) {
        String mystring = "";
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -6391,8 +6385,8 @@ return myitem;
     public static String getCodeKeyByCode(String code) {
        String mystring = "";
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -6420,8 +6414,8 @@ return myitem;
     public static String getCodeValueByCodeKey(String code, String key) {
        String mystring = "";
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -6453,8 +6447,8 @@ return myitem;
             public static String getSystemImageDirectory() {
          String myreturn = "";
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -6480,8 +6474,8 @@ return myitem;
              public static String getSystemTempDirectory() {
          String myreturn = "";
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -6506,8 +6500,8 @@ return myitem;
              public static String getSystemLabelDirectory() {
          String myreturn = "";
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -6532,8 +6526,8 @@ return myitem;
              public static String getSystemJasperDirectory() {
          String myreturn = "";
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -6558,8 +6552,8 @@ return myitem;
              public static String getSystemEDIDirectory() {
          String myreturn = "";
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -6584,8 +6578,8 @@ return myitem;
              public static String getSystemFileServerType() {
          String myreturn = "";
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -6619,8 +6613,8 @@ return myitem;
     public static String getDefaultSite() {
            String myitem = null;
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -6646,8 +6640,8 @@ return myitem;
     public static String getDefaultWH() {
            String myitem = null;
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -6673,8 +6667,8 @@ return myitem;
     public static String getDefaultCC() {
            String myitem = null;
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -6703,8 +6697,8 @@ return myitem;
     public static String getDefaultSiteName() {
            String myitem = null;
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -6730,8 +6724,8 @@ return myitem;
     public static String getDefaultCurrency() {
            String myitem = null;
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -6757,8 +6751,8 @@ return myitem;
     public static String getDefaultLabelPrinter() {
            String myitem = null;
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -6785,8 +6779,8 @@ return myitem;
     public static String getDefaultARBank() {
            String myitem = null;
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -6812,8 +6806,8 @@ return myitem;
     public static String getDefaultARAcct() {
            String myitem = null;
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -6839,8 +6833,8 @@ return myitem;
     public static String getDefaultPayWithHoldAcct() {
            String myitem = null;
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -6867,8 +6861,8 @@ return myitem;
     public static String getDefaultPayLaborAcct() {
            String myitem = null;
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -6894,8 +6888,8 @@ return myitem;
     public static String getDefaultPayLaborCC() {
            String myitem = null;
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -6921,8 +6915,8 @@ return myitem;
     public static String getDefaultPaySalariedAcct() {
            String myitem = null;
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -6948,8 +6942,8 @@ return myitem;
     public static String getDefaultPaySalariedCC() {
            String myitem = null;
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -6975,8 +6969,8 @@ return myitem;
     public static String getDefaultPayTaxAcct() {
            String myitem = null;
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -7002,8 +6996,8 @@ return myitem;
     public static String getPayProfileDetAcct(String profile, String line) {
            String myitem = null;
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -7030,8 +7024,8 @@ return myitem;
     public static String getPayProfileDetCC(String profile, String line) {
            String myitem = null;
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -7059,8 +7053,8 @@ return myitem;
     public static String getPayProfileAcctPayTaxCC() {
            String myitem = null;
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -7086,8 +7080,8 @@ return myitem;
     public static String getDefaultSalesAcct() {
            String myitem = null;
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -7113,8 +7107,8 @@ return myitem;
     public static String getDefaultAssetAcctAR() {
            String myitem = null;
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -7140,8 +7134,8 @@ return myitem;
     public static String getDefaultAssetAcctAP() {
            String myitem = null;
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -7167,8 +7161,8 @@ return myitem;
     public static String getDefaultAssetCC() {
            String myitem = null;
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -7195,8 +7189,8 @@ return myitem;
            public static String getVendTerms(String vend) {
            String myitem = null;
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -7222,8 +7216,8 @@ return myitem;
     public static String getVendName(String vend) {
            String myitem = null;
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -7250,8 +7244,8 @@ return myitem;
            public static String getVendAPAcct(String vend) {
            String myitem = null;
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -7277,8 +7271,8 @@ return myitem;
              public static String getVendAPCC(String vend) {
            String myitem = null;
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -7307,8 +7301,8 @@ return myitem;
            public static String getExchangeRate(String base, String foreign) {
            String myitem = "";
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -7336,8 +7330,8 @@ return myitem;
            public static Double getExchangeBaseValue(String base, String foreign, Double invalue) {
            Double outvalue = invalue;
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -7368,8 +7362,8 @@ return myitem;
          public static String getDefaultARCC() {
            String myitem = "";
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -7395,8 +7389,8 @@ return myitem;
           public static String getDefaultSalesCC() {
            String myitem = "";
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -7422,8 +7416,8 @@ return myitem;
            public static String getVendCurrency(String vend) {
            String myitem = "";
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -7449,8 +7443,8 @@ return myitem;
          public static String getDefaultAPBank() {
            String myitem = "";
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -7477,8 +7471,8 @@ return myitem;
         public static String getDefaultBankAcct(String bank) {
            String myitem = "";
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -7504,8 +7498,8 @@ return myitem;
                  public static String getDefaultAPAcct() {
            String myitem = "";
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -7531,8 +7525,8 @@ return myitem;
          public static String getDefaultSiteForUserid(String myuser) {
            String myitem = null;
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -7558,8 +7552,8 @@ return myitem;
         public static String getProdLineFromItem(String mypart) {
            String myitem = null;
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -7585,8 +7579,8 @@ return myitem;
         public static String getUOMFromItemSite(String mypart, String mysite) {
            String myitem = null;
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -7613,8 +7607,8 @@ return myitem;
        public static Boolean isBaseUOMOfItem(String mypart, String mysite, String uom) {
            boolean isBase = false;
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -7645,8 +7639,8 @@ return myitem;
            Double baseqty = order_qty;  // initialize with inbound qty
            String baseuom = "";
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -7696,8 +7690,8 @@ return myitem;
            boolean isValid = false;
            String baseuom = "";
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -7748,8 +7742,8 @@ return myitem;
     public static String getProdLineInvAcct(String prodline) {
            String myitem = null;
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -7775,8 +7769,8 @@ return myitem;
     public static String[] getWorkCellElements(String wc) {
            String[] myarray = new String[9];
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -7814,8 +7808,8 @@ return myitem;
     public static String[] getRoutingElements(String routing) {
            String[] myarray = new String[7];
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -7851,8 +7845,8 @@ return myitem;
     public static String[] getBOMParentOpElements(String parent, String op) {
            String[] myarray = new String[10];
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -7899,8 +7893,8 @@ return myitem;
     public static ArrayList getWorkCellList() {
            ArrayList myarray = new ArrayList();
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -7927,8 +7921,8 @@ return myitem;
     public static ArrayList getRoutingList() {
            ArrayList myarray = new ArrayList();
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -7956,8 +7950,8 @@ return myitem;
     public static ArrayList getSiteList() {
            ArrayList myarray = new ArrayList();
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -7984,8 +7978,8 @@ return myitem;
     public static ArrayList getUOMList() {
            ArrayList myarray = new ArrayList();
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -8012,8 +8006,8 @@ return myitem;
     public static Double getPOSSalesTaxPct() {
            Double percent = 0.00;
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -8040,8 +8034,8 @@ return myitem;
        public static String getLocationByPart(String part) {
           String myloc = "";
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -8067,8 +8061,8 @@ return myitem;
          public static String[] getTopLocationAndWHByQTY(String part, String site) {
           String[] myloc = new String[2];
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -8107,8 +8101,8 @@ return myitem;
         public static Double getTopQtyLocationByPart(String part, String site) {
           Double qty = 0.00;
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -8136,8 +8130,8 @@ return myitem;
         public static String getUOMByPart(String part) {
           String myuom = "";
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -8163,8 +8157,8 @@ return myitem;
        public static String getWarehouseByPart(String part) {
           String myloc = "";
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -8190,8 +8184,8 @@ return myitem;
        public static ArrayList getLocationList() {
            ArrayList myarray = new ArrayList();
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -8218,8 +8212,8 @@ return myitem;
         public static ArrayList getLocationListByWarehouse(String wh) {
            ArrayList myarray = new ArrayList();
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -8248,8 +8242,8 @@ return myitem;
     public static ArrayList getWareHouseList() {
            ArrayList myarray = new ArrayList();
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -8278,8 +8272,8 @@ return myitem;
                     
              String[] mystring = new String[9];
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -8316,8 +8310,8 @@ return myitem;
     public static ArrayList getProdCodeList() {
            ArrayList myarray = new ArrayList();
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -8347,8 +8341,8 @@ return myitem;
           
            String myimage = "";
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -8374,8 +8368,8 @@ return myitem;
         public static String getPMCodeByPart(String mypart) {
            String myitem = "";
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -8401,8 +8395,8 @@ return myitem;
             public static String getBankCodeOfCust(String cust) {
            String myitem = "";
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -8428,8 +8422,8 @@ return myitem;
             public static String getPOSBank() {
                 String bank = "";
                  try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -8456,8 +8450,8 @@ return myitem;
               public static Integer getGLTranCount() {
            int mycount = 0;
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -8485,8 +8479,8 @@ return myitem;
         public static String[] getBillToAddressArray(String cust) {
             String[] address = new String[9];
              try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -8519,8 +8513,8 @@ return myitem;
          public static String[] getShipToAddressArray(String cust, String ship) {
             String[] address = new String[9];
              try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -8556,8 +8550,8 @@ return myitem;
           public static String[] getWarehouseAddressArray(String site, String wh) {
             String[] address = new String[9];
              try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -8593,8 +8587,8 @@ return myitem;
            public static String[] getSiteAddressArray(String site) {
            String[] address = new String[9];
              try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -8629,8 +8623,8 @@ return myitem;
          public static String getDefaultShipperJasper(String site) {
            String myitem = "";
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -8656,8 +8650,8 @@ return myitem;
            public static String getDefaultPOPrintJasper(String site) {
            String myitem = "";
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -8683,8 +8677,8 @@ return myitem;
           public static String getDefaultInvoiceJasper(String site) {
            String myitem = "";
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -8710,8 +8704,8 @@ return myitem;
            public static String getDefaultOrderJasper(String site) {
            String myitem = "";
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -8738,8 +8732,8 @@ return myitem;
              public static String getDefaultPOSJasper(String site) {
            String myitem = "";
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -8765,8 +8759,8 @@ return myitem;
          public static String getSiteLogo(String site) {
            String myitem = "";
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -8801,8 +8795,8 @@ return myitem;
        } else {
        
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -8837,8 +8831,8 @@ return myitem;
     public static boolean isValidOperation(String item, String op) {
        boolean isGood = false;
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -8871,8 +8865,8 @@ return myitem;
              
            boolean venditemonly = false;
             try{
-               Class.forName(driver).newInstance();
-                con = DriverManager.getConnection(url + db, user, pass);
+               
+                Connection con = DriverManager.getConnection(url + db, user, pass);
                 try{
                     Statement st = con.createStatement();
                     ResultSet res = null;
@@ -8901,8 +8895,8 @@ return myitem;
              
            boolean custitemonly = false;
             try{
-               Class.forName(driver).newInstance();
-                con = DriverManager.getConnection(url + db, user, pass);
+               
+                Connection con = DriverManager.getConnection(url + db, user, pass);
                 try{
                     Statement st = con.createStatement();
                     ResultSet res = null;
@@ -8929,8 +8923,8 @@ return myitem;
              
            boolean srvmtype = false;
             try{
-               Class.forName(driver).newInstance();
-                con = DriverManager.getConnection(url + db, user, pass);
+               
+                Connection con = DriverManager.getConnection(url + db, user, pass);
                 try{
                     Statement st = con.createStatement();
                     ResultSet res = null;
@@ -8957,8 +8951,8 @@ return myitem;
              
            boolean srvmtype = false;
             try{
-               Class.forName(driver).newInstance();
-                con = DriverManager.getConnection(url + db, user, pass);
+               
+                Connection con = DriverManager.getConnection(url + db, user, pass);
                 try{
                     Statement st = con.createStatement();
                     ResultSet res = null;
@@ -8986,8 +8980,8 @@ return myitem;
              
            boolean custitemonly = false;
             try{
-               Class.forName(driver).newInstance();
-                con = DriverManager.getConnection(url + db, user, pass);
+               
+                Connection con = DriverManager.getConnection(url + db, user, pass);
                 try{
                     Statement st = con.createStatement();
                     ResultSet res = null;
@@ -9015,8 +9009,8 @@ return myitem;
              
        boolean autosource = false;
         try{
-           Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+           
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -9043,8 +9037,8 @@ return myitem;
              
        boolean autoitem = false;
         try{
-           Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+           
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -9071,8 +9065,8 @@ return myitem;
              
        boolean autoinvoice = false;
         try{
-           Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+           
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -9099,8 +9093,8 @@ return myitem;
              
        boolean autoallocate = false;
         try{
-           Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+           
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -9127,8 +9121,8 @@ return myitem;
              
        boolean exceedqohu = false;
         try{
-           Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+           
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -9155,8 +9149,8 @@ return myitem;
              
        boolean autocust = false;
         try{
-           Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+           
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -9183,8 +9177,8 @@ return myitem;
              
        boolean autovend = false;
         try{
-           Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+           
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -9211,8 +9205,8 @@ return myitem;
              
        boolean autopost = false;
         try{
-           Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+           
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -9241,8 +9235,8 @@ return myitem;
              
        boolean autovoucher = false;
         try{
-           Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+           
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -9271,8 +9265,8 @@ return myitem;
              
        boolean isgood = false;
         try{
-           Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+           
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -9299,8 +9293,8 @@ return myitem;
              
        boolean isgood = false;
         try{
-           Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+           
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -9329,8 +9323,8 @@ return myitem;
              
        boolean isgood = false;
         try{
-           Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+           
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -9358,8 +9352,8 @@ return myitem;
              
        boolean isgood = false;
         try{
-           Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+           
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -9386,8 +9380,8 @@ return myitem;
              
        boolean isgood = false;
         try{
-           Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+           
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -9414,8 +9408,8 @@ return myitem;
              
        boolean isgood = false;
         try{
-           Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+           
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -9444,8 +9438,8 @@ return myitem;
              
        boolean isgood = false;
         try{
-           Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+           
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -9472,8 +9466,8 @@ return myitem;
              
        boolean isgood = false;
         try{
-           Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+           
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -9500,8 +9494,8 @@ return myitem;
              
        boolean isgood = false;
         try{
-           Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+           
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -9529,8 +9523,8 @@ return myitem;
              
        boolean isgood = false;
         try{
-           Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+           
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -9557,8 +9551,8 @@ return myitem;
              
        boolean isgood = false;
         try{
-           Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+           
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -9584,8 +9578,8 @@ return myitem;
            public static boolean isValidRouting(String key) {
        boolean isGood = false;
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -9614,8 +9608,8 @@ return myitem;
     public static boolean isValidWorkCenter(String key) {
        boolean isGood = false;
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -9646,8 +9640,8 @@ return myitem;
              
        boolean isgood = false;
         try{
-           Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+           
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -9673,8 +9667,8 @@ return myitem;
            public static ArrayList getShiftCodes() {
        ArrayList myarray = new ArrayList();
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -9731,8 +9725,8 @@ return myitem;
         public static ArrayList getOperationsByPart(String mypart) {
        ArrayList myarray = new ArrayList();
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -9758,8 +9752,8 @@ return myitem;
         public static int getFirstOpByPart(String mypart) {
            int myreturn = -1;
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -9787,8 +9781,8 @@ return myitem;
         public static int getLastOpByPart(String mypart) {
            int myreturn = -1;
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -9818,8 +9812,8 @@ return myitem;
              Double labor = 0.0;
              DecimalFormat df = new DecimalFormat("#.00000", new DecimalFormatSymbols(Locale.US));           
              try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -9852,8 +9846,8 @@ return myitem;
              Double burden = 0.0;
              DecimalFormat df = new DecimalFormat("#.00000", new DecimalFormatSymbols(Locale.US));            
              try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -9888,8 +9882,8 @@ return myitem;
              DecimalFormat df = new DecimalFormat("#.00000", new DecimalFormatSymbols(Locale.US)); 
                         
              try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -9922,8 +9916,8 @@ return myitem;
              Double labor = 0.0;
              DecimalFormat df = new DecimalFormat("#.00000", new DecimalFormatSymbols(Locale.US));           
              try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -9968,8 +9962,8 @@ return myitem;
              DecimalFormat df = new DecimalFormat("#.00000", new DecimalFormatSymbols(Locale.US)); 
              
              try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -10010,8 +10004,8 @@ return myitem;
              Double burden = 0.0;
              DecimalFormat df = new DecimalFormat("#.00000", new DecimalFormatSymbols(Locale.US));          
              try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -10049,8 +10043,8 @@ return myitem;
             }
             try {
 
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try {
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -10160,8 +10154,8 @@ return myitem;
              
            
              try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 Statement st2 = con.createStatement();
@@ -10283,8 +10277,8 @@ return myitem;
              Double total = 0.0;
              String op = "";
                   try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 Statement st2 = con.createStatement();
@@ -10371,8 +10365,8 @@ return myitem;
         public static String getShipperBillto(String shipper) {
              String billto = "";
               try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -10404,8 +10398,8 @@ return myitem;
          public static String getOrderBillto(String order) {
              String billto = "";
               try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -10437,8 +10431,8 @@ return myitem;
          public static String getOrderCurrency(String order) {
              String curr = "";
               try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -10471,8 +10465,8 @@ return myitem;
          public static ArrayList getOrderWHSource(String order) {
              ArrayList<String> wh = new ArrayList<String>();
               try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -10502,8 +10496,8 @@ return myitem;
           public static String getFreightOrderCarrierAssigned(String order) {
             String carrier = "";
               try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -10531,8 +10525,8 @@ return myitem;
           public static String getFreightOrderNbrFromCustFO(String custfo) {
             String fo = "";
               try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -10557,8 +10551,8 @@ return myitem;
           public static ArrayList getFreightOrderCarrierList(String order) {
              ArrayList<String> carriers = new ArrayList<String>();
               try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -10602,8 +10596,8 @@ return myitem;
              
               String[] H = new String[13];
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -10649,8 +10643,8 @@ return myitem;
           public static String[] getFreightOrderHeaderArray(String order) {
               String header[] = new String[11];
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -10694,8 +10688,8 @@ return myitem;
            public static ArrayList getFreightOrderDetailArray(String order) {
               ArrayList<String[]> detail = new ArrayList<String[]>();
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -10752,8 +10746,8 @@ return myitem;
             public static String[] getOrderHeaderArray(String order) {
               String header[] = new String[7];
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -10791,8 +10785,8 @@ return myitem;
             public static ArrayList getOrderDetailArray(String order) {
               ArrayList<String[]> detail = new ArrayList<String[]>();
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -10839,8 +10833,8 @@ return myitem;
              public static String getOrderHeader(String order) {
               String mystring = "";
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -10886,8 +10880,8 @@ return myitem;
               ArrayList<String[]> mylist = new ArrayList();  
               
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -10932,8 +10926,8 @@ return myitem;
          public static ArrayList getShippersOpenListForFreight() {
               ArrayList mylist = new ArrayList();  
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -10968,8 +10962,8 @@ return myitem;
          public static boolean UpdateInventoryDiscrete(String part, String site, String loc, String wh, Double qty) {
               boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 Statement st2 = con.createStatement();
@@ -11056,7 +11050,7 @@ return myitem;
          
     public static void UpdateInventoryFromPOS(String nbr, boolean isVoid, Connection bscon) throws SQLException {
         
-        
+        Connection con = DriverManager.getConnection(url + db, user, pass);
         Statement st = con.createStatement();
         Statement st2 = con.createStatement();
         Statement st3 = con.createStatement();
@@ -11173,14 +11167,15 @@ return myitem;
            if (res != null) {res.close();}
            if (res2 != null) {res2.close();}
            if (nres != null) {nres.close();}
+           if (con != null) {con.close();}
         
          }
          
          public static boolean UpdateInventoryFromShipper(String shipper) {
               boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 Statement st2 = con.createStatement();
@@ -11318,8 +11313,8 @@ return myitem;
            public static boolean UpdateInventoryFromShipperRV(String shipper) {
               boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 Statement st2 = con.createStatement();
@@ -11451,8 +11446,8 @@ return myitem;
          public static boolean UpdateInventoryFromReceiver(String receiver) {
               boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 Statement st2 = con.createStatement();
@@ -11560,8 +11555,8 @@ return myitem;
             
             
             try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try {
                 Statement st = con.createStatement();
                   
@@ -11600,8 +11595,8 @@ return myitem;
           public static boolean TRHistRctPurch(String receiver, Date effdate) {
         boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 Statement st2 = con.createStatement();
@@ -11717,8 +11712,8 @@ return myitem;
       public static boolean TRHistIssSales(String shipper, Date effdate) {
         boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 Statement st2 = con.createStatement();
@@ -11929,8 +11924,8 @@ return myitem;
         public static boolean TRHistIssSalesRV(String shipper, Date effdate) {
         boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 Statement st2 = con.createStatement();
@@ -12086,8 +12081,8 @@ return myitem;
           
           // try block for updating tran_mstr
        try {
-             Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+             
+            Connection con = DriverManager.getConnection(url + db, user, pass);
         try {
                 Statement st = con.createStatement();
                 
@@ -12401,8 +12396,8 @@ return myitem;
               String ref, String acct, String cc, String jobnbr, String serial, String program, String userid) {
         boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st2 = con.createStatement();
                 
@@ -12517,8 +12512,8 @@ return myitem;
           
        if ( amt != 0 ) {   
        try {
-             Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+             
+            Connection con = DriverManager.getConnection(url + db, user, pass);
         try {
                 Statement st = con.createStatement();
        // bsmf.MainFrame.show(acct_cr.toString() + "/" + cc_cr + "/" + date + "/" + df.format(-1 * amt) + "/" + ref + "/" + site + "/" + type + "/" + desc);
@@ -12644,8 +12639,8 @@ return myitem;
         public static boolean glEntryFromVoucher(String voucher, Date effdate) {
                 boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 Statement st2 = con.createStatement();
@@ -12717,8 +12712,8 @@ return myitem;
         public static boolean glEntryFromVoucherExpense(String voucher, Date effdate) {
                 boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -12798,8 +12793,8 @@ return myitem;
         public static boolean glEntryFromPayRoll(String batch, Date effdate) {
                 boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -12927,8 +12922,8 @@ return myitem;
          public static boolean glEntryFromCashTranBuy(String voucher, Date effdate) {
                 boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -13020,8 +13015,8 @@ return myitem;
           public static boolean glEntryFromARMemo(String batchnbr, Date effdate) {
                 boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -13093,8 +13088,8 @@ return myitem;
         public static boolean glEntryFromARPayment(String batchnbr, Date effdate) {
                 boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 Statement st2 = con.createStatement();
@@ -13262,8 +13257,8 @@ return myitem;
          public static boolean glEntryFromPOS(String batchnbr, Date effdate) {
                 boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -13410,8 +13405,8 @@ return myitem;
         public static boolean glEntryFromReceiver(String receiver, Date effdate) {
               boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 Statement st2 = con.createStatement();
@@ -13570,8 +13565,8 @@ return myitem;
         public static boolean glEntryFromShipper(String shipper, Date effdate) {
               boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 Statement st2 = con.createStatement();
@@ -13847,8 +13842,8 @@ return myitem;
          public static boolean glEntryFromShipperRV(String shipper, Date effdate) {
               boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 Statement st2 = con.createStatement();
@@ -14109,8 +14104,8 @@ return myitem;
         public static boolean glEntryFromCheckRun(int batchid, Date effdate, String ctype) {
               boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -14193,8 +14188,8 @@ return myitem;
        public static ArrayList getGLAcctList() {
        ArrayList myarray = new ArrayList();
         try{
-           Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+           
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -14221,8 +14216,8 @@ return myitem;
        public static ArrayList getGLAcctListByType(String type) {
        ArrayList myarray = new ArrayList();
         try{
-           Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+           
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -14249,8 +14244,8 @@ return myitem;
         public static ArrayList getGLAcctExpenseDisplayOnly() {
        ArrayList myarray = new ArrayList();
         try{
-           Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+           
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -14278,8 +14273,8 @@ return myitem;
           public static ArrayList getGLAcctIncomeDisplayOnly() {
        ArrayList myarray = new ArrayList();
         try{
-           Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+           
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -14307,8 +14302,8 @@ return myitem;
        public static boolean isValidTerms(String code) {
        boolean myreturn = false;
         try{
-           Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+           
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -14334,8 +14329,8 @@ return myitem;
         public static boolean isDuplicateNavCode(String code, String callingmenu) {
        boolean myreturn = false;
         try{
-           Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+           
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -14362,8 +14357,8 @@ return myitem;
         public static boolean isValidProfile(String code) {
        boolean myreturn = false;
         try{
-           Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+           
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -14388,8 +14383,8 @@ return myitem;
          public static boolean isCurrSameAsDefault(String curr) {
        boolean myreturn = false;
         try{
-           Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+           
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -14416,8 +14411,8 @@ return myitem;
          public static boolean isValidBank(String code) {
        boolean myreturn = false;
         try{
-           Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+           
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -14442,8 +14437,8 @@ return myitem;
           public static boolean isValidCurrency(String code) {
        boolean myreturn = false;
         try{
-           Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+           
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -14468,8 +14463,8 @@ return myitem;
           public static boolean isValidGLAcct(String acct) {
        boolean myreturn = false;
         try{
-           Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+           
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -14494,8 +14489,8 @@ return myitem;
        public static boolean isValidGLcc(String cc) {
        boolean myreturn = false;
         try{
-           Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+           
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -14520,8 +14515,8 @@ return myitem;
           public static ArrayList getGLAcctListRange(String fromacct, String toacct) {
        ArrayList myarray = new ArrayList();
         try{
-           Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+           
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -14549,8 +14544,8 @@ return myitem;
            public static ArrayList getGLAcctListRangeWTypeDesc(String fromacct, String toacct) {
        ArrayList myarray = new ArrayList();
         try{
-           Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+           
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -14579,8 +14574,8 @@ return myitem;
        ArrayList<String[]> myarray = new ArrayList();
        
         try{
-           Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+           
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -14616,8 +14611,8 @@ return myitem;
            public static String getGLAcctType(String acct) {
       String myreturn = "";
         try{
-           Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+           
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -14644,8 +14639,8 @@ return myitem;
             public static String getGLAcctDesc(String acct) {
       String myreturn = "";
         try{
-           Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+           
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -14672,8 +14667,8 @@ return myitem;
          public static ArrayList getGLCCList() {
       ArrayList myarray = new ArrayList();
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -14707,8 +14702,8 @@ return myitem;
       String[] x = new String[]{"","","","",""};        
       
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -14748,8 +14743,8 @@ return myitem;
               
          boolean isclosed = false;
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -14787,8 +14782,8 @@ return myitem;
               
       ArrayList myarray = new ArrayList();
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -14825,8 +14820,8 @@ return myitem;
               
       ArrayList myarray = new ArrayList();
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -14860,8 +14855,8 @@ return myitem;
               
       ArrayList myarray = new ArrayList();
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -14894,8 +14889,8 @@ return myitem;
               
       String account = "";
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -14925,8 +14920,8 @@ return myitem;
               
       String account = "";
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -14956,8 +14951,8 @@ return myitem;
               
       String account = "";
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -14987,8 +14982,8 @@ return myitem;
               
       String account = "";
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -15018,8 +15013,8 @@ return myitem;
               
       String account = "";
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -15049,8 +15044,8 @@ return myitem;
               
       String account = "";
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -15078,8 +15073,8 @@ return myitem;
               
        double amt = 0.00;
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -15116,8 +15111,8 @@ return myitem;
          public static double getGLAcctBalYTD(String site, String acct) {
        double amt = 0.00;
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -15160,8 +15155,8 @@ return myitem;
                 String dateend = String.valueOf(actdatearray.get(1));
                 
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -15231,8 +15226,8 @@ return myitem;
               
        double amt = 0.00;
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -15268,8 +15263,8 @@ return myitem;
              double myamt = 0.00;
              DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
              try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try {
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -15297,8 +15292,8 @@ return myitem;
              double myamt = 0.00;
              DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
              try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try {
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -15325,8 +15320,8 @@ return myitem;
        ArrayList mylist = new ArrayList() ;
        
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -15353,8 +15348,8 @@ return myitem;
        ArrayList mylist = new ArrayList() ;
        
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -15382,8 +15377,8 @@ return myitem;
        String mystring = "";
        
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -15410,8 +15405,8 @@ return myitem;
        String mystring = "";
        
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -15438,8 +15433,8 @@ return myitem;
        int myreturn = 0;
        
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -15466,8 +15461,8 @@ return myitem;
        ArrayList mylist = new ArrayList() ;
        
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -15495,8 +15490,8 @@ return myitem;
               double myamt = 0.00;
               
                try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -15529,8 +15524,8 @@ return myitem;
               double myamt = 0.00;
               
                try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -15570,8 +15565,8 @@ return myitem;
               try {
                   
                   
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try {
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -15697,8 +15692,8 @@ return myitem;
               try {
                   
                   
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try {
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -15827,8 +15822,8 @@ return myitem;
               try {
                   
                   
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try {
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -15930,8 +15925,8 @@ return myitem;
               try {
                   
                   
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try {
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -16048,8 +16043,8 @@ return myitem;
            public static String[] getYearEndValues(String site, String year) {
                String[] myarray = new String[5];
             try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try {
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -16117,8 +16112,8 @@ return myitem;
                ArrayList<String[]> accounts = new ArrayList<String[]>();
                
             try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try {
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -16191,8 +16186,8 @@ return myitem;
            try {
             DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));   
             DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try {
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -16272,8 +16267,8 @@ return myitem;
             ArrayList<Integer> gltran = new ArrayList();
             DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));   
             DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try {
                 Statement st = con.createStatement();
                 Statement st2 = con.createStatement();
@@ -16372,8 +16367,8 @@ return myitem;
        
        public static void glCopyTranToHist(ArrayList<Integer> trans) {
            try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try {
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -16418,8 +16413,8 @@ return myitem;
            ArrayList<Integer> gltran = new ArrayList();
            try {
             DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try {
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -16473,8 +16468,8 @@ return myitem;
             // now let's read the apd_mstr table for this batchID and group by Vendor code...one check per vendor code 
                 //...each vendor may have multiple vouchers assigned
             try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try {
                 Statement st = con.createStatement();
                 Statement st2 = con.createStatement();
@@ -16587,8 +16582,8 @@ return myitem;
             // now let's read the apd_mstr table for this batchID and group by Vendor code...one check per vendor code 
                 //...each vendor may have multiple vouchers assigned
             try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try {
                 Statement st = con.createStatement();
                 Statement st2 = con.createStatement();
@@ -16674,8 +16669,8 @@ return myitem;
            DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
        try {
 
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
        try {
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -16711,8 +16706,8 @@ return myitem;
            DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
        try {
 
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
        try {
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -16748,8 +16743,8 @@ return myitem;
            
        try {
 
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
        try {
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -16827,8 +16822,8 @@ return myitem;
            duedate = null;
            
            try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -16862,8 +16857,8 @@ return myitem;
            
            try {
 
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             
             try {
                 Statement st = con.createStatement();
@@ -17093,8 +17088,8 @@ return myitem;
            
            try {
 
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             
             try {
                 Statement st = con.createStatement();
@@ -17262,8 +17257,8 @@ return myitem;
            
            try {
 
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try {
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -17377,8 +17372,8 @@ return myitem;
             
               try {
 
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             
             try {
                 Statement st = con.createStatement();
@@ -17436,7 +17431,7 @@ return myitem;
          try {
 
             Class.forName(bsmf.MainFrame.driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try {
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -17461,8 +17456,8 @@ return myitem;
             
            try {
 
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try {
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -17517,8 +17512,8 @@ return myitem;
             
            try {
 
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try {
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -17579,8 +17574,8 @@ return myitem;
             
            try {
 
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try {
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -17638,8 +17633,8 @@ return myitem;
             
            try {
 
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try {
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -17699,8 +17694,8 @@ return myitem;
            boolean proceed = true;
            try {
 
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Savepoint mysave = con.setSavepoint("mysave");
             
             try {
@@ -17778,8 +17773,8 @@ return myitem;
             
            try {
 
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try {
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -17837,8 +17832,8 @@ return myitem;
        public static void updateShipperStatus(String shipper, Date effdate) {
            DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd"); 
            try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                            st.executeUpdate(
@@ -17860,8 +17855,8 @@ return myitem;
        public static ArrayList<String[]> getOrderSAC(String order) {
           ArrayList<String[]> sac = new ArrayList<String[]>();
           try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -17897,8 +17892,8 @@ return myitem;
            Double matltax = 0.00;
            Double totamt = 0.00;
            try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -17976,8 +17971,8 @@ return myitem;
             // table structure    "line", "FONbr", "Type", "Shipper", "Ref", "Name", "Addr1", "Addr2", "City", "State", "Zip", "Contact", "Phone", "Email", "Units", "Weight"
            DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd"); 
            try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 for (int j = 0; j < mytable.getRowCount(); j++ ) {
@@ -18011,8 +18006,8 @@ return myitem;
         public static void updateShipperStatusRV(String shipper, Date effdate) {
            DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd"); 
            try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                            st.executeUpdate(
@@ -18038,8 +18033,8 @@ return myitem;
             Set<String> uniqueorders = new HashSet<String>();
             
             try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             ResultSet res = null;
             try{
                 Statement st = con.createStatement();
@@ -18149,8 +18144,8 @@ return myitem;
             Set<String> uniqueorders = new HashSet<String>();
             
             try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             ResultSet res = null;
             try{
                 Statement st = con.createStatement();
@@ -18184,8 +18179,8 @@ return myitem;
             Set<String> uniqueorders = new HashSet<String>();
             
             try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             ResultSet res = null;
             try{
                 Statement st = con.createStatement();
@@ -18252,8 +18247,8 @@ return myitem;
             Set<String> uniqueorders = new HashSet<String>();
             
             try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             ResultSet res = null;
             
                 ArrayList qty = new ArrayList();
@@ -18355,8 +18350,8 @@ return myitem;
      public static ArrayList getPrinterList() {
            ArrayList<String> mylist = new ArrayList<String>();  
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -18382,8 +18377,8 @@ return myitem;
       public static String[] getPrinterInfo(String printer) {
           String myreturn[] = new String[]{"","",""};
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -18413,8 +18408,8 @@ return myitem;
        public static boolean isValidPrinter(String printer) {
           boolean myreturn = false;
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -18486,8 +18481,8 @@ return myitem;
     /* print methods */
     public static void printPOS_Jasper(String nbr) {
         try{
-             Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+             
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try {
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -18511,10 +18506,8 @@ return myitem;
                // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_part, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
                 File mytemplate = new File("jasper/" + jasperfile);
-              //  JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, hm, bsmf.MainFrame.con );
-                con.close();
-                con = DriverManager.getConnection(url + db, user, pass);
-                JasperPrint jasperPrint = JasperFillManager.fillReport(mytemplate.getPath(), hm, con );
+              //  JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, hm, con );
+                 JasperPrint jasperPrint = JasperFillManager.fillReport(mytemplate.getPath(), hm, con );
                 JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/posprt.pdf");
          
                 JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
@@ -18538,8 +18531,8 @@ return myitem;
         }
         
         try{
-             Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+             
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try {
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -18574,9 +18567,7 @@ return myitem;
                // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_part, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
                 File mytemplate = new File("jasper/" + jasperfile); 
-              //  JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, hm, bsmf.MainFrame.con );
-                con.close();
-                con = DriverManager.getConnection(url + db, user, pass);
+              //  JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, hm, con );
                 JasperPrint jasperPrint = JasperFillManager.fillReport(mytemplate.getPath(), hm, con );
                 JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/ivprt.pdf");
                 
@@ -18597,8 +18588,8 @@ return myitem;
     
     public static void printInvoiceByOrder(String order) {
         try{
-             Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+             
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try {
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -18642,9 +18633,7 @@ return myitem;
                // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_part, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
                 File mytemplate = new File("jasper/" + jasperfile); 
-              //  JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, hm, bsmf.MainFrame.con );
-                con.close();
-                con = DriverManager.getConnection(url + db, user, pass);
+              //  JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, hm, con );
                 JasperPrint jasperPrint = JasperFillManager.fillReport(mytemplate.getPath(), hm, con );
                 JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/ivprt.pdf");
                 
@@ -18669,7 +18658,7 @@ return myitem;
         
         DefaultTableModel newmodel = new DefaultTableModel();
         for (int k = 0; k < model.getColumnCount(); k++) {
-            if (model.getColumnName(k).equals("select")) {
+            if (model.getColumnClass(k).getSimpleName().equals("ImageIcon")) {
                 continue;
             }
             newmodel.addColumn(model.getColumnName(k));
@@ -18732,8 +18721,8 @@ return myitem;
         
     public static void printReceipt(String shipper) {
         try{
-             Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+             
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try {
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -18765,9 +18754,7 @@ return myitem;
                // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_part, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
                 File mytemplate = new File("jasper/" + jasperfile); 
-              //  JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, hm, bsmf.MainFrame.con );
-                con.close();
-                con = DriverManager.getConnection(url + db, user, pass);
+              //  JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, hm, con );
                 JasperPrint jasperPrint = JasperFillManager.fillReport(mytemplate.getPath(), hm, con );
                 JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/ivprt.pdf");
                 
@@ -18786,14 +18773,11 @@ return myitem;
     
     public static void printAPCheck(String batch) {
         try{
-             Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+             
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try {
                 Statement st = con.createStatement();
                 ResultSet res = null;
-               
-                
-                
                 String jasperfile = "apcheck_generic.jasper";
              // jasperfile = OVData.getCustInvoiceJasper(cust);
             //    if (jasperfile.isEmpty()) {
@@ -18810,20 +18794,19 @@ return myitem;
                // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_part, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
                 File mytemplate = new File("jasper/" + jasperfile); 
-              //  JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, hm, bsmf.MainFrame.con );
-                con.close();
-                con = DriverManager.getConnection(url + db, user, pass);
+              //  JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, hm, con );
+                
                 JasperPrint jasperPrint = JasperFillManager.fillReport(mytemplate.getPath(), hm, con );
                 JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/chkrun.pdf");
                 
                 JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
                 jasperViewer.setVisible(true);
                 jasperViewer.setFitPageZoomRatio();
-                
+               con.close();
             } catch (SQLException s) {
                 MainFrame.bslog(s);
             }
-            con.close();
+            
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -18831,8 +18814,8 @@ return myitem;
     
     public static void printShipper(String shipper) {
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -18863,9 +18846,9 @@ return myitem;
                // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_part, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
                 File mytemplate = new File("jasper/" + jasperfile);
-              //  JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, hm, bsmf.MainFrame.con );
-                con.close();
-                con = DriverManager.getConnection(url + db, user, pass);
+              //  JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, hm, con );
+                
+                
                 JasperPrint jasperPrint = JasperFillManager.fillReport(mytemplate.getPath(), hm, con );
                 JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/shprt.pdf");
          
@@ -18884,8 +18867,8 @@ return myitem;
         
     public static void printShipperByOrder(String order) {
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -18923,16 +18906,14 @@ return myitem;
                // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_part, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
                 File mytemplate = new File("jasper/" + jasperfile);
-              //  JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, hm, bsmf.MainFrame.con );
-                con.close();
-                con = DriverManager.getConnection(url + db, user, pass);
+              //  JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, hm, con );
+               
                 JasperPrint jasperPrint = JasperFillManager.fillReport(mytemplate.getPath(), hm, con );
                 JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/shprt.pdf");
          
                 JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
                 jasperViewer.setVisible(true);
-                
-                
+                                
             } catch (SQLException s) {
                 MainFrame.bslog(s);
             }
@@ -18944,8 +18925,8 @@ return myitem;
       
     public static void printPurchaseOrder(String po) {
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -18973,10 +18954,8 @@ return myitem;
                // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_part, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
                 File mytemplate = new File("jasper/" + jasperfile);
-              //  JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, hm, bsmf.MainFrame.con );
-                con.close();
-                con = DriverManager.getConnection(url + db, user, pass);
-                JasperPrint jasperPrint = JasperFillManager.fillReport(mytemplate.getPath(), hm, con );
+              //  JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, hm, con );
+                 JasperPrint jasperPrint = JasperFillManager.fillReport(mytemplate.getPath(), hm, con );
                 JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/poprt.pdf");
          
                 JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
@@ -18994,8 +18973,8 @@ return myitem;
      
     public static void printCustomerOrder(String order) {
         try{
-             Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+             
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try {
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -19028,10 +19007,8 @@ return myitem;
                // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_part, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
                 File mytemplate = new File("jasper/" + jasperfile); 
-              //  JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, hm, bsmf.MainFrame.con );
-                con.close();
-                con = DriverManager.getConnection(url + db, user, pass);
-                JasperPrint jasperPrint = JasperFillManager.fillReport(mytemplate.getPath(), hm, con );
+              //  JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, hm, con );
+                 JasperPrint jasperPrint = JasperFillManager.fillReport(mytemplate.getPath(), hm, con );
                 JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/orprt.pdf");
                 
                 JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
@@ -19049,8 +19026,8 @@ return myitem;
         
     public static void printServiceOrder(String order) {
         try{
-             Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+             
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try {
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -19074,7 +19051,7 @@ return myitem;
                 }
                
                String jasperfile = "serviceorder.jasper";
-               if (bsmf.MainFrame.dbtype.equals("mysql")) {
+               if (dbtype.equals("mysql")) {
                    jasperfile = "serviceorder_mysql.jasper";
                } 
                
@@ -19091,10 +19068,8 @@ return myitem;
                // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_part, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
                 File mytemplate = new File("jasper/" + jasperfile); 
-              //  JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, hm, bsmf.MainFrame.con );
-                con.close();
-                con = DriverManager.getConnection(url + db, user, pass);
-                JasperPrint jasperPrint = JasperFillManager.fillReport(mytemplate.getPath(), hm, con );
+              //  JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, hm, con );
+                 JasperPrint jasperPrint = JasperFillManager.fillReport(mytemplate.getPath(), hm, con );
                 JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/svprt.pdf");
                 
                 JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
@@ -19112,8 +19087,8 @@ return myitem;
         
     public static void printBOMJasper(String item) {
         try{
-             Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+             
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try {
                                 
                 String imagepath = "";
@@ -19136,17 +19111,15 @@ return myitem;
                // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_part, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
                 File mytemplate = new File("jasper/" + jasperfile); 
-              //  JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, hm, bsmf.MainFrame.con );
-                con.close();
-                con = DriverManager.getConnection(url + db, user, pass);
-                JasperPrint jasperPrint = JasperFillManager.fillReport(mytemplate.getPath(), hm, con );
+              //  JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, hm, con );
+                 JasperPrint jasperPrint = JasperFillManager.fillReport(mytemplate.getPath(), hm, con );
                 JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/bomprt.pdf");
                 
                 JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
                 jasperViewer.setVisible(true);
                 jasperViewer.setFitPageZoomRatio();
                 
-            } catch (SQLException s) {
+            } catch (Exception s) {
                 MainFrame.bslog(s);
             }
             con.close();
@@ -19281,8 +19254,8 @@ MainFrame.bslog(e);
              x[i] = "";
          }
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -19311,8 +19284,8 @@ MainFrame.bslog(e);
     public static String[] isSMTPServer() {
         String[] x = new String[]{"0",""};
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -19441,8 +19414,8 @@ MainFrame.bslog(e);
         String ToEmail = "";
                     
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -19581,8 +19554,8 @@ MainFrame.bslog(e);
           
           try {
 
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
           
             try {
                 Statement st = con.createStatement();
@@ -19679,7 +19652,7 @@ MainFrame.bslog(e);
                    rvdvoqty = voqty + qty;
                    
                        
-                           if (bsmf.MainFrame.dbtype.equals("sqlite")) { 
+                           if (dbtype.equals("sqlite")) { 
                             st.executeUpdate("update recv_det  "
                             + " set rvd_voqty =  " + "'" + rvdvoqty + "'" + ","
                             + " rvd_status = " + "'" + status + "'"
@@ -19905,8 +19878,8 @@ MainFrame.bslog(e);
           // here we create the table records
            try {
 
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
           
             try {
                 Statement st = con.createStatement();
@@ -20019,8 +19992,8 @@ MainFrame.bslog(e);
           
           try {
 
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
           
             try {
                 Statement st = con.createStatement();
@@ -20140,8 +20113,8 @@ MainFrame.bslog(e);
        public static void CreateShipperDet(String nbr, String part, String custpart, String skupart, String so, String po, String qty, String uom, String listprice, String discpercent, String netprice, String shipdate, String desc, String line, String site, String wh, String loc, String taxamt) {
            try {
 
-         Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+         
+            Connection con = DriverManager.getConnection(url + db, user, pass);
           
             try {
                 Statement st = con.createStatement();
@@ -20187,8 +20160,8 @@ MainFrame.bslog(e);
           
           // table field order:  "Line", "Part", "CustPart", "SO", "PO", "Qty", "UOM", "ListPrice", "Discount", "NetPrice", "QtyShip", "Status", "WH", "LOC", "Desc", "Taxamt"
             try {
-         Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+         
+            Connection con = DriverManager.getConnection(url + db, user, pass);
           
             try {
                 Statement st = con.createStatement();
@@ -20399,8 +20372,8 @@ MainFrame.bslog(e);
          
            try {
 
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
           
             try {
                 Statement st = con.createStatement();
@@ -20514,8 +20487,8 @@ MainFrame.bslog(e);
           String part = "";
           String po = "";
           try {
-         Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+         
+            Connection con = DriverManager.getConnection(url + db, user, pass);
           
             try {
                 Statement st = con.createStatement();
@@ -20592,8 +20565,8 @@ MainFrame.bslog(e);
           int myreturn = -1;
           try {
 
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
           
             try {
                 Statement st = con.createStatement();
@@ -20622,8 +20595,8 @@ MainFrame.bslog(e);
           int nullcount = 0;
            try {
 
-             Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+             
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try {
                 Statement st = con.createStatement();
                  ResultSet res = null;
@@ -20675,8 +20648,8 @@ MainFrame.bslog(e);
                if (status.equals("closed")) { status = "1"; }
                if (status.equals("voided")) { status = "-1"; }
               
-             Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+             
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try {
                 Statement st = con.createStatement();
                  ResultSet res = null;
@@ -20716,8 +20689,8 @@ MainFrame.bslog(e);
           
           try {
 
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
           
             try {
                 Statement st = con.createStatement();
@@ -20741,8 +20714,8 @@ MainFrame.bslog(e);
       public static boolean isInvCtrlPlanMultiScan() {
        boolean myreturn = false;
         try{
-           Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+           
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -20767,8 +20740,8 @@ MainFrame.bslog(e);
       public static boolean isPrintTicketFromPlanScan() {
        boolean myreturn = false;
         try{
-           Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+           
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -20794,8 +20767,8 @@ MainFrame.bslog(e);
       public static boolean isInvCtrlDemdToPlan() {
        boolean myreturn = false;
         try{
-           Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+           
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -20825,8 +20798,8 @@ MainFrame.bslog(e);
           
           try {
 
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
           
             try {
                 Statement st = con.createStatement();
@@ -20870,8 +20843,8 @@ MainFrame.bslog(e);
          int planid = 0; 
           
           try {
-         Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+         
+            Connection con = DriverManager.getConnection(url + db, user, pass);
           
             try {
                 Statement st = con.createStatement();
@@ -20962,8 +20935,8 @@ MainFrame.bslog(e);
           
           
           try {
-         Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+         
+            Connection con = DriverManager.getConnection(url + db, user, pass);
           
             try {
                 Statement st = con.createStatement();
@@ -21006,8 +20979,8 @@ MainFrame.bslog(e);
        public static ArrayList getTaskMasterList() {
        ArrayList myarray = new ArrayList();
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -21043,8 +21016,8 @@ MainFrame.bslog(e);
           
           try {
 
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
           
             try {
                 Statement st = con.createStatement();
@@ -21073,8 +21046,8 @@ MainFrame.bslog(e);
           
           try {
 
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
           
             try {
                 Statement st = con.createStatement();
@@ -21103,8 +21076,8 @@ MainFrame.bslog(e);
           
           try {
 
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
           
             try {
                 Statement st = con.createStatement();
@@ -21136,8 +21109,8 @@ MainFrame.bslog(e);
           
           try {
 
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
           
             try {
                 Statement st = con.createStatement();
@@ -21197,8 +21170,8 @@ MainFrame.bslog(e);
     public static void updateLabelStatus(String serialno, String value) {
           try {
 
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
           
             try {
                 Statement st = con.createStatement();
@@ -21216,8 +21189,8 @@ MainFrame.bslog(e);
       public static void updatePlanStatus(String serialno, String value) {
           try {
 
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
           
             try {
                 Statement st = con.createStatement();
@@ -21235,8 +21208,8 @@ MainFrame.bslog(e);
       public static void updatePlanQty(String serialno, int qty) {
           try {
 
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
           
             try {
                 Statement st = con.createStatement();
@@ -21254,8 +21227,8 @@ MainFrame.bslog(e);
          public static void updatePlanQtyByOp(String serialno, int qty, String op, String ref, String cell) {
           try {
 
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
           
             try {
                 Statement st = con.createStatement();
@@ -21279,8 +21252,8 @@ MainFrame.bslog(e);
           
           try {
 
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
           
             try {
                 Statement st = con.createStatement();
@@ -21307,8 +21280,8 @@ MainFrame.bslog(e);
       public static ArrayList getLabelFileList(String type) {
        ArrayList myarray = new ArrayList();
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -21346,8 +21319,8 @@ MainFrame.bslog(e);
           
           try {
 
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
           
             try {
                 Statement st = con.createStatement();
@@ -21376,8 +21349,8 @@ MainFrame.bslog(e);
           String delim = "+-+";
           try {
 
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
           
             try {
                 Statement st = con.createStatement();
@@ -21439,8 +21412,8 @@ MainFrame.bslog(e);
           String shiptocode = "";
           try {
 
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
           
             try {
                 Statement st = con.createStatement();
@@ -21544,8 +21517,8 @@ MainFrame.bslog(e);
           String shiptocode = "";
           try {
 
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
           
             try {
                 Statement st = con.createStatement();
@@ -21595,8 +21568,8 @@ MainFrame.bslog(e);
      
       public static void updateOrderStatusError(String nbr) {
             try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                            st.executeUpdate(
@@ -21616,8 +21589,8 @@ MainFrame.bslog(e);
       
        public static void updateOrderSourceFlag(String nbr) {
             try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                            st.executeUpdate(
@@ -21637,8 +21610,8 @@ MainFrame.bslog(e);
       
         public static void updateFreightOrderQuoteFlag(String nbr) {
             try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                            st.executeUpdate(
@@ -21658,8 +21631,8 @@ MainFrame.bslog(e);
         
        public static void updateFreightOrderTenderFlag(String nbr) {
             try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                            st.executeUpdate(
@@ -21679,8 +21652,8 @@ MainFrame.bslog(e);
         
         public static void updateFreightOrderReasonCode(String nbr, String reasoncode) {
             try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                            st.executeUpdate(
@@ -21700,8 +21673,8 @@ MainFrame.bslog(e);
        
        public static void updateFreightOrderStatus(String nbr, String status) {
             try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                            st.executeUpdate(
@@ -21748,8 +21721,8 @@ MainFrame.bslog(e);
         
         
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -21853,8 +21826,8 @@ MainFrame.bslog(e);
         
         
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -22042,8 +22015,8 @@ MainFrame.bslog(e);
         
         
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -22163,14 +22136,11 @@ MainFrame.bslog(e);
         try {
 
             Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
+                Statement st = con.createStatement();
                 ResultSet res = null;
                 int i = 0;
-                
-                  
-                
                 res = st.executeQuery("SELECT * FROM  gl_cal where glc_year = " + "'" + year + "'" + " and glc_per = '1' " +
                            ";");
                 while (res.next()) {
@@ -22204,7 +22174,7 @@ MainFrame.bslog(e);
                 s.printStackTrace();
                 bsmf.MainFrame.show("Unable to retrieve fct_mstr");
             }
-            bsmf.MainFrame.con.close();
+            con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -22220,8 +22190,8 @@ MainFrame.bslog(e);
          double hours = OVData.calcClockHours(df.format(clockdate), start, df.format(clockdate), end);
          
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -22278,8 +22248,8 @@ MainFrame.bslog(e);
         ArrayList<String> mylist = new ArrayList<String>();
               
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -22308,8 +22278,8 @@ MainFrame.bslog(e);
         ArrayList<String> mylist = new ArrayList<String>();
               
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -22337,8 +22307,8 @@ MainFrame.bslog(e);
         ArrayList<String> mylist = new ArrayList<String>();
               
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -22366,8 +22336,8 @@ MainFrame.bslog(e);
         boolean myreturn = false;
          DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -22397,7 +22367,7 @@ MainFrame.bslog(e);
          try {
 
             Class.forName(bsmf.MainFrame.driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try {
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -22486,8 +22456,8 @@ MainFrame.bslog(e);
      public static String getShiftClockForThisDay(String shift, int day) {
         String myreturn = "";
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -22539,8 +22509,8 @@ MainFrame.bslog(e);
      public static boolean shouldClock(String shift, int day) {
         boolean myreturn = false;
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -22621,8 +22591,8 @@ MainFrame.bslog(e);
          // should be any records and if there are any records
          
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;

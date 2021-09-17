@@ -36,6 +36,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Connection;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
@@ -63,7 +64,7 @@ public class RPData {
                         }; 
         try{
             Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -133,7 +134,7 @@ public class RPData {
                         }; 
         try{
             Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -199,7 +200,7 @@ public class RPData {
            
            try{
             Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -258,7 +259,7 @@ public class RPData {
             
       try{
             Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{    
@@ -320,7 +321,7 @@ public class RPData {
             
       try{
             Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{    
@@ -382,7 +383,7 @@ public class RPData {
               
         try{
             Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -440,7 +441,7 @@ public class RPData {
               
        try{
             Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -497,7 +498,7 @@ public class RPData {
 
         try{
             Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -548,7 +549,7 @@ public class RPData {
              
        try{
             Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -607,7 +608,7 @@ public class RPData {
              
        try{
             Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -672,7 +673,7 @@ public class RPData {
            
            try{
             Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -731,7 +732,7 @@ public class RPData {
            
           try{
             Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{

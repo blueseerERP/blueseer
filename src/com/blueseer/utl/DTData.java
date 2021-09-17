@@ -38,6 +38,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Connection;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -91,8 +92,8 @@ public class DTData {
              
               
        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -163,8 +164,8 @@ public class DTData {
              
               
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -219,8 +220,8 @@ public class DTData {
              
               
        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -265,8 +266,8 @@ public class DTData {
              
               
        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -312,8 +313,8 @@ public class DTData {
              
               
        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -367,8 +368,8 @@ public class DTData {
              
               
        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -423,8 +424,8 @@ public class DTData {
              
               
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -478,8 +479,8 @@ public class DTData {
                         }; 
               
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -543,8 +544,8 @@ public class DTData {
                         }; 
               
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -605,8 +606,8 @@ public class DTData {
                         }; 
               
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -671,8 +672,8 @@ public class DTData {
                         }; 
               
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -731,8 +732,8 @@ public class DTData {
                         }; 
               
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -788,8 +789,8 @@ public class DTData {
                         }; 
               
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -844,8 +845,8 @@ public class DTData {
                         }; 
               
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -904,8 +905,8 @@ public class DTData {
                         }; 
               
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -963,8 +964,8 @@ public class DTData {
                         }; 
               
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -1024,8 +1025,8 @@ public class DTData {
                         }; 
               
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -1086,8 +1087,8 @@ public class DTData {
                         }; 
               
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -1148,8 +1149,8 @@ public class DTData {
                         }; 
               
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -1208,8 +1209,8 @@ public class DTData {
                         }; 
               
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -1267,8 +1268,8 @@ public class DTData {
                         }; 
               
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -1323,8 +1324,8 @@ public class DTData {
                         }; 
               
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -1378,8 +1379,8 @@ public class DTData {
                         }; 
               
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -1440,8 +1441,8 @@ public class DTData {
                         }; 
               
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -1501,8 +1502,8 @@ public class DTData {
                         }; 
               
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -1556,8 +1557,8 @@ public class DTData {
                         }; 
               
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -1618,8 +1619,8 @@ public class DTData {
                         }; 
               
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -1676,8 +1677,8 @@ public class DTData {
                         }; 
               
        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -1734,8 +1735,8 @@ public class DTData {
                         }; 
              
        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -1791,8 +1792,8 @@ public class DTData {
                         }; 
               
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -1847,8 +1848,8 @@ public class DTData {
                         }; 
               
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -1903,8 +1904,8 @@ public class DTData {
                         }; 
               
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -1958,8 +1959,8 @@ public class DTData {
                         }; 
               
        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -2014,8 +2015,8 @@ public class DTData {
                         }; 
               
        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -2072,8 +2073,8 @@ public class DTData {
                         }; 
               
        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -2130,8 +2131,8 @@ public class DTData {
                         }; 
               
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -2186,8 +2187,8 @@ public class DTData {
                         }; 
               
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -2246,8 +2247,8 @@ public class DTData {
                         }; 
               
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -2302,8 +2303,8 @@ public class DTData {
                         }; 
               
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -2362,8 +2363,8 @@ public class DTData {
                         }; 
               
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -2420,8 +2421,8 @@ public class DTData {
                         }; 
               
        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -2479,8 +2480,8 @@ public class DTData {
                         }; 
               
        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -2535,8 +2536,8 @@ public class DTData {
                         }; 
               
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -2596,8 +2597,8 @@ public class DTData {
                         }; 
               
        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -2654,8 +2655,8 @@ public class DTData {
                         }; 
               
        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -2710,8 +2711,8 @@ public class DTData {
                         }; 
               
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -2770,8 +2771,8 @@ public class DTData {
                         }; 
               
        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -2830,8 +2831,8 @@ public class DTData {
                         }; 
               
        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -2890,8 +2891,8 @@ public class DTData {
                         }; 
               
        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -2945,8 +2946,8 @@ public class DTData {
                         }; 
               
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -3005,8 +3006,8 @@ public class DTData {
                         }; 
               
        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -3065,8 +3066,8 @@ public class DTData {
                         }; 
               
        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -3125,8 +3126,8 @@ public class DTData {
                         }; 
               
        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -3181,8 +3182,8 @@ public class DTData {
                         }; 
               
        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -3261,8 +3262,8 @@ public class DTData {
                         }; 
               
        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -3340,8 +3341,8 @@ public class DTData {
                         }; 
               
        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -3400,8 +3401,8 @@ public class DTData {
                         }; 
               
       try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -3459,8 +3460,8 @@ public class DTData {
                         }; 
               
       try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -3516,8 +3517,8 @@ public class DTData {
                         }; 
               
       try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -3578,8 +3579,8 @@ public class DTData {
                         }; 
               
        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -3640,8 +3641,8 @@ public class DTData {
                         }; 
               
       try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -3699,8 +3700,8 @@ public class DTData {
                         }; 
               
      try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -3759,8 +3760,8 @@ public class DTData {
                         }; 
               
        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -3816,8 +3817,8 @@ public class DTData {
                         }; 
               
        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -3874,8 +3875,8 @@ public class DTData {
                         }; 
               
       try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -3934,8 +3935,8 @@ public class DTData {
                         }; 
               
       try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -3992,8 +3993,8 @@ public class DTData {
                         }; 
               
        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -4050,8 +4051,8 @@ public class DTData {
                         }; 
               
       try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -4111,8 +4112,8 @@ public class DTData {
                         }; 
               
        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -4184,8 +4185,8 @@ public class DTData {
                         }; 
               
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -4240,8 +4241,8 @@ public class DTData {
                         }; 
               
        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -4300,8 +4301,8 @@ public class DTData {
              
               
        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -4348,8 +4349,8 @@ public class DTData {
              
               
       try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -4405,8 +4406,8 @@ public class DTData {
              
               
        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -4452,8 +4453,8 @@ public class DTData {
              
               
        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -4528,8 +4529,8 @@ public class DTData {
              
               
        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             Integer[] values = new Integer[13];
@@ -4592,8 +4593,8 @@ public class DTData {
                          new String[]{"CallID", "Name", "Phone", "Date", "Type", getGlobalColumnTag("description")});
            
           try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -4635,8 +4636,8 @@ public class DTData {
                          new String[]{"LastName", "FirstName", "Phone", "Cell", "Email"});
            
           try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -4678,8 +4679,8 @@ public class DTData {
                          new String[]{"Menu", getGlobalColumnTag("description"), "NavCode", "Type", "JavaClass"});
            
           try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -4732,8 +4733,8 @@ public class DTData {
                         };
              
           try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -4789,8 +4790,8 @@ public class DTData {
                         }; 
            
            try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -4843,8 +4844,8 @@ public class DTData {
                         }; 
            
            try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -4905,8 +4906,8 @@ public class DTData {
                         };
            
           try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -4947,8 +4948,8 @@ public class DTData {
                         new String[]{getGlobalColumnTag("item"), "WorkFlowID", "Operation", "Component"});
            
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -5001,8 +5002,8 @@ public class DTData {
                         };
            
            try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -5057,8 +5058,8 @@ public class DTData {
                         };
            
            try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -5109,8 +5110,8 @@ public class DTData {
                         }; 
            
            try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -5165,8 +5166,8 @@ public class DTData {
                         };
            
           try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -5216,8 +5217,8 @@ public class DTData {
                         }; 
            
            try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -5273,8 +5274,8 @@ public class DTData {
                         };
            
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -5325,8 +5326,8 @@ public class DTData {
                         };
            
           try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -5369,8 +5370,8 @@ public class DTData {
                        new String[]{"UserID", "LastName", "FirstName", "Phone", "Cell", "Email"});
            
           try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -5421,8 +5422,8 @@ public class DTData {
                         };
            
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -5468,8 +5469,8 @@ public class DTData {
                         };
            
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -5511,8 +5512,8 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                         new String[]{"Shipper", "Cust", "PartNbr", "PONbr", "Qty", "Price", "DateShipped"});
            
           try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -5550,8 +5551,8 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                          new String[]{"Order", "Cust", "PartNbr", "Description", "PONbr", "QtyOrd", "QtySHipped"});
            
           try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -5595,8 +5596,8 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                        new String[]{"TableName", "ColumnName", "ColumnType"});
            
           try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -5655,8 +5656,8 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                         }; 
              
       try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -5703,8 +5704,8 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                         }; 
              
       try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -5747,8 +5748,8 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                         }; 
              
       try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -5793,8 +5794,8 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                         }; 
              
       try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -5838,8 +5839,8 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                         }; 
              
        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -5874,8 +5875,8 @@ public static DefaultTableModel getUnPostedGLTrans() {
                       new String[]{"ID", "Acct", "AcctDesc", "CC", "Type", "Ref", getGlobalColumnTag("description"), "EffDate", "EntDate", "Amt"}); 
            
        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -5926,8 +5927,8 @@ public static DefaultTableModel getGLHistBrowseUtil( String str, int state, Stri
                         }; 
               
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -5991,8 +5992,8 @@ public static DefaultTableModel getPayRollHours(String fromdate, String todate) 
                         }; 
            
        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -6050,8 +6051,8 @@ public static DefaultTableModel getPayRollHours(String fromdate, String todate) 
                       new String[]{"ARNbr", "Cust", "InvoiceNbr", "CheckNbr", "DateApplied", "Amount"}); 
              
        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -6096,8 +6097,8 @@ public static DefaultTableModel getPayRollHours(String fromdate, String todate) 
                         }; 
              
        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -6138,8 +6139,8 @@ public static DefaultTableModel getPayRollHours(String fromdate, String todate) 
                         }; 
              
        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -6180,8 +6181,8 @@ public static DefaultTableModel getPayRollHours(String fromdate, String todate) 
                         }; 
              
        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -6221,8 +6222,8 @@ public static DefaultTableModel getPayRollHours(String fromdate, String todate) 
                         }; 
              
        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -6264,8 +6265,8 @@ public static DefaultTableModel getPayRollHours(String fromdate, String todate) 
                         }; 
              
        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -6310,8 +6311,8 @@ public static DefaultTableModel getPayRollHours(String fromdate, String todate) 
                         }; 
              
        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -6354,8 +6355,8 @@ public static DefaultTableModel getPayRollHours(String fromdate, String todate) 
                         }; 
              
        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -6402,8 +6403,8 @@ public static DefaultTableModel getPayRollHours(String fromdate, String todate) 
                         }; 
              
        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{  
@@ -6447,8 +6448,8 @@ public static DefaultTableModel getPayRollHours(String fromdate, String todate) 
                         }; 
              
       try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -6483,8 +6484,8 @@ public static DefaultTableModel getPayRollHours(String fromdate, String todate) 
                       new String[]{getGlobalColumnTag("item"), getGlobalColumnTag("description"), "Type"}); 
              
        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{     
@@ -6526,8 +6527,8 @@ public static DefaultTableModel getPayRollHours(String fromdate, String todate) 
                         }; 
              
       try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -6572,8 +6573,8 @@ public static DefaultTableModel getPayRollHours(String fromdate, String todate) 
                         }; 
              
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -6616,8 +6617,8 @@ public static DefaultTableModel getPayRollHours(String fromdate, String todate) 
                         }; 
             
       try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{     
@@ -6667,8 +6668,8 @@ public static DefaultTableModel getPayRollHours(String fromdate, String todate) 
                         }; 
               
        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -6726,8 +6727,8 @@ public static DefaultTableModel getPayRollHours(String fromdate, String todate) 
                         }; 
               
        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -6784,8 +6785,8 @@ public static DefaultTableModel getPayRollHours(String fromdate, String todate) 
                         }; 
               
        try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{

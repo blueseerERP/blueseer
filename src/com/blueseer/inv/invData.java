@@ -26,7 +26,6 @@ SOFTWARE.
 package com.blueseer.inv;
 
 import bsmf.MainFrame;
-import static bsmf.MainFrame.con;
 import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.pass;
@@ -269,7 +268,7 @@ public class invData {
 
 
         Class.forName(driver).newInstance();
-        con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = DriverManager.getConnection(url + db, user, pass);
 
         try {
             Statement st = con.createStatement();
@@ -294,7 +293,7 @@ public class invData {
     String mystring = "";
     try{
        Class.forName(driver).newInstance();
-        con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = DriverManager.getConnection(url + db, user, pass);
         try{
             Statement st = con.createStatement();
             ResultSet res = null;
@@ -325,7 +324,7 @@ public class invData {
 
     try{
         Class.forName(driver).newInstance();
-        con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = DriverManager.getConnection(url + db, user, pass);
         try{
             Statement st = con.createStatement();
             ResultSet res = null;
@@ -369,7 +368,7 @@ public class invData {
 
     try{
     Class.forName(driver).newInstance();
-    con = DriverManager.getConnection(url + db, user, pass);
+    Connection con = DriverManager.getConnection(url + db, user, pass);
     try{
         Statement st = con.createStatement();
         ResultSet res = null; 
@@ -400,7 +399,7 @@ public class invData {
     int i = 0;
     try{
     Class.forName(driver).newInstance();
-    con = DriverManager.getConnection(url + db, user, pass);
+    Connection con = DriverManager.getConnection(url + db, user, pass);
     try{
         Statement st = con.createStatement();
         ResultSet res = null;
@@ -442,7 +441,7 @@ public class invData {
        String mystring = "";
         try{
             Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -471,7 +470,7 @@ public class invData {
        String mystring = "";
         try{
             Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -502,7 +501,7 @@ public class invData {
 
         try{
             Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -550,7 +549,7 @@ public class invData {
 
             try{
                 Class.forName(driver).newInstance();
-                con = DriverManager.getConnection(url + db, user, pass);
+                Connection con = DriverManager.getConnection(url + db, user, pass);
                 try{
                     Statement st = con.createStatement();
                     ResultSet res = null;
@@ -635,7 +634,7 @@ public class invData {
                ArrayList myarray = new ArrayList();
              try{
                 Class.forName(driver).newInstance();
-                con = DriverManager.getConnection(url + db, user, pass);
+                Connection con = DriverManager.getConnection(url + db, user, pass);
                 try{
                     Statement st = con.createStatement();
                     ResultSet res = null;
@@ -706,7 +705,7 @@ public class invData {
                ArrayList myarray = new ArrayList();
              try{
                 Class.forName(driver).newInstance();
-                con = DriverManager.getConnection(url + db, user, pass);
+                Connection con = DriverManager.getConnection(url + db, user, pass);
                 try{
                     Statement st = con.createStatement();
                     ResultSet res = null;
@@ -732,7 +731,7 @@ public class invData {
       String myitem = "";
     try{
     Class.forName(driver).newInstance();
-    con = DriverManager.getConnection(url + db, user, pass);
+    Connection con = DriverManager.getConnection(url + db, user, pass);
     try{
         Statement st = con.createStatement();
         ResultSet res = null;
@@ -759,7 +758,7 @@ public class invData {
     String myitem = "";
     try{
     Class.forName(driver).newInstance();
-    con = DriverManager.getConnection(url + db, user, pass);
+    Connection con = DriverManager.getConnection(url + db, user, pass);
     try{
         Statement st = con.createStatement();
         ResultSet res = null;
@@ -786,7 +785,7 @@ public class invData {
     String myreturn = "";
     try{
     Class.forName(driver).newInstance();
-    con = DriverManager.getConnection(url + db, user, pass);
+    Connection con = DriverManager.getConnection(url + db, user, pass);
     try{
         Statement st = con.createStatement();
         ResultSet res = null;
@@ -813,7 +812,7 @@ public class invData {
     String myreturn = "";
     try{
     Class.forName(driver).newInstance();
-    con = DriverManager.getConnection(url + db, user, pass);
+    Connection con = DriverManager.getConnection(url + db, user, pass);
     try{
         Statement st = con.createStatement();
         ResultSet res = null;
@@ -841,7 +840,7 @@ public class invData {
     String myreturn = "";
     try{
     Class.forName(driver).newInstance();
-    con = DriverManager.getConnection(url + db, user, pass);
+    Connection con = DriverManager.getConnection(url + db, user, pass);
     try{
         Statement st = con.createStatement();
         ResultSet res = null;
@@ -869,7 +868,7 @@ public class invData {
        Double cost = 0.00;
      try{
         Class.forName(driver).newInstance();
-        con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = DriverManager.getConnection(url + db, user, pass);
         try{
             Statement st = con.createStatement();
             ResultSet res = null;
@@ -900,7 +899,7 @@ public class invData {
        Double qohu = 0.00;
      try{
         Class.forName(driver).newInstance();
-        con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = DriverManager.getConnection(url + db, user, pass);
         try{
             Statement st = con.createStatement();
             ResultSet res = null;
@@ -945,7 +944,7 @@ public class invData {
        Double cost = 0.00;
      try{
         Class.forName(driver).newInstance();
-        con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = DriverManager.getConnection(url + db, user, pass);
         try{
             Statement st = con.createStatement();
             ResultSet res = null;
@@ -976,7 +975,7 @@ public class invData {
        Double cost = 0.00;
      try{
         Class.forName(driver).newInstance();
-        con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = DriverManager.getConnection(url + db, user, pass);
         try{
             Statement st = con.createStatement();
             ResultSet res = null;
@@ -1008,7 +1007,7 @@ public class invData {
        Double price = 0.00;
      try{
         Class.forName(driver).newInstance();
-        con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = DriverManager.getConnection(url + db, user, pass);
         try{
             Statement st = con.createStatement();
             ResultSet res = null;
@@ -1035,7 +1034,7 @@ public class invData {
        Double price = 0.00;
      try{
         Class.forName(driver).newInstance();
-        con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = DriverManager.getConnection(url + db, user, pass);
         try{
             Statement st = con.createStatement();
             ResultSet res = null;
@@ -1062,7 +1061,7 @@ public class invData {
                Double cost = 0.00;
              try{
                 Class.forName(driver).newInstance();
-                con = DriverManager.getConnection(url + db, user, pass);
+                Connection con = DriverManager.getConnection(url + db, user, pass);
                 try{
                     Statement st = con.createStatement();
                     ResultSet res = null;
@@ -1091,7 +1090,7 @@ public class invData {
                Double cost = 0.00;
              try{
                 Class.forName(driver).newInstance();
-                con = DriverManager.getConnection(url + db, user, pass);
+                Connection con = DriverManager.getConnection(url + db, user, pass);
                 try{
                     Statement st = con.createStatement();
                     ResultSet res = null;
@@ -1130,7 +1129,7 @@ public class invData {
                ArrayList<Double> mylist = new ArrayList<Double>();
              try{
                 Class.forName(driver).newInstance();
-                con = DriverManager.getConnection(url + db, user, pass);
+                Connection con = DriverManager.getConnection(url + db, user, pass);
                 try{
                     Statement st = con.createStatement();
                     ResultSet res = null;
@@ -1171,7 +1170,7 @@ public class invData {
                String[] myarray = new String[]{"","","","","","",""};
              try{
                 Class.forName(driver).newInstance();
-                con = DriverManager.getConnection(url + db, user, pass);
+                Connection con = DriverManager.getConnection(url + db, user, pass);
                 try{
                     Statement st = con.createStatement();
                     ResultSet res = null;
@@ -1210,7 +1209,7 @@ public class invData {
     double cost = 0.00; 
     try{
     Class.forName(driver).newInstance();
-    con = DriverManager.getConnection(url + db, user, pass);
+    Connection con = DriverManager.getConnection(url + db, user, pass);
     try{
         Statement st = con.createStatement();
         ResultSet res = null;
@@ -1242,7 +1241,7 @@ public class invData {
     Double cost = 0.00;
     try{
     Class.forName(driver).newInstance();
-    con = DriverManager.getConnection(url + db, user, pass);
+    Connection con = DriverManager.getConnection(url + db, user, pass);
     try{
         Statement st = con.createStatement();
         ResultSet res = null;
@@ -1271,7 +1270,7 @@ public class invData {
     Double cost = 0.00;
     try{
     Class.forName(driver).newInstance();
-    con = DriverManager.getConnection(url + db, user, pass);
+    Connection con = DriverManager.getConnection(url + db, user, pass);
     try{
         Statement st = con.createStatement();
         ResultSet res = null;
@@ -1298,7 +1297,7 @@ public class invData {
     Double cost = 0.00;
     try{
     Class.forName(driver).newInstance();
-    con = DriverManager.getConnection(url + db, user, pass);
+    Connection con = DriverManager.getConnection(url + db, user, pass);
     try{
         Statement st = con.createStatement();
         ResultSet res = null;
@@ -1327,7 +1326,7 @@ public class invData {
     Double cost = 0.00;
     try{
     Class.forName(driver).newInstance();
-    con = DriverManager.getConnection(url + db, user, pass);
+    Connection con = DriverManager.getConnection(url + db, user, pass);
     try{
         Statement st = con.createStatement();
         ResultSet res = null;
@@ -1354,7 +1353,7 @@ public class invData {
     Double cost = 0.00;
     try{
     Class.forName(driver).newInstance();
-    con = DriverManager.getConnection(url + db, user, pass);
+    Connection con = DriverManager.getConnection(url + db, user, pass);
     try{
         Statement st = con.createStatement();
         ResultSet res = null;
@@ -1383,7 +1382,7 @@ public class invData {
            Double cost = 0.00;
          try{
             Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -1410,7 +1409,7 @@ public class invData {
            String myitem = "";
          try{
             Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -1437,7 +1436,7 @@ public class invData {
            String myitem = "";
          try{
             Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -1464,7 +1463,7 @@ public class invData {
            String[] x = new String[]{"","","","","","","","","",""};
          try{
             Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -1506,7 +1505,7 @@ public class invData {
        ArrayList myarray = new ArrayList();
         try{
             Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -1533,7 +1532,7 @@ public class invData {
        ArrayList myarray = new ArrayList();
         try{
             Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -1560,7 +1559,7 @@ public class invData {
        ArrayList myarray = new ArrayList();
         try{
             Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -1587,7 +1586,7 @@ public class invData {
        ArrayList myarray = new ArrayList();
         try{
             Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -1615,7 +1614,7 @@ public class invData {
        ArrayList myarray = new ArrayList();
         try{
             Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -1642,7 +1641,7 @@ public class invData {
        ArrayList myarray = new ArrayList();
         try{
             Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -1671,7 +1670,7 @@ public class invData {
        ArrayList myarray = new ArrayList();
         try{
            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -1699,7 +1698,7 @@ public class invData {
        ArrayList myarray = new ArrayList();
         try{
            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -1730,7 +1729,7 @@ public class invData {
        ArrayList myarray = new ArrayList();
         try{
            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -1759,7 +1758,7 @@ public class invData {
        ArrayList myarray = new ArrayList();
         try{
            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -1790,7 +1789,7 @@ public class invData {
        ArrayList myarray = new ArrayList();
         try{
            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -1822,7 +1821,7 @@ public class invData {
        ArrayList myarray = new ArrayList();
         try{
            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -1855,7 +1854,7 @@ public class invData {
               DecimalFormat df = new DecimalFormat("#.00000", new DecimalFormatSymbols(Locale.US)); 
               try{
             Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -1889,7 +1888,7 @@ public class invData {
           DecimalFormat df = new DecimalFormat("#.00000", new DecimalFormatSymbols(Locale.US)); 
           try{
         Class.forName(driver).newInstance();
-        con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = DriverManager.getConnection(url + db, user, pass);
         try{
             Statement st = con.createStatement();
             ResultSet res = null;
