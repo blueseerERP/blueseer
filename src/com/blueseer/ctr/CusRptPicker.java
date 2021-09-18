@@ -427,7 +427,7 @@ public class CusRptPicker extends javax.swing.JPanel {
             Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
               while (en.hasMoreElements()) {
                  TableColumn tc = en.nextElement();
-                 if (tc.getModelIndex() == 0) {
+                 if (tc.getClass().getSimpleName().equals("ImageIcon")) {
                      continue;
                  }
                  tc.setCellRenderer(new CusRptPicker.renderer1());
@@ -520,7 +520,7 @@ public class CusRptPicker extends javax.swing.JPanel {
             Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
               while (en.hasMoreElements()) {
                  TableColumn tc = en.nextElement();
-                 if (tc.getModelIndex() == 0) {
+                 if (tc.getClass().getSimpleName().equals("ImageIcon")) {
                      continue;
                  }
                  tc.setCellRenderer(new CusRptPicker.renderer1());
@@ -620,7 +620,7 @@ public class CusRptPicker extends javax.swing.JPanel {
             Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
               while (en.hasMoreElements()) {
                  TableColumn tc = en.nextElement();
-                 if (tc.getModelIndex() == 0) {
+                 if (tc.getClass().getSimpleName().equals("ImageIcon")) {
                      continue;
                  }
                  tc.setCellRenderer(new CusRptPicker.renderer1());
@@ -719,7 +719,7 @@ public class CusRptPicker extends javax.swing.JPanel {
             Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
               while (en.hasMoreElements()) {
                  TableColumn tc = en.nextElement();
-                 if (tc.getModelIndex() == 0) {
+                 if (tc.getClass().getSimpleName().equals("ImageIcon")) {
                      continue;
                  }
                  tc.setCellRenderer(new CusRptPicker.renderer1());
@@ -829,7 +829,7 @@ public class CusRptPicker extends javax.swing.JPanel {
             Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
               while (en.hasMoreElements()) {
                  TableColumn tc = en.nextElement();
-                 if (tc.getModelIndex() == 0) {
+                 if (tc.getClass().getSimpleName().equals("ImageIcon")) {
                      continue;
                  }
                  tc.setCellRenderer(new CusRptPicker.renderer1());
@@ -928,7 +928,7 @@ public class CusRptPicker extends javax.swing.JPanel {
             Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
               while (en.hasMoreElements()) {
                  TableColumn tc = en.nextElement();
-                 if (tc.getModelIndex() == 0) {
+                 if (tc.getClass().getSimpleName().equals("ImageIcon")) {
                      continue;
                  }
                  tc.setCellRenderer(new CusRptPicker.renderer1());
