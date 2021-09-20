@@ -2381,6 +2381,7 @@ CREATE TABLE "ov_ctrl" (
 CREATE TABLE "counter" (
   "counter_name" varchar(30) NOT NULL COLLATE NOCASE,
   "counter_desc" varchar(100) NOT NULL COLLATE NOCASE,
+  "counter_prefix" varchar(4) NOT NULL COLLATE NOCASE,
   "counter_from" int(10) DEFAULT NULL COLLATE NOCASE, 
   "counter_to" int(10) DEFAULT NULL COLLATE NOCASE, 
   "counter_id" int(10) DEFAULT NULL COLLATE NOCASE 

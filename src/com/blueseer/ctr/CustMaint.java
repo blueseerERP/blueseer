@@ -29,7 +29,7 @@ import bsmf.MainFrame;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import com.blueseer.utl.BlueSeerUtils;
-import com.blueseer.ord.OrderMaintPanel;
+import com.blueseer.ord.OrderMaint;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;

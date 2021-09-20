@@ -123,7 +123,7 @@ com.blueseer.lbl.LabelPartPanel,,1
 com.blueseer.ord.OrderControl,,1
 com.blueseer.pur.POControl,,1
 com.blueseer.fgl.PayControl,,1
-com.blueseer.ord.OrderMaintPanel,,1
+com.blueseer.ord.OrderMaint,,1
 com.blueseer.ord.ServiceOrderMaint,,1
 com.blueseer.ord.ServiceOrderBrowse,,1
 com.blueseer.fgl.PayRollBrowse,,1

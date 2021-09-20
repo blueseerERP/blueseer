@@ -43,6 +43,7 @@ import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.inv.calcCost;
 import com.blueseer.inv.invData;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -305,41 +306,7 @@ public class OVData {
         return myarray;
         
     }
-       
-    public static int getNextPO() {
-       int mypo = 0;
-        try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try{
-               res = st.executeQuery("select max(counter_id) as 'num' from counter where counter_name = 'po';");
-                while (res.next()) {
-
-                    int nextnumber = Integer.valueOf(res.getString("num"));
-                    mypo = nextnumber;
-                    nextnumber++;
-                    OVData.updatecounter("po", nextnumber);
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return mypo;
-        
-    }
-       
+     
     public static int getNextNbr(String countername) {
        int nbr = 0;
         try{
@@ -3530,7 +3497,7 @@ return myitem;
                         " insert into mrp_mstr (mrp_part, mrp_qty, mrp_date, mrp_ref, mrp_type, mrp_line, mrp_site ) "
                         + " select sod_part, (sod_ord_qty - sod_shipped_qty), sod_due_date, sod_nbr, 'demand', sod_line, sod_site from sod_det "
                         + " inner join  item_mstr on sod_part = it_item and it_level = '0' where it_mrp = '1' " 
-                        + " and sod_status <> 'closed' "        
+                        + " AND sod_status <> " + "'" + getGlobalProgTag("closed") + "'"
                         + " and sod_site = " + "'" + site + "'" + ";");
             } catch (SQLException s) {
                 MainFrame.bslog(s);
@@ -11564,9 +11531,9 @@ return myitem;
                     count++;
                     
                     String status = mytable.getValueAt(i,12).toString();
-                     if (status.equals("open")) { status = "0"; }
-                     if (status.equals("closed")) { status = "1"; }
-                     if (status.equals("voided")) { status = "-1"; }
+                     if (status.equals(getGlobalProgTag("open"))) { status = "0"; }
+                     if (status.equals(getGlobalProgTag("closed"))) { status = "1"; }
+                     if (status.equals(getGlobalProgTag("void"))) { status = "-1"; }
                      
                 st.executeUpdate(" update plan_mstr " +
                        " set plan_cell = "  + "'" + mytable.getValueAt(i,5).toString() + "'" + ","
@@ -14754,7 +14721,7 @@ return myitem;
                         " AND glc_end >= " +
                         "'" + EffDate.toString() + "'" + ";");
                while (res.next()) {
-                   if (res.getString("glc_status").equals("closed")) {
+                   if (res.getString("glc_status").equals(getGlobalProgTag("closed"))) {
                        isclosed = true;
                    }
                }
@@ -15326,7 +15293,7 @@ return myitem;
                 Statement st = con.createStatement();
                 ResultSet res = null;
                
-                res = st.executeQuery("select so_nbr from so_mstr where so_status = 'open' or so_status = 'commit' or so_status = 'backorder' ;");
+                res = st.executeQuery("select so_nbr from so_mstr where so_status = " + "'" + getGlobalProgTag("open") + "'" + " or so_status = " + "'" + getGlobalProgTag("commit") + "'" + " or so_status = " + "'" + getGlobalProgTag("backorder") + "'" + " ;");
                        while (res.next()) {
                           mylist.add(res.getString(("so_nbr")));
                        }
@@ -18066,7 +18033,7 @@ return myitem;
                   for (int j = 0; j < line.size(); j++) {
                       total = Integer.valueOf(qty.get(j).toString()) + Integer.valueOf(shippedqty.get(j).toString());
                       if (total >= Integer.valueOf(ordqty.get(j).toString())) {
-                          status = "closed";
+                          status = getGlobalProgTag("closed");
                       } else {
                           status = linestatus.get(j).toString();
                       }
@@ -18084,7 +18051,9 @@ return myitem;
                   st.executeUpdate(
                          " update sod_det inner join ship_det on shd_part = sod_part and shd_soline = sod_line and shd_so = sod_nbr " +
                          " inner join so_mstr on so_nbr = sod_nbr and so_type = 'DISCRETE' " +
-                          " set sod_shipped_qty = sod_shipped_qty + shd_qty, sod_status = (case when sod_shipped_qty + shd_qty >= sod_ord_qty then 'closed' else sod_status end) " +
+                          " set sod_shipped_qty = sod_shipped_qty + shd_qty, sod_status = " +
+                          " (case when sod_shipped_qty + shd_qty >= sod_ord_qty then " + "'" + getGlobalProgTag("closed") + "'" +
+                          " else sod_status end) " +
                      " where shd_id = " + "'" + shipper + "'" + ";" );
               }
                     // now let's select the unique orders involved in that shipper
@@ -18105,17 +18074,17 @@ return myitem;
                            // logic is that a shipper has been committed with at least some portion of this order
                            // therefore if any line items on that order are still open...then the order was shipped partial...
                            //  therefore flag it as backorder
-                           if (res.getString("sod_status").equals("open")) {
+                           if (res.getString("sod_status").equals(getGlobalProgTag("open"))) {
                                    partial = true;
                                 }
-                           if (! res.getString("sod_status").equals("closed")) {
+                           if (! res.getString("sod_status").equals(getGlobalProgTag("closed"))) {
                                    complete = false;
                                 }
                         }
 
                        
                        if (complete) {
-                        st.executeUpdate( "update so_mstr set so_status  = 'closed' where so_nbr = " + "'" + uniqueorder + "'" + ";"); 
+                        st.executeUpdate( "update so_mstr set so_status  = " + "'" + getGlobalProgTag("closed") + "'" + " where so_nbr = " + "'" + uniqueorder + "'" + ";"); 
                        }
                        if (partial && ! complete) {
                        st.executeUpdate( "update so_mstr set so_status = 'backorder' where so_nbr = " + "'" + uniqueorder + "'" + ";");
@@ -18157,7 +18126,7 @@ return myitem;
                        ordernbr = res.getString("svd_nbr");
                     }
                    res.close();
-                   st.executeUpdate( "update sv_mstr set sv_status = 'closed' where sv_nbr = " + "'" + ordernbr + "'" + ";"); 
+                   st.executeUpdate( "update sv_mstr set sv_status = " + "'" + getGlobalProgTag("closed") + "'" + " where sv_nbr = " + "'" + ordernbr + "'" + ";"); 
             }
             catch (SQLException s){
                  MainFrame.bslog(s);
@@ -18188,7 +18157,8 @@ return myitem;
                    st.executeUpdate(
                          " update sod_det inner join ship_det on shd_part = sod_part and shd_soline = sod_line and shd_so = sod_nbr " +
                          " inner join so_mstr on so_nbr = sod_nbr and so_type = 'DISCRETE' " +
-                          " set sod_shipped_qty = sod_shipped_qty - shd_qty, sod_status = 'open' ) " +
+                          " set sod_shipped_qty = sod_shipped_qty - shd_qty, " +
+                          " sod_status = " + "'" + getGlobalProgTag("open") + "'" + " ) " +
                      " where shd_id = " + "'" + shipper + "'" + ";" );
                    
                     // now let's select the unique orders involved in that shipper
@@ -18209,20 +18179,20 @@ return myitem;
                            // logic is that a shipper has been committed with at least some portion of this order
                            // therefore if any line items on that order are still open...then the order was shipped partial...
                            //  therefore flag it as backorder
-                           if (res.getString("sod_status").equals("open")) {
+                           if (res.getString("sod_status").equals(getGlobalProgTag("open"))) {
                                    partial = true;
                                 }
-                           if (! res.getString("sod_status").equals("closed")) {
+                           if (! res.getString("sod_status").equals(getGlobalProgTag("closed"))) {
                                    complete = false;
                                 }
                         }
 
                        
                        if (complete) {
-                        st.executeUpdate( "update so_mstr set so_status = 'closed' where so_nbr = " + "'" + uniqueorder + "'" + ";"); 
+                        st.executeUpdate( "update so_mstr set so_status = " + "'" + getGlobalProgTag("closed") + "'" + " where so_nbr = " + "'" + uniqueorder + "'" + ";"); 
                        }
                        if (partial && ! complete) {
-                       st.executeUpdate( "update so_mstr set so_status = 'backorder' where so_nbr = " + "'" + uniqueorder + "'" + ";");
+                       st.executeUpdate( "update so_mstr set so_status = " + "'" + getGlobalProgTag("backorder") + "'" + " where so_nbr = " + "'" + uniqueorder + "'" + ";");
                        }
                        
                    }
@@ -18279,7 +18249,7 @@ return myitem;
                   for (int j = 0; j < line.size(); j++) {
                       total = Integer.valueOf(qty.get(j).toString()) + Integer.valueOf(recvdqty.get(j).toString());
                       if (total >= Integer.valueOf(ordqty.get(j).toString())) {
-                          status = "closed";
+                          status = getGlobalProgTag("closed");
                       } else {
                           status = linestatus.get(j).toString();
                       }
@@ -18290,7 +18260,7 @@ return myitem;
                     st.executeUpdate(
                          " update pod_mstr inner join recv_det on rvd_part = pod_part and rvd_poline = pod_line and rvd_po = pod_nbr " +
                          " inner join po_mstr on po_nbr = pod_nbr " +
-                          " set pod_rcvd_qty = pod_rcvd_qty + rvd_qty, pod_status = (case when pod_rcvd_qty + rvd_qty >= pod_ord_qty then 'closed' else pod_status end) " +
+                          " set pod_rcvd_qty = pod_rcvd_qty + rvd_qty, pod_status = (case when pod_rcvd_qty + rvd_qty >= pod_ord_qty then " + "'" + getGlobalProgTag("closed") + "'" + " else pod_status end) " +
                      " where rvd_id = " + "'" + receiver + "'" + ";" );
                 }
                    
@@ -18314,17 +18284,17 @@ return myitem;
                            // logic is that a shipper has been committed with at least some portion of this order
                            // therefore if any line items on that order are still open...then the order was shipped partial...
                            //  therefore flag it as backorder
-                           if (res.getString("pod_status").equals("open")) {
+                           if (res.getString("pod_status").equals(getGlobalProgTag("open"))) {
                                    partial = true;
                                 }
-                           if (! res.getString("pod_status").equals("closed")) {
+                           if (! res.getString("pod_status").equals(getGlobalProgTag("closed"))) {
                                    complete = false;
                                 }
                         }
                         res.close();
                        
                        if (complete) {
-                        st.executeUpdate( "update po_mstr set po_status = 'closed' where po_nbr = " + "'" + uniqueorder + "'" + ";"); 
+                        st.executeUpdate( "update po_mstr set po_status = " + "'" + getGlobalProgTag("closed") + "'" + " where po_nbr = " + "'" + uniqueorder + "'" + ";"); 
                        }
                        if (partial && ! complete) {
                        st.executeUpdate( "update po_mstr set po_status = 'partial' where po_nbr = " + "'" + uniqueorder + "'" + ";");
@@ -20425,7 +20395,7 @@ MainFrame.bslog(e);
                         + "'" + DueDate + "'" + ","
                         + "'" + dfdate.format(now) + "'" + ","
                         + "'" + "api" + "'" + ","
-                        + "'" + "open" + "'" + ","
+                        + "'" + getGlobalProgTag("open") + "'" + ","
                         + "'" + Remarks + "'" + ","
                         + "'" + custinfo[4] + "'" + ","
                         + "'" + custinfo[0] + "'" + ","
@@ -20452,7 +20422,7 @@ MainFrame.bslog(e);
                             + "'" + s[7] + "'" + ","
                             + "'" + DueDate + "'" + ","
                             + '0' + "," + "'" + s[4] + "'" +  "," 
-                            + "'" + "open" + "'" + ","
+                            + "'" + getGlobalProgTag("open") + "'" + ","
                             + "'" + s[1] + "'"
                             + ")"
                             + ";");
@@ -20502,7 +20472,7 @@ MainFrame.bslog(e);
                 i = 0;
                 res = st.executeQuery("select sod_part, sod_po from sod_det where sod_nbr = " + "'" + order + "'" 
                          + " AND sod_line = " + "'" + line + "'" 
-                         + " AND sod_status = 'OPEN' "                           
+                         + " AND sod_status = " + "'" + getGlobalProgTag("open") + "'"                           
                          + " ;");
                    while (res.next()) {
                        i++;
@@ -20644,9 +20614,9 @@ MainFrame.bslog(e);
           boolean myreturn = false;  
           try {
 
-               if (status.equals("open")) { status = "0"; }
-               if (status.equals("closed")) { status = "1"; }
-               if (status.equals("voided")) { status = "-1"; }
+               if (status.equals(getGlobalProgTag("open"))) { status = "0"; }
+               if (status.equals(getGlobalProgTag("close"))) { status = "1"; }
+               if (status.equals(getGlobalProgTag("void"))) { status = "-1"; }
               
              
             Connection con = DriverManager.getConnection(url + db, user, pass);
@@ -21139,13 +21109,13 @@ MainFrame.bslog(e);
           
           String x = "unknown";
           if (status == 0) {
-              x = "open";
+              x = getGlobalProgTag("open");
           }
           if (status == -1) {
-              x = "void";
+              x = getGlobalProgTag("void");
           }
           if (status == 1) {
-              x = "complete";
+              x = getGlobalProgTag("complete");
           }
           return x;
       }
@@ -22040,10 +22010,10 @@ MainFrame.bslog(e);
                  int k = 0;
                                  
                   res = st.executeQuery("select sod_site, sod_nbr, sod_due_date, sod_part, sod_ord_qty, sod_shipped_qty, sod_line from so_mstr " +
-                          " inner join sod_det on sod_nbr = so_nbr and sod_status = 'open' and (sod_ord_qty - sod_shipped_qty) > 0 " +
+                          " inner join sod_det on sod_nbr = so_nbr and sod_status = " + "'" + getGlobalProgTag("open") + "'" + " and (sod_ord_qty - sod_shipped_qty) > 0 " +
                           " inner join item_mstr on it_item = sod_part " +
                           " where so_site = " + "'" + site + "'" +
-                          " and so_status = 'open' " +
+                          " and so_status = " + "'" + getGlobalProgTag("open") + "'" +
                           " and it_plan = '1' " + 
                                          ";" );
                     while (res.next()) {

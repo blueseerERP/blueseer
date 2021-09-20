@@ -26,12 +26,23 @@ SOFTWARE.
 package com.blueseer.ord;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.tags;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.IBlueSeerc;
+import java.awt.Component;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.SwingWorker;
 
 /**
@@ -45,6 +56,7 @@ public class OrderControl extends javax.swing.JPanel implements IBlueSeerc {
    
     public OrderControl() {
         initComponents();
+        setLanguageTags(this);
     }
 
     // global variable declarations
@@ -110,6 +122,50 @@ public class OrderControl extends javax.swing.JPanel implements IBlueSeerc {
        isLoad = true;
         
        isLoad = false;
+    }
+    
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
     }
     
     public String[] setAction(int i) {
@@ -214,7 +270,7 @@ public class OrderControl extends javax.swing.JPanel implements IBlueSeerc {
                             "'" + srvmitemdefault + "'" +  "," +   
                             "'" + exceedQOHU + "'" +           
                                     ")" + ";");                   
-                          bsmf.MainFrame.show("Inserting Defaults");
+                         
                     m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
                 } else {
                      st.executeUpdate("update order_ctrl set " 
@@ -232,7 +288,7 @@ public class OrderControl extends javax.swing.JPanel implements IBlueSeerc {
                     
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError};  
+                m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};  
             } finally {
                if (res != null) res.close();
                if (st != null) st.close();
@@ -240,7 +296,7 @@ public class OrderControl extends javax.swing.JPanel implements IBlueSeerc {
             }
         } catch (Exception e) {
             MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordConnError};
+            m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1020, Thread.currentThread().getStackTrace()[1].getMethodName())};
         }
      
      return m;
@@ -276,7 +332,7 @@ public class OrderControl extends javax.swing.JPanel implements IBlueSeerc {
                 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
+                m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};  
             } finally {
                if (res != null) res.close();
                if (st != null) st.close();
@@ -284,7 +340,7 @@ public class OrderControl extends javax.swing.JPanel implements IBlueSeerc {
             }
         } catch (Exception e) {
             MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};  
+            m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1020, Thread.currentThread().getStackTrace()[1].getMethodName())};  
         }
       return m;
     }
@@ -316,10 +372,13 @@ public class OrderControl extends javax.swing.JPanel implements IBlueSeerc {
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Order Control"));
+        jPanel1.setName("panelmain"); // NOI18N
 
         cbautosource.setText("Auto Source Order?");
+        cbautosource.setName("cbautosource"); // NOI18N
 
         btupdate.setText("Update");
+        btupdate.setName("btupdate"); // NOI18N
         btupdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btupdateActionPerformed(evt);
@@ -327,14 +386,19 @@ public class OrderControl extends javax.swing.JPanel implements IBlueSeerc {
         });
 
         cbautoinvoice.setText("Auto Invoice Order?");
+        cbautoinvoice.setName("cbautoinvoice"); // NOI18N
 
         cbcustitem.setText("Cust Item Xref Only?");
+        cbcustitem.setName("cbxrefonly"); // NOI18N
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Service Order Defaults"));
+        jPanel2.setName("panelservice"); // NOI18N
 
         cbsrvmitemdefault.setText("Service Default Item?");
+        cbsrvmitemdefault.setName("cbservice"); // NOI18N
 
         cbsrvmtype.setText("Quote Type?");
+        cbsrvmtype.setName("cbquotetype"); // NOI18N
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -358,8 +422,10 @@ public class OrderControl extends javax.swing.JPanel implements IBlueSeerc {
         );
 
         cballocate.setText("Auto Allocate?");
+        cballocate.setName("cbautoallocate"); // NOI18N
 
         cbexceedQOHU.setText("Exceed QOHU?");
+        cbexceedQOHU.setName("cbexceed"); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);

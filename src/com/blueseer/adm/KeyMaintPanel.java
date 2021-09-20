@@ -327,9 +327,10 @@ public class KeyMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                     }
                     if (i == 0) {
                         st.executeUpdate("insert into counter "
-                            + "(counter_name, counter_desc, counter_from, counter_to, counter_id ) "
+                            + "(counter_name, counter_desc, counter_prefix, counter_from, counter_to, counter_id ) "
                             + " values ( " + "'" + tbkey.getText().toString() + "'" + ","
                             + "'" + tbdesc.getText().toString() + "'" + ","
+                            + "'" + tbprefix.getText().toString() + "'" + ","        
                             + "'" + tbrangefrom.getText().toString() + "'" + ","
                             + "'" + tbrangeto.getText().toString() + "'" + ","
                             + "'" + tbassignedID.getText().toString() + "'"      
@@ -370,7 +371,8 @@ public class KeyMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                 
                 if (proceed) {
                     st.executeUpdate("update counter set counter_desc = " + "'" + tbdesc.getText() + "'" + ","
-                            + "counter_from = " + "'" + tbrangefrom.getText().toString() + "'" + ","
+                            + "counter_prefix = " + "'" + tbprefix.getText().toString() + "'" + ","
+                            + "counter_from = " + "'" + tbrangefrom.getText().toString() + "'" + ","        
                             + "counter_to = " + "'" + tbrangeto.getText().toString() + "'" + ","
                             + "counter_id = " + "'" + tbassignedID.getText().toString() + "'"    
                             + " where counter_name = " + "'" + tbkey.getText() + "'"                             
@@ -439,6 +441,7 @@ public class KeyMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                     i++;
                     tbkey.setText(res.getString("counter_name"));
                     tbdesc.setText(res.getString("counter_desc"));
+                    tbprefix.setText(res.getString("counter_prefix")); 
                     tbrangefrom.setText(res.getString("counter_from"));
                     tbrangeto.setText(res.getString("counter_to"));
                     tbassignedID.setText(res.getString("counter_id"));
@@ -531,6 +534,8 @@ public class KeyMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         btnew = new javax.swing.JButton();
         btclear = new javax.swing.JButton();
         btlookup = new javax.swing.JButton();
+        tbprefix = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
 
         jTextField1.setText("jTextField1");
 
@@ -596,6 +601,8 @@ public class KeyMaintPanel extends javax.swing.JPanel implements IBlueSeer {
             }
         });
 
+        jLabel4.setText("Prefix:");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -607,7 +614,8 @@ public class KeyMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                     .addComponent(jLabel2)
                     .addComponent(jLabel3)
                     .addComponent(jLabel5)
-                    .addComponent(jLabel6))
+                    .addComponent(jLabel6)
+                    .addComponent(jLabel4))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -628,7 +636,8 @@ public class KeyMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                         .addGap(13, 13, 13)
                         .addComponent(btnew)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btclear)))
+                        .addComponent(btclear))
+                    .addComponent(tbprefix, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -647,7 +656,11 @@ public class KeyMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
-                .addGap(27, 27, 27)
+                .addGap(4, 4, 4)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbprefix, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbrangefrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3))
@@ -664,7 +677,7 @@ public class KeyMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                     .addComponent(btadd)
                     .addComponent(btdelete)
                     .addComponent(btupdate))
-                .addContainerGap(60, Short.MAX_VALUE))
+                .addContainerGap(57, Short.MAX_VALUE))
         );
 
         add(jPanel1);
@@ -723,6 +736,7 @@ public class KeyMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
@@ -730,6 +744,7 @@ public class KeyMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     private javax.swing.JTextField tbassignedID;
     private javax.swing.JTextField tbdesc;
     private javax.swing.JTextField tbkey;
+    private javax.swing.JTextField tbprefix;
     private javax.swing.JTextField tbrangefrom;
     private javax.swing.JTextField tbrangeto;
     // End of variables declaration//GEN-END:variables

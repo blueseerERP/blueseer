@@ -782,15 +782,15 @@ public class BlueSeerUtils {
 	}
 }
   
-     public static String getMessageTag(int key) {
+    
+    
+     public static String getGlobalProgTag(String key) {
          String tag = "";
-          if (tags.containsKey("global.message." + key)) {
-            tag = tags.getString("global.message." + key);
+          if (tags.containsKey("global.prog." + key)) {
+            tag = tags.getString("global.prog." + key);
           }
          return tag;
      }
-    
-    
      
      public static String getGlobalLabelTag(String key) {
          String tag = "";
@@ -815,8 +815,7 @@ public class BlueSeerUtils {
           }
          return tag;
      }
-    
-     
+         
      public static String getClassLabelTag(String key, String thisclass) {
          String tag = "";
           if (tags.containsKey(thisclass + ".label." + key)) {
@@ -833,7 +832,14 @@ public class BlueSeerUtils {
          return tag;
      }
     
-     
+     public static String getMessageTag(int key) {
+         String tag = "";
+          if (tags.containsKey("global.message." + key)) {
+            tag = tags.getString("global.message." + key);
+          }
+         return tag;
+     }
+    
     
      public static void startTask(String[] message) {
         bsmf.MainFrame.MainProgressBar.setVisible(true);

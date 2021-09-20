@@ -29,8 +29,12 @@ import bsmf.MainFrame;
 import com.blueseer.utl.BlueSeerUtils;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.reinitpanels;
+import static bsmf.MainFrame.tags;
 import com.blueseer.inv.invData;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
 import static com.blueseer.utl.BlueSeerUtils.luTable;
 import static com.blueseer.utl.BlueSeerUtils.lual;
@@ -73,6 +77,8 @@ import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -93,7 +99,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author vaughnte
  */
-public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
+public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
 
     // global variable declarations
                 boolean isLoad = false;
@@ -113,19 +119,40 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                
     
     // global datatablemodel declarations
-    OrderMaintPanel.MyTableModel myorddetmodel = new OrderMaintPanel.MyTableModel(new Object[][]{},
+    OrderMaint.MyTableModel myorddetmodel = new OrderMaint.MyTableModel(new Object[][]{},
             new String[]{
-               "Line", "Part", "CustPart", "SO", "PO", "Qty", "UOM", "ListPrice", "Discount", "NetPrice", "QtyShip", "Status", "WH", "LOC", "Desc", "Tax"
+               getGlobalColumnTag("line"), 
+                getGlobalColumnTag("item"), 
+                getGlobalColumnTag("custitem"), 
+                getGlobalColumnTag("order"), 
+                getGlobalColumnTag("po"), 
+                getGlobalColumnTag("qty"), 
+                getGlobalColumnTag("uom"), 
+                getGlobalColumnTag("listprice"), 
+                getGlobalColumnTag("discount"), 
+                getGlobalColumnTag("netprice"), 
+                getGlobalColumnTag("shipqty"), 
+                getGlobalColumnTag("status"), 
+                getGlobalColumnTag("warehouse"),
+                getGlobalColumnTag("location"), 
+                getGlobalColumnTag("description"), 
+                getGlobalColumnTag("tax")
             }
     );
     
     javax.swing.table.DefaultTableModel modelsched = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
-                "Date", "Ref", "Qty", "Type"
+                getGlobalColumnTag("date"), 
+                getGlobalColumnTag("reference"), 
+                getGlobalColumnTag("qty"), 
+                getGlobalColumnTag("type")
             });
     javax.swing.table.DefaultTableModel sacmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
-                "Type", "Desc", "Value", "Amt"
+                getGlobalColumnTag("type"), 
+                getGlobalColumnTag("description"), 
+                getGlobalColumnTag("value"), 
+                getGlobalColumnTag("amount")
             });
     
     javax.swing.event.TableModelListener ml = new javax.swing.event.TableModelListener() {
@@ -166,8 +193,9 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
    }    
     
      
-    public OrderMaintPanel() {
+    public OrderMaint() {
         initComponents();
+        setLanguageTags(this);
     }
    
      // interface functions implemented  
@@ -287,7 +315,51 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                 }
             }
     } 
-        
+      
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+    
     public void setComponentDefaultValues() {
         
         isLoad = true;
@@ -462,7 +534,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         for (int i = 0; i < mylist.size(); i++) {
             ddstatus.addItem(mylist.get(i));
         }
-        ddstatus.setSelectedItem("open");
+        ddstatus.setSelectedItem(getGlobalProgTag("open"));
         
         
         
@@ -508,8 +580,8 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                     
                     refreshDisplayTotals();
                     
-                    if (ddstatus.getSelectedItem().toString().compareTo("closed") == 0) {
-                             lblstatus.setText("Order has been invoiced and is now closed.");
+                    if (ddstatus.getSelectedItem().toString().compareTo(getGlobalProgTag("closed")) == 0) {
+                             lblstatus.setText(getMessageTag(1097));
                              lblstatus.setForeground(Color.blue);
                              setPanelComponentState(this, false);
                              btnew.setEnabled(true);
@@ -520,7 +592,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                              btprintorder.setEnabled(true);
                     } else {
                              
-                             lblstatus.setText("Order has not been shipped.");
+                             lblstatus.setText(getMessageTag(1098));
                              lblstatus.setForeground(Color.red);
                               setPanelComponentState(this, true);
                               btadd.setEnabled(false);
@@ -546,14 +618,14 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                 
                 if (tbkey.getText().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a code");
+                    bsmf.MainFrame.show(getMessageTag(1024));
                     tbkey.requestFocus();
                     return b;
                 }
                 
                 if (orddet.getRowCount() == 0) {
                     b = false;
-                    bsmf.MainFrame.show("No Line Items");
+                    bsmf.MainFrame.show(getMessageTag(1089));
                     ddship.requestFocus();
                     return b;
                 }
@@ -561,20 +633,20 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         
                 if (ddsite.getSelectedItem() == null || ddsite.getSelectedItem().toString().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("must choose a site");
+                    bsmf.MainFrame.show(getMessageTag(1024));
                     ddsite.requestFocus();
                     return b;
                 }
                 
                 if ( ddcust.getSelectedItem() == null || ddcust.getSelectedItem().toString().isEmpty() ) {
                     b = false;
-                    bsmf.MainFrame.show("Must choose a customer code");
+                    bsmf.MainFrame.show(getMessageTag(1024));
                     ddcust.requestFocus();
                     return b;
                 }
                 if ( ddship.getSelectedItem() == null || ddship.getSelectedItem().toString().isEmpty() || ddship.getSelectedItem().toString().equals("<new>")) {
                     b = false;
-                    bsmf.MainFrame.show("Must choose a valid shipto code");
+                    bsmf.MainFrame.show(getMessageTag(1024));
                     ddship.requestFocus();
                     return b;
                 }
@@ -582,7 +654,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                
                 if (ddcurr.getSelectedItem() == null || ddcurr.getSelectedItem().toString().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("must choose a currency");
+                    bsmf.MainFrame.show(getMessageTag(1024));
                     return b;
                 }
                                 
@@ -596,7 +668,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                         terms.isEmpty() || aracct.isEmpty() || arcc.isEmpty() || curr.isEmpty()
                          ) {
                         b = false;
-                        bsmf.MainFrame.show("Terms|ARacct|ARcc|Currency is not defined for this customer");
+                        bsmf.MainFrame.show(getMessageTag(1090));
                         return b;
                     }   
                 
@@ -606,7 +678,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                  // lets check for foreign currency with no exchange rate
             if (! curr.toUpperCase().equals(basecurr.toUpperCase())) {
             if (OVData.getExchangeRate(basecurr, curr).isEmpty()) {
-                bsmf.MainFrame.show("Foreign currency has no exchange rate " + curr + "/" + basecurr);
+                bsmf.MainFrame.show(getMessageTag(1091, curr + "/" + basecurr));
                 b = false;
             }
             }
@@ -703,7 +775,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                                     res = st.executeQuery("SELECT  sum(case when sod_all_qty = '' then 0 else (sod_all_qty - sod_shipped_qty) end) as allqty  " +
                                     " FROM  sod_det inner join so_mstr on so_nbr = sod_nbr  " +
                                     " where sod_part = " + "'" + orddet.getValueAt(j, 1).toString() + "'" + 
-                                    " AND so_status <> 'closed' " + 
+                                    " AND so_status <> " + "'" + getGlobalProgTag("closed") + "'" +
                                     " AND so_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +          
                                     " group by sod_part ;");
 
@@ -936,7 +1008,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                                     res = st.executeQuery("SELECT  sum(case when sod_all_qty = '' then 0 else (sod_all_qty - sod_shipped_qty) end) as allqty  " +
                                     " FROM  sod_det inner join so_mstr on so_nbr = sod_nbr  " +
                                     " where sod_part = " + "'" + orddet.getValueAt(j, 1).toString() + "'" + 
-                                    " AND so_status <> 'closed' " + 
+                                    " AND so_status <> " + "'" + getGlobalProgTag("closed") + "'" + 
                                     " AND so_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +   
                                     " AND so_nbr <> " + "'" + tbkey.getText() + "'" +
                                     " group by sod_part ;");
@@ -1135,14 +1207,14 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                     
                     if (res.getString("so_isallocated").equals("c")) {
                         cbisallocated.setSelected(true);
-                        cbisallocated.setText("Allocation?");
+                        cbisallocated.setText(tags.getString(this.getClass().getSimpleName() +".label.cballocation"));
                     } 
                     else if (res.getString("so_isallocated").equals("p")) {
                         cbisallocated.setSelected(true);
-                        cbisallocated.setText("Allocation? (partial)");
+                        cbisallocated.setText(tags.getString(this.getClass().getSimpleName() +".label.cballocationpartial"));
                     } else {
                         cbisallocated.setSelected(false);
-                        cbisallocated.setText("Allocation?");
+                        cbisallocated.setText(tags.getString(this.getClass().getSimpleName() +".label.cballocation"));
                     }
                     
                     if (res.getString("so_type").compareTo("BLANKET") == 0) {
@@ -1431,7 +1503,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("SQL Code does not execute");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -1529,7 +1601,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("unable to select srl_mstr");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -1618,7 +1690,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
                
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("SQL Code does not execute");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -1856,58 +1928,63 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     }
     
     public boolean validateDetail() {
-        boolean canproceed = true;
+        
         Pattern p = Pattern.compile("^[0-9]\\d*(\\.\\d+)?$");
         Matcher m = p.matcher(listprice.getText());
         if (!m.find() || listprice.getText() == null) {
-            bsmf.MainFrame.show("Invalid List Price format");
-            canproceed = false;
+            bsmf.MainFrame.show(getMessageTag(1033));
+            listprice.requestFocus();
+            return false;
         }
         
         p = Pattern.compile("^[0-9]\\d*(\\.\\d+)?$");
         if (! discount.getText().isEmpty()) {
             m = p.matcher(discount.getText());
             if (!m.find()) {
-                bsmf.MainFrame.show("Invalid Discount format");
-                canproceed = false;
+                bsmf.MainFrame.show(getMessageTag(1033));
+                discount.requestFocus();
+                return false;
             }
         }
         
         p = Pattern.compile("^[0-9]\\d*(\\.\\d+)?$");
         m = p.matcher(netprice.getText());
         if (!m.find() || netprice.getText() == null) {
-            bsmf.MainFrame.show("Invalid Net Price format");
-            canproceed = false;
+            bsmf.MainFrame.show(getMessageTag(1033));
+            netprice.requestFocus();
+            return false;
         }
         
         p = Pattern.compile("^[1-9]\\d*$");
         m = p.matcher(qtyshipped.getText());
         if (!m.find() || qtyshipped.getText() == null) {
-            bsmf.MainFrame.show("Invalid Qty");
-            canproceed = false;
+            bsmf.MainFrame.show(getMessageTag(1033));
+            qtyshipped.requestFocus();
+            return false;
         }
         
          
         
         // check unallocated qty
         if (! OVData.isOrderExceedQOHU() && Integer.valueOf(qtyshipped.getText()) > invData.getItemQOHUnallocated(ddpart.getSelectedItem().toString(),ddsite.getSelectedItem().toString(),tbkey.getText())) {
-             bsmf.MainFrame.show("Quantity exceeds QOH Unallocated");
-            canproceed = false;
+             bsmf.MainFrame.show(getMessageTag(1092));
+             qtyshipped.requestFocus();
+             return false;
         }
         
         if (OVData.isValidItem(ddpart.getSelectedItem().toString()) && ! OVData.isValidUOMConversion(ddpart.getSelectedItem().toString(), ddsite.getSelectedItem().toString(), dduom.getSelectedItem().toString())) {
-                bsmf.MainFrame.show("no base uom conversion");
-                canproceed = false;
+                bsmf.MainFrame.show(getMessageTag(1093));
                 dduom.requestFocus();
+                return false;
                 
         }
         if (OVData.isValidItem(ddpart.getSelectedItem().toString()) && ! OVData.isBaseUOMOfItem(ddpart.getSelectedItem().toString(), ddsite.getSelectedItem().toString(), dduom.getSelectedItem().toString()) && ! OVData.isValidCustPriceRecordExists(ddcust.getSelectedItem().toString(),ddpart.getSelectedItem().toString(),dduom.getSelectedItem().toString(),ddcurr.getSelectedItem().toString())) {
-                bsmf.MainFrame.show("no price record for conversion uom");
-                canproceed = false;
+                bsmf.MainFrame.show(getMessageTag(1094));
                 dduom.requestFocus();
+                return false;
                 
         }
-      return canproceed;   
+      return true;   
     }
     
    
@@ -2103,8 +2180,10 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         add(jPanelSched);
 
         jPanelMain.setBorder(javax.swing.BorderFactory.createTitledBorder("Order Maintenance"));
+        jPanelMain.setName("panelmain"); // NOI18N
 
         jLabel76.setText("Key");
+        jLabel76.setName("lblid"); // NOI18N
 
         tbkey.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -2113,6 +2192,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         });
 
         btnew.setText("New");
+        btnew.setName("btnew"); // NOI18N
         btnew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnewActionPerformed(evt);
@@ -2120,6 +2200,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         });
 
         jLabel82.setText("bill-to");
+        jLabel82.setName("lblbillto"); // NOI18N
 
         ddcust.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -2128,6 +2209,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         });
 
         btadd.setText("Add");
+        btadd.setName("btadd"); // NOI18N
         btadd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddActionPerformed(evt);
@@ -2135,6 +2217,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         });
 
         btupdate.setText("Update");
+        btupdate.setName("btupdate"); // NOI18N
         btupdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btupdateActionPerformed(evt);
@@ -2148,28 +2231,41 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         });
 
         jLabel91.setText("ship-to");
+        jLabel91.setName("lblshipto"); // NOI18N
+
+        lblcustname.setName("lblbilltoaddress"); // NOI18N
+
+        lblshiptoaddr.setName("lblshiptoaddress"); // NOI18N
 
         jPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         jLabel81.setText("Due Date");
+        jLabel81.setName("lblduedate"); // NOI18N
 
         jLabel90.setText("ShipVia");
+        jLabel90.setName("lblshipvia"); // NOI18N
 
         jLabel83.setText("PO Number");
+        jLabel83.setName("lblponbr"); // NOI18N
 
         jLabel85.setText("Status");
+        jLabel85.setName("lblstatus"); // NOI18N
 
         duedate.setDateFormatString("yyyy-MM-dd");
 
         jLabel86.setText("Remarks");
+        jLabel86.setName("lblremarks"); // NOI18N
 
         orddate.setDateFormatString("yyyy-MM-dd");
 
         jLabel87.setText("Ord Date");
+        jLabel87.setName("lblorddate"); // NOI18N
 
         cbblanket.setText("Blanket?");
+        cbblanket.setName("cbblanket"); // NOI18N
 
         jLabel92.setText("Site:");
+        jLabel92.setName("lblsite"); // NOI18N
 
         ddsite.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -2184,16 +2280,21 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         });
 
         jLabel93.setText("Tax Code");
+        jLabel93.setName("lbltaxcode"); // NOI18N
 
         jLabel97.setText("WH");
+        jLabel97.setName("lblwh"); // NOI18N
 
         lblIsSourced.setText("   ");
 
         cbissourced.setText("is Sourced?");
+        cbissourced.setName("cbissourced"); // NOI18N
 
         jLabel98.setText("Currency");
+        jLabel98.setName("lblcurrency"); // NOI18N
 
         cbisallocated.setText("Allocation?");
+        cbisallocated.setName("cballocation"); // NOI18N
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -2312,6 +2413,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         );
 
         btdelete.setText("Delete");
+        btdelete.setName("btdelete"); // NOI18N
         btdelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdeleteActionPerformed(evt);
@@ -2321,28 +2423,40 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         jLabel11.setText("Zip");
+        jLabel11.setName("lblzip"); // NOI18N
 
         jLabel99.setText("City");
+        jLabel99.setName("lblcity"); // NOI18N
 
         jLabel100.setText("Misc");
+        jLabel100.setName("lblmisc"); // NOI18N
 
         jLabel101.setText("Name");
+        jLabel101.setName("lblname"); // NOI18N
 
         jLabel102.setText("Addr2");
+        jLabel102.setName("lbladdr2"); // NOI18N
 
         jLabel104.setText("Phone");
+        jLabel104.setName("lblphone"); // NOI18N
 
         jLabel106.setText("Email");
+        jLabel106.setName("lblemail"); // NOI18N
 
         jLabel77.setText("Code");
+        jLabel77.setName("lblcode"); // NOI18N
 
         jLabel109.setText("Contact");
+        jLabel109.setName("lblcontact"); // NOI18N
 
         jLabel110.setText("Addr1");
+        jLabel110.setName("lbladdr1"); // NOI18N
 
         jLabel111.setText("State");
+        jLabel111.setName("lblstate"); // NOI18N
 
         btaddshipto.setText("Add ShipTo");
+        btaddshipto.setName("btaddshipto"); // NOI18N
         btaddshipto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddshiptoActionPerformed(evt);
@@ -2469,6 +2583,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         );
 
         btinvoice.setText("Invoice");
+        btinvoice.setName("btinvoice"); // NOI18N
         btinvoice.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btinvoiceActionPerformed(evt);
@@ -2476,13 +2591,17 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         });
 
         btprintorder.setText("Print Order");
+        btprintorder.setName("btprintorder"); // NOI18N
         btprintorder.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btprintorderActionPerformed(evt);
             }
         });
 
+        lblstatus.setName("lblmessage"); // NOI18N
+
         btclear.setText("Clear");
+        btclear.setName("btclear"); // NOI18N
         btclear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btclearActionPerformed(evt);
@@ -2490,6 +2609,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         });
 
         btprintinvoice.setText("Print Invoice");
+        btprintinvoice.setName("btprintinvoice"); // NOI18N
         btprintinvoice.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btprintinvoiceActionPerformed(evt);
@@ -2497,6 +2617,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         });
 
         btprintps.setText("Print PackingSlip");
+        btprintps.setName("btprintpackingslip"); // NOI18N
         btprintps.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btprintpsActionPerformed(evt);
@@ -2629,9 +2750,11 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         add(jPanelMain);
 
         jPanelLines.setBorder(javax.swing.BorderFactory.createTitledBorder("Lines"));
+        jPanelLines.setName("panellines"); // NOI18N
         jPanelLines.setPreferredSize(new java.awt.Dimension(821, 627));
 
         btadditem.setText("Insert");
+        btadditem.setName("btinsert"); // NOI18N
         btadditem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btadditemActionPerformed(evt);
@@ -2639,6 +2762,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         });
 
         btdelitem.setText("Remove");
+        btdelitem.setName("btremove"); // NOI18N
         btdelitem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdelitemActionPerformed(evt);
@@ -2646,8 +2770,10 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         });
 
         jLabel84.setText("Qty Ship");
+        jLabel84.setName("lblqtyship"); // NOI18N
 
         lblCustItemAndDesc.setText("CustNumber");
+        lblCustItemAndDesc.setName("lblcustnumber"); // NOI18N
 
         qtyshipped.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -2666,8 +2792,10 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         });
 
         lblpart1.setText("Item Number");
+        lblpart1.setName("lblitem"); // NOI18N
 
         jLabel5.setText("uom");
+        jLabel5.setName("lbluom"); // NOI18N
 
         dduom.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -2676,6 +2804,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         });
 
         jLabel9.setText("Description");
+        jLabel9.setName("lbldescription"); // NOI18N
 
         btLookUpCustItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/find.png"))); // NOI18N
         btLookUpCustItem.addActionListener(new java.awt.event.ActionListener() {
@@ -2756,8 +2885,10 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         );
 
         jLabel89.setText("NetPrice");
+        jLabel89.setName("lblnetprice"); // NOI18N
 
         jLabel80.setText("ListPrice");
+        jLabel80.setName("lbllistprice"); // NOI18N
 
         discount.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -2766,6 +2897,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         });
 
         jLabel88.setText("Disc%");
+        jLabel88.setName("lbldiscount"); // NOI18N
 
         netprice.setEditable(false);
         netprice.addActionListener(new java.awt.event.ActionListener() {
@@ -2825,10 +2957,13 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         );
 
         jLabel94.setText("Misc");
+        jLabel94.setName("lblmisc"); // NOI18N
 
         jLabel95.setText("Plant/WH");
+        jLabel95.setName("lblwh"); // NOI18N
 
         jLabel96.setText("Location");
+        jLabel96.setName("lblloc"); // NOI18N
 
         tbmisc.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -2886,6 +3021,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         );
 
         btupdateitem.setText("Update");
+        btupdateitem.setName("btupdate"); // NOI18N
         btupdateitem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btupdateitemActionPerformed(evt);
@@ -2951,6 +3087,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         jScrollPane8.setViewportView(orddet);
 
         jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder("Summary Discounts, Charges, and Taxes"));
+        jPanel5.setName("panelsummary"); // NOI18N
 
         sactable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -2963,10 +3100,13 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         jScrollPane2.setViewportView(sactable);
 
         percentlabel.setText("Percent/Amount");
+        percentlabel.setName("lblpercent"); // NOI18N
 
         jLabel8.setText("Desc");
+        jLabel8.setName("lbldesc"); // NOI18N
 
         btsacadd.setText("add");
+        btsacadd.setName("btadd"); // NOI18N
         btsacadd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btsacaddActionPerformed(evt);
@@ -2974,6 +3114,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         });
 
         btsacdelete.setText("delete");
+        btsacdelete.setName("btdelete"); // NOI18N
         btsacdelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btsacdeleteActionPerformed(evt);
@@ -3032,18 +3173,22 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         );
 
         jLabel3.setText("Total Lines:");
+        jLabel3.setName("lbltotallines"); // NOI18N
 
         totlines.setEditable(false);
 
         jLabel1.setText("Total Qty:");
+        jLabel1.setName("lbltotalquantity"); // NOI18N
 
         tbtotqty.setEditable(false);
 
         jLabel4.setText("Total Tax:");
+        jLabel4.setName("lbltotaltax"); // NOI18N
 
         tbtottax.setEditable(false);
 
         jLabel2.setText("Total $");
+        jLabel2.setName("lbltotalamount"); // NOI18N
 
         tbtotdollars.setEditable(false);
 
@@ -3182,10 +3327,10 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         int[] rows = orddet.getSelectedRows();
         for (int i : rows) {
             if (orddet.getValueAt(i, 11).toString().equals("closed") || orddet.getValueAt(i, 11).toString().equals("partial")) {
-                bsmf.MainFrame.show("Cannot Delete Closed or Partial Item");
+                bsmf.MainFrame.show(getMessageTag(1088));
                 return;
             } else {
-            bsmf.MainFrame.show("Removing row " + i);
+            bsmf.MainFrame.show(getMessageTag(1088, String.valueOf(i)));
             linetax.remove(orddet.getValueAt(i, 0));
             ((javax.swing.table.DefaultTableModel) orddet.getModel()).removeRow(i);
             }
@@ -3282,7 +3427,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         if (x.equals("error")) {
             qtyshipped.setText("");
             qtyshipped.setBackground(Color.yellow);
-            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            bsmf.MainFrame.show(getMessageTag(1000));
             qtyshipped.requestFocus();
         } else {
             qtyshipped.setText(x);
@@ -3304,7 +3449,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         if (x.equals("error")) {
             listprice.setText("");
             listprice.setBackground(Color.yellow);
-            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            bsmf.MainFrame.show(getMessageTag(1000));
             listprice.requestFocus();
         } else {
             listprice.setText(x);
@@ -3318,7 +3463,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         if (x.equals("error")) {
             discount.setText("");
             discount.setBackground(Color.yellow);
-            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            bsmf.MainFrame.show(getMessageTag(1000));
             discount.requestFocus();
         } else {
             discount.setText(x);
@@ -3385,24 +3530,28 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         boolean error = false;
         
         if (tbshiptocode.getText().isEmpty()) {
-            bsmf.MainFrame.show("Must enter a legitimate value in the code field");
+            bsmf.MainFrame.show(getMessageTag(1024));
+            tbshiptocode.requestFocus();
             return;
         }
         if (tbshiptocode.getText().length() > 10) {
-            bsmf.MainFrame.show("ship to code cannot be larger than 10 chars");
+            bsmf.MainFrame.show(getMessageTag(1080, "10"));
+            tbshiptocode.requestFocus();
             return;
         }
         if (tbzip.getText().length() > 10) {
-            bsmf.MainFrame.show("zip code cannot be larger than 10 chars");
+            bsmf.MainFrame.show(getMessageTag(1080, "10"));
+            tbzip.requestFocus();
             return;
         }
         if (tbname.getText().length() > 50) {
-            bsmf.MainFrame.show("ship to name cannot be larger than 10 chars");
+            bsmf.MainFrame.show(getMessageTag(1080, "50"));
+            tbname.requestFocus();
             return;
         }
         
         if (OVData.isValidCustShipTo(ddcust.getSelectedItem().toString(), tbshiptocode.getText())) {
-            bsmf.MainFrame.show("Shipto Code already used...choose another");
+            bsmf.MainFrame.show(getMessageTag(1022));
         } else {
             ArrayList<String> st = new ArrayList<String>();
             String list = "";
@@ -3426,7 +3575,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
            
            error = OVData.addCustShipToMstr(st);
            if (! error) {
-            bsmf.MainFrame.show("Added shipto code");
+            bsmf.MainFrame.show(getMessageTag(1007));
             reinitCustandShip(ddcust.getSelectedItem().toString(), tbshiptocode.getText()); 
            }
         }
@@ -3435,7 +3584,7 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     private void btsacdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btsacdeleteActionPerformed
          int[] rows = sactable.getSelectedRows();
         for (int i : rows) {
-            bsmf.MainFrame.show("Removing row " + i);
+            bsmf.MainFrame.show(getMessageTag(1031,String.valueOf(i)));
             ((javax.swing.table.DefaultTableModel) sactable.getModel()).removeRow(i);
         }
        
@@ -3449,14 +3598,14 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         Pattern p = Pattern.compile("^[0-9]\\d*(\\.\\d+)?$");
         Matcher m = p.matcher(tbsacamt.getText());
         if (!m.find() || tbsacamt.getText() == null) {
-            bsmf.MainFrame.show("Invalid amount format");
+            bsmf.MainFrame.show(getMessageTag(1033));
             proceed = false;
             tbsacamt.requestFocus();
             return;
         }
         
         if (tbsacdesc.getText().isEmpty()) {
-            bsmf.MainFrame.show("Description cannot be blank");
+            bsmf.MainFrame.show(getMessageTag(1024));
             proceed = false;
             tbsacdesc.requestFocus();
             return;
@@ -3590,15 +3739,15 @@ public class OrderMaintPanel extends javax.swing.JPanel implements IBlueSeer {
         
         int[] rows = orddet.getSelectedRows();
         if (rows.length != 1) {
-            bsmf.MainFrame.show("Only 1 row must be selected");
+            bsmf.MainFrame.show(getMessageTag(1095));
                 return;
         }
         for (int i : rows) {
             if (orddet.getValueAt(i, 11).toString().equals("closed") || orddet.getValueAt(i, 11).toString().equals("partial")) {
-                bsmf.MainFrame.show("Cannot Update Closed or Partial Item");
+                bsmf.MainFrame.show(getMessageTag(1088));
                 return;
             } else if (! orddet.getValueAt(i, 1).toString().equals(ddpart.getSelectedItem().toString())) {
-                bsmf.MainFrame.show("The item field value cannot be different for this table record");
+                bsmf.MainFrame.show(getMessageTag(1096));
                 return;
             }else {
                 boolean canproceed = validateDetail();

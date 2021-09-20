@@ -28,6 +28,7 @@
             <TitledBorder title="Order Control"/>
           </Border>
         </Property>
+        <Property name="name" type="java.lang.String" value="panelmain" noResource="true"/>
       </Properties>
 
       <Layout>
@@ -86,11 +87,13 @@
         <Component class="javax.swing.JCheckBox" name="cbautosource">
           <Properties>
             <Property name="text" type="java.lang.String" value="Auto Source Order?"/>
+            <Property name="name" type="java.lang.String" value="cbautosource" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="btupdate">
           <Properties>
             <Property name="text" type="java.lang.String" value="Update"/>
+            <Property name="name" type="java.lang.String" value="btupdate" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btupdateActionPerformed"/>
@@ -99,11 +102,13 @@
         <Component class="javax.swing.JCheckBox" name="cbautoinvoice">
           <Properties>
             <Property name="text" type="java.lang.String" value="Auto Invoice Order?"/>
+            <Property name="name" type="java.lang.String" value="cbautoinvoice" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JCheckBox" name="cbcustitem">
           <Properties>
             <Property name="text" type="java.lang.String" value="Cust Item Xref Only?"/>
+            <Property name="name" type="java.lang.String" value="cbxrefonly" noResource="true"/>
           </Properties>
         </Component>
         <Container class="javax.swing.JPanel" name="jPanel2">
@@ -113,6 +118,7 @@
                 <TitledBorder title="Service Order Defaults"/>
               </Border>
             </Property>
+            <Property name="name" type="java.lang.String" value="panelservice" noResource="true"/>
           </Properties>
 
           <Layout>
@@ -144,11 +150,13 @@
             <Component class="javax.swing.JCheckBox" name="cbsrvmitemdefault">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Service Default Item?"/>
+                <Property name="name" type="java.lang.String" value="cbservice" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JCheckBox" name="cbsrvmtype">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Quote Type?"/>
+                <Property name="name" type="java.lang.String" value="cbquotetype" noResource="true"/>
               </Properties>
             </Component>
           </SubComponents>
@@ -156,11 +164,13 @@
         <Component class="javax.swing.JCheckBox" name="cballocate">
           <Properties>
             <Property name="text" type="java.lang.String" value="Auto Allocate?"/>
+            <Property name="name" type="java.lang.String" value="cbautoallocate" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JCheckBox" name="cbexceedQOHU">
           <Properties>
             <Property name="text" type="java.lang.String" value="Exceed QOHU?"/>
+            <Property name="name" type="java.lang.String" value="cbexceed" noResource="true"/>
           </Properties>
         </Component>
       </SubComponents>

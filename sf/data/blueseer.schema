@@ -1900,6 +1900,7 @@ CREATE TABLE IF NOT EXISTS `clock_code` (
 CREATE TABLE IF NOT EXISTS `counter` (
   `counter_name` varchar(30) NOT NULL ,
   `counter_desc` varchar(100) NOT NULL ,
+  `counter_prefix` varchar(4) NOT NULL ,
   `counter_from` int(10) NOT NULL DEFAULT '0',  
   `counter_to` int(10) NOT NULL DEFAULT '0',  
   `counter_id` int(10) NOT NULL DEFAULT '0'  
