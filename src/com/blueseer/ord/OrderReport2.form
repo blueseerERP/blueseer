@@ -32,6 +32,9 @@
   </Layout>
   <SubComponents>
     <Container class="javax.swing.JPanel" name="jPanel1">
+      <Properties>
+        <Property name="name" type="java.lang.String" value="lblqty" noResource="true"/>
+      </Properties>
 
       <Layout>
         <DimensionLayout dim="0">
@@ -156,6 +159,7 @@
         <Component class="javax.swing.JLabel" name="jLabel2">
           <Properties>
             <Property name="text" type="java.lang.String" value="From Ord Date"/>
+            <Property name="name" type="java.lang.String" value="lblfromorddate" noResource="true"/>
           </Properties>
         </Component>
         <Component class="com.toedter.calendar.JDateChooser" name="dcFrom">
@@ -171,11 +175,13 @@
         <Component class="javax.swing.JLabel" name="jLabel3">
           <Properties>
             <Property name="text" type="java.lang.String" value="To Ord Date"/>
+            <Property name="name" type="java.lang.String" value="lbltoorddate" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="btRun">
           <Properties>
             <Property name="text" type="java.lang.String" value="Run"/>
+            <Property name="name" type="java.lang.String" value="btrun" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btRunActionPerformed"/>
@@ -184,11 +190,13 @@
         <Component class="javax.swing.JLabel" name="jLabel1">
           <Properties>
             <Property name="text" type="java.lang.String" value="From Cust"/>
+            <Property name="name" type="java.lang.String" value="lblfromcust" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel4">
           <Properties>
             <Property name="text" type="java.lang.String" value="To Cust"/>
+            <Property name="name" type="java.lang.String" value="lbltocust" noResource="true"/>
           </Properties>
         </Component>
         <Container class="javax.swing.JScrollPane" name="jScrollPane1">
@@ -224,6 +232,7 @@
         <Component class="javax.swing.JLabel" name="jLabel7">
           <Properties>
             <Property name="text" type="java.lang.String" value="Count"/>
+            <Property name="name" type="java.lang.String" value="lblcount" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="labelqty">
@@ -239,16 +248,19 @@
         <Component class="javax.swing.JCheckBox" name="cbopen">
           <Properties>
             <Property name="text" type="java.lang.String" value="Open"/>
+            <Property name="name" type="java.lang.String" value="cbopen" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel10">
           <Properties>
             <Property name="text" type="java.lang.String" value="Summarize"/>
+            <Property name="name" type="java.lang.String" value="lblsummarize" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JCheckBox" name="cbclose">
           <Properties>
             <Property name="text" type="java.lang.String" value="Close"/>
+            <Property name="name" type="java.lang.String" value="cbclose" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JComboBox" name="ddfromcust">
@@ -268,16 +280,19 @@
         <Component class="javax.swing.JCheckBox" name="cbbackorder">
           <Properties>
             <Property name="text" type="java.lang.String" value="BackOrder"/>
+            <Property name="name" type="java.lang.String" value="cbbackorder" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JCheckBox" name="cberror">
           <Properties>
             <Property name="text" type="java.lang.String" value="Error"/>
+            <Property name="name" type="java.lang.String" value="cberror" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="tbprint">
           <Properties>
             <Property name="text" type="java.lang.String" value="Print"/>
+            <Property name="name" type="java.lang.String" value="btprint" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tbprintActionPerformed"/>

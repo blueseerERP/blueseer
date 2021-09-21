@@ -66,8 +66,11 @@ import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.mydialog;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
+import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.text.DecimalFormatSymbols;
@@ -76,7 +79,13 @@ import java.util.Enumeration;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 import org.jfree.chart.ChartFactory;
@@ -99,7 +108,18 @@ public class ServiceOrderBrowse extends javax.swing.JPanel {
     Double orders = 0.00;
     
     javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"Select", "Detail", "Nbr", "Cust", "JobSite", "Type", "Status", "CreateDate", "DueDate", "TotalPrice", "Print"})
+                        new String[]{
+                            getGlobalColumnTag("select"), 
+                            getGlobalColumnTag("detail"), 
+                            getGlobalColumnTag("order"), 
+                            getGlobalColumnTag("code"), 
+                            getGlobalColumnTag("jobsite"), 
+                            getGlobalColumnTag("type"), 
+                            getGlobalColumnTag("status"), 
+                            getGlobalColumnTag("orderdate"), 
+                            getGlobalColumnTag("duedate"), 
+                            getGlobalColumnTag("total"), 
+                            getGlobalColumnTag("print")})
             {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -110,7 +130,11 @@ public class ServiceOrderBrowse extends javax.swing.JPanel {
                         };
                 
     javax.swing.table.DefaultTableModel modeldetail = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"Nbr", "Item", "Qty/Hrs", "NetPrice"});
+                        new String[]{
+                            getGlobalColumnTag("order"), 
+                            getGlobalColumnTag("item"), 
+                            getGlobalColumnTag("qty"), 
+                            getGlobalColumnTag("price")});
     
    
     
@@ -235,12 +259,10 @@ public class ServiceOrderBrowse extends javax.swing.JPanel {
       //  myicon.getImage().getScaledInstance(400, 200, Image.SCALE_SMOOTH);
         this.chartlabel.setIcon(myicon);
         this.repaint();
-       
-       // bsmf.MainFrame.show("your chart is complete...go to chartview");
-                
+            
               } catch (SQLException s) {
                   MainFrame.bslog(s);
-                  bsmf.MainFrame.show("unable to chart");
+                  bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             con.close();
         } catch (Exception e) {
@@ -305,11 +327,11 @@ public class ServiceOrderBrowse extends javax.swing.JPanel {
         this.pielabel.setIcon(myicon);
         this.repaint();
        
-       // bsmf.MainFrame.show("your chart is complete...go to chartview");
+      
                 
               } catch (SQLException s) {
                   MainFrame.bslog(s);
-                  bsmf.MainFrame.show("unable to chart orders");
+                  bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             con.close();
         } catch (Exception e) {
@@ -325,9 +347,10 @@ public class ServiceOrderBrowse extends javax.swing.JPanel {
      */
     public ServiceOrderBrowse() {
         initComponents();
+        setLanguageTags(this);
     }
 
-     public void getdetail(String order) {
+    public void getdetail(String order) {
       
          modeldetail.setNumRows(0);
          double totalsales = 0.00;
@@ -360,13 +383,57 @@ public class ServiceOrderBrowse extends javax.swing.JPanel {
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to get service order browse detail");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
 
+    }
+    
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
     }
     
     public void initvars(String[] arg) {
@@ -456,6 +523,7 @@ public class ServiceOrderBrowse extends javax.swing.JPanel {
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Service Order Browse"));
+        jPanel1.setName("panelmain"); // NOI18N
 
         tablepanel.setLayout(new javax.swing.BoxLayout(tablepanel, javax.swing.BoxLayout.LINE_AXIS));
 
@@ -519,6 +587,7 @@ public class ServiceOrderBrowse extends javax.swing.JPanel {
         tablepanel.add(chartpanel);
 
         btdetail.setText("Hide Detail");
+        btdetail.setName("bthidedetail"); // NOI18N
         btdetail.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdetailActionPerformed(evt);
@@ -526,6 +595,7 @@ public class ServiceOrderBrowse extends javax.swing.JPanel {
         });
 
         btRun.setText("Run");
+        btRun.setName("btrun"); // NOI18N
         btRun.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btRunActionPerformed(evt);
@@ -533,14 +603,17 @@ public class ServiceOrderBrowse extends javax.swing.JPanel {
         });
 
         jLabel5.setText("From Date:");
+        jLabel5.setName("lblfromdate"); // NOI18N
 
         jLabel6.setText("To Date:");
+        jLabel6.setName("lbltodate"); // NOI18N
 
         dcfrom.setDateFormatString("yyyy-MM-dd");
 
         dcto.setDateFormatString("yyyy-MM-dd");
 
         tbcsv.setText("CSV");
+        tbcsv.setName("btcsv"); // NOI18N
         tbcsv.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tbcsvActionPerformed(evt);
@@ -548,6 +621,7 @@ public class ServiceOrderBrowse extends javax.swing.JPanel {
         });
 
         cbchart.setText("Charts");
+        cbchart.setName("cbcharts"); // NOI18N
         cbchart.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbchartActionPerformed(evt);
@@ -555,8 +629,10 @@ public class ServiceOrderBrowse extends javax.swing.JPanel {
         });
 
         jLabel7.setText("From Cust:");
+        jLabel7.setName("lblfromcust"); // NOI18N
 
         jLabel9.setText("To Cust:");
+        jLabel9.setName("lbltocust"); // NOI18N
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -619,12 +695,14 @@ public class ServiceOrderBrowse extends javax.swing.JPanel {
         );
 
         jLabel8.setText("Total Orders:");
+        jLabel8.setName("lbltotalorders"); // NOI18N
 
         tbtotorders.setText("0");
 
         tbtotquotes.setText("0");
 
         jLabel11.setText("Total Quotes:");
+        jLabel11.setName("lbltotalquotes"); // NOI18N
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -789,7 +867,7 @@ try {
                 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Problem executing Service Order Browse Report");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             con.close();
         } catch (Exception e) {

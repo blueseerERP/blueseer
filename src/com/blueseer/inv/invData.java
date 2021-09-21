@@ -27,6 +27,7 @@ package com.blueseer.inv;
 
 import bsmf.MainFrame;
 import static bsmf.MainFrame.db;
+import static bsmf.MainFrame.defaultDecimalSeparator;
 import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
@@ -240,12 +241,12 @@ public class invData {
                     while(res.next()) {
                         m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
                         r = new ItemMstr(m, res.getString("it_item"), res.getString("it_desc"), res.getString("it_lotsize"),
-                    res.getString("it_sell_price"), res.getString("it_pur_price"), res.getString("it_ovh_cost"), res.getString("it_out_cost"),
-                    res.getString("it_mtl_cost"), res.getString("it_code"), res.getString("it_type"), res.getString("it_group"),
+                    res.getString("it_sell_price").replace('.',defaultDecimalSeparator), res.getString("it_pur_price").replace('.',defaultDecimalSeparator), res.getString("it_ovh_cost").replace('.',defaultDecimalSeparator), res.getString("it_out_cost").replace('.',defaultDecimalSeparator),
+                    res.getString("it_mtl_cost").replace('.',defaultDecimalSeparator), res.getString("it_code"), res.getString("it_type"), res.getString("it_group"),
                     res.getString("it_prodline"), res.getString("it_drawing"), res.getString("it_rev"), res.getString("it_custrev"), res.getString("it_wh"),
                     res.getString("it_loc"), res.getString("it_site"), res.getString("it_comments"), res.getString("it_status"), res.getString("it_uom"),
-                    res.getString("it_net_wt"), res.getString("it_ship_wt"), res.getString("it_cont"), res.getString("it_contqty"), 
-                    res.getString("it_leadtime"), res.getString("it_safestock"), res.getString("it_minordqty"), res.getInt("it_mrp"), 
+                    res.getString("it_net_wt").replace('.',defaultDecimalSeparator), res.getString("it_ship_wt").replace('.',defaultDecimalSeparator), res.getString("it_cont"), res.getString("it_contqty").replace('.',defaultDecimalSeparator), 
+                    res.getString("it_leadtime").replace('.',defaultDecimalSeparator), res.getString("it_safestock").replace('.',defaultDecimalSeparator), res.getString("it_minordqty").replace('.',defaultDecimalSeparator), res.getInt("it_mrp"), 
                     res.getInt("it_sched"), res.getInt("it_plan"), res.getString("it_wf"), res.getString("it_taxcode"), res.getString("it_createdate")
         );
                     }

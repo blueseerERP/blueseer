@@ -25,6 +25,7 @@ SOFTWARE.
  */
 package com.blueseer.utl;
 import bsmf.MainFrame;
+import static bsmf.MainFrame.bslog;
 import static bsmf.MainFrame.tags;
 
 import java.awt.Color;
@@ -51,6 +52,8 @@ import java.util.ArrayList;
 import java.util.Currency;
 import java.util.Date;
 import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
@@ -487,10 +490,23 @@ public class BlueSeerUtils {
         luinput.requestFocus();
     } 
     
+    public static double bsParseDouble(String x) {
+        double z = 0;
+        NumberFormat format = NumberFormat.getInstance(Locale.getDefault());
+        Number number = 0;
+                    try {
+                        number = format.parse(x);
+                    } catch (ParseException ex) {
+                        bsmf.MainFrame.show("Problem parsing double");
+                    }
+        z = number.doubleValue();
+        return z;
+    }
     
     public static String bsformat(String type, String invalue, String precision) {
+        String pattern = "";
         String outvalue = "";
-        DecimalFormat df = null;
+        
         if (invalue.isEmpty() && type.equals("s")) {
            return "";
         }
@@ -500,39 +516,56 @@ public class BlueSeerUtils {
         if (invalue.isEmpty() && type.equals("d")) {
            invalue = "0"; // for use down below
         }
-       
         if (precision.equals("2")) {
-         df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US)); 
+         pattern = "#0.00"; 
         } else if (precision.equals("3")) {
-         df = new DecimalFormat("#0.000", new DecimalFormatSymbols(Locale.US));  
+         pattern = "#0.000";  
         } else if (precision.equals("4")) {
-         df = new DecimalFormat("#0.0000", new DecimalFormatSymbols(Locale.US));   
+         pattern = "#0.0000";   
         } else if (precision.equals("5")) {
-         df = new DecimalFormat("#0.00000", new DecimalFormatSymbols(Locale.US));    
+         pattern = "#0.00000";    
          } else if (precision.equals("0")) {
-         df = new DecimalFormat("#0", new DecimalFormatSymbols(Locale.US));    
+         pattern = "#0";    
         } else {
-         df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));    
+         pattern = "#0.00";    
         }
-        try {
-        outvalue = df.format(Double.valueOf(invalue));
-        } catch(NumberFormatException e) {
+       
+        DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.getDefault());    
+        df.applyPattern(pattern);
+        try {   
+            outvalue = df.format(df.parse(invalue));
+        } catch (ParseException ex) {
             outvalue = "error";
         }
+       
         return outvalue;
     }
     
     public static String currformat(String invalue) {
         String x = "";
-        DecimalFormat df = new DecimalFormat("#0.00###", new DecimalFormatSymbols(Locale.US)); 
-        x = df.format(Double.valueOf(invalue));   
+        String pattern = "#0.00###";
+       // DecimalFormat df = new DecimalFormat("#0.00###", new DecimalFormatSymbols(Locale.getDefault())); 
+        DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.getDefault());
+        df.applyPattern(pattern);
+        try {   
+            x = df.format(df.parse(invalue));
+        } catch (ParseException ex) {
+            bslog(ex);
+        }
         return x;
     }
     
     public static String priceformat(String invalue) {
         String x = "";
-        DecimalFormat df = new DecimalFormat("#0.0000#", new DecimalFormatSymbols(Locale.US)); 
-        x = df.format(Double.valueOf(invalue));   
+        String pattern = "#0.0000#";
+       // DecimalFormat df = new DecimalFormat("#0.0000#", new DecimalFormatSymbols(Locale.US)); 
+       DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.getDefault());
+        df.applyPattern(pattern);
+        try {   
+            x = df.format(df.parse(invalue));
+        } catch (ParseException ex) {
+            bslog(ex);
+        }
         return x;
     }
     

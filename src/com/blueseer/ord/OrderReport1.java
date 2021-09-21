@@ -72,12 +72,22 @@ import static bsmf.MainFrame.mydialog;
 import static bsmf.MainFrame.panelmap;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
+import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 
 /**
  *
@@ -86,7 +96,18 @@ import javax.swing.ImageIcon;
 public class OrderReport1 extends javax.swing.JPanel {
  
      MyTableModel mymodel = new OrderReport1.MyTableModel(new Object[][]{},
-                        new String[]{"Select", "Order", "Cust", "PO", "Remarks", "OrdDate", "DueDate", "Qty", "Amount", "Status", "PlanStatus"})
+                        new String[]{
+                            getGlobalColumnTag("select"), 
+                            getGlobalColumnTag("order"), 
+                            getGlobalColumnTag("customer"), 
+                            getGlobalColumnTag("po"), 
+                            getGlobalColumnTag("remarks"), 
+                            getGlobalColumnTag("orddate"), 
+                            getGlobalColumnTag("duedate"), 
+                            getGlobalColumnTag("qty"), 
+                            getGlobalColumnTag("amount"), 
+                            getGlobalColumnTag("status"), 
+                            getGlobalColumnTag("planstatus")})
              {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -190,8 +211,53 @@ public class OrderReport1 extends javax.swing.JPanel {
         
     public OrderReport1() {
         initComponents();
+        setLanguageTags(this);
     }
 
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+    
     public void initvars(String[] arg) {
         mymodel.setRowCount(0);
          java.util.Date now = new java.util.Date();
@@ -268,14 +334,17 @@ public class OrderReport1 extends javax.swing.JPanel {
         setBackground(new java.awt.Color(0, 102, 204));
 
         jLabel2.setText("From Ord Date");
+        jLabel2.setName("lblfromorddate"); // NOI18N
 
         dcFrom.setDateFormatString("yyyy-MM-dd");
 
         dcTo.setDateFormatString("yyyy-MM-dd");
 
         jLabel3.setText("To Ord Date");
+        jLabel3.setName("lbltoorddate"); // NOI18N
 
         btRun.setText("Run");
+        btRun.setName("btrun"); // NOI18N
         btRun.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btRunActionPerformed(evt);
@@ -283,8 +352,10 @@ public class OrderReport1 extends javax.swing.JPanel {
         });
 
         jLabel1.setText("From Cust");
+        jLabel1.setName("lblfromcust"); // NOI18N
 
         jLabel4.setText("To Cust");
+        jLabel4.setName("lbltocust"); // NOI18N
 
         tableorder.setAutoCreateRowSorter(true);
         tableorder.setModel(new javax.swing.table.DefaultTableModel(
@@ -305,27 +376,36 @@ public class OrderReport1 extends javax.swing.JPanel {
         labelcount.setText("0");
 
         jLabel7.setText("Count");
+        jLabel7.setName("lblcount"); // NOI18N
 
         labelqty.setText("0");
 
         jLabel8.setText("Qty");
+        jLabel8.setName("lblqty"); // NOI18N
 
         labeldollar.setBackground(new java.awt.Color(195, 129, 129));
         labeldollar.setText("0");
 
         jLabel9.setText("$");
+        jLabel9.setName("lblamt"); // NOI18N
 
         cbopen.setText("Open");
+        cbopen.setName("cbopen"); // NOI18N
 
         jLabel10.setText("Summarize");
+        jLabel10.setName("lblsummarize"); // NOI18N
 
         cbclose.setText("Close");
+        cbclose.setName("cbclose"); // NOI18N
 
         cbbackorder.setText("BackOrder");
+        cbbackorder.setName("cbbackorder"); // NOI18N
 
         cberror.setText("Error");
+        cberror.setName("cberror"); // NOI18N
 
         tbprint.setText("PDF");
+        tbprint.setName("btpdf"); // NOI18N
         tbprint.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tbprintActionPerformed(evt);
@@ -333,8 +413,10 @@ public class OrderReport1 extends javax.swing.JPanel {
         });
 
         jLabel5.setText("Site:");
+        jLabel5.setName("lblsite"); // NOI18N
 
         btcsv.setText("CSV");
+        btcsv.setName("btcsv"); // NOI18N
         btcsv.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btcsvActionPerformed(evt);
@@ -583,7 +665,7 @@ try {
                 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Cannot execute sql query for Order Report");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             con.close();
         } catch (Exception e) {
@@ -628,7 +710,7 @@ try {
                 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Could not create jasperfile...see stacktrace");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {

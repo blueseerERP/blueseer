@@ -26,12 +26,16 @@ SOFTWARE.
 package com.blueseer.ord;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.bslog;
+import static bsmf.MainFrame.defaultDecimalSeparator;
 import com.blueseer.utl.BlueSeerUtils;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import com.blueseer.inv.invData;
+import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -64,12 +68,16 @@ import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.BorderFactory;
@@ -112,7 +120,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
                 boolean custitemonly = true;
                 boolean autoallocate = false;
                 
-                DecimalFormat df = new DecimalFormat("#0.0000", new DecimalFormatSymbols(Locale.US));
+                DecimalFormat df = new DecimalFormat("#0.0000", new DecimalFormatSymbols(Locale.getDefault()));
                 Map<Integer, ArrayList<String[]>> linetax = new HashMap<Integer, ArrayList<String[]>>();
                 ArrayList<String[]> headertax = new ArrayList<String[]>();
      
@@ -159,7 +167,11 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
                     @Override
                     public void tableChanged(TableModelEvent tme) {
                         if (tme.getType() == TableModelEvent.UPDATE && (tme.getColumn() == 5 || tme.getColumn() == 7 )) {
-                            retotal();
+                            try {
+                                retotal();
+                            } catch (ParseException ex) {
+                                bslog(ex);
+                            }
                             refreshDisplayTotals();
                         }
                         // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -390,10 +402,10 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
         cbissourced.setSelected(false);
         cbisallocated.setSelected(false);
         
-        listprice.setText("0.00");
-        netprice.setText("0.00");
+        listprice.setText("0");
+        netprice.setText("0");
         qtyshipped.setText("0");
-        discount.setText("0.00");
+        discount.setText("0");
         ponbr.setText("");
         lblcustname.setText("");
         lblshiptoaddr.setText("");
@@ -797,24 +809,24 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
                                 + "sod_shipped_qty, sod_status, sod_wh, sod_loc, sod_desc, sod_taxamt, sod_site) "
                                 + " values ( " 
                                 + "'" + orddet.getValueAt(j, 0).toString() + "'" + ","
-                                + "'" + orddet.getValueAt(j, 1).toString().replace("'", "") + "'" + ","
-                                + "'" + orddet.getValueAt(j, 2).toString().replace("'", "") + "'" + ","
-                                + "'" + orddet.getValueAt(j, 3).toString().replace("'", "") + "'" + ","
-                                + "'" + orddet.getValueAt(j, 4).toString().replace("'", "") + "'" + ","
-                                + "'" + orddet.getValueAt(j, 5).toString() + "'" + ","
+                                + "'" + orddet.getValueAt(j, 1).toString() + "'" + ","
+                                + "'" + orddet.getValueAt(j, 2).toString() + "'" + ","
+                                + "'" + orddet.getValueAt(j, 3).toString() + "'" + ","
+                                + "'" + orddet.getValueAt(j, 4).toString() + "'" + ","
+                                + "'" + orddet.getValueAt(j, 5).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
                                 + "'" + orddet.getValueAt(j, 6).toString() + "'" + ","        
                                 + "'" + allocationvalue + "'" + ","  // sod_all_qty is allocated
-                                + "'" + orddet.getValueAt(j, 7).toString() + "'" + ","
-                                + "'" + orddet.getValueAt(j, 8).toString() + "'" + ","
-                                + "'" + orddet.getValueAt(j, 9).toString() + "'" + ","
+                                + "'" + orddet.getValueAt(j, 7).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + orddet.getValueAt(j, 8).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + orddet.getValueAt(j, 9).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
                                 + "'" + bsmf.MainFrame.dfdate.format(orddate.getDate()).toString() + "'" + ","
                                 + "'" + bsmf.MainFrame.dfdate.format(duedate.getDate()).toString() + "'" + ","
-                                + "'" + orddet.getValueAt(j, 10).toString() + "'" + ","
+                                + "'" + orddet.getValueAt(j, 10).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
                                 + "'" + orddet.getValueAt(j, 11).toString() + "'" + ","
                                 + "'" + orddet.getValueAt(j, 12).toString() + "'" + ","
                                 + "'" + orddet.getValueAt(j, 13).toString() + "'" + ","
                                 + "'" + orddet.getValueAt(j, 14).toString() + "'" + ","
-                                + "'" + orddet.getValueAt(j, 15).toString() + "'" + ","        
+                                + "'" + orddet.getValueAt(j, 15).toString().replace(defaultDecimalSeparator, '.') + "'" + ","        
                                 + "'" + ddsite.getSelectedItem().toString() + "'" 
                                 + ")"
                                 + ";");
@@ -1035,20 +1047,20 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
                             }
                             if (i > 0) {                                
                               st.executeUpdate("update sod_det set "
-                            + " sod_part = " + "'" + orddet.getValueAt(j, 1).toString().replace("'", "") + "'" + ","
-                            + " sod_custpart = " + "'" + orddet.getValueAt(j, 2).toString().replace("'", "") + "'" + ","
+                            + " sod_part = " + "'" + orddet.getValueAt(j, 1).toString() + "'" + ","
+                            + " sod_custpart = " + "'" + orddet.getValueAt(j, 2).toString() + "'" + ","
                             + " sod_po = " + "'" + ponbr.getText().replace("'", "") + "'" + ","
                             + " sod_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + ","        
-                            + " sod_ord_qty = " + "'" + orddet.getValueAt(j, 5).toString() + "'" + ","
+                            + " sod_ord_qty = " + "'" + orddet.getValueAt(j, 5).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
                             + " sod_uom = " + "'" + orddet.getValueAt(j, 6).toString() + "'" + ","        
                             + " sod_all_qty = " + "'" + allocationvalue + "'" + ","        
-                            + " sod_listprice = " + "'" + orddet.getValueAt(j, 7).toString() + "'" + ","
-                            + " sod_disc = " + "'" + orddet.getValueAt(j, 8).toString() + "'" + ","
+                            + " sod_listprice = " + "'" + orddet.getValueAt(j, 7).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
+                            + " sod_disc = " + "'" + orddet.getValueAt(j, 8).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
                             + " sod_wh = " + "'" + orddet.getValueAt(j, 12).toString() + "'" + ","
                             + " sod_loc = " + "'" + orddet.getValueAt(j, 13).toString() + "'" + ","
                             + " sod_due_date = " + "'" + bsmf.MainFrame.dfdate.format(duedate.getDate()).toString() + "'" + ","
                             + " sod_ord_date = " + "'" + bsmf.MainFrame.dfdate.format(orddate.getDate()).toString() + "'" + ","        
-                            + " sod_netprice = " + "'" + orddet.getValueAt(j, 9).toString() + "'"
+                            + " sod_netprice = " + "'" + orddet.getValueAt(j, 9).toString().replace(defaultDecimalSeparator, '.') + "'"
                             + " where sod_nbr = " + "'" + tbkey.getText() + "'" 
                             + " AND sod_line = " + "'" + orddet.getValueAt(j, 0).toString() + "'"
                             + ";");
@@ -1062,15 +1074,15 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
                             + "'" + orddet.getValueAt(j, 2).toString() + "'" + ","
                             + "'" + orddet.getValueAt(j, 3).toString() + "'" + ","
                             + "'" + orddet.getValueAt(j, 4).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 5).toString() + "'" + ","
+                            + "'" + orddet.getValueAt(j, 5).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
                             + "'" + orddet.getValueAt(j, 6).toString() + "'" + ","        
                             + "'" + allocationvalue + "'" + ","  // sod_all_qty is allocated
-                            + "'" + orddet.getValueAt(j, 7).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 8).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 9).toString() + "'" + ","
+                            + "'" + orddet.getValueAt(j, 7).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
+                            + "'" + orddet.getValueAt(j, 8).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
+                            + "'" + orddet.getValueAt(j, 9).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
                             + "'" + bsmf.MainFrame.dfdate.format(orddate.getDate()).toString() + "'" + ","
                             + "'" + bsmf.MainFrame.dfdate.format(duedate.getDate()).toString() + "'" + ","        
-                            + "'" + orddet.getValueAt(j, 10).toString() + "'" + ","
+                            + "'" + orddet.getValueAt(j, 10).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
                             + "'" + orddet.getValueAt(j, 11).toString() + "'" + ","
                             + "'" + orddet.getValueAt(j, 12).toString() + "'" + ","
                             + "'" + orddet.getValueAt(j, 13).toString() + "'" + ","                
@@ -1088,10 +1100,10 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
                             + "(sos_nbr, sos_desc, sos_type, sos_amttype, sos_amt ) "
                             + " values ( " 
                             + "'" + tbkey.getText().toString() + "'" + ","
-                            + "'" + sactable.getValueAt(j, 1).toString().replace("'", "") + "'" + ","
-                            + "'" + sactable.getValueAt(j, 0).toString().replace("'", "") + "'" + ","
-                            + "'" + sactable.getValueAt(j, 2).toString().replace("'", "") + "'" + ","
-                            + "'" + sactable.getValueAt(j, 3).toString().replace("'", "") + "'" 
+                            + "'" + sactable.getValueAt(j, 1).toString() + "'" + ","
+                            + "'" + sactable.getValueAt(j, 0).toString() + "'" + ","
+                            + "'" + sactable.getValueAt(j, 2).toString() + "'" + ","
+                            + "'" + sactable.getValueAt(j, 3).toString().replace(defaultDecimalSeparator, '.') + "'" 
                             + ")"
                             + ";");
 
@@ -1226,15 +1238,25 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
                     }
                 }
                
+               
                  // myorddetmodel  "Line", "Part", "CustPart", "SO", "PO", "Qty", "UOM", "ListPrice", "Discount", "NetPrice", "QtyShip", "Status"
                 res = st.executeQuery("select * from sod_det where sod_nbr = " + "'" + x[0] + "'" + ";");
                 while (res.next()) {
+                  if (defaultDecimalSeparator != '.') {
+                    myorddetmodel.addRow(new Object[]{res.getString("sod_line"), res.getString("sod_part"),
+                      res.getString("sod_custpart"), res.getString("sod_nbr"), 
+                      res.getString("sod_po"), res.getString("sod_ord_qty").replace('.', defaultDecimalSeparator), res.getString("sod_uom"), BlueSeerUtils.priceformat(res.getString("sod_listprice").replace('.', defaultDecimalSeparator)),
+                      BlueSeerUtils.priceformat(res.getString("sod_disc").replace('.', defaultDecimalSeparator)), BlueSeerUtils.priceformat(res.getString("sod_netprice").replace('.', defaultDecimalSeparator)), res.getString("sod_shipped_qty").replace('.', defaultDecimalSeparator), res.getString("sod_status"),
+                      res.getString("sod_wh"), res.getString("sod_loc"), res.getString("sod_desc"), res.getString("sod_taxamt").replace('.', defaultDecimalSeparator)
+                  });
+                  } else { 
                   myorddetmodel.addRow(new Object[]{res.getString("sod_line"), res.getString("sod_part"),
                       res.getString("sod_custpart"), res.getString("sod_nbr"), 
                       res.getString("sod_po"), res.getString("sod_ord_qty"), res.getString("sod_uom"), BlueSeerUtils.priceformat(res.getString("sod_listprice")),
                       BlueSeerUtils.priceformat(res.getString("sod_disc")), BlueSeerUtils.priceformat(res.getString("sod_netprice")), res.getString("sod_shipped_qty"), res.getString("sod_status"),
                       res.getString("sod_wh"), res.getString("sod_loc"), res.getString("sod_desc"), res.getString("sod_taxamt")
                   });
+                  }
                 }
                 
                 // set Action if Record found (i > 0)
@@ -1267,9 +1289,9 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
         luTable.setModel(luModel);
         luTable.getColumnModel().getColumn(0).setMaxWidth(50);
         if (luModel.getRowCount() < 1) {
-            ludialog.setTitle("No Records Found!");
+            ludialog.setTitle(getMessageTag(1001));
         } else {
-            ludialog.setTitle(luModel.getRowCount() + " Records Found!");
+            ludialog.setTitle(getMessageTag(1002, String.valueOf(luModel.getRowCount())));
         }
         }
         };
@@ -1289,8 +1311,10 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
         };
         luTable.addMouseListener(luml);
       
-        callDialog("OrdNbr", "PONbr", "Cust"); 
         
+        callDialog(getClassLabelTag("lblid", this.getClass().getSimpleName()), 
+                getClassLabelTag("lblpo", this.getClass().getSimpleName()),
+                getClassLabelTag("lblcust", this.getClass().getSimpleName())); 
         
     }
  
@@ -1309,9 +1333,9 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
         luTable.setModel(luModel);
         luTable.getColumnModel().getColumn(0).setMaxWidth(50);
         if (luModel.getRowCount() < 1) {
-            ludialog.setTitle("No Records Found!");
+            ludialog.setTitle(getMessageTag(1001));
         } else {
-            ludialog.setTitle(luModel.getRowCount() + " Records Found!");
+            ludialog.setTitle(getMessageTag(1002, String.valueOf(luModel.getRowCount())));
         }
         }
         };
@@ -1331,7 +1355,10 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
         };
         luTable.addMouseListener(luml);
       
-        callDialog("CustCode", "Name", "Zip"); 
+        
+        callDialog(getClassLabelTag("lblcust", this.getClass().getSimpleName()), 
+                getClassLabelTag("lblname", this.getClass().getSimpleName()),
+                getClassLabelTag("lblzip", this.getClass().getSimpleName())); 
         
         
     }
@@ -1347,9 +1374,9 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
         luTable.setModel(luModel);
         luTable.getColumnModel().getColumn(0).setMaxWidth(50);
         if (luModel.getRowCount() < 1) {
-            ludialog.setTitle("No Records Found!");
+            ludialog.setTitle(getMessageTag(1001));
         } else {
-            ludialog.setTitle(luModel.getRowCount() + " Records Found!");
+            ludialog.setTitle(getMessageTag(1002, String.valueOf(luModel.getRowCount())));
         }
         }
         };
@@ -1369,8 +1396,8 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
         };
         luTable.addMouseListener(luml);
       
-        callDialog("Description"); 
-        
+         
+        callDialog(getClassLabelTag("lbldesc", this.getClass().getSimpleName())); 
         
     }
     
@@ -1383,9 +1410,9 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
         luTable.setModel(luModel);
         luTable.getColumnModel().getColumn(0).setMaxWidth(50);
         if (luModel.getRowCount() < 1) {
-            ludialog.setTitle("No Records Found!");
+            ludialog.setTitle(getMessageTag(1001));
         } else {
-            ludialog.setTitle(luModel.getRowCount() + " Records Found!");
+            ludialog.setTitle(getMessageTag(1002, String.valueOf(luModel.getRowCount())));
         }
         }
         };
@@ -1405,7 +1432,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
         };
         luTable.addMouseListener(luml);
       
-        callDialog("CustItem"); 
+        callDialog(getClassLabelTag("lblcustitem", this.getClass().getSimpleName())); 
         
         
     }
@@ -1651,20 +1678,20 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
                     tbdesc.setForeground(Color.red);
                     tbdesc.setEditable(true);
                     
-                    discount.setText("0.0000");
-                    listprice.setText("0.0000");
+                    discount.setText("0");
+                    listprice.setText("0");
                     listprice.setBackground(Color.white);
                     
-                    netprice.setText("0.0000");
+                    netprice.setText("0");
                     qtyshipped.setText("0");
                 }
                 
                 }
                 
              if (k >= 0) {   
-            discount.setText("0.0000");
-            listprice.setText("0.0000");
-            netprice.setText("0.0000");
+            discount.setText("0");
+            listprice.setText("0");
+            netprice.setText("0");
             qtyshipped.setText("0");
             tbdesc.setText(invData.getItemDesc(ddpart.getSelectedItem().toString()));
             custnumber.setText(OVData.getCustPartFromPart(ddcust.getSelectedItem().toString(),ddpart.getSelectedItem().toString()));
@@ -1699,12 +1726,12 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
     }
     
     public void setPrice() {
-        listprice.setText("0.00");
-        netprice.setText("0.00");
+        listprice.setText("0");
+        netprice.setText("0");
         discount.setText("0");
         String[] TypeAndPrice = new String[]{"","0"};
         if (dduom.getItemCount() > 0 && ddpart.getItemCount() > 0 && ddcust.getItemCount() > 0) {
-                DecimalFormat df = new DecimalFormat("#0.0000", new DecimalFormatSymbols(Locale.US));
+                DecimalFormat df = new DecimalFormat("#0.0000", new DecimalFormatSymbols(Locale.getDefault()));
                 
                 TypeAndPrice = invData.getItemPrice("c", ddcust.getSelectedItem().toString(), ddpart.getSelectedItem().toString(), 
                         dduom.getSelectedItem().toString(), ddcurr.getSelectedItem().toString());
@@ -1728,23 +1755,34 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
         Double disc = 0.00;
         Double list = 0.00;
         Double net = 0.00;
+        NumberFormat nf = NumberFormat.getInstance(Locale.getDefault());
+        if (! discount.getText().isEmpty()) {
+            try {
+                disc = nf.parse(discount.getText()).doubleValue();
+            } catch (ParseException ex) {
+                bsmf.MainFrame.show(getMessageTag(1033));
+            }
+        }
+        if (! listprice.getText().isEmpty()) {
+            try {
+                list = nf.parse(listprice.getText()).doubleValue();
+            } catch (ParseException ex) {
+                bsmf.MainFrame.show(getMessageTag(1033));
+            }
+        }
         
-        
-        if (discount.getText().isEmpty() || Double.parseDouble(discount.getText().toString()) == 0) {
+        if (disc == 0) {
             netprice.setText(listprice.getText());
         } else {
-           
-           if (listprice.getText().isEmpty() || Double.parseDouble(listprice.getText().toString()) == 0) {
+           if (list == 0) {
              listprice.setText("0");
              netprice.setText("0");
-           } else {               
-           disc = Double.parseDouble(discount.getText().toString());
-           list = Double.parseDouble(listprice.getText().toString());
-            
+           } else {  
            net = list - ((disc / 100) * list);
            netprice.setText(df.format(net));
            }
         }
+
     }
      
     public void enableAllButAction() {
@@ -1842,8 +1880,9 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
         return max;
     }
     
-    public void sumdollars() {
-        DecimalFormat df = new DecimalFormat("#.00", new DecimalFormatSymbols(Locale.US));
+    public void sumdollars() throws ParseException {
+        DecimalFormat df = new DecimalFormat("#.00", new DecimalFormatSymbols(Locale.getDefault()));
+        NumberFormat nf = NumberFormat.getInstance(Locale.getDefault());
         double dol = 0;
         double summaryTaxPercent = 0;
         double headertax = 0;
@@ -1851,18 +1890,18 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
         double totaltax = 0;
         
          for (int j = 0; j < orddet.getRowCount(); j++) {
-             dol = dol + ( Double.valueOf(orddet.getValueAt(j, 5).toString()) * Double.valueOf(orddet.getValueAt(j, 9).toString()) ); 
-             matltax += Double.valueOf(orddet.getValueAt(j, 15).toString()); // now get material tax at the line level
+             dol = dol + ( nf.parse(orddet.getValueAt(j, 5).toString()).doubleValue() * nf.parse(orddet.getValueAt(j, 9).toString()).doubleValue() );  
+             matltax += nf.parse(orddet.getValueAt(j, 15).toString()).doubleValue(); // now get material tax at the line level
          }
          
          // now lets get summary tax
          // now add trailer/summary charges if any
          for (int j = 0; j < sactable.getRowCount(); j++) {
             if (sactable.getValueAt(j,0).toString().equals("charge")) {
-            dol += Double.valueOf(sactable.getValueAt(j,3).toString());  // add charges to total net charge
+            dol += nf.parse(sactable.getValueAt(j,3).toString()).doubleValue();  // add charges to total net charge
             }
             if (sactable.getValueAt(j,0).toString().equals("tax")) {
-            summaryTaxPercent += Double.valueOf(sactable.getValueAt(j,3).toString());
+            summaryTaxPercent += nf.parse(sactable.getValueAt(j,3).toString()).doubleValue();
             }
         }
          
@@ -1887,13 +1926,17 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
       
     public void refreshDisplayTotals() {
         sumqty();
-        sumdollars();
+        try {
+            sumdollars();
+        } catch (ParseException ex) {
+            bslog(ex);
+        }
         sumlinecount();
     }
     
-    public void retotal() {
-        
-        DecimalFormat df = new DecimalFormat("#.00", new DecimalFormatSymbols(Locale.US));
+    public void retotal() throws ParseException {
+        NumberFormat nf = NumberFormat.getInstance(Locale.getDefault());
+        DecimalFormat df = new DecimalFormat("#.00", new DecimalFormatSymbols(Locale.getDefault()));
         double dol = 0;
         double newdisc = 0;
         double newprice = 0;
@@ -1904,7 +1947,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
          //"Line", "Part", "CustPart", "SO", "PO", "Qty", "ListPrice", "Discount", "NetPrice", "QtyShip", "Status", "WH", "LOC", "Desc"
         for (int j = 0; j < sactable.getRowCount(); j++) {
             if (sactable.getValueAt(j,0).toString().equals("discount")) {
-            newdisc += Double.valueOf(sactable.getValueAt(j,3).toString());
+            newdisc += nf.parse(sactable.getValueAt(j,3).toString()).doubleValue();
             
             }
         }
@@ -1912,7 +1955,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
        
         
          for (int j = 0; j < orddet.getRowCount(); j++) {
-             listprice = Double.valueOf(orddet.getValueAt(j, 7).toString());
+             listprice = nf.parse(orddet.getValueAt(j, 7).toString()).doubleValue();
              orddet.setValueAt(BlueSeerUtils.priceformat(String.valueOf(newdisc)), j, 8);
              if (newdisc > 0) {
              newprice = listprice - (listprice * (newdisc / 100));
@@ -1928,7 +1971,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
     }
     
     public boolean validateDetail() {
-        
+        /*
         Pattern p = Pattern.compile("^[0-9]\\d*(\\.\\d+)?$");
         Matcher m = p.matcher(listprice.getText());
         if (!m.find() || listprice.getText() == null) {
@@ -1962,7 +2005,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
             qtyshipped.requestFocus();
             return false;
         }
-        
+        */
          
         
         // check unallocated qty
@@ -3268,7 +3311,19 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
     }//GEN-LAST:event_btnewActionPerformed
 
     private void btadditemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btadditemActionPerformed
-        
+        NumberFormat nf = NumberFormat.getInstance(Locale.getDefault());
+        double np = 0;
+        double qty = 0;
+            try {
+                np = nf.parse(netprice.getText()).doubleValue();
+            } catch (ParseException ex) {
+                bslog(ex);
+            }
+            try {
+                qty = nf.parse(qtyshipped.getText()).doubleValue();
+            } catch (ParseException ex) {
+                bslog(ex);
+            }
         int line = 0;
         
         line = getmaxline();
@@ -3283,7 +3338,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
                 discount.getText(), netprice.getText(), 
                 "0", "open",
                 ddwh.getSelectedItem().toString(), ddloc.getSelectedItem().toString(), tbdesc.getText(), 
-                String.valueOf(OVData.getTaxAmtApplicableByItem(ddpart.getSelectedItem().toString(), (Double.valueOf(netprice.getText()) * Double.valueOf(qtyshipped.getText())) ))
+                String.valueOf(OVData.getTaxAmtApplicableByItem(ddpart.getSelectedItem().toString(), (np * qty) ))
             });
             
             // lets collect tax elements for each item
@@ -3588,7 +3643,11 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
             ((javax.swing.table.DefaultTableModel) sactable.getModel()).removeRow(i);
         }
        
-        retotal();
+                    try {
+                        retotal();
+                    } catch (ParseException ex) {
+                        bslog(ex);
+                    }
         refreshDisplayTotals();
          
     }//GEN-LAST:event_btsacdeleteActionPerformed
@@ -3613,7 +3672,11 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
         
         if (proceed)
         sacmodel.addRow(new Object[]{ ddsactype.getSelectedItem().toString(), tbsacdesc.getText(), percentlabel.getText(), tbsacamt.getText()});
-        retotal();
+                    try {
+                        retotal();
+                    } catch (ParseException ex) {
+                        bslog(ex);
+                    }
         refreshDisplayTotals();
     }//GEN-LAST:event_btsacaddActionPerformed
 

@@ -29,9 +29,13 @@ import bsmf.MainFrame;
 import com.blueseer.dst.*;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.reinitpanels;
+import static bsmf.MainFrame.tags;
 import com.blueseer.inv.invData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
 import static com.blueseer.utl.BlueSeerUtils.luTable;
 import static com.blueseer.utl.BlueSeerUtils.lual;
@@ -57,10 +61,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
@@ -83,7 +91,14 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
    // global datatablemodel declarations    
     javax.swing.table.DefaultTableModel myorddetmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
-                "line", "Part", "Type", "Desc", "Order", "Qty", "Price", "UOM"
+                getGlobalColumnTag("line"), 
+                getGlobalColumnTag("item"), 
+                getGlobalColumnTag("type"), 
+                getGlobalColumnTag("description"), 
+                getGlobalColumnTag("order"), 
+                getGlobalColumnTag("qty"), 
+                getGlobalColumnTag("price"), 
+                getGlobalColumnTag("uom")
             })
             {
                     boolean[] canEdit = new boolean[]{
@@ -109,6 +124,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
     
     public ServiceOrderMaint() {
         initComponents();
+        setLanguageTags(this);
     }
   
     
@@ -248,6 +264,50 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
                 }
             }
     } 
+    
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
     
     public void setComponentDefaultValues() {
        isLoad = true;
@@ -393,12 +453,12 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
         boolean b = true;
             if (ddcust.getSelectedItem() == null || ddcust.getSelectedItem().toString().isEmpty()) {
                 b = false;
-                bsmf.MainFrame.show("must choose a cust");
+                bsmf.MainFrame.show(getMessageTag(1024,""));
                 return b;
             } 
             if (ddship.getSelectedItem() == null || ddship.getSelectedItem().toString().isEmpty()) {
                 b = false;
-                bsmf.MainFrame.show("must choose a shipto");
+                bsmf.MainFrame.show(getMessageTag(1024,""));
                 return b;
             } 
             return b;
@@ -663,9 +723,9 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
         luTable.setModel(luModel);
         luTable.getColumnModel().getColumn(0).setMaxWidth(50);
         if (luModel.getRowCount() < 1) {
-            ludialog.setTitle("No Records Found!");
+            ludialog.setTitle(getMessageTag(1001));
         } else {
-            ludialog.setTitle(luModel.getRowCount() + " Records Found!");
+            ludialog.setTitle(getMessageTag(1002, String.valueOf(luModel.getRowCount())));
         }
         }
         };
@@ -685,7 +745,8 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
         };
         luTable.addMouseListener(luml);
       
-        callDialog("Nbr", "Cust"); 
+        callDialog(getClassLabelTag("lblid", this.getClass().getSimpleName()), 
+                getClassLabelTag("lblcust", this.getClass().getSimpleName())); 
         
         
     }
@@ -744,7 +805,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
                 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("SQL Code does not execute");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -780,7 +841,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
                 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("SQL Code does not execute");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -978,10 +1039,13 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
         add(jScrollPane1);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Service Order Maintenance"));
+        jPanel1.setName("panelmain"); // NOI18N
 
         jLabel76.setText("Key");
+        jLabel76.setName("lblid"); // NOI18N
 
         jLabel86.setText("Remarks");
+        jLabel86.setName("lblremarks"); // NOI18N
 
         tbkey.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -992,6 +1056,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
         duedate.setDateFormatString("yyyy-MM-dd");
 
         btnew.setText("New");
+        btnew.setName("btnew"); // NOI18N
         btnew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnewActionPerformed(evt);
@@ -999,6 +1064,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         btadditem.setText("Add Item");
+        btadditem.setName("btadditem"); // NOI18N
         btadditem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btadditemActionPerformed(evt);
@@ -1006,8 +1072,10 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         jLabel85.setText("Type");
+        jLabel85.setName("lbltype"); // NOI18N
 
         jLabel82.setText("Customer");
+        jLabel82.setName("lblcust"); // NOI18N
 
         orddet.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -1023,6 +1091,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
         jScrollPane8.setViewportView(orddet);
 
         btdelitem.setText("Del Item");
+        btdelitem.setName("btdeleteitem"); // NOI18N
         btdelitem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdelitemActionPerformed(evt);
@@ -1032,6 +1101,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
         ddtype.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "quote", "order" }));
 
         btadd.setText("Add");
+        btadd.setName("bdadd"); // NOI18N
         btadd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddActionPerformed(evt);
@@ -1039,8 +1109,10 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         jLabel81.setText("Due Date");
+        jLabel81.setName("lblduedate"); // NOI18N
 
         btupdate.setText("Update");
+        btupdate.setName("btupdate"); // NOI18N
         btupdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btupdateActionPerformed(evt);
@@ -1048,6 +1120,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         jLabel79.setText("Service Item");
+        jLabel79.setName("lblserviceitem"); // NOI18N
 
         serviceitem.setColumns(20);
         serviceitem.setRows(5);
@@ -1072,11 +1145,13 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         jLabel84.setText("Unit/Hour");
+        jLabel84.setName("lblunithour"); // NOI18N
 
         jLabel11.setText("Price");
 
         jLabel12.setFont(new java.awt.Font("Noto Sans", 2, 12)); // NOI18N
         jLabel12.setText("Price is per uom");
+        jLabel12.setName("lblperuom"); // NOI18N
 
         javax.swing.GroupLayout panelServiceLayout = new javax.swing.GroupLayout(panelService);
         panelService.setLayout(panelServiceLayout);
@@ -1122,8 +1197,10 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
         );
 
         jLabel8.setText("Item");
+        jLabel8.setName("lblitem"); // NOI18N
 
         jLabel3.setText("Price");
+        jLabel3.setName("lblprice"); // NOI18N
 
         dditem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1141,6 +1218,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         jLabel10.setText("Qty");
+        jLabel10.setName("lblqty"); // NOI18N
 
         tbqty.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -1152,6 +1230,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         jLabel13.setText("UOM");
+        jLabel13.setName("lbluom"); // NOI18N
 
         javax.swing.GroupLayout panelItemLayout = new javax.swing.GroupLayout(panelItem);
         panelItem.setLayout(panelItemLayout);
@@ -1226,12 +1305,16 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
         );
 
         jLabel1.setText("Total Lines");
+        jLabel1.setName("lbltotallines"); // NOI18N
 
         jLabel2.setText("Total Hrs");
+        jLabel2.setName("lbltotalhours"); // NOI18N
 
         jLabel91.setText("Job Site");
+        jLabel91.setName("lbljobsite"); // NOI18N
 
         btprint.setText("Print");
+        btprint.setName("btprint"); // NOI18N
         btprint.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btprintActionPerformed(evt);
@@ -1239,12 +1322,14 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         jLabel92.setText("PO");
+        jLabel92.setName("lblpo"); // NOI18N
 
         remarks.setColumns(20);
         remarks.setRows(5);
         jScrollPane3.setViewportView(remarks);
 
         btquotetoorder.setText("QuoteToOrder");
+        btquotetoorder.setName("btquotetoorder"); // NOI18N
         btquotetoorder.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btquotetoorderActionPerformed(evt);
@@ -1252,8 +1337,10 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         jLabel93.setText("Crew");
+        jLabel93.setName("lblcrew"); // NOI18N
 
         jLabel5.setText("Total");
+        jLabel5.setName("lbltotal"); // NOI18N
 
         ddcust.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1286,12 +1373,15 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
         ddstatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "open", "processing", "closed", "void" }));
 
         jLabel6.setText("Status");
+        jLabel6.setName("lblstatus"); // NOI18N
 
         createdate.setDateFormatString("yyyy-MM-dd");
 
         jLabel83.setText("Crt Date");
+        jLabel83.setName("lblcreatedate"); // NOI18N
 
         btinvoice.setText("Invoice");
+        btinvoice.setName("btinvoice"); // NOI18N
         btinvoice.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btinvoiceActionPerformed(evt);
@@ -1299,8 +1389,10 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         jLabel7.setText("Site");
+        jLabel7.setName("lblsite"); // NOI18N
 
         btdelete.setText("Delete");
+        btdelete.setName("btdelete"); // NOI18N
         btdelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdeleteActionPerformed(evt);
@@ -1308,6 +1400,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         rbinventory.setText("Inventory");
+        rbinventory.setName("cbinventory"); // NOI18N
         rbinventory.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 rbinventoryStateChanged(evt);
@@ -1320,6 +1413,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         rbservice.setText("Service");
+        rbservice.setName("cbservice"); // NOI18N
         rbservice.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 rbserviceStateChanged(evt);
@@ -1352,8 +1446,10 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
         );
 
         cbpaid.setText("PaidInFull?");
+        cbpaid.setName("cbpaidinfull"); // NOI18N
 
         btclear.setText("Clear");
+        btclear.setName("btclear"); // NOI18N
         btclear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btclearActionPerformed(evt);
@@ -1615,7 +1711,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
         } else {
             
             if (dditem.getSelectedItem() == null || dditem.getSelectedItem().toString().isEmpty()) {
-                bsmf.MainFrame.show("must choose an item from inventory");
+                bsmf.MainFrame.show(getMessageTag(1099));
                 return;
             }
             if (tbqty.getText().isEmpty()) { 
@@ -1631,7 +1727,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
         }
         
         if (qty == 0) {
-            bsmf.MainFrame.show("Warning: qty is zero");
+            bsmf.MainFrame.show(getMessageTag(1100));
         }
         
         if (canproceed) {
@@ -1750,17 +1846,19 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
     }//GEN-LAST:event_tbpriceFocusGained
 
     private void tbpriceFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbpriceFocusLost
-              String x = BlueSeerUtils.bsformat("", tbprice.getText(), "2");
+        if (! tbprice.getText().isEmpty()) {
+        String x = BlueSeerUtils.bsformat("", tbprice.getText(), "2");
         if (x.equals("error")) {
             tbprice.setText("");
             tbprice.setBackground(Color.yellow);
-            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            bsmf.MainFrame.show(getMessageTag(1000));
             tbprice.requestFocus();
         } else {
             tbprice.setText(x);
             tbprice.setBackground(Color.white);
         }
         setTotalPrice();
+        }
     }//GEN-LAST:event_tbpriceFocusLost
 
     private void tbhoursFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbhoursFocusGained
@@ -1770,11 +1868,12 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
     }//GEN-LAST:event_tbhoursFocusGained
 
     private void tbhoursFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbhoursFocusLost
-              String x = BlueSeerUtils.bsformat("", tbhours.getText(), "2");
+        if (! tbhours.getText().isEmpty()) {
+        String x = BlueSeerUtils.bsformat("", tbhours.getText(), "2");
         if (x.equals("error")) {
             tbhours.setText("");
             tbhours.setBackground(Color.yellow);
-            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            bsmf.MainFrame.show(getMessageTag(1000));
             tbhours.requestFocus();
         } else {
             tbhours.setText(x);
@@ -1782,6 +1881,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
         }
         setTotalHours();
         setTotalPrice();  
+        }
     }//GEN-LAST:event_tbhoursFocusLost
 
     private void btquotetoorderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btquotetoorderActionPerformed
@@ -1793,13 +1893,13 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
             try {
                 Statement st = bsmf.MainFrame.con.createStatement();
                     st.executeUpdate("update sv_mstr set sv_type = 'order' where sv_nbr = " + "'" + tbkey.getText() + "'" );
-                    bsmf.MainFrame.show("Quote has been confirmed to Order");
+                    bsmf.MainFrame.show(getMessageTag(1101));
                    initvars(new String[]{tbkey.getText()});
                     // btQualProbAdd.setEnabled(false);
                
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Cannot update Service Order");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -1847,17 +1947,19 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
     }//GEN-LAST:event_tbservicepriceFocusGained
 
     private void tbservicepriceFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbservicepriceFocusLost
-                  String x = BlueSeerUtils.bsformat("", tbserviceprice.getText(), "2");
+        if (! tbserviceprice.getText().isEmpty()) {
+        String x = BlueSeerUtils.bsformat("", tbserviceprice.getText(), "2");
         if (x.equals("error")) {
             tbserviceprice.setText("");
             tbserviceprice.setBackground(Color.yellow);
-            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            bsmf.MainFrame.show(getMessageTag(1000));
             tbserviceprice.requestFocus();
         } else {
             tbserviceprice.setText(x);
             tbserviceprice.setBackground(Color.white);
         }
         setTotalPrice();
+        }
     }//GEN-LAST:event_tbservicepriceFocusLost
 
     private void rbserviceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbserviceActionPerformed

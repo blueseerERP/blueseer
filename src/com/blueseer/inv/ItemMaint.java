@@ -27,6 +27,7 @@ SOFTWARE.
 package com.blueseer.inv;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.defaultDecimalSeparator;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import static bsmf.MainFrame.reinitpanels;
@@ -74,6 +75,7 @@ import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -531,15 +533,15 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
          
             double mtlcost = 0.00;
             if (! tbmtlcost.getText().isEmpty()) {
-                mtlcost = Double.valueOf(tbmtlcost.getText());
+                mtlcost = Double.valueOf(tbmtlcost.getText().replace(defaultDecimalSeparator, '.'));
             }
              double ovhcost = 0.00;
             if (! tbovhcost.getText().isEmpty()) {
-                ovhcost = Double.valueOf(tbovhcost.getText());
+                ovhcost = Double.valueOf(tbovhcost.getText().replace(defaultDecimalSeparator, '.'));
             }
              double outcost = 0.00;
             if (! tboutcost.getText().isEmpty()) {
-                outcost = Double.valueOf(tboutcost.getText());
+                outcost = Double.valueOf(tboutcost.getText().replace(defaultDecimalSeparator, '.'));
             }
           // now add item cost record for later use
           OVData.addItemCostRec(tbkey.getText(), ddsite.getSelectedItem().toString(), "standard", mtlcost, ovhcost, outcost, (mtlcost + ovhcost + outcost));
@@ -616,11 +618,11 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
         ItemMstr x = new ItemMstr(null, tbkey.getText().toString(),
                 tbdesc.getText().toUpperCase(),
                 bsformat("i", tblotsize.getText(), ""),
-                bsformat("d", tbsellprice.getText(), "5"),
-                bsformat("d", tbpurchprice.getText(), "5"),
-                bsformat("d", tbovhcost.getText(), "5"),
-                bsformat("d", tboutcost.getText(), "5"),
-                bsformat("d", tbmtlcost.getText(), "5"),
+                bsformat("d", tbsellprice.getText(), "5").replace(defaultDecimalSeparator, '.'),
+                bsformat("d", tbpurchprice.getText(), "5").replace(defaultDecimalSeparator, '.'),
+                bsformat("d", tbovhcost.getText(), "5").replace(defaultDecimalSeparator, '.'),
+                bsformat("d", tboutcost.getText(), "5").replace(defaultDecimalSeparator, '.'),
+                bsformat("d", tbmtlcost.getText(), "5").replace(defaultDecimalSeparator, '.'),
                 ddcode.getSelectedItem().toString(),
                 ddtype.getSelectedItem().toString(),
                 tbgroup.getText(),
@@ -634,13 +636,13 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
                 comments.getText().toString(),
                 ddstatus.getSelectedItem().toString(),
                 dduom.getSelectedItem().toString(),
-                bsformat("d", tbnetwt.getText(), "2"),
-                bsformat("d", tbshipwt.getText(), "2"),
+                bsformat("d", tbnetwt.getText(), "2").replace(defaultDecimalSeparator, '.'),
+                bsformat("d", tbshipwt.getText(), "2").replace(defaultDecimalSeparator, '.'),
                 tbdefaultcont.getText(),
-                bsformat("d", tbcontqty.getText(), "0"),
-                bsformat("d", tbleadtime.getText(), "0"),
-                bsformat("d", tbsafestock.getText(), "0"),
-                bsformat("d", tbminordqty.getText(), "0"),
+                bsformat("d", tbcontqty.getText(), "0").replace(defaultDecimalSeparator, '.'),
+                bsformat("d", tbleadtime.getText(), "0").replace(defaultDecimalSeparator, '.'),
+                bsformat("d", tbsafestock.getText(), "0").replace(defaultDecimalSeparator, '.'),
+                bsformat("d", tbminordqty.getText(), "0").replace(defaultDecimalSeparator, '.'),
                 BlueSeerUtils.boolToInt(cbmrp.isSelected()),
                 BlueSeerUtils.boolToInt(cbschedule.isSelected()),
                 BlueSeerUtils.boolToInt(cbplan.isSelected()),
@@ -719,7 +721,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
              
        Double opcost = 0.00;
        Double prevcost = 0.00;
-       DecimalFormat df = new DecimalFormat("#.####", new DecimalFormatSymbols(Locale.US)); 
+      
         try {
             Class.forName(bsmf.MainFrame.driver).newInstance();
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
@@ -813,135 +815,12 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
              
              
          }
-      
-    public void getroutingcost(String parentpart) {
-             
-              Double opcost = 0.00;
-              Double totcost = 0.00;
-       Double prevcost = 0.00;
-       Double mtl = 0.00;
-       Double lbr = 0.00;
-       Double bdn = 0.00;
-       Double ovh = 0.00;
-       Double svc = 0.00;
-       Double lastmtl = 0.00;
-       Double lastlbr = 0.00;
-       Double lastbdn = 0.00;
-       Double lastovh = 0.00;
-       Double lastsvc = 0.00;
-       
-       DecimalFormat df = new DecimalFormat("#.####", new DecimalFormatSymbols(Locale.US)); 
-        try {
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-
-                int i = 0;
-
-                
-                routingmodel.setRowCount(0);
-             //   tablerouting.setModel(routingmodel);
-                            
-                // ReportPanel.TableReport.getColumn("CallID").setCellRenderer(new ButtonRenderer());
-                //          ReportPanel.TableReport.getColumn("CallID").setCellEditor(
-                    //       new ButtonEditor(new JCheckBox()));
-
-               res = st.executeQuery("SELECT it_wf, wf_desc, it_item, itr_total, itr_op,  " +
-                        " itr_mtl_top, itr_mtl_low, itr_lbr_top, itr_lbr_low, itr_bdn_top, itr_bdn_low, itr_ovh_top, itr_ovh_low, " +
-                        " itr_out_top, itr_out_low " +
-                        " FROM  item_mstr  " +
-                        " inner join itemr_cost on itr_item = it_item and itr_routing = item_mstr.it_wf " +
-                        " inner join wf_mstr on wf_id = it_wf and wf_op = itr_op " +
-                        " where it_item = " + "'" + parentpart.toString() + "'" + 
-                        " order by it_item desc ;");
-
-               /*
-                while (res.next()) {
-                    i++;
-                    if (i == 1) {
-                    opcost = res.getDouble("itr_total");
-                    mtl = res.getDouble("itr_mtl_top") + res.getDouble("itr_mtl_low");
-                    lbr = res.getDouble("itr_lbr_top") + res.getDouble("itr_lbr_low");
-                    bdn = res.getDouble("itr_bdn_top") + res.getDouble("itr_bdn_low");
-                    ovh = res.getDouble("itr_ovh_top") + res.getDouble("itr_ovh_low");
-                    svc = res.getDouble("itr_out_top") + res.getDouble("itr_out_low");
-                    }
-                    else {
-                    opcost = res.getDouble("itr_total") - prevcost;
-                    mtl = res.getDouble("itr_mtl_top") + res.getDouble("itr_mtl_low") - lastmtl;
-                    lbr = res.getDouble("itr_lbr_top") + res.getDouble("itr_lbr_low") - lastlbr;
-                    bdn = res.getDouble("itr_bdn_top") + res.getDouble("itr_bdn_low") - lastbdn;
-                    ovh = res.getDouble("itr_ovh_top") + res.getDouble("itr_ovh_low") - lastovh;
-                    svc = res.getDouble("itr_out_top") + res.getDouble("itr_out_low") - lastsvc;
-                    }        
-                    routingmodel.addRow(new Object[]{
-                                res.getString("itr_op"),
-                                res.getString("wf_desc"),
-                                (df.format(mtl)),
-                                (df.format(lbr)),
-                                (df.format(bdn)),
-                                (df.format(ovh)),
-                                (df.format(svc)),
-                                df.format(opcost)
-                            });
-               prevcost = res.getDouble("itr_total");
-               lastmtl = res.getDouble("itr_mtl_top") + res.getDouble("itr_mtl_low");
-               lastlbr = res.getDouble("itr_lbr_top") + res.getDouble("itr_lbr_low");
-               lastbdn = res.getDouble("itr_bdn_top") + res.getDouble("itr_bdn_low");
-               lastovh = res.getDouble("itr_ovh_top") + res.getDouble("itr_ovh_low");
-               lastsvc = res.getDouble("itr_out_top") + res.getDouble("itr_out_low");
-                }
-                */
-               totcost = 0.00;
-               while (res.next()) {
-                    i++;
-                opcost = res.getDouble("itr_total");
-                totcost += opcost;
-                    mtl = res.getDouble("itr_mtl_top") + res.getDouble("itr_mtl_low");
-                    lbr = res.getDouble("itr_lbr_top") + res.getDouble("itr_lbr_low");
-                    bdn = res.getDouble("itr_bdn_top") + res.getDouble("itr_bdn_low");
-                    ovh = res.getDouble("itr_ovh_top") + res.getDouble("itr_ovh_low");
-                    svc = res.getDouble("itr_out_top") + res.getDouble("itr_out_low");
-               
-               routingmodel.addRow(new Object[]{
-                                res.getString("itr_op"),
-                                res.getString("wf_desc"),
-                                (df.format(mtl)),
-                                (df.format(lbr)),
-                                (df.format(bdn)),
-                                (df.format(ovh)),
-                                (df.format(svc)),
-                                df.format(opcost)
-                            });
-               
-               }
-                
-                
-                
-                
-                
-                routingmodel.addRow(new Object[]{"","","","","","","",df.format(totcost)});
-
-               // if (i == 0  && ddcode.getSelectedItem() != null && ddcode.getSelectedItem().equals("M"))
-                   // bsmf.MainFrame.show("No Routing Cost Defined");
-                
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("problem with getroutingcost");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-             
-             
-         }
-      
+     
     public void getcurrentcost(String parentpart) {
-                calcCost cur = new calcCost();
-        DecimalFormat df = new DecimalFormat("0.00000", new DecimalFormatSymbols(Locale.US)); 
+        calcCost cur = new calcCost();
+        String pattern = "#0.00000";
+        DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.getDefault());    
+        df.applyPattern(pattern); 
         ArrayList<Double> costlist = new ArrayList<Double>();
         costlist = cur.getTotalCost(tbkey.getText());
      tbmtlcur.setText(df.format(costlist.get(0)));
@@ -954,7 +833,9 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
     
     public void getstandardcost(String parentpart) {
     ArrayList<Double> costs = invData.getItemCostElements(tbkey.getText(), "standard", ddsite.getSelectedItem().toString());
-    DecimalFormat df = new DecimalFormat("0.00000", new DecimalFormatSymbols(Locale.US)); 
+    String pattern = "#0.00000";
+    DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.getDefault());    
+    df.applyPattern(pattern);  
      tbmtlstd.setText(df.format(costs.get(0) + costs.get(5)));
      tblbrstd.setText(df.format(costs.get(1) + costs.get(6)));
      tbbdnstd.setText(df.format(costs.get(2) + costs.get(7)));
@@ -984,7 +865,9 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
        
     public DefaultMutableTreeNode get_nodes_by_op(String mypart, String myop)  {
-           DecimalFormat df = new DecimalFormat("0.00000", new DecimalFormatSymbols(Locale.US));
+        String pattern = "#0.00000";
+        DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.getDefault());    
+        df.applyPattern(pattern); 
        DefaultMutableTreeNode mynode = new DefaultMutableTreeNode(myop);
         String[] newpart = mypart.split("___");
         ArrayList<String> mylist = new ArrayList<String>();
@@ -1010,7 +893,9 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
      }
       
     public DefaultMutableTreeNode get_nodes_op(String mypart)  {
-        DecimalFormat df = new DecimalFormat("0.00000", new DecimalFormatSymbols(Locale.US)); 
+        String pattern = "#0.00000";
+        DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.getDefault());    
+        df.applyPattern(pattern);  
         DefaultMutableTreeNode mynode = new DefaultMutableTreeNode(mypart);
         String[] newpart = mypart.split("___");
         ArrayList<String> mylist = new ArrayList<String>();
@@ -2347,7 +2232,8 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
     }//GEN-LAST:event_tbkeyActionPerformed
 
     private void tbsellpriceFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbsellpriceFocusLost
-            String x = BlueSeerUtils.bsformat("", tbsellprice.getText(), "5");
+        if (! tbsellprice.getText().isEmpty()) {
+        String x = BlueSeerUtils.bsformat("", tbsellprice.getText(), "5");
         if (x.equals("error")) {
             tbsellprice.setText("");
             tbsellprice.setBackground(Color.yellow);
@@ -2356,6 +2242,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
         } else {
             tbsellprice.setText(x);
             tbsellprice.setBackground(Color.white);
+        }
         }
     }//GEN-LAST:event_tbsellpriceFocusLost
 
@@ -2366,7 +2253,8 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
     }//GEN-LAST:event_tbsellpriceFocusGained
 
     private void tbpurchpriceFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbpurchpriceFocusLost
-              String x = BlueSeerUtils.bsformat("", tbpurchprice.getText(), "5");
+        if (! tbpurchprice.getText().isEmpty()) {
+        String x = BlueSeerUtils.bsformat("", tbpurchprice.getText(), "5");
         if (x.equals("error")) {
             tbpurchprice.setText("");
             tbpurchprice.setBackground(Color.yellow);
@@ -2377,6 +2265,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
             tbmtlcost.setText(x);
             tbpurchprice.setBackground(Color.white);
         }
+        }
     }//GEN-LAST:event_tbpurchpriceFocusLost
 
     private void tbpurchpriceFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbpurchpriceFocusGained
@@ -2386,7 +2275,8 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
     }//GEN-LAST:event_tbpurchpriceFocusGained
 
     private void tbmtlcostFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbmtlcostFocusLost
-               String x = BlueSeerUtils.bsformat("", tbmtlcost.getText(), "5");
+        if (! tbmtlcost.getText().isEmpty()) {
+        String x = BlueSeerUtils.bsformat("", tbmtlcost.getText(), "5");
         if (x.equals("error")) {
             tbmtlcost.setText("");
             tbmtlcost.setBackground(Color.yellow);
@@ -2396,10 +2286,12 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
             tbmtlcost.setText(x);
             tbmtlcost.setBackground(Color.white);
         }
+        }
     }//GEN-LAST:event_tbmtlcostFocusLost
 
     private void tboutcostFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tboutcostFocusLost
-                  String x = BlueSeerUtils.bsformat("", tboutcost.getText(), "5");
+        if (! tboutcost.getText().isEmpty()) {
+        String x = BlueSeerUtils.bsformat("", tboutcost.getText(), "5");
         if (x.equals("error")) {
             tboutcost.setText("");
             tboutcost.setBackground(Color.yellow);
@@ -2409,10 +2301,12 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
             tboutcost.setText(x);
             tboutcost.setBackground(Color.white);
         }
+        }
     }//GEN-LAST:event_tboutcostFocusLost
 
     private void tbovhcostFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbovhcostFocusLost
-                  String x = BlueSeerUtils.bsformat("", tbovhcost.getText(), "5");
+        if (! tbovhcost.getText().isEmpty()) {
+        String x = BlueSeerUtils.bsformat("", tbovhcost.getText(), "5");
         if (x.equals("error")) {
             tbovhcost.setText("");
             tbovhcost.setBackground(Color.yellow);
@@ -2422,10 +2316,12 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
             tbovhcost.setText(x);
             tbovhcost.setBackground(Color.white);
         }
+        }
     }//GEN-LAST:event_tbovhcostFocusLost
 
     private void tbnetwtFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbnetwtFocusLost
-          String x = BlueSeerUtils.bsformat("", tbnetwt.getText(), "3");
+        if (! tbnetwt.getText().isEmpty()) {
+        String x = BlueSeerUtils.bsformat("", tbnetwt.getText(), "3");
         if (x.equals("error")) {
             tbnetwt.setText("");
             tbnetwt.setBackground(Color.yellow);
@@ -2435,9 +2331,11 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
             tbnetwt.setText(x);
             tbnetwt.setBackground(Color.white);
         }
+        }
     }//GEN-LAST:event_tbnetwtFocusLost
 
     private void tbshipwtFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbshipwtFocusLost
+        if (! tbshipwt.getText().isEmpty()) {
         String x = BlueSeerUtils.bsformat("", tbshipwt.getText(), "3");
         if (x.equals("error")) {
             tbshipwt.setText("");
@@ -2448,9 +2346,11 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
             tbshipwt.setText(x);
             tbshipwt.setBackground(Color.white);
         }
+        }
     }//GEN-LAST:event_tbshipwtFocusLost
 
     private void tbleadtimeFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbleadtimeFocusLost
+        if (! tbleadtime.getText().isEmpty()) {
         String x = BlueSeerUtils.bsformat("", tbleadtime.getText(), "0");
         if (x.equals("error")) {
             tbleadtime.setText("");
@@ -2461,10 +2361,12 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
             tbleadtime.setText(x);
             tbleadtime.setBackground(Color.white);
         }
+        }
     }//GEN-LAST:event_tbleadtimeFocusLost
 
     private void tbsafestockFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbsafestockFocusLost
-       String x = BlueSeerUtils.bsformat("", tbsafestock.getText(), "0");
+       if (! tbsafestock.getText().isEmpty()) {
+        String x = BlueSeerUtils.bsformat("", tbsafestock.getText(), "0");
         if (x.equals("error")) {
             tbsafestock.setText("");
             tbsafestock.setBackground(Color.yellow);
@@ -2474,9 +2376,11 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
             tbsafestock.setText(x);
             tbsafestock.setBackground(Color.white);
         }
+       }
     }//GEN-LAST:event_tbsafestockFocusLost
 
     private void tbminordqtyFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbminordqtyFocusLost
+        if (! tbminordqty.getText().isEmpty()) {
         String x = BlueSeerUtils.bsformat("", tbminordqty.getText(), "0");
         if (x.equals("error")) {
             tbminordqty.setText("");
@@ -2486,6 +2390,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
         } else {
             tbminordqty.setText(x);
             tbminordqty.setBackground(Color.white);
+        }
         }
     }//GEN-LAST:event_tbminordqtyFocusLost
 
