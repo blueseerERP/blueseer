@@ -26,11 +26,16 @@ SOFTWARE.
 package com.blueseer.shp;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.bslog;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.reinitpanels;
+import static bsmf.MainFrame.tags;
 import com.blueseer.inv.invData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
 import static com.blueseer.utl.BlueSeerUtils.luTable;
 import static com.blueseer.utl.BlueSeerUtils.lual;
@@ -56,6 +61,7 @@ import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfContentByte;
 import com.itextpdf.text.pdf.PdfWriter;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -69,8 +75,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.print.Doc;
 import javax.print.DocFlavor;
 import javax.print.DocPrintJob;
@@ -79,13 +89,20 @@ import javax.print.PrintServiceLookup;
 import javax.print.SimpleDoc;
 import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
+import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTree;
 import javax.swing.ToolTipManager;
@@ -125,18 +142,37 @@ public class ShipperMaint extends javax.swing.JPanel {
      */
     public ShipperMaint() {
         initComponents();
+        setLanguageTags(this);
     }
    
     
    // shs_nbr, shs_so, shs_desc, shs_type, shs_amttype, shs_amt 
     javax.swing.table.DefaultTableModel sacmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
-                "SO", "Desc", "Type", "AmtType", "Amt"
+                getGlobalColumnTag("order"), 
+                getGlobalColumnTag("description"), 
+                getGlobalColumnTag("type"), 
+                getGlobalColumnTag("amounttype"), 
+                getGlobalColumnTag("amount")
             });
     
     javax.swing.table.DefaultTableModel myshipdetmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
-                 "Line", "Part", "SO", "SOLine", "PO", "Qty", "Price", "Desc", "WH", "LOC", "Disc", "ListPrice", "MatlTax", "Cont", "Serial"
+                 getGlobalColumnTag("line"), 
+                getGlobalColumnTag("item"), 
+                getGlobalColumnTag("order"), 
+                getGlobalColumnTag("orderline"), 
+                getGlobalColumnTag("po"), 
+                getGlobalColumnTag("qty"), 
+                getGlobalColumnTag("price"), 
+                getGlobalColumnTag("description"), 
+                getGlobalColumnTag("warehouse"), 
+                getGlobalColumnTag("location"), 
+                getGlobalColumnTag("discount"), 
+                getGlobalColumnTag("listprice"), 
+                getGlobalColumnTag("tax"), 
+                getGlobalColumnTag("cont"), 
+                getGlobalColumnTag("serial")
             });
     
   
@@ -153,11 +189,11 @@ public class ShipperMaint extends javax.swing.JPanel {
         return max;
     }
     
-     public void sumlinecount() {
+    public void sumlinecount() {
          totlines.setText(String.valueOf(tabledetail.getRowCount()));
     }
      
-     public void sumqty() {
+    public void sumqty() {
         int qty = 0;
          for (int j = 0; j < tabledetail.getRowCount(); j++) {
              qty = qty + Integer.valueOf(tabledetail.getValueAt(j, 5).toString()); 
@@ -165,27 +201,76 @@ public class ShipperMaint extends javax.swing.JPanel {
          tbtotqty.setText(String.valueOf(qty));
     }
     
-     public void sumdollars() {
+    public void sumdollars() throws ParseException {
         DecimalFormat df = new DecimalFormat("#.00", new DecimalFormatSymbols(Locale.US));
+        NumberFormat nf = NumberFormat.getInstance(Locale.getDefault());
         double dol = 0;
          for (int j = 0; j < tabledetail.getRowCount(); j++) {
-             dol = dol + ( Double.valueOf(tabledetail.getValueAt(j, 5).toString()) * Double.valueOf(tabledetail.getValueAt(j, 6).toString()) ); 
+             dol = dol + ( nf.parse(tabledetail.getValueAt(j, 5).toString()).doubleValue() * nf.parse(tabledetail.getValueAt(j, 6).toString()).doubleValue() ); 
          }
          // now add trailer/summary charges if any
          for (int j = 0; j < sactable.getRowCount(); j++) {
             if (sactable.getValueAt(j,2).toString().equals("charge"))
-            dol += Double.valueOf(sactable.getValueAt(j,4).toString());
+            dol += nf.parse(sactable.getValueAt(j,4).toString()).doubleValue();
         }
          tbtotdollars.setText(df.format(dol));
     }
      
-      public void retotal() {
+    public void retotal() {
          sumqty();
-         sumdollars();
+                    try {
+                        sumdollars();
+                    } catch (ParseException ex) {
+                        bslog(ex);
+                        bsmf.MainFrame.show(getMessageTag(1017));
+                    }
          sumlinecount();
     }
-     
-     
+    
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+         
     public void initvars(String[] arg) {
         
         isLoad = true;
@@ -632,7 +717,7 @@ public class ShipperMaint extends javax.swing.JPanel {
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to retrieve shipper");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -651,7 +736,7 @@ public class ShipperMaint extends javax.swing.JPanel {
             
             
             if (ddbillto.getSelectedItem().toString() != null && ! ddbillto.getSelectedItem().toString().isEmpty() && ddshipto.getItemCount() <= 0) {
-           bsmf.MainFrame.show("No ship-to codes for this customer...either add one in customer maint or select another customer");
+           bsmf.MainFrame.show(getMessageTag(1108));
            ddbillto.requestFocus();
        }
             
@@ -683,7 +768,7 @@ public class ShipperMaint extends javax.swing.JPanel {
             
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Cannot retrieve sod_det");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -711,7 +796,7 @@ public class ShipperMaint extends javax.swing.JPanel {
                 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("sql problem selecting cms_det");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -739,7 +824,7 @@ public class ShipperMaint extends javax.swing.JPanel {
                 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("sql problem selecting so_mstr");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -781,10 +866,10 @@ public class ShipperMaint extends javax.swing.JPanel {
                 
                 
                 if (i == 0) {
-                    bsmf.MainFrame.show("shipto code does not exist");
+                    bsmf.MainFrame.show(getMessageTag(1034,shipto));
                 } 
                 if (ddbillto.getSelectedItem().toString().isEmpty() || terms.isEmpty() || aracct.isEmpty() || arcc.isEmpty()) {
-                    bsmf.MainFrame.show("billto of shipto missing AR required fields...terms, etc");
+                    bsmf.MainFrame.show(getMessageTag(1090));
                 }
                 
                 disablechoices();
@@ -794,7 +879,7 @@ public class ShipperMaint extends javax.swing.JPanel {
                 btedit.setEnabled(false);
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("sql code does not execute");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -840,7 +925,7 @@ public class ShipperMaint extends javax.swing.JPanel {
             
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Cannot retrieve sod_det");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -887,7 +972,7 @@ public class ShipperMaint extends javax.swing.JPanel {
                     
                     
                     if (! ddshipto.getSelectedItem().toString().toLowerCase().equals(res.getString("so_ship").toLowerCase()) && ordercount > 0) {
-                        bsmf.MainFrame.show("Order does not belong to Billto/Shipto");
+                        bsmf.MainFrame.show(getMessageTag(1109));
                         proceed = false;
                         ddshipto.setSelectedIndex(0);
                         ddorder.requestFocus();
@@ -898,7 +983,7 @@ public class ShipperMaint extends javax.swing.JPanel {
                 }
                 
                    if (i == 0) {
-                    bsmf.MainFrame.show("order does not exist");
+                    bsmf.MainFrame.show(getMessageTag(1034,myorder));
                     proceed = false;
                     ddshipto.setSelectedIndex(0);
                      ddorder.requestFocus(); 
@@ -906,7 +991,7 @@ public class ShipperMaint extends javax.swing.JPanel {
                     } 
                     
                     if (i > 0 && status.equals("closed")) {
-                    bsmf.MainFrame.show("order is closed");
+                    bsmf.MainFrame.show(getMessageTag(1097));
                     proceed = false;
                     ddshipto.setSelectedIndex(0);
                     ddorder.requestFocus(); 
@@ -963,7 +1048,7 @@ public class ShipperMaint extends javax.swing.JPanel {
             
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("sql code does not execute");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -1024,7 +1109,7 @@ public class ShipperMaint extends javax.swing.JPanel {
                  
              } catch (SQLException s) {
                  MainFrame.bslog(s);
-             bsmf.MainFrame.show("Unable to update sod_det");
+             bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
              }
           
          }
@@ -1043,9 +1128,9 @@ public class ShipperMaint extends javax.swing.JPanel {
         luTable.setModel(luModel);
         luTable.getColumnModel().getColumn(0).setMaxWidth(50);
         if (luModel.getRowCount() < 1) {
-            ludialog.setTitle("No Records Found!");
+            ludialog.setTitle(getMessageTag(1001));
         } else {
-            ludialog.setTitle(luModel.getRowCount() + " Records Found!");
+            ludialog.setTitle(getMessageTag(1002, String.valueOf(luModel.getRowCount())));
         }
         }
         };
@@ -1065,8 +1150,9 @@ public class ShipperMaint extends javax.swing.JPanel {
         };
         luTable.addMouseListener(luml);
       
-        callDialog("Nbr", "Cust"); 
         
+        callDialog(getClassLabelTag("lblid", this.getClass().getSimpleName()), 
+                getClassLabelTag("lblcust", this.getClass().getSimpleName())); 
         
     }
 
@@ -1086,9 +1172,9 @@ public class ShipperMaint extends javax.swing.JPanel {
         luTable.setModel(luModel);
         luTable.getColumnModel().getColumn(0).setMaxWidth(50);
         if (luModel.getRowCount() < 1) {
-            ludialog.setTitle("No Records Found!");
+            ludialog.setTitle(getMessageTag(1001));
         } else {
-            ludialog.setTitle(luModel.getRowCount() + " Records Found!");
+            ludialog.setTitle(getMessageTag(1002, String.valueOf(luModel.getRowCount())));
         }
         }
         };
@@ -1110,7 +1196,9 @@ public class ShipperMaint extends javax.swing.JPanel {
         };
         luTable.addMouseListener(luml);
       
-        callDialog("Item", "Description"); 
+        
+        callDialog(getClassLabelTag("lblitem", this.getClass().getSimpleName()), 
+                getClassLabelTag("lbldesc", this.getClass().getSimpleName()));
         
         
     }
@@ -1228,10 +1316,13 @@ public class ShipperMaint extends javax.swing.JPanel {
         add(jTabbedPane1);
 
         panelMain.setBorder(javax.swing.BorderFactory.createTitledBorder("Shipper Maintenance"));
+        panelMain.setName("panelmain"); // NOI18N
 
         jLabel24.setText("Shipper#");
+        jLabel24.setName("lblid"); // NOI18N
 
         btnewshipper.setText("New");
+        btnewshipper.setName("btnew"); // NOI18N
         btnewshipper.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnewshipperActionPerformed(evt);
@@ -1239,6 +1330,7 @@ public class ShipperMaint extends javax.swing.JPanel {
         });
 
         btadd.setText("Add");
+        btadd.setName("btadd"); // NOI18N
         btadd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddActionPerformed(evt);
@@ -1246,6 +1338,7 @@ public class ShipperMaint extends javax.swing.JPanel {
         });
 
         btPrintShp.setText("Print Shipper");
+        btPrintShp.setName("btprintshipper"); // NOI18N
         btPrintShp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btPrintShpActionPerformed(evt);
@@ -1253,13 +1346,15 @@ public class ShipperMaint extends javax.swing.JPanel {
         });
 
         btPrintInv.setText("Print Invoice");
+        btPrintInv.setName("btprintinvoice"); // NOI18N
         btPrintInv.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btPrintInvActionPerformed(evt);
             }
         });
 
-        btedit.setText("Edit");
+        btedit.setText("Update");
+        btedit.setName("btupdate"); // NOI18N
         btedit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bteditActionPerformed(evt);
@@ -1267,24 +1362,33 @@ public class ShipperMaint extends javax.swing.JPanel {
         });
 
         HeaderPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Header"));
+        HeaderPanel.setName("panelheader"); // NOI18N
 
         jLabel25.setText("Site:");
+        jLabel25.setName("lblsite"); // NOI18N
 
         jLabel35.setText("Shipdate:");
+        jLabel35.setName("lblshipdate"); // NOI18N
 
         dcshipdate.setDateFormatString("yyyy-MM-dd");
 
         jLabel39.setText("ShipVia:");
+        jLabel39.setName("lblshipvia"); // NOI18N
 
         jLabel40.setText("Trailer:");
+        jLabel40.setName("lbltrailer"); // NOI18N
 
         jLabel27.setText("Ref:");
+        jLabel27.setName("lblref"); // NOI18N
 
         jLabel41.setText("Remarks:");
+        jLabel41.setName("lblremarks"); // NOI18N
 
         jLabel7.setText("Pallets:");
+        jLabel7.setName("lblpallets"); // NOI18N
 
         jLabel8.setText("Boxes:");
+        jLabel8.setName("lblboxes"); // NOI18N
 
         javax.swing.GroupLayout HeaderPanelLayout = new javax.swing.GroupLayout(HeaderPanel);
         HeaderPanel.setLayout(HeaderPanelLayout);
@@ -1360,6 +1464,7 @@ public class ShipperMaint extends javax.swing.JPanel {
         );
 
         jLabel36.setText("ShipTo:");
+        jLabel36.setName("lblshipto"); // NOI18N
 
         btorder.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/add.png"))); // NOI18N
         btorder.addActionListener(new java.awt.event.ActionListener() {
@@ -1376,6 +1481,7 @@ public class ShipperMaint extends javax.swing.JPanel {
         });
 
         jLabel104.setText("Order:");
+        jLabel104.setName("lblorder"); // NOI18N
 
         ddorder.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1390,6 +1496,7 @@ public class ShipperMaint extends javax.swing.JPanel {
         });
 
         jLabel2.setText("Bill To:");
+        jLabel2.setName("lblbillto"); // NOI18N
 
         lbladdr.setBackground(java.awt.Color.lightGray);
 
@@ -1450,6 +1557,7 @@ public class ShipperMaint extends javax.swing.JPanel {
         lblstatus.setBorder(javax.swing.BorderFactory.createTitledBorder("Status"));
 
         btconfirm.setText("Confirm");
+        btconfirm.setName("btconfirm"); // NOI18N
         btconfirm.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btconfirmActionPerformed(evt);
@@ -1457,6 +1565,7 @@ public class ShipperMaint extends javax.swing.JPanel {
         });
 
         rborder.setText("Single Order");
+        rborder.setName("cbsingle"); // NOI18N
         rborder.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 rborderStateChanged(evt);
@@ -1469,6 +1578,7 @@ public class ShipperMaint extends javax.swing.JPanel {
         });
 
         rbnonorder.setText("Multi Order");
+        rbnonorder.setName("cbmulti"); // NOI18N
         rbnonorder.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 rbnonorderActionPerformed(evt);
@@ -1476,6 +1586,7 @@ public class ShipperMaint extends javax.swing.JPanel {
         });
 
         btclear.setText("Clear");
+        btclear.setName("btclear"); // NOI18N
         btclear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btclearActionPerformed(evt);
@@ -1571,6 +1682,7 @@ public class ShipperMaint extends javax.swing.JPanel {
         panelDetail.setPreferredSize(new java.awt.Dimension(958, 500));
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Detail"));
+        jPanel2.setName("paneldetail"); // NOI18N
 
         btadditem.setText("Add Item");
         btadditem.addActionListener(new java.awt.event.ActionListener() {
@@ -1589,20 +1701,28 @@ public class ShipperMaint extends javax.swing.JPanel {
         jPanel5.setPreferredSize(new java.awt.Dimension(762, 110));
 
         jLabel42.setText("PONbr");
+        jLabel42.setName("lblponbr"); // NOI18N
 
         jLabel30.setText("Item");
+        jLabel30.setName("lblitem"); // NOI18N
 
         jLabel38.setText("Desc");
+        jLabel38.setName("lbldesc"); // NOI18N
 
         jLabel48.setText("Order");
+        jLabel48.setName("lblorder"); // NOI18N
 
         jLabel6.setText("OrderLine");
+        jLabel6.setName("lblorderline"); // NOI18N
 
         jLabel11.setText("Cont");
+        jLabel11.setName("lblcont"); // NOI18N
 
         jLabel10.setText("Serial");
+        jLabel10.setName("lblserial"); // NOI18N
 
         jLabel9.setText("ContQty");
+        jLabel9.setName("lblcontqty"); // NOI18N
 
         btlookupOrderLine.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/find.png"))); // NOI18N
         btlookupOrderLine.addActionListener(new java.awt.event.ActionListener() {
@@ -1685,8 +1805,10 @@ public class ShipperMaint extends javax.swing.JPanel {
         );
 
         jLabel47.setText("UOM");
+        jLabel47.setName("lbluom"); // NOI18N
 
         jLabel44.setText("NetPrice");
+        jLabel44.setName("lblnetprice"); // NOI18N
 
         dduom.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1701,8 +1823,10 @@ public class ShipperMaint extends javax.swing.JPanel {
         });
 
         jLabel43.setText("Qty");
+        jLabel43.setName("lblqty"); // NOI18N
 
         cbexplode.setText("Explode");
+        cbexplode.setName("cbexplode"); // NOI18N
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -1751,6 +1875,7 @@ public class ShipperMaint extends javax.swing.JPanel {
         );
 
         jLabel46.setText("Location");
+        jLabel46.setName("lblloc"); // NOI18N
 
         ddwh.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1759,6 +1884,7 @@ public class ShipperMaint extends javax.swing.JPanel {
         });
 
         jLabel45.setText("Warehouse");
+        jLabel45.setName("lblwh"); // NOI18N
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
@@ -1845,7 +1971,7 @@ public class ShipperMaint extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btdelitem)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, 213, Short.MAX_VALUE)
+            .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 213, Short.MAX_VALUE)
         );
 
         tabledetail.setModel(new javax.swing.table.DefaultTableModel(
@@ -1862,10 +1988,13 @@ public class ShipperMaint extends javax.swing.JPanel {
         jScrollPane7.setViewportView(tabledetail);
 
         jLabel3.setText("Total Lines:");
+        jLabel3.setName("lbltotallines"); // NOI18N
 
         jLabel1.setText("Total Qty:");
+        jLabel1.setName("lbltotalqty"); // NOI18N
 
         jLabel4.setText("Total $");
+        jLabel4.setName("lbltotalamt"); // NOI18N
 
         sactable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -1961,15 +2090,19 @@ public class ShipperMaint extends javax.swing.JPanel {
          Pattern p = Pattern.compile("^[0-9]\\d*(\\.\\d+)?$");
         Matcher m = p.matcher(tbprice.getText());
         if (!m.find() || tbprice.getText() == null) {
-            bsmf.MainFrame.show("Invalid List Price format");
+            bsmf.MainFrame.show(getMessageTag(1023,"2"));
+            tbprice.requestFocus();
             canproceed = false;
+            return;
         }
                 
         p = Pattern.compile("^[1-9]\\d*$");
         m = p.matcher(tbqty.getText());
         if (!m.find() || tbqty.getText() == null) {
-            bsmf.MainFrame.show("Invalid Qty");
+            bsmf.MainFrame.show(getMessageTag(1033));
+            tbqty.requestFocus();
             canproceed = false;
+            return;
         }
         
         int nbrOfContainers = 0;
@@ -2058,7 +2191,7 @@ public class ShipperMaint extends javax.swing.JPanel {
 
             if ( OVData.isGLPeriodClosed(dfdate.format(dcshipdate.getDate()))) {
                 proceed = false;
-                bsmf.MainFrame.show("Period is closed");
+                bsmf.MainFrame.show(getMessageTag(1035));
                 return;
             }
 
@@ -2162,14 +2295,14 @@ public class ShipperMaint extends javax.swing.JPanel {
                 OVData.updateShipperSAC(tbshipper.getText());
 
 
-                bsmf.MainFrame.show("Added Shipper Record");
+              
                 initvars(new String[]{tbshipper.getText()});
 
 
             } // if proceed
         } catch (SQLException s) {
             MainFrame.bslog(s);
-            bsmf.MainFrame.show("Sql code does not execute");
+            bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
         }
         bsmf.MainFrame.con.close();
     } catch (Exception e) {
@@ -2180,7 +2313,7 @@ public class ShipperMaint extends javax.swing.JPanel {
     private void btdelitemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdelitemActionPerformed
         int[] rows = tabledetail.getSelectedRows();
         for (int i : rows) {
-            JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "Removing row " + i);
+            bsmf.MainFrame.show(getMessageTag(1031,String.valueOf(i)));
             ((javax.swing.table.DefaultTableModel) tabledetail.getModel()).removeRow(i);
         }
         retotal();
@@ -2215,7 +2348,7 @@ public class ShipperMaint extends javax.swing.JPanel {
                 
                 if ( OVData.isGLPeriodClosed(dfdate.format(dcshipdate.getDate()))) {
                     proceed = false;
-                    bsmf.MainFrame.show("Period is closed");
+                    bsmf.MainFrame.show(getMessageTag(1035));
                     return;
                 }
                 
@@ -2287,13 +2420,13 @@ public class ShipperMaint extends javax.swing.JPanel {
                     OVData.updateShipperSAC(tbshipper.getText());
                     
                     
-                    bsmf.MainFrame.show("Edited Shipper Record");
+                   
                     reinitshippervariables("");
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to edit shipper");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -2388,7 +2521,7 @@ public class ShipperMaint extends javax.swing.JPanel {
         if (x.equals("error")) {
             tbqty.setText("");
             tbqty.setBackground(Color.yellow);
-            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            bsmf.MainFrame.show(getMessageTag(1000));
             tbqty.requestFocus();
         } else {
             tbqty.setText(x);
