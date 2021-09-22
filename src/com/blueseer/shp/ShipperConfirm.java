@@ -27,8 +27,11 @@ SOFTWARE.
 package com.blueseer.shp;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.tags;
 import com.blueseer.utl.OVData;
 import com.blueseer.edi.EDI;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import java.awt.Component;
 import java.io.IOException;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -40,21 +43,74 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 
 /**
  *
  * @author vaughnte
  */
-public class ShipConfirmPanel extends javax.swing.JPanel {
+public class ShipperConfirm extends javax.swing.JPanel {
 
     /**
      * Creates new form ShipConfirmPanel
      */
-    public ShipConfirmPanel() {
+    public ShipperConfirm() {
         initComponents();
+        setLanguageTags(this);
     }
 
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+    
     public void initvars(String[] arg) {
         java.util.Date now = new java.util.Date();
                 dcdate.setDate(now);
@@ -80,10 +136,13 @@ public class ShipConfirmPanel extends javax.swing.JPanel {
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Shipper Confirmation Into Invoice"));
+        jPanel1.setName("panelmain"); // NOI18N
 
         jLabel1.setText("Shipper Number:");
+        jLabel1.setName("lblid"); // NOI18N
 
         btConfirm.setText("Confirm");
+        btConfirm.setName("btconfirm"); // NOI18N
         btConfirm.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btConfirmActionPerformed(evt);
@@ -92,7 +151,8 @@ public class ShipConfirmPanel extends javax.swing.JPanel {
 
         dcdate.setDateFormatString("yyyy-MM-dd");
 
-        btasn.setText("ASN");
+        btasn.setText("856");
+        btasn.setName("btasn"); // NOI18N
         btasn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btasnActionPerformed(evt);
@@ -100,6 +160,7 @@ public class ShipConfirmPanel extends javax.swing.JPanel {
         });
 
         bt810.setText("810");
+        bt810.setName("bt810"); // NOI18N
         bt810.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bt810ActionPerformed(evt);
@@ -166,37 +227,37 @@ public class ShipConfirmPanel extends javax.swing.JPanel {
     private void btasnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btasnActionPerformed
           int error = EDI.Create856(tbshipid.getText());
        if (error == 0)
-       bsmf.MainFrame.show("EDI Invoice complete");
+       bsmf.MainFrame.show(getMessageTag(1102));
        
        if (error == 1)
-           bsmf.MainFrame.show("Missing Billto/Doctype Record in cmedi_mstr");
+           bsmf.MainFrame.show(getMessageTag(1104));
        
        if (error == 2)
-           bsmf.MainFrame.show("Unable to retrieve billto from shipper");
+           bsmf.MainFrame.show(getMessageTag(1105));
        
        if (error == 3)
-           bsmf.MainFrame.show("ClassDef and/or Invocation error");
+           bsmf.MainFrame.show(getMessageTag(1106));
        
        if (error == 4)
-           bsmf.MainFrame.show("Shipper does not exist");
+           bsmf.MainFrame.show(getMessageTag(1107));
     }//GEN-LAST:event_btasnActionPerformed
 
     private void bt810ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt810ActionPerformed
        int error = EDI.Create810(tbshipid.getText());
        if (error == 0)
-       bsmf.MainFrame.show("EDI Invoice complete");
+       bsmf.MainFrame.show(getMessageTag(1103));
        
        if (error == 1)
-           bsmf.MainFrame.show("Missing Billto/Doctype Record in cmedi_mstr");
+           bsmf.MainFrame.show(getMessageTag(1104));
        
        if (error == 2)
-           bsmf.MainFrame.show("Unable to retrieve billto from shipper");
+           bsmf.MainFrame.show(getMessageTag(1105));
        
        if (error == 3)
-           bsmf.MainFrame.show("ClassDef and/or Invocation error");
+           bsmf.MainFrame.show(getMessageTag(1106));
        
        if (error == 4)
-           bsmf.MainFrame.show("Shipper does not exist");
+           bsmf.MainFrame.show(getMessageTag(1107));
        
     }//GEN-LAST:event_bt810ActionPerformed
 

@@ -60,23 +60,48 @@ import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.mydialog;
 import static bsmf.MainFrame.pass;
+import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 
 /**
  *
  * @author vaughnte
  */
-public class ShipperDetBrowsePanel extends javax.swing.JPanel {
+public class ShipperDetBrowse extends javax.swing.JPanel {
  
     
     javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"Cust", "Shipper/InvNbr", "PO", "ShipDate", "Part", "Qty", "NetPrice", "ExtPrice"});
+                        new String[]{
+                            getGlobalColumnTag("customer"), 
+                            getGlobalColumnTag("shipper"), 
+                            getGlobalColumnTag("po"), 
+                            getGlobalColumnTag("shipdate"), 
+                            getGlobalColumnTag("item"), 
+                            getGlobalColumnTag("qty"), 
+                            getGlobalColumnTag("netprice"), 
+                            getGlobalColumnTag("price")});
                 
     javax.swing.table.DefaultTableModel modeldetail = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"Shipper", "Line", "Part", "CustPart", "SO", "PO", "Qty", "NetPrice"});
+                        new String[]{
+                            getGlobalColumnTag("shipper"), 
+                            getGlobalColumnTag("line"), 
+                            getGlobalColumnTag("item"), 
+                            getGlobalColumnTag("custitem"), 
+                            getGlobalColumnTag("order"), 
+                            getGlobalColumnTag("po"), 
+                            getGlobalColumnTag("qty"), 
+                            getGlobalColumnTag("netprice")});
     
      class ButtonRenderer extends JButton implements TableCellRenderer {
 
@@ -106,11 +131,12 @@ public class ShipperDetBrowsePanel extends javax.swing.JPanel {
     /**
      * Creates new form ScrapReportPanel
      */
-    public ShipperDetBrowsePanel() {
+    public ShipperDetBrowse() {
         initComponents();
+        setLanguageTags(this);
     }
 
-     public void getdetail(String shipper) {
+    public void getdetail(String shipper) {
       
          modeldetail.setNumRows(0);
          double totalsales = 0.00;
@@ -147,13 +173,57 @@ public class ShipperDetBrowsePanel extends javax.swing.JPanel {
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to get Shipper detail");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
 
+    }
+    
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
     }
     
     public void initvars(String[] arg) {
@@ -235,8 +305,10 @@ public class ShipperDetBrowsePanel extends javax.swing.JPanel {
         tablepanel.add(summarypanel);
 
         jLabel4.setText("To Billto:");
+        jLabel4.setName("lbltocust"); // NOI18N
 
         btRun.setText("Run");
+        btRun.setName("btrun"); // NOI18N
         btRun.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btRunActionPerformed(evt);
@@ -244,12 +316,16 @@ public class ShipperDetBrowsePanel extends javax.swing.JPanel {
         });
 
         jLabel1.setText("From Billto:");
+        jLabel1.setName("lblfromcust"); // NOI18N
 
         cbinvoiced.setText("Invoiced Only?");
+        cbinvoiced.setName("cbinvoiceonly"); // NOI18N
 
         jLabel3.setText("To Shipper:");
+        jLabel3.setName("lbltoshipper"); // NOI18N
 
         jLabel2.setText("From Shipper:");
+        jLabel2.setName("lblfromshipper"); // NOI18N
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -310,10 +386,12 @@ public class ShipperDetBrowsePanel extends javax.swing.JPanel {
         );
 
         jLabel8.setText("Total Sales:");
+        jLabel8.setName("lbltotalsales"); // NOI18N
 
         tbtotsales.setText("0");
 
         jLabel7.setText("Total Qty:");
+        jLabel7.setName("lbltotalqty"); // NOI18N
 
         tbtotqty.setText("0");
 
@@ -469,7 +547,7 @@ try {
                 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Problem executing Shipper Report");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             con.close();
         } catch (Exception e) {

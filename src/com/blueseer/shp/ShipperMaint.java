@@ -105,7 +105,7 @@ import net.sf.jasperreports.view.JasperViewer;
  *
  * @author vaughnte
  */
-public class ShipMaintPanel extends javax.swing.JPanel {
+public class ShipperMaint extends javax.swing.JPanel {
 
                 String terms = "";
                 String taxcode = "";
@@ -123,7 +123,7 @@ public class ShipMaintPanel extends javax.swing.JPanel {
     /**
      * Creates new form ShipMaintPanel
      */
-    public ShipMaintPanel() {
+    public ShipperMaint() {
         initComponents();
     }
    
@@ -1845,7 +1845,7 @@ public class ShipMaintPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btdelitem)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 213, Short.MAX_VALUE)
+            .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, 213, Short.MAX_VALUE)
         );
 
         tabledetail.setModel(new javax.swing.table.DefaultTableModel(

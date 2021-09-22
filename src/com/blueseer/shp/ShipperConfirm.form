@@ -28,6 +28,7 @@
             <TitledBorder title="Shipper Confirmation Into Invoice"/>
           </Border>
         </Property>
+        <Property name="name" type="java.lang.String" value="panelmain" noResource="true"/>
       </Properties>
 
       <Layout>
@@ -81,11 +82,13 @@
         <Component class="javax.swing.JLabel" name="jLabel1">
           <Properties>
             <Property name="text" type="java.lang.String" value="Shipper Number:"/>
+            <Property name="name" type="java.lang.String" value="lblid" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="btConfirm">
           <Properties>
             <Property name="text" type="java.lang.String" value="Confirm"/>
+            <Property name="name" type="java.lang.String" value="btconfirm" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btConfirmActionPerformed"/>
@@ -100,7 +103,8 @@
         </Component>
         <Component class="javax.swing.JButton" name="btasn">
           <Properties>
-            <Property name="text" type="java.lang.String" value="ASN"/>
+            <Property name="text" type="java.lang.String" value="856"/>
+            <Property name="name" type="java.lang.String" value="btasn" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btasnActionPerformed"/>
@@ -109,6 +113,7 @@
         <Component class="javax.swing.JButton" name="bt810">
           <Properties>
             <Property name="text" type="java.lang.String" value="810"/>
+            <Property name="name" type="java.lang.String" value="bt810" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bt810ActionPerformed"/>
