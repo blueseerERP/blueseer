@@ -92,6 +92,7 @@
         <Component class="javax.swing.JLabel" name="jLabel2">
           <Properties>
             <Property name="text" type="java.lang.String" value="Text Search:"/>
+            <Property name="name" type="java.lang.String" value="lbltext" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="tbtext">
@@ -102,16 +103,19 @@
         <Component class="javax.swing.JRadioButton" name="rbpart">
           <Properties>
             <Property name="text" type="java.lang.String" value="Part"/>
+            <Property name="name" type="java.lang.String" value="cbitem" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JRadioButton" name="rbcode">
           <Properties>
             <Property name="text" type="java.lang.String" value="Vendor"/>
+            <Property name="name" type="java.lang.String" value="cbvendor" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="btview">
           <Properties>
             <Property name="text" type="java.lang.String" value="View"/>
+            <Property name="name" type="java.lang.String" value="btview" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btviewActionPerformed"/>
@@ -120,6 +124,7 @@
         <Component class="javax.swing.JButton" name="btcsv">
           <Properties>
             <Property name="text" type="java.lang.String" value="CSV"/>
+            <Property name="name" type="java.lang.String" value="btcsv" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btcsvActionPerformed"/>

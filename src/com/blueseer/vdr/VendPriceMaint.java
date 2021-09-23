@@ -28,9 +28,12 @@ package com.blueseer.vdr;
 
 import bsmf.MainFrame;
 import static bsmf.MainFrame.reinitpanels;
+import static bsmf.MainFrame.tags;
 import com.blueseer.inv.invData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
 import static com.blueseer.utl.BlueSeerUtils.luTable;
 import static com.blueseer.utl.BlueSeerUtils.lual;
@@ -59,10 +62,14 @@ import java.util.ArrayList;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
@@ -86,6 +93,7 @@ public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeer {
                 
     public VendPriceMaint() {
         initComponents();
+        setLanguageTags(this);
     }
 
     // interface functions implemented
@@ -222,6 +230,50 @@ public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeer {
             }
     } 
     
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+    
     public void setComponentDefaultValues() {
        isLoad = true;
         tbkey.setText("");
@@ -292,7 +344,7 @@ public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeer {
          
                 if (tbkey.getText().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a code");
+                    bsmf.MainFrame.show(getMessageTag(1024));
                     tbkey.requestFocus();
                     return b;
                 }
@@ -300,21 +352,21 @@ public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeer {
         
                 if (ddpart.getSelectedItem() == null || ddpart.getSelectedItem().toString().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("must choose an item");
+                    bsmf.MainFrame.show(getMessageTag(1026));
                     ddpart.requestFocus();
                     return b;
                 }
                 
                 if (dduom.getSelectedItem() == null || dduom.getSelectedItem().toString().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("must choose a UOM");
+                    bsmf.MainFrame.show(getMessageTag(1026));
                     dduom.requestFocus();
                     return b;
                 }
                
                 if (ddcurr.getSelectedItem() == null || ddcurr.getSelectedItem().toString().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("must choose a currency");
+                    bsmf.MainFrame.show(getMessageTag(1026));
                     ddcurr.requestFocus();
                     return b;
                 }
@@ -323,7 +375,7 @@ public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeer {
                 
                 if (price.getText().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a price");
+                    bsmf.MainFrame.show(getMessageTag(1024));
                     price.requestFocus();
                     return b;
                 }
@@ -561,9 +613,9 @@ public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeer {
         luTable.setModel(luModel);
         luTable.getColumnModel().getColumn(0).setMaxWidth(50);
         if (luModel.getRowCount() < 1) {
-            ludialog.setTitle("No Records Found!");
+            ludialog.setTitle(getMessageTag(1001));
         } else {
-            ludialog.setTitle(luModel.getRowCount() + " Records Found!");
+            ludialog.setTitle(getMessageTag(1002, String.valueOf(luModel.getRowCount())));
         }
         }
         };
@@ -583,7 +635,9 @@ public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeer {
         };
         luTable.addMouseListener(luml);
       
-        callDialog("Vendor", "Item"); 
+        
+        callDialog(getClassLabelTag("lblvend", this.getClass().getSimpleName()), 
+                getClassLabelTag("lblitem", this.getClass().getSimpleName())); 
         
         
     }
@@ -624,12 +678,12 @@ public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeer {
                
                 
                 if (i == 0) 
-                    bsmf.MainFrame.show("No Price List Found");
+                    bsmf.MainFrame.show(getMessageTag(1001));
                
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to retrieve vpr_mstr");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -694,7 +748,7 @@ public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeer {
               
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Sql Cannot Retrieve Price List");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -738,8 +792,10 @@ public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeer {
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Vendor Price Maintenance"));
+        jPanel1.setName("panelmain"); // NOI18N
 
         jLabel5.setText("Price");
+        jLabel5.setName("lblprice"); // NOI18N
 
         price.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -751,8 +807,10 @@ public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         jLabel3.setText("Vend / GroupCode");
+        jLabel3.setName("lblvend"); // NOI18N
 
         btadd.setText("Add");
+        btadd.setName("btadd"); // NOI18N
         btadd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddActionPerformed(evt);
@@ -760,6 +818,7 @@ public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         btdelete.setText("Delete");
+        btdelete.setName("btdelete"); // NOI18N
         btdelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdeleteActionPerformed(evt);
@@ -767,6 +826,7 @@ public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         btupdate.setText("Update");
+        btupdate.setName("btupdate"); // NOI18N
         btupdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btupdateActionPerformed(evt);
@@ -774,6 +834,7 @@ public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         jLabel2.setText("Item");
+        jLabel2.setName("lblitem"); // NOI18N
 
         pricelist.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -783,6 +844,7 @@ public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeer {
         jScrollPane2.setViewportView(pricelist);
 
         jLabel4.setText("Applied");
+        jLabel4.setName("lblapplied"); // NOI18N
 
         ddpart.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -797,6 +859,7 @@ public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         jLabel1.setText("uom");
+        jLabel1.setName("lbluom"); // NOI18N
 
         ddcurr.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -805,8 +868,10 @@ public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         jLabel6.setText("Currency");
+        jLabel6.setName("lblcurrency"); // NOI18N
 
         btnew.setText("New");
+        btnew.setName("btnew"); // NOI18N
         btnew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnewActionPerformed(evt);
@@ -814,6 +879,7 @@ public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         btclear.setText("Clear");
+        btclear.setName("btclear"); // NOI18N
         btclear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btclearActionPerformed(evt);
@@ -947,7 +1013,7 @@ public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeer {
                 btdelete.setEnabled(true);
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Sql Cannot Retrieve Selected Part Price");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -996,7 +1062,7 @@ public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeer {
         if (x.equals("error")) {
             price.setText("");
             price.setBackground(Color.yellow);
-            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            bsmf.MainFrame.show(getMessageTag(1000));
             price.requestFocus();
         } else {
             price.setText(x);
