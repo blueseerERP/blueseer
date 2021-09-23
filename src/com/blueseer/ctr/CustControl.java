@@ -33,6 +33,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import bsmf.MainFrame;
 import static bsmf.MainFrame.tags;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.IBlueSeerc;
 import com.blueseer.utl.OVData;
 import java.awt.Component;
@@ -224,7 +225,7 @@ public class CustControl extends javax.swing.JPanel implements IBlueSeerc {
                     
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError};  
+                m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};  
             } finally {
                if (res != null) res.close();
                if (st != null) st.close();
@@ -232,7 +233,7 @@ public class CustControl extends javax.swing.JPanel implements IBlueSeerc {
             }
         } catch (Exception e) {
             MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordConnError};
+            m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1020, Thread.currentThread().getStackTrace()[1].getMethodName())};
         }
      
      return m;

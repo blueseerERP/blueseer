@@ -51,6 +51,8 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.RPData;
 import java.lang.reflect.InvocationTargetException;
@@ -294,8 +296,8 @@ public class VenRptPicker extends javax.swing.JPanel {
            resetVariables();
            hidePanels();
            showPanels(new String[]{"tb1"});
-           lbkey1.setText("From VendCode:");
-           lbkey2.setText("To VendCode:");
+           lbkey1.setText(getClassLabelTag("lblfromcode", this.getClass().getSimpleName()));
+           lbkey2.setText(getClassLabelTag("lbltocode", this.getClass().getSimpleName()));
         } else { // output...fill report
             // colect variables from input
             String from = tbkey1.getText();
@@ -313,7 +315,13 @@ public class VenRptPicker extends javax.swing.JPanel {
             // column 1 is always 'select' and always type ImageIcon
             // the remaining columns are whatever you require
              javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-              new String[]{"select", "VendCode", "Name", "Line1", "City", "State", "Zip"})
+              new String[]{getGlobalColumnTag("select"), 
+                  getGlobalColumnTag("code"), 
+                  getGlobalColumnTag("name"), 
+                  getGlobalColumnTag("addr1"), 
+                  getGlobalColumnTag("city"), 
+                  getGlobalColumnTag("state"), 
+                  getGlobalColumnTag("zip")})
               {
               @Override  
               public Class getColumnClass(int col) {  
@@ -368,7 +376,7 @@ public class VenRptPicker extends javax.swing.JPanel {
             Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
               while (en.hasMoreElements()) {
                  TableColumn tc = en.nextElement();
-                 if (tc.getIdentifier().toString().equals("select")) {
+                 if (tc.getClass().getSimpleName().equals("ImageIcon")) {
                      continue;
                  }
                  tc.setCellRenderer(new VenRptPicker.renderer1());
@@ -384,8 +392,8 @@ public class VenRptPicker extends javax.swing.JPanel {
            resetVariables();
            hidePanels();
            showPanels(new String[]{"tb1"});
-           lbkey1.setText("From VendCode:");
-           lbkey2.setText("To VendCode:");
+           lbkey1.setText(getClassLabelTag("lblfromcode", this.getClass().getSimpleName()));
+           lbkey2.setText(getClassLabelTag("lbltocode", this.getClass().getSimpleName()));
          } else { // output...fill report
             // colect variables from input
             String from = tbkey1.getText();
@@ -402,8 +410,12 @@ public class VenRptPicker extends javax.swing.JPanel {
             // create and fill tablemodel
             // column 1 is always 'select' and always type ImageIcon
             // the remaining columns are whatever you require
+           
              javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-              new String[]{"select", "VendCode", "Name", "Phone", "Email"})
+              new String[]{getGlobalColumnTag("select"), 
+                  getGlobalColumnTag("code"), 
+                  getGlobalColumnTag("name"),
+                  getGlobalColumnTag("phone"), getGlobalColumnTag("email")})
               {
               @Override  
               public Class getColumnClass(int col) {  
@@ -456,7 +468,7 @@ public class VenRptPicker extends javax.swing.JPanel {
             Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
               while (en.hasMoreElements()) {
                  TableColumn tc = en.nextElement();
-                 if (tc.getIdentifier().toString().equals("select")) {
+                 if (tc.getClass().getSimpleName().equals("ImageIcon")) {
                      continue;
                  }
                  tc.setCellRenderer(new VenRptPicker.renderer1());
@@ -471,8 +483,8 @@ public class VenRptPicker extends javax.swing.JPanel {
            resetVariables();
            hidePanels();
            showPanels(new String[]{"tb1"});
-           lbkey1.setText("From VendCode:");
-           lbkey2.setText("To VendCode:");
+           lbkey1.setText(getClassLabelTag("lblfromcode", this.getClass().getSimpleName()));
+           lbkey2.setText(getClassLabelTag("lbltocode", this.getClass().getSimpleName()));
          } else { // output...fill report
             // colect variables from input
             String from = tbkey1.getText();
@@ -490,7 +502,15 @@ public class VenRptPicker extends javax.swing.JPanel {
             // column 1 is always 'select' and always type ImageIcon
             // the remaining columns are whatever you require
              javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-              new String[]{"select", "VendCode", "Name", "Terms", "Bank", "Curr", "APAcct", "APcc", "Market"})
+              new String[]{getGlobalColumnTag("select"), 
+                  getGlobalColumnTag("code"), 
+                  getGlobalColumnTag("name"), 
+                  getGlobalColumnTag("terms"), 
+                  getGlobalColumnTag("bank"), 
+                  getGlobalColumnTag("currency"), 
+                  getGlobalColumnTag("account"), 
+                  getGlobalColumnTag("costcenter"), 
+                  getGlobalColumnTag("market")})
               {
               @Override  
               public Class getColumnClass(int col) {  
@@ -546,7 +566,7 @@ public class VenRptPicker extends javax.swing.JPanel {
             Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
               while (en.hasMoreElements()) {
                  TableColumn tc = en.nextElement();
-                 if (tc.getIdentifier().toString().equals("select")) {
+                 if (tc.getClass().getSimpleName().equals("ImageIcon")) {
                      continue;
                  }
                  tc.setCellRenderer(new VenRptPicker.renderer1());
@@ -561,10 +581,10 @@ public class VenRptPicker extends javax.swing.JPanel {
            resetVariables();
            hidePanels();
            showPanels(new String[]{"tb1","dc"});
-           lbkey1.setText("From VendCode:");
-           lbkey2.setText("To VEndCode:");
-           lbdate1.setText("From Date:");
-           lbdate2.setText("To Date:");
+           lbkey1.setText(getClassLabelTag("lblfromcode", this.getClass().getSimpleName()));
+           lbkey2.setText(getClassLabelTag("lbltocode", this.getClass().getSimpleName()));
+           lbdate1.setText(getClassLabelTag("lblfromdate", this.getClass().getSimpleName()));
+           lbdate2.setText(getClassLabelTag("lbltodate", this.getClass().getSimpleName()));
            java.util.Date now = new java.util.Date();
            dcdate1.setDate(now);
            dcdate2.setDate(now);
@@ -592,7 +612,12 @@ public class VenRptPicker extends javax.swing.JPanel {
             // column 1 is always 'select' and always type ImageIcon
             // the remaining columns are whatever you require
              javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-              new String[]{"select", "VendCode", "Name", "fromdate", "todate", "TotSales"})
+              new String[]{getGlobalColumnTag("select"), 
+                  getGlobalColumnTag("code"), 
+                  getGlobalColumnTag("name"), 
+                  getGlobalColumnTag("fromdate"), 
+                  getGlobalColumnTag("todate"), 
+                  getGlobalColumnTag("totalsales")})
               {
               @Override  
               public Class getColumnClass(int col) {  
@@ -650,7 +675,7 @@ public class VenRptPicker extends javax.swing.JPanel {
             Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
               while (en.hasMoreElements()) {
                  TableColumn tc = en.nextElement();
-                 if (tc.getIdentifier().toString().equals("select")) {
+                 if (tc.getClass().getSimpleName().equals("ImageIcon")) {
                      continue;
                  }
                  tc.setCellRenderer(new VenRptPicker.renderer1());
@@ -705,8 +730,10 @@ public class VenRptPicker extends javax.swing.JPanel {
         tablereport = new javax.swing.JTable();
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Vendor Report Picker"));
+        jPanel1.setName("panelmain"); // NOI18N
 
         btview.setText("View");
+        btview.setName("btview"); // NOI18N
         btview.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btviewActionPerformed(evt);
@@ -720,8 +747,10 @@ public class VenRptPicker extends javax.swing.JPanel {
         });
 
         jLabel3.setText("Report:");
+        jLabel3.setName("lblreport"); // NOI18N
 
         btcsv.setText("CSV");
+        btcsv.setName("btcsv"); // NOI18N
         btcsv.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btcsvActionPerformed(evt);
@@ -803,8 +832,10 @@ public class VenRptPicker extends javax.swing.JPanel {
         );
 
         rbinactive.setText("Inactive");
+        rbinactive.setName("cbinactive"); // NOI18N
 
         rbactive.setText("Active");
+        rbactive.setName("cbactive"); // NOI18N
 
         javax.swing.GroupLayout panelrbLayout = new javax.swing.GroupLayout(panelrb);
         panelrb.setLayout(panelrbLayout);
@@ -920,6 +951,7 @@ public class VenRptPicker extends javax.swing.JPanel {
         );
 
         btprint.setText("Print/PDF");
+        btprint.setName("btprintpdf"); // NOI18N
         btprint.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btprintActionPerformed(evt);

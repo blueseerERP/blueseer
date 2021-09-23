@@ -67,14 +67,14 @@ import javax.swing.SwingWorker;
  *
  * @author vaughnte
  */
-public class VendXrefMaintPanel extends javax.swing.JPanel implements IBlueSeer {
+public class VendXrefMaint extends javax.swing.JPanel implements IBlueSeer {
 
    // global variable declarations
                 boolean isLoad = false;
     
     // global datatablemodel declarations       
                 
-    public VendXrefMaintPanel() {
+    public VendXrefMaint() {
         initComponents();
     }
 

@@ -73,7 +73,7 @@ import javax.swing.SwingWorker;
  *
  * @author vaughnte
  */
-public class VendPriceMstr extends javax.swing.JPanel implements IBlueSeer {
+public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeer {
 
     
     
@@ -84,7 +84,7 @@ public class VendPriceMstr extends javax.swing.JPanel implements IBlueSeer {
      DefaultListModel listmodel = new DefaultListModel();
      DefaultListModel pricelistmodel = new DefaultListModel();           
                 
-    public VendPriceMstr() {
+    public VendPriceMaint() {
         initComponents();
     }
 

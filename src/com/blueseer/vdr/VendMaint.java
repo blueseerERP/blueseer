@@ -68,7 +68,7 @@ import javax.swing.SwingWorker;
  *
  * @author vaughnte
  */
-public class VendMaintPanel extends javax.swing.JPanel implements IBlueSeer {
+public class VendMaint extends javax.swing.JPanel implements IBlueSeer {
 
      
     // global variable declarations
@@ -84,7 +84,7 @@ public class VendMaintPanel extends javax.swing.JPanel implements IBlueSeer {
     /**
      * Creates new form VendMaintPanel
      */
-    public VendMaintPanel() {
+    public VendMaint() {
         initComponents();
     }
 

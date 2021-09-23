@@ -97,8 +97,8 @@ ARRptPicker,,com.blueseer.far.ARRptPicker,JMenuItem,rpar
 HRRptPicker,,com.blueseer.hrm.HRRptPicker,JMenuItem,rphr
 ScrapEntry,,com.blueseer.prd.ScrapMaintPanel,JMenuItem,scrp
 ScrapRpt1,,com.blueseer.prd.ScrapReportPanel,JMenuItem,scrr
-ShipConfirm,,com.blueseer.shp.ShipConfirmPanel,JMenuItem,shcf
-ShipMaint,,com.blueseer.shp.ShipMaintPanel,JMenuItem,shpm
+ShipConfirm,,com.blueseer.shp.ShipConfirm,JMenuItem,shcf
+ShipMaint,,com.blueseer.shp.ShipMaint,JMenuItem,shpm
 InvoiceMaint,,com.blueseer.far.InvoiceMaint,JMenuItem,invv
 SiteMaint,,com.blueseer.adm.SiteMstrPanel,JMenuItem,site
 TermsMaint,,com.blueseer.ctr.TermsMaint,JMenuItem,term
@@ -127,8 +127,8 @@ TimeClockAdjust,,com.blueseer.tca.ClockUpdatePanel,JMenuItem,tima
 TimeClockEntry,,com.blueseer.tca.ClockPanel,JMenuItem,time
 TrainingMaint,,com.blueseer.hrm.TrainingMaster,JMenuItem,tram
 UserPermsMaint,,com.blueseer.adm.UserPermsMaint,JMenuItem,uspm
-VendXrefMaint,,com.blueseer.vdr.VendXrefMaintPanel,JMenuItem,vdxm
-VendXrefRpt1,,com.blueseer.vdr.VendXrefRpt1,JMenuItem,vdxr
+VendXrefMaint,,com.blueseer.vdr.VendXrefMaint,JMenuItem,vdxm
+VendXrefRpt1,,com.blueseer.vdr.VendXrefRpt,JMenuItem,vdxr
 VouchMaintPanel,,com.blueseer.fap.VouchMaintPanel,JMenuItem,vocm
 VoucherBrowse,,com.blueseer.fap.VoucherBrowse,JMenuItem,vocb
 WhereUsedUtility,,com.blueseer.inv.WhereUsedUtility,JMenuItem,where
@@ -144,7 +144,7 @@ FreightBrowse,Browse Freight Records,com.blueseer.utl.ReportPanel,JMenuItem,frtb
 CarrierBrowse,Carrier Browse,com.blueseer.utl.ReportPanel,JMenuItem,carb
 ARPaymentMaint,,com.blueseer.far.ARPaymentMaint,JMenuItem,arpm
 BankMaint,,com.blueseer.fgl.BankMaint,JMenuItem,bank
-ShipperBrowse,Shipper Browse,com.blueseer.shp.ShipperBrowsePanel,JMenuItem,shpb
+ShipperBrowse,Shipper Browse,com.blueseer.shp.ShipperBrowse,JMenuItem,shpb
 InvoiceBrowse,Invoice Browse,com.blueseer.far.InvoiceBrowsePanel,JMenuItem,invb
 AddrLabel,,com.blueseer.lbl.LabelAddrPanel,JMenuItem,lbla
 CustPriceReport,Customer Price Report,com.blueseer.ctr.CustPriceRpt,JMenuItem,cprb
@@ -203,9 +203,9 @@ DiscreteOrderPerWeekUnits,,com.blueseer.utl.ChartView,JMenuItem,orc1
 DiscreteOrderPerWeekDollars,,com.blueseer.utl.ChartView,JMenuItem,orc2
 ARPaymentBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,arpb
 VendBrowse,,com.blueseer.vdr.VendMstrBrowse,JMenuItem,venb
-VendMaint,,com.blueseer.vdr.VendMaintPanel,JMenuItem,venm
+VendMaint,,com.blueseer.vdr.VendMaint,JMenuItem,venm
 ShipPerWeekDollarsChart,,com.blueseer.utl.ChartView,JMenuItem,shpr1
-ShipUnconfirm,,com.blueseer.shp.ShipUnConfirmPanel,JMenuItem,uncf
+ShipUnconfirm,,com.blueseer.shp.ShipUnConfirm,JMenuItem,uncf
 ClockControl,,com.blueseer.tca.ClockControl,JMenuItem,cloc
 ShipperControl,,com.blueseer.shp.ShipperControl,JMenuItem,shpc
 ARControl,,com.blueseer.far.ARControl,JMenuItem,arcc
@@ -215,8 +215,8 @@ SystemControl,,com.blueseer.adm.SystemControl,JMenuItem,sysc
 POBrowse,,com.blueseer.pur.POBrowse,JMenuItem,purb
 RecvBrowse,,com.blueseer.rcv.RecvBrowse,JMenuItem,recb
 RecvByPOBrowse,,com.blueseer.rcv.RecvByPOBrowse,JMenuItem,recbp
-VendPriceMaint,,com.blueseer.vdr.VendPriceMstr,JMenuItem,vprm
-VendPriceRpt1,,com.blueseer.vdr.VendPriceRpt1,JMenuItem,vprb
+VendPriceMaint,,com.blueseer.vdr.VendPriceMaint,JMenuItem,vprm
+VendPriceRpt1,,com.blueseer.vdr.VendPriceRpt,JMenuItem,vprb
 ProdEntryMaint,,com.blueseer.prd.ProdEntryMaint,JMenuItem,prod
 piechart_salesbycust,,com.blueseer.utl.ChartView,JMenuItem,sales1
 piechart_custAR,,com.blueseer.utl.ChartView,JMenuItem,sales2
@@ -269,7 +269,7 @@ POSMenu,,,JMenu,
 DOMenu,,,JMenu, 
 TransportationMenu,,,JMenu, 
 CashTransactionMenu,,,JMenu, 
-ShipperBrowseDet,,com.blueseer.shp.ShipperDetBrowsePanel,JMenuItem,shpbd
+ShipperBrowseDet,,com.blueseer.shp.ShipperDetBrowse,JMenuItem,shpbd
 FTPMaint,,com.blueseer.adm.FTPMaint,JMenuItem,ftpm
 ECNMaint,,com.blueseer.eng.ECNMaint,JMenuItem,ecnm
 ECNBrowse,,com.blueseer.eng.ECNBrowse,JMenuItem,ecnb

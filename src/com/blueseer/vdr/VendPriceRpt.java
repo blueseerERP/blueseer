@@ -52,7 +52,7 @@ import javax.swing.table.TableCellRenderer;
  *
  * @author vaughnte
  */
-public class VendPriceRpt1 extends javax.swing.JPanel {
+public class VendPriceRpt extends javax.swing.JPanel {
 
        javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                     new String[]{"Select", "VendCode", "VendName", "Item", "ItemDesc", "UOM", "Currency", "Price"})
@@ -68,7 +68,7 @@ public class VendPriceRpt1 extends javax.swing.JPanel {
     /**
      * Creates new form CustXrefRpt1
      */
-    public VendPriceRpt1() {
+    public VendPriceRpt() {
         initComponents();
     }
 

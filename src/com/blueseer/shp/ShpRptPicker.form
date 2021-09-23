@@ -42,6 +42,7 @@
             <TitledBorder title="Shipper Report Picker"/>
           </Border>
         </Property>
+        <Property name="name" type="java.lang.String" value="panelmain" noResource="true"/>
       </Properties>
 
       <Layout>
@@ -89,6 +90,7 @@
         <Component class="javax.swing.JButton" name="btview">
           <Properties>
             <Property name="text" type="java.lang.String" value="View"/>
+            <Property name="name" type="java.lang.String" value="btview" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btviewActionPerformed"/>
@@ -110,11 +112,13 @@
         <Component class="javax.swing.JLabel" name="jLabel3">
           <Properties>
             <Property name="text" type="java.lang.String" value="Report:"/>
+            <Property name="name" type="java.lang.String" value="lblreport" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="btcsv">
           <Properties>
             <Property name="text" type="java.lang.String" value="CSV"/>
+            <Property name="name" type="java.lang.String" value="btcsv" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btcsvActionPerformed"/>
@@ -324,11 +328,13 @@
                 <Component class="javax.swing.JRadioButton" name="rbinactive">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Inactive"/>
+                    <Property name="name" type="java.lang.String" value="cbinactive" noResource="true"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JRadioButton" name="rbactive">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Active"/>
+                    <Property name="name" type="java.lang.String" value="cbactive" noResource="true"/>
                   </Properties>
                 </Component>
               </SubComponents>
@@ -448,6 +454,7 @@
         <Component class="javax.swing.JButton" name="btprint">
           <Properties>
             <Property name="text" type="java.lang.String" value="Print/PDF"/>
+            <Property name="name" type="java.lang.String" value="btprintpdf" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btprintActionPerformed"/>

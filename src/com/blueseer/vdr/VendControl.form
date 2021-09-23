@@ -28,6 +28,7 @@
             <TitledBorder title="Vendor Control"/>
           </Border>
         </Property>
+        <Property name="name" type="java.lang.String" value="panelmain" noResource="true"/>
       </Properties>
 
       <Layout>
@@ -59,6 +60,7 @@
         <Component class="javax.swing.JCheckBox" name="cbautovend">
           <Properties>
             <Property name="text" type="java.lang.String" value="Auto Vendor ID?"/>
+            <Property name="name" type="java.lang.String" value="cbautovendid" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbautovendActionPerformed"/>
@@ -67,6 +69,7 @@
         <Component class="javax.swing.JButton" name="btupdate">
           <Properties>
             <Property name="text" type="java.lang.String" value="Update"/>
+            <Property name="name" type="java.lang.String" value="btupdate" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btupdateActionPerformed"/>

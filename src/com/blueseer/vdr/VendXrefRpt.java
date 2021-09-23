@@ -47,12 +47,12 @@ import javax.swing.table.TableCellRenderer;
  *
  * @author vaughnte
  */
-public class VendXrefRpt1 extends javax.swing.JPanel {
+public class VendXrefRpt extends javax.swing.JPanel {
 
     /**
      * Creates new form CustXrefRpt1
      */
-    public VendXrefRpt1() {
+    public VendXrefRpt() {
         initComponents();
     }
 
@@ -233,7 +233,7 @@ public class VendXrefRpt1 extends javax.swing.JPanel {
 
                 javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                     new String[]{"Select", "Vend", "Part", "VendPart", "Sku", "UPC", "Misc"});
-                tablereport.setModel(mymodel); tablereport.getColumn("Select").setCellRenderer(new VendXrefRpt1.ButtonRenderer());
+                tablereport.setModel(mymodel); tablereport.getColumn("Select").setCellRenderer(new VendXrefRpt.ButtonRenderer());
                 tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
 
                 if (rbpart.isSelected()) {
