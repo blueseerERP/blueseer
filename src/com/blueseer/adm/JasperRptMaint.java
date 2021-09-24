@@ -27,7 +27,10 @@ SOFTWARE.
 package com.blueseer.adm;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.tags;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
 import static com.blueseer.utl.BlueSeerUtils.luTable;
 import static com.blueseer.utl.BlueSeerUtils.lubg;
@@ -38,7 +41,8 @@ import static com.blueseer.utl.BlueSeerUtils.luinput;
 import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import static com.blueseer.utl.BlueSeerUtils.lurb2;
-import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import static com.blueseer.utl.BlueSeerUtils.luModel;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeer;
 import com.blueseer.utl.OVData;
@@ -59,8 +63,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -88,6 +95,7 @@ public class JasperRptMaint extends javax.swing.JPanel implements IBlueSeer {
                 
     public JasperRptMaint() {
         initComponents();
+        setLanguageTags(this);
     }
 
     
@@ -224,6 +232,50 @@ public class JasperRptMaint extends javax.swing.JPanel implements IBlueSeer {
             }
     } 
     
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+    
     public void setComponentDefaultValues() {
        isLoad = true;
         tbsequence.setText("");
@@ -268,13 +320,13 @@ public class JasperRptMaint extends javax.swing.JPanel implements IBlueSeer {
                   
                 if (tbsequence.getText().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a sequence");
+                    bsmf.MainFrame.show(getMessageTag(1024));
                     tbsequence.requestFocus();
                     return b;
                 }
                 if (tbdesc.getText().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a title");
+                    bsmf.MainFrame.show(getMessageTag(1024));
                     tbdesc.requestFocus();
                     return b;
                 }
@@ -465,9 +517,9 @@ public class JasperRptMaint extends javax.swing.JPanel implements IBlueSeer {
         luTable.setModel(luModel);
         luTable.getColumnModel().getColumn(0).setMaxWidth(50);
         if (luModel.getRowCount() < 1) {
-            ludialog.setTitle("No Records Found!");
+            ludialog.setTitle(getMessageTag(1001));
         } else {
-            ludialog.setTitle(luModel.getRowCount() + " Records Found!");
+            ludialog.setTitle(getMessageTag(1002, String.valueOf(luModel.getRowCount())));
         }
         }
         };
@@ -487,8 +539,8 @@ public class JasperRptMaint extends javax.swing.JPanel implements IBlueSeer {
         };
         luTable.addMouseListener(luml);
       
-        callDialog("group", "description"); 
-        
+        callDialog(getClassLabelTag("lblreport", this.getClass().getSimpleName()), 
+                getClassLabelTag("lblrpttitle", this.getClass().getSimpleName()));
     }
 
    
@@ -523,12 +575,16 @@ public class JasperRptMaint extends javax.swing.JPanel implements IBlueSeer {
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Jasper File Maintenance"));
+        jPanel1.setName("panelmain"); // NOI18N
 
         jLabel1.setText("Report Group:");
+        jLabel1.setName("lblreport"); // NOI18N
 
         jLabel2.setText("Rpt Title:");
+        jLabel2.setName("lblrpttitle"); // NOI18N
 
         btdelete.setText("delete");
+        btdelete.setName("btdelete"); // NOI18N
         btdelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdeleteActionPerformed(evt);
@@ -536,6 +592,7 @@ public class JasperRptMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         btadd.setText("add");
+        btadd.setName("btadd"); // NOI18N
         btadd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddActionPerformed(evt);
@@ -543,6 +600,7 @@ public class JasperRptMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         btupdate.setText("update");
+        btupdate.setName("btupdate"); // NOI18N
         btupdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btupdateActionPerformed(evt);
@@ -550,6 +608,7 @@ public class JasperRptMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         btnew.setText("New");
+        btnew.setName("btnew"); // NOI18N
         btnew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnewActionPerformed(evt);
@@ -557,6 +616,7 @@ public class JasperRptMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         btclear.setText("Clear");
+        btclear.setName("btclear"); // NOI18N
         btclear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btclearActionPerformed(evt);
@@ -566,10 +626,13 @@ public class JasperRptMaint extends javax.swing.JPanel implements IBlueSeer {
         ddgroup.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "CusRptGroup", "VenRptGroup", "InvRptGroup", "HRRptGroup", "ARRptGroup", "APRptGroup", "OrdRptGroup", "ShpRptGroup", "SchRptGroup", "PurRptGroup" }));
 
         jLabel3.setText("Sequence:");
+        jLabel3.setName("lblsequence"); // NOI18N
 
         jLabel4.setText("Format:");
+        jLabel4.setName("lblformat"); // NOI18N
 
         jLabel5.setText("Function:");
+        jLabel5.setName("lblfunction"); // NOI18N
 
         btlookup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
         btlookup.addActionListener(new java.awt.event.ActionListener() {
@@ -618,13 +681,14 @@ public class JasperRptMaint extends javax.swing.JPanel implements IBlueSeer {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btnew)
                         .addComponent(btclear))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(ddgroup, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(ddgroup, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel1))
                             .addComponent(btlookup))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)

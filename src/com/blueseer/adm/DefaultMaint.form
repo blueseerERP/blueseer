@@ -28,6 +28,7 @@
             <TitledBorder title="Default Maintenance"/>
           </Border>
         </Property>
+        <Property name="name" type="java.lang.String" value="panelmain" noResource="true"/>
       </Properties>
 
       <Layout>
@@ -100,11 +101,13 @@
         <Component class="javax.swing.JLabel" name="jLabel1">
           <Properties>
             <Property name="text" type="java.lang.String" value="Default Site Code:"/>
+            <Property name="name" type="java.lang.String" value="lblsite" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="btupdate">
           <Properties>
             <Property name="text" type="java.lang.String" value="Update"/>
+            <Property name="name" type="java.lang.String" value="btupdate" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btupdateActionPerformed"/>
@@ -119,16 +122,19 @@
         <Component class="javax.swing.JLabel" name="jLabel2">
           <Properties>
             <Property name="text" type="java.lang.String" value="Default Currency:"/>
+            <Property name="name" type="java.lang.String" value="lblcurrency" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel3">
           <Properties>
             <Property name="text" type="java.lang.String" value="Default Warehouse:"/>
+            <Property name="name" type="java.lang.String" value="lblwh" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel4">
           <Properties>
             <Property name="text" type="java.lang.String" value="Default Dept/CC:"/>
+            <Property name="name" type="java.lang.String" value="lblcc" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="tblabelprinter">
@@ -136,6 +142,7 @@
         <Component class="javax.swing.JLabel" name="jLabel5">
           <Properties>
             <Property name="text" type="java.lang.String" value="Default Label Printer:"/>
+            <Property name="name" type="java.lang.String" value="lblprinter" noResource="true"/>
           </Properties>
         </Component>
       </SubComponents>

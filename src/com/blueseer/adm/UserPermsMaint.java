@@ -26,8 +26,19 @@ SOFTWARE.
 
 package com.blueseer.adm;
 
+import static bsmf.MainFrame.tags;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.OVData;
+import java.awt.Component;
 import java.util.ArrayList;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 
 /**
  *
@@ -40,10 +51,52 @@ public class UserPermsMaint extends javax.swing.JPanel {
      */
     public UserPermsMaint() {
         initComponents();
-       
-        
+        setLanguageTags(this);  
     }
 
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
     
     public void initvars(String[] arg)
     {
@@ -123,13 +176,17 @@ public class UserPermsMaint extends javax.swing.JPanel {
 
         setBackground(new java.awt.Color(0, 102, 204));
 
+        jPanel5.setName("panelmain"); // NOI18N
+
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Users Assigned to this Menu"));
+        jPanel3.setName("paneltomenu"); // NOI18N
 
         tausers.setColumns(20);
         tausers.setRows(5);
         jScrollPane1.setViewportView(tausers);
 
         btgetusers.setText("Get");
+        btgetusers.setName("btview"); // NOI18N
         btgetusers.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btgetusersActionPerformed(evt);
@@ -164,8 +221,10 @@ public class UserPermsMaint extends javax.swing.JPanel {
         );
 
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Menu To User Assign/Unassign"));
+        jPanel4.setName("panelmenu"); // NOI18N
 
         btusermenuassign.setText("Assign");
+        btusermenuassign.setName("btassign"); // NOI18N
         btusermenuassign.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btusermenuassignActionPerformed(evt);
@@ -173,6 +232,7 @@ public class UserPermsMaint extends javax.swing.JPanel {
         });
 
         btmenuuserunassign.setText("UnAssign");
+        btmenuuserunassign.setName("btunassign"); // NOI18N
         btmenuuserunassign.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btmenuuserunassignActionPerformed(evt);
@@ -180,8 +240,10 @@ public class UserPermsMaint extends javax.swing.JPanel {
         });
 
         jLabel3.setText("Menu");
+        jLabel3.setName("lblmenu"); // NOI18N
 
         jLabel4.setText("User");
+        jLabel4.setName("lbluser"); // NOI18N
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -224,8 +286,10 @@ public class UserPermsMaint extends javax.swing.JPanel {
         );
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Copy All User Permissions"));
+        jPanel1.setName("panelcopy"); // NOI18N
 
         btCopy.setText("Copy");
+        btCopy.setName("btcopy"); // NOI18N
         btCopy.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btCopyActionPerformed(evt);
@@ -233,8 +297,10 @@ public class UserPermsMaint extends javax.swing.JPanel {
         });
 
         jLabel1.setText("User From");
+        jLabel1.setName("lbluserfrom"); // NOI18N
 
         jLabel2.setText("User To");
+        jLabel2.setName("lbluserto"); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -271,12 +337,14 @@ public class UserPermsMaint extends javax.swing.JPanel {
         );
 
         jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder("Menus Assigned to this User"));
+        jPanel6.setName("paneltouser"); // NOI18N
 
         tamenus.setColumns(20);
         tamenus.setRows(5);
         jScrollPane2.setViewportView(tamenus);
 
         btgetmenus.setText("Get");
+        btgetmenus.setName("btview"); // NOI18N
         btgetmenus.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btgetmenusActionPerformed(evt);
@@ -364,13 +432,13 @@ public class UserPermsMaint extends javax.swing.JPanel {
         } else {
         String myreturn = OVData.addMenuToUser(ddmenuuser.getSelectedItem().toString(), dduserapplied.getSelectedItem().toString());
         if (myreturn.equals("0")) {
-            bsmf.MainFrame.show("Assigned menu");
+            bsmf.MainFrame.show(getMessageTag(1065));
         }
         if (myreturn.equals("1")) {
-            bsmf.MainFrame.show("Menu already assigned to user");
+            bsmf.MainFrame.show(getMessageTag(1014));
         }
         if (myreturn.equals("2")) {
-            bsmf.MainFrame.show("Unable to assign menu to user");
+            bsmf.MainFrame.show(getMessageTag(1012));
         }
         }
     }//GEN-LAST:event_btusermenuassignActionPerformed
@@ -381,13 +449,13 @@ public class UserPermsMaint extends javax.swing.JPanel {
         } else {
         String myreturn = OVData.deleteMenuToUser(ddmenuuser.getSelectedItem().toString(), dduserapplied.getSelectedItem().toString());
          if (myreturn.equals("0")) {
-            bsmf.MainFrame.show("Unassigned menu");
+            bsmf.MainFrame.show(getMessageTag(1065));
         }
         if (myreturn.equals("1")) {
-            bsmf.MainFrame.show("Menu already unassigned to user");
+            bsmf.MainFrame.show(getMessageTag(1014));
         }
         if (myreturn.equals("2")) {
-            bsmf.MainFrame.show("Unable to unassign menu to user");
+            bsmf.MainFrame.show(getMessageTag(1012));
         }
         }
     }//GEN-LAST:event_btmenuuserunassignActionPerformed

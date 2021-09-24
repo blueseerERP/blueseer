@@ -22,6 +22,9 @@
   <Layout class="org.netbeans.modules.form.compat2.layouts.DesignFlowLayout"/>
   <SubComponents>
     <Container class="javax.swing.JPanel" name="jPanel5">
+      <Properties>
+        <Property name="name" type="java.lang.String" value="panelmain" noResource="true"/>
+      </Properties>
 
       <Layout>
         <DimensionLayout dim="0">
@@ -67,6 +70,7 @@
                 <TitledBorder title="Users Assigned to this Menu"/>
               </Border>
             </Property>
+            <Property name="name" type="java.lang.String" value="paneltomenu" noResource="true"/>
           </Properties>
 
           <Layout>
@@ -128,6 +132,7 @@
             <Component class="javax.swing.JButton" name="btgetusers">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Get"/>
+                <Property name="name" type="java.lang.String" value="btview" noResource="true"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btgetusersActionPerformed"/>
@@ -142,6 +147,7 @@
                 <TitledBorder title="Menu To User Assign/Unassign"/>
               </Border>
             </Property>
+            <Property name="name" type="java.lang.String" value="panelmenu" noResource="true"/>
           </Properties>
 
           <Layout>
@@ -199,6 +205,7 @@
             <Component class="javax.swing.JButton" name="btusermenuassign">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Assign"/>
+                <Property name="name" type="java.lang.String" value="btassign" noResource="true"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btusermenuassignActionPerformed"/>
@@ -221,6 +228,7 @@
             <Component class="javax.swing.JButton" name="btmenuuserunassign">
               <Properties>
                 <Property name="text" type="java.lang.String" value="UnAssign"/>
+                <Property name="name" type="java.lang.String" value="btunassign" noResource="true"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btmenuuserunassignActionPerformed"/>
@@ -229,11 +237,13 @@
             <Component class="javax.swing.JLabel" name="jLabel3">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Menu"/>
+                <Property name="name" type="java.lang.String" value="lblmenu" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel4">
               <Properties>
                 <Property name="text" type="java.lang.String" value="User"/>
+                <Property name="name" type="java.lang.String" value="lbluser" noResource="true"/>
               </Properties>
             </Component>
           </SubComponents>
@@ -245,6 +255,7 @@
                 <TitledBorder title="Copy All User Permissions"/>
               </Border>
             </Property>
+            <Property name="name" type="java.lang.String" value="panelcopy" noResource="true"/>
           </Properties>
 
           <Layout>
@@ -308,6 +319,7 @@
             <Component class="javax.swing.JButton" name="btCopy">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Copy"/>
+                <Property name="name" type="java.lang.String" value="btcopy" noResource="true"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btCopyActionPerformed"/>
@@ -316,11 +328,13 @@
             <Component class="javax.swing.JLabel" name="jLabel1">
               <Properties>
                 <Property name="text" type="java.lang.String" value="User From"/>
+                <Property name="name" type="java.lang.String" value="lbluserfrom" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel2">
               <Properties>
                 <Property name="text" type="java.lang.String" value="User To"/>
+                <Property name="name" type="java.lang.String" value="lbluserto" noResource="true"/>
               </Properties>
             </Component>
           </SubComponents>
@@ -332,6 +346,7 @@
                 <TitledBorder title="Menus Assigned to this User"/>
               </Border>
             </Property>
+            <Property name="name" type="java.lang.String" value="paneltouser" noResource="true"/>
           </Properties>
 
           <Layout>
@@ -393,6 +408,7 @@
             <Component class="javax.swing.JButton" name="btgetmenus">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Get"/>
+                <Property name="name" type="java.lang.String" value="btview" noResource="true"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btgetmenusActionPerformed"/>

@@ -27,8 +27,10 @@ SOFTWARE.
 package com.blueseer.adm;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.tags;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
@@ -40,6 +42,14 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
@@ -57,9 +67,7 @@ public class MenuTree extends javax.swing.JPanel {
      */
     public MenuTree() {
         initComponents();
-        
-        
-        
+        setLanguageTags(this);
     }
 
     
@@ -100,6 +108,49 @@ public class MenuTree extends javax.swing.JPanel {
     }
 }
     
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
     
     public void initvars(String[] arg) {
         tbpar.setText("");
@@ -202,7 +253,7 @@ public class MenuTree extends javax.swing.JPanel {
                     }
              } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("problem querying menu_tree");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -264,16 +315,22 @@ public class MenuTree extends javax.swing.JPanel {
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Menu Tree Maintenance"));
+        jPanel2.setName("panelmain"); // NOI18N
 
         jLabel3.setText("Icon");
+        jLabel3.setName("lblicon"); // NOI18N
 
         jLabel6.setText("Name");
+        jLabel6.setName("lblname"); // NOI18N
 
         jLabel2.setText("Component");
+        jLabel2.setName("lblcomponent"); // NOI18N
 
         jLabel5.setText("Function");
+        jLabel5.setName("lblfunc"); // NOI18N
 
         jLabel1.setText("Parent Item");
+        jLabel1.setName("lblparent"); // NOI18N
 
         ddcomp.setEditable(true);
         ddcomp.addItemListener(new java.awt.event.ItemListener() {
@@ -283,6 +340,7 @@ public class MenuTree extends javax.swing.JPanel {
         });
 
         btupdate.setText("Update");
+        btupdate.setName("btupdate"); // NOI18N
         btupdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btupdateActionPerformed(evt);
@@ -290,6 +348,7 @@ public class MenuTree extends javax.swing.JPanel {
         });
 
         btadd.setText("Add");
+        btadd.setName("btadd"); // NOI18N
         btadd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddActionPerformed(evt);
@@ -297,8 +356,10 @@ public class MenuTree extends javax.swing.JPanel {
         });
 
         jLabel4.setText("InitVar");
+        jLabel4.setName("lblinitvar"); // NOI18N
 
         btdelete.setText("Delete");
+        btdelete.setName("btdelete"); // NOI18N
         btdelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdeleteActionPerformed(evt);
@@ -306,6 +367,7 @@ public class MenuTree extends javax.swing.JPanel {
         });
 
         btGetTree.setText("Tree");
+        btGetTree.setName("btview"); // NOI18N
         btGetTree.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btGetTreeActionPerformed(evt);
@@ -321,12 +383,16 @@ public class MenuTree extends javax.swing.JPanel {
         ddtype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "JMenu", "JMenuItem" }));
 
         jLabel8.setText("Type");
+        jLabel8.setName("lbltype"); // NOI18N
 
         jLabel7.setText("Index");
+        jLabel7.setName("lblindex"); // NOI18N
 
         cbvisible.setText("Visible?");
+        cbvisible.setName("cbvisible"); // NOI18N
 
         cbenable.setText("Enabled?");
+        cbenable.setName("cbenabled"); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -496,7 +562,9 @@ public class MenuTree extends javax.swing.JPanel {
                 }
                 if (i == 0) {
                     proceed = false;
-                    bsmf.MainFrame.show("Menu Child not defined in Menu Master");
+                    bsmf.MainFrame.show(getMessageTag(1116));
+                    ddcomp.requestFocus();
+                    return;
                 }
                 // now parent
                 res = st.executeQuery("SELECT menu_id FROM  menu_mstr where menu_id = " + "'" + tbpar.getText() + "';" );
@@ -505,7 +573,9 @@ public class MenuTree extends javax.swing.JPanel {
                 }
                 if (i == 0) {
                     proceed = false;
-                    bsmf.MainFrame.show("Menu Parent not defined in Menu Master");
+                    bsmf.MainFrame.show(getMessageTag(1116));
+                    tbpar.requestFocus();
+                    return;
                 }
                 
                 }
@@ -544,9 +614,9 @@ public class MenuTree extends javax.swing.JPanel {
                             + "'" + tbfunc.getText() + "'" 
                             + ")"
                             + ";");
-                        bsmf.MainFrame.show("Added Menu Tree Record");
+                        bsmf.MainFrame.show(getMessageTag(1007));
                     } else {
-                        bsmf.MainFrame.show("Menu Tree Record Already Exists");
+                        bsmf.MainFrame.show(getMessageTag(1014));
                     }
 
                    initvars(null);
@@ -554,7 +624,7 @@ public class MenuTree extends javax.swing.JPanel {
                 } // if proceed
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to Add Menu Tree Record");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -563,7 +633,7 @@ public class MenuTree extends javax.swing.JPanel {
     }//GEN-LAST:event_btaddActionPerformed
 
     private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
-       boolean proceed = bsmf.MainFrame.warn("Are you sure?");
+       boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
        int index = 0;
        int count = 0;
         if (proceed) {
@@ -610,12 +680,12 @@ public class MenuTree extends javax.swing.JPanel {
                             " AND mt_child = " + "'" + ddcomp.getSelectedItem().toString() + "'" + ";");
                    
                     if (i > 0) {
-                    bsmf.MainFrame.show("deleted Menu Tree record");
+                    bsmf.MainFrame.show(getMessageTag(1009));
                     initvars(null);
                     }
                 } catch (SQLException s) {
                     MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to Delete Menu Tree Record");
+                bsmf.MainFrame.show(getMessageTag(1013));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -635,8 +705,9 @@ public class MenuTree extends javax.swing.JPanel {
                   ResultSet res = null;   
                 if (tbindex.getText().isEmpty()) {
                     proceed = false;
-                    bsmf.MainFrame.show("Must enter an Index Nbr");
+                    bsmf.MainFrame.show(getMessageTag(1024));
                     tbindex.requestFocus();
+                    return;
                 }
               
                 if (proceed) {
@@ -671,13 +742,13 @@ public class MenuTree extends javax.swing.JPanel {
                    // lets reindex the children of this parent
                OVData.indexMenuChildren(tbpar.getText().toString(), ddcomp.getSelectedItem().toString(), Integer.valueOf(tbindex.getText()), oldindex);
                    
-                    bsmf.MainFrame.show("Updated Menu Tree Record");
+                    bsmf.MainFrame.show(getMessageTag(1008));
                     initvars(null);
                 } 
          
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Problem updating Menu Tree");
+                bsmf.MainFrame.show(getMessageTag(1012));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {

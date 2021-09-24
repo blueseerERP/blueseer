@@ -27,7 +27,9 @@ SOFTWARE.
 package com.blueseer.adm;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.tags;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.IBlueSeer;
 import com.blueseer.utl.IBlueSeerc;
 import com.blueseer.utl.OVData;
@@ -38,9 +40,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
@@ -57,6 +63,7 @@ public class DefaultMaint extends javax.swing.JPanel implements IBlueSeerc {
                 
     public DefaultMaint() {
         initComponents();
+        setLanguageTags(this);
     }
 
     
@@ -125,6 +132,50 @@ public class DefaultMaint extends javax.swing.JPanel implements IBlueSeerc {
        isLoad = false;
     }
     
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+    
     public String[] setAction(int i) {
         String[] m = new String[2];
         if (i > 0) {
@@ -140,7 +191,7 @@ public class DefaultMaint extends javax.swing.JPanel implements IBlueSeerc {
                                 
                 if (tbsite.getText().isEmpty() || ! OVData.isValidSite(tbsite.getText())) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a valid site");
+                    bsmf.MainFrame.show(getMessageTag(1024));
                     tbsite.requestFocus();
                     return b;
                 }
@@ -194,7 +245,7 @@ public class DefaultMaint extends javax.swing.JPanel implements IBlueSeerc {
                     
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError};  
+                m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};  
             } finally {
                if (res != null) res.close();
                if (st != null) st.close();
@@ -202,7 +253,7 @@ public class DefaultMaint extends javax.swing.JPanel implements IBlueSeerc {
             }
         } catch (Exception e) {
             MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordConnError};
+            m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1020, Thread.currentThread().getStackTrace()[1].getMethodName())};
         }
      
      return m;
@@ -235,7 +286,7 @@ public class DefaultMaint extends javax.swing.JPanel implements IBlueSeerc {
                 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
+                m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};  
             } finally {
                if (res != null) res.close();
                if (st != null) st.close();
@@ -243,7 +294,7 @@ public class DefaultMaint extends javax.swing.JPanel implements IBlueSeerc {
             }
         } catch (Exception e) {
             MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};  
+            m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1020, Thread.currentThread().getStackTrace()[1].getMethodName())};  
         }
       return m;
     }
@@ -275,10 +326,13 @@ public class DefaultMaint extends javax.swing.JPanel implements IBlueSeerc {
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Default Maintenance"));
+        jPanel1.setName("panelmain"); // NOI18N
 
         jLabel1.setText("Default Site Code:");
+        jLabel1.setName("lblsite"); // NOI18N
 
         btupdate.setText("Update");
+        btupdate.setName("btupdate"); // NOI18N
         btupdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btupdateActionPerformed(evt);
@@ -286,12 +340,16 @@ public class DefaultMaint extends javax.swing.JPanel implements IBlueSeerc {
         });
 
         jLabel2.setText("Default Currency:");
+        jLabel2.setName("lblcurrency"); // NOI18N
 
         jLabel3.setText("Default Warehouse:");
+        jLabel3.setName("lblwh"); // NOI18N
 
         jLabel4.setText("Default Dept/CC:");
+        jLabel4.setName("lblcc"); // NOI18N
 
         jLabel5.setText("Default Label Printer:");
+        jLabel5.setName("lblprinter"); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);

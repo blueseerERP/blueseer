@@ -26,6 +26,9 @@
   <Layout class="org.netbeans.modules.form.compat2.layouts.DesignFlowLayout"/>
   <SubComponents>
     <Container class="javax.swing.JPanel" name="jPanel1">
+      <Properties>
+        <Property name="name" type="java.lang.String" value="panelmain" noResource="true"/>
+      </Properties>
 
       <Layout>
         <DimensionLayout dim="0">
@@ -81,6 +84,7 @@
         <Component class="javax.swing.JLabel" name="jLabel3">
           <Properties>
             <Property name="text" type="java.lang.String" value="PO"/>
+            <Property name="name" type="java.lang.String" value="lblpo" noResource="true"/>
           </Properties>
         </Component>
         <Component class="com.toedter.calendar.JDateChooser" name="calduedate">
@@ -93,6 +97,7 @@
         <Component class="javax.swing.JButton" name="btupload">
           <Properties>
             <Property name="text" type="java.lang.String" value="Upload File"/>
+            <Property name="name" type="java.lang.String" value="btupload" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btuploadActionPerformed"/>
@@ -101,6 +106,7 @@
         <Component class="javax.swing.JLabel" name="jLabel1">
           <Properties>
             <Property name="text" type="java.lang.String" value="BillTo Code"/>
+            <Property name="name" type="java.lang.String" value="lblcust" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JComboBox" name="ddcustcode">
@@ -113,6 +119,7 @@
         <Component class="javax.swing.JLabel" name="jLabel4">
           <Properties>
             <Property name="text" type="java.lang.String" value="DueDate"/>
+            <Property name="name" type="java.lang.String" value="lblduedate" noResource="true"/>
           </Properties>
         </Component>
       </SubComponents>

@@ -26,8 +26,11 @@ SOFTWARE.
 package com.blueseer.adm;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.tags;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
 import static com.blueseer.utl.BlueSeerUtils.luTable;
 import static com.blueseer.utl.BlueSeerUtils.lual;
@@ -49,12 +52,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JViewport;
@@ -76,6 +82,7 @@ public class UserMaint extends javax.swing.JPanel implements IBlueSeer {
 
     public UserMaint() {
         initComponents();
+        setLanguageTags(this);
     }            
      
     // interface functions implemented
@@ -211,6 +218,50 @@ public class UserMaint extends javax.swing.JPanel implements IBlueSeer {
             }
     } 
     
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+    
     public void setComponentDefaultValues() {
        isLoad = true;
           tbkey.setText("");
@@ -267,20 +318,21 @@ public class UserMaint extends javax.swing.JPanel implements IBlueSeer {
         boolean b = true;
                 if (ddsite.getSelectedItem() == null || ddsite.getSelectedItem().toString().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("must choose a site");
+                    bsmf.MainFrame.show(getMessageTag(1024));
+                    ddsite.requestFocus();
                     return b;
                 }
                 
                 if (tbkey.getText().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a code");
+                    bsmf.MainFrame.show(getMessageTag(1024));
                     tbkey.requestFocus();
                     return b;
                 }
                 
                 if (tbpassword.getPassword().toString().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a password");
+                    bsmf.MainFrame.show(getMessageTag(1024));
                     tbpassword.requestFocus();
                     return b;
                 }
@@ -494,9 +546,9 @@ public class UserMaint extends javax.swing.JPanel implements IBlueSeer {
         luTable.setModel(luModel);
         luTable.getColumnModel().getColumn(0).setMaxWidth(50);
         if (luModel.getRowCount() < 1) {
-            ludialog.setTitle("No Records Found!");
+            ludialog.setTitle(getMessageTag(1001));
         } else {
-            ludialog.setTitle(luModel.getRowCount() + " Records Found!");
+            ludialog.setTitle(getMessageTag(1002, String.valueOf(luModel.getRowCount())));
         }
         }
         };
@@ -516,7 +568,8 @@ public class UserMaint extends javax.swing.JPanel implements IBlueSeer {
         };
         luTable.addMouseListener(luml);
       
-        callDialog("userid", "lastname"); 
+        callDialog(getClassLabelTag("lblid", this.getClass().getSimpleName()), 
+                getClassLabelTag("lbldesc", this.getClass().getSimpleName()));
         
         
     }
@@ -607,8 +660,10 @@ public class UserMaint extends javax.swing.JPanel implements IBlueSeer {
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("User Maintenance"));
+        jPanel1.setName("panelmain"); // NOI18N
 
         btadd.setText("Add");
+        btadd.setName("lbladd"); // NOI18N
         btadd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddActionPerformed(evt);
@@ -616,6 +671,7 @@ public class UserMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         btupdate.setText("Update");
+        btupdate.setName("lblupdate"); // NOI18N
         btupdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btupdateActionPerformed(evt);
@@ -629,12 +685,16 @@ public class UserMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         jLabel46.setText("User ID");
+        jLabel46.setName("lblid"); // NOI18N
 
         jLabel47.setText("LastName");
+        jLabel47.setName("lbllastname"); // NOI18N
 
         jLabel48.setText("Dept");
+        jLabel48.setName("lbldept"); // NOI18N
 
         jLabel49.setText("FirstName");
+        jLabel49.setName("lblfirstname"); // NOI18N
 
         tarmks.setColumns(20);
         tarmks.setRows(5);
@@ -645,14 +705,19 @@ public class UserMaint extends javax.swing.JPanel implements IBlueSeer {
         jScrollPane7.setViewportView(taUMperms1);
 
         jLabel138.setText("Password");
+        jLabel138.setName("lblpass"); // NOI18N
 
         jLabel1.setText("email");
+        jLabel1.setName("lblemail"); // NOI18N
 
         jLabel2.setText("Phone");
+        jLabel2.setName("lblphone"); // NOI18N
 
         jLabel3.setText("Cell");
+        jLabel3.setName("lblcell"); // NOI18N
 
         btdelete.setText("Delete");
+        btdelete.setName("lbldelete"); // NOI18N
         btdelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdeleteActionPerformed(evt);
@@ -660,6 +725,7 @@ public class UserMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         btnew.setText("New");
+        btnew.setName("lblnew"); // NOI18N
         btnew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnewActionPerformed(evt);
@@ -667,8 +733,10 @@ public class UserMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         jLabel4.setText("Default Site");
+        jLabel4.setName("lbldefaultsite"); // NOI18N
 
         btclear.setText("Clear");
+        btclear.setName("lblclear"); // NOI18N
         btclear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btclearActionPerformed(evt);

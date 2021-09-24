@@ -27,18 +27,21 @@ SOFTWARE.
 package com.blueseer.adm;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.tags;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import static com.blueseer.utl.BlueSeerUtils.luModel;
 import static com.blueseer.utl.BlueSeerUtils.lubg;
 import static com.blueseer.utl.BlueSeerUtils.ludialog;
-import static com.blueseer.utl.BlueSeerUtils.luModel;
 import static com.blueseer.utl.BlueSeerUtils.luTable;
 import static com.blueseer.utl.BlueSeerUtils.lual;
 import static com.blueseer.utl.BlueSeerUtils.luinput;
 import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import static com.blueseer.utl.BlueSeerUtils.lurb2;
-import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeer;
 import java.awt.Color;
@@ -57,8 +60,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -87,6 +93,7 @@ public class SiteMaint extends javax.swing.JPanel implements IBlueSeer {
     
     public SiteMaint() { 
         initComponents();
+        setLanguageTags(this);
     }
 
     
@@ -223,6 +230,50 @@ public class SiteMaint extends javax.swing.JPanel implements IBlueSeer {
             }
     } 
     
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+    
     public void setComponentDefaultValues() {
        isLoad = true;
            tbkey.setText("");
@@ -297,14 +348,14 @@ public class SiteMaint extends javax.swing.JPanel implements IBlueSeer {
                 
                 if (tbdesc.getText().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a description");
+                    bsmf.MainFrame.show(getMessageTag(1024));
                     tbdesc.requestFocus();
                     return b;
                 }
                 
                  if (tbkey.getText().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a code");
+                    bsmf.MainFrame.show(getMessageTag(1024));
                     tbkey.requestFocus();
                     return b;
                 }
@@ -450,12 +501,6 @@ public class SiteMaint extends javax.swing.JPanel implements IBlueSeer {
             ResultSet res = null;
             try {
                 
-                // check the site field
-                if (tbkey.getText().isEmpty()) {
-                    proceed = false;
-                    bsmf.MainFrame.show("Must enter a site code");
-                }
-                
                 if (proceed) {
                     st.executeUpdate("update site_mstr set site_line1 = " + "'" + tbline1.getText() + "'" + ","
                             + "site_line2 = " + "'" + tbline2.getText().replace("'","''") + "'" + ","
@@ -541,9 +586,9 @@ public class SiteMaint extends javax.swing.JPanel implements IBlueSeer {
         luTable.setModel(luModel);
         luTable.getColumnModel().getColumn(0).setMaxWidth(50);
         if (luModel.getRowCount() < 1) {
-            ludialog.setTitle("No Records Found!");
+            ludialog.setTitle(getMessageTag(1001));
         } else {
-            ludialog.setTitle(luModel.getRowCount() + " Records Found!");
+            ludialog.setTitle(getMessageTag(1002, String.valueOf(luModel.getRowCount())));
         }
         }
         };
@@ -563,7 +608,8 @@ public class SiteMaint extends javax.swing.JPanel implements IBlueSeer {
         };
         luTable.addMouseListener(luml);
       
-        callDialog("site", "description"); 
+        callDialog(getClassLabelTag("lblid", this.getClass().getSimpleName()), 
+                getClassLabelTag("lbldesc", this.getClass().getSimpleName()));
         
         
     }
@@ -625,22 +671,31 @@ public class SiteMaint extends javax.swing.JPanel implements IBlueSeer {
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Site Maintenance"));
+        jPanel1.setName("panelmain"); // NOI18N
 
         jLabel4.setText("AddrLine2");
+        jLabel4.setName("lbladdr2"); // NOI18N
 
         jLabel5.setText("AddrLine3");
+        jLabel5.setName("lbladdr3"); // NOI18N
 
         jLabel6.setText("City");
+        jLabel6.setName("lblcity"); // NOI18N
 
         jLabel8.setText("Zip");
+        jLabel8.setName("lblzip"); // NOI18N
 
         jLabel7.setText("State");
+        jLabel7.setName("lblstate"); // NOI18N
 
         jLabel1.setText("Site Code:");
+        jLabel1.setName("lblid"); // NOI18N
 
         jLabel2.setText("Site Desc:");
+        jLabel2.setName("lbldesc"); // NOI18N
 
         jLabel3.setText("AddrLine1");
+        jLabel3.setName("lbladdr1"); // NOI18N
 
         tbkey.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -649,6 +704,7 @@ public class SiteMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         btnew.setText("New");
+        btnew.setName("btnew"); // NOI18N
         btnew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnewActionPerformed(evt);
@@ -656,6 +712,7 @@ public class SiteMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         btclear.setText("Clear");
+        btclear.setName("btclear"); // NOI18N
         btclear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btclearActionPerformed(evt);
@@ -663,6 +720,7 @@ public class SiteMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         jLabel15.setText("Country");
+        jLabel15.setName("lblcountry"); // NOI18N
 
         btlookup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
         btlookup.addActionListener(new java.awt.event.ActionListener() {
@@ -760,16 +818,22 @@ public class SiteMaint extends javax.swing.JPanel implements IBlueSeer {
         );
 
         jLabel10.setText("Generic Invoice:");
+        jLabel10.setName("lblinvoice"); // NOI18N
 
         jLabel11.setText("Generic Shipper:");
+        jLabel11.setName("lblshipper"); // NOI18N
 
         jLabel9.setText("Logo File:");
+        jLabel9.setName("lbllogo"); // NOI18N
 
         jLabel12.setText("Generic PO:");
+        jLabel12.setName("lblpo"); // NOI18N
 
         jLabel13.setText("POS Rcpt:");
+        jLabel13.setName("lblpos"); // NOI18N
 
         jLabel14.setText("Generic OR:");
+        jLabel14.setName("lblorder"); // NOI18N
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -831,6 +895,7 @@ public class SiteMaint extends javax.swing.JPanel implements IBlueSeer {
         );
 
         btadd.setText("Add");
+        btadd.setName("btadd"); // NOI18N
         btadd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddActionPerformed(evt);
@@ -838,6 +903,7 @@ public class SiteMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         btupdate.setText("Update");
+        btupdate.setName("btupdate"); // NOI18N
         btupdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btupdateActionPerformed(evt);
@@ -845,6 +911,7 @@ public class SiteMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         btdelete.setText("Delete");
+        btdelete.setName("btdelete"); // NOI18N
         btdelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdeleteActionPerformed(evt);

@@ -29,8 +29,11 @@ package com.blueseer.adm;
 import com.blueseer.fgl.*;
 import bsmf.MainFrame;
 import static bsmf.MainFrame.dfdate;
+import static bsmf.MainFrame.tags;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
 import static com.blueseer.utl.BlueSeerUtils.luTable;
 import static com.blueseer.utl.BlueSeerUtils.lual;
@@ -62,8 +65,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -86,6 +92,7 @@ public class KeyMaint extends javax.swing.JPanel implements IBlueSeer {
                 
     public KeyMaint() {
         initComponents();
+        setLanguageTags(this);
     }
 
     
@@ -223,6 +230,50 @@ public class KeyMaint extends javax.swing.JPanel implements IBlueSeer {
             }
     } 
     
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+    
     public void setComponentDefaultValues() {
        isLoad = true;
         tbkey.setText("");
@@ -272,14 +323,14 @@ public class KeyMaint extends javax.swing.JPanel implements IBlueSeer {
                                
                 if (tbdesc.getText().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a description");
+                    bsmf.MainFrame.show(getMessageTag(1024));
                     tbdesc.requestFocus();
                     return b;
                 }
                 
                 if (tbkey.getText().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a code");
+                    bsmf.MainFrame.show(getMessageTag(1024));
                     tbkey.requestFocus();
                     return b;
                 }
@@ -476,9 +527,9 @@ public class KeyMaint extends javax.swing.JPanel implements IBlueSeer {
         luTable.setModel(luModel);
         luTable.getColumnModel().getColumn(0).setMaxWidth(50);
         if (luModel.getRowCount() < 1) {
-            ludialog.setTitle("No Records Found!");
+            ludialog.setTitle(getMessageTag(1001));
         } else {
-            ludialog.setTitle(luModel.getRowCount() + " Records Found!");
+            ludialog.setTitle(getMessageTag(1002, String.valueOf(luModel.getRowCount())));
         }
         }
         };
@@ -498,7 +549,8 @@ public class KeyMaint extends javax.swing.JPanel implements IBlueSeer {
         };
         luTable.addMouseListener(luml);
       
-        callDialog("Name", "Description"); 
+        callDialog(getClassLabelTag("lblcode", this.getClass().getSimpleName()), 
+                getClassLabelTag("lbldesc", this.getClass().getSimpleName()));
         
         
     }
@@ -542,12 +594,16 @@ public class KeyMaint extends javax.swing.JPanel implements IBlueSeer {
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Key Maintenance"));
+        jPanel1.setName("panelmain"); // NOI18N
 
         jLabel1.setText("Key Code:");
+        jLabel1.setName("lblcode"); // NOI18N
 
         jLabel2.setText("Description:");
+        jLabel2.setName("lbldesc"); // NOI18N
 
         btdelete.setText("delete");
+        btdelete.setName("btdelete"); // NOI18N
         btdelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdeleteActionPerformed(evt);
@@ -555,6 +611,7 @@ public class KeyMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         btadd.setText("add");
+        btadd.setName("btadd"); // NOI18N
         btadd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddActionPerformed(evt);
@@ -562,6 +619,7 @@ public class KeyMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         btupdate.setText("update");
+        btupdate.setName("btupdate"); // NOI18N
         btupdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btupdateActionPerformed(evt);
@@ -575,12 +633,16 @@ public class KeyMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         jLabel3.setText("Range From:");
+        jLabel3.setName("lblrangefrom"); // NOI18N
 
         jLabel5.setText("Range To:");
+        jLabel5.setName("lblrangeto"); // NOI18N
 
         jLabel6.setText("assignedID:");
+        jLabel6.setName("lblassignedID"); // NOI18N
 
         btnew.setText("New");
+        btnew.setName("btnew"); // NOI18N
         btnew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnewActionPerformed(evt);
@@ -588,6 +650,7 @@ public class KeyMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         btclear.setText("Clear");
+        btclear.setName("btclear"); // NOI18N
         btclear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btclearActionPerformed(evt);
@@ -602,6 +665,7 @@ public class KeyMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         jLabel4.setText("Prefix:");
+        jLabel4.setName("lblprefix"); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);

@@ -65,11 +65,20 @@ import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.mydialog;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
+import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 
 /**
  *
@@ -80,7 +89,16 @@ public class RecvByPOBrowse extends javax.swing.JPanel {
      public Map<String, ArrayList<String>> map = new HashMap<String, ArrayList<String>>();
      
     javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"Select", "Detail", "PO", "Vend", "Line", "Part", "Type", "Status", "OrdQty", "RecvQty"})
+                        new String[]{getGlobalColumnTag("select"), 
+                            getGlobalColumnTag("detail"), 
+                            getGlobalColumnTag("po"), 
+                            getGlobalColumnTag("vendor"), 
+                            getGlobalColumnTag("line"), 
+                            getGlobalColumnTag("item"), 
+                            getGlobalColumnTag("type"), 
+                            getGlobalColumnTag("status"), 
+                            getGlobalColumnTag("orderqty"), 
+                            getGlobalColumnTag("recvqty")})
             {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -91,7 +109,14 @@ public class RecvByPOBrowse extends javax.swing.JPanel {
                         };
                 
     javax.swing.table.DefaultTableModel modeldetail = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"ReceiverID", "Line", "Part", "PackingSlip", "RecvDate", "NetPrice", "QtyRecvd", "QtyVouchered"});
+                        new String[]{getGlobalColumnTag("id"), 
+                            getGlobalColumnTag("line"), 
+                            getGlobalColumnTag("item"), 
+                            getGlobalColumnTag("packingslip"), 
+                            getGlobalColumnTag("recvdate"), 
+                            getGlobalColumnTag("netprice"), 
+                            getGlobalColumnTag("recvqty"), 
+                            getGlobalColumnTag("vouchqty")});
     
      class ButtonRenderer extends JButton implements TableCellRenderer {
 
@@ -123,6 +148,7 @@ public class RecvByPOBrowse extends javax.swing.JPanel {
      */
     public RecvByPOBrowse() {
         initComponents();
+        setLanguageTags(this);
     }
 
      public void getdetail(String po, String line) {
@@ -165,7 +191,7 @@ public class RecvByPOBrowse extends javax.swing.JPanel {
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to get Recv Browse detail");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -174,6 +200,49 @@ public class RecvByPOBrowse extends javax.swing.JPanel {
 
     }
     
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
     
     public void initvars(String[] arg) {
      
@@ -264,6 +333,7 @@ public class RecvByPOBrowse extends javax.swing.JPanel {
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Receiver By PO Browse"));
+        jPanel1.setName("panelmain"); // NOI18N
 
         tablepanel.setLayout(new javax.swing.BoxLayout(tablepanel, javax.swing.BoxLayout.LINE_AXIS));
 
@@ -313,6 +383,7 @@ public class RecvByPOBrowse extends javax.swing.JPanel {
         tablepanel.add(detailpanel);
 
         btdetail.setText("Hide Detail");
+        btdetail.setName("bthidedetail"); // NOI18N
         btdetail.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdetailActionPerformed(evt);
@@ -320,8 +391,10 @@ public class RecvByPOBrowse extends javax.swing.JPanel {
         });
 
         jLabel4.setText("To Vend");
+        jLabel4.setName("lbltovend"); // NOI18N
 
         btRun.setText("Run");
+        btRun.setName("btrun"); // NOI18N
         btRun.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btRunActionPerformed(evt);
@@ -329,12 +402,16 @@ public class RecvByPOBrowse extends javax.swing.JPanel {
         });
 
         jLabel5.setText("Site");
+        jLabel5.setName("lblsite"); // NOI18N
 
         jLabel1.setText("From Vend");
+        jLabel1.setName("lblfromvend"); // NOI18N
 
         jLabel3.setText("To PO");
+        jLabel3.setName("lbltopo"); // NOI18N
 
         jLabel6.setText("From PO");
+        jLabel6.setName("lblfrompo"); // NOI18N
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -513,7 +590,7 @@ try {
         
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Problem executing Recv Browse Report");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             con.close();
         } catch (Exception e) {

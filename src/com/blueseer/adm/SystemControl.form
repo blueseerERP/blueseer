@@ -32,6 +32,7 @@
             <TitledBorder title="System Control"/>
           </Border>
         </Property>
+        <Property name="name" type="java.lang.String" value="panelmain" noResource="true"/>
       </Properties>
 
       <Layout>
@@ -137,11 +138,13 @@
         <Component class="javax.swing.JCheckBox" name="cblogin">
           <Properties>
             <Property name="text" type="java.lang.String" value="Explicit Login?"/>
+            <Property name="name" type="java.lang.String" value="cbexplicit" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="btupdate">
           <Properties>
             <Property name="text" type="java.lang.String" value="Update"/>
+            <Property name="name" type="java.lang.String" value="btupdate" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btupdateActionPerformed"/>
@@ -152,11 +155,13 @@
         <Component class="javax.swing.JLabel" name="jLabel1">
           <Properties>
             <Property name="text" type="java.lang.String" value="Version"/>
+            <Property name="name" type="java.lang.String" value="lblversion" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JCheckBox" name="cbcustom">
           <Properties>
             <Property name="text" type="java.lang.String" value="Custom?"/>
+            <Property name="name" type="java.lang.String" value="cbcustom" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="tbbgimage">
@@ -170,21 +175,25 @@
         <Component class="javax.swing.JLabel" name="jLabel2">
           <Properties>
             <Property name="text" type="java.lang.String" value="BG Image Path"/>
+            <Property name="name" type="java.lang.String" value="lblimagepath" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel3">
           <Properties>
             <Property name="text" type="java.lang.String" value="R Color"/>
+            <Property name="name" type="java.lang.String" value="lblrcolor" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel4">
           <Properties>
             <Property name="text" type="java.lang.String" value="G Color"/>
+            <Property name="name" type="java.lang.String" value="lblgcolor" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel5">
           <Properties>
             <Property name="text" type="java.lang.String" value="B Color"/>
+            <Property name="name" type="java.lang.String" value="lblbcolor" noResource="true"/>
           </Properties>
         </Component>
         <Container class="javax.swing.JPanel" name="jPanel2">
@@ -228,16 +237,19 @@
             <Component class="javax.swing.JRadioButton" name="rblocal">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Local"/>
+                <Property name="name" type="java.lang.String" value="cblocal" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JRadioButton" name="rbwin">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Win UNC"/>
+                <Property name="name" type="java.lang.String" value="cbwinunc" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JRadioButton" name="rbsamba">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Samba"/>
+                <Property name="name" type="java.lang.String" value="cbsamba" noResource="true"/>
               </Properties>
             </Component>
           </SubComponents>
@@ -342,6 +354,7 @@
             <Component class="javax.swing.JLabel" name="jLabel6">
               <Properties>
                 <Property name="text" type="java.lang.String" value="EmailServerIP"/>
+                <Property name="name" type="java.lang.String" value="lblemailserverip" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="tbemailfrom">
@@ -349,6 +362,7 @@
             <Component class="javax.swing.JLabel" name="jLabel7">
               <Properties>
                 <Property name="text" type="java.lang.String" value="EmailFromAddr"/>
+                <Property name="name" type="java.lang.String" value="lblemailfrom" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="tbimagedir">
@@ -364,26 +378,31 @@
             <Component class="javax.swing.JLabel" name="jLabel8">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Image Dir"/>
+                <Property name="name" type="java.lang.String" value="lblimagedir" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel9">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Temp Dir"/>
+                <Property name="name" type="java.lang.String" value="lbltempdir" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel10">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Label Dir"/>
+                <Property name="name" type="java.lang.String" value="lbllabeldir" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel11">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Jasper Dir"/>
+                <Property name="name" type="java.lang.String" value="lbljasperdir" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel12">
               <Properties>
                 <Property name="text" type="java.lang.String" value="EDI Dir"/>
+                <Property name="name" type="java.lang.String" value="lbledidir" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="tbsmtpuser">
@@ -391,11 +410,13 @@
             <Component class="javax.swing.JLabel" name="jLabel13">
               <Properties>
                 <Property name="text" type="java.lang.String" value="SMTP Auth User"/>
+                <Property name="name" type="java.lang.String" value="lblauthuser" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel14">
               <Properties>
                 <Property name="text" type="java.lang.String" value="SMTP Auth Pass"/>
+                <Property name="name" type="java.lang.String" value="lblauthpass" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JPasswordField" name="tbsmtppass">
@@ -409,6 +430,7 @@
                 <TitledBorder title="Copy Site"/>
               </Border>
             </Property>
+            <Property name="name" type="java.lang.String" value="panelcopy" noResource="true"/>
           </Properties>
 
           <Layout>
@@ -466,6 +488,7 @@
             <Component class="javax.swing.JButton" name="btcopy">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Copy"/>
+                <Property name="name" type="java.lang.String" value="btcopy" noResource="true"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btcopyActionPerformed"/>
@@ -474,11 +497,13 @@
             <Component class="javax.swing.JLabel" name="jLabel15">
               <Properties>
                 <Property name="text" type="java.lang.String" value="From Site"/>
+                <Property name="name" type="java.lang.String" value="lblfromsite" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel16">
               <Properties>
                 <Property name="text" type="java.lang.String" value="To Site"/>
+                <Property name="name" type="java.lang.String" value="lbltosite" noResource="true"/>
               </Properties>
             </Component>
           </SubComponents>
@@ -488,6 +513,7 @@
         <Component class="javax.swing.JLabel" name="jLabel17">
           <Properties>
             <Property name="text" type="java.lang.String" value="Locale"/>
+            <Property name="name" type="java.lang.String" value="lbllocale" noResource="true"/>
           </Properties>
         </Component>
       </SubComponents>

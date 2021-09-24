@@ -29,8 +29,12 @@ import bsmf.MainFrame;
 import static bsmf.MainFrame.dfdate;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.reinitpanels;
+import static bsmf.MainFrame.tags;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
 import static com.blueseer.utl.BlueSeerUtils.luTable;
 import static com.blueseer.utl.BlueSeerUtils.lual;
@@ -62,6 +66,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JViewport;
 
@@ -81,7 +89,19 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeer {
     // global datatablemodel declarations            
                 javax.swing.table.DefaultTableModel myrecvdetmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
-                "Part", "PO", "Line", "Qty", "uom", "listprice", "disc", "netprice", "loc", "WH", "serial", "lot", "cost"
+                getGlobalColumnTag("item"), 
+                getGlobalColumnTag("po"), 
+                getGlobalColumnTag("line"), 
+                getGlobalColumnTag("qty"), 
+                getGlobalColumnTag("uom"), 
+                getGlobalColumnTag("listprice"), 
+                getGlobalColumnTag("discount"), 
+                getGlobalColumnTag("netprice"), 
+                getGlobalColumnTag("location"), 
+                getGlobalColumnTag("warehouse"), 
+                getGlobalColumnTag("serial"), 
+                getGlobalColumnTag("lot"), 
+                getGlobalColumnTag("cost")
             })
                         {
                boolean[] canEdit = new boolean[]{
@@ -96,6 +116,7 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeer {
    
     public RecvMaint() {
         initComponents();
+        setLanguageTags(this);
     }
    
     
@@ -233,6 +254,49 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeer {
             }
     } 
      
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
     
     public void setComponentDefaultValues() {
         
@@ -697,20 +761,22 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeer {
         boolean b = true;
                 if (ddvend.getSelectedItem() == null || ddvend.getSelectedItem().toString().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("Must Have a Vendor");
+                    bsmf.MainFrame.show(getMessageTag(1024));
+                    ddvend.requestFocus();
                     return b;
                 }
                 if (! x.equals("updateRecord")) {  // if adjusting fields in the table....this validation is not necessary as they cannot change the PO
                     if (ddpo.getSelectedItem() == null || ddpo.getSelectedItem().toString().isEmpty()) {
                         b = false;
-                        bsmf.MainFrame.show("Must Have a legitimate PO to receive against");
+                        bsmf.MainFrame.show(getMessageTag(1026));
+                        ddpo.requestFocus();
                         return b;
                     }
                 }
                 
                 if (tbpackingslip.getText().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("Must enter a packing slip number");
+                    bsmf.MainFrame.show(getMessageTag(1024));
                     tbpackingslip.requestFocus();
                     return b;
                 }
@@ -718,7 +784,7 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeer {
                 if (! x.equals("addItem")) {
                     if (rvdet.getRowCount() <= 0) {
                         b = false;
-                        bsmf.MainFrame.show("There are no rows received");
+                        bsmf.MainFrame.show(getMessageTag(1089));
                         return b;
                     }
                 }
@@ -726,7 +792,7 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeer {
                 if (x.equals("addItem")) {
                     if (tbqty.getText().isEmpty()) {
                         b = false;
-                        bsmf.MainFrame.show("Must enter a quantity");
+                        bsmf.MainFrame.show(getMessageTag(1024));
                         tbqty.requestFocus();
                         return b;
                     }
@@ -735,7 +801,7 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeer {
                 
                 if ( OVData.isGLPeriodClosed(dfdate.format(dcdate.getDate()))) {
                     b = false;
-                    bsmf.MainFrame.show("Period is closed");
+                    bsmf.MainFrame.show(getMessageTag(1035));
                     return b;
                 }
         return b;
@@ -758,9 +824,9 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeer {
         luTable.setModel(luModel);
         luTable.getColumnModel().getColumn(0).setMaxWidth(50);
         if (luModel.getRowCount() < 1) {
-            ludialog.setTitle("No Records Found!");
+            ludialog.setTitle(getMessageTag(1001));
         } else {
-            ludialog.setTitle(luModel.getRowCount() + " Records Found!");
+            ludialog.setTitle(getMessageTag(1002, String.valueOf(luModel.getRowCount())));
         }
         }
         };
@@ -781,7 +847,10 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeer {
         luTable.addMouseListener(luml);
       
         callDialog("ID", "Vendor", "PONbr", "PackingSlip"); 
-        
+        callDialog(getClassLabelTag("lblid", this.getClass().getSimpleName()), 
+                getClassLabelTag("lblvend", this.getClass().getSimpleName()),
+                getClassLabelTag("lblpo", this.getClass().getSimpleName()),
+                getClassLabelTag("lblps", this.getClass().getSimpleName()));
         
     }
 
@@ -810,7 +879,7 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeer {
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("sql code does not execute");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -887,6 +956,7 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeer {
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Receiver Maintenance"));
+        jPanel1.setName("panelmain"); // NOI18N
 
         tbkey.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -895,8 +965,10 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         jLabel24.setText("Receiver#");
+        jLabel24.setName("lblid"); // NOI18N
 
         btnew.setText("New");
+        btnew.setName("btnew"); // NOI18N
         btnew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnewActionPerformed(evt);
@@ -904,16 +976,22 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         jLabel26.setText("DueDate");
+        jLabel26.setName("lblduedate"); // NOI18N
 
         jLabel30.setText("PartNumber");
+        jLabel30.setName("lblitem"); // NOI18N
 
         jLabel32.setText("Price");
+        jLabel32.setName("lblprice"); // NOI18N
 
         jLabel36.setText("Vendor");
+        jLabel36.setName("lblvendor"); // NOI18N
 
         jLabel38.setText("PO Number");
+        jLabel38.setName("lblpo"); // NOI18N
 
         btadditem.setText("Add Item");
+        btadditem.setName("btadditem"); // NOI18N
         btadditem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btadditemActionPerformed(evt);
@@ -921,6 +999,7 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         btadd.setText("Add");
+        btadd.setName("btadd"); // NOI18N
         btadd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddActionPerformed(evt);
@@ -934,6 +1013,7 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         jLabel43.setText("Qty Recvd");
+        jLabel43.setName("lblqtyrecv"); // NOI18N
 
         rvdet.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -955,6 +1035,7 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         btdeleteitem.setText("Del Item");
+        btdeleteitem.setName("btdeleteitem"); // NOI18N
         btdeleteitem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdeleteitemActionPerformed(evt);
@@ -962,6 +1043,7 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         btupdate.setText("Update");
+        btupdate.setName("btupdate"); // NOI18N
         btupdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btupdateActionPerformed(evt);
@@ -977,12 +1059,16 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeer {
         dcdate.setDateFormatString("yyyy-MM-dd");
 
         jLabel27.setText("PackingSlip");
+        jLabel27.setName("lblps"); // NOI18N
 
         jLabel33.setText("Line");
+        jLabel33.setName("lblline"); // NOI18N
 
         jLabel34.setText("Qty Ordered");
+        jLabel34.setName("lblqtyord"); // NOI18N
 
         jLabel28.setText("OrdDate");
+        jLabel28.setName("lblorddate"); // NOI18N
 
         tbqty.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -994,18 +1080,25 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         jLabel29.setText("Qty");
+        jLabel29.setName("lblqty"); // NOI18N
 
         jLabel31.setText("WareHouse");
+        jLabel31.setName("lblwh"); // NOI18N
 
         jLabel35.setText("DateRecvd");
+        jLabel35.setName("lblrecvdate"); // NOI18N
 
         jLabel37.setText("Site");
+        jLabel37.setName("lblsite"); // NOI18N
 
         jLabel39.setText("Serial");
+        jLabel39.setName("lblserial"); // NOI18N
 
         jLabel40.setText("Lot");
+        jLabel40.setName("lbllot"); // NOI18N
 
         jLabel41.setText("Cost");
+        jLabel41.setName("lblcost"); // NOI18N
 
         ddwh.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1014,12 +1107,16 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         jLabel42.setText("Location");
+        jLabel42.setName("lblloc"); // NOI18N
 
         cbautovoucher.setText("AutoVoucher?");
+        cbautovoucher.setName("cbautovoucher"); // NOI18N
 
         btdelete.setText("Delete");
+        btdelete.setName("btdelete"); // NOI18N
 
         btclear.setText("Clear");
+        btclear.setName("btclear"); // NOI18N
         btclear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btclearActionPerformed(evt);
@@ -1027,6 +1124,7 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         jLabel1.setText("uom");
+        jLabel1.setName("lbluom"); // NOI18N
 
         btlookup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
         btlookup.addActionListener(new java.awt.event.ActionListener() {
@@ -1355,7 +1453,7 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeer {
              res.close();
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Cannot find po line item");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             
         //    bsmf.MainFrame.con.close();
@@ -1396,7 +1494,7 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeer {
                 res.close();
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Cannot get PO list for this Vendor");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
        //     bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -1409,7 +1507,7 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeer {
     private void btdeleteitemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteitemActionPerformed
         int[] rows = rvdet.getSelectedRows();
         for (int i : rows) {
-            bsmf.MainFrame.show("Removing row " + i);
+            bsmf.MainFrame.show(getMessageTag(1031,String.valueOf(i)));
             ((javax.swing.table.DefaultTableModel) rvdet.getModel()).removeRow(i);
         }
     }//GEN-LAST:event_btdeleteitemActionPerformed
@@ -1448,7 +1546,7 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeer {
                 res.close();
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Cannot find po line items for this PO");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             } // if mypo is not empty
             
@@ -1477,7 +1575,7 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeer {
         if (x.equals("error")) {
             tbqty.setText("");
             tbqty.setBackground(Color.yellow);
-            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            bsmf.MainFrame.show(getMessageTag(1000));
             tbqty.requestFocus();
         } else {
             tbqty.setText(x);

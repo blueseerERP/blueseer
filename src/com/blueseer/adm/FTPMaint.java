@@ -28,7 +28,10 @@ package com.blueseer.adm;
 import bsmf.MainFrame;
 import com.blueseer.utl.BlueSeerUtils;
 import static bsmf.MainFrame.reinitpanels;
+import static bsmf.MainFrame.tags;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
 import static com.blueseer.utl.BlueSeerUtils.luTable;
 import static com.blueseer.utl.BlueSeerUtils.lual;
@@ -50,8 +53,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
@@ -72,6 +79,7 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeer {
     
     public FTPMaint() {
         initComponents();
+        setLanguageTags(this);
     }
 
     // interface functions implemented
@@ -207,6 +215,50 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeer {
             }
     } 
     
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+    
     public void setComponentDefaultValues() {
        isLoad = true;
        tbkey.setText("");
@@ -258,35 +310,35 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeer {
                 
                 if (tbkey.getText().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a code");
+                    bsmf.MainFrame.show(getMessageTag(1024));
                     tbkey.requestFocus();
                     return b;
                 }
                 
                 if (tbdesc.getText().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a description");
+                    bsmf.MainFrame.show(getMessageTag(1024));
                     tbdesc.requestFocus();
                     return b;
                 }
                 
                 if (tbip.getText().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("must enter an IP");
+                    bsmf.MainFrame.show(getMessageTag(1024));
                     tbip.requestFocus();
                     return b;
                 }
                 
                 if (tblogin.getText().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a login");
+                    bsmf.MainFrame.show(getMessageTag(1024));
                     tblogin.requestFocus();
                     return b;
                 }
                 
                 if (tbpasswd.getText().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a password");
+                    bsmf.MainFrame.show(getMessageTag(1024));
                     tbpasswd.requestFocus();
                     return b;
                 }
@@ -497,9 +549,9 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeer {
         luTable.setModel(luModel);
         luTable.getColumnModel().getColumn(0).setMaxWidth(50);
         if (luModel.getRowCount() < 1) {
-            ludialog.setTitle("No Records Found!");
+            ludialog.setTitle(getMessageTag(1001));
         } else {
-            ludialog.setTitle(luModel.getRowCount() + " Records Found!");
+            ludialog.setTitle(getMessageTag(1002, String.valueOf(luModel.getRowCount())));
         }
         }
         };
@@ -519,8 +571,9 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeer {
         };
         luTable.addMouseListener(luml);
       
-        callDialog("FTPid", "Description"); 
         
+        callDialog(getClassLabelTag("lblcode", this.getClass().getSimpleName()), 
+                getClassLabelTag("lbldesc", this.getClass().getSimpleName()));
         
     }
 
@@ -567,8 +620,10 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeer {
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("FTP Maintenance"));
+        jPanel1.setName("panelmain"); // NOI18N
 
         btadd.setText("Add");
+        btadd.setName("btadd"); // NOI18N
         btadd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddActionPerformed(evt);
@@ -576,10 +631,13 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         jLabel2.setText("Description:");
+        jLabel2.setName("lbldesc"); // NOI18N
 
         cbdelete.setText("Delete After Get?");
+        cbdelete.setName("cbdelete"); // NOI18N
 
         btupdate.setText("Update");
+        btupdate.setName("btupdate"); // NOI18N
         btupdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btupdateActionPerformed(evt);
@@ -593,6 +651,7 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         btdelete.setText("Delete");
+        btdelete.setName("btdelete"); // NOI18N
         btdelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdeleteActionPerformed(evt);
@@ -600,10 +659,13 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         jLabel1.setText("ID");
+        jLabel1.setName("lblcode"); // NOI18N
 
         jLabel3.setText("IP");
+        jLabel3.setName("lblip"); // NOI18N
 
         btnew.setText("New");
+        btnew.setName("btnew"); // NOI18N
         btnew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnewActionPerformed(evt);
@@ -611,16 +673,22 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         jLabel4.setText("Login");
+        jLabel4.setName("lbluser"); // NOI18N
 
         jLabel5.setText("Passwd");
+        jLabel5.setName("lblpass"); // NOI18N
 
         jLabel6.setText("InDir");
+        jLabel6.setName("lblindir"); // NOI18N
 
         jLabel7.setText("OutDir");
+        jLabel7.setName("lbloutdir"); // NOI18N
 
         jLabel9.setText("CD Dir");
+        jLabel9.setName("lblcddir"); // NOI18N
 
         tbclear.setText("Clear");
+        tbclear.setName("btclear"); // NOI18N
         tbclear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tbclearActionPerformed(evt);

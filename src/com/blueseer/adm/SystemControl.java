@@ -29,9 +29,12 @@ import bsmf.MainFrame;
 import com.blueseer.utl.BlueSeerUtils;
 import static bsmf.MainFrame.backgroundcolor;
 import static bsmf.MainFrame.backgroundpanel;
+import static bsmf.MainFrame.tags;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.IBlueSeerc;
 import com.blueseer.utl.OVData;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.GradientPaint;
 import java.awt.Window;
 import java.sql.DriverManager;
@@ -40,7 +43,15 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Locale;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 
@@ -58,6 +69,7 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
                 
     public SystemControl() {
         initComponents();
+        setLanguageTags(this);
     }
 
     // interface functions implemented
@@ -136,6 +148,50 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
        isLoad = false;
     }
     
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+    
     public String[] setAction(int i) {
         String[] m = new String[2];
         if (i > 0) {
@@ -151,31 +207,31 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
                                 
                 if (tbversion.getText().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a version");
+                    bsmf.MainFrame.show(getMessageTag(1024));
                     tbversion.requestFocus();
                     return b;
                 }
                 if (tbbgimage.getText().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a background image");
+                    bsmf.MainFrame.show(getMessageTag(1024));
                     tbbgimage.requestFocus();
                     return b;
                 }
                 if (tbrcolor.getText().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("must enter an R color");
+                    bsmf.MainFrame.show(getMessageTag(1024));
                     tbrcolor.requestFocus();
                     return b;
                 }
                 if (tbbcolor.getText().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a B color");
+                    bsmf.MainFrame.show(getMessageTag(1024));
                     tbbcolor.requestFocus();
                     return b;
                 }
                 if (tbgcolor.getText().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a G color");
+                    bsmf.MainFrame.show(getMessageTag(1024));
                     tbgcolor.requestFocus();
                     return b;
                 }
@@ -419,10 +475,13 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("System Control"));
+        jPanel1.setName("panelmain"); // NOI18N
 
         cblogin.setText("Explicit Login?");
+        cblogin.setName("cbexplicit"); // NOI18N
 
         btupdate.setText("Update");
+        btupdate.setName("btupdate"); // NOI18N
         btupdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btupdateActionPerformed(evt);
@@ -430,24 +489,33 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
         });
 
         jLabel1.setText("Version");
+        jLabel1.setName("lblversion"); // NOI18N
 
         cbcustom.setText("Custom?");
+        cbcustom.setName("cbcustom"); // NOI18N
 
         jLabel2.setText("BG Image Path");
+        jLabel2.setName("lblimagepath"); // NOI18N
 
         jLabel3.setText("R Color");
+        jLabel3.setName("lblrcolor"); // NOI18N
 
         jLabel4.setText("G Color");
+        jLabel4.setName("lblgcolor"); // NOI18N
 
         jLabel5.setText("B Color");
+        jLabel5.setName("lblbcolor"); // NOI18N
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("File Server Type"));
 
         rblocal.setText("Local");
+        rblocal.setName("cblocal"); // NOI18N
 
         rbwin.setText("Win UNC");
+        rbwin.setName("cbwinunc"); // NOI18N
 
         rbsamba.setText("Samba");
+        rbsamba.setName("cbsamba"); // NOI18N
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -474,22 +542,31 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
         );
 
         jLabel6.setText("EmailServerIP");
+        jLabel6.setName("lblemailserverip"); // NOI18N
 
         jLabel7.setText("EmailFromAddr");
+        jLabel7.setName("lblemailfrom"); // NOI18N
 
         jLabel8.setText("Image Dir");
+        jLabel8.setName("lblimagedir"); // NOI18N
 
         jLabel9.setText("Temp Dir");
+        jLabel9.setName("lbltempdir"); // NOI18N
 
         jLabel10.setText("Label Dir");
+        jLabel10.setName("lbllabeldir"); // NOI18N
 
         jLabel11.setText("Jasper Dir");
+        jLabel11.setName("lbljasperdir"); // NOI18N
 
         jLabel12.setText("EDI Dir");
+        jLabel12.setName("lbledidir"); // NOI18N
 
         jLabel13.setText("SMTP Auth User");
+        jLabel13.setName("lblauthuser"); // NOI18N
 
         jLabel14.setText("SMTP Auth Pass");
+        jLabel14.setName("lblauthpass"); // NOI18N
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -567,8 +644,10 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
         );
 
         panelCopySite.setBorder(javax.swing.BorderFactory.createTitledBorder("Copy Site"));
+        panelCopySite.setName("panelcopy"); // NOI18N
 
         btcopy.setText("Copy");
+        btcopy.setName("btcopy"); // NOI18N
         btcopy.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btcopyActionPerformed(evt);
@@ -576,8 +655,10 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
         });
 
         jLabel15.setText("From Site");
+        jLabel15.setName("lblfromsite"); // NOI18N
 
         jLabel16.setText("To Site");
+        jLabel16.setName("lbltosite"); // NOI18N
 
         javax.swing.GroupLayout panelCopySiteLayout = new javax.swing.GroupLayout(panelCopySite);
         panelCopySite.setLayout(panelCopySiteLayout);
@@ -612,6 +693,7 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
         );
 
         jLabel17.setText("Locale");
+        jLabel17.setName("lbllocale"); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -706,10 +788,10 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
     private void btcopyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcopyActionPerformed
        boolean r = OVData.copySite(ddfromsite.getSelectedItem().toString(), tbtosite.getText());
        if (r == true) {
-           bsmf.MainFrame.show("copied site successfully");
+           bsmf.MainFrame.show(getMessageTag(1065));
            initvars(null);
        } else {
-           bsmf.MainFrame.show("unable to copy site");
+           bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
        }
     }//GEN-LAST:event_btcopyActionPerformed
 
