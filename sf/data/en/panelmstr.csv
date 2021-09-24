@@ -172,7 +172,7 @@ com.blueseer.sch.MRPBrowse,,1
 com.blueseer.sch.RetailReorderRpt,,1
 com.blueseer.sch.SchRptPicker,,1
 com.blueseer.shp.ShipConfirm,,1
-com.blueseer.shp.ShipMaint,,1
+com.blueseer.shp.ShipperMaint,,1
 com.blueseer.shp.ShipperBrowse,,1
 com.blueseer.shp.ShipperControl,,1
 com.blueseer.shp.ShipperDetBrowse,,1

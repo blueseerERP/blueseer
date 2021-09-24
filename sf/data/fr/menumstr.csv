@@ -138,7 +138,7 @@ HRRptPicker,,com.blueseer.hrm.HRRptPicker,JMenuItem,rphr
 ScrapEntry,,com.blueseer.prd.ScrapMaint,JMenuItem,scrp
 ScrapRpt1,,com.blueseer.prd.ScrapRpt,JMenuItem,scrr
 ShipConfirm,,com.blueseer.shp.ShipConfirm,JMenuItem,shcf
-ShipMaint,,com.blueseer.shp.ShipMaint,JMenuItem,shpm
+ShipMaint,,com.blueseer.shp.ShipperMaint,JMenuItem,shpm
 InvoiceMaint,,com.blueseer.far.InvoiceMaint,JMenuItem,invv
 SiteMaint,,com.blueseer.adm.SiteMaint,JMenuItem,site
 TermsMaint,,com.blueseer.ctr.TermsMaint,JMenuItem,term

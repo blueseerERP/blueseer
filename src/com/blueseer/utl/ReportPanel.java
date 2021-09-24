@@ -39,6 +39,7 @@ import static bsmf.MainFrame.main;
 import static bsmf.MainFrame.menumap;
 import static bsmf.MainFrame.panelmap;
 import static bsmf.MainFrame.reinitpanels;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import javax.swing.JPanel;
 import java.awt.Container;
 
@@ -322,7 +323,7 @@ public int[] mywidth;
         int col = TableReport.columnAtPoint(evt.getPoint());
         String[] args = null;
         String mypanel = "";
-        if (col == 0 && TableReport.getColumnModel().getColumn(0).getIdentifier().equals("select")) {
+        if (col == 0 && TableReport.getColumnModel().getColumn(0).getIdentifier().equals(getGlobalColumnTag("select"))) {
              // if (! checkperms("MenuReqMaint")) { return; }
             
             if (TableReport.getName() != null && TableReport.getName().compareTo("ReqBrowseAll") == 0) {

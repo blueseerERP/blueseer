@@ -1467,6 +1467,378 @@ public class OVData {
 
     
     /* Customer Related functions */
+    
+    
+    public static boolean addCustMstr(ArrayList<String> list) {
+        boolean myreturn = false;
+        try {
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+                int i = 0;
+                String[] ld = null;
+
+                // now loop through comma delimited list and insert into item master table
+                // skip if already in table.....keys are cust (cup_cust) and custitem (cup_citem)
+                for (String rec : list) {
+                    ld = rec.split(":", -1);
+
+                    res = st.executeQuery("select cm_code from cm_mstr where "
+                            + " cm_code = " + "'" + ld[0] + "'" + ";");
+                    int j = 0;
+                    while (res.next()) {
+                        j++;
+                    }
+
+                    if (j == 0) {
+                        st.executeUpdate(" insert into cm_mstr "
+                                + "(cm_code, cm_site, cm_name, cm_line1, cm_line2, cm_line3, cm_city, cm_state, cm_zip, cm_country, cm_dateadd, cm_datemod, "
+                                + " cm_usermod, cm_group, cm_market, cm_creditlimit, cm_onhold, cm_carrier, cm_terms, cm_freight_type, cm_price_code, "
+                                + " cm_disc_code, cm_tax_code, cm_salesperson, cm_ar_acct, cm_ar_cc, cm_remarks, cm_misc1, cm_bank, cm_curr, "
+                                + " cm_logo, cm_ps_jasper, cm_iv_jasper, cm_label ) "
+                                + " values ( "
+                                + "'" + ld[0] + "'" + ","
+                                + "'" + ld[1] + "'" + ","
+                                + "'" + ld[2] + "'" + ","
+                                + "'" + ld[3] + "'" + ","
+                                + "'" + ld[4] + "'" + ","
+                                + "'" + ld[5] + "'" + ","
+                                + "'" + ld[6] + "'" + ","
+                                + "'" + ld[7] + "'" + ","
+                                + "'" + ld[8] + "'" + ","
+                                + "'" + ld[9] + "'" + ","        
+                                + "'" + BlueSeerUtils.setDateFormat(new java.util.Date()) + "'" + ","
+                                + "'" + BlueSeerUtils.setDateFormat(new java.util.Date()) + "'" + ","
+                                + "'" + bsmf.MainFrame.userid + "'" + ","
+                                + "'" + ld[10] + "'" + ","
+                                + "'" + ld[11] + "'" + ","
+                                + "'" + ld[12] + "'" + ","
+                                + "'" + ld[13] + "'" + ","
+                                + "'" + ld[14] + "'" + ","
+                                + "'" + ld[15] + "'" + ","
+                                + "'" + ld[16] + "'" + ","
+                                + "'" + ld[17] + "'" + ","
+                                + "'" + ld[18] + "'" + ","
+                                + "'" + ld[19] + "'" + ","
+                                + "'" + ld[20] + "'" + ","
+                                + "'" + ld[21] + "'" + ","
+                                + "'" + ld[22] + "'" + ","
+                                + "'" + ld[23] + "'" + ","
+                                + "'" + ld[24] + "'" + ","
+                                + "'" + ld[25] + "'" + ","
+                                + "'" + ld[26] + "'" + ","
+                                + "'" + ld[27] + "'" + ","
+                                + "'" + ld[28] + "'" + ","
+                                + "'" + ld[29] + "'" + ","
+                                + "'" + ld[30] + "'" + ","
+                                + "'" + ld[31] + "'" + ","
+                                + "'" + ld[32] + "'"
+                                + " );"
+                        );
+                    }
+                }
+            } // if proceed
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("Error while inserting...check printStackTrace");
+                myreturn = true;
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return myreturn;
+    }
+    
+    public static String[] addCustMstrWShipToMinimal(String[] list) {
+       // list[0] will have newly assigned custcode from getNextNbr
+       // return array:  aracct, arcc, currency, bank, terms, carrier, onhold, site
+       String[] x = new String[]{"","","","","","","", ""}; 
+        
+        try {
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+                        
+            x[0] = OVData.getDefaultARAcct();
+            x[1] = OVData.getDefaultARCC();
+            x[2] = OVData.getDefaultCurrency();
+            x[3] = OVData.getDefaultARBank();
+            x[4] = "N00";
+            x[5] = "";
+            x[6] = "0";
+            x[7] = OVData.getDefaultSite();
+            
+            try {
+                int i = 0;
+               
+                    res = st.executeQuery("select cm_code from cm_mstr where "
+                            + " cm_code = " + "'" + list[0] + "'" + ";");
+                    int j = 0;
+                    while (res.next()) {
+                        j++;
+                    }
+
+                    if (j == 0) {
+                        st.executeUpdate(" insert into cm_mstr "
+                                + "(cm_code, cm_name, cm_line1, cm_line2, cm_line3, cm_city, cm_state, cm_zip, cm_country, cm_phone, cm_email, cm_dateadd, cm_datemod, "
+                                + " cm_ar_acct, cm_ar_cc, cm_bank, cm_curr, cm_terms ) "
+                                + " values ( "
+                                + "'" + list[0] + "'" + ","
+                                + "'" + list[1] + "'" + ","
+                                + "'" + list[2] + "'" + ","
+                                + "'" + list[3] + "'" + ","
+                                + "'" + list[4] + "'" + ","
+                                + "'" + list[5] + "'" + ","
+                                + "'" + list[6] + "'" + ","
+                                + "'" + list[7] + "'" + ","
+                                + "'" + list[8] + "'" + ","
+                                + "'" + list[9] + "'" + ","
+                                + "'" + list[10] + "'" + ","
+                                + "'" + BlueSeerUtils.setDateFormat(new java.util.Date()) + "'" + ","
+                                + "'" + BlueSeerUtils.setDateFormat(new java.util.Date()) + "'" + ","
+                                + "'" + x[0] + "'" + ","
+                                + "'" + x[1] + "'" + ","
+                                + "'" + x[3] + "'" + ","
+                                + "'" + x[2] + "'" + ","
+                                + "'" + x[4] + "'"                                       
+                                + " );"
+                        );
+
+                        // now add default shipto with same shipcode as billcode
+                        st.executeUpdate(" insert into cms_det "
+                                + "(cms_code, cms_shipto, cms_name, cms_line1, cms_line2, cms_line3, cms_city, cms_state, cms_zip, cms_country ) "
+                                + " values ( "
+                                + "'" + list[0] + "'" + ","
+                                + "'" + list[0] + "'" + ","
+                                + "'" + list[11] + "'" + ","
+                                + "'" + list[12] + "'" + ","
+                                + "'" + list[13] + "'" + ","
+                                + "'" + list[14] + "'" + ","
+                                + "'" + list[15] + "'" + ","
+                                + "'" + list[16] + "'" + ","
+                                + "'" + list[17] + "'" + ","
+                                + "'" + list[18] + "'"
+                                + " );"
+                        );
+
+                    }
+                
+            } // if proceed
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("Error while inserting...check printStackTrace");
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return x;
+    }
+    
+    public static boolean addCustMstrWShipTo(ArrayList<String> list) {
+        boolean myreturn = false;
+        try {
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+                int i = 0;
+                String[] ld = null;
+
+                // now loop through comma delimited list and insert into item master table
+                // skip if already in table.....keys are cust (cup_cust) and custitem (cup_citem)
+                for (String rec : list) {
+                    ld = rec.split(":", -1);
+
+                    res = st.executeQuery("select cm_code from cm_mstr where "
+                            + " cm_code = " + "'" + ld[0] + "'" + ";");
+                    int j = 0;
+                    while (res.next()) {
+                        j++;
+                    }
+
+                    if (j == 0) {
+                        st.executeUpdate(" insert into cm_mstr "
+                                + "(cm_code, cm_site, cm_name, cm_line1, cm_line2, cm_line3, cm_city, cm_state, cm_zip, cm_country, " +
+                                  " cm_dateadd, cm_datemod, cm_usermod, "
+                                + " cm_group, cm_market, cm_creditlimit, cm_onhold, cm_carrier, cm_terms, cm_freight_type, cm_price_code, "
+                                + " cm_disc_code, cm_tax_code, cm_salesperson, cm_ar_acct, cm_ar_cc, cm_remarks, cm_misc1, cm_bank, cm_curr, "
+                                + " cm_logo, cm_ps_jasper, cm_iv_jasper, cm_label, cm_phone, cm_email ) "
+                                + " values ( "
+                                + "'" + ld[0] + "'" + ","
+                                + "'" + ld[1] + "'" + ","
+                                + "'" + ld[2] + "'" + ","
+                                + "'" + ld[3] + "'" + ","
+                                + "'" + ld[4] + "'" + ","
+                                + "'" + ld[5] + "'" + ","
+                                + "'" + ld[6] + "'" + ","
+                                + "'" + ld[7] + "'" + ","
+                                + "'" + ld[8] + "'" + ","
+                                + "'" + ld[9] + "'" + ","        
+                                + "'" + BlueSeerUtils.setDateFormat(new java.util.Date()) + "'" + ","
+                                + "'" + BlueSeerUtils.setDateFormat(new java.util.Date()) + "'" + ","
+                                + "'" + bsmf.MainFrame.userid + "'" + ","
+                                + "'" + ld[10] + "'" + ","
+                                + "'" + ld[11] + "'" + ","
+                                + "'" + ld[12] + "'" + ","
+                                + "'" + ld[13] + "'" + ","
+                                + "'" + ld[14] + "'" + ","
+                                + "'" + ld[15] + "'" + ","
+                                + "'" + ld[16] + "'" + ","
+                                + "'" + ld[17] + "'" + ","
+                                + "'" + ld[18] + "'" + ","
+                                + "'" + ld[19] + "'" + ","
+                                + "'" + ld[20] + "'" + ","
+                                + "'" + ld[21] + "'" + ","
+                                + "'" + ld[22] + "'" + ","
+                                + "'" + ld[23] + "'" + ","
+                                + "'" + ld[24] + "'" + ","
+                                + "'" + ld[25] + "'" + ","
+                                + "'" + ld[26] + "'" + ","
+                                + "'" + ld[27] + "'" + ","
+                                + "'" + ld[28] + "'" + ","
+                                + "'" + ld[29] + "'" + ","
+                                + "'" + ld[30] + "'" + ","
+                                + "'" + ld[31] + "'" + ","
+                                + "'" + ld[32] + "'"
+                                + " );"
+                        );
+
+                        // now add default shipto with same shipcode as billcode
+                        st.executeUpdate(" insert into cms_det "
+                                + "(cms_code, cms_shipto, cms_name, cms_line1, cms_line2, cms_line3, cms_city, cms_state, cms_zip, cms_country ) "
+                                + " values ( "
+                                + "'" + ld[0] + "'" + ","
+                                + "'" + ld[0] + "'" + ","
+                                + "'" + ld[2] + "'" + ","
+                                + "'" + ld[3] + "'" + ","
+                                + "'" + ld[4] + "'" + ","
+                                + "'" + ld[5] + "'" + ","
+                                + "'" + ld[6] + "'" + ","
+                                + "'" + ld[7] + "'" + ","
+                                + "'" + ld[8] + "'" + ","
+                                + "'" + ld[9] + "'"
+                                + " );"
+                        );
+
+                    }
+                }
+            } // if proceed
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("Error while inserting...check printStackTrace");
+                myreturn = true;
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return myreturn;
+    }
+
+    public static boolean addCustShipToMstr(ArrayList<String> list) {
+        boolean myreturn = false;
+        try {
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+                int i = 0;
+                String[] ld = null;
+
+                // now loop through comma delimited list and insert into item master table
+                // skip if already in table.....keys are cust (cup_cust) and custitem (cup_citem)
+                for (String rec : list) {
+                    ld = rec.split(":", -1);
+
+                    res = st.executeQuery("select cms_code from cms_det where "
+                            + " cms_code = " + "'" + ld[0] + "'" + " AND cms_shipto = " + "'" + ld[1] + "'" + ";");
+                    int j = 0;
+                    while (res.next()) {
+                        j++;
+                    }
+
+                    if (j == 0) {
+                        st.executeUpdate(" insert into cms_det "
+                                + "(cms_code, cms_shipto, cms_name, cms_line1, cms_line2, cms_line3, cms_city, cms_state, cms_zip, cms_country, cms_plantcode, cms_contact, cms_phone, cms_email, cms_misc ) "
+                                + " values ( "
+                                + "'" + ld[0] + "'" + ","
+                                + "'" + ld[1] + "'" + ","
+                                + "'" + ld[2] + "'" + ","
+                                + "'" + ld[3] + "'" + ","
+                                + "'" + ld[4] + "'" + ","
+                                + "'" + ld[5] + "'" + ","
+                                + "'" + ld[6] + "'" + ","
+                                + "'" + ld[7] + "'" + ","
+                                + "'" + ld[8] + "'" + ","
+                                + "'" + ld[9] + "'" + ","
+                                + "'" + ld[10] + "'" + ","
+                                + "'" + ld[11] + "'" + ","
+                                + "'" + ld[12] + "'" + ","
+                                + "'" + ld[13] + "'" + ","
+                                + "'" + ld[14] + "'"
+                                + " );"
+                        );
+                    }
+                }
+            } // if proceed
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("Error while inserting...check printStackTrace");
+                myreturn = true;
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return myreturn;
+    }
+
     public static String getCustSalesAcct(String cust) {
            String myitem = "";
          try{
@@ -4758,378 +5130,6 @@ return myitem;
                                 + "'" + ld[24] + "'" + ","
                                 + "'" + ld[25] + "'" + ","
                                 + "'" + ld[26] + "'"
-                                + " );"
-                        );
-                    }
-                }
-            } // if proceed
-            catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Error while inserting...check printStackTrace");
-                myreturn = true;
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                if (con != null) {
-                    con.close();
-                }
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-        return myreturn;
-    }
-
-    public static boolean addCustMstr(ArrayList<String> list) {
-        boolean myreturn = false;
-        try {
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-
-                int i = 0;
-                String[] ld = null;
-
-                // now loop through comma delimited list and insert into item master table
-                // skip if already in table.....keys are cust (cup_cust) and custitem (cup_citem)
-                for (String rec : list) {
-                    ld = rec.split(":", -1);
-
-                    res = st.executeQuery("select cm_code from cm_mstr where "
-                            + " cm_code = " + "'" + ld[0] + "'" + ";");
-                    int j = 0;
-                    while (res.next()) {
-                        j++;
-                    }
-
-                    if (j == 0) {
-                        st.executeUpdate(" insert into cm_mstr "
-                                + "(cm_code, cm_site, cm_name, cm_line1, cm_line2, cm_line3, cm_city, cm_state, cm_zip, cm_country, cm_dateadd, cm_datemod, "
-                                + " cm_usermod, cm_group, cm_market, cm_creditlimit, cm_onhold, cm_carrier, cm_terms, cm_freight_type, cm_price_code, "
-                                + " cm_disc_code, cm_tax_code, cm_salesperson, cm_ar_acct, cm_ar_cc, cm_remarks, cm_misc1, cm_bank, cm_curr, "
-                                + " cm_logo, cm_ps_jasper, cm_iv_jasper, cm_label ) "
-                                + " values ( "
-                                + "'" + ld[0] + "'" + ","
-                                + "'" + ld[1] + "'" + ","
-                                + "'" + ld[2] + "'" + ","
-                                + "'" + ld[3] + "'" + ","
-                                + "'" + ld[4] + "'" + ","
-                                + "'" + ld[5] + "'" + ","
-                                + "'" + ld[6] + "'" + ","
-                                + "'" + ld[7] + "'" + ","
-                                + "'" + ld[8] + "'" + ","
-                                + "'" + ld[9] + "'" + ","        
-                                + "'" + BlueSeerUtils.setDateFormat(new java.util.Date()) + "'" + ","
-                                + "'" + BlueSeerUtils.setDateFormat(new java.util.Date()) + "'" + ","
-                                + "'" + bsmf.MainFrame.userid + "'" + ","
-                                + "'" + ld[10] + "'" + ","
-                                + "'" + ld[11] + "'" + ","
-                                + "'" + ld[12] + "'" + ","
-                                + "'" + ld[13] + "'" + ","
-                                + "'" + ld[14] + "'" + ","
-                                + "'" + ld[15] + "'" + ","
-                                + "'" + ld[16] + "'" + ","
-                                + "'" + ld[17] + "'" + ","
-                                + "'" + ld[18] + "'" + ","
-                                + "'" + ld[19] + "'" + ","
-                                + "'" + ld[20] + "'" + ","
-                                + "'" + ld[21] + "'" + ","
-                                + "'" + ld[22] + "'" + ","
-                                + "'" + ld[23] + "'" + ","
-                                + "'" + ld[24] + "'" + ","
-                                + "'" + ld[25] + "'" + ","
-                                + "'" + ld[26] + "'" + ","
-                                + "'" + ld[27] + "'" + ","
-                                + "'" + ld[28] + "'" + ","
-                                + "'" + ld[29] + "'" + ","
-                                + "'" + ld[30] + "'" + ","
-                                + "'" + ld[31] + "'" + ","
-                                + "'" + ld[32] + "'"
-                                + " );"
-                        );
-                    }
-                }
-            } // if proceed
-            catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Error while inserting...check printStackTrace");
-                myreturn = true;
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                if (con != null) {
-                    con.close();
-                }
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-        return myreturn;
-    }
-
-    
-     public static String[] addCustMstrWShipToMinimal(String[] list) {
-       // list[0] will have newly assigned custcode from getNextNbr
-       // return array:  aracct, arcc, currency, bank, terms, carrier, onhold, site
-       String[] x = new String[]{"","","","","","","", ""}; 
-        
-        try {
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-                        
-            x[0] = OVData.getDefaultARAcct();
-            x[1] = OVData.getDefaultARCC();
-            x[2] = OVData.getDefaultCurrency();
-            x[3] = OVData.getDefaultARBank();
-            x[4] = "N00";
-            x[5] = "";
-            x[6] = "0";
-            x[7] = OVData.getDefaultSite();
-            
-            try {
-                int i = 0;
-               
-                    res = st.executeQuery("select cm_code from cm_mstr where "
-                            + " cm_code = " + "'" + list[0] + "'" + ";");
-                    int j = 0;
-                    while (res.next()) {
-                        j++;
-                    }
-
-                    if (j == 0) {
-                        st.executeUpdate(" insert into cm_mstr "
-                                + "(cm_code, cm_name, cm_line1, cm_line2, cm_line3, cm_city, cm_state, cm_zip, cm_country, cm_phone, cm_email, cm_dateadd, cm_datemod, "
-                                + " cm_ar_acct, cm_ar_cc, cm_bank, cm_curr, cm_terms ) "
-                                + " values ( "
-                                + "'" + list[0] + "'" + ","
-                                + "'" + list[1] + "'" + ","
-                                + "'" + list[2] + "'" + ","
-                                + "'" + list[3] + "'" + ","
-                                + "'" + list[4] + "'" + ","
-                                + "'" + list[5] + "'" + ","
-                                + "'" + list[6] + "'" + ","
-                                + "'" + list[7] + "'" + ","
-                                + "'" + list[8] + "'" + ","
-                                + "'" + list[9] + "'" + ","
-                                + "'" + list[10] + "'" + ","
-                                + "'" + BlueSeerUtils.setDateFormat(new java.util.Date()) + "'" + ","
-                                + "'" + BlueSeerUtils.setDateFormat(new java.util.Date()) + "'" + ","
-                                + "'" + x[0] + "'" + ","
-                                + "'" + x[1] + "'" + ","
-                                + "'" + x[3] + "'" + ","
-                                + "'" + x[2] + "'" + ","
-                                + "'" + x[4] + "'"                                       
-                                + " );"
-                        );
-
-                        // now add default shipto with same shipcode as billcode
-                        st.executeUpdate(" insert into cms_det "
-                                + "(cms_code, cms_shipto, cms_name, cms_line1, cms_line2, cms_line3, cms_city, cms_state, cms_zip, cms_country ) "
-                                + " values ( "
-                                + "'" + list[0] + "'" + ","
-                                + "'" + list[0] + "'" + ","
-                                + "'" + list[11] + "'" + ","
-                                + "'" + list[12] + "'" + ","
-                                + "'" + list[13] + "'" + ","
-                                + "'" + list[14] + "'" + ","
-                                + "'" + list[15] + "'" + ","
-                                + "'" + list[16] + "'" + ","
-                                + "'" + list[17] + "'" + ","
-                                + "'" + list[18] + "'"
-                                + " );"
-                        );
-
-                    }
-                
-            } // if proceed
-            catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Error while inserting...check printStackTrace");
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                if (con != null) {
-                    con.close();
-                }
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-        return x;
-    }
-
-    
-    public static boolean addCustMstrWShipTo(ArrayList<String> list) {
-        boolean myreturn = false;
-        try {
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-
-                int i = 0;
-                String[] ld = null;
-
-                // now loop through comma delimited list and insert into item master table
-                // skip if already in table.....keys are cust (cup_cust) and custitem (cup_citem)
-                for (String rec : list) {
-                    ld = rec.split(":", -1);
-
-                    res = st.executeQuery("select cm_code from cm_mstr where "
-                            + " cm_code = " + "'" + ld[0] + "'" + ";");
-                    int j = 0;
-                    while (res.next()) {
-                        j++;
-                    }
-
-                    if (j == 0) {
-                        st.executeUpdate(" insert into cm_mstr "
-                                + "(cm_code, cm_site, cm_name, cm_line1, cm_line2, cm_line3, cm_city, cm_state, cm_zip, cm_country, " +
-                                  " cm_dateadd, cm_datemod, cm_usermod, "
-                                + " cm_group, cm_market, cm_creditlimit, cm_onhold, cm_carrier, cm_terms, cm_freight_type, cm_price_code, "
-                                + " cm_disc_code, cm_tax_code, cm_salesperson, cm_ar_acct, cm_ar_cc, cm_remarks, cm_misc1, cm_bank, cm_curr, "
-                                + " cm_logo, cm_ps_jasper, cm_iv_jasper, cm_label, cm_phone, cm_email ) "
-                                + " values ( "
-                                + "'" + ld[0] + "'" + ","
-                                + "'" + ld[1] + "'" + ","
-                                + "'" + ld[2] + "'" + ","
-                                + "'" + ld[3] + "'" + ","
-                                + "'" + ld[4] + "'" + ","
-                                + "'" + ld[5] + "'" + ","
-                                + "'" + ld[6] + "'" + ","
-                                + "'" + ld[7] + "'" + ","
-                                + "'" + ld[8] + "'" + ","
-                                + "'" + ld[9] + "'" + ","        
-                                + "'" + BlueSeerUtils.setDateFormat(new java.util.Date()) + "'" + ","
-                                + "'" + BlueSeerUtils.setDateFormat(new java.util.Date()) + "'" + ","
-                                + "'" + bsmf.MainFrame.userid + "'" + ","
-                                + "'" + ld[10] + "'" + ","
-                                + "'" + ld[11] + "'" + ","
-                                + "'" + ld[12] + "'" + ","
-                                + "'" + ld[13] + "'" + ","
-                                + "'" + ld[14] + "'" + ","
-                                + "'" + ld[15] + "'" + ","
-                                + "'" + ld[16] + "'" + ","
-                                + "'" + ld[17] + "'" + ","
-                                + "'" + ld[18] + "'" + ","
-                                + "'" + ld[19] + "'" + ","
-                                + "'" + ld[20] + "'" + ","
-                                + "'" + ld[21] + "'" + ","
-                                + "'" + ld[22] + "'" + ","
-                                + "'" + ld[23] + "'" + ","
-                                + "'" + ld[24] + "'" + ","
-                                + "'" + ld[25] + "'" + ","
-                                + "'" + ld[26] + "'" + ","
-                                + "'" + ld[27] + "'" + ","
-                                + "'" + ld[28] + "'" + ","
-                                + "'" + ld[29] + "'" + ","
-                                + "'" + ld[30] + "'" + ","
-                                + "'" + ld[31] + "'" + ","
-                                + "'" + ld[32] + "'"
-                                + " );"
-                        );
-
-                        // now add default shipto with same shipcode as billcode
-                        st.executeUpdate(" insert into cms_det "
-                                + "(cms_code, cms_shipto, cms_name, cms_line1, cms_line2, cms_line3, cms_city, cms_state, cms_zip, cms_country ) "
-                                + " values ( "
-                                + "'" + ld[0] + "'" + ","
-                                + "'" + ld[0] + "'" + ","
-                                + "'" + ld[2] + "'" + ","
-                                + "'" + ld[3] + "'" + ","
-                                + "'" + ld[4] + "'" + ","
-                                + "'" + ld[5] + "'" + ","
-                                + "'" + ld[6] + "'" + ","
-                                + "'" + ld[7] + "'" + ","
-                                + "'" + ld[8] + "'" + ","
-                                + "'" + ld[9] + "'"
-                                + " );"
-                        );
-
-                    }
-                }
-            } // if proceed
-            catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Error while inserting...check printStackTrace");
-                myreturn = true;
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                if (con != null) {
-                    con.close();
-                }
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-        return myreturn;
-    }
-
-    public static boolean addCustShipToMstr(ArrayList<String> list) {
-        boolean myreturn = false;
-        try {
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-
-                int i = 0;
-                String[] ld = null;
-
-                // now loop through comma delimited list and insert into item master table
-                // skip if already in table.....keys are cust (cup_cust) and custitem (cup_citem)
-                for (String rec : list) {
-                    ld = rec.split(":", -1);
-
-                    res = st.executeQuery("select cms_code from cms_det where "
-                            + " cms_code = " + "'" + ld[0] + "'" + " AND cms_shipto = " + "'" + ld[1] + "'" + ";");
-                    int j = 0;
-                    while (res.next()) {
-                        j++;
-                    }
-
-                    if (j == 0) {
-                        st.executeUpdate(" insert into cms_det "
-                                + "(cms_code, cms_shipto, cms_name, cms_line1, cms_line2, cms_line3, cms_city, cms_state, cms_zip, cms_country, cms_plantcode, cms_contact, cms_phone, cms_email, cms_misc ) "
-                                + " values ( "
-                                + "'" + ld[0] + "'" + ","
-                                + "'" + ld[1] + "'" + ","
-                                + "'" + ld[2] + "'" + ","
-                                + "'" + ld[3] + "'" + ","
-                                + "'" + ld[4] + "'" + ","
-                                + "'" + ld[5] + "'" + ","
-                                + "'" + ld[6] + "'" + ","
-                                + "'" + ld[7] + "'" + ","
-                                + "'" + ld[8] + "'" + ","
-                                + "'" + ld[9] + "'" + ","
-                                + "'" + ld[10] + "'" + ","
-                                + "'" + ld[11] + "'" + ","
-                                + "'" + ld[12] + "'" + ","
-                                + "'" + ld[13] + "'" + ","
-                                + "'" + ld[14] + "'"
                                 + " );"
                         );
                     }
