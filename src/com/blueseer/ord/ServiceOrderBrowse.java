@@ -113,7 +113,7 @@ public class ServiceOrderBrowse extends javax.swing.JPanel {
                             getGlobalColumnTag("detail"), 
                             getGlobalColumnTag("order"), 
                             getGlobalColumnTag("code"), 
-                            getGlobalColumnTag("jobsite"), 
+                            getGlobalColumnTag("name"), 
                             getGlobalColumnTag("type"), 
                             getGlobalColumnTag("status"), 
                             getGlobalColumnTag("orderdate"), 

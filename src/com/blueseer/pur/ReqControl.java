@@ -30,14 +30,26 @@ import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import static bsmf.MainFrame.backgroundcolor;
 import static bsmf.MainFrame.backgroundpanel;
+import static bsmf.MainFrame.tags;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.GradientPaint;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 
 /**
  *
@@ -50,7 +62,11 @@ public class ReqControl extends javax.swing.JPanel {
     
      javax.swing.table.DefaultTableModel authmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
-                "Userid", "Desc", "Seqeunce", "Enabled", "Email"
+                getGlobalColumnTag("user"), 
+                getGlobalColumnTag("description"), 
+                getGlobalColumnTag("sequence"), 
+                getGlobalColumnTag("enabled"), 
+                getGlobalColumnTag("email")
             });
     
     /**
@@ -58,10 +74,11 @@ public class ReqControl extends javax.swing.JPanel {
      */
     public ReqControl() {
         initComponents();
+        setLanguageTags(this);
     }
 
     
-     public void getcontrol() {
+    public void getcontrol() {
          try {
 
             Class.forName(bsmf.MainFrame.driver).newInstance();
@@ -90,7 +107,7 @@ public class ReqControl extends javax.swing.JPanel {
             }
             catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to retrieve req_ctrl");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -98,6 +115,49 @@ public class ReqControl extends javax.swing.JPanel {
         }
      }
     
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
     
     public void initvars(String[] arg) {
            
@@ -159,8 +219,10 @@ public class ReqControl extends javax.swing.JPanel {
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Requisition Control"));
+        jPanel1.setName("panelmain"); // NOI18N
 
         btupdate.setText("Update");
+        btupdate.setName("btupdate"); // NOI18N
         btupdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btupdateActionPerformed(evt);
@@ -168,14 +230,19 @@ public class ReqControl extends javax.swing.JPanel {
         });
 
         jLabel1.setText("Threshold Amt:");
+        jLabel1.setName("lblthreshhold"); // NOI18N
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Authorization Maintenance"));
+        jPanel2.setName("panelauthorization"); // NOI18N
 
         cbemail.setText("Emailed?");
+        cbemail.setName("cbemailed"); // NOI18N
 
         jLabel2.setText("Sequence");
+        jLabel2.setName("lblsequence"); // NOI18N
 
         jLabel3.setText("Desc");
+        jLabel3.setName("lbldesc"); // NOI18N
 
         tableauth.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -191,8 +258,10 @@ public class ReqControl extends javax.swing.JPanel {
         jScrollPane1.setViewportView(tableauth);
 
         cbenabled.setText("Enabled?");
+        cbenabled.setName("cbenabled"); // NOI18N
 
         btdeleteauth.setText("Delete");
+        btdeleteauth.setName("btdelete"); // NOI18N
         btdeleteauth.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdeleteauthActionPerformed(evt);
@@ -200,6 +269,7 @@ public class ReqControl extends javax.swing.JPanel {
         });
 
         btaddauth.setText("Add");
+        btaddauth.setName("btadd"); // NOI18N
         btaddauth.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddauthActionPerformed(evt);
@@ -207,6 +277,7 @@ public class ReqControl extends javax.swing.JPanel {
         });
 
         jLabel4.setText("User");
+        jLabel4.setName("lbluser"); // NOI18N
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -262,8 +333,10 @@ public class ReqControl extends javax.swing.JPanel {
         );
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("PreApproved List"));
+        jPanel3.setName("panelpreapproved"); // NOI18N
 
         btdelete.setText("Delete");
+        btdelete.setName("btdelete"); // NOI18N
         btdelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdeleteActionPerformed(evt);
@@ -271,6 +344,7 @@ public class ReqControl extends javax.swing.JPanel {
         });
 
         btadd.setText("Add");
+        btadd.setName("btadd"); // NOI18N
         btadd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddActionPerformed(evt);
@@ -278,8 +352,10 @@ public class ReqControl extends javax.swing.JPanel {
         });
 
         jLabel5.setText("All Users");
+        jLabel5.setName("lblallusers"); // NOI18N
 
         jLabel6.setText("PreApproved Users");
+        jLabel6.setName("lblpreapprovedusers"); // NOI18N
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -315,6 +391,7 @@ public class ReqControl extends javax.swing.JPanel {
         );
 
         cbrequestor.setText("Requestor Email?");
+        cbrequestor.setName("cbrequestoremail"); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -386,7 +463,7 @@ public class ReqControl extends javax.swing.JPanel {
                             "'" + threshold + "'"  + "," +
                             "'" + BlueSeerUtils.boolToInt(cbrequestor.isSelected()) + "'" +
                             ")" + ";");              
-                          bsmf.MainFrame.show("Inserting Defaults");
+                         
                 } else {
                     st.executeUpdate("update req_ctrl set " 
                             + " req_admins = " + "'" + adminsstring + "'" + "," 
@@ -412,11 +489,11 @@ public class ReqControl extends javax.swing.JPanel {
                         + " );" );
                  }
               
-                 bsmf.MainFrame.show("Updated Defaults");
+                 
                  
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Problem updating req_ctrl and req_auth");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -428,7 +505,7 @@ public class ReqControl extends javax.swing.JPanel {
        if(((DefaultComboBoxModel)ddadmins.getModel()).getIndexOf(dduserid.getSelectedItem().toString()) == -1) {
          ddadmins.addItem(dduserid.getSelectedItem().toString());
        } else {
-           bsmf.MainFrame.show("Already assigned");
+           bsmf.MainFrame.show(getMessageTag(1022));
        }
     }//GEN-LAST:event_btaddActionPerformed
 
@@ -444,7 +521,7 @@ public class ReqControl extends javax.swing.JPanel {
     private void btdeleteauthActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteauthActionPerformed
        int[] rows = tableauth.getSelectedRows();
         for (int i : rows) {
-            bsmf.MainFrame.show("Removing row " + i);
+            bsmf.MainFrame.show(getMessageTag(1031,String.valueOf(i)));
             ((javax.swing.table.DefaultTableModel) tableauth.getModel()).removeRow(i);
             
         }

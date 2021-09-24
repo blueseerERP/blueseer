@@ -994,7 +994,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
                     for (int j = 0; j < orddet.getRowCount(); j++) {
                          i = 0;
                         // skip closed lines
-                        if (orddet.getValueAt(j, 11).toString().equals("closed"))
+                        if (orddet.getValueAt(j, 11).toString().equals(getGlobalProgTag("closed")))
                             continue;
                         
                         
@@ -3336,7 +3336,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
             myorddetmodel.addRow(new Object[]{line, ddpart.getSelectedItem().toString(), custnumber.getText(), tbkey.getText(), ponbr.getText(), 
                 qtyshipped.getText(), dduom.getSelectedItem().toString(), listprice.getText(), 
                 discount.getText(), netprice.getText(), 
-                "0", "open",
+                "0", getGlobalProgTag("open"),
                 ddwh.getSelectedItem().toString(), ddloc.getSelectedItem().toString(), tbdesc.getText(), 
                 String.valueOf(OVData.getTaxAmtApplicableByItem(ddpart.getSelectedItem().toString(), (np * qty) ))
             });
@@ -3381,7 +3381,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
     private void btdelitemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdelitemActionPerformed
         int[] rows = orddet.getSelectedRows();
         for (int i : rows) {
-            if (orddet.getValueAt(i, 11).toString().equals("closed") || orddet.getValueAt(i, 11).toString().equals("partial")) {
+            if (orddet.getValueAt(i, 11).toString().equals(getGlobalProgTag("closed")) || orddet.getValueAt(i, 11).toString().equals(getGlobalProgTag("partial"))) {
                 bsmf.MainFrame.show(getMessageTag(1088));
                 return;
             } else {
@@ -3806,7 +3806,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
                 return;
         }
         for (int i : rows) {
-            if (orddet.getValueAt(i, 11).toString().equals("closed") || orddet.getValueAt(i, 11).toString().equals("partial")) {
+            if (orddet.getValueAt(i, 11).toString().equals(getGlobalProgTag("closed")) || orddet.getValueAt(i, 11).toString().equals(getGlobalProgTag("partial"))) {
                 bsmf.MainFrame.show(getMessageTag(1088));
                 return;
             } else if (! orddet.getValueAt(i, 1).toString().equals(ddpart.getSelectedItem().toString())) {

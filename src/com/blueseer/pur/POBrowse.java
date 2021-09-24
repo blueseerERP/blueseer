@@ -66,12 +66,21 @@ import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.mydialog;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
+import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.text.DecimalFormatSymbols;
 import java.util.Enumeration;
 import java.util.Locale;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 
@@ -83,8 +92,18 @@ public class POBrowse extends javax.swing.JPanel {
  
      public Map<String, ArrayList<String>> map = new HashMap<String, ArrayList<String>>();
      
+                          
+     
     javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"Select", "Detail", "PO", "Vend", "Name", "OrdDate", "Type", "Status", "Amt"})
+                        new String[]{getGlobalColumnTag("select"), 
+                            getGlobalColumnTag("detail"), 
+                            getGlobalColumnTag("po"), 
+                            getGlobalColumnTag("code"), 
+                            getGlobalColumnTag("name"), 
+                            getGlobalColumnTag("orddate"), 
+                            getGlobalColumnTag("type"),
+                            getGlobalColumnTag("status"), 
+                            getGlobalColumnTag("amount")})
             {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -95,7 +114,12 @@ public class POBrowse extends javax.swing.JPanel {
                         };
                 
     javax.swing.table.DefaultTableModel modeldetail = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"PO", "Part", "Price", "QtyOrd", "QtyRecvd", "Status"});
+                        new String[]{getGlobalColumnTag("po"), 
+                            getGlobalColumnTag("item"), 
+                            getGlobalColumnTag("price"), 
+                            getGlobalColumnTag("orderqty"), 
+                            getGlobalColumnTag("recvqty"), 
+                            getGlobalColumnTag("status")});
     
      class ButtonRenderer extends JButton implements TableCellRenderer {
 
@@ -160,9 +184,10 @@ public class POBrowse extends javax.swing.JPanel {
      */
     public POBrowse() {
         initComponents();
+        setLanguageTags(this);
     }
 
-     public void getdetail(String po) {
+    public void getdetail(String po) {
       
          modeldetail.setNumRows(0);
          double total = 0.00;
@@ -197,7 +222,7 @@ public class POBrowse extends javax.swing.JPanel {
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to get PO Browse detail");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -206,6 +231,49 @@ public class POBrowse extends javax.swing.JPanel {
 
     }
     
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
     
     public void initvars(String[] arg) {
         lblamttot.setText("0");
@@ -306,6 +374,7 @@ public class POBrowse extends javax.swing.JPanel {
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("PO Browse"));
+        jPanel1.setName("panelmain"); // NOI18N
 
         tablepanel.setLayout(new javax.swing.BoxLayout(tablepanel, javax.swing.BoxLayout.LINE_AXIS));
 
@@ -355,6 +424,7 @@ public class POBrowse extends javax.swing.JPanel {
         tablepanel.add(detailpanel);
 
         btdetail.setText("Hide Detail");
+        btdetail.setName("bthidedetail"); // NOI18N
         btdetail.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdetailActionPerformed(evt);
@@ -362,8 +432,10 @@ public class POBrowse extends javax.swing.JPanel {
         });
 
         jLabel4.setText("To Vend");
+        jLabel4.setName("lbltovend"); // NOI18N
 
         btRun.setText("Run");
+        btRun.setName("btrun"); // NOI18N
         btRun.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btRunActionPerformed(evt);
@@ -371,16 +443,22 @@ public class POBrowse extends javax.swing.JPanel {
         });
 
         jLabel5.setText("Site");
+        jLabel5.setName("lblsite"); // NOI18N
 
         jLabel1.setText("From Vend");
+        jLabel1.setName("lblfromvend"); // NOI18N
 
         jLabel3.setText("To PO");
+        jLabel3.setName("lbltopo"); // NOI18N
 
         jLabel6.setText("From PO");
+        jLabel6.setName("lblfrompo"); // NOI18N
 
         cbclose.setText("Closed");
+        cbclose.setName("cbclosed"); // NOI18N
 
         cbopen.setText("Open");
+        cbopen.setName("cbopen"); // NOI18N
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -448,6 +526,7 @@ public class POBrowse extends javax.swing.JPanel {
         );
 
         jLabel8.setText("Total Qty");
+        jLabel8.setName("lbltotalqty"); // NOI18N
 
         lblqtytot.setText("0");
 
@@ -455,6 +534,7 @@ public class POBrowse extends javax.swing.JPanel {
         lblamttot.setText("0");
 
         EndBal.setText("Total Amt");
+        EndBal.setName("lbltotalamt"); // NOI18N
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -622,7 +702,7 @@ try {
                 lblqtytot.setText(df.format(totqty));
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Problem executing PO Browse Report");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             con.close();
         } catch (Exception e) {
