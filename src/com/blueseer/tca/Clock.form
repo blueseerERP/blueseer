@@ -28,6 +28,7 @@
             <TitledBorder title="Employee Clock"/>
           </Border>
         </Property>
+        <Property name="name" type="java.lang.String" value="panelmain" noResource="true"/>
       </Properties>
 
       <Layout>
@@ -47,7 +48,7 @@
                                   <Component id="jLabel1" min="-2" pref="182" max="-2" attributes="0"/>
                               </Group>
                               <Group type="102" attributes="0">
-                                  <Component id="jComboBox1" min="-2" pref="120" max="-2" attributes="0"/>
+                                  <Component id="dddir" min="-2" pref="120" max="-2" attributes="0"/>
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                   <Component id="jLabel3" min="-2" pref="182" max="-2" attributes="0"/>
                               </Group>
@@ -91,7 +92,7 @@
                           </Group>
                       </Group>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="jComboBox1" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="dddir" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -193,15 +194,13 @@
         <Component class="javax.swing.JLabel" name="jLabel2">
           <Properties>
             <Property name="text" type="java.lang.String" value="ClockNumber"/>
+            <Property name="name" type="java.lang.String" value="lblclocknumber" noResource="true"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JComboBox" name="jComboBox1">
+        <Component class="javax.swing.JComboBox" name="dddir">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="2">
-                <StringItem index="0" value="Clock IN"/>
-                <StringItem index="1" value="Clock OUT"/>
-              </StringArray>
+              <StringArray count="0"/>
             </Property>
           </Properties>
         </Component>
@@ -235,6 +234,7 @@
               <Color blue="cc" green="33" red="0" type="rgb"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Input ClockNumber and Press Enter"/>
+            <Property name="name" type="java.lang.String" value="lbldirection" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel3">
@@ -246,6 +246,7 @@
               <Color blue="cc" green="33" red="0" type="rgb"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Choose Direction"/>
+            <Property name="name" type="java.lang.String" value="lblchoose" noResource="true"/>
           </Properties>
         </Component>
       </SubComponents>

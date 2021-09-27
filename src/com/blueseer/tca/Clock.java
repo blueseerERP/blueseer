@@ -45,6 +45,18 @@ import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
 import static bsmf.MainFrame.con;
+import static bsmf.MainFrame.tags;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import java.awt.Component;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 
 /**
  *
@@ -86,8 +98,8 @@ public class Clock extends javax.swing.JPanel {
      */
     public Clock() {
         initComponents();
-        
-          tbclocknumber.addKeyListener(new KeyListener() {
+        setLanguageTags(this);
+        tbclocknumber.addKeyListener(new KeyListener() {
 
     public void keyTyped(KeyEvent e) { 
        
@@ -137,6 +149,50 @@ public class Clock extends javax.swing.JPanel {
         
     }
 
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+    
     public void initvars(String[] arg) {
         count = 0;
     lbempid.setText(null);
@@ -146,9 +202,12 @@ public class Clock extends javax.swing.JPanel {
    //lbimage.setIcon(new ImageIcon(getClass().getResource("images/statusnogo.png")));
     lbname.setText(null);
     lbclockdatetime.setText(null);
-
+    dddir.removeAllItems();
+    dddir.addItem(getGlobalProgTag("clockin"));
+    dddir.addItem(getGlobalProgTag("clockout"));
     tbclocknumber.setText(null);
     tbclocknumber.requestFocus(); 
+    
     }
      
     private void reinitcomponents() {
@@ -188,14 +247,14 @@ public class Clock extends javax.swing.JPanel {
           }
         con.close();
         if (i > 0) {
-        if (emp_clockin.toString().equals("1") && clockdir.toString().equals("Clock IN")) {
+        if (emp_clockin.toString().equals("1") && clockdir.toString().equals(getGlobalProgTag("clockin"))) {
             //  Already clocked in
-            failureAction("Already Clocked In");
+            failureAction(getMessageTag(1119));
             returnvalue = true;
         }
-        if (emp_clockin.equals("0") && clockdir.equals("Clock OUT")) {
+        if (emp_clockin.equals("0") && clockdir.equals(getGlobalProgTag("clockout"))) {
             //  Already clocked out
-            failureAction("Already Clocked Out");
+            failureAction(getMessageTag(1118));
             returnvalue = true;
         }
           } 
@@ -204,7 +263,7 @@ public class Clock extends javax.swing.JPanel {
       }
       catch (SQLException s){
           MainFrame.bslog(s);
-        System.out.println("sql problem at ifClockedDir");
+        System.out.println(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
       }
 
     }
@@ -260,7 +319,7 @@ public class Clock extends javax.swing.JPanel {
         jTextArea1 = new javax.swing.JTextArea();
         lbname = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox();
+        dddir = new javax.swing.JComboBox();
         tbclocknumber = new javax.swing.JPasswordField();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextArea2 = new javax.swing.JTextArea();
@@ -270,6 +329,7 @@ public class Clock extends javax.swing.JPanel {
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Employee Clock"));
+        jPanel1.setName("panelmain"); // NOI18N
 
         lbimage.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -290,8 +350,7 @@ public class Clock extends javax.swing.JPanel {
         lbname.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         jLabel2.setText("ClockNumber");
-
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Clock IN", "Clock OUT" }));
+        jLabel2.setName("lblclocknumber"); // NOI18N
 
         tbclocknumber.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -307,10 +366,12 @@ public class Clock extends javax.swing.JPanel {
         jLabel1.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(0, 51, 204));
         jLabel1.setText("Input ClockNumber and Press Enter");
+        jLabel1.setName("lbldirection"); // NOI18N
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 2, 11)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(0, 51, 204));
         jLabel3.setText("Choose Direction");
+        jLabel3.setName("lblchoose"); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -329,7 +390,7 @@ public class Clock extends javax.swing.JPanel {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(dddir, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -360,7 +421,7 @@ public class Clock extends javax.swing.JPanel {
                             .addComponent(jLabel1)
                             .addComponent(jLabel2)))
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(dddir, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel3)))
                 .addGap(28, 28, 28)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -394,14 +455,14 @@ public class Clock extends javax.swing.JPanel {
         //  choice of 100 was completely arbitrary.
         
         if (timediff > 100 && OVData.isClockScanCard()) {
-            bsmf.MainFrame.show("Must Scan IDCard!");
+            bsmf.MainFrame.show(getMessageTag(1120));
             reinitcomponents();
             return;
         }
 
         
         
-        boolean isclocked = ifClockedDir(jComboBox1.getSelectedItem().toString());
+        boolean isclocked = ifClockedDir(dddir.getSelectedItem().toString());
           // the check of login status is performed within ifClockedDir...
         // it will simply check the emp_clockin field within the emp_mstr table which
         // is set at time of clock in / out by ClockPanel.java .
@@ -462,7 +523,7 @@ public class Clock extends javax.swing.JPanel {
                        
                     if (proceed) {
                         // clockin or clockout direction logic
-                        if (jComboBox1.getSelectedItem().toString().equals("Clock IN")) {
+                        if (dddir.getSelectedItem().toString().equals(getGlobalProgTag("clockin"))) {
                             lbstatus.setText("CLOCKED IN...")   ;
                             st2.executeUpdate("update emp_mstr set emp_clockin = '1' where emp_nbr = " + "'" + myid + "'" +";");
 
@@ -529,14 +590,14 @@ public class Clock extends javax.swing.JPanel {
                     } // if proceed                    
 
                     if (i == 0) {
-                        failureAction("No emp_mstr ID found");
+                        failureAction(getMessageTag(1117));
                     }
                     con.close();
 
                 }
                 catch (SQLException s){
                     MainFrame.bslog(s);
-                   bsmf.MainFrame.show("sql problem during execution");
+                   bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
                 }
 
             }
@@ -551,7 +612,7 @@ public class Clock extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox jComboBox1;
+    private javax.swing.JComboBox dddir;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

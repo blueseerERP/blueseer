@@ -26,6 +26,7 @@ SOFTWARE.
 package com.blueseer.sch;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.tags;
 import com.blueseer.inv.invData;
 import com.blueseer.utl.BlueSeerUtils;
 import com.blueseer.utl.OVData;
@@ -48,8 +49,15 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Locale;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -90,6 +98,7 @@ public class MRPBrowse extends javax.swing.JPanel {
      */
     public MRPBrowse() {
         initComponents();
+        setLanguageTags(this);
     }
 
     
@@ -344,6 +353,51 @@ public class MRPBrowse extends javax.swing.JPanel {
              
          }
         
+    public void setLanguageTags(Object myobj) {
+      // lblaccount.setText(labels.getString("LedgerAcctMstrPanel.labels.lblaccount"));
+      
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+                if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
         
     public void initvars(String[] arg) {
        
@@ -607,8 +661,10 @@ public class MRPBrowse extends javax.swing.JPanel {
         setLayout(new java.awt.BorderLayout());
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("MRP Browse"));
+        jPanel2.setName("panelmain"); // NOI18N
 
         btsearch.setText("Search");
+        btsearch.setName("btsearch"); // NOI18N
         btsearch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btsearchActionPerformed(evt);
@@ -618,10 +674,13 @@ public class MRPBrowse extends javax.swing.JPanel {
         ddweek.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Week1", "Week2", "Week3", "Week4", "Week5", "Week6", "Week7", "Week8", "Week9", "Week10", "Week11", "Week12", "Week13" }));
 
         jLabel1.setText("From:");
+        jLabel1.setName("lblfromitem"); // NOI18N
 
         jLabel2.setText("To:");
+        jLabel2.setName("lbltoitem"); // NOI18N
 
         btdetail.setText("Hide Detail");
+        btdetail.setName("bthidedetail"); // NOI18N
         btdetail.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdetailActionPerformed(evt);
@@ -629,6 +688,7 @@ public class MRPBrowse extends javax.swing.JPanel {
         });
 
         jLabel3.setText("Site");
+        jLabel3.setName("lblsite"); // NOI18N
 
         tabletrans.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -659,16 +719,22 @@ public class MRPBrowse extends javax.swing.JPanel {
         jScrollPane5.setViewportView(tabletrans);
 
         jLabel4.setText("Type");
+        jLabel4.setName("lbltype"); // NOI18N
 
         jLabel5.setText("QOH");
+        jLabel5.setName("lblqoh"); // NOI18N
 
         jLabel6.setText("Cost");
+        jLabel6.setName("lblcost"); // NOI18N
 
         rbclassm.setText("Class M");
+        rbclassm.setName("cbclassm"); // NOI18N
 
         rbclassp.setText("Class P");
+        rbclassp.setName("cbclassp"); // NOI18N
 
         rbclassa.setText("Class A");
+        rbclassa.setName("cbclassa"); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -696,16 +762,8 @@ public class MRPBrowse extends javax.swing.JPanel {
                             .addComponent(rbclassa)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addComponent(jLabel4)
-                                                    .addComponent(jLabel5))
-                                                .addGap(7, 7, 7)))
-                                        .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING))
-                                    .addComponent(jLabel1))
+                                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(tbfrompart, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -714,8 +772,12 @@ public class MRPBrowse extends javax.swing.JPanel {
                                     .addComponent(tbtype, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(btdetail)
                                     .addComponent(tbqtyoh, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(tbcost, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                                    .addComponent(tbcost, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING)))
+                        .addGap(0, 3, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(

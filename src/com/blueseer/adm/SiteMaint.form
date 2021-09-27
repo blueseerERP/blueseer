@@ -37,15 +37,10 @@
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jPanel2" max="32767" attributes="0"/>
+                  <EmptySpace pref="14" max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" attributes="0">
-                          <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
-                          <Component id="jPanel3" max="32767" attributes="0"/>
-                      </Group>
-                      <Group type="102" attributes="0">
-                          <EmptySpace max="32767" attributes="0"/>
-                          <Component id="jPanel4" min="-2" max="-2" attributes="0"/>
-                      </Group>
+                      <Component id="jPanel4" alignment="1" min="-2" max="-2" attributes="0"/>
+                      <Component id="jPanel3" alignment="1" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
           </Group>
@@ -303,37 +298,26 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Group type="102" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="jLabel9" alignment="1" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jLabel10" alignment="1" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jLabel11" alignment="1" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                  <Component id="tblogo" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="tb_iv_generic" alignment="1" max="32767" attributes="0"/>
-                                  <Component id="tb_sh_generic" alignment="0" min="-2" pref="199" max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
-                          <Group type="102" alignment="1" attributes="0">
-                              <Group type="103" groupAlignment="1" attributes="0">
-                                  <Component id="jLabel12" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jLabel13" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jLabel14" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Component id="tb_pos_generic" max="32767" attributes="0"/>
-                                  <Component id="tb_po_generic" pref="199" max="32767" attributes="0"/>
-                                  <Component id="tb_or_generic" alignment="1" max="32767" attributes="0"/>
-                              </Group>
-                          </Group>
+                  <Group type="102" alignment="1" attributes="0">
+                      <EmptySpace pref="64" max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="jLabel9" alignment="1" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel10" alignment="1" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel11" alignment="1" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel12" alignment="1" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel13" alignment="1" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel14" alignment="1" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="tblogo" alignment="0" max="32767" attributes="0"/>
+                          <Component id="tb_or_generic" alignment="0" min="-2" pref="199" max="-2" attributes="0"/>
+                          <Component id="tb_pos_generic" alignment="0" max="32767" attributes="0"/>
+                          <Component id="tb_po_generic" alignment="0" max="32767" attributes="0"/>
+                          <Component id="tb_sh_generic" alignment="0" min="-2" pref="199" max="-2" attributes="0"/>
+                          <Component id="tb_iv_generic" alignment="0" max="32767" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>

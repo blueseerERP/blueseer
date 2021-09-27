@@ -32,6 +32,17 @@ import java.text.SimpleDateFormat;
 import javax.swing.SwingWorker;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.setperms;
+import static bsmf.MainFrame.tags;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import java.awt.Component;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 
 /**
  *
@@ -45,8 +56,52 @@ public class FcstToPlanMaint extends javax.swing.JPanel {
      */
     public FcstToPlanMaint() {
         initComponents();
+        setLanguageTags(this);
     }
 
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
     
     public void initvars(String[] args) {
         tbfrompart.setText("");
@@ -101,7 +156,7 @@ public class FcstToPlanMaint extends javax.swing.JPanel {
            // MainProgressBar.setVisible(false);
            // setperms(bsmf.MainFrame.userid);
           //  reinitpanels2("BackGroundPanel", "BackGroundPanel", false, "");
-            bsmf.MainFrame.show("Commit Complete! Records created " + String.valueOf(numberrecords));
+            bsmf.MainFrame.show(getMessageTag(1121,String.valueOf(numberrecords)));
             MainProgressBar.setEnabled(false);
             MainProgressBar.setIndeterminate(false);
         }
@@ -132,8 +187,10 @@ public class FcstToPlanMaint extends javax.swing.JPanel {
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Commit Fcst To Plan"));
+        jPanel1.setName("panelmain"); // NOI18N
 
         btpost.setText("Commit");
+        btpost.setName("btcommit"); // NOI18N
         btpost.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btpostActionPerformed(evt);
@@ -141,12 +198,16 @@ public class FcstToPlanMaint extends javax.swing.JPanel {
         });
 
         jLabel1.setText("From Part");
+        jLabel1.setName("lblfromitem"); // NOI18N
 
         jLabel2.setText("To Part");
+        jLabel2.setName("lbltoitem"); // NOI18N
 
         jLabel3.setText("From Site");
+        jLabel3.setName("lblfromsite"); // NOI18N
 
         jLabel4.setText("To Site");
+        jLabel4.setName("lbltosite"); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -156,31 +217,24 @@ public class FcstToPlanMaint extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(12, 12, 12)
-                        .addComponent(jLabel3)
-                        .addGap(13, 13, 13)
-                        .addComponent(tbfromsite, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(MainProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(28, 28, 28)
-                        .addComponent(jLabel4)
-                        .addGap(12, 12, 12)
-                        .addComponent(tbtosite, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(12, 12, 12)
-                        .addComponent(jLabel1)
-                        .addGap(12, 12, 12)
-                        .addComponent(tbfrompart, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(27, 27, 27)
-                        .addComponent(jLabel2)
-                        .addGap(12, 12, 12)
-                        .addComponent(tbtopart, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(183, 183, 183)
-                        .addComponent(btpost))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(12, 12, 12)
-                        .addComponent(MainProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(28, Short.MAX_VALUE))
+                        .addGap(15, 15, 15)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btpost)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING))
+                                .addGap(8, 8, 8)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(tbfromsite, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(tbtosite, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(tbfrompart, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(tbtopart, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                .addContainerGap(31, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

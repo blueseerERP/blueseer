@@ -27,7 +27,9 @@ package com.blueseer.sch;
 
 import bsmf.MainFrame;
 import static bsmf.MainFrame.reinitpanels;
+import static bsmf.MainFrame.tags;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.IBlueSeer;
 import com.blueseer.utl.OVData;
 import java.awt.Color;
@@ -46,8 +48,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
@@ -69,6 +75,7 @@ public class ForecastMaint extends javax.swing.JPanel implements IBlueSeer {
     
     public ForecastMaint() {
         initComponents();
+        setLanguageTags(this);
     }
 
     
@@ -205,6 +212,52 @@ public class ForecastMaint extends javax.swing.JPanel implements IBlueSeer {
             }
     } 
     
+    public void setLanguageTags(Object myobj) {
+      // lblaccount.setText(labels.getString("LedgerAcctMstrPanel.labels.lblaccount"));
+      
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+                if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+    
     public void setComponentDefaultValues() {
        
          java.util.Date now = new java.util.Date();
@@ -295,7 +348,7 @@ public class ForecastMaint extends javax.swing.JPanel implements IBlueSeer {
                   if (! isNew)
                   executeTask("get", new String[]{tbkey.getText(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString()});
                   }
-                    //JOptionPane.showMessageDialog(box, e.getItem());
+                   
                    // System.out.println(e.getItem());
                 }
             }
@@ -351,21 +404,21 @@ public class ForecastMaint extends javax.swing.JPanel implements IBlueSeer {
         
                 if (tbkey.getText().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("must enter an item");
+                    bsmf.MainFrame.show(getMessageTag(1024));
                     tbkey.requestFocus();
                     return b;
                 }
                 
                  if (! OVData.isValidItem(tbkey.getText()) && x.equals("addRecord")) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a valid item from item master");
+                    bsmf.MainFrame.show(getMessageTag(1021, tbkey.getText()));
                     tbkey.requestFocus();
                     return b;
                 }
         
                 if (ddsite.getSelectedItem() == null || ddsite.getSelectedItem().toString().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("must choose a site");
+                    bsmf.MainFrame.show(getMessageTag(1024));
                     return b;
                 }
                
@@ -652,7 +705,7 @@ public class ForecastMaint extends javax.swing.JPanel implements IBlueSeer {
                 
            
                 
-                // bsmf.MainFrame.show(x[0] + "/" + x[1] + "/" + x[2]);
+               
                 
                  int i = 0;
                 if (x == null && x.length < 2) { return new String[]{}; };
@@ -942,8 +995,10 @@ public class ForecastMaint extends javax.swing.JPanel implements IBlueSeer {
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder("Forecast Maintenance"));
+        jPanel7.setName("panelmain"); // NOI18N
 
         btadd.setText("Add");
+        btadd.setName("btadd"); // NOI18N
         btadd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddActionPerformed(evt);
@@ -951,6 +1006,7 @@ public class ForecastMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         btupdate.setText("Edit");
+        btupdate.setName("btupdate"); // NOI18N
         btupdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btupdateActionPerformed(evt);
@@ -958,6 +1014,7 @@ public class ForecastMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         jLabel3.setText("Year");
+        jLabel3.setName("lblyear"); // NOI18N
 
         tbkey.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -966,6 +1023,7 @@ public class ForecastMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         btdelete.setText("Delete");
+        btdelete.setName("btdelete"); // NOI18N
         btdelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdeleteActionPerformed(evt);
@@ -973,8 +1031,10 @@ public class ForecastMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         jLabel2.setText("Site");
+        jLabel2.setName("lblsite"); // NOI18N
 
         jLabel1.setText("Part");
+        jLabel1.setName("lblitem"); // NOI18N
 
         btbrowse.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
         btbrowse.addActionListener(new java.awt.event.ActionListener() {
@@ -984,6 +1044,7 @@ public class ForecastMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         btnew.setText("New");
+        btnew.setName("btnew"); // NOI18N
         btnew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnewActionPerformed(evt);
@@ -991,6 +1052,7 @@ public class ForecastMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         btclear.setText("Clear");
+        btclear.setName("btclear"); // NOI18N
         btclear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btclearActionPerformed(evt);

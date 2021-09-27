@@ -28,6 +28,7 @@
             <TitledBorder title="Commit Fcst To Plan"/>
           </Border>
         </Property>
+        <Property name="name" type="java.lang.String" value="panelmain" noResource="true"/>
       </Properties>
 
       <Layout>
@@ -37,38 +38,31 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
                           <EmptySpace min="12" pref="12" max="-2" attributes="0"/>
-                          <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="13" pref="13" max="-2" attributes="0"/>
-                          <Component id="tbfromsite" min="-2" pref="159" max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="102" attributes="0">
-                          <EmptySpace min="28" pref="28" max="-2" attributes="0"/>
-                          <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="12" pref="12" max="-2" attributes="0"/>
-                          <Component id="tbtosite" min="-2" pref="159" max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="102" attributes="0">
-                          <EmptySpace min="12" pref="12" max="-2" attributes="0"/>
-                          <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="12" pref="12" max="-2" attributes="0"/>
-                          <Component id="tbfrompart" min="-2" pref="159" max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="102" attributes="0">
-                          <EmptySpace min="27" pref="27" max="-2" attributes="0"/>
-                          <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="12" pref="12" max="-2" attributes="0"/>
-                          <Component id="tbtopart" min="-2" pref="159" max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="102" attributes="0">
-                          <EmptySpace min="183" pref="183" max="-2" attributes="0"/>
-                          <Component id="btpost" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="102" attributes="0">
-                          <EmptySpace min="12" pref="12" max="-2" attributes="0"/>
                           <Component id="MainProgressBar" min="-2" pref="235" max="-2" attributes="0"/>
                       </Group>
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="1" attributes="0">
+                              <Component id="btpost" min="-2" max="-2" attributes="0"/>
+                              <Group type="102" attributes="0">
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="jLabel3" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jLabel4" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jLabel1" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jLabel2" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="tbfromsite" alignment="0" min="-2" pref="159" max="-2" attributes="0"/>
+                                      <Component id="tbtosite" alignment="0" min="-2" pref="159" max="-2" attributes="0"/>
+                                      <Component id="tbfrompart" alignment="0" min="-2" pref="159" max="-2" attributes="0"/>
+                                      <Component id="tbtopart" alignment="0" min="-2" pref="159" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                          </Group>
+                      </Group>
                   </Group>
-                  <EmptySpace pref="28" max="32767" attributes="0"/>
+                  <EmptySpace pref="31" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -120,6 +114,7 @@
         <Component class="javax.swing.JButton" name="btpost">
           <Properties>
             <Property name="text" type="java.lang.String" value="Commit"/>
+            <Property name="name" type="java.lang.String" value="btcommit" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btpostActionPerformed"/>
@@ -130,6 +125,7 @@
         <Component class="javax.swing.JLabel" name="jLabel1">
           <Properties>
             <Property name="text" type="java.lang.String" value="From Part"/>
+            <Property name="name" type="java.lang.String" value="lblfromitem" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JProgressBar" name="MainProgressBar">
@@ -139,6 +135,7 @@
         <Component class="javax.swing.JLabel" name="jLabel2">
           <Properties>
             <Property name="text" type="java.lang.String" value="To Part"/>
+            <Property name="name" type="java.lang.String" value="lbltoitem" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="tbfromsite">
@@ -146,6 +143,7 @@
         <Component class="javax.swing.JLabel" name="jLabel3">
           <Properties>
             <Property name="text" type="java.lang.String" value="From Site"/>
+            <Property name="name" type="java.lang.String" value="lblfromsite" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="tbtosite">
@@ -153,6 +151,7 @@
         <Component class="javax.swing.JLabel" name="jLabel4">
           <Properties>
             <Property name="text" type="java.lang.String" value="To Site"/>
+            <Property name="name" type="java.lang.String" value="lbltosite" noResource="true"/>
           </Properties>
         </Component>
       </SubComponents>

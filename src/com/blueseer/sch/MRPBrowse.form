@@ -32,6 +32,7 @@
             <TitledBorder title="MRP Browse"/>
           </Border>
         </Property>
+        <Property name="name" type="java.lang.String" value="panelmain" noResource="true"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout" value="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout$BorderConstraintsDescription">
@@ -93,20 +94,8 @@
                                   <Component id="rbclassa" min="-2" max="-2" attributes="0"/>
                                   <Group type="102" alignment="0" attributes="0">
                                       <Group type="103" groupAlignment="0" attributes="0">
-                                          <Group type="103" groupAlignment="0" attributes="0">
-                                              <Group type="103" groupAlignment="0" attributes="0">
-                                                  <Component id="jLabel6" alignment="1" min="-2" max="-2" attributes="0"/>
-                                                  <Group type="102" attributes="0">
-                                                      <Group type="103" groupAlignment="0" attributes="0">
-                                                          <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
-                                                          <Component id="jLabel5" alignment="0" min="-2" max="-2" attributes="0"/>
-                                                      </Group>
-                                                      <EmptySpace min="-2" pref="7" max="-2" attributes="0"/>
-                                                  </Group>
-                                              </Group>
-                                              <Component id="jLabel2" alignment="1" min="-2" max="-2" attributes="0"/>
-                                          </Group>
-                                          <Component id="jLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Component id="jLabel1" alignment="1" min="-2" max="-2" attributes="0"/>
+                                          <Component id="jLabel2" alignment="1" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="0" attributes="0">
@@ -119,8 +108,13 @@
                                           <Component id="tbcost" alignment="0" min="-2" pref="93" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="jLabel4" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jLabel5" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jLabel6" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  </Group>
                               </Group>
-                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                              <EmptySpace min="0" pref="3" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
@@ -182,6 +176,7 @@
             <Component class="javax.swing.JButton" name="btsearch">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Search"/>
+                <Property name="name" type="java.lang.String" value="btsearch" noResource="true"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btsearchActionPerformed"/>
@@ -215,16 +210,19 @@
             <Component class="javax.swing.JLabel" name="jLabel1">
               <Properties>
                 <Property name="text" type="java.lang.String" value="From:"/>
+                <Property name="name" type="java.lang.String" value="lblfromitem" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel2">
               <Properties>
                 <Property name="text" type="java.lang.String" value="To:"/>
+                <Property name="name" type="java.lang.String" value="lbltoitem" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JButton" name="btdetail">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Hide Detail"/>
+                <Property name="name" type="java.lang.String" value="bthidedetail" noResource="true"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btdetailActionPerformed"/>
@@ -240,6 +238,7 @@
             <Component class="javax.swing.JLabel" name="jLabel3">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Site"/>
+                <Property name="name" type="java.lang.String" value="lblsite" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="tbtype">
@@ -273,11 +272,13 @@
             <Component class="javax.swing.JLabel" name="jLabel4">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Type"/>
+                <Property name="name" type="java.lang.String" value="lbltype" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel5">
               <Properties>
                 <Property name="text" type="java.lang.String" value="QOH"/>
+                <Property name="name" type="java.lang.String" value="lblqoh" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="tbcost">
@@ -285,21 +286,25 @@
             <Component class="javax.swing.JLabel" name="jLabel6">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Cost"/>
+                <Property name="name" type="java.lang.String" value="lblcost" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JRadioButton" name="rbclassm">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Class M"/>
+                <Property name="name" type="java.lang.String" value="cbclassm" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JRadioButton" name="rbclassp">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Class P"/>
+                <Property name="name" type="java.lang.String" value="cbclassp" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JRadioButton" name="rbclassa">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Class A"/>
+                <Property name="name" type="java.lang.String" value="cbclassa" noResource="true"/>
               </Properties>
             </Component>
           </SubComponents>

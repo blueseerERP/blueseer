@@ -519,7 +519,7 @@ public class PanelMaint extends javax.swing.JPanel implements IBlueSeer {
         };
         luTable.addMouseListener(luml);
       
-        callDialog(getClassLabelTag("lbl", this.getClass().getSimpleName()), 
+        callDialog(getClassLabelTag("lblid", this.getClass().getSimpleName()), 
                 getClassLabelTag("lbldesc", this.getClass().getSimpleName()));
         
         

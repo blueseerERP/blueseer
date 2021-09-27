@@ -65,12 +65,21 @@ import static bsmf.MainFrame.mydialog;
 import static bsmf.MainFrame.panelmap;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
+import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.DTData;
 import static com.blueseer.utl.ReportPanel.TableReport;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
+import javax.swing.BorderFactory;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 
 /**
  *
@@ -167,10 +176,11 @@ public class ForecastBrowse extends javax.swing.JPanel {
         
     public ForecastBrowse() {
         initComponents();
+        setLanguageTags(this);
     }
 
     
-      public void getdetail(String part) {
+    public void getdetail(String part) {
       
          modeltrans.setNumRows(0);
          double total = 0.00;
@@ -205,7 +215,7 @@ public class ForecastBrowse extends javax.swing.JPanel {
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to get Tran Detail");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -214,6 +224,49 @@ public class ForecastBrowse extends javax.swing.JPanel {
 
     }
     
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
       
     public void initvars(String[] arg) {
          mymodel.setNumRows(0);
@@ -258,7 +311,10 @@ public class ForecastBrowse extends javax.swing.JPanel {
 
         setBackground(new java.awt.Color(0, 102, 204));
 
+        jPanel1.setName("panelmain"); // NOI18N
+
         btexport.setText("Export");
+        btexport.setName("btexport"); // NOI18N
         btexport.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btexportActionPerformed(evt);
@@ -266,12 +322,15 @@ public class ForecastBrowse extends javax.swing.JPanel {
         });
 
         jLabel1.setText("From Part");
+        jLabel1.setName("lblfromitem"); // NOI18N
 
         labelcount.setText("0");
 
         jLabel4.setText("To Part");
+        jLabel4.setName("lbltoitem"); // NOI18N
 
         btRun.setText("Run");
+        btRun.setName("btrun"); // NOI18N
         btRun.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btRunActionPerformed(evt);
@@ -279,12 +338,15 @@ public class ForecastBrowse extends javax.swing.JPanel {
         });
 
         jLabel7.setText("Count");
+        jLabel7.setName("lblcount"); // NOI18N
 
         jLabel8.setText("Qty");
+        jLabel8.setName("lblqty"); // NOI18N
 
         labelqty.setText("0");
 
         btdetail.setText("Hide Trans");
+        btdetail.setName("bthidedetail"); // NOI18N
         btdetail.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdetailActionPerformed(evt);
@@ -445,7 +507,6 @@ public class ForecastBrowse extends javax.swing.JPanel {
         if (topart.isEmpty())
             topart = bsmf.MainFrame.hichar;
         
-      // bsmf.MainFrame.show("forecast week: " + OVData.getForecastWeek(now)) ;
        javax.swing.table.DefaultTableModel mymodel = DTData.getForecast13weeksByPart(frompart, topart, OVData.getForecastWeek(now));
     
         tablelabel.setModel(mymodel);
