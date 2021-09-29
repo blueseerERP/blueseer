@@ -73,13 +73,21 @@ import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.mydialog;
 import static bsmf.MainFrame.pass;
+import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import javax.swing.BorderFactory;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 
 /**
  *
@@ -89,7 +97,23 @@ public class Scheduler extends javax.swing.JPanel {
 
     // NOTE:  if you change this...you must also adjust APCheckRun...my advise....dont change it
        Scheduler.MyTableModel mymodel = new Scheduler.MyTableModel(new Object[][]{},
-                        new String[]{"PlanNbr", "Part", "DueDate", "Type", "isSched", "Cell", "QtySched", "QtyRequired", "QtyComp", "SchedDate", "Order", "line", "Status", "Print", "Update", "Void"})
+                        new String[]{
+                            getGlobalColumnTag("planid"), 
+                            getGlobalColumnTag("item"), 
+                            getGlobalColumnTag("duedate"), 
+                            getGlobalColumnTag("type"), 
+                            getGlobalColumnTag("issched"), 
+                            getGlobalColumnTag("cell"), 
+                            getGlobalColumnTag("schedqty"), 
+                            getGlobalColumnTag("reqdqty"), 
+                            getGlobalColumnTag("compqty"), 
+                            getGlobalColumnTag("scheddate"), 
+                            getGlobalColumnTag("order"), 
+                            getGlobalColumnTag("line"), 
+                            getGlobalColumnTag("status"), 
+                            getGlobalColumnTag("print"), 
+                            getGlobalColumnTag("update"), 
+                            getGlobalColumnTag("void")})
                {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -107,10 +131,20 @@ public class Scheduler extends javax.swing.JPanel {
       
       
     MyTableModelDetail modeldetail = new MyTableModelDetail(new Object[][]{},
-           new String[]{"PlanNbr", "Part", "Type", "Cell", "QtySched", "Status"});
+           new String[]{
+               getGlobalColumnTag("planid"), 
+               getGlobalColumnTag("item"), 
+               getGlobalColumnTag("type"), 
+               getGlobalColumnTag("cell"), 
+               getGlobalColumnTag("schedqty"), 
+               getGlobalColumnTag("status")});
      
      DefaultTableModel modelavailable = new DefaultTableModel(new Object[][]{},
-           new String[]{"Cell", "Capacity", "QtySched", "QtyAvail"});
+           new String[]{
+               getGlobalColumnTag("cell"), 
+               getGlobalColumnTag("capacity"), 
+               getGlobalColumnTag("schedqty"), 
+               getGlobalColumnTag("availqty")});
              /*
                     {
                       @Override  
@@ -196,9 +230,9 @@ public class Scheduler extends javax.swing.JPanel {
 
         public boolean isCellEditable(int rowIndex, int columnIndex) {
             // plan is closed
-            if (mytable.getModel().getValueAt(rowIndex, 12).equals("closed")) {   // 1
+            if (mytable.getModel().getValueAt(rowIndex, 12).equals(getGlobalProgTag("closed"))) {   // 1
                canEdit = new boolean[]{false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};  
-            } else if (mytable.getModel().getValueAt(rowIndex, 12).equals("voided")) {   // -1
+            } else if (mytable.getModel().getValueAt(rowIndex, 12).equals(getGlobalProgTag("voided"))) {   // -1
                canEdit = new boolean[]{false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};  
             } else {
                canEdit = new boolean[]{false, false, false, false, false, true, true, false, false, true, false, false, false, false, false, false};  
@@ -307,9 +341,9 @@ public class Scheduler extends javax.swing.JPanel {
         {
               String status = (String) mytable.getModel().getValueAt(table.convertRowIndexToModel(row), 12);  // 7 = status column
              
-              if (status.equals("closed")) {
+              if (status.equals(getGlobalProgTag("closed"))) {
               setForeground(Color.blue);
-             } else if (status.equals("voided")) {
+             } else if (status.equals(getGlobalProgTag("voided"))) {
               setForeground(Color.red);   
              } else {
               setBackground(table.getBackground());
@@ -453,7 +487,7 @@ public class Scheduler extends javax.swing.JPanel {
      */
     public Scheduler() {
         initComponents();
-           
+        setLanguageTags(this);   
     jc.getDayChooser().addPropertyChangeListener("day", new PropertyChangeListener() {
    @Override
    public void propertyChange(PropertyChangeEvent e) {
@@ -480,7 +514,53 @@ public class Scheduler extends javax.swing.JPanel {
          
     }
 
-     public void printtickets(String fromjob, String tojob ) {
+    public void setLanguageTags(Object myobj) {
+      // lblaccount.setText(labels.getString("LedgerAcctMstrPanel.labels.lblaccount"));
+      
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+                if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+     
+    public void printtickets(String fromjob, String tojob ) {
         
        try {
             Class.forName(bsmf.MainFrame.driver).newInstance();
@@ -508,7 +588,7 @@ public class Scheduler extends javax.swing.JPanel {
                 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("sql problem printing ticket");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -546,7 +626,7 @@ public class Scheduler extends javax.swing.JPanel {
                 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("sql problem printing single ticket");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -730,7 +810,7 @@ public class Scheduler extends javax.swing.JPanel {
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to get Detail");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -922,6 +1002,7 @@ public class Scheduler extends javax.swing.JPanel {
         setLayout(new java.awt.BorderLayout());
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Scheduler"));
+        jPanel2.setName("panelmain"); // NOI18N
 
         jc.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jc.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
@@ -937,12 +1018,14 @@ public class Scheduler extends javax.swing.JPanel {
         });
 
         jLabel4.setText("Cell:");
+        jLabel4.setName("lblcell"); // NOI18N
 
         jPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         labelqtyreqd.setText("0");
 
         btcommit.setText("Commit");
+        btcommit.setName("btcommit"); // NOI18N
         btcommit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btcommitActionPerformed(evt);
@@ -950,12 +1033,15 @@ public class Scheduler extends javax.swing.JPanel {
         });
 
         jLabel2.setText("Tot Qty Reqd");
+        jLabel2.setName("lbltotqtyreqd"); // NOI18N
 
         dcto.setDateFormatString("yyyy-MM-dd");
 
         jLabel3.setText("Site");
+        jLabel3.setName("lblsite"); // NOI18N
 
         jLabel1.setText("Tot Qty Sched");
+        jLabel1.setName("lbltotqtysched"); // NOI18N
 
         dcfrom.setDateFormatString("yyyy-MM-dd");
 
@@ -964,6 +1050,7 @@ public class Scheduler extends javax.swing.JPanel {
         labelqtysched.setText("0");
 
         btRun.setText("Run");
+        btRun.setName("btrun"); // NOI18N
         btRun.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btRunActionPerformed(evt);
@@ -971,6 +1058,7 @@ public class Scheduler extends javax.swing.JPanel {
         });
 
         cbclosed.setText("OpenOnly?");
+        cbclosed.setName("cbopenonly"); // NOI18N
         cbclosed.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbclosedActionPerformed(evt);
@@ -978,14 +1066,19 @@ public class Scheduler extends javax.swing.JPanel {
         });
 
         jLabel7.setText("From:");
+        jLabel7.setName("lblfrom"); // NOI18N
 
         cbsched.setText("Unscheduled Only?");
+        cbsched.setName("cbunscheduled"); // NOI18N
 
         jLabel9.setText("Rows");
+        jLabel9.setName("lblrows"); // NOI18N
 
         jLabel8.setText("To:");
+        jLabel8.setName("lblto"); // NOI18N
 
         bthide.setText("Hide Detail");
+        bthide.setName("bthidedetail"); // NOI18N
         bthide.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bthideActionPerformed(evt);
@@ -997,8 +1090,10 @@ public class Scheduler extends javax.swing.JPanel {
         lblThisDateQtyCapacity.setText("0");
 
         jLabel5.setText("Selected Date Tot Qty");
+        jLabel5.setName("lblselecteddatetotqty"); // NOI18N
 
         jLabel6.setText("Selected Date Tot Avail");
+        jLabel6.setName("lblselecteddatetotavail"); // NOI18N
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -1245,10 +1340,10 @@ public class Scheduler extends javax.swing.JPanel {
         
         
         if (col == 14)   {
-                    if ( mytable.getValueAt(row, 12).equals("open")) {
+                    if ( mytable.getValueAt(row, 12).equals(getGlobalProgTag("open"))) {
                         // lets confirm valid date has been entered
                         if (! BlueSeerUtils.isValidDateStr(mytable.getValueAt(row, 9).toString())) {
-                            bsmf.MainFrame.show("Invalid Date Provided");
+                            bsmf.MainFrame.show(getMessageTag(1123));
                             return;
                         }
                         boolean isGood = OVData.updatePlanOrder(mytable.getValueAt(row, 0).toString(), 
@@ -1258,17 +1353,17 @@ public class Scheduler extends javax.swing.JPanel {
                         mytable.getValueAt(row,12).toString() 
                          );  
                            if (! isGood) {
-                               bsmf.MainFrame.show("Unable to update");
+                               bsmf.MainFrame.show(getMessageTag(1012));
                            } else {
-                               bsmf.MainFrame.show("Record Updated");
+                               bsmf.MainFrame.show(getMessageTag(1008));
                            }
                    } 
         }
         if (col == 15)   {
-                    if ( mytable.getValueAt(row, 12).equals("open")) {
+                    if ( mytable.getValueAt(row, 12).equals(getGlobalProgTag("open"))) {
                         OVData.updatePlanStatus(mytable.getValueAt(row, 0).toString(), "-1");
-                        bsmf.MainFrame.show("JobNbr Voided");
-                        mytable.setValueAt("voided", row, 12);
+                        bsmf.MainFrame.show(getMessageTag(1072, mytable.getValueAt(row, 0).toString()));
+                        mytable.setValueAt(getGlobalProgTag("voided"), row, 12);
                    } 
         }
         
@@ -1412,9 +1507,9 @@ public class Scheduler extends javax.swing.JPanel {
                     i++;
                     reqtot = reqtot + res.getInt("plan_qty_req");
                     schtot = schtot + res.getInt("plan_qty_sched");
-                    if (res.getString("plan_status").equals("0")) { status = "open"; }
-                    if (res.getString("plan_status").equals("1")) { status = "closed"; }
-                    if (res.getString("plan_status").equals("-1")) { status = "voided"; }
+                    if (res.getString("plan_status").equals("0")) { status = getGlobalProgTag("open"); }
+                    if (res.getString("plan_status").equals("1")) { status = getGlobalProgTag("closed"); }
+                    if (res.getString("plan_status").equals("-1")) { status = getGlobalProgTag("voided"); }
 
                     mymodel.addRow(new Object[]{
                         res.getString("plan_nbr"),
@@ -1447,7 +1542,7 @@ public class Scheduler extends javax.swing.JPanel {
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("sql problem running view");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             con.close();
         } catch (Exception e) {
@@ -1464,8 +1559,8 @@ public class Scheduler extends javax.swing.JPanel {
 
         for (int i = 0 ; i < mymodel.getRowCount(); i++) {
 
-            if (! mymodel.getValueAt(i, 12).equals("open") && ! mymodel.getValueAt(i, 12).equals("closed") && ! mymodel.getValueAt(i, 12).equals("voided")) {
-                bsmf.MainFrame.show("Invalid entry in status field...must be 'closed', 'open', 'voided'");
+            if (! mymodel.getValueAt(i, 12).equals(getGlobalProgTag("open")) && ! mymodel.getValueAt(i, 12).equals(getGlobalProgTag("closed")) && ! mymodel.getValueAt(i, 12).equals(getGlobalProgTag("voided"))) {
+                bsmf.MainFrame.show(getMessageTag(1124));
                 commit = false;
                 break;
             }
@@ -1497,7 +1592,7 @@ public class Scheduler extends javax.swing.JPanel {
                 count = OVData.CommitSchedules(mytable, df.format(jc.getDate()) );
             }
             postcommit();
-            bsmf.MainFrame.show(String.valueOf(count) + " " + "Schedules Committed ");
+            bsmf.MainFrame.show(getMessageTag(1121, String.valueOf(count)));
         }
     }//GEN-LAST:event_btcommitActionPerformed
 

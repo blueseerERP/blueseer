@@ -73,14 +73,24 @@ import static bsmf.MainFrame.mydialog;
 import static bsmf.MainFrame.panelmap;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
+import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.inv.invData;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.text.DecimalFormatSymbols;
 import java.util.Arrays;
 import java.util.Locale;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 
 /**
  *
@@ -89,7 +99,20 @@ import javax.swing.ImageIcon;
 public class RetailReorderRpt extends javax.swing.JPanel {
  
      DefaultTableModel summarymodel = new DefaultTableModel(new Object[][]{},
-                        new String[]{"Select", "Item", "Desc", "LeadTime", "QOH", "UQOH", "SafetyStock", "POQty", "DemandUnAllocated", "FwdQty", "FcstQty", "Status", "Ratio"})
+                        new String[]{
+                            getGlobalColumnTag("select"), 
+                            getGlobalColumnTag("item"), 
+                            getGlobalColumnTag("desc"), 
+                            getGlobalColumnTag("leadtime"), 
+                            getGlobalColumnTag("qoh"), 
+                            getGlobalColumnTag("uqoh"), 
+                            getGlobalColumnTag("safetystock"), 
+                            getGlobalColumnTag("poqty"), 
+                            getGlobalColumnTag("demandunallocated"), 
+                            getGlobalColumnTag("forwardqty"), 
+                            getGlobalColumnTag("forecastqty"), 
+                            getGlobalColumnTag("status"), 
+                            getGlobalColumnTag("ratio")})
              {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -103,7 +126,14 @@ public class RetailReorderRpt extends javax.swing.JPanel {
     
     
       DefaultTableModel demandmodel = new DefaultTableModel(new Object[][]{},
-                        new String[]{"Select", "OrdNbr", "Cust", "Name", "PO", "DueDate", "OrdQty", "AllocatedQty"})
+                        new String[]{getGlobalColumnTag("select"), 
+                            getGlobalColumnTag("ordernumber"), 
+                            getGlobalColumnTag("customer"), 
+                            getGlobalColumnTag("name"), 
+                            getGlobalColumnTag("po"), 
+                            getGlobalColumnTag("duedate"), 
+                            getGlobalColumnTag("ordqty"), 
+                            getGlobalColumnTag("allocatedqty")})
              {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -116,7 +146,15 @@ public class RetailReorderRpt extends javax.swing.JPanel {
                         };
     
       DefaultTableModel replenishmodel = new DefaultTableModel(new Object[][]{},
-                        new String[]{"Select", "PONbr", "Vend", "Name", "PONbr", "PODate", "DueDate", "POQty", "RcvdQty"})
+                        new String[]{getGlobalColumnTag("select"), 
+                            getGlobalColumnTag("po"), 
+                            getGlobalColumnTag("vendor"), 
+                            getGlobalColumnTag("name"), 
+                            getGlobalColumnTag("po"), 
+                            getGlobalColumnTag("podate"), 
+                            getGlobalColumnTag("duedate"), 
+                            getGlobalColumnTag("qty"), 
+                            getGlobalColumnTag("recvqty")})
              {
                        @Override  
                       public Class getColumnClass(int col) {  
@@ -217,8 +255,54 @@ public class RetailReorderRpt extends javax.swing.JPanel {
         
     public RetailReorderRpt() {
         initComponents();
+        setLanguageTags(this);
     }
 
+    public void setLanguageTags(Object myobj) {
+      // lblaccount.setText(labels.getString("LedgerAcctMstrPanel.labels.lblaccount"));
+      
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+                if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
     
     public void getDetail(String item, String site, int leadtime) {
         
@@ -293,7 +377,7 @@ public class RetailReorderRpt extends javax.swing.JPanel {
                      
 
             } catch (SQLException s) {
-                bsmf.MainFrame.show("SQL cannot get Terms Master");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             } finally {
                 if (res != null) {
                     res.close();
@@ -398,6 +482,7 @@ public class RetailReorderRpt extends javax.swing.JPanel {
         setBackground(new java.awt.Color(0, 102, 204));
 
         btRun.setText("Run");
+        btRun.setName("btrun"); // NOI18N
         btRun.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btRunActionPerformed(evt);
@@ -405,16 +490,21 @@ public class RetailReorderRpt extends javax.swing.JPanel {
         });
 
         jLabel1.setText("From Item");
+        jLabel1.setName("lblfromitem"); // NOI18N
 
         jLabel4.setText("To Item");
+        jLabel4.setName("lbltoitem"); // NOI18N
 
         labelcount.setText("0");
 
         jLabel7.setText("Line Count:");
+        jLabel7.setName("lblcount"); // NOI18N
 
         cboverride.setText("Override?");
+        cboverride.setName("cboverride"); // NOI18N
 
         btpdf.setText("PDF");
+        btpdf.setName("btpdf"); // NOI18N
         btpdf.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btpdfActionPerformed(evt);
@@ -422,8 +512,10 @@ public class RetailReorderRpt extends javax.swing.JPanel {
         });
 
         jLabel5.setText("Site:");
+        jLabel5.setName("lblsite"); // NOI18N
 
         btcsv.setText("CSV");
+        btcsv.setName("btcsv"); // NOI18N
         btcsv.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btcsvActionPerformed(evt);
@@ -437,6 +529,7 @@ public class RetailReorderRpt extends javax.swing.JPanel {
         });
 
         jLabel2.setText("Days Forward:");
+        jLabel2.setName("lbldays"); // NOI18N
 
         tablepanel.setLayout(new javax.swing.BoxLayout(tablepanel, javax.swing.BoxLayout.LINE_AXIS));
 
@@ -507,6 +600,7 @@ public class RetailReorderRpt extends javax.swing.JPanel {
         tablepanel.add(replenishpanel);
 
         btdetail.setText("Hide Detail");
+        btdetail.setName("bthidedetail"); // NOI18N
         btdetail.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdetailActionPerformed(evt);
@@ -866,7 +960,7 @@ public class RetailReorderRpt extends javax.swing.JPanel {
                 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Cannot execute sql query for Retail Report");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             con.close();
         } catch (Exception e) {
@@ -892,7 +986,7 @@ public class RetailReorderRpt extends javax.swing.JPanel {
     }//GEN-LAST:event_tablesummaryMouseClicked
 
     private void btpdfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btpdfActionPerformed
-     MainFrame.show("Not yet supported");
+     MainFrame.show(getMessageTag(1122));
         /*
         if (tablesummary != null && summarymodel.getRowCount() > 0) {
         try {
@@ -938,7 +1032,7 @@ public class RetailReorderRpt extends javax.swing.JPanel {
         if (x.equals("error")) {
             tbdays.setText("");
             tbdays.setBackground(Color.yellow);
-            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            bsmf.MainFrame.show(getMessageTag(1000));
             tbdays.requestFocus();
         } else {
             tbdays.setText(x);

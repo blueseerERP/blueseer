@@ -29,6 +29,7 @@ import bsmf.MainFrame;
 import static bsmf.MainFrame.tags;
 import com.blueseer.inv.invData;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import com.blueseer.utl.OVData;
 import com.toedter.calendar.DateUtil;
 import java.awt.Color;
@@ -73,7 +74,16 @@ import javax.swing.table.TableColumnModel;
 public class MRPBrowse extends javax.swing.JPanel {
 
     MyTableModel mymodel = new MyTableModel(new Object[][]{},
-                    new String[]{"Select","PART", "CALC", "DATE1", "DATE2", "DATE3", "DATE4", "DATE5", "DATE6", "DATE7"})
+                    new String[]{getGlobalColumnTag("select"),
+                        getGlobalColumnTag("item"), 
+                        getGlobalColumnTag("calc"), 
+                        "DATE1", 
+                        "DATE2", 
+                        "DATE3", 
+                        "DATE4", 
+                        "DATE5", 
+                        "DATE6", 
+                        "DATE7"})
             {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -83,11 +93,20 @@ public class MRPBrowse extends javax.swing.JPanel {
                       }  
                         };
     MyTableModelDetail modelorder = new MyTableModelDetail(new Object[][]{},
-                        new String[]{"Part", "Order", "Type","Status", "DueDate", "Qty"});
+                        new String[]{
+                            getGlobalColumnTag("item"), 
+                            getGlobalColumnTag("order"), 
+                            getGlobalColumnTag("type"),
+                            getGlobalColumnTag("status"), 
+                            getGlobalColumnTag("duedate"), 
+                            getGlobalColumnTag("qty")});
      
     
     javax.swing.table.DefaultTableModel modeltrans = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                    new String[]{"type", "date", "qty"});
+                    new String[]{
+                        getGlobalColumnTag("type"), 
+                        getGlobalColumnTag("date"), 
+                        getGlobalColumnTag("qty")});
     
     String startdate = "";
     String enddate = "";

@@ -123,6 +123,7 @@
         <Component class="javax.swing.JButton" name="btRun">
           <Properties>
             <Property name="text" type="java.lang.String" value="Run"/>
+            <Property name="name" type="java.lang.String" value="btrun" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btRunActionPerformed"/>
@@ -131,11 +132,13 @@
         <Component class="javax.swing.JLabel" name="jLabel1">
           <Properties>
             <Property name="text" type="java.lang.String" value="From Item"/>
+            <Property name="name" type="java.lang.String" value="lblfromitem" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel4">
           <Properties>
             <Property name="text" type="java.lang.String" value="To Item"/>
+            <Property name="name" type="java.lang.String" value="lbltoitem" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="labelcount">
@@ -146,11 +149,13 @@
         <Component class="javax.swing.JLabel" name="jLabel7">
           <Properties>
             <Property name="text" type="java.lang.String" value="Line Count:"/>
+            <Property name="name" type="java.lang.String" value="lblcount" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JCheckBox" name="cboverride">
           <Properties>
             <Property name="text" type="java.lang.String" value="Override?"/>
+            <Property name="name" type="java.lang.String" value="cboverride" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JComboBox" name="ddfromitem">
@@ -170,6 +175,7 @@
         <Component class="javax.swing.JButton" name="btpdf">
           <Properties>
             <Property name="text" type="java.lang.String" value="PDF"/>
+            <Property name="name" type="java.lang.String" value="btpdf" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btpdfActionPerformed"/>
@@ -185,11 +191,13 @@
         <Component class="javax.swing.JLabel" name="jLabel5">
           <Properties>
             <Property name="text" type="java.lang.String" value="Site:"/>
+            <Property name="name" type="java.lang.String" value="lblsite" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="btcsv">
           <Properties>
             <Property name="text" type="java.lang.String" value="CSV"/>
+            <Property name="name" type="java.lang.String" value="btcsv" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btcsvActionPerformed"/>
@@ -203,6 +211,7 @@
         <Component class="javax.swing.JLabel" name="jLabel2">
           <Properties>
             <Property name="text" type="java.lang.String" value="Days Forward:"/>
+            <Property name="name" type="java.lang.String" value="lbldays" noResource="true"/>
           </Properties>
         </Component>
         <Container class="javax.swing.JPanel" name="tablepanel">
@@ -307,6 +316,7 @@
         <Component class="javax.swing.JButton" name="btdetail">
           <Properties>
             <Property name="text" type="java.lang.String" value="Hide Detail"/>
+            <Property name="name" type="java.lang.String" value="bthidedetail" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btdetailActionPerformed"/>

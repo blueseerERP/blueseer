@@ -68,6 +68,7 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.DTData;
 import static com.blueseer.utl.ReportPanel.TableReport;
@@ -90,7 +91,11 @@ public class ForecastBrowse extends javax.swing.JPanel {
     DefaultTableModel mymodel = new DefaultTableModel();
     
     MyTableModel modeltrans = new ForecastBrowse.MyTableModel(new Object[][]{},
-                        new String[]{"Nbr", "Part", "Qty", "Type", "Date"});
+                        new String[]{getGlobalColumnTag("number"), 
+                            getGlobalColumnTag("item"), 
+                            getGlobalColumnTag("qty"), 
+                            getGlobalColumnTag("type"), 
+                            getGlobalColumnTag("date")});
     /**
      * Creates new form ScrapReportPanel
      */
