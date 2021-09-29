@@ -28,7 +28,11 @@
             <TitledBorder title="AR Control Maintenance"/>
           </Border>
         </Property>
+        <Property name="name" type="java.lang.String" value="panelmain" noResource="true"/>
       </Properties>
+      <AccessibilityProperties>
+        <Property name="AccessibleContext.accessibleDescription" type="java.lang.String" value=""/>
+      </AccessibilityProperties>
 
       <Layout>
         <DimensionLayout dim="0">
@@ -182,6 +186,7 @@
         <Component class="javax.swing.JLabel" name="jLabel2">
           <Properties>
             <Property name="text" type="java.lang.String" value="Default AR Acct"/>
+            <Property name="name" type="java.lang.String" value="lblaracct" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="tbbank">
@@ -191,16 +196,19 @@
         <Component class="javax.swing.JLabel" name="jLabel1">
           <Properties>
             <Property name="text" type="java.lang.String" value="AR Default Bank"/>
+            <Property name="name" type="java.lang.String" value="lblbank" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel3">
           <Properties>
             <Property name="text" type="java.lang.String" value="Default AR CC"/>
+            <Property name="name" type="java.lang.String" value="lblarcc" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="btupdate">
           <Properties>
             <Property name="text" type="java.lang.String" value="Update"/>
+            <Property name="name" type="java.lang.String" value="btupdate" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btupdateActionPerformed"/>
@@ -211,6 +219,7 @@
         <Component class="javax.swing.JLabel" name="jLabel4">
           <Properties>
             <Property name="text" type="java.lang.String" value="Default Sales Acct"/>
+            <Property name="name" type="java.lang.String" value="lblsalesacct" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="tbsalescc">
@@ -218,6 +227,7 @@
         <Component class="javax.swing.JLabel" name="jLabel5">
           <Properties>
             <Property name="text" type="java.lang.String" value="Default Sales CC"/>
+            <Property name="name" type="java.lang.String" value="lblsalescc" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="tbfederaltax">
@@ -235,31 +245,37 @@
         <Component class="javax.swing.JLabel" name="jLabel6">
           <Properties>
             <Property name="text" type="java.lang.String" value="Sales State Tax Acct"/>
+            <Property name="name" type="java.lang.String" value="lblstatetaxacct" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel7">
           <Properties>
             <Property name="text" type="java.lang.String" value="Sales Federal Tax CC"/>
+            <Property name="name" type="java.lang.String" value="lblfedtaxcc" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel8">
           <Properties>
             <Property name="text" type="java.lang.String" value="Sales Federal Tax Acct"/>
+            <Property name="name" type="java.lang.String" value="lblfedtaxacct" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel9">
           <Properties>
             <Property name="text" type="java.lang.String" value="Sales State Tax CC"/>
+            <Property name="name" type="java.lang.String" value="lblstatetaxcc" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel10">
           <Properties>
             <Property name="text" type="java.lang.String" value="Sales Local Tax Acct"/>
+            <Property name="name" type="java.lang.String" value="lbllocaltaxacct" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel11">
           <Properties>
             <Property name="text" type="java.lang.String" value="Sales Local Tax CC"/>
+            <Property name="name" type="java.lang.String" value="lbllocaltaxcc" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="tbothertax">
@@ -269,11 +285,13 @@
         <Component class="javax.swing.JLabel" name="jLabel12">
           <Properties>
             <Property name="text" type="java.lang.String" value="Sales Other Tax Acct"/>
+            <Property name="name" type="java.lang.String" value="lblothertaxacct" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel13">
           <Properties>
             <Property name="text" type="java.lang.String" value="Sales Other Tax CC"/>
+            <Property name="name" type="java.lang.String" value="lblothertaxcc" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="tbasset">
@@ -281,6 +299,7 @@
         <Component class="javax.swing.JLabel" name="jLabel14">
           <Properties>
             <Property name="text" type="java.lang.String" value="Asset Acct"/>
+            <Property name="name" type="java.lang.String" value="lblassetacct" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="tbassetcc">
@@ -288,6 +307,7 @@
         <Component class="javax.swing.JLabel" name="jLabel15">
           <Properties>
             <Property name="text" type="java.lang.String" value="Asset CC"/>
+            <Property name="name" type="java.lang.String" value="lblassetcc" noResource="true"/>
           </Properties>
         </Component>
       </SubComponents>

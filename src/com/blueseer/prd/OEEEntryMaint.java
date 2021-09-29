@@ -52,8 +52,20 @@ import static bsmf.MainFrame.con;
 import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.pass;
+import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import java.awt.Component;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 
 /**
  *
@@ -64,15 +76,20 @@ public class OEEEntryMaint extends javax.swing.JPanel {
 
  javax.swing.table.DefaultTableModel modelDT = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
-                "Desc", "Min"
+                getGlobalColumnTag("desc"), getGlobalColumnTag("minutes")
             });
  javax.swing.table.DefaultTableModel modelCO = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
-                "Desc", "Min"
+                getGlobalColumnTag("desc"), getGlobalColumnTag("minutes")
             });
   javax.swing.table.DefaultTableModel modelRecs = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
-                "Cell", "Shift", "Hour", "QtyProd", "QtyReject", "Operator"
+                getGlobalColumnTag("cell"), 
+                getGlobalColumnTag("shift"), 
+                getGlobalColumnTag("hour"), 
+                getGlobalColumnTag("prodqty"), 
+                getGlobalColumnTag("rejectqty"), 
+                getGlobalColumnTag("operator")
             });
     
     /**
@@ -80,6 +97,7 @@ public class OEEEntryMaint extends javax.swing.JPanel {
      */
     public OEEEntryMaint() {
         initComponents();
+        setLanguageTags(this);
     }
 
     
@@ -109,7 +127,7 @@ public class OEEEntryMaint extends javax.swing.JPanel {
                
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("unable to select from eeo_mstr");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -134,7 +152,51 @@ public class OEEEntryMaint extends javax.swing.JPanel {
       }
     }
     
-      public void initvars(String[] arg) {
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+    
+    public void initvars(String[] arg) {
          java.util.Date now = new java.util.Date();
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
         dcdate.setDate(now);
@@ -216,6 +278,7 @@ public class OEEEntryMaint extends javax.swing.JPanel {
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("OEE Entry"));
+        jPanel1.setName("panelmain"); // NOI18N
 
         tableDT.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -231,6 +294,7 @@ public class OEEEntryMaint extends javax.swing.JPanel {
         jScrollPane1.setViewportView(tableDT);
 
         btaddco.setText("Add ChangeOver");
+        btaddco.setName("btadd"); // NOI18N
         btaddco.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddcoActionPerformed(evt);
@@ -238,6 +302,7 @@ public class OEEEntryMaint extends javax.swing.JPanel {
         });
 
         btdeldt.setText("Delete DownTime");
+        btdeldt.setName("btdelete"); // NOI18N
         btdeldt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdeldtActionPerformed(evt);
@@ -245,6 +310,7 @@ public class OEEEntryMaint extends javax.swing.JPanel {
         });
 
         btdelco.setText("Delete ChangeOver");
+        btdelco.setName("btdelete"); // NOI18N
         btdelco.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdelcoActionPerformed(evt);
@@ -265,6 +331,7 @@ public class OEEEntryMaint extends javax.swing.JPanel {
         jScrollPane2.setViewportView(tableCO);
 
         btadddt.setText("Add DownTime");
+        btadddt.setName("btadd"); // NOI18N
         btadddt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btadddtActionPerformed(evt);
@@ -272,12 +339,15 @@ public class OEEEntryMaint extends javax.swing.JPanel {
         });
 
         jLabel1.setText("DownTime");
+        jLabel1.setName("lbldowntime"); // NOI18N
 
         jLabel2.setText("ChangeOver");
+        jLabel2.setName("lblchangeover"); // NOI18N
 
         jLabel3.setText("Minutes");
 
         jLabel5.setText("Minutes");
+        jLabel5.setName("lblminutes"); // NOI18N
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -354,6 +424,7 @@ public class OEEEntryMaint extends javax.swing.JPanel {
         );
 
         btcommit.setText("Commit");
+        btcommit.setName("btcommit"); // NOI18N
         btcommit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btcommitActionPerformed(evt);
@@ -361,6 +432,7 @@ public class OEEEntryMaint extends javax.swing.JPanel {
         });
 
         jLabel11.setText("Operator:");
+        jLabel11.setName("lbloperator"); // NOI18N
 
         ddcell.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -369,14 +441,17 @@ public class OEEEntryMaint extends javax.swing.JPanel {
         });
 
         jLabel6.setText("Cell:");
+        jLabel6.setName("lblcell"); // NOI18N
 
         ddhour.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1", "2", "3", "4", "5", "6", "7", "8" }));
 
         ddshift.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1", "2", "3" }));
 
         jLabel9.setText("Shift:");
+        jLabel9.setName("lblshift"); // NOI18N
 
         jLabel10.setText("Hour:");
+        jLabel10.setName("lblhour"); // NOI18N
 
         tbscrapqty.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -388,8 +463,10 @@ public class OEEEntryMaint extends javax.swing.JPanel {
         });
 
         jLabel12.setText("Qty Scrap:");
+        jLabel12.setName("lblqtyscrap"); // NOI18N
 
         jLabel4.setText("Qty Prod:");
+        jLabel4.setName("lblqtyprod"); // NOI18N
 
         tbqty.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -403,6 +480,7 @@ public class OEEEntryMaint extends javax.swing.JPanel {
         dcdate.setDateFormatString("yyyy-MM-dd");
 
         jLabel7.setText("Date");
+        jLabel7.setName("lbldate"); // NOI18N
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -531,7 +609,8 @@ public class OEEEntryMaint extends javax.swing.JPanel {
         Pattern p = Pattern.compile("^[0-9]\\d*$");
         Matcher m = p.matcher(tbqty.getText());
         if (!m.find() || tbqty.getText() == null) {
-            bsmf.MainFrame.show("Invalid prod qty");
+            bsmf.MainFrame.show(getMessageTag(1028));
+            tbqty.requestFocus();
             return;
         } else {
             qty = Integer.valueOf(tbqty.getText());
@@ -539,7 +618,8 @@ public class OEEEntryMaint extends javax.swing.JPanel {
         
         m = p.matcher(tbscrapqty.getText());
         if (!m.find() || tbscrapqty.getText() == null) {
-            bsmf.MainFrame.show("Invalid scrap qty");
+            bsmf.MainFrame.show(getMessageTag(1024));
+            tbscrapqty.requestFocus();
             return;
         } else {
             scrapqty = Integer.valueOf(tbscrapqty.getText());
@@ -556,7 +636,7 @@ public class OEEEntryMaint extends javax.swing.JPanel {
                     
                     if (i > 0) {
                         proceed = false;
-                        bsmf.MainFrame.show("Record already written for this Date / Cell / Shift / Hour");
+                        bsmf.MainFrame.show(getMessageTag(1014));
                         return;
                     }
                    
@@ -606,7 +686,7 @@ public class OEEEntryMaint extends javax.swing.JPanel {
                     }
                     
                     
-                    bsmf.MainFrame.show("Record has been committed");
+                    bsmf.MainFrame.show(getMessageTag(1125));
                   
                     initvars(null);
                     getRecords(ddcell.getSelectedItem().toString(), dfdate.format(now));
@@ -614,7 +694,7 @@ public class OEEEntryMaint extends javax.swing.JPanel {
                 } // if proceed
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Cannot add EEO record");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -674,7 +754,7 @@ public class OEEEntryMaint extends javax.swing.JPanel {
     private void btdeldtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeldtActionPerformed
          int[] rows = tableDT.getSelectedRows();
         for (int i : rows) {
-            bsmf.MainFrame.show("Removing row " + i);
+            bsmf.MainFrame.show(getMessageTag(1031,String.valueOf(i)));
             ((javax.swing.table.DefaultTableModel) tableDT.getModel()).removeRow(i);
         }
         
@@ -683,7 +763,7 @@ public class OEEEntryMaint extends javax.swing.JPanel {
     private void btdelcoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdelcoActionPerformed
         int[] rows = tableCO.getSelectedRows();
         for (int i : rows) {
-            bsmf.MainFrame.show("Removing row " + i);
+            bsmf.MainFrame.show(getMessageTag(1031,String.valueOf(i)));
             ((javax.swing.table.DefaultTableModel) tableCO.getModel()).removeRow(i);
         }
     }//GEN-LAST:event_btdelcoActionPerformed

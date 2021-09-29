@@ -32,6 +32,9 @@
   </Layout>
   <SubComponents>
     <Container class="javax.swing.JPanel" name="jPanel1">
+      <Properties>
+        <Property name="name" type="java.lang.String" value="panelmain" noResource="true"/>
+      </Properties>
 
       <Layout>
         <DimensionLayout dim="0">
@@ -148,11 +151,13 @@
                 <Component class="javax.swing.JLabel" name="jLabel7">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Rows"/>
+                    <Property name="name" type="java.lang.String" value="lblcount" noResource="true"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel9">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Total Sched Qty"/>
+                    <Property name="name" type="java.lang.String" value="lbltotalschedqty" noResource="true"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="labelqtyreqd">
@@ -166,6 +171,7 @@
                 <Component class="javax.swing.JLabel" name="jLabel11">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Total Reqd Qty"/>
+                    <Property name="name" type="java.lang.String" value="lbltotalreqdqty" noResource="true"/>
                   </Properties>
                 </Component>
               </SubComponents>
@@ -272,11 +278,13 @@
                 <Component class="javax.swing.JLabel" name="jLabel6">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="To Cell:"/>
+                    <Property name="name" type="java.lang.String" value="lbltocell" noResource="true"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel4">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="To Part:"/>
+                    <Property name="name" type="java.lang.String" value="lbltoitem" noResource="true"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="frompart">
@@ -284,11 +292,13 @@
                 <Component class="javax.swing.JLabel" name="jLabel3">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="To SchedDate"/>
+                    <Property name="name" type="java.lang.String" value="lbltodate" noResource="true"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JButton" name="btRun">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Run"/>
+                    <Property name="name" type="java.lang.String" value="btrun" noResource="true"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btRunActionPerformed"/>
@@ -299,6 +309,7 @@
                 <Component class="javax.swing.JLabel" name="jLabel1">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="From Part:"/>
+                    <Property name="name" type="java.lang.String" value="lblfromitem" noResource="true"/>
                   </Properties>
                 </Component>
                 <Component class="com.toedter.calendar.JDateChooser" name="dcto">
@@ -311,11 +322,13 @@
                 <Component class="javax.swing.JLabel" name="jLabel2">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="From SchedDate"/>
+                    <Property name="name" type="java.lang.String" value="lblfromdate" noResource="true"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel5">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="From Cell:"/>
+                    <Property name="name" type="java.lang.String" value="lblfromcell" noResource="true"/>
                   </Properties>
                 </Component>
                 <Component class="com.toedter.calendar.JDateChooser" name="dcfrom">
@@ -328,11 +341,13 @@
                 <Component class="javax.swing.JCheckBox" name="cbclosed">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="OpenOnly?"/>
+                    <Property name="name" type="java.lang.String" value="cbopen" noResource="true"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JButton" name="bthidedetail">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Hide Detail"/>
+                    <Property name="name" type="java.lang.String" value="bthidedetail" noResource="true"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bthidedetailActionPerformed"/>

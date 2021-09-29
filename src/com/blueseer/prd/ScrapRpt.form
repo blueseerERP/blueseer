@@ -32,6 +32,9 @@
   </Layout>
   <SubComponents>
     <Container class="javax.swing.JPanel" name="jPanel1">
+      <Properties>
+        <Property name="name" type="java.lang.String" value="panelmain" noResource="true"/>
+      </Properties>
 
       <Layout>
         <DimensionLayout dim="0">
@@ -200,6 +203,7 @@
         <Component class="javax.swing.JLabel" name="jLabel2">
           <Properties>
             <Property name="text" type="java.lang.String" value="From Date"/>
+            <Property name="name" type="java.lang.String" value="lblfromdate" noResource="true"/>
           </Properties>
         </Component>
         <Component class="com.toedter.calendar.JDateChooser" name="dcFrom">
@@ -215,11 +219,13 @@
         <Component class="javax.swing.JLabel" name="jLabel3">
           <Properties>
             <Property name="text" type="java.lang.String" value="To Date"/>
+            <Property name="name" type="java.lang.String" value="lbltodate" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="btRun">
           <Properties>
             <Property name="text" type="java.lang.String" value="Run"/>
+            <Property name="name" type="java.lang.String" value="btrun" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btRunActionPerformed"/>
@@ -230,11 +236,13 @@
         <Component class="javax.swing.JLabel" name="jLabel1">
           <Properties>
             <Property name="text" type="java.lang.String" value="From Part"/>
+            <Property name="name" type="java.lang.String" value="lblfromitem" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel4">
           <Properties>
             <Property name="text" type="java.lang.String" value="To Part"/>
+            <Property name="name" type="java.lang.String" value="lbltoitem" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="toPart">
@@ -244,6 +252,7 @@
         <Component class="javax.swing.JLabel" name="jLabel5">
           <Properties>
             <Property name="text" type="java.lang.String" value="From Code"/>
+            <Property name="name" type="java.lang.String" value="lblfromcode" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="toCode">
@@ -251,6 +260,7 @@
         <Component class="javax.swing.JLabel" name="jLabel6">
           <Properties>
             <Property name="text" type="java.lang.String" value="To Code"/>
+            <Property name="name" type="java.lang.String" value="lbltocode" noResource="true"/>
           </Properties>
         </Component>
         <Container class="javax.swing.JScrollPane" name="jScrollPane1">
@@ -281,6 +291,7 @@
         <Component class="javax.swing.JButton" name="btexport">
           <Properties>
             <Property name="text" type="java.lang.String" value="Export"/>
+            <Property name="name" type="java.lang.String" value="btexport" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btexportActionPerformed"/>
@@ -294,6 +305,7 @@
         <Component class="javax.swing.JLabel" name="jLabel7">
           <Properties>
             <Property name="text" type="java.lang.String" value="Count"/>
+            <Property name="name" type="java.lang.String" value="lblcount" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="labelqty">
@@ -304,6 +316,7 @@
         <Component class="javax.swing.JLabel" name="jLabel8">
           <Properties>
             <Property name="text" type="java.lang.String" value="Qty"/>
+            <Property name="name" type="java.lang.String" value="lblqty" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="labeldollar">
@@ -317,31 +330,37 @@
         <Component class="javax.swing.JLabel" name="jLabel9">
           <Properties>
             <Property name="text" type="java.lang.String" value="$"/>
+            <Property name="name" type="java.lang.String" value="lblamt" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JCheckBox" name="cbsumpart">
           <Properties>
             <Property name="text" type="java.lang.String" value="Part"/>
+            <Property name="name" type="java.lang.String" value="cbitem" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel10">
           <Properties>
             <Property name="text" type="java.lang.String" value="Summarize"/>
+            <Property name="name" type="java.lang.String" value="lblsummarize" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JCheckBox" name="cbsumcode">
           <Properties>
             <Property name="text" type="java.lang.String" value="Code"/>
+            <Property name="name" type="java.lang.String" value="cbcode" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JCheckBox" name="cbassydate">
           <Properties>
             <Property name="text" type="java.lang.String" value="AssyDate"/>
+            <Property name="name" type="java.lang.String" value="cbassydate" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JCheckBox" name="cbkeydate">
           <Properties>
             <Property name="text" type="java.lang.String" value="KeyDate"/>
+            <Property name="name" type="java.lang.String" value="cbentrydate" noResource="true"/>
           </Properties>
         </Component>
       </SubComponents>

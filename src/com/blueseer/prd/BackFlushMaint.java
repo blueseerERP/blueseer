@@ -25,13 +25,25 @@ SOFTWARE.
  */
 package com.blueseer.prd;
 
+import static bsmf.MainFrame.tags;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.OVData;
 import java.awt.Color;
+import java.awt.Component;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 
 /**
  *
@@ -42,7 +54,23 @@ public class BackFlushMaint extends javax.swing.JPanel {
     // table model must be 16 fields in length
      javax.swing.table.DefaultTableModel transmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
-                "Part", "Type", "Operation", "Qty", "Date", "Location", "SerialNo", "Reference", "Site", "Userid", "ProdLine", "AssyCell", "Rmks", "PackCell", "PackDate", "AssyDate", "Program"
+                getGlobalColumnTag("item"), 
+                getGlobalColumnTag("type"), 
+                getGlobalColumnTag("operation"), 
+                getGlobalColumnTag("qty"), 
+                getGlobalColumnTag("date"), 
+                getGlobalColumnTag("location"), 
+                getGlobalColumnTag("serial"), 
+                getGlobalColumnTag("reference"), 
+                getGlobalColumnTag("site"), 
+                getGlobalColumnTag("userid"), 
+                getGlobalColumnTag("prodline"), 
+                getGlobalColumnTag("cell"), 
+                getGlobalColumnTag("remarks"), 
+                getGlobalColumnTag("cell"), 
+                getGlobalColumnTag("packdate"), 
+                getGlobalColumnTag("assydate"), 
+                getGlobalColumnTag("program")
             });
     
     
@@ -52,8 +80,53 @@ public class BackFlushMaint extends javax.swing.JPanel {
      */
     public BackFlushMaint() {
         initComponents();
+        setLanguageTags(this);
     }
 
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+    
     public void initvars(String[] arg) {
         
         transmodel.setRowCount(0);
@@ -123,8 +196,10 @@ public class BackFlushMaint extends javax.swing.JPanel {
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Production Entry"));
+        jPanel2.setName("panelmain"); // NOI18N
 
         btsubmit.setText("Submit");
+        btsubmit.setName("btcommit"); // NOI18N
         btsubmit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btsubmitActionPerformed(evt);
@@ -132,14 +207,18 @@ public class BackFlushMaint extends javax.swing.JPanel {
         });
 
         jLabel8.setText("SerialNo");
+        jLabel8.setName("lblserial"); // NOI18N
 
         tbdate.setDateFormatString("yyyy-MM-dd");
 
         jLabel7.setText("Cell");
+        jLabel7.setName("lblcell"); // NOI18N
 
         jLabel9.setText("reference");
+        jLabel9.setName("lblref"); // NOI18N
 
         btadd.setText("Add");
+        btadd.setName("btadd"); // NOI18N
         btadd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddActionPerformed(evt);
@@ -147,20 +226,28 @@ public class BackFlushMaint extends javax.swing.JPanel {
         });
 
         jLabel1.setText("User");
+        jLabel1.setName("lbluser"); // NOI18N
 
         jLabel6.setText("Quantity");
+        jLabel6.setName("lblqty"); // NOI18N
 
         jLabel5.setText("Operation");
+        jLabel5.setName("lblop"); // NOI18N
 
         jLabel3.setText("Type");
+        jLabel3.setName("lbltype"); // NOI18N
 
         jLabel4.setText("Part");
+        jLabel4.setName("lblitem"); // NOI18N
 
         jLabel10.setText("EffDate");
+        jLabel10.setName("lbleffdate"); // NOI18N
 
         jLabel2.setText("Site");
+        jLabel2.setName("lblsite"); // NOI18N
 
         btdelete.setText("Delete");
+        btdelete.setName("btdelete"); // NOI18N
         btdelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdeleteActionPerformed(evt);
@@ -180,22 +267,18 @@ public class BackFlushMaint extends javax.swing.JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
+                        .addGap(9, 9, 9)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(jLabel4)
-                                .addComponent(jLabel5)
-                                .addComponent(jLabel6)
-                                .addComponent(jLabel7)
-                                .addComponent(jLabel8)
-                                .addComponent(jLabel9))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(20, 20, 20)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel1)
-                                    .addComponent(jLabel2)
-                                    .addComponent(jLabel3)
-                                    .addComponent(jLabel10))))
+                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
@@ -344,18 +427,16 @@ public class BackFlushMaint extends javax.swing.JPanel {
         transtable.setModel(transmodel);
         
         if (! BlueSeerUtils.isParsableToDouble(tbqty.getText()) ) {
-            bsmf.MainFrame.show("Qty Field must be a number");
-            canproceed = false;            
+            bsmf.MainFrame.show(getMessageTag(1028));
+            tbqty.requestFocus();
+            return;
         }
         
-        if ( (prodline = OVData.getProdLineFromItem(tbpart.getText())) == null ) {
-            bsmf.MainFrame.show("Product Line is not defined for this item");
-            canproceed = false;            
-        }
         
          if (tbdate.getDate() == null || ! BlueSeerUtils.isValidDateStr(BlueSeerUtils.mysqlDateFormat.format(tbdate.getDate())) ) {
-            bsmf.MainFrame.show("Date not properly formatted");
-            canproceed = false;            
+            bsmf.MainFrame.show(getMessageTag(1123));
+            tbdate.requestFocus();
+            return;            
         }
         
        
@@ -384,7 +465,7 @@ public class BackFlushMaint extends javax.swing.JPanel {
     private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
          int[] rows = transtable.getSelectedRows();
         for (int i : rows) {
-            bsmf.MainFrame.show("Removing row " + i);
+            bsmf.MainFrame.show(getMessageTag(1031,String.valueOf(i)));
             ((javax.swing.table.DefaultTableModel) transtable.getModel()).removeRow(i);
         }
     }//GEN-LAST:event_btdeleteActionPerformed
@@ -395,7 +476,7 @@ public class BackFlushMaint extends javax.swing.JPanel {
         boolean goodpart = false;
        goodpart = OVData.isValidItem(tbpart.getText());
        if (! goodpart) {
-           bsmf.MainFrame.show("Item not in Item Master");
+           bsmf.MainFrame.show(getMessageTag(1021,tbpart.getText()));
            tbpart.setForeground(Color.red);
        } else {
            tbpart.setForeground(Color.black);
@@ -411,10 +492,10 @@ public class BackFlushMaint extends javax.swing.JPanel {
         boolean didLoad = false;
         
         if (! OVData.loadTranHistByTable(transtable)) {
-            bsmf.MainFrame.show("Unable to perform BackFlush Transactions");
+            bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
         } else {
             initvars(null);
-            bsmf.MainFrame.show("Successfully Submitted Transactions");
+            bsmf.MainFrame.show(getMessageTag(1125));
         }
     }//GEN-LAST:event_btsubmitActionPerformed
 

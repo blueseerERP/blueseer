@@ -28,6 +28,7 @@
             <TitledBorder title="Prod Entry By Plan Ticket"/>
           </Border>
         </Property>
+        <Property name="name" type="java.lang.String" value="panelmain" noResource="true"/>
       </Properties>
 
       <Layout>
@@ -119,6 +120,7 @@
         <Component class="javax.swing.JLabel" name="jLabel4">
           <Properties>
             <Property name="text" type="java.lang.String" value="Quantity"/>
+            <Property name="name" type="java.lang.String" value="lblqty" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="tbscan">
@@ -131,11 +133,13 @@
         <Component class="javax.swing.JLabel" name="jLabel5">
           <Properties>
             <Property name="text" type="java.lang.String" value="Scan"/>
+            <Property name="name" type="java.lang.String" value="lblscan" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="btcommit">
           <Properties>
             <Property name="text" type="java.lang.String" value="Commit"/>
+            <Property name="name" type="java.lang.String" value="btcommit" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btcommitActionPerformed"/>
@@ -151,6 +155,7 @@
         <Component class="javax.swing.JLabel" name="jLabel7">
           <Properties>
             <Property name="text" type="java.lang.String" value="Operation"/>
+            <Property name="name" type="java.lang.String" value="lblop" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="tbref">
@@ -162,6 +167,7 @@
         <Component class="javax.swing.JLabel" name="jLabel8">
           <Properties>
             <Property name="text" type="java.lang.String" value="Reference"/>
+            <Property name="name" type="java.lang.String" value="lblreference" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="partlabel">

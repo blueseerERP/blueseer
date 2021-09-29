@@ -32,6 +32,9 @@
   </Layout>
   <SubComponents>
     <Container class="javax.swing.JPanel" name="jPanel1">
+      <Properties>
+        <Property name="name" type="java.lang.String" value="panelmain" noResource="true"/>
+      </Properties>
 
       <Layout>
         <DimensionLayout dim="0">
@@ -120,11 +123,13 @@
             <Component class="javax.swing.JLabel" name="jLabel7">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Count"/>
+                <Property name="name" type="java.lang.String" value="lblcount" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel8">
               <Properties>
                 <Property name="text" type="java.lang.String" value="$"/>
+                <Property name="name" type="java.lang.String" value="lbamt" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="labeldollar">
@@ -199,11 +204,13 @@
                 <Component class="javax.swing.JLabel" name="jLabel3">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="To Cust"/>
+                    <Property name="name" type="java.lang.String" value="lbltocust" noResource="true"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JButton" name="btRun">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Run"/>
+                    <Property name="name" type="java.lang.String" value="btrun" noResource="true"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btRunActionPerformed"/>
@@ -212,11 +219,13 @@
                 <Component class="javax.swing.JLabel" name="jLabel2">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="From Cust"/>
+                    <Property name="name" type="java.lang.String" value="lblfromcust" noResource="true"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JButton" name="btdetail">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Hide Detail"/>
+                    <Property name="name" type="java.lang.String" value="bthidedetail" noResource="true"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btdetailActionPerformed"/>
@@ -239,6 +248,7 @@
                 <Component class="javax.swing.JCheckBox" name="cbpaymentpanel">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Payments"/>
+                    <Property name="name" type="java.lang.String" value="cbpayments" noResource="true"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbpaymentpanelActionPerformed"/>
@@ -247,6 +257,7 @@
                 <Component class="javax.swing.JButton" name="btexport">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Export Detail"/>
+                    <Property name="name" type="java.lang.String" value="btexportdetail" noResource="true"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btexportActionPerformed"/>
@@ -255,6 +266,7 @@
                 <Component class="javax.swing.JButton" name="btcsv">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="CSV"/>
+                    <Property name="name" type="java.lang.String" value="btcsv" noResource="true"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btcsvActionPerformed"/>
@@ -263,6 +275,7 @@
                 <Component class="javax.swing.JButton" name="btpdf">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="PDF"/>
+                    <Property name="name" type="java.lang.String" value="btpdf" noResource="true"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btpdfActionPerformed"/>

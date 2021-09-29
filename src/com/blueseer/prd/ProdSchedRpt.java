@@ -75,10 +75,18 @@ import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.mydialog;
 import static bsmf.MainFrame.pass;
+import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
+import javax.swing.BorderFactory;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 
 /**
  *
@@ -89,11 +97,32 @@ public class ProdSchedRpt extends javax.swing.JPanel {
     
        // NOTE:  if you change this...you must also adjust APCheckRun...my advise....dont change it
        MasterModel mymodel = new MasterModel(new Object[][]{},
-                        new String[]{"Detail", "JobNbr", "Part", "DueDate", "Type", "isSched", "Cell", "QtySched", "QtyRequired", "QtyComp", "SchedDate", "Order", "line", "Status", "Print"});
+                        new String[]{getGlobalColumnTag("detail"), 
+                            getGlobalColumnTag("planid"), 
+                            getGlobalColumnTag("item"), 
+                            getGlobalColumnTag("duedate"), 
+                            getGlobalColumnTag("type"), 
+                            getGlobalColumnTag("issched"), 
+                            getGlobalColumnTag("cell"), 
+                            getGlobalColumnTag("schedqty"), 
+                            getGlobalColumnTag("reqdqty"), 
+                            getGlobalColumnTag("compqty"), 
+                            getGlobalColumnTag("scheddate"), 
+                            getGlobalColumnTag("order"), 
+                            getGlobalColumnTag("line"), 
+                            getGlobalColumnTag("status"), 
+                            getGlobalColumnTag("print")});
       
       
        DetailModel modeldetail = new DetailModel(new Object[][]{},
-                        new String[]{"ID", "JobNbr", "Part", "Operation", "Cell", "EffDate", "Ref", "Qty"});
+                        new String[]{getGlobalColumnTag("id"), 
+                            getGlobalColumnTag("planid"), 
+                            getGlobalColumnTag("item"), 
+                            getGlobalColumnTag("operation"), 
+                            getGlobalColumnTag("cell"), 
+                            getGlobalColumnTag("effectivedate"), 
+                            getGlobalColumnTag("reference"), 
+                            getGlobalColumnTag("quantity")});
 
       
      
@@ -342,9 +371,10 @@ public class ProdSchedRpt extends javax.swing.JPanel {
      
     public ProdSchedRpt() {
         initComponents();
+        setLanguageTags(this);
     }
 
-     public void getdetail(String jobnbr) {
+    public void getdetail(String jobnbr) {
       
          modeldetail.setNumRows(0);
          double total = 0.00;
@@ -394,7 +424,7 @@ public class ProdSchedRpt extends javax.swing.JPanel {
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("sql problem getting detail");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -431,7 +461,7 @@ public class ProdSchedRpt extends javax.swing.JPanel {
                 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("sql problem printing tickets");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -468,7 +498,7 @@ public class ProdSchedRpt extends javax.swing.JPanel {
                 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("sql problem printing single ticket");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -477,7 +507,7 @@ public class ProdSchedRpt extends javax.swing.JPanel {
         
     }
     
-      public void postcommit() {
+    public void postcommit() {
         java.util.Date now = new java.util.Date();
          
          Calendar calfrom = Calendar.getInstance();
@@ -503,6 +533,50 @@ public class ProdSchedRpt extends javax.swing.JPanel {
              
          
          
+    }
+    
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
     }
     
     public void initvars(String[] arg) {
@@ -576,19 +650,24 @@ public class ProdSchedRpt extends javax.swing.JPanel {
 
         setBackground(new java.awt.Color(0, 102, 204));
 
+        jPanel1.setName("panelmain"); // NOI18N
+
         labelqtysched.setBackground(new java.awt.Color(195, 129, 129));
         labelqtysched.setText("0");
 
         labelcount.setText("0");
 
         jLabel7.setText("Rows");
+        jLabel7.setName("lblcount"); // NOI18N
 
         jLabel9.setText("Total Sched Qty");
+        jLabel9.setName("lbltotalschedqty"); // NOI18N
 
         labelqtyreqd.setBackground(new java.awt.Color(195, 129, 129));
         labelqtyreqd.setText("0");
 
         jLabel11.setText("Total Reqd Qty");
+        jLabel11.setName("lbltotalreqdqty"); // NOI18N
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -628,12 +707,16 @@ public class ProdSchedRpt extends javax.swing.JPanel {
         );
 
         jLabel6.setText("To Cell:");
+        jLabel6.setName("lbltocell"); // NOI18N
 
         jLabel4.setText("To Part:");
+        jLabel4.setName("lbltoitem"); // NOI18N
 
         jLabel3.setText("To SchedDate");
+        jLabel3.setName("lbltodate"); // NOI18N
 
         btRun.setText("Run");
+        btRun.setName("btrun"); // NOI18N
         btRun.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btRunActionPerformed(evt);
@@ -641,18 +724,23 @@ public class ProdSchedRpt extends javax.swing.JPanel {
         });
 
         jLabel1.setText("From Part:");
+        jLabel1.setName("lblfromitem"); // NOI18N
 
         dcto.setDateFormatString("yyyy-MM-dd");
 
         jLabel2.setText("From SchedDate");
+        jLabel2.setName("lblfromdate"); // NOI18N
 
         jLabel5.setText("From Cell:");
+        jLabel5.setName("lblfromcell"); // NOI18N
 
         dcfrom.setDateFormatString("yyyy-MM-dd");
 
         cbclosed.setText("OpenOnly?");
+        cbclosed.setName("cbopen"); // NOI18N
 
         bthidedetail.setText("Hide Detail");
+        bthidedetail.setName("bthidedetail"); // NOI18N
         bthidedetail.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bthidedetailActionPerformed(evt);
@@ -972,7 +1060,7 @@ try {
                 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Cannot execute sql query for plan_mstr");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             con.close();
         } catch (Exception e) {

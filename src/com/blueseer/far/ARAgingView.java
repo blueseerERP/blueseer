@@ -30,7 +30,10 @@ import bsmf.MainFrame;
 import static bsmf.MainFrame.checkperms;
 import static bsmf.MainFrame.con;
 import static bsmf.MainFrame.reinitpanels;
+import static bsmf.MainFrame.tags;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.OVData;
 import java.awt.Color;
 import java.awt.Component;
@@ -65,7 +68,14 @@ import javax.swing.table.TableColumnModel;
 
 import java.util.HashMap;
 import java.util.Locale;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
@@ -81,7 +91,15 @@ public class ARAgingView extends javax.swing.JPanel {
     String selectedCustomer = "";
  
      MyTableModel modelsummary = new ARAgingView.MyTableModel(new Object[][]{},
-                        new String[]{"Detail", "Cust", "Name", "0DaysOld", "30DaysOld", "60DaysOld", "90DaysOld", "90+DaysOld"})
+                        new String[]{
+                            getGlobalColumnTag("detail"), 
+                            getGlobalColumnTag("customer"), 
+                            getGlobalColumnTag("name"), 
+                            getGlobalColumnTag("0daysold"), 
+                            getGlobalColumnTag("30daysold"), 
+                            getGlobalColumnTag("60daysold"), 
+                            getGlobalColumnTag("90daysold"), 
+                            getGlobalColumnTag("90+daysold")})
              {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -92,7 +110,17 @@ public class ARAgingView extends javax.swing.JPanel {
                         };
     
     MyTableModel2 modeldetail = new ARAgingView.MyTableModel2(new Object[][]{},
-                        new String[]{"Select", "ID", "Desc", "Type", "EffDate", "DueDate", "0DaysOld", "30DaysOld", "60DaysOld", "90DaysOld", "90+DaysOld"})
+                        new String[]{getGlobalColumnTag("select"), 
+                            getGlobalColumnTag("id"), 
+                            getGlobalColumnTag("description"), 
+                            getGlobalColumnTag("type"), 
+                            getGlobalColumnTag("effectivedate"), 
+                            getGlobalColumnTag("duedate"), 
+                            getGlobalColumnTag("0daysold"), 
+                            getGlobalColumnTag("30daysold"), 
+                            getGlobalColumnTag("60daysold"), 
+                            getGlobalColumnTag("90daysold"), 
+                            getGlobalColumnTag("90+daysold")})
             {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -104,7 +132,15 @@ public class ARAgingView extends javax.swing.JPanel {
    
     
     MyTableModel3 modelpayment = new ARAgingView.MyTableModel3(new Object[][]{},
-                        new String[]{"ID", "InvNbr", "EffDate", "DueDate", "Type", "CheckNbr", "INAmt", "CKAmt"});
+                        new String[]{
+                            getGlobalColumnTag("id"), 
+                            getGlobalColumnTag("invoice"), 
+                            getGlobalColumnTag("effectivedate"), 
+                            getGlobalColumnTag("duedate"), 
+                            getGlobalColumnTag("type"), 
+                            getGlobalColumnTag("checknbr"), 
+                            getGlobalColumnTag("invoiceamt"), 
+                            getGlobalColumnTag("checkamt")});
     
     /**
      * Creates new form ScrapReportPanel
@@ -234,10 +270,11 @@ public class ARAgingView extends javax.swing.JPanel {
         
     public ARAgingView() {
         initComponents();
+        setLanguageTags(this);
     }
 
     
-      public void getdetail(String cust) {
+    public void getdetail(String cust) {
       
          modeldetail.setNumRows(0);
          modelpayment.setNumRows(0);
@@ -342,7 +379,7 @@ public class ARAgingView extends javax.swing.JPanel {
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to get Detail");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             } finally {
                if (res != null) res.close();
                if (st != null) st.close();
@@ -354,7 +391,7 @@ public class ARAgingView extends javax.swing.JPanel {
 
     }
     
-        public void getpayment(String cust) {
+    public void getpayment(String cust) {
       
          modelpayment.setNumRows(0);
          double total = 0.00;
@@ -410,7 +447,7 @@ public class ARAgingView extends javax.swing.JPanel {
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to get payment");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             } finally {
                if (res != null) res.close();
                if (st != null) st.close();
@@ -422,6 +459,49 @@ public class ARAgingView extends javax.swing.JPanel {
 
     }
       
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
       
     public void initvars(String[] arg) {
         modelsummary.setRowCount(0);
@@ -502,17 +582,23 @@ public class ARAgingView extends javax.swing.JPanel {
 
         setBackground(new java.awt.Color(0, 102, 204));
 
+        jPanel1.setName("panelmain"); // NOI18N
+
         labelcount.setText("0");
 
         jLabel7.setText("Count");
+        jLabel7.setName("lblcount"); // NOI18N
 
         jLabel8.setText("$");
+        jLabel8.setName("lbamt"); // NOI18N
 
         labeldollar.setText("0");
 
         jLabel3.setText("To Cust");
+        jLabel3.setName("lbltocust"); // NOI18N
 
         btRun.setText("Run");
+        btRun.setName("btrun"); // NOI18N
         btRun.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btRunActionPerformed(evt);
@@ -520,8 +606,10 @@ public class ARAgingView extends javax.swing.JPanel {
         });
 
         jLabel2.setText("From Cust");
+        jLabel2.setName("lblfromcust"); // NOI18N
 
         btdetail.setText("Hide Detail");
+        btdetail.setName("bthidedetail"); // NOI18N
         btdetail.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdetailActionPerformed(evt);
@@ -529,6 +617,7 @@ public class ARAgingView extends javax.swing.JPanel {
         });
 
         cbpaymentpanel.setText("Payments");
+        cbpaymentpanel.setName("cbpayments"); // NOI18N
         cbpaymentpanel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbpaymentpanelActionPerformed(evt);
@@ -536,6 +625,7 @@ public class ARAgingView extends javax.swing.JPanel {
         });
 
         btexport.setText("Export Detail");
+        btexport.setName("btexportdetail"); // NOI18N
         btexport.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btexportActionPerformed(evt);
@@ -543,6 +633,7 @@ public class ARAgingView extends javax.swing.JPanel {
         });
 
         btcsv.setText("CSV");
+        btcsv.setName("btcsv"); // NOI18N
         btcsv.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btcsvActionPerformed(evt);
@@ -550,6 +641,7 @@ public class ARAgingView extends javax.swing.JPanel {
         });
 
         btpdf.setText("PDF");
+        btpdf.setName("btpdf"); // NOI18N
         btpdf.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btpdfActionPerformed(evt);
@@ -867,7 +959,7 @@ try {
                 labeldollar.setText(String.valueOf(df.format(dol)));
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Cannot execute sql query for AR Aging View");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             } finally {
                if (res != null) res.close();
                if (st != null) st.close();
@@ -1019,7 +1111,7 @@ try {
             
           } catch (SQLException s) {
               MainFrame.bslog(s);
-                bsmf.MainFrame.show("Cannot execute sql query for AR Export");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -1063,7 +1155,7 @@ try {
                 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Could not create jasperfile...see stacktrace");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {

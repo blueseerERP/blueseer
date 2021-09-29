@@ -25,13 +25,24 @@ SOFTWARE.
  */
 package com.blueseer.prd;
 
+import static bsmf.MainFrame.tags;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.awt.Color;
+import java.awt.Component;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 
 /**
  *
@@ -52,8 +63,53 @@ public class ProdEntryMaint extends javax.swing.JPanel {
      */
     public ProdEntryMaint() {
         initComponents();
+        setLanguageTags(this);
     }
 
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+    
     public void initvars(String[] arg) {
         
         transmodel.setRowCount(0);
@@ -103,14 +159,17 @@ public class ProdEntryMaint extends javax.swing.JPanel {
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Production Entry"));
+        jPanel2.setName("panelmain"); // NOI18N
 
         jLabel8.setText("SerialNo");
+        jLabel8.setName("lblserial"); // NOI18N
 
         tbdate.setDateFormatString("yyyy-MM-dd");
 
         jLabel9.setText("Reference");
 
         btsubmit.setText("Submit");
+        btsubmit.setName("btsubmit"); // NOI18N
         btsubmit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btsubmitActionPerformed(evt);
@@ -118,16 +177,24 @@ public class ProdEntryMaint extends javax.swing.JPanel {
         });
 
         jLabel1.setText("User");
+        jLabel1.setName("lbluser"); // NOI18N
 
         jLabel6.setText("Quantity");
+        jLabel6.setName("lblqty"); // NOI18N
 
         jLabel5.setText("Operation");
+        jLabel5.setName("lblop"); // NOI18N
 
         jLabel4.setText("Part");
+        jLabel4.setName("lblitem"); // NOI18N
 
         jLabel10.setText("EffDate");
+        jLabel10.setName("lbleffdate"); // NOI18N
 
         jLabel2.setText("Site");
+        jLabel2.setName("lblsite"); // NOI18N
+
+        tbreference.setName("lblref"); // NOI18N
 
         tbpart.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -154,12 +221,6 @@ public class ProdEntryMaint extends javax.swing.JPanel {
                             .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(tbsite)
-                                .addGap(48, 48, 48))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(tbdate, javax.swing.GroupLayout.DEFAULT_SIZE, 164, Short.MAX_VALUE)
-                                .addGap(48, 48, 48))
                             .addComponent(tbreference)
                             .addComponent(tbserialno)
                             .addComponent(tbpart)
@@ -168,7 +229,12 @@ public class ProdEntryMaint extends javax.swing.JPanel {
                                     .addComponent(tbuser, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(ddop, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(tbqty, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(0, 0, Short.MAX_VALUE))))
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(tbsite)
+                                    .addComponent(tbdate, javax.swing.GroupLayout.DEFAULT_SIZE, 164, Short.MAX_VALUE))
+                                .addGap(48, 48, 48))))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btsubmit)))
@@ -229,23 +295,18 @@ public class ProdEntryMaint extends javax.swing.JPanel {
         transtable.setModel(transmodel);
         
         if (! BlueSeerUtils.isParsableToDouble(tbqty.getText()) ) {
-            bsmf.MainFrame.show("Qty Field must be a number");
-            canproceed = false;            
-        }
-        
-        if ( (prodline = OVData.getProdLineFromItem(tbpart.getText())) == null ) {
-            bsmf.MainFrame.show("Product Line is not defined for this item");
+            bsmf.MainFrame.show(getMessageTag(1028));
             canproceed = false;            
         }
         
          if (tbdate.getDate() == null || ! BlueSeerUtils.isValidDateStr(BlueSeerUtils.mysqlDateFormat.format(tbdate.getDate())) ) {
-            bsmf.MainFrame.show("Date not properly formatted");
+            bsmf.MainFrame.show(getMessageTag(1123));
             canproceed = false;            
         }
          
          if ( OVData.isGLPeriodClosed(dfdate.format(tbdate.getDate()))) {
                     canproceed = false;
-                    bsmf.MainFrame.show("Period is closed");
+                    bsmf.MainFrame.show(getMessageTag(1035));
                     return;
                 }
          
@@ -273,10 +334,10 @@ public class ProdEntryMaint extends javax.swing.JPanel {
         }
         // now let's load transaction
         if (! OVData.loadTranHistByTable(transtable)) {
-            bsmf.MainFrame.show("Unable to perform Production Entry for this Item");
+            bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
         } else {
             initvars(null);
-            bsmf.MainFrame.show("Production Entry Successfull");
+            bsmf.MainFrame.show(getMessageTag(1007));
         }
         
         // now reset variables for next entry
@@ -294,7 +355,7 @@ public class ProdEntryMaint extends javax.swing.JPanel {
         boolean goodpart = false;
        goodpart = OVData.isValidItem(tbpart.getText());
        if (! goodpart) {
-           bsmf.MainFrame.show("Item not in Item Master");
+           bsmf.MainFrame.show(getMessageTag(1021,tbpart.getText()));
            tbpart.setForeground(Color.red);
        } else {
            tbpart.setForeground(Color.black);

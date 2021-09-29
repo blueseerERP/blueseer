@@ -67,9 +67,20 @@ import static bsmf.MainFrame.con;
 import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.pass;
+import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.inv.invData;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import java.awt.Component;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.view.JasperViewer;
 
@@ -98,6 +109,7 @@ String sitecitystatezip = "";
      */
     public ProdEntryByPlanMaint() {
         initComponents();
+        setLanguageTags(this);
     }
 
     
@@ -199,7 +211,51 @@ String sitecitystatezip = "";
       }
     }
     
-      public void initvars(String[] arg) {
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+    
+    public void initvars(String[] arg) {
         
         tbqty.setText("");
         tbscan.setText("");
@@ -241,6 +297,7 @@ String sitecitystatezip = "";
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Prod Entry By Plan Ticket"));
+        jPanel1.setName("panelmain"); // NOI18N
 
         tbqty.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -252,6 +309,7 @@ String sitecitystatezip = "";
         });
 
         jLabel4.setText("Quantity");
+        jLabel4.setName("lblqty"); // NOI18N
 
         tbscan.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -268,8 +326,10 @@ String sitecitystatezip = "";
         });
 
         jLabel5.setText("Scan");
+        jLabel5.setName("lblscan"); // NOI18N
 
         btcommit.setText("Commit");
+        btcommit.setName("btcommit"); // NOI18N
         btcommit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btcommitActionPerformed(evt);
@@ -277,6 +337,7 @@ String sitecitystatezip = "";
         });
 
         jLabel7.setText("Operation");
+        jLabel7.setName("lblop"); // NOI18N
 
         tbref.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -288,6 +349,7 @@ String sitecitystatezip = "";
         });
 
         jLabel8.setText("Reference");
+        jLabel8.setName("lblreference"); // NOI18N
 
         partlabel.setForeground(new java.awt.Color(25, 102, 232));
 
@@ -373,21 +435,20 @@ String sitecitystatezip = "";
         }
         
         if (! OVData.isPlan(tbscan.getText())) {
-            lblmessage.setText("Bad Ticket: " + tbscan.getText());
+            lblmessage.setText(getMessageTag(1070,tbscan.getText()));
             lblmessage.setForeground(Color.red);
-            bsmf.MainFrame.show("Bad Ticket: " + tbscan.getText());
             initvars(null);
             return;
         }
         
         if (OVData.isPlan(tbscan.getText()) &&  OVData.getPlanStatus(tbscan.getText()) > 0 ) {
-            lblmessage.setText("Ticket CLosed: " + tbscan.getText());
+            lblmessage.setText(getMessageTag(1071,tbscan.getText()));
             lblmessage.setForeground(Color.red);
             initvars(null);
             return;
         }
         if (OVData.isPlan(tbscan.getText()) &&  OVData.getPlanStatus(tbscan.getText()) < 0 ) {
-            lblmessage.setText("Ticket Voided: " + tbscan.getText());
+            lblmessage.setText(getMessageTag(1072,tbscan.getText()));
             lblmessage.setForeground(Color.red);
             initvars(null);
             return;
@@ -465,7 +526,7 @@ String sitecitystatezip = "";
            }
             catch (SQLException s){
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("problem with sql commit");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
                  
             }
             con.close();

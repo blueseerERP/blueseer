@@ -57,12 +57,23 @@ import static bsmf.MainFrame.menumap;
 import static bsmf.MainFrame.mydialog;
 import static bsmf.MainFrame.panelmap;
 import static bsmf.MainFrame.pass;
+import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.OVData;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Locale;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 
 /**
  *
@@ -117,8 +128,53 @@ public class ProdDetRpt extends javax.swing.JPanel {
         
     public ProdDetRpt() {
         initComponents();
+        setLanguageTags(this);
     }
 
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+    
     public void initvars(String[] arg) {
          java.util.Date now = new java.util.Date();
          dcFrom.setDate(now);
@@ -165,15 +221,20 @@ public class ProdDetRpt extends javax.swing.JPanel {
 
         setBackground(new java.awt.Color(0, 102, 204));
 
+        jPanel1.setName("panelmain"); // NOI18N
+
         jLabel2.setText("From Date");
+        jLabel2.setName("lblfromdate"); // NOI18N
 
         dcFrom.setDateFormatString("yyyy-MM-dd");
 
         dcTo.setDateFormatString("yyyy-MM-dd");
 
         jLabel3.setText("To Date");
+        jLabel3.setName("lbltodate"); // NOI18N
 
         btRun.setText("Run");
+        btRun.setName("btrun"); // NOI18N
         btRun.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btRunActionPerformed(evt);
@@ -181,12 +242,16 @@ public class ProdDetRpt extends javax.swing.JPanel {
         });
 
         jLabel1.setText("From Part");
+        jLabel1.setName("lblfromitem"); // NOI18N
 
         jLabel4.setText("To Part");
+        jLabel4.setName("lbltoitem"); // NOI18N
 
         jLabel5.setText("From Cell");
+        jLabel5.setName("lblfromcell"); // NOI18N
 
         jLabel6.setText("To Cell");
+        jLabel6.setName("lbltocell"); // NOI18N
 
         tableprod.setAutoCreateRowSorter(true);
         tableprod.setModel(new javax.swing.table.DefaultTableModel(
@@ -208,6 +273,7 @@ public class ProdDetRpt extends javax.swing.JPanel {
         jScrollPane1.setViewportView(tableprod);
 
         btexport.setText("Export");
+        btexport.setName("btexport"); // NOI18N
         btexport.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btexportActionPerformed(evt);
@@ -217,19 +283,23 @@ public class ProdDetRpt extends javax.swing.JPanel {
         labelcount.setText("0");
 
         jLabel7.setText("Count");
+        jLabel7.setName("lblcount"); // NOI18N
 
         labelqty.setText("0");
 
         jLabel8.setText("Qty");
+        jLabel8.setName("lblqty"); // NOI18N
 
         labeldollar.setBackground(new java.awt.Color(195, 129, 129));
         labeldollar.setText("0");
 
         jLabel9.setText("$");
+        jLabel9.setName("lblamt"); // NOI18N
 
         ddtype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "ALL", "ISS-WIP", "RCT-FG" }));
 
         jLabel10.setText("TranType");
+        jLabel10.setName("lbltype"); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -406,7 +476,15 @@ try {
                    
                    
                 ProdDetRpt.MyTableModel mymodel = new ProdDetRpt.MyTableModel(new Object[][]{},
-                        new String[]{"Part", "P/M", "Qty", "Cost", "Operation", "EffDate",  "Cell",  "Export?", "Userid"});
+                        new String[]{getGlobalColumnTag("item"), 
+                            getGlobalColumnTag("class"), 
+                            getGlobalColumnTag("quantity"), 
+                            getGlobalColumnTag("cost"), 
+                            getGlobalColumnTag("operation"), 
+                            getGlobalColumnTag("effdate"),  
+                            getGlobalColumnTag("cell"),  
+                            getGlobalColumnTag("export"), 
+                            getGlobalColumnTag("userid")});
                 tableprod.setModel(mymodel);
                 tableprod.getColumnModel().getColumn(0).setCellRenderer(new ProdDetRpt.SomeRenderer());  
                 
@@ -469,7 +547,7 @@ try {
                 labelqty.setText(String.valueOf(qty));
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Cannot execute sql query for Prod Report");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             con.close();
         } catch (Exception e) {
@@ -570,10 +648,10 @@ try {
                 
                 
                 
-             bsmf.MainFrame.show("file has been created");
+             bsmf.MainFrame.show(getMessageTag(1126));
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Cannot extract tran_mstr data");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             con.close();
         } catch (Exception e) {

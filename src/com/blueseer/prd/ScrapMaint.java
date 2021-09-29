@@ -26,13 +26,25 @@ SOFTWARE.
 
 package com.blueseer.prd;
 
+import static bsmf.MainFrame.tags;
 import com.blueseer.inv.invData;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.awt.Color;
+import java.awt.Component;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 
@@ -46,7 +58,23 @@ public class ScrapMaint extends javax.swing.JPanel {
           DefaultTableCellRenderer tableRender = new DefaultTableCellRenderer();
     javax.swing.table.DefaultTableModel transmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
-                "Part", "Type", "Operation", "Qty", "effDate", "Location", "SerialNo", "Reference", "Site", "Userid", "ProdLine", "ActCell", "Remarks", "pack", "packdate", "assydate", "Program"
+                getGlobalColumnTag("item"), 
+                getGlobalColumnTag("type"), 
+                getGlobalColumnTag("operation"), 
+                getGlobalColumnTag("qty"), 
+                getGlobalColumnTag("date"), 
+                getGlobalColumnTag("location"), 
+                getGlobalColumnTag("serial"), 
+                getGlobalColumnTag("reference"), 
+                getGlobalColumnTag("site"), 
+                getGlobalColumnTag("userid"), 
+                getGlobalColumnTag("prodline"), 
+                getGlobalColumnTag("cell"), 
+                getGlobalColumnTag("remarks"), 
+                getGlobalColumnTag("cell"), 
+                getGlobalColumnTag("packdate"), 
+                getGlobalColumnTag("assydate"), 
+                getGlobalColumnTag("program")
             })    {
     @Override
     public boolean isCellEditable(int row, int column) {
@@ -58,12 +86,56 @@ public class ScrapMaint extends javax.swing.JPanel {
      */
     public ScrapMaint() {
         initComponents();
+        setLanguageTags(this);
     }
 
     
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
     
     
-       public void initvars(String[] arg) {
+    public void initvars(String[] arg) {
         
        transmodel.setRowCount(0);
         tbuser.setText(bsmf.MainFrame.userid);
@@ -150,12 +222,15 @@ public class ScrapMaint extends javax.swing.JPanel {
         ddsite = new javax.swing.JComboBox<>();
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Scrap Entry"));
+        jPanel1.setName("panelmain"); // NOI18N
 
         dcassydate.setDateFormatString("yyyy-MM-dd");
 
         jLabel9.setText("ScrapCode");
+        jLabel9.setName("lblcode"); // NOI18N
 
         btsubmit.setText("Submit");
+        btsubmit.setName("btsubmit"); // NOI18N
         btsubmit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btsubmitActionPerformed(evt);
@@ -163,16 +238,22 @@ public class ScrapMaint extends javax.swing.JPanel {
         });
 
         jLabel1.setText("User");
+        jLabel1.setName("lbluser"); // NOI18N
 
         jLabel6.setText("Quantity");
+        jLabel6.setName("lblqty"); // NOI18N
 
         jLabel5.setText("Operation");
+        jLabel5.setName("lblop"); // NOI18N
 
         jLabel4.setText("Part");
+        jLabel4.setName("lblitem"); // NOI18N
 
         jLabel10.setText("AssyDate");
+        jLabel10.setName("lblassydate"); // NOI18N
 
         jLabel2.setText("Site");
+        jLabel2.setName("lblsite"); // NOI18N
 
         ddcode.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -181,6 +262,7 @@ public class ScrapMaint extends javax.swing.JPanel {
         });
 
         jLabel7.setText("WorkCell");
+        jLabel7.setName("lblcell"); // NOI18N
 
         tbpart.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -189,10 +271,12 @@ public class ScrapMaint extends javax.swing.JPanel {
         });
 
         jLabel8.setText("Reference");
+        jLabel8.setName("lblref"); // NOI18N
 
         dceffdate.setDateFormatString("yyyy-MM-dd");
 
         jLabel13.setText("EffDate");
+        jLabel13.setName("lbleffdate"); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -316,31 +400,23 @@ public class ScrapMaint extends javax.swing.JPanel {
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
        
         if (! BlueSeerUtils.isParsableToDouble(tbqty.getText()) ) {
-            bsmf.MainFrame.show("Qty Field must be a number");
-            canproceed = false;
+            bsmf.MainFrame.show(getMessageTag(1028));
             tbqty.requestFocus();
+            return;
         }
 
         if (tbpart.getText().isEmpty()) {
-             bsmf.MainFrame.show("Item cannot be blank");
+             bsmf.MainFrame.show(getMessageTag(1024));
             tbpart.requestFocus();
-            canproceed = false;
+            return;
         }
-        if ( (prodline = OVData.getProdLineFromItem(tbpart.getText().toString())) == null ) {
-            bsmf.MainFrame.show("Product Line is not defined for this item");
-            canproceed = false;
-        }
+      
         
-        status = invData.getItemStatusByPart(tbpart.getText().toString()).toLowerCase();
-        if (! status.equals("active") && ! status.equals("actphan") ) {
-            bsmf.MainFrame.show("Item is Not Active");
-            canproceed = false;
-        }
-
         if (dceffdate.getDate() != null) {
            if ( ! BlueSeerUtils.isValidDateStr(BlueSeerUtils.mysqlDateFormat.format(dceffdate.getDate())) ) {
-            bsmf.MainFrame.show("Effective Date not properly formatted");
-            canproceed = false;
+            bsmf.MainFrame.show(getMessageTag(1123));
+            dceffdate.requestFocus();
+            return;
            } else {
                effdate = BlueSeerUtils.mysqlDateFormat.format(dceffdate.getDate());
            }
@@ -348,8 +424,9 @@ public class ScrapMaint extends javax.swing.JPanel {
         
         if (dcassydate.getDate() != null) {
            if ( ! BlueSeerUtils.isValidDateStr(BlueSeerUtils.mysqlDateFormat.format(dcassydate.getDate())) ) {
-            bsmf.MainFrame.show("Assy Date not properly formatted");
-            canproceed = false;
+            bsmf.MainFrame.show(getMessageTag(1123));
+            dcassydate.requestFocus();
+            return;
            } else {
                assydate = BlueSeerUtils.mysqlDateFormat.format(dcassydate.getDate());
            }
@@ -376,7 +453,7 @@ public class ScrapMaint extends javax.swing.JPanel {
          
          if ( OVData.isGLPeriodClosed(dfdate.format(dceffdate.getDate()))) {
                     canproceed = false;
-                    bsmf.MainFrame.show("Period is closed");
+                    bsmf.MainFrame.show(getMessageTag(1035));
                     return;
                 }
          
@@ -406,9 +483,9 @@ public class ScrapMaint extends javax.swing.JPanel {
             
             
                if (! OVData.loadTranHistByTable(transtable)) {
-            bsmf.MainFrame.show("Unable to perform Scrap Transactions");
+            bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
         } else {
-            bsmf.MainFrame.show("Successfully Submitted Transactions");
+            bsmf.MainFrame.show(getMessageTag(1125));
         }
         
         initvars(null);
@@ -433,7 +510,7 @@ public class ScrapMaint extends javax.swing.JPanel {
                   ddop.addItem(myops.get(i));
                   }
              } else {
-                 bsmf.MainFrame.show("Invalid Item...try again");
+                 bsmf.MainFrame.show(getMessageTag(1021,tbpart.getText()));
                  tbpart.requestFocus();
              }
          }

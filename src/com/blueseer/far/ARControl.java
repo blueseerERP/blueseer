@@ -26,13 +26,24 @@ SOFTWARE.
 package com.blueseer.far;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.tags;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.IBlueSeerc;
 import com.blueseer.utl.OVData;
+import java.awt.Component;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.SwingWorker;
 
 /**
@@ -43,6 +54,7 @@ public class ARControl extends javax.swing.JPanel implements IBlueSeerc {
 
     public ARControl() {
         initComponents();
+        setLanguageTags(this);
     }
 
     // global variable declarations
@@ -110,6 +122,50 @@ public class ARControl extends javax.swing.JPanel implements IBlueSeerc {
        isLoad = false;
     }
     
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+    
     public String[] setAction(int i) {
         String[] m = new String[2];
         if (i > 0) {
@@ -125,43 +181,43 @@ public class ARControl extends javax.swing.JPanel implements IBlueSeerc {
                                 
                 if (tbbank.getText().isEmpty() || ! OVData.isValidBank(tbbank.getText())) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a valid bank");
+                    bsmf.MainFrame.show(getMessageTag(1026));
                     tbbank.requestFocus();
                     return b;
                 }
                 if (tbaracct.getText().isEmpty() || ! OVData.isValidGLAcct(tbaracct.getText())) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a valid AR acct");
+                    bsmf.MainFrame.show(getMessageTag(1026));
                     tbaracct.requestFocus();
                     return b;
                 }
                 if (tbsalesacct.getText().isEmpty() || ! OVData.isValidGLAcct(tbsalesacct.getText())) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a valid Sales acct");
+                    bsmf.MainFrame.show(getMessageTag(1026));
                     tbsalesacct.requestFocus();
                     return b;
                 }
                 if (tbasset.getText().isEmpty() || ! OVData.isValidGLAcct(tbasset.getText())) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a valid Asset acct");
+                    bsmf.MainFrame.show(getMessageTag(1026));
                     tbasset.requestFocus();
                     return b;
                 }
                 if (tbfederaltax.getText().isEmpty() || ! OVData.isValidGLAcct(tbfederaltax.getText())) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a valid Federal Tax acct");
+                    bsmf.MainFrame.show(getMessageTag(1026));
                     tbfederaltax.requestFocus();
                     return b;
                 }
                 if (tbstatetax.getText().isEmpty() || ! OVData.isValidGLAcct(tbstatetax.getText())) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a valid State Tax acct");
+                    bsmf.MainFrame.show(getMessageTag(1026));
                     tbstatetax.requestFocus();
                     return b;
                 }
                 if (tblocaltax.getText().isEmpty() || ! OVData.isValidGLAcct(tblocaltax.getText())) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a valid Local Tax acct");
+                    bsmf.MainFrame.show(getMessageTag(1026));
                     tblocaltax.requestFocus();
                     return b;
                 }
@@ -226,7 +282,7 @@ public class ARControl extends javax.swing.JPanel implements IBlueSeerc {
                     
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError};  
+                m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};  
             } finally {
                if (res != null) res.close();
                if (st != null) st.close();
@@ -234,7 +290,7 @@ public class ARControl extends javax.swing.JPanel implements IBlueSeerc {
             }
         } catch (Exception e) {
             MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordConnError};
+            m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1020, Thread.currentThread().getStackTrace()[1].getMethodName())};
         }
      
      return m;
@@ -270,7 +326,7 @@ public class ARControl extends javax.swing.JPanel implements IBlueSeerc {
                 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
+                m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};  
             } finally {
                if (res != null) res.close();
                if (st != null) st.close();
@@ -278,7 +334,7 @@ public class ARControl extends javax.swing.JPanel implements IBlueSeerc {
             }
         } catch (Exception e) {
             MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};  
+            m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1020, Thread.currentThread().getStackTrace()[1].getMethodName())};  
         }
       return m;
     }
@@ -333,14 +389,19 @@ public class ARControl extends javax.swing.JPanel implements IBlueSeerc {
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("AR Control Maintenance"));
+        jPanel1.setName("panelmain"); // NOI18N
 
         jLabel2.setText("Default AR Acct");
+        jLabel2.setName("lblaracct"); // NOI18N
 
         jLabel1.setText("AR Default Bank");
+        jLabel1.setName("lblbank"); // NOI18N
 
         jLabel3.setText("Default AR CC");
+        jLabel3.setName("lblarcc"); // NOI18N
 
         btupdate.setText("Update");
+        btupdate.setName("btupdate"); // NOI18N
         btupdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btupdateActionPerformed(evt);
@@ -348,28 +409,40 @@ public class ARControl extends javax.swing.JPanel implements IBlueSeerc {
         });
 
         jLabel4.setText("Default Sales Acct");
+        jLabel4.setName("lblsalesacct"); // NOI18N
 
         jLabel5.setText("Default Sales CC");
+        jLabel5.setName("lblsalescc"); // NOI18N
 
         jLabel6.setText("Sales State Tax Acct");
+        jLabel6.setName("lblstatetaxacct"); // NOI18N
 
         jLabel7.setText("Sales Federal Tax CC");
+        jLabel7.setName("lblfedtaxcc"); // NOI18N
 
         jLabel8.setText("Sales Federal Tax Acct");
+        jLabel8.setName("lblfedtaxacct"); // NOI18N
 
         jLabel9.setText("Sales State Tax CC");
+        jLabel9.setName("lblstatetaxcc"); // NOI18N
 
         jLabel10.setText("Sales Local Tax Acct");
+        jLabel10.setName("lbllocaltaxacct"); // NOI18N
 
         jLabel11.setText("Sales Local Tax CC");
+        jLabel11.setName("lbllocaltaxcc"); // NOI18N
 
         jLabel12.setText("Sales Other Tax Acct");
+        jLabel12.setName("lblothertaxacct"); // NOI18N
 
         jLabel13.setText("Sales Other Tax CC");
+        jLabel13.setName("lblothertaxcc"); // NOI18N
 
         jLabel14.setText("Asset Acct");
+        jLabel14.setName("lblassetacct"); // NOI18N
 
         jLabel15.setText("Asset CC");
+        jLabel15.setName("lblassetcc"); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -491,6 +564,7 @@ public class ARControl extends javax.swing.JPanel implements IBlueSeerc {
         );
 
         add(jPanel1);
+        jPanel1.getAccessibleContext().setAccessibleDescription("");
     }// </editor-fold>//GEN-END:initComponents
 
     private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
