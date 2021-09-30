@@ -27,7 +27,10 @@ SOFTWARE.
 package com.blueseer.far;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.tags;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.OVData;
 import java.awt.Color;
 import java.awt.Component;
@@ -53,9 +56,16 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -71,7 +81,18 @@ import javax.swing.table.TableColumnModel;
 public class ARTranRpt extends javax.swing.JPanel {
  
      MyTableModel modelsummary = new ARTranRpt.MyTableModel(new Object[][]{},
-                        new String[]{"Detail", "ID", "Nbr", "Cust", "Type", "EffDate", "Status", "Ref", "Remarks", "Amt", "Applied", "AmtOpen"})
+                        new String[]{getGlobalColumnTag("detail"), 
+                            getGlobalColumnTag("id"), 
+                            getGlobalColumnTag("number"), 
+                            getGlobalColumnTag("customer"), 
+                            getGlobalColumnTag("type"), 
+                            getGlobalColumnTag("effectivedate"), 
+                            getGlobalColumnTag("status"), 
+                            getGlobalColumnTag("reference"), 
+                            getGlobalColumnTag("remarks"), 
+                            getGlobalColumnTag("amount"), 
+                            getGlobalColumnTag("applied"), 
+                            getGlobalColumnTag("open")})
              {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -82,7 +103,15 @@ public class ARTranRpt extends javax.swing.JPanel {
                         };
     
     MyTableModel2 modeldetail = new ARTranRpt.MyTableModel2(new Object[][]{},
-                        new String[]{"ID", "Cust", "Ref", "Line", "Date", "Acct", "CC", "Amt"});
+                        new String[]{
+                            getGlobalColumnTag("id"), 
+                            getGlobalColumnTag("customer"), 
+                            getGlobalColumnTag("reference"), 
+                            getGlobalColumnTag("line"), 
+                            getGlobalColumnTag("date"), 
+                            getGlobalColumnTag("account"), 
+                            getGlobalColumnTag("cc"), 
+                            getGlobalColumnTag("amount")});
     /**
      * Creates new form ScrapReportPanel
      */
@@ -189,10 +218,54 @@ public class ARTranRpt extends javax.swing.JPanel {
         
     public ARTranRpt() {
         initComponents();
+        setLanguageTags(this);
     }
 
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
     
-      public void getdetail(String id) {
+    public void getdetail(String id) {
       
          modeldetail.setNumRows(0);
          double total = 0.00;
@@ -243,7 +316,7 @@ public class ARTranRpt extends javax.swing.JPanel {
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to get ard_mstr detail");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -333,17 +406,23 @@ public class ARTranRpt extends javax.swing.JPanel {
 
         setBackground(new java.awt.Color(0, 102, 204));
 
+        jPanel1.setName("panelmain"); // NOI18N
+
         labelcount.setText("0");
 
         jLabel7.setText("Count");
+        jLabel7.setName("lblcount"); // NOI18N
 
         jLabel8.setText("Open:");
+        jLabel8.setName("lblopen"); // NOI18N
 
         labelopen.setText("0");
 
         jLabel3.setText("To Cust");
+        jLabel3.setName("lbltocust"); // NOI18N
 
         btRun.setText("Run");
+        btRun.setName("btrun"); // NOI18N
         btRun.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btRunActionPerformed(evt);
@@ -351,8 +430,10 @@ public class ARTranRpt extends javax.swing.JPanel {
         });
 
         jLabel2.setText("From Cust");
+        jLabel2.setName("lblfromcust"); // NOI18N
 
         btdetail.setText("Hide Detail");
+        btdetail.setName("bthidedetail"); // NOI18N
         btdetail.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdetailActionPerformed(evt);
@@ -364,12 +445,15 @@ public class ARTranRpt extends javax.swing.JPanel {
         dcto.setDateFormatString("yyyy-MM-dd");
 
         jLabel4.setText("From Eff Date");
+        jLabel4.setName("lblfromdate"); // NOI18N
 
         jLabel5.setText("To Eff Date");
+        jLabel5.setName("lbltodate"); // NOI18N
 
         ddtype.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "P", "I", "M", "U", "ALL" }));
 
         jLabel6.setText("Type");
+        jLabel6.setName("lbltype"); // NOI18N
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -432,8 +516,10 @@ public class ARTranRpt extends javax.swing.JPanel {
         labelpaid.setText("0");
 
         jLabel1.setText("Paid:");
+        jLabel1.setName("lblapplied"); // NOI18N
 
         jLabel9.setText("Amt:");
+        jLabel9.setName("lblamt"); // NOI18N
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -674,7 +760,7 @@ try {
                 labelamt.setText(String.valueOf(df.format(amt)));
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Cannot execute sql query for AR Report");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {

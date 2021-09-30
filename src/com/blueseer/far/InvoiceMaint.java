@@ -29,8 +29,12 @@ import com.blueseer.shp.*;
 import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.reinitpanels;
+import static bsmf.MainFrame.tags;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
 import static com.blueseer.utl.BlueSeerUtils.luTable;
 import static com.blueseer.utl.BlueSeerUtils.lual;
@@ -82,6 +86,9 @@ import javax.print.PrintServiceLookup;
 import javax.print.SimpleDoc;
 import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
@@ -89,6 +96,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
@@ -125,18 +133,32 @@ public class InvoiceMaint extends javax.swing.JPanel {
       // global datatablemodel declarations     
     javax.swing.table.DefaultTableModel sacmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
-                "SO", "Desc", "Type", "AmtType", "Amt"
+                getGlobalColumnTag("order"), 
+                getGlobalColumnTag("description"), 
+                getGlobalColumnTag("type"), 
+                getGlobalColumnTag("amounttype"), 
+                getGlobalColumnTag("amount")
             });
     
     javax.swing.table.DefaultTableModel myshipdetmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
-                 "Line", "Part", "SO", "PO", "Qty", "Price", "Desc", "Disc", "ListPrice", "MatlTax"
+                 getGlobalColumnTag("line"), 
+                getGlobalColumnTag("item"), 
+                getGlobalColumnTag("order"), 
+                getGlobalColumnTag("po"), 
+                getGlobalColumnTag("quantity"), 
+                getGlobalColumnTag("price"), 
+                getGlobalColumnTag("description"), 
+                getGlobalColumnTag("discount"), 
+                getGlobalColumnTag("listprice"), 
+                getGlobalColumnTag("tax")
             });           
                 
     
   
     public InvoiceMaint() {
         initComponents();
+        setLanguageTags(this);
     }
    
     
@@ -273,6 +295,50 @@ public class InvoiceMaint extends javax.swing.JPanel {
             }
     } 
     
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+    
     public void setComponentDefaultValues() {
        isLoad = true;
         ordercount = 0;
@@ -379,14 +445,15 @@ public class InvoiceMaint extends javax.swing.JPanel {
                 
                  if (tbkey.getText().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a code");
+                    bsmf.MainFrame.show(getMessageTag(1024));
                     tbkey.requestFocus();
                     return b;
                 }
         
                 if (ddsite.getSelectedItem() == null || ddsite.getSelectedItem().toString().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("must choose a site");
+                    bsmf.MainFrame.show(getMessageTag(1026));
+                    ddsite.requestFocus();
                     return b;
                 }
                
@@ -502,8 +569,8 @@ public class InvoiceMaint extends javax.swing.JPanel {
      
      public String[] deleteRecord(String[] x) {
      String[] m = new String[2];
-        bsmf.MainFrame.show("This action will delete shipper, invoice, and AR Entry");
-        boolean proceed = bsmf.MainFrame.warn("Are you sure?");
+        bsmf.MainFrame.show(getMessageTag(1131));
+        boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
         if (proceed) {
         try {
 
@@ -720,9 +787,9 @@ public class InvoiceMaint extends javax.swing.JPanel {
         luTable.setModel(luModel);
         luTable.getColumnModel().getColumn(0).setMaxWidth(50);
         if (luModel.getRowCount() < 1) {
-            ludialog.setTitle("No Records Found!");
+            ludialog.setTitle(getMessageTag(1001));
         } else {
-            ludialog.setTitle(luModel.getRowCount() + " Records Found!");
+            ludialog.setTitle(getMessageTag(1002, String.valueOf(luModel.getRowCount())));
         }
         }
         };
@@ -742,8 +809,9 @@ public class InvoiceMaint extends javax.swing.JPanel {
         };
         luTable.addMouseListener(luml);
       
-        callDialog("Nbr", "Cust"); 
         
+        callDialog(getClassLabelTag("lblid", this.getClass().getSimpleName()), 
+                getClassLabelTag("lblcust", this.getClass().getSimpleName())); 
         
     }
 
@@ -815,7 +883,7 @@ public class InvoiceMaint extends javax.swing.JPanel {
                 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("sql problem selecting cms_det");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -909,6 +977,7 @@ public class InvoiceMaint extends javax.swing.JPanel {
         setBackground(new java.awt.Color(0, 102, 204));
 
         panelMain.setBorder(javax.swing.BorderFactory.createTitledBorder("Invoice View"));
+        panelMain.setName("panelmain"); // NOI18N
 
         tbkey.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -917,8 +986,10 @@ public class InvoiceMaint extends javax.swing.JPanel {
         });
 
         jLabel24.setText("Invoice Nbr:");
+        jLabel24.setName("lblid"); // NOI18N
 
         btclear.setText("Clear");
+        btclear.setName("btclear"); // NOI18N
         btclear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btclearActionPerformed(evt);
@@ -926,6 +997,7 @@ public class InvoiceMaint extends javax.swing.JPanel {
         });
 
         btvoid.setText("Void");
+        btvoid.setName("btvoid"); // NOI18N
         btvoid.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btvoidActionPerformed(evt);
@@ -933,6 +1005,7 @@ public class InvoiceMaint extends javax.swing.JPanel {
         });
 
         btPrintShp.setText("Print Shipper");
+        btPrintShp.setName("btprintshipper"); // NOI18N
         btPrintShp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btPrintShpActionPerformed(evt);
@@ -940,6 +1013,7 @@ public class InvoiceMaint extends javax.swing.JPanel {
         });
 
         btPrintInv.setText("Print Invoice");
+        btPrintInv.setName("btprintinvoice"); // NOI18N
         btPrintInv.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btPrintInvActionPerformed(evt);
@@ -947,6 +1021,7 @@ public class InvoiceMaint extends javax.swing.JPanel {
         });
 
         btupdate.setText("Update");
+        btupdate.setName("btupdate"); // NOI18N
         btupdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btupdateActionPerformed(evt);
@@ -954,59 +1029,83 @@ public class InvoiceMaint extends javax.swing.JPanel {
         });
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Header"));
+        jPanel3.setName("panelheader"); // NOI18N
 
         jLabel25.setText("Site");
+        jLabel25.setName("lblsite"); // NOI18N
 
         jLabel35.setText("Shipdate");
+        jLabel35.setName("lblshipdate"); // NOI18N
 
         jLabel26.setText("UserID");
+        jLabel26.setName("lbluserid"); // NOI18N
 
         dcshipdate.setDateFormatString("yyyy-MM-dd");
 
         jLabel39.setText("ShipVia");
+        jLabel39.setName("lblshipvia"); // NOI18N
 
         jLabel40.setText("Trailer");
+        jLabel40.setName("lbltrailer"); // NOI18N
 
         jLabel27.setText("Ref");
+        jLabel27.setName("lblref"); // NOI18N
 
         lbladdr.setBackground(java.awt.Color.lightGray);
         lbladdr.setBorder(javax.swing.BorderFactory.createTitledBorder("ShipTo Addr"));
+        lbladdr.setName("panelshipto"); // NOI18N
 
         jLabel41.setText("Remarks");
 
         dcinvduedate.setDateFormatString("yyyy-MM-dd");
 
         jLabel36.setText("InvDue");
+        jLabel36.setName("lblduedate"); // NOI18N
 
         jLabel2.setText("ARAcct");
+        jLabel2.setName("lblaracct"); // NOI18N
 
         jLabel6.setText("ARcc");
+        jLabel6.setName("lbarcc"); // NOI18N
 
         jLabel8.setText("Currency");
+        jLabel8.setName("lblcurrency"); // NOI18N
 
         jLabel9.setText("OrdNbr");
+        jLabel9.setName("lblorder"); // NOI18N
 
         jLabel10.setText("PONbr");
+        jLabel10.setName("lblpo"); // NOI18N
 
         jLabel11.setText("ShipCode:");
+        jLabel11.setName("lblship"); // NOI18N
 
         cbispaid.setText("Paid?");
+        cbispaid.setName("cbpaid"); // NOI18N
 
         cbisvoid.setText("Void?");
+        cbisvoid.setName("cbvoid"); // NOI18N
 
         jLabel12.setText("Terms");
+        jLabel12.setName("lblterms"); // NOI18N
 
         jLabel13.setText("TaxCode");
+        jLabel13.setName("lbltaxcode"); // NOI18N
 
         jLabel14.setText("OpenAmt");
+        jLabel14.setName("lblopenamt"); // NOI18N
 
         jLabel15.setText("Bank");
+        jLabel15.setName("lblbank"); // NOI18N
 
         jLabel16.setText("AR Amt");
+        jLabel16.setName("lblaramt"); // NOI18N
 
         jLabel17.setText("Tax Amt");
+        jLabel17.setName("lbltaxamt"); // NOI18N
 
         jLabel7.setText("CustCode:");
+        jLabel7.setName("lblcust"); // NOI18N
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -1226,10 +1325,13 @@ public class InvoiceMaint extends javax.swing.JPanel {
         jScrollPane7.setViewportView(tabledetail);
 
         jLabel3.setText("Total Lines:");
+        jLabel3.setName("lbllines"); // NOI18N
 
         jLabel1.setText("Total Qty:");
+        jLabel1.setName("lblqty"); // NOI18N
 
         jLabel4.setText("Total $");
+        jLabel4.setName("lblamt"); // NOI18N
 
         sactable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -1355,7 +1457,7 @@ public class InvoiceMaint extends javax.swing.JPanel {
     }//GEN-LAST:event_btPrintInvActionPerformed
 
     private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
-       bsmf.MainFrame.show("not yet implemented");
+       bsmf.MainFrame.show(getMessageTag(1122));
     }//GEN-LAST:event_btupdateActionPerformed
 
     private void tbkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkeyActionPerformed

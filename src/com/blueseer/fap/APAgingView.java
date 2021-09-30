@@ -26,7 +26,10 @@ SOFTWARE.
 
 package com.blueseer.fap;
 import bsmf.MainFrame;
+import static bsmf.MainFrame.tags;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.OVData;
 import java.awt.Color;
 import java.awt.Component;
@@ -50,9 +53,16 @@ import java.util.Enumeration;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -71,7 +81,13 @@ public class APAgingView extends javax.swing.JPanel {
     String selectedVendor = "";
     
      MyTableModel modelsummary = new APAgingView.MyTableModel(new Object[][]{},
-                        new String[]{"Detail", "Vend", "0DaysOld", "30DaysOld", "60DaysOld", "90DaysOld", "90+DaysOld"})
+                        new String[]{getGlobalColumnTag("detail"), 
+                            getGlobalColumnTag("vendor"), 
+                            getGlobalColumnTag("0daysold"), 
+                            getGlobalColumnTag("30daysold"), 
+                            getGlobalColumnTag("60daysold"), 
+                            getGlobalColumnTag("90daysold"), 
+                            getGlobalColumnTag("90+daysold")})
              {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -82,10 +98,27 @@ public class APAgingView extends javax.swing.JPanel {
                         };
     
     MyTableModel2 modeldetail = new APAgingView.MyTableModel2(new Object[][]{},
-                        new String[]{"VouchNbr", "Reference", "PONbr", "EffDate", "DueDate", "0DaysOld", "30DaysOld", "60DaysOld", "90DaysOld", "90+DaysOld"});
+                        new String[]{getGlobalColumnTag("id"), 
+                            getGlobalColumnTag("reference"), 
+                            getGlobalColumnTag("po"), 
+                            getGlobalColumnTag("effectivedate"), 
+                            getGlobalColumnTag("duedate"), 
+                            getGlobalColumnTag("0daysold"), 
+                            getGlobalColumnTag("30daysold"), 
+                            getGlobalColumnTag("60daysold"), 
+                            getGlobalColumnTag("90daysold"), 
+                            getGlobalColumnTag("90+daysold")});
     
      MyTableModel3 modelpayment = new APAgingView.MyTableModel3(new Object[][]{},
-                        new String[]{"VouchNbr", "Reference", "PONbr", "EffDate", "DueDate", "Type", "CheckNbr", "VOAmt", "CKAmt"});
+                        new String[]{getGlobalColumnTag("id"), 
+                            getGlobalColumnTag("reference"), 
+                            getGlobalColumnTag("po"), 
+                            getGlobalColumnTag("effectivedate"), 
+                            getGlobalColumnTag("duedate"), 
+                            getGlobalColumnTag("type"), 
+                            getGlobalColumnTag("checknbr"), 
+                            getGlobalColumnTag("voucheramt"), 
+                            getGlobalColumnTag("checkamt")});
   
     
     /**
@@ -215,10 +248,55 @@ public class APAgingView extends javax.swing.JPanel {
         
     public APAgingView() {
         initComponents();
+        setLanguageTags(this);
     }
 
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
     
-      public void getdetail(String vend) {
+    
+    public void getdetail(String vend) {
       
          modeldetail.setNumRows(0);
           modelpayment.setNumRows(0);
@@ -296,7 +374,7 @@ public class APAgingView extends javax.swing.JPanel {
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to get Detail");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -305,7 +383,7 @@ public class APAgingView extends javax.swing.JPanel {
 
     }
     
-       public void getpayment(String vend) {
+    public void getpayment(String vend) {
       
          modelpayment.setNumRows(0);
          double total = 0.00;
@@ -360,7 +438,7 @@ public class APAgingView extends javax.swing.JPanel {
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to get payment");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -369,7 +447,7 @@ public class APAgingView extends javax.swing.JPanel {
 
     }
      
-       public String getPOorMix(String vonbr) {
+    public String getPOorMix(String vonbr) {
           String ponbr = "";
           try {
 
@@ -481,17 +559,23 @@ public class APAgingView extends javax.swing.JPanel {
 
         setBackground(new java.awt.Color(0, 102, 204));
 
+        jPanel1.setName("panelmain"); // NOI18N
+
         labelcount.setText("0");
 
         jLabel7.setText("Count");
+        jLabel7.setName("lblcount"); // NOI18N
 
         jLabel8.setText("$$");
+        jLabel8.setName("lblamt"); // NOI18N
 
         labeldollar.setText("0");
 
         jLabel3.setText("To Vend");
+        jLabel3.setName("lbltovend"); // NOI18N
 
         btRun.setText("Run");
+        btRun.setName("btrun"); // NOI18N
         btRun.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btRunActionPerformed(evt);
@@ -499,8 +583,10 @@ public class APAgingView extends javax.swing.JPanel {
         });
 
         jLabel2.setText("From Vend");
+        jLabel2.setName("lblfromvend"); // NOI18N
 
         btdetail.setText("Hide Detail");
+        btdetail.setName("bthidedetail"); // NOI18N
         btdetail.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdetailActionPerformed(evt);
@@ -508,6 +594,7 @@ public class APAgingView extends javax.swing.JPanel {
         });
 
         cbpaymentpanel.setText("PaymentPanel");
+        cbpaymentpanel.setName("cbpayments"); // NOI18N
         cbpaymentpanel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbpaymentpanelActionPerformed(evt);
@@ -807,7 +894,7 @@ try {
                 labeldollar.setText(String.valueOf(df.format(dol)));
             } catch (SQLException s) {
                 MainFrame.bslog(s); 
-                bsmf.MainFrame.show("Cannot execute sql query for AP Aging View");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {

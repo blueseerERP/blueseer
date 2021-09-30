@@ -64,12 +64,20 @@ import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.mydialog;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
+import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.text.DecimalFormatSymbols;
 import java.util.HashMap;
 import java.util.Locale;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.SwingWorker;
 import javax.swing.table.DefaultTableCellRenderer;
 import net.sf.jasperreports.engine.JasperExportManager;
@@ -150,9 +158,11 @@ public class InvoiceBrowse extends javax.swing.JPanel {
      */
     public InvoiceBrowse() {
         initComponents();
+        setLanguageTags(this);
     }
 
-     public void executeTask(String x, int y, String w) { 
+    
+    public void executeTask(String x, int y, String w) { 
       
         class Task extends SwingWorker<String[], Void> {
        
@@ -193,6 +203,49 @@ public class InvoiceBrowse extends javax.swing.JPanel {
        
     }
     
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
     
     public void getdetail(String shipper) {
       
@@ -235,7 +288,7 @@ public class InvoiceBrowse extends javax.swing.JPanel {
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to get Shipper detail");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -273,7 +326,7 @@ public class InvoiceBrowse extends javax.swing.JPanel {
                 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("sql problem printing single ticket");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -365,6 +418,8 @@ public class InvoiceBrowse extends javax.swing.JPanel {
 
         setBackground(new java.awt.Color(0, 102, 204));
 
+        jPanel1.setName("panelmain"); // NOI18N
+
         tablepanel.setLayout(new javax.swing.BoxLayout(tablepanel, javax.swing.BoxLayout.LINE_AXIS));
 
         summarypanel.setLayout(new java.awt.BorderLayout());
@@ -412,6 +467,7 @@ public class InvoiceBrowse extends javax.swing.JPanel {
         tablepanel.add(detailpanel);
 
         btdetail.setText("Hide Detail");
+        btdetail.setName("bthidedetail"); // NOI18N
         btdetail.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdetailActionPerformed(evt);
@@ -419,8 +475,10 @@ public class InvoiceBrowse extends javax.swing.JPanel {
         });
 
         jLabel4.setText("To Billto:");
+        jLabel4.setName("lbltocust"); // NOI18N
 
         btRun.setText("Run");
+        btRun.setName("btrun"); // NOI18N
         btRun.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btRunActionPerformed(evt);
@@ -428,20 +486,26 @@ public class InvoiceBrowse extends javax.swing.JPanel {
         });
 
         jLabel1.setText("From Billto:");
+        jLabel1.setName("lblfromcust"); // NOI18N
 
         jLabel3.setText("To Invoice:");
+        jLabel3.setName("lbltoinv"); // NOI18N
 
         jLabel2.setText("From Invoice:");
+        jLabel2.setName("lblfrominv"); // NOI18N
 
         jLabel5.setText("From InvDate:");
+        jLabel5.setName("lblfromdate"); // NOI18N
 
         jLabel6.setText("To InvDate:");
+        jLabel6.setName("lbltodate"); // NOI18N
 
         dcfrom.setDateFormatString("yyyy-MM-dd");
 
         dcto.setDateFormatString("yyyy-MM-dd");
 
         tbcsv.setText("CSV");
+        tbcsv.setName("btcsv"); // NOI18N
         tbcsv.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tbcsvActionPerformed(evt);
@@ -527,10 +591,12 @@ public class InvoiceBrowse extends javax.swing.JPanel {
         );
 
         jLabel8.setText("Total Amt:");
+        jLabel8.setName("lbltotamt"); // NOI18N
 
         tbtotsales.setText("0");
 
         jLabel7.setText("Total Open Amt:");
+        jLabel7.setName("lblopen"); // NOI18N
 
         tbtotopen.setText("0");
 
@@ -538,11 +604,13 @@ public class InvoiceBrowse extends javax.swing.JPanel {
         tbdetqty.setText("0");
 
         EndBal.setText("Detail Qty:");
+        EndBal.setName("lblqty"); // NOI18N
 
         tbdetsales.setBackground(new java.awt.Color(195, 129, 129));
         tbdetsales.setText("0");
 
         EndBal1.setText("Detail Amt:");
+        EndBal1.setName("lblamt"); // NOI18N
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -719,7 +787,7 @@ try {
                 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Problem executing Shipper Report");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             con.close();
         } catch (Exception e) {

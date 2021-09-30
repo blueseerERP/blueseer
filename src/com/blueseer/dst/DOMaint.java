@@ -28,8 +28,11 @@ package com.blueseer.dst;
 import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.reinitpanels;
+import static bsmf.MainFrame.tags;
 import com.blueseer.inv.invData;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
 import static com.blueseer.utl.BlueSeerUtils.luTable;
 import static com.blueseer.utl.BlueSeerUtils.lual;
@@ -39,6 +42,7 @@ import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import com.blueseer.utl.DTData;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -53,7 +57,15 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 
 
@@ -121,7 +133,7 @@ public class DOMaint extends javax.swing.JPanel {
                  sumlinecount();
                
                 if (i == 0) {
-                   bsmf.MainFrame.show("No Order Record found for " + mykey);
+                   bsmf.MainFrame.show(getMessageTag(1001));
                 } else {
                             if (ddstatus.getSelectedItem().toString().compareTo("close") == 0) {
                              disableAll();
@@ -136,7 +148,7 @@ public class DOMaint extends javax.swing.JPanel {
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to retrieve do_mstr");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -179,6 +191,7 @@ public class DOMaint extends javax.swing.JPanel {
      */
     public DOMaint() {
         initComponents();
+        setLanguageTags(this);
     }
 
      public void enableAll() {
@@ -245,6 +258,50 @@ public class DOMaint extends javax.swing.JPanel {
         btadd.setEnabled(false);
         btadditem.setEnabled(false);
         btdelitem.setEnabled(false);
+    }
+    
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
     }
     
     public void initvars(String[] arg) {
@@ -339,9 +396,9 @@ public class DOMaint extends javax.swing.JPanel {
         luTable.setModel(luModel);
         luTable.getColumnModel().getColumn(0).setMaxWidth(50);
         if (luModel.getRowCount() < 1) {
-            ludialog.setTitle("No Records Found!");
+            ludialog.setTitle(getMessageTag(1001));
         } else {
-            ludialog.setTitle(luModel.getRowCount() + " Records Found!");
+            ludialog.setTitle(getMessageTag(1002, String.valueOf(luModel.getRowCount())));
         }
         }
         };
@@ -361,7 +418,8 @@ public class DOMaint extends javax.swing.JPanel {
         };
         luTable.addMouseListener(luml);
       
-        callDialog("Nbr", "From WH"); 
+        callDialog(getClassLabelTag("lblid", this.getClass().getSimpleName()),
+                getClassLabelTag("lblfromwh", this.getClass().getSimpleName())); 
         
         
     }
@@ -423,10 +481,13 @@ public class DOMaint extends javax.swing.JPanel {
         add(jScrollPane1);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Distribution Order Maintenance"));
+        jPanel1.setName("panelmain"); // NOI18N
 
         jLabel76.setText("OrderNbr");
+        jLabel76.setName("lblid"); // NOI18N
 
         jLabel86.setText("Remarks");
+        jLabel86.setName("lblremarks"); // NOI18N
 
         shipdate.setDateFormatString("yyyy-MM-dd");
 
@@ -438,6 +499,7 @@ public class DOMaint extends javax.swing.JPanel {
         });
 
         btadditem.setText("Add Item");
+        btadditem.setName("btadditem"); // NOI18N
         btadditem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btadditemActionPerformed(evt);
@@ -445,8 +507,10 @@ public class DOMaint extends javax.swing.JPanel {
         });
 
         jLabel85.setText("Status");
+        jLabel85.setName("lblstatus"); // NOI18N
 
         jLabel82.setText("From WH");
+        jLabel82.setName("lblfromwh"); // NOI18N
 
         orddet.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -462,6 +526,7 @@ public class DOMaint extends javax.swing.JPanel {
         jScrollPane8.setViewportView(orddet);
 
         btdelitem.setText("Del Item");
+        btdelitem.setName("btdeleteitem"); // NOI18N
         btdelitem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdelitemActionPerformed(evt);
@@ -471,6 +536,7 @@ public class DOMaint extends javax.swing.JPanel {
         ddstatus.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Open", "Shipped", "PartialShipped", "Hold", "Canceled" }));
 
         btadd.setText("Save");
+        btadd.setName("btadd"); // NOI18N
         btadd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddActionPerformed(evt);
@@ -478,8 +544,10 @@ public class DOMaint extends javax.swing.JPanel {
         });
 
         jLabel81.setText("Ship Date");
+        jLabel81.setName("lblshipdate"); // NOI18N
 
         btedit.setText("Edit");
+        btedit.setName("btupdate"); // NOI18N
         btedit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bteditActionPerformed(evt);
@@ -487,8 +555,10 @@ public class DOMaint extends javax.swing.JPanel {
         });
 
         jLabel90.setText("ShipVia");
+        jLabel90.setName("lblshipvia"); // NOI18N
 
         jLabel79.setText("PartNumber");
+        jLabel79.setName("lblitem"); // NOI18N
 
         ddpart.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -497,8 +567,10 @@ public class DOMaint extends javax.swing.JPanel {
         });
 
         jLabel84.setText("Qty Ship");
+        jLabel84.setName("lblqty"); // NOI18N
 
         jLabel5.setText("uom");
+        jLabel5.setName("lbluom"); // NOI18N
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -534,12 +606,16 @@ public class DOMaint extends javax.swing.JPanel {
         );
 
         jLabel1.setText("Total Lines");
+        jLabel1.setName("lbltotlines"); // NOI18N
 
         jLabel2.setText("Total Qty");
+        jLabel2.setName("lbltotqty"); // NOI18N
 
         jLabel91.setText("To WH");
+        jLabel91.setName("lbltowh"); // NOI18N
 
         btpoprint.setText("Print");
+        btpoprint.setName("btprint"); // NOI18N
         btpoprint.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btpoprintActionPerformed(evt);
@@ -547,6 +623,7 @@ public class DOMaint extends javax.swing.JPanel {
         });
 
         jLabel92.setText("Reference");
+        jLabel92.setName("lblreference"); // NOI18N
 
         btlookup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
 
@@ -583,12 +660,13 @@ public class DOMaint extends javax.swing.JPanel {
                         .addGap(36, 36, 36)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addGap(33, 33, 33)
+                                .addGap(32, 32, 32)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(jLabel82)
                                     .addComponent(jLabel90)
                                     .addComponent(jLabel91)
-                                    .addComponent(jLabel85))
+                                    .addComponent(jLabel85)
+                                    .addComponent(jLabel76))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -614,9 +692,6 @@ public class DOMaint extends javax.swing.JPanel {
                                             .addComponent(shipdate, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addComponent(tbref, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                             .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(21, 21, 21)
-                                .addComponent(jLabel76))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(37, 37, 37)
                                 .addComponent(jLabel86)
@@ -646,9 +721,9 @@ public class DOMaint extends javax.swing.JPanel {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(5, 5, 5)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel76)
-                                    .addComponent(ordernbr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(ordernbr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel76)))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(btlookup)
@@ -759,7 +834,7 @@ public class DOMaint extends javax.swing.JPanel {
         Pattern p = Pattern.compile("^[1-9]\\d*$");
         Matcher m = p.matcher(qtyshipped.getText());
         if (!m.find() || qtyshipped.getText() == null) {
-            bsmf.MainFrame.show("Invalid Qty");
+            bsmf.MainFrame.show(getMessageTag(1028));
             canproceed = false;
         }
         line = getmaxline();
@@ -816,13 +891,13 @@ public class DOMaint extends javax.swing.JPanel {
                             + ";");
 
                     }
-                    bsmf.MainFrame.show("DO has been added");
+                    bsmf.MainFrame.show(getMessageTag(1007));
                    initvars(null);
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Cannot add DO");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {

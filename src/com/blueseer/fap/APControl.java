@@ -26,13 +26,24 @@ SOFTWARE.
 package com.blueseer.fap;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.tags;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.IBlueSeerc;
 import com.blueseer.utl.OVData;
+import java.awt.Component;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.SwingWorker;
 
 /**
@@ -44,6 +55,7 @@ public class APControl extends javax.swing.JPanel implements IBlueSeerc {
     
     public APControl() {
         initComponents();
+        setLanguageTags(this);
     }
 
     // global variable declarations
@@ -111,6 +123,50 @@ public class APControl extends javax.swing.JPanel implements IBlueSeerc {
        isLoad = false;
     }
     
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+    
     public String[] setAction(int i) {
         String[] m = new String[2];
         if (i > 0) {
@@ -126,19 +182,19 @@ public class APControl extends javax.swing.JPanel implements IBlueSeerc {
                                 
                 if (tbbank.getText().isEmpty() || ! OVData.isValidBank(tbbank.getText())) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a valid bank");
+                    bsmf.MainFrame.show(getMessageTag(1026));
                     tbbank.requestFocus();
                     return b;
                 }
                 if (tbdefaultpurchacct.getText().isEmpty() || ! OVData.isValidGLAcct(tbdefaultpurchacct.getText())) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a valid Asset Purchase acct");
+                    bsmf.MainFrame.show(getMessageTag(1052));
                     tbdefaultpurchacct.requestFocus();
                     return b;
                 }
                 if (tbapacct.getText().isEmpty() || ! OVData.isValidGLAcct(tbapacct.getText())) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a valid AP acct");
+                    bsmf.MainFrame.show(getMessageTag(1052));
                     tbapacct.requestFocus();
                     return b;
                 }
@@ -270,10 +326,13 @@ public class APControl extends javax.swing.JPanel implements IBlueSeerc {
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("AP Control Maintenance"));
+        jPanel1.setName("panelmain"); // NOI18N
 
         jLabel1.setText("AP Default Bank");
+        jLabel1.setName("lblbank"); // NOI18N
 
         btupdate.setText("Update");
+        btupdate.setName("btupdate"); // NOI18N
         btupdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btupdateActionPerformed(evt);
@@ -281,10 +340,13 @@ public class APControl extends javax.swing.JPanel implements IBlueSeerc {
         });
 
         cbautovoucher.setText("Auto Voucher?");
+        cbautovoucher.setName("cbauto"); // NOI18N
 
         jLabel2.setText("Asset Purchase Acct");
+        jLabel2.setName("lblassetacct"); // NOI18N
 
         jLabel3.setText("AP Default Acct");
+        jLabel3.setName("lbldefaultacct"); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);

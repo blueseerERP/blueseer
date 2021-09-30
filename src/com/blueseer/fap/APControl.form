@@ -28,6 +28,7 @@
             <TitledBorder title="AP Control Maintenance"/>
           </Border>
         </Property>
+        <Property name="name" type="java.lang.String" value="panelmain" noResource="true"/>
       </Properties>
 
       <Layout>
@@ -85,11 +86,13 @@
         <Component class="javax.swing.JLabel" name="jLabel1">
           <Properties>
             <Property name="text" type="java.lang.String" value="AP Default Bank"/>
+            <Property name="name" type="java.lang.String" value="lblbank" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="btupdate">
           <Properties>
             <Property name="text" type="java.lang.String" value="Update"/>
+            <Property name="name" type="java.lang.String" value="btupdate" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btupdateActionPerformed"/>
@@ -98,6 +101,7 @@
         <Component class="javax.swing.JCheckBox" name="cbautovoucher">
           <Properties>
             <Property name="text" type="java.lang.String" value="Auto Voucher?"/>
+            <Property name="name" type="java.lang.String" value="cbauto" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="tbdefaultpurchacct">
@@ -105,6 +109,7 @@
         <Component class="javax.swing.JLabel" name="jLabel2">
           <Properties>
             <Property name="text" type="java.lang.String" value="Asset Purchase Acct"/>
+            <Property name="name" type="java.lang.String" value="lblassetacct" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="tbapacct">
@@ -112,6 +117,7 @@
         <Component class="javax.swing.JLabel" name="jLabel3">
           <Properties>
             <Property name="text" type="java.lang.String" value="AP Default Acct"/>
+            <Property name="name" type="java.lang.String" value="lbldefaultacct" noResource="true"/>
           </Properties>
         </Component>
       </SubComponents>

@@ -56,11 +56,22 @@ import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.mydialog;
 import static bsmf.MainFrame.pass;
+import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import java.awt.Component;
 import java.text.DecimalFormatSymbols;
 import java.util.Calendar;
 import java.util.Locale;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 
 
 /**
@@ -135,12 +146,54 @@ public class PaymentMaint extends javax.swing.JPanel {
     
     public PaymentMaint() {
         initComponents();
+        setLanguageTags(this);
     }
 
-    
-    
-    
-      public void postcommit() {
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+            
+    public void postcommit() {
          java.util.Date now = new java.util.Date();
         // dcfrom.setDate(now);
        //  dcto.setDate(now);
@@ -227,16 +280,21 @@ public class PaymentMaint extends javax.swing.JPanel {
 
         setBackground(new java.awt.Color(0, 102, 204));
 
+        jPanel1.setName("panelmain"); // NOI18N
+
         labeldollar.setBackground(new java.awt.Color(195, 129, 129));
         labeldollar.setText("0");
 
         labelcount.setText("0");
 
         jLabel7.setText("Count");
+        jLabel7.setName("lblcount"); // NOI18N
 
         jLabel9.setText("Total");
+        jLabel9.setName("lblamt"); // NOI18N
 
         btcommit.setText("Commit");
+        btcommit.setName("btcommit"); // NOI18N
         btcommit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btcommitActionPerformed(evt);
@@ -247,8 +305,10 @@ public class PaymentMaint extends javax.swing.JPanel {
         labelselected.setText("0");
 
         jLabel10.setText("Row(s)");
+        jLabel10.setName("lblrows"); // NOI18N
 
         jLabel8.setText("CheckNbr:");
+        jLabel8.setName("lblchecknbr"); // NOI18N
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -300,12 +360,16 @@ public class PaymentMaint extends javax.swing.JPanel {
         );
 
         jLabel6.setText("To Bank");
+        jLabel6.setName("lbltobank"); // NOI18N
 
         jLabel4.setText("To Vend");
+        jLabel4.setName("lbltovend"); // NOI18N
 
         jLabel3.setText("To DueDate");
+        jLabel3.setName("lbltoduedate"); // NOI18N
 
         btRun.setText("Run");
+        btRun.setName("btrun"); // NOI18N
         btRun.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btRunActionPerformed(evt);
@@ -313,6 +377,7 @@ public class PaymentMaint extends javax.swing.JPanel {
         });
 
         btexport.setText("Export");
+        btexport.setName("btexport"); // NOI18N
         btexport.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btexportActionPerformed(evt);
@@ -320,12 +385,15 @@ public class PaymentMaint extends javax.swing.JPanel {
         });
 
         jLabel1.setText("From Vend");
+        jLabel1.setName("lblfromvend"); // NOI18N
 
         dcto.setDateFormatString("yyyy-MM-dd");
 
         jLabel2.setText("From DueDate");
+        jLabel2.setName("lblfromduedate"); // NOI18N
 
         jLabel5.setText("From Bank");
+        jLabel5.setName("lblfrombank"); // NOI18N
 
         dcfrom.setDateFormatString("yyyy-MM-dd");
 
@@ -561,7 +629,7 @@ try {
                 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Cannot execute sql query for AP Vouchers");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             con.close();
         } catch (Exception e) {
@@ -641,10 +709,10 @@ try {
                             
                     output.write(newstring + '\n');
                 }
-             bsmf.MainFrame.show("file has been created");
+             bsmf.MainFrame.show(getMessageTag(1126));
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Cannot extract tran_mstr data");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             con.close();
         } catch (Exception e) {
@@ -680,7 +748,7 @@ try {
               OVData.APCheckRun(mytable, now, Integer.valueOf(tbchecknbr.getText().toString()), "AP-Vendor");
              }
              postcommit();
-             bsmf.MainFrame.show("Check Run Complete");
+             bsmf.MainFrame.show(getMessageTag(1125));
     }//GEN-LAST:event_btcommitActionPerformed
 
     private void mytableMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mytableMouseReleased

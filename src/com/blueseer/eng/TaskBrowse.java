@@ -62,6 +62,8 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.text.DecimalFormatSymbols;
 import java.util.Enumeration;
 import java.util.Locale;
@@ -76,10 +78,16 @@ public class TaskBrowse extends javax.swing.JPanel {
  
     
     javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"Select", "Detail", "MasterTaskID", "Description"});
+                        new String[]{getGlobalColumnTag("select"), 
+                            getGlobalColumnTag("detail"), 
+                            getGlobalColumnTag("id"), 
+                            getGlobalColumnTag("description")});
                 
     javax.swing.table.DefaultTableModel modeldetail = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"Sequence", "Owner", "Task", "Enabled?"});
+                        new String[]{getGlobalColumnTag("sequence"), 
+                            getGlobalColumnTag("owner"), 
+                            getGlobalColumnTag("id"), 
+                            getGlobalColumnTag("enabled")});
     
      class ButtonRenderer extends JButton implements TableCellRenderer {
 
@@ -179,7 +187,7 @@ public class TaskBrowse extends javax.swing.JPanel {
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to get Task detail");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -235,6 +243,8 @@ public class TaskBrowse extends javax.swing.JPanel {
 
         setBackground(new java.awt.Color(0, 102, 204));
 
+        jPanel1.setName("panelmain"); // NOI18N
+
         tablepanel.setLayout(new javax.swing.BoxLayout(tablepanel, javax.swing.BoxLayout.LINE_AXIS));
 
         summarypanel.setLayout(new java.awt.BorderLayout());
@@ -282,6 +292,7 @@ public class TaskBrowse extends javax.swing.JPanel {
         tablepanel.add(detailpanel);
 
         btdetail.setText("Hide Detail");
+        btdetail.setName("bthidedetail"); // NOI18N
         btdetail.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdetailActionPerformed(evt);
@@ -289,6 +300,7 @@ public class TaskBrowse extends javax.swing.JPanel {
         });
 
         btRun.setText("Run");
+        btRun.setName("btrun"); // NOI18N
         btRun.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btRunActionPerformed(evt);
@@ -317,6 +329,7 @@ public class TaskBrowse extends javax.swing.JPanel {
         );
 
         jLabel7.setText("Total Records:");
+        jLabel7.setName("lblcount"); // NOI18N
 
         tbtotqty.setText("0");
 
@@ -441,7 +454,7 @@ try {
                 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Problem executing Task Browse");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             con.close();
         } catch (Exception e) {

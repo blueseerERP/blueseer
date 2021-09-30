@@ -29,9 +29,13 @@ package com.blueseer.eng;
 import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.reinitpanels;
+import static bsmf.MainFrame.tags;
 import com.blueseer.inv.invData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
 import static com.blueseer.utl.BlueSeerUtils.luTable;
 import static com.blueseer.utl.BlueSeerUtils.lual;
@@ -79,6 +83,7 @@ import javax.print.PrintServiceLookup;
 import javax.print.SimpleDoc;
 import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
+import javax.swing.BorderFactory;
 import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -90,6 +95,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
@@ -123,7 +129,12 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
     // global datatablemodel declarations     
      javax.swing.table.DefaultTableModel taskmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
-                "Sequence", "Owner", "Task", "AssignDate", "CompDate", "Status"
+                getGlobalColumnTag("Sequence"), 
+                getGlobalColumnTag("owner"), 
+                getGlobalColumnTag("task"), 
+                getGlobalColumnTag("assigndate"), 
+                getGlobalColumnTag("compdate"), 
+                getGlobalColumnTag("status")
             });
       
       
@@ -209,7 +220,7 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
                     if (tasktable.getModel().getValueAt(myrow, 1).toString().compareTo(bsmf.MainFrame.userid) == 0) {
                  completetask(tbkey.getText(), tasktable.getValueAt(myrow, 0).toString());
                     } else {
-                      bsmf.MainFrame.show("you do not have access to complete this action");  
+                      bsmf.MainFrame.show(getMessageTag(1112));  
                     }
                     //bsmf.MainFrame.show(jTable1.getValueAt(myrow, 1).toString());
                 }
@@ -431,7 +442,7 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
     
     public ECNMaint() {
         initComponents();
-        
+        setLanguageTags(this);
     }
 
      
@@ -568,6 +579,50 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
             }
     } 
     
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+    
     public void setComponentDefaultValues() {
        isLoad = true;
         tbkey.setText("");
@@ -676,7 +731,7 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
                 
                 if (tbkey.getText().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a code");
+                    bsmf.MainFrame.show(getMessageTag(1024));
                     tbkey.requestFocus();
                     return b;
                 }
@@ -926,9 +981,9 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
         luTable.setModel(luModel);
         luTable.getColumnModel().getColumn(0).setMaxWidth(50);
         if (luModel.getRowCount() < 1) {
-            ludialog.setTitle("No Records Found!");
+            ludialog.setTitle(getMessageTag(1001));
         } else {
-            ludialog.setTitle(luModel.getRowCount() + " Records Found!");
+            ludialog.setTitle(getMessageTag(1002, String.valueOf(luModel.getRowCount())));
         }
         }
         };
@@ -948,7 +1003,7 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
         };
         luTable.addMouseListener(luml);
       
-        callDialog("Nbr"); 
+        callDialog(getClassLabelTag("lblid", this.getClass().getSimpleName())); 
         
         
     }
@@ -1051,10 +1106,10 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
                  }
                  
                  if (islast)
-                 bsmf.MainFrame.show("Last task is complete...ECN is now closed");
+                 bsmf.MainFrame.show(getMessageTag(1132));
                  
                  if (! islast)
-                 bsmf.MainFrame.show("You have completed your task");  
+                 bsmf.MainFrame.show(getMessageTag(1133));  
                  
                  // reinit the task list
                 res = st.executeQuery("select * from ecn_task where ecnt_nbr = " + "'" + myid + "'" + " order by ecnt_seq ;");
@@ -1070,7 +1125,7 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-               bsmf.MainFrame.show("Unable to Complete Task");
+               bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -1107,7 +1162,7 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
            }
             catch (SQLException s){
                 MainFrame.bslog(s);
-                 bsmf.MainFrame.show("Cannot send email to engineers");
+                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         }
@@ -1142,7 +1197,7 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("unable to retrieve Task Mstr Details");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -1172,7 +1227,7 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("unable to retrieve ECN Task Notes");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -1198,12 +1253,12 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
                         + " and ecnt_seq = " + "'" + seq + "'" 
                         + ";");
                
-             bsmf.MainFrame.show("updated Notes for ECN=" + ecn + " and Seq=" + seq);
+             bsmf.MainFrame.show(getMessageTag(1135,ecn));
              tanotes.setText("");   
                 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("unable to update ECN Task Notes");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -1283,6 +1338,7 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("ECN Maintenance"));
+        jPanel1.setName("panelmain"); // NOI18N
 
         tbkey.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1291,8 +1347,10 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
         });
 
         jLabel24.setText("ECN#");
+        jLabel24.setName("lblid"); // NOI18N
 
         btnew.setText("New");
+        btnew.setName("btnew"); // NOI18N
         btnew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnewActionPerformed(evt);
@@ -1300,12 +1358,16 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
         });
 
         jLabel25.setText("DateCreated");
+        jLabel25.setName("lblcreatedate"); // NOI18N
 
         jLabel26.setText("Drawing");
+        jLabel26.setName("lbldrawing"); // NOI18N
 
         jLabel35.setText("Target Date");
+        jLabel35.setName("lbltargetdate"); // NOI18N
 
         btadd.setText("Add");
+        btadd.setName("btadd"); // NOI18N
         btadd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddActionPerformed(evt);
@@ -1331,6 +1393,7 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
         jScrollPane7.setViewportView(tasktable);
 
         btupdate.setText("Update");
+        btupdate.setName("btupdate"); // NOI18N
         btupdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btupdateActionPerformed(evt);
@@ -1340,8 +1403,10 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
         dctargetdate.setDateFormatString("yyyy-MM-dd");
 
         jLabel27.setText("Customer Rev");
+        jLabel27.setName("lblcustomerrev"); // NOI18N
 
         jLabel37.setText("Engineer POC");
+        jLabel37.setName("lblpoc"); // NOI18N
 
         ddtask.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1350,10 +1415,13 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
         });
 
         jLabel38.setText("Mstr Task ID");
+        jLabel38.setName("lblmastertask"); // NOI18N
 
         jLabel39.setText("Internal Rev");
+        jLabel39.setName("lblinternalrev"); // NOI18N
 
         jLabel40.setText("Item Number");
+        jLabel40.setName("lblitem"); // NOI18N
 
         tanotes.setColumns(20);
         tanotes.setRows(5);
@@ -1362,8 +1430,10 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
         ddstatus.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "open", "hold", "closed", "cancelled" }));
 
         jLabel36.setText("Status");
+        jLabel36.setName("lblstatus"); // NOI18N
 
         btnotes.setText("Update Notes");
+        btnotes.setName("btupdatenotes"); // NOI18N
         btnotes.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnotesActionPerformed(evt);
@@ -1371,6 +1441,7 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
         });
 
         btclear.setText("Clear");
+        btclear.setName("btclear"); // NOI18N
         btclear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btclearActionPerformed(evt);
@@ -1378,6 +1449,7 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
         });
 
         btdelete.setText("Delete");
+        btdelete.setName("btdelete"); // NOI18N
         btdelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdeleteActionPerformed(evt);
@@ -1596,7 +1668,7 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
     private void btnotesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnotesActionPerformed
         int howmany = tasktable.getSelectedRowCount();
         if (howmany > 1) {
-            bsmf.MainFrame.show("Select only one Sequence");
+            bsmf.MainFrame.show(getMessageTag(1134));
             return;
         }
         

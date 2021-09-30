@@ -61,11 +61,20 @@ import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
+import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.text.DecimalFormatSymbols;
 import java.util.Enumeration;
 import java.util.Locale;
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 
@@ -77,10 +86,22 @@ public class ECNBrowse extends javax.swing.JPanel {
  
     
     javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"Select", "Detail", "ECNNbr", "MstrTaskID", "Eng POC", "Item", "Status"});
+                        new String[]{
+                            getGlobalColumnTag("select"), 
+                            getGlobalColumnTag("detail"), 
+                            getGlobalColumnTag("number"), 
+                            getGlobalColumnTag("id"), 
+                            getGlobalColumnTag("user"), 
+                            getGlobalColumnTag("item"), 
+                            getGlobalColumnTag("status")});
                 
     javax.swing.table.DefaultTableModel modeldetail = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"Sequence", "Owner", "Task", "AssignDate", "CloseDate", "Status"});
+                        new String[]{getGlobalColumnTag("sequence"), 
+                            getGlobalColumnTag("owner"), 
+                            getGlobalColumnTag("id"), 
+                            getGlobalColumnTag("assigndate"), 
+                            getGlobalColumnTag("compdate"), 
+                            getGlobalColumnTag("status")});
     
      class ButtonRenderer extends JButton implements TableCellRenderer {
 
@@ -145,6 +166,7 @@ public class ECNBrowse extends javax.swing.JPanel {
      */
     public ECNBrowse() {
         initComponents();
+        setLanguageTags(this);
     }
 
      public void getdetail(String nbr) {
@@ -182,7 +204,7 @@ public class ECNBrowse extends javax.swing.JPanel {
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to get ECN Task detail");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -193,6 +215,49 @@ public class ECNBrowse extends javax.swing.JPanel {
     
   
      
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
      
     public void initvars(String[] arg) {
        
@@ -253,6 +318,8 @@ public class ECNBrowse extends javax.swing.JPanel {
 
         setBackground(new java.awt.Color(0, 102, 204));
 
+        jPanel1.setName("panelmain"); // NOI18N
+
         tablepanel.setLayout(new javax.swing.BoxLayout(tablepanel, javax.swing.BoxLayout.LINE_AXIS));
 
         summarypanel.setLayout(new java.awt.BorderLayout());
@@ -300,6 +367,7 @@ public class ECNBrowse extends javax.swing.JPanel {
         tablepanel.add(detailpanel);
 
         btdetail.setText("Hide Detail");
+        btdetail.setName("bthidedetail"); // NOI18N
         btdetail.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdetailActionPerformed(evt);
@@ -307,6 +375,7 @@ public class ECNBrowse extends javax.swing.JPanel {
         });
 
         btRun.setText("Run");
+        btRun.setName("btrun"); // NOI18N
         btRun.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btRunActionPerformed(evt);
@@ -314,8 +383,10 @@ public class ECNBrowse extends javax.swing.JPanel {
         });
 
         jLabel5.setText("From Date:");
+        jLabel5.setName("lblfromdate"); // NOI18N
 
         jLabel6.setText("To Date:");
+        jLabel6.setName("lbltodate"); // NOI18N
 
         dcfrom.setDateFormatString("yyyy-MM-dd");
 
@@ -369,6 +440,7 @@ public class ECNBrowse extends javax.swing.JPanel {
         );
 
         jLabel7.setText("Total Records:");
+        jLabel7.setName("btcount"); // NOI18N
 
         tbtotqty.setText("0");
 
@@ -507,7 +579,7 @@ try {
                 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Problem executing ECN Browse");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             con.close();
         } catch (Exception e) {

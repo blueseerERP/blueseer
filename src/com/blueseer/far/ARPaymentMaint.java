@@ -27,8 +27,12 @@ package com.blueseer.far;
 
 import bsmf.MainFrame;
 import static bsmf.MainFrame.reinitpanels;
+import static bsmf.MainFrame.tags;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
 import static com.blueseer.utl.BlueSeerUtils.luTable;
 import static com.blueseer.utl.BlueSeerUtils.lual;
@@ -94,8 +98,12 @@ import java.awt.Color;
 import java.awt.Component;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JViewport;
@@ -125,10 +133,20 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
     // global datatablemodel declarations 
     javax.swing.table.DefaultTableModel referencemodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
-                "Reference", "Type", "DueDate", "Amount", "AmtApplied", "AmtOpen", "Tax", "Curr"});
+                getGlobalColumnTag("reference"), 
+                getGlobalColumnTag("type"), 
+                getGlobalColumnTag("duedate"), 
+                getGlobalColumnTag("amount"), 
+                getGlobalColumnTag("applied"), 
+                getGlobalColumnTag("open"), 
+                getGlobalColumnTag("tax"), 
+                getGlobalColumnTag("currency")});
     javax.swing.table.DefaultTableModel armodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
-                "Reference", "AmountToApply", "TaxAmount", "Curr"
+                getGlobalColumnTag("reference"), 
+                getGlobalColumnTag("amount"), 
+                getGlobalColumnTag("tax"), 
+                getGlobalColumnTag("currency")
             });
                 
     javax.swing.event.TableModelListener ml = new javax.swing.event.TableModelListener() {
@@ -143,10 +161,7 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
   
     public ARPaymentMaint() {
         initComponents();
-      
-        
-       
-       
+        setLanguageTags(this);     
     }
    
     // interface functions implemented
@@ -282,6 +297,50 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
             }
     } 
     
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+     
     public void setComponentDefaultValues() {
        isLoad = true;
         tbkey.setText("");
@@ -381,19 +440,21 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
         boolean b = true;
                 if (ddsite.getSelectedItem() == null || ddsite.getSelectedItem().toString().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("must choose a site");
+                    bsmf.MainFrame.show(getMessageTag(1026));
+                    ddsite.requestFocus();
                     return b;
                 }
                
                 if (ddcurr.getSelectedItem() == null || ddcurr.getSelectedItem().toString().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("must choose a currency");
+                    bsmf.MainFrame.show(getMessageTag(1026));
+                    ddcurr.requestFocus();
                     return b;
                 }
                 
                 if (tbkey.getText().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a code");
+                    bsmf.MainFrame.show(getMessageTag(1024));
                     tbkey.requestFocus();
                     return b;
                 }
@@ -401,28 +462,28 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
                    
                  if (tbcheck.getText().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("Check Number cannot be blank.");
+                    bsmf.MainFrame.show(getMessageTag(1127));
                     tbcheck.requestFocus();
                     return b;
                 }
                 if (arbank.isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("There is no Bank assigned for this cust");
+                    bsmf.MainFrame.show(getMessageTag(1128));
                     return b;
                 }
                 if (arcc.isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("There is no Cost Center assigned for this cust");
+                    bsmf.MainFrame.show(getMessageTag(1129));
                     return b;
                 }
                 if (aracct.isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("There is no AR Account assigned for this cust");
+                    bsmf.MainFrame.show(getMessageTag(1130));
                     return b;
                 }
                  if ( control != actamt || control == 0.00 || actamt == 0.00 ) {
                     b = false;
-                    bsmf.MainFrame.show("control amount does not match actual amount");
+                    bsmf.MainFrame.show(getMessageTag(1039,String.valueOf(control)));
                     return b;
                 }
                 
@@ -720,9 +781,9 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
         luTable.setModel(luModel);
         luTable.getColumnModel().getColumn(0).setMaxWidth(50);
         if (luModel.getRowCount() < 1) {
-            ludialog.setTitle("No Records Found!");
+            ludialog.setTitle(getMessageTag(1001));
         } else {
-            ludialog.setTitle(luModel.getRowCount() + " Records Found!");
+            ludialog.setTitle(getMessageTag(1002, String.valueOf(luModel.getRowCount())));
         }
         }
         };
@@ -742,7 +803,8 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
         };
         luTable.addMouseListener(luml);
       
-        callDialog("Nbr", "Cust"); 
+        callDialog(getClassLabelTag("lblid", this.getClass().getSimpleName()), 
+                getClassLabelTag("lblbillto", this.getClass().getSimpleName()));  
         
         
     }
@@ -773,7 +835,7 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("cannot retrieve from cm_mstr");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             } finally {
                if (res != null) res.close();
                if (st != null) st.close();
@@ -821,7 +883,7 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Cannot Get AR / Memo References");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             } finally {
                if (res != null) res.close();
                if (st != null) st.close();
@@ -886,7 +948,7 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
                  
              } catch (SQLException s) {
                  MainFrame.bslog(s);
-                 bsmf.MainFrame.show("Unable to update sod_det");
+                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
              } finally {
                if (res != null) res.close();
                if (st != null) st.close();
@@ -983,6 +1045,7 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("AR Payment Maintenance"));
+        jPanel1.setName("panelmain"); // NOI18N
 
         tbkey.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -991,6 +1054,7 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         jLabel24.setText("Batch Nbr");
+        jLabel24.setName("lblbatch"); // NOI18N
 
         btnew.setText("New");
         btnew.addActionListener(new java.awt.event.ActionListener() {
@@ -1009,8 +1073,10 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         jLabel36.setText("Billto");
+        jLabel36.setName("lblbillto"); // NOI18N
 
         btadditem.setText("Add Item");
+        btadditem.setName("btadditem"); // NOI18N
         btadditem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btadditemActionPerformed(evt);
@@ -1018,6 +1084,7 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         btadd.setText("Add");
+        btadd.setName("btadd"); // NOI18N
         btadd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddActionPerformed(evt);
@@ -1044,6 +1111,7 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         btdeleteitem.setText("Del Item");
+        btdeleteitem.setName("btdeleteitem"); // NOI18N
         btdeleteitem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdeleteitemActionPerformed(evt);
@@ -1051,6 +1119,7 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         btupdate.setText("Update");
+        btupdate.setName("btupdate"); // NOI18N
         btupdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btupdateActionPerformed(evt);
@@ -1060,8 +1129,10 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
         dcdate.setDateFormatString("yyyy-MM-dd");
 
         jLabel27.setText("Control Amt");
+        jLabel27.setName("lblcontrol"); // NOI18N
 
         jLabel35.setText("EffDate");
+        jLabel35.setName("lbleffdate"); // NOI18N
 
         referencedet.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -1077,8 +1148,10 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
         jScrollPane8.setViewportView(referencedet);
 
         jLabel2.setText("CheckNbr");
+        jLabel2.setName("lblchecknbr"); // NOI18N
 
         btaddall.setText("Add All");
+        btaddall.setName("btaddall"); // NOI18N
         btaddall.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddallActionPerformed(evt);
@@ -1086,8 +1159,10 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         jLabel3.setText("Ref Total");
+        jLabel3.setName("lblreftotal"); // NOI18N
 
         jLabel4.setText("Rmks");
+        jLabel4.setName("lblremarks"); // NOI18N
 
         ddsite.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1096,6 +1171,7 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         jLabel37.setText("Site");
+        jLabel37.setName("lblsite"); // NOI18N
 
         ddcurr.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1104,8 +1180,10 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         jLabel38.setText("Currency");
+        jLabel38.setName("lblcurrency"); // NOI18N
 
         jLabel5.setText("ActualAmt");
+        jLabel5.setName("lblactual"); // NOI18N
 
         btclear.setText("Clear");
         btclear.addActionListener(new java.awt.event.ActionListener() {
@@ -1115,6 +1193,7 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         btdelete.setText("Delete");
+        btdelete.setName("btdelete"); // NOI18N
         btdelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdeleteActionPerformed(evt);
@@ -1332,7 +1411,7 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
     private void btdeleteitemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteitemActionPerformed
         int[] rows = ardet.getSelectedRows();
         for (int i : rows) {
-            bsmf.MainFrame.show("Removing row " + i);
+            bsmf.MainFrame.show(getMessageTag(1031,String.valueOf(i)));
              actamt -= Double.valueOf(ardet.getModel().getValueAt(i,1).toString());
             ((javax.swing.table.DefaultTableModel) ardet.getModel()).removeRow(i);
         }
@@ -1389,7 +1468,7 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
         if (x.equals("error")) {
             tbcontrolamt.setText("");
             tbcontrolamt.setBackground(Color.yellow);
-            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            bsmf.MainFrame.show(getMessageTag(1000));
             tbcontrolamt.requestFocus();
         } else {
             tbcontrolamt.setText(x);

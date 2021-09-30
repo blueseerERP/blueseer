@@ -32,6 +32,9 @@
   </Layout>
   <SubComponents>
     <Container class="javax.swing.JPanel" name="jPanel1">
+      <Properties>
+        <Property name="name" type="java.lang.String" value="panelmain" noResource="true"/>
+      </Properties>
 
       <Layout>
         <DimensionLayout dim="0">
@@ -243,6 +246,7 @@
             <Component class="javax.swing.JButton" name="btdetail">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Hide Detail"/>
+                <Property name="name" type="java.lang.String" value="bthidedetail" noResource="true"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btdetailActionPerformed"/>
@@ -251,11 +255,13 @@
             <Component class="javax.swing.JLabel" name="jLabel4">
               <Properties>
                 <Property name="text" type="java.lang.String" value="To Billto:"/>
+                <Property name="name" type="java.lang.String" value="lbltocust" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JButton" name="btRun">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Run"/>
+                <Property name="name" type="java.lang.String" value="btrun" noResource="true"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btRunActionPerformed"/>
@@ -264,16 +270,19 @@
             <Component class="javax.swing.JLabel" name="jLabel1">
               <Properties>
                 <Property name="text" type="java.lang.String" value="From Billto:"/>
+                <Property name="name" type="java.lang.String" value="lblfromcust" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel3">
               <Properties>
                 <Property name="text" type="java.lang.String" value="To Invoice:"/>
+                <Property name="name" type="java.lang.String" value="lbltoinv" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel2">
               <Properties>
                 <Property name="text" type="java.lang.String" value="From Invoice:"/>
+                <Property name="name" type="java.lang.String" value="lblfrominv" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="datelabel">
@@ -289,11 +298,13 @@
             <Component class="javax.swing.JLabel" name="jLabel5">
               <Properties>
                 <Property name="text" type="java.lang.String" value="From InvDate:"/>
+                <Property name="name" type="java.lang.String" value="lblfromdate" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel6">
               <Properties>
                 <Property name="text" type="java.lang.String" value="To InvDate:"/>
+                <Property name="name" type="java.lang.String" value="lbltodate" noResource="true"/>
               </Properties>
             </Component>
             <Component class="com.toedter.calendar.JDateChooser" name="dcfrom">
@@ -309,6 +320,7 @@
             <Component class="javax.swing.JButton" name="tbcsv">
               <Properties>
                 <Property name="text" type="java.lang.String" value="CSV"/>
+                <Property name="name" type="java.lang.String" value="btcsv" noResource="true"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tbcsvActionPerformed"/>
@@ -374,6 +386,7 @@
             <Component class="javax.swing.JLabel" name="jLabel8">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Total Amt:"/>
+                <Property name="name" type="java.lang.String" value="lbltotamt" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="tbtotsales">
@@ -384,6 +397,7 @@
             <Component class="javax.swing.JLabel" name="jLabel7">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Total Open Amt:"/>
+                <Property name="name" type="java.lang.String" value="lblopen" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="tbtotopen">
@@ -402,6 +416,7 @@
             <Component class="javax.swing.JLabel" name="EndBal">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Detail Qty:"/>
+                <Property name="name" type="java.lang.String" value="lblqty" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="tbdetsales">
@@ -415,6 +430,7 @@
             <Component class="javax.swing.JLabel" name="EndBal1">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Detail Amt:"/>
+                <Property name="name" type="java.lang.String" value="lblamt" noResource="true"/>
               </Properties>
             </Component>
           </SubComponents>

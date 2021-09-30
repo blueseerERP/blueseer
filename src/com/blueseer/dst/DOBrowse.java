@@ -66,10 +66,19 @@ import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.mydialog;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
+import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 
 /**
  *
@@ -80,10 +89,22 @@ public class DOBrowse extends javax.swing.JPanel {
      public Map<String, ArrayList<String>> map = new HashMap<String, ArrayList<String>>();
      
     javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"Select", "Detail", "OrderNbr", "From WH", "To WH", "ShipDate", "Type", "Status", "Qty"});
+                        new String[]{
+                            getGlobalColumnTag("select"), 
+                            getGlobalColumnTag("detail"), 
+                            getGlobalColumnTag("order"), 
+                            getGlobalColumnTag("fromwh"), 
+                            getGlobalColumnTag("towh"), 
+                            getGlobalColumnTag("shipdate"), 
+                            getGlobalColumnTag("type"), 
+                            getGlobalColumnTag("status"), 
+                            getGlobalColumnTag("quantity")});
                 
     javax.swing.table.DefaultTableModel modeldetail = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"DO", "Part", "Qty", "Ref"});
+                        new String[]{getGlobalColumnTag("order"), 
+                            getGlobalColumnTag("item"), 
+                            getGlobalColumnTag("quantity"), 
+                            getGlobalColumnTag("reference")});
     
      class ButtonRenderer extends JButton implements TableCellRenderer {
 
@@ -115,6 +136,7 @@ public class DOBrowse extends javax.swing.JPanel {
      */
     public DOBrowse() {
         initComponents();
+        setLanguageTags(this);
     }
 
      public void getdetail(String donbr) {
@@ -150,7 +172,7 @@ public class DOBrowse extends javax.swing.JPanel {
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to get DO Browse detail");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -159,6 +181,49 @@ public class DOBrowse extends javax.swing.JPanel {
 
     }
     
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
     
     public void initvars(String[] arg) {
         lblqtytot.setText("0");
@@ -243,6 +308,7 @@ public class DOBrowse extends javax.swing.JPanel {
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Distribution Order Browse"));
+        jPanel1.setName("panelmain"); // NOI18N
 
         tablepanel.setLayout(new javax.swing.BoxLayout(tablepanel, javax.swing.BoxLayout.LINE_AXIS));
 
@@ -292,6 +358,7 @@ public class DOBrowse extends javax.swing.JPanel {
         tablepanel.add(detailpanel);
 
         btdetail.setText("Hide Detail");
+        btdetail.setName("bthidedetail"); // NOI18N
         btdetail.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdetailActionPerformed(evt);
@@ -299,8 +366,10 @@ public class DOBrowse extends javax.swing.JPanel {
         });
 
         jLabel4.setText("To Sending WH");
+        jLabel4.setName("lbltowh"); // NOI18N
 
         btRun.setText("Run");
+        btRun.setName("btrun"); // NOI18N
         btRun.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btRunActionPerformed(evt);
@@ -308,10 +377,13 @@ public class DOBrowse extends javax.swing.JPanel {
         });
 
         jLabel1.setText("From Sending WH");
+        jLabel1.setName("lblfromwh"); // NOI18N
 
         jLabel3.setText("To DO");
+        jLabel3.setName("lbltodo"); // NOI18N
 
         jLabel6.setText("From DO");
+        jLabel6.setName("lblfromdo"); // NOI18N
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -364,6 +436,7 @@ public class DOBrowse extends javax.swing.JPanel {
         );
 
         jLabel8.setText("Total Qty");
+        jLabel8.setName("lbltotqty"); // NOI18N
 
         lblqtytot.setText("0");
 
@@ -498,7 +571,7 @@ try {
                 lblqtytot.setText(df.format(totqty));
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Problem executing DO Browse Report");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             con.close();
         } catch (Exception e) {

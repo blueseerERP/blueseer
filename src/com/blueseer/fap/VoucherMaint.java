@@ -28,7 +28,11 @@ package com.blueseer.fap;
 import com.blueseer.utl.OVData;
 import bsmf.MainFrame;
 import static bsmf.MainFrame.reinitpanels;
+import static bsmf.MainFrame.tags;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
 import static com.blueseer.utl.BlueSeerUtils.luTable;
 import static com.blueseer.utl.BlueSeerUtils.lual;
@@ -89,8 +93,16 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import static com.blueseer.utl.OVData.getDueDateFromTerms;
 import java.awt.Color;
+import java.awt.Component;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 
 
@@ -116,10 +128,7 @@ public class VoucherMaint extends javax.swing.JPanel {
      */
     public VoucherMaint() {
         initComponents();
-      
-        
-       
-       
+        setLanguageTags(this);
     }
    
     
@@ -251,6 +260,49 @@ public class VoucherMaint extends javax.swing.JPanel {
        isLoad = false;
     }
     
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
     
     public void initvars(String[] arg) {
         
@@ -279,9 +331,9 @@ public class VoucherMaint extends javax.swing.JPanel {
         luTable.setModel(luModel);
         luTable.getColumnModel().getColumn(0).setMaxWidth(50);
         if (luModel.getRowCount() < 1) {
-            ludialog.setTitle("No Records Found!");
+            ludialog.setTitle(getMessageTag(1001));
         } else {
-            ludialog.setTitle(luModel.getRowCount() + " Records Found!");
+            ludialog.setTitle(getMessageTag(1002, String.valueOf(luModel.getRowCount())));
         }
         }
         };
@@ -301,7 +353,8 @@ public class VoucherMaint extends javax.swing.JPanel {
         };
         luTable.addMouseListener(luml);
       
-        callDialog("Nbr", "VendCode"); 
+        callDialog(getClassLabelTag("lblid", this.getClass().getSimpleName()), 
+                getClassLabelTag("lblvendor", this.getClass().getSimpleName())); 
         
         
     }
@@ -309,11 +362,32 @@ public class VoucherMaint extends javax.swing.JPanel {
     
     javax.swing.table.DefaultTableModel receivermodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
-                "Part", "PO", "Line", "Qty", "listprice", "disc", "netprice", "loc", "serial", "lot", "RecvID", "RecvLine", "Acct", "CC"
+                getGlobalColumnTag("item"), 
+                getGlobalColumnTag("po"), 
+                getGlobalColumnTag("line"), 
+                getGlobalColumnTag("quantity"), 
+                getGlobalColumnTag("listprice"), 
+                getGlobalColumnTag("discount"), 
+                getGlobalColumnTag("netprice"), 
+                getGlobalColumnTag("location"), 
+                getGlobalColumnTag("serial"), 
+                getGlobalColumnTag("lot"), 
+                getGlobalColumnTag("receiver"), 
+                getGlobalColumnTag("line"), 
+                getGlobalColumnTag("account"), 
+                getGlobalColumnTag("costcenter")
             });
     javax.swing.table.DefaultTableModel vouchermodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
-                "PO", "Line", "Part", "Qty", "Price", "RecvID", "RecvLine", "Acct", "CC"
+                getGlobalColumnTag("po"), 
+                getGlobalColumnTag("line"), 
+                getGlobalColumnTag("item"), 
+                getGlobalColumnTag("quantity"), 
+                getGlobalColumnTag("listprice"), 
+                getGlobalColumnTag("receiver"), 
+                getGlobalColumnTag("line"), 
+                getGlobalColumnTag("account"), 
+                getGlobalColumnTag("costcenter")
             });
       public void reinitreceivervariables(String myreceiver) {
        
@@ -367,7 +441,7 @@ public class VoucherMaint extends javax.swing.JPanel {
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("cannot retrieve vendor info");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -406,7 +480,7 @@ public class VoucherMaint extends javax.swing.JPanel {
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Cannot retrieve Receiver");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -448,7 +522,7 @@ public class VoucherMaint extends javax.swing.JPanel {
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Cannot retrieve Voucher");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -535,10 +609,13 @@ public class VoucherMaint extends javax.swing.JPanel {
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Voucher Maintenance"));
+        jPanel1.setName("panelmain"); // NOI18N
 
         jLabel24.setText("Voucher Nbr");
+        jLabel24.setName("lblid"); // NOI18N
 
         btnew.setText("New");
+        btnew.setName("btnew"); // NOI18N
         btnew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnewActionPerformed(evt);
@@ -546,10 +623,13 @@ public class VoucherMaint extends javax.swing.JPanel {
         });
 
         jLabel36.setText("Vendor");
+        jLabel36.setName("lblvendor"); // NOI18N
 
         lblreceiver.setText("Receivers");
+        lblreceiver.setName("lblreceivers"); // NOI18N
 
         btadditem.setText("Add Item");
+        btadditem.setName("btadditem"); // NOI18N
         btadditem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btadditemActionPerformed(evt);
@@ -557,6 +637,7 @@ public class VoucherMaint extends javax.swing.JPanel {
         });
 
         btadd.setText("Save");
+        btadd.setName("btadd"); // NOI18N
         btadd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddActionPerformed(evt);
@@ -583,6 +664,7 @@ public class VoucherMaint extends javax.swing.JPanel {
         });
 
         btdeleteitem.setText("Del Item");
+        btdeleteitem.setName("btdeleteitem"); // NOI18N
         btdeleteitem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdeleteitemActionPerformed(evt);
@@ -590,6 +672,7 @@ public class VoucherMaint extends javax.swing.JPanel {
         });
 
         btedit.setText("Edit");
+        btedit.setName("btupdate"); // NOI18N
         btedit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bteditActionPerformed(evt);
@@ -605,8 +688,10 @@ public class VoucherMaint extends javax.swing.JPanel {
         dcdate.setDateFormatString("yyyy-MM-dd");
 
         jLabel27.setText("Control Amt");
+        jLabel27.setName("lblcontrol"); // NOI18N
 
         jLabel35.setText("VoucherDate");
+        jLabel35.setName("lblvoucherdate"); // NOI18N
 
         receiverdet.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -628,12 +713,16 @@ public class VoucherMaint extends javax.swing.JPanel {
         });
 
         jLabel1.setText("PO");
+        jLabel1.setName("lblpo"); // NOI18N
 
         jLabel2.setText("Invoice");
+        jLabel2.setName("lblinvoice"); // NOI18N
 
         jLabel28.setText("Actual Amt");
+        jLabel28.setName("lblactual"); // NOI18N
 
         btaddall.setText("Add All");
+        btaddall.setName("btaddall"); // NOI18N
         btaddall.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddallActionPerformed(evt);
@@ -641,12 +730,16 @@ public class VoucherMaint extends javax.swing.JPanel {
         });
 
         jLabel3.setText("Receiver Total");
+        jLabel3.setName("lblreceivertotal"); // NOI18N
 
         jLabel4.setText("Rmks");
+        jLabel4.setName("lblremarks"); // NOI18N
 
         jLabel5.setText("Item/Service");
+        jLabel5.setName("lblitem"); // NOI18N
 
         jLabel6.setText("Price");
+        jLabel6.setName("lblprice"); // NOI18N
 
         ddtype.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Receipt", "Expense" }));
         ddtype.addActionListener(new java.awt.event.ActionListener() {
@@ -656,12 +749,16 @@ public class VoucherMaint extends javax.swing.JPanel {
         });
 
         jLabel37.setText("Type");
+        jLabel37.setName("lbltype"); // NOI18N
 
         jLabel7.setText("Qty");
+        jLabel7.setName("lblqty"); // NOI18N
 
         jLabel8.setText("CC");
+        jLabel8.setName("lblcc"); // NOI18N
 
         jLabel9.setText("ExpenseAcct");
+        jLabel9.setName("lblacct"); // NOI18N
 
         ddsite.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -670,6 +767,7 @@ public class VoucherMaint extends javax.swing.JPanel {
         });
 
         jLabel10.setText("Site");
+        jLabel10.setName("lblsite"); // NOI18N
 
         btlookup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
         btlookup.addActionListener(new java.awt.event.ActionListener() {
@@ -717,17 +815,15 @@ public class VoucherMaint extends javax.swing.JPanel {
                                                             .addComponent(ddtype, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
                                                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                                                        .addGap(90, 90, 90)
-                                                                        .addComponent(jLabel4))
-                                                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                        .addComponent(jLabel10)))
+                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                                .addComponent(jLabel10)
                                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                                    .addComponent(tbrmks, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                    .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                                .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                                                .addGap(121, 121, 121)
+                                                                .addComponent(jLabel4)
+                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                .addComponent(tbrmks, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                                 .addGap(0, 2, Short.MAX_VALUE))
                                                             .addGroup(jPanel1Layout.createSequentialGroup()
                                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -779,7 +875,7 @@ public class VoucherMaint extends javax.swing.JPanel {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(tbcc, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(tbitemservice, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
                         .addComponent(jLabel7)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(tbqty, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -940,13 +1036,14 @@ public class VoucherMaint extends javax.swing.JPanel {
                     Date duedate = OVData.getDueDateFromTerms(dcdate.getDate(), terms);
                     if (duedate == null) {
                     proceed = false;
-                    bsmf.MainFrame.show("Terms is undefined for this Vendor");
+                    bsmf.MainFrame.show(getMessageTag(1090));
                     return;
                     }
                      
                     if (tbinvoice.getText().isEmpty()) {
                     proceed = false;
-                    bsmf.MainFrame.show("Invoice Nbr cannot be empty");
+                    bsmf.MainFrame.show(getMessageTag(1024));
+                    tbinvoice.requestFocus();
                     return;
                     }
                     
@@ -1053,9 +1150,9 @@ public class VoucherMaint extends javax.swing.JPanel {
                              }
                         
                     if (error) {
-                        bsmf.MainFrame.show("An error occurred");
+                        bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
                     } else {
-                    bsmf.MainFrame.show("Vouchering Complete");
+                    bsmf.MainFrame.show(getMessageTag(1125));
                     initvars(null);
                     }
                     //reinitreceivervariables("");
@@ -1064,7 +1161,7 @@ public class VoucherMaint extends javax.swing.JPanel {
                 } // if proceed
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to Voucher");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -1101,7 +1198,7 @@ public class VoucherMaint extends javax.swing.JPanel {
                 ddpo.setSelectedIndex(0);
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Cannot get PO list for this Vendor");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -1114,7 +1211,7 @@ public class VoucherMaint extends javax.swing.JPanel {
         int[] rows = voucherdet.getSelectedRows();
         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
         for (int i : rows) {
-            bsmf.MainFrame.show("Removing row " + i);
+            bsmf.MainFrame.show(getMessageTag(1031,String.valueOf(i)));
              actamt -= Double.valueOf(voucherdet.getModel().getValueAt(i,3).toString()) * Double.valueOf(voucherdet.getModel().getValueAt(i,4).toString());
             ((javax.swing.table.DefaultTableModel) voucherdet.getModel()).removeRow(i);
            voucherline--;
@@ -1159,13 +1256,13 @@ public class VoucherMaint extends javax.swing.JPanel {
                             + ")"
                             + ";");
                     }
-                    JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "Edited Shipper Record");
+                    bsmf.MainFrame.show(getMessageTag(1008));
                     reinitreceivervariables("");
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Cannot insert into recv_det");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -1207,7 +1304,7 @@ public class VoucherMaint extends javax.swing.JPanel {
                 ddreceiver.setSelectedIndex(0);
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Cannot get Receiver list for this Vendor");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
