@@ -208,7 +208,7 @@ public class DTData {
         
         
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), "Shift", getGlobalColumnTag("description")})
+                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("shift"), getGlobalColumnTag("description")})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -356,7 +356,7 @@ public class DTData {
         
         
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("item"), getGlobalColumnTag("description"), "UOM", "Type", "Status", "QtyOnHand", "SafetyStock"})
+                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("item"), getGlobalColumnTag("description"), getGlobalColumnTag("uom"), getGlobalColumnTag("type"), getGlobalColumnTag("status"), getGlobalColumnTag("qoh"), getGlobalColumnTag("safetystock")})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -412,7 +412,7 @@ public class DTData {
         
         
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("item"), getGlobalColumnTag("description"), "UOM", "Type", "Status", getGlobalColumnTag("site"), "ProdLine", "Rev", "MFCode", "RoutingCode"})
+                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("item"), getGlobalColumnTag("description"), getGlobalColumnTag("uom"), getGlobalColumnTag("type"), getGlobalColumnTag("status"), getGlobalColumnTag("site"), getGlobalColumnTag("prodline"), getGlobalColumnTag("rev"), getGlobalColumnTag("class"), getGlobalColumnTag("routing")})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -468,7 +468,7 @@ public class DTData {
     
     public static DefaultTableModel getGLTranBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), "ID", "Ref", "Acct", "CC", getGlobalColumnTag("site"), "EffDate", "EntDate", getGlobalColumnTag("description"), "Amount", "UserID"})
+                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("ref"), getGlobalColumnTag("account"), getGlobalColumnTag("cc"), getGlobalColumnTag("site"), getGlobalColumnTag("effectivedate"), getGlobalColumnTag("enterdate"), getGlobalColumnTag("description"), getGlobalColumnTag("amount"), getGlobalColumnTag("userid")})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -533,7 +533,7 @@ public class DTData {
     
     public static DefaultTableModel getItemBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("item"), getGlobalColumnTag("description"), "ClassCode", "UOM", "Type", "Status", getGlobalColumnTag("site"), "ProdLine", "Routing"})
+                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("item"), getGlobalColumnTag("description"), "ClassCode", getGlobalColumnTag("uom"), getGlobalColumnTag("type"), getGlobalColumnTag("status"), getGlobalColumnTag("site"), getGlobalColumnTag("prodline"), getGlobalColumnTag("routing")})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -595,7 +595,7 @@ public class DTData {
       
     public static DefaultTableModel getItemMClassBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("item"), getGlobalColumnTag("description"), "ClassCode", "UOM", "Type", "Status", getGlobalColumnTag("site"), "ProdLine", "Routing"})
+                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("item"), getGlobalColumnTag("description"), "ClassCode", getGlobalColumnTag("uom"), getGlobalColumnTag("type"), getGlobalColumnTag("status"), getGlobalColumnTag("site"), getGlobalColumnTag("prodline"), getGlobalColumnTag("routing")})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -661,7 +661,7 @@ public class DTData {
     
     public static DefaultTableModel getVendBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("code"), "Name", "Line1", "City", "State", "Zip", "Country"})
+                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("code"), "Name", getGlobalColumnTag("addr1"), getGlobalColumnTag("city"), getGlobalColumnTag("state"), getGlobalColumnTag("zip"), getGlobalColumnTag("country")})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -721,7 +721,7 @@ public class DTData {
         
          public static DefaultTableModel getAcctBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("code"), getGlobalColumnTag("description"), "Type", "Currency"})
+                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("code"), getGlobalColumnTag("description"), getGlobalColumnTag("type"), getGlobalColumnTag("currency")})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -894,7 +894,7 @@ public class DTData {
          
          public static DefaultTableModel getSiteBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("site"), getGlobalColumnTag("description"), "Line1", "City", "State", "Zip", "Logo"})
+                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("site"), getGlobalColumnTag("description"), getGlobalColumnTag("addr1"), getGlobalColumnTag("city"), getGlobalColumnTag("state"), getGlobalColumnTag("zip"), "Logo"})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -954,7 +954,7 @@ public class DTData {
          
         public static DefaultTableModel getCustBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("code"), "Name", "Line1", "City", "State", "Zip", "Country"}){
+                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("code"), "Name", getGlobalColumnTag("addr1"), getGlobalColumnTag("city"), getGlobalColumnTag("state"), getGlobalColumnTag("zip"), getGlobalColumnTag("country")}){
                       @Override  
                       public Class getColumnClass(int col) {  
                         if (col == 0)       
@@ -1014,7 +1014,7 @@ public class DTData {
         
         public static DefaultTableModel getShipToBrowseUtil( String str, int state, String myfield, String cust) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), "ShipCode", "BillCode", "Name", "Line1", "City", "State", "Zip", "Country"})
+                      new String[]{getGlobalColumnTag("select"), "ShipCode", "BillCode", "Name", getGlobalColumnTag("addr1"), getGlobalColumnTag("city"), getGlobalColumnTag("state"), getGlobalColumnTag("zip"), getGlobalColumnTag("country")})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -1076,7 +1076,7 @@ public class DTData {
         
         public static DefaultTableModel getShipToBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), "ShipCode", "BillCode", "Name", "Line1", "City", "State", "Zip", "Country"})
+                      new String[]{getGlobalColumnTag("select"), "ShipCode", "BillCode", "Name", getGlobalColumnTag("addr1"), getGlobalColumnTag("city"), getGlobalColumnTag("state"), getGlobalColumnTag("zip"), getGlobalColumnTag("country")})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -1138,7 +1138,7 @@ public class DTData {
         
          public static DefaultTableModel getRoutingBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), "RoutingID", "Operation", "Cell", "OpDesc", "RunHours", "SetupHours", "isAssert"})
+                      new String[]{getGlobalColumnTag("select"), "RoutingID", "Operation", getGlobalColumnTag("cell"), "OpDesc", "RunHours", "SetupHours", "isAssert"})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -1198,7 +1198,7 @@ public class DTData {
         
           public static DefaultTableModel getWorkCenterBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), "Cell",  getGlobalColumnTag("description"), "Dept/CC", "RunRate", "SetupRate", "BurdenRate"})
+                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("cell"),  getGlobalColumnTag("description"), "Dept/CC", "RunRate", "SetupRate", "BurdenRate"})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -1313,7 +1313,7 @@ public class DTData {
            
        public static DefaultTableModel getUOMBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("uom"), getGlobalColumnTag("description")})
+                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag(getGlobalColumnTag("uom")), getGlobalColumnTag("description")})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -1368,7 +1368,7 @@ public class DTData {
         
         public static DefaultTableModel getQPRBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), "ID", getGlobalColumnTag("item"),  getGlobalColumnTag("description"), "Vendor", "Userid", "DateCreate", "DateClosed"})
+                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("item"),  getGlobalColumnTag("description"), "Vendor", getGlobalColumnTag("userid"), "DateCreate", "DateClosed"})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -1430,7 +1430,7 @@ public class DTData {
        
          public static DefaultTableModel getPrinterBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), "PrinterID", getGlobalColumnTag("description"), "Type", "IP", "Port"})
+                      new String[]{getGlobalColumnTag("select"), "PrinterID", getGlobalColumnTag("description"), getGlobalColumnTag("type"), "IP", "Port"})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -1546,7 +1546,7 @@ public class DTData {
            
         public static DefaultTableModel getUOMConvBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), "Key1", "Key2", "Key2Amount", "Key2Amount", "Type", "Notes"})
+                      new String[]{getGlobalColumnTag("select"), "Key1", "Key2", "Key2Amount", "Key2Amount", getGlobalColumnTag("type"), "Notes"})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -1608,7 +1608,7 @@ public class DTData {
         
         public static DefaultTableModel getECNBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), "ECN Nbr", "TaskID", getGlobalColumnTag("description"), "POC", "Status"})
+                      new String[]{getGlobalColumnTag("select"), "ECN Nbr", "TaskID", getGlobalColumnTag("description"), "POC", getGlobalColumnTag("status")})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -1666,7 +1666,7 @@ public class DTData {
         
          public static DefaultTableModel getTaskBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), "TaskID", getGlobalColumnTag("description"), "Class", "Creator", "Status"})
+                      new String[]{getGlobalColumnTag("select"), "TaskID", getGlobalColumnTag("description"), "Class", "Creator", getGlobalColumnTag("status")})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -1781,7 +1781,7 @@ public class DTData {
          
         public static DefaultTableModel getTaxBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), "TaxCode", getGlobalColumnTag("description"), "UserID"})
+                      new String[]{getGlobalColumnTag("select"), "TaxCode", getGlobalColumnTag("description"), getGlobalColumnTag("userid")})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -1893,7 +1893,7 @@ public class DTData {
         
         public static DefaultTableModel getEDIPartnerBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), "ID", getGlobalColumnTag("description")})
+                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("description")})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -2120,7 +2120,7 @@ public class DTData {
         
         public static DefaultTableModel getCustXrefBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), "Cust", "CustItem", getGlobalColumnTag("item")})
+                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("customer"), "CustItem", getGlobalColumnTag("item")})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -2176,7 +2176,7 @@ public class DTData {
         
         public static DefaultTableModel getCustXrefBrowseUtil( String str, int state, String myfield, String cust) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), "Cust", "CustItem", getGlobalColumnTag("item")})
+                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("customer"), "CustItem", getGlobalColumnTag("item")})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -2236,7 +2236,7 @@ public class DTData {
         
         public static DefaultTableModel getVendXrefBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), "Vend", "VendItem", getGlobalColumnTag("item")})
+                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("vendor"), getGlobalColumnTag("venditem"), getGlobalColumnTag("item")})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -2292,7 +2292,7 @@ public class DTData {
         
         public static DefaultTableModel getVendXrefBrowseUtil( String str, int state, String myfield, String vend) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), "Vend", "VendItem", getGlobalColumnTag("item")})
+                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("vendor"), getGlobalColumnTag("venditem"), getGlobalColumnTag("item")})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -2352,7 +2352,7 @@ public class DTData {
         
         public static DefaultTableModel getVendPriceBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), "Vend", getGlobalColumnTag("item"), "UOM", "Currency", "Price"})
+                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("vendor"), getGlobalColumnTag("item"), getGlobalColumnTag("uom"), getGlobalColumnTag("currency"), getGlobalColumnTag("price")})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -2410,7 +2410,7 @@ public class DTData {
          
          public static DefaultTableModel getCustPriceBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), "Cust", getGlobalColumnTag("item"), "UOM", "Currency", "Price"})
+                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("customer"), getGlobalColumnTag("item"), getGlobalColumnTag("uom"), getGlobalColumnTag("currency"), getGlobalColumnTag("price")})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -2469,7 +2469,7 @@ public class DTData {
           
         public static DefaultTableModel getPayProfileBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), "ProfileCode", getGlobalColumnTag("description"), "UserID"})
+                      new String[]{getGlobalColumnTag("select"), "ProfileCode", getGlobalColumnTag("description"), getGlobalColumnTag("userid")})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -2525,7 +2525,7 @@ public class DTData {
          
              public static DefaultTableModel getPayRollBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), "BatchID", getGlobalColumnTag("site"), getGlobalColumnTag("description"), "StartDate", "EndDate", "PayDate", "UserID"})
+                      new String[]{getGlobalColumnTag("select"), "BatchID", getGlobalColumnTag("site"), getGlobalColumnTag("description"), "StartDate", "EndDate", "PayDate", getGlobalColumnTag("userid")})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -2586,7 +2586,7 @@ public class DTData {
           
           public static DefaultTableModel getEDITPBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), "TPID", getGlobalColumnTag("description"), "Contact", "Web", "Phone"})
+                      new String[]{getGlobalColumnTag("select"), "TPID", getGlobalColumnTag("description"), "Contact", "Web", getGlobalColumnTag("phone")})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -2820,7 +2820,7 @@ public class DTData {
           
     public static DefaultTableModel getOrderBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), "OrderNbr", "Billto", "Shipto", "PONumber", "OrderDate", "DueDate", "Status"})
+                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("order"), "Billto", "Shipto", "PONumber", "OrderDate", getGlobalColumnTag("duedate"), getGlobalColumnTag("status")})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -2880,7 +2880,7 @@ public class DTData {
      
     public static DefaultTableModel getOrderDetailBrowseUtil( String str, String myfield, String cust, String ship) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), "Order", "Line", "PONbr", getGlobalColumnTag("item"), getGlobalColumnTag("description"), "QtyOrd", "QtyShipped"})
+                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("order"), "Line", getGlobalColumnTag("po"), getGlobalColumnTag("item"), getGlobalColumnTag("description"), "QtyOrd", "QtyShipped"})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -2935,7 +2935,7 @@ public class DTData {
     
     public static DefaultTableModel getPOBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), "PO Nbr", "Vendor", getGlobalColumnTag("site"), "Remarks", "OrderDate", "DueDate", "Status"})
+                      new String[]{getGlobalColumnTag("select"), "PO Nbr", "Vendor", getGlobalColumnTag("site"), "Remarks", "OrderDate", getGlobalColumnTag("duedate"), getGlobalColumnTag("status")})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -2995,7 +2995,7 @@ public class DTData {
            
         public static DefaultTableModel getDOBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), "DO Nbr", "From WH", "To WH", "Ref", "ShipDate", "RecvDate", "Status"})
+                      new String[]{getGlobalColumnTag("select"), "DO Nbr", "From WH", "To WH", getGlobalColumnTag("ref"), getGlobalColumnTag("shipdate"), "RecvDate", getGlobalColumnTag("status")})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -3055,7 +3055,7 @@ public class DTData {
            
         public static DefaultTableModel getSVBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), "SV Nbr", "Cust", "PO", "ShedDate", "Type", "Status"})
+                      new String[]{getGlobalColumnTag("select"), "SV Nbr", getGlobalColumnTag("customer"), getGlobalColumnTag("po"), "ShedDate", getGlobalColumnTag("type"), getGlobalColumnTag("status")})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -3115,7 +3115,7 @@ public class DTData {
         
         public static DefaultTableModel getFOBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), "FrieghtNbr", "Carrier", "Status"})
+                      new String[]{getGlobalColumnTag("select"), "FrieghtNbr", "Carrier", getGlobalColumnTag("status")})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -3169,9 +3169,9 @@ public class DTData {
         
          } 
            
-           public static DefaultTableModel getShipperBrowseUtil( String str, int state, String myfield) {
+        public static DefaultTableModel getShipperBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), "ShipperNbr", "Cust", "Ship", "OrderNbr", "PONbr", "ShipDate", "Status"})
+                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("shipper"), getGlobalColumnTag("customer"), getGlobalColumnTag("shipcode"), getGlobalColumnTag("order"), getGlobalColumnTag("po"), getGlobalColumnTag("shipdate"), getGlobalColumnTag("status")})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -3251,7 +3251,7 @@ public class DTData {
            
         public static DefaultTableModel getInvoiceBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), "InvoiceNbr", "Cust", "Ship", "OrderNbr", "PONbr", "ShipDate", "Status"})
+                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("invoice"), getGlobalColumnTag("customer"), getGlobalColumnTag("shipcode"), getGlobalColumnTag("order"), getGlobalColumnTag("po"), getGlobalColumnTag("shipdate"), getGlobalColumnTag("status")})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -3330,7 +3330,7 @@ public class DTData {
            
           public static DefaultTableModel getCarrierBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("code"), getGlobalColumnTag("description"), "SCAC", "Phone", "Email", "Contact", "Acct"})
+                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("code"), getGlobalColumnTag("description"), "SCAC", getGlobalColumnTag("phone"), getGlobalColumnTag("email"), "Contact", getGlobalColumnTag("account")})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -3568,7 +3568,7 @@ public class DTData {
            
             public static DefaultTableModel getWareHouseBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), "WHCode", getGlobalColumnTag("site"), "Name", "Addr1", "City", "State", "Zip"})
+                      new String[]{getGlobalColumnTag("select"), "WHCode", getGlobalColumnTag("site"), "Name", "Addr1", getGlobalColumnTag("city"), getGlobalColumnTag("state"), getGlobalColumnTag("zip")})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -3630,7 +3630,7 @@ public class DTData {
            
             public static DefaultTableModel getBankBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), "BankID", getGlobalColumnTag("description"), "Account", "Currency", "Active"})
+                      new String[]{getGlobalColumnTag("select"), "BankID", getGlobalColumnTag("description"), "Account", getGlobalColumnTag("currency"), "Active"})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -3689,7 +3689,7 @@ public class DTData {
             
              public static DefaultTableModel getVoucherBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), "VouchID", "Vend", "RecvID", "InvoiceNbr", "TotalAmt", "VOPrice", "Qty"})
+                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("vendor"), getGlobalColumnTag("recvid"), getGlobalColumnTag("invoice"), "TotalAmt", "VOPrice", getGlobalColumnTag("quantity")})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -3749,7 +3749,7 @@ public class DTData {
             
               public static DefaultTableModel getARPaymentBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), "ARBatch", "Cust", "Date", "Amt"})
+                      new String[]{getGlobalColumnTag("select"), "ARBatch", getGlobalColumnTag("customer"), "Date", getGlobalColumnTag("amount")})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -3806,7 +3806,7 @@ public class DTData {
             
         public static DefaultTableModel getExpenseBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), "Batch", "Vend", "Date", "Amt"})
+                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("vendor"), getGlobalColumnTag("date"), getGlobalColumnTag("amount")})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -3864,7 +3864,7 @@ public class DTData {
            
         public static DefaultTableModel getReceiverBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), "RecvID", "Vend", "PO", "PackingSlip", getGlobalColumnTag("item"), "RecvDate", "Qty"})
+                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("vendor"), getGlobalColumnTag("po"), getGlobalColumnTag("packingslip"), getGlobalColumnTag("item"), "RecvDate", getGlobalColumnTag("quantity")})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -3982,7 +3982,7 @@ public class DTData {
             
              public static DefaultTableModel getCalendarBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("year"), "Period", "StartDate", "EndDate", "Status"})
+                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("year"), "Period", "StartDate", "EndDate", getGlobalColumnTag("status")})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -4040,7 +4040,7 @@ public class DTData {
            
           public static DefaultTableModel getEmpBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), "EmpNbr", "LastName", "FirstName", "Status", "StartDate", "Type", "Phone"})
+                      new String[]{getGlobalColumnTag("select"), "EmpNbr", "LastName", "FirstName", getGlobalColumnTag("status"), "StartDate", getGlobalColumnTag("type"), getGlobalColumnTag("phone")})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -4174,7 +4174,7 @@ public class DTData {
           
              public static DefaultTableModel getUserBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), "UserID", "LastName", "FirstName"})
+                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("userid"), "LastName", "FirstName"})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -4230,7 +4230,7 @@ public class DTData {
         
             public static DefaultTableModel getMenuBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), "ID", getGlobalColumnTag("description"), "Panel", "Type"})
+                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("description"), "Panel", getGlobalColumnTag("type")})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -4289,7 +4289,7 @@ public class DTData {
         
         
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), "Printer", getGlobalColumnTag("description"), "Type", "IP", "Port"})
+                      new String[]{getGlobalColumnTag("select"), "Printer", getGlobalColumnTag("description"), getGlobalColumnTag("type"), "IP", "Port"})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -4337,7 +4337,7 @@ public class DTData {
         
         
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), "ID", "Doc", "SndISA", "RcvISA", "Map", "SndGS", "RcvGS", "Prefix", "Version", "OutDocType", "OutFileType", "IFS", "OFS"})
+                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), "Doc", "SndISA", "RcvISA", "Map", "SndGS", "RcvGS", "Prefix", "Version", "OutDocType", "OutFileType", "IFS", "OFS"})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -4394,7 +4394,7 @@ public class DTData {
         
         
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), "LabelCode", getGlobalColumnTag("description"), "File", "Type"})
+                      new String[]{getGlobalColumnTag("select"), "LabelCode", getGlobalColumnTag("description"), "File", getGlobalColumnTag("type")})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -4590,7 +4590,7 @@ public class DTData {
            public static DefaultTableModel getCallCenterReport1() {
            
            javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                         new String[]{"CallID", "Name", "Phone", "Date", "Type", getGlobalColumnTag("description")});
+                         new String[]{"CallID", "Name", getGlobalColumnTag("phone"), "Date", getGlobalColumnTag("type"), getGlobalColumnTag("description")});
            
           try{
             
@@ -4633,7 +4633,7 @@ public class DTData {
         public static DefaultTableModel getPlantDirectory() {
            
            javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                         new String[]{"LastName", "FirstName", "Phone", "Cell", "Email"});
+                         new String[]{"LastName", "FirstName", getGlobalColumnTag("phone"), getGlobalColumnTag("cell"), getGlobalColumnTag("email")});
            
           try{
             
@@ -4676,7 +4676,7 @@ public class DTData {
           public static DefaultTableModel getNavCodeList() {
            
            javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                         new String[]{"Menu", getGlobalColumnTag("description"), "NavCode", "Type", "JavaClass"});
+                         new String[]{"Menu", getGlobalColumnTag("description"), "NavCode", getGlobalColumnTag("type"), "JavaClass"});
            
           try{
             
@@ -4721,7 +4721,7 @@ public class DTData {
            
            
            javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{getGlobalColumnTag("select"), "ReqID", "Requestor", "Date", "Type", "Vend", "Amt", "Owner"}) {
+                        new String[]{getGlobalColumnTag("select"), "ReqID", "Requestor", "Date", getGlobalColumnTag("type"), getGlobalColumnTag("vendor"), getGlobalColumnTag("amount"), getGlobalColumnTag("owner")}) {
                       @Override  
                       public Class getColumnClass(int col) {  
                         if (col == 6 )       
@@ -4779,7 +4779,7 @@ public class DTData {
        public static DefaultTableModel getReqAll() {
            
            javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{getGlobalColumnTag("select"), "ReqID", "Requestor", "Date", "PO", "Vend", "Amt", "Status"}) 
+                        new String[]{getGlobalColumnTag("select"), "ReqID", "Requestor", "Date", getGlobalColumnTag("po"), getGlobalColumnTag("vendor"), getGlobalColumnTag("amount"), getGlobalColumnTag("status")}) 
                     {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -4833,7 +4833,7 @@ public class DTData {
         public static DefaultTableModel getReqBrowseUtil(String str, int state, String myfield) {
            
            javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{getGlobalColumnTag("select"), "ReqID", "Requestor", "Date", "PO", "Vend", "Amt", "Status"}) 
+                        new String[]{getGlobalColumnTag("select"), "ReqID", "Requestor", "Date", getGlobalColumnTag("po"), getGlobalColumnTag("vendor"), getGlobalColumnTag("amount"), getGlobalColumnTag("status")}) 
                     {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -4895,7 +4895,7 @@ public class DTData {
         public static DefaultTableModel getGLAcctAll() {
            
            javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{getGlobalColumnTag("select"), "Acct", getGlobalColumnTag("description"), "Type", "Currency"})
+                        new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("account"), getGlobalColumnTag("description"), getGlobalColumnTag("type"), getGlobalColumnTag("currency")})
                    {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -4988,7 +4988,7 @@ public class DTData {
         public static DefaultTableModel getItemBrowse() {
            
            javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("item"), getGlobalColumnTag("description"), getGlobalColumnTag("code"), "ProdLine", "Group", "Loc", "WH", "CreateDate", "SellPrice", "PurchPrice", "Revision"})
+                        new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("item"), getGlobalColumnTag("description"), getGlobalColumnTag("code"), getGlobalColumnTag("prodline"), "Group", "Loc", "WH", "CreateDate", "SellPrice", "PurchPrice", "Revision"})
                    {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -5047,7 +5047,7 @@ public class DTData {
         public static DefaultTableModel getItemDescBrowse(String str, String myfield) {
            
            javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("item"), getGlobalColumnTag("description"), "Class", "Type"})
+                        new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("item"), getGlobalColumnTag("description"), "Class", getGlobalColumnTag("type")})
                    {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -5099,7 +5099,7 @@ public class DTData {
          public static DefaultTableModel getEmployeeAll() {
            
            javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{getGlobalColumnTag("select"), "EmpID", "LastName", "FirstName", "Dept", "Status", "Shift", "Type", "StartDate", "TermDate"})
+                        new String[]{getGlobalColumnTag("select"), "EmpID", "LastName", "FirstName", "Dept", getGlobalColumnTag("status"), getGlobalColumnTag("shift"), getGlobalColumnTag("type"), "StartDate", "TermDate"})
                    {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -5206,7 +5206,7 @@ public class DTData {
           public static DefaultTableModel getWorkCellAll() {
            
            javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-           new String[]{getGlobalColumnTag("select"),"Cell", getGlobalColumnTag("description"), getGlobalColumnTag("site"), "Dept/CC", "SetupRate$", "LaborRate$", "BurdenRate$", "RunCrewSize", "SetupCrewSize", "Remarks"})
+           new String[]{getGlobalColumnTag("select"),getGlobalColumnTag("cell"), getGlobalColumnTag("description"), getGlobalColumnTag("site"), "Dept/CC", "SetupRate$", "LaborRate$", "BurdenRate$", "RunCrewSize", "SetupCrewSize", "Remarks"})
                    {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -5261,7 +5261,7 @@ public class DTData {
          public static DefaultTableModel getReqPending() {
            
            javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{getGlobalColumnTag("select"), "ReqID", "Requestor", "Date", "Vend", "Amt", "Status", "Approver", getGlobalColumnTag("description")})
+                        new String[]{getGlobalColumnTag("select"), "ReqID", "Requestor", "Date", getGlobalColumnTag("vendor"), getGlobalColumnTag("amount"), getGlobalColumnTag("status"), getGlobalColumnTag("approver"), getGlobalColumnTag("description")})
                    {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -5313,7 +5313,7 @@ public class DTData {
           public static DefaultTableModel getReqApproved() {
            
            javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{getGlobalColumnTag("select"), "ReqID", "Requestor", "Date", "PO", "Vend", "Amt", "Status"})
+                        new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("requestor"), getGlobalColumnTag("date"), getGlobalColumnTag("po"), getGlobalColumnTag("vendor"), getGlobalColumnTag("amount"), getGlobalColumnTag("status")})
                    {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -5367,7 +5367,7 @@ public class DTData {
          public static DefaultTableModel getUserAll() {
            
            javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                       new String[]{"UserID", "LastName", "FirstName", "Phone", "Cell", "Email"});
+                       new String[]{getGlobalColumnTag("userid"), getGlobalColumnTag("lastname"), getGlobalColumnTag("firstname"), getGlobalColumnTag("phone"), getGlobalColumnTag("cell"), getGlobalColumnTag("email")});
            
           try{
             
@@ -5458,7 +5458,7 @@ public class DTData {
           public static DefaultTableModel getQPRAll() {
            
            javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                         new String[]{getGlobalColumnTag("select"), "Complaint#", "Originator", "PartNbr", "PartDesc", "Supplier", "DateAdded", "DateLastUpdate"})
+                         new String[]{getGlobalColumnTag("select"), "Complaint#", "Originator", getGlobalColumnTag("item"), "PartDesc", "Supplier", "DateAdded", "DateLastUpdate"})
                    {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -5509,7 +5509,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                 df.setMinimumFractionDigits(2);
                 df.setMaximumFractionDigits(2);
            javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"Shipper", "Cust", "PartNbr", "PONbr", "Qty", "Price", "DateShipped"});
+                        new String[]{getGlobalColumnTag("shipper"), getGlobalColumnTag("customer"), getGlobalColumnTag("item"), getGlobalColumnTag("po"), getGlobalColumnTag("quantity"), getGlobalColumnTag("price"), "DateShipped"});
            
           try{
             
@@ -5548,7 +5548,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             public static DefaultTableModel getOrderOpen() {
            
            javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                         new String[]{"Order", "Cust", "PartNbr", "Description", "PONbr", "QtyOrd", "QtySHipped"});
+                         new String[]{getGlobalColumnTag("order"), getGlobalColumnTag("customer"), getGlobalColumnTag("item"), "Description", getGlobalColumnTag("po"), "QtyOrd", "QtySHipped"});
            
           try{
             
@@ -5693,7 +5693,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
           
            public static DefaultTableModel getLocationsAll() {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), "LocationID", getGlobalColumnTag("description"), getGlobalColumnTag("site"), "Active"})
+                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("description"), getGlobalColumnTag("site"), "Active"})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -5737,7 +5737,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
            
            public static DefaultTableModel getWareHousesAll() {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), "WH ID", getGlobalColumnTag("site"), "Name", "City", "State", "Zip"})
+                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("site"), "Name", getGlobalColumnTag("city"), getGlobalColumnTag("state"), getGlobalColumnTag("zip")})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -5783,7 +5783,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
            
             public static DefaultTableModel getDeptsAll() {
               javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), "Dept", getGlobalColumnTag("description"), "COPAcct", "LBRAcct", "BDNAcct"})
+                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("description"), "COPAcct", "LBRAcct", "BDNAcct"})
                       {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -5828,7 +5828,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
             
             public static DefaultTableModel getBankAll() {
               javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), "Bank", getGlobalColumnTag("description"), "Acct", "Currency", "Active"})
+                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("description"), getGlobalColumnTag("account"), getGlobalColumnTag("currency"), getGlobalColumnTag("active")})
                       {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -5872,7 +5872,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
            
 public static DefaultTableModel getUnPostedGLTrans() {
               javax.swing.table.DefaultTableModel mymodel =  new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"ID", "Acct", "AcctDesc", "CC", "Type", "Ref", getGlobalColumnTag("description"), "EffDate", "EntDate", "Amt"}); 
+                      new String[]{getGlobalColumnTag("id"), getGlobalColumnTag("account"), getGlobalColumnTag("description"), getGlobalColumnTag("cc"), getGlobalColumnTag("type"), getGlobalColumnTag("ref"), getGlobalColumnTag("description"), getGlobalColumnTag("effectivedate"), getGlobalColumnTag("enterdate"), getGlobalColumnTag("amount")}); 
            
        try{
             
@@ -5916,7 +5916,7 @@ public static DefaultTableModel getUnPostedGLTrans() {
  
 public static DefaultTableModel getGLHistBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), "ID", "Ref", "Acct", "CC", getGlobalColumnTag("site"), "EffDate", "EntDate", getGlobalColumnTag("description"), "Amount", "UserID"})
+                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("ref"), getGlobalColumnTag("account"), getGlobalColumnTag("cc"), getGlobalColumnTag("site"), getGlobalColumnTag("effectivedate"), getGlobalColumnTag("enterdate"), getGlobalColumnTag("description"), getGlobalColumnTag("amount"), getGlobalColumnTag("userid")})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -5981,7 +5981,7 @@ public static DefaultTableModel getGLHistBrowseUtil( String str, int state, Stri
 public static DefaultTableModel getPayRollHours(String fromdate, String todate) {
            
                  javax.swing.table.DefaultTableModel mymodel =  new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), "RecID", "EmpID", "LastName", "FirstName", "MidName", "Dept", "Shift", "Supervisor", "Type", "Profile", "JobTitle", "Rate", "tothrs", "Amount"})
+                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("empid"), getGlobalColumnTag("lastname"), getGlobalColumnTag("firstname"), getGlobalColumnTag("middlename"), getGlobalColumnTag("department"), getGlobalColumnTag("shift"), getGlobalColumnTag("supervisor"), getGlobalColumnTag("type"), getGlobalColumnTag("profile"), getGlobalColumnTag("jobtitle"), getGlobalColumnTag("rate"), getGlobalColumnTag("hours"), getGlobalColumnTag("amount")})
                        {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -6048,7 +6048,7 @@ public static DefaultTableModel getPayRollHours(String fromdate, String todate) 
             
     public static DefaultTableModel getARPaymentBrowse() {
               javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"ARNbr", "Cust", "InvoiceNbr", "CheckNbr", "DateApplied", "Amount"}); 
+                      new String[]{getGlobalColumnTag("number"), getGlobalColumnTag("customer"), getGlobalColumnTag("invoice"), getGlobalColumnTag("checknbr"), getGlobalColumnTag("applieddate"), getGlobalColumnTag("amount")}); 
              
        try{
             
@@ -6086,7 +6086,7 @@ public static DefaultTableModel getPayRollHours(String fromdate, String todate) 
             
             public static DefaultTableModel getMenusAll() {
               javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), "MenuID", getGlobalColumnTag("description"), "ClassID"})
+                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("description"), getGlobalColumnTag("class")})
                       {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -6128,7 +6128,7 @@ public static DefaultTableModel getPayRollHours(String fromdate, String todate) 
             
             public static DefaultTableModel getPanelsAll() {
               javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), "ClassID", getGlobalColumnTag("description")})
+                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("class"), getGlobalColumnTag("description")})
                       {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -6254,7 +6254,7 @@ public static DefaultTableModel getPayRollHours(String fromdate, String todate) 
              
         public static DefaultTableModel getCarrierAll() {
               javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("code"), getGlobalColumnTag("description"), "SCAC", "Phone", "Email", "Contact", "Acct"})
+                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("code"), getGlobalColumnTag("description"), "SCAC", getGlobalColumnTag("phone"), getGlobalColumnTag("email"), getGlobalColumnTag("user"), getGlobalColumnTag("account")})
                       {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -6300,7 +6300,7 @@ public static DefaultTableModel getPayRollHours(String fromdate, String todate) 
         
          public static DefaultTableModel getTaxAll() {
               javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("code"), getGlobalColumnTag("description"), "Element", "Percent", "Userid"})
+                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("code"), getGlobalColumnTag("description"), getGlobalColumnTag("element"), getGlobalColumnTag("percent"), getGlobalColumnTag("userid")})
                       {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -6344,7 +6344,7 @@ public static DefaultTableModel getPayRollHours(String fromdate, String todate) 
         
            public static DefaultTableModel getPayProfileAll() {
               javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("code"), getGlobalColumnTag("description"), "Element", "type", "Amt", "AmtType", "Userid"})
+                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("code"), getGlobalColumnTag("description"), "Element", getGlobalColumnTag("type"), getGlobalColumnTag("amount"), "AmtType", getGlobalColumnTag("userid")})
                       {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -6481,7 +6481,7 @@ public static DefaultTableModel getPayRollHours(String fromdate, String todate) 
         
         public static DefaultTableModel getNoStdCostItems() {
               javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("item"), getGlobalColumnTag("description"), "Type"}); 
+                      new String[]{getGlobalColumnTag("item"), getGlobalColumnTag("description"), getGlobalColumnTag("type")}); 
              
        try{
             
@@ -6606,7 +6606,7 @@ public static DefaultTableModel getPayRollHours(String fromdate, String todate) 
        
             public static DefaultTableModel getCustAddrInfoAll() {
               javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), "CustCode", "Market", "Name", "Line1", "City", "State", "Zip"})
+                      new String[]{getGlobalColumnTag("select"), "CustCode", "Market", "Name", getGlobalColumnTag("addr1"), getGlobalColumnTag("city"), getGlobalColumnTag("state"), getGlobalColumnTag("zip")})
                       {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -6774,7 +6774,7 @@ public static DefaultTableModel getPayRollHours(String fromdate, String todate) 
            
              public static DefaultTableModel getFreightOrderStatusTable(String order) {
               javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), "OrdNbr", "UniqueID", "Carrier", "DocType", "DocFile", "Status", "Remarks", "Lat", "Lon", "Dir", "Date"})
+                      new String[]{getGlobalColumnTag("select"), "OrdNbr", "UniqueID", "Carrier", "DocType", "DocFile", getGlobalColumnTag("status"), "Remarks", "Lat", "Lon", "Dir", "Date"})
                       {
                       @Override  
                       public Class getColumnClass(int col) {  

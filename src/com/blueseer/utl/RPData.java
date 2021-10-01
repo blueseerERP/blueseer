@@ -32,6 +32,7 @@ import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -53,7 +54,19 @@ public class RPData {
         
         boolean autoitem = OVData.isAutoItem();
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "Item", "Desc", "Class", "Site", "PlanNbr", "PlanType", "OrderNbr", "isSched", "Cell", "QtySched", "DateSched", "Status"})
+                      new String[]{getGlobalColumnTag("select"), 
+                          getGlobalColumnTag("item"), 
+                        getGlobalColumnTag("desc"), 
+                        getGlobalColumnTag("class"), 
+                          getGlobalColumnTag("site"), 
+                          getGlobalColumnTag("planid"), 
+                          getGlobalColumnTag("type"), 
+                          getGlobalColumnTag("order"), 
+                          getGlobalColumnTag("issched"), 
+                          getGlobalColumnTag("cell"), 
+                          getGlobalColumnTag("schedqty"), 
+                          getGlobalColumnTag("scheddate"), 
+                          getGlobalColumnTag("status")})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -123,7 +136,21 @@ public class RPData {
     public static DefaultTableModel getPlanBySalesOrder(String from, String to) {
         
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "Order", "Line", "Item", "Desc", "Class", "Site", "PlanNbr", "PlanType",  "isSched", "Cell", "QtySched", "DateSched", "Status"})
+                      new String[]{
+                          getGlobalColumnTag("select"), 
+                          getGlobalColumnTag("order"), 
+                        getGlobalColumnTag("line"), 
+                        getGlobalColumnTag("item"), 
+                        getGlobalColumnTag("desc"), 
+                        getGlobalColumnTag("class"), 
+                          getGlobalColumnTag("site"), 
+                          getGlobalColumnTag("planid"), 
+                          getGlobalColumnTag("type"),  
+                          getGlobalColumnTag("issched"), 
+                          getGlobalColumnTag("cell"), 
+                          getGlobalColumnTag("schedqty"), 
+                          getGlobalColumnTag("scheddate"), 
+                          getGlobalColumnTag("status")})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -188,7 +215,19 @@ public class RPData {
     public static DefaultTableModel getItemBrowse(String from, String to) {
            
            javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"select", "Item", "Desc", "CreateDate", "ProdLine", "Code" , "Group", "Loc", "WH",  "SellPrice", "PurchPrice", "Revision"})
+                        new String[]{
+                            getGlobalColumnTag("select"), 
+                            getGlobalColumnTag("item"), 
+                            getGlobalColumnTag("description"), 
+                            getGlobalColumnTag("createdate"), 
+                            getGlobalColumnTag("prodline"), 
+                            getGlobalColumnTag("class"), 
+                            getGlobalColumnTag("group"), 
+                            getGlobalColumnTag("location"), 
+                            getGlobalColumnTag("warehouse"),  
+                            getGlobalColumnTag("sellprice"), 
+                            getGlobalColumnTag("purchprice"), 
+                            getGlobalColumnTag("revision")})
                    {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -247,7 +286,15 @@ public class RPData {
 
     public static DefaultTableModel getCustBrowseAddrInfo(String from, String to) {
       javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-              new String[]{"select", "CustCode", "Name", "Line1", "City", "State", "Zip", "Phone", "Email"})
+              new String[]{getGlobalColumnTag("select"), 
+                  getGlobalColumnTag("code"), 
+                  getGlobalColumnTag("name"), 
+                  getGlobalColumnTag("addr1"), 
+                  getGlobalColumnTag("city"), 
+                  getGlobalColumnTag("state"), 
+                  getGlobalColumnTag("zip"), 
+                  getGlobalColumnTag("phone"),
+                  getGlobalColumnTag("email")})
               {
               @Override  
               public Class getColumnClass(int col) {  
@@ -309,7 +356,15 @@ public class RPData {
     
     public static DefaultTableModel getCustBrowseFinInfo(String from, String to) {
       javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-              new String[]{"select", "CustCode", "Name", "Terms", "Bank", "Curr", "ARAcct", "ARcc", "OnHold"})
+              new String[]{getGlobalColumnTag("select"), 
+                  getGlobalColumnTag("code"), 
+                  getGlobalColumnTag("name"), 
+                  getGlobalColumnTag("terms"), 
+                  getGlobalColumnTag("bank"), 
+                  getGlobalColumnTag("currency"), 
+                  getGlobalColumnTag("account"), 
+                  getGlobalColumnTag("cc"), 
+                  getGlobalColumnTag("onhold")})
               {
               @Override  
               public Class getColumnClass(int col) {  
@@ -371,7 +426,14 @@ public class RPData {
     
     public static DefaultTableModel getVendBrowse( String from, String to) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-              new String[]{"select", "Code", "Name", "Line1", "City", "State", "Zip", "Country"})
+              new String[]{getGlobalColumnTag("select"), 
+                  getGlobalColumnTag("code"), 
+                  getGlobalColumnTag("name"), 
+                  getGlobalColumnTag("addr1"), 
+                  getGlobalColumnTag("city"), 
+                  getGlobalColumnTag("state"), 
+                  getGlobalColumnTag("zip"), 
+                  getGlobalColumnTag("country")})
         {
               @Override  
               public Class getColumnClass(int col) {  
@@ -429,7 +491,14 @@ public class RPData {
    
     public static DefaultTableModel getOrderBrowse( String from, String to) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-              new String[]{"select", "OrderNbr", "Billto", "Shipto", "PONumber", "OrderDate", "DueDate", "Status"})
+              new String[]{getGlobalColumnTag("select"), 
+                  getGlobalColumnTag("order"), 
+                  getGlobalColumnTag("customer"), 
+                  getGlobalColumnTag("shipcode"), 
+                  getGlobalColumnTag("po"), 
+                  getGlobalColumnTag("orderdate"), 
+                  getGlobalColumnTag("duedate"), 
+                  getGlobalColumnTag("status")})
             {
               @Override  
               public Class getColumnClass(int col) {  
@@ -486,7 +555,14 @@ public class RPData {
     
     public static DefaultTableModel getPOBrowse( String from, String to) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-              new String[]{"select", "PO Nbr", "Vendor", "Site", "Remarks", "OrderDate", "DueDate", "Status"})
+              new String[]{getGlobalColumnTag("select"), 
+                  getGlobalColumnTag("purchaseorder"), 
+                  getGlobalColumnTag("vendor"), 
+                  getGlobalColumnTag("site"), 
+                  getGlobalColumnTag("remarks"),
+                  getGlobalColumnTag("orderdate"), 
+                  getGlobalColumnTag("duedate"), 
+                  getGlobalColumnTag("status")})
         {
               @Override  
               public Class getColumnClass(int col) {  
@@ -545,7 +621,21 @@ public class RPData {
     
     public static DefaultTableModel getARBrowse(String from, String to) {
               javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"ID", "Cust", "Name", "Type", "Ref", "Nbr", "EffDate", "InvDate", "DueDate", "Amt", "BaseAmt", "AmtOpen", "Status", "Currency", "ARAcct"}); 
+                      new String[]{getGlobalColumnTag("id"), 
+                   getGlobalColumnTag("customer"), 
+                   getGlobalColumnTag("name"), 
+                   getGlobalColumnTag("type"), 
+                   getGlobalColumnTag("reference"), 
+                   getGlobalColumnTag("number"), 
+                   getGlobalColumnTag("effectivedate"), 
+                   getGlobalColumnTag("invdate"), 
+                   getGlobalColumnTag("duedate"), 
+                   getGlobalColumnTag("amount"), 
+                   getGlobalColumnTag("baseamount"), 
+                   getGlobalColumnTag("open"), 
+                   getGlobalColumnTag("status"), 
+                   getGlobalColumnTag("currency"), 
+                   getGlobalColumnTag("account")}); 
              
        try{
             Class.forName(driver).newInstance();
@@ -604,7 +694,18 @@ public class RPData {
     
     public static DefaultTableModel getAPBrowse(String from, String to) {
               javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"ID", "Vend", "Name", "Type", "Ref", "EffDate", "DueDate", "Amt", "BaseAmt", "Status", "Currency", "Acct"}); 
+                      new String[]{getGlobalColumnTag("id"), 
+                getGlobalColumnTag("vendor"), 
+                getGlobalColumnTag("name"),
+                getGlobalColumnTag("type"),
+                getGlobalColumnTag("reference"), 
+                getGlobalColumnTag("effectivedate"), 
+                getGlobalColumnTag("duedate"), 
+                getGlobalColumnTag("amount"), 
+                getGlobalColumnTag("baseamount"), 
+                getGlobalColumnTag("status"), 
+                getGlobalColumnTag("currency"), 
+                getGlobalColumnTag("account")}); 
              
        try{
             Class.forName(driver).newInstance();
@@ -661,7 +762,16 @@ public class RPData {
     public static DefaultTableModel getEmpBrowse(String from, String to) {
            
            javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"select", "EmpID", "LastName", "FirstName", "Dept", "Status", "Shift", "Type", "StartDate", "TermDate"})
+                        new String[]{getGlobalColumnTag("select"), 
+                            getGlobalColumnTag("empid"), 
+                            getGlobalColumnTag("lastname"), 
+                            getGlobalColumnTag("firstname"), 
+                            getGlobalColumnTag("department"), 
+                            getGlobalColumnTag("status"), 
+                            getGlobalColumnTag("shift"), 
+                            getGlobalColumnTag("type"), 
+                            getGlobalColumnTag("startdate"), 
+                            getGlobalColumnTag("termdate")})
                    {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -728,8 +838,18 @@ public class RPData {
                // df.setMinimumFractionDigits(2);
                // df.setMaximumFractionDigits(2);
            javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"Shipper", "Cust", "Name", "ShipDate", "Type", "Site", "PO", "SO", "Currency", "Amt", "Status"});
-           
+                        new String[]{getGlobalColumnTag("shipper"), 
+                  getGlobalColumnTag("code"), 
+                  getGlobalColumnTag("name"), 
+                  getGlobalColumnTag("shipdate"), 
+                  getGlobalColumnTag("type"), 
+                  getGlobalColumnTag("site"), 
+                  getGlobalColumnTag("po"), 
+                  getGlobalColumnTag("order"), 
+                  getGlobalColumnTag("currency"), 
+                  getGlobalColumnTag("amount"), 
+                  getGlobalColumnTag("status")});
+          
           try{
             Class.forName(driver).newInstance();
             Connection con = DriverManager.getConnection(url + db, user, pass);
