@@ -3,7 +3,7 @@ package EDIMaps;
 /*
 The MIT License (MIT)
 
-Copyright (c) Terry Evans Vaughn "VCSCode"
+Copyright (c) Terry Evans Vaughn 
 
 All rights reserved.
 

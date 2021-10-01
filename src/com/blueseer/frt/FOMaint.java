@@ -1,7 +1,7 @@
 /*
 The MIT License (MIT)
 
-Copyright (c) Terry Evans Vaughn "VCSCode"
+Copyright (c) Terry Evans Vaughn 
 
 All rights reserved.
 
@@ -1000,10 +1000,13 @@ public class FOMaint extends javax.swing.JPanel {
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanelMain.setBorder(javax.swing.BorderFactory.createTitledBorder("Freight Order Maintenance"));
+        jPanelMain.setName("panelmain"); // NOI18N
 
         jLabel76.setText("FreightNbr");
+        jLabel76.setName("lblid"); // NOI18N
 
         btnew.setText("New");
+        btnew.setName("btnew"); // NOI18N
         btnew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnewActionPerformed(evt);
@@ -1011,6 +1014,7 @@ public class FOMaint extends javax.swing.JPanel {
         });
 
         btadditem.setText("Add Item");
+        btadditem.setName("btadditem"); // NOI18N
         btadditem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btadditemActionPerformed(evt);
@@ -1036,6 +1040,7 @@ public class FOMaint extends javax.swing.JPanel {
         jScrollPane8.setViewportView(orddet);
 
         btdelitem.setText("Del Item");
+        btdelitem.setName("btdeleteitem"); // NOI18N
         btdelitem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdelitemActionPerformed(evt);
@@ -1043,6 +1048,7 @@ public class FOMaint extends javax.swing.JPanel {
         });
 
         btadd.setText("Save");
+        btadd.setName("btadd"); // NOI18N
         btadd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddActionPerformed(evt);
@@ -1050,6 +1056,7 @@ public class FOMaint extends javax.swing.JPanel {
         });
 
         btedit.setText("Edit");
+        btedit.setName("btupdate"); // NOI18N
         btedit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bteditActionPerformed(evt);
@@ -1057,10 +1064,13 @@ public class FOMaint extends javax.swing.JPanel {
         });
 
         jLabel1.setText("Total Units");
+        jLabel1.setName("lbltotunits"); // NOI18N
 
         jLabel2.setText("Total Weight");
+        jLabel2.setName("lbltotweight"); // NOI18N
 
         btpoprint.setText("Print");
+        btpoprint.setName("btprint"); // NOI18N
         btpoprint.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btpoprintActionPerformed(evt);
@@ -1070,32 +1080,45 @@ public class FOMaint extends javax.swing.JPanel {
         jPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         jLabel83.setText("Reference");
+        jLabel83.setName("lblref"); // NOI18N
 
         jLabel89.setText("Phone");
+        jLabel89.setName("lblphone"); // NOI18N
 
         jLabel99.setText("Units");
+        jLabel99.setName("lblunits"); // NOI18N
 
         jLabel77.setText("Shipper");
+        jLabel77.setName("lblshipper"); // NOI18N
 
         jLabel98.setText("Weight");
+        jLabel98.setName("lblweight"); // NOI18N
 
         jLabel88.setText("Contact");
+        jLabel88.setName("lblcontact"); // NOI18N
 
         jLabel91.setText("Addr1");
+        jLabel91.setName("lbladdr1"); // NOI18N
 
         jLabel94.setText("State");
+        jLabel94.setName("lblstate"); // NOI18N
 
         jLabel81.setText("Ship Date");
+        jLabel81.setName("lblshipdate"); // NOI18N
 
         shipdate.setDateFormatString("yyyy-MM-dd");
 
         jLabel93.setText("City");
+        jLabel93.setName("lblcity"); // NOI18N
 
         jLabel86.setText("Misc");
+        jLabel86.setName("lblmisc"); // NOI18N
 
         jLabel82.setText("Name");
+        jLabel82.setName("lblname"); // NOI18N
 
         jLabel90.setText("Addr2");
+        jLabel90.setName("lbladdr2"); // NOI18N
 
         ddshipper.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1104,14 +1127,18 @@ public class FOMaint extends javax.swing.JPanel {
         });
 
         jLabel96.setText("Email");
+        jLabel96.setName("lblemail"); // NOI18N
 
         jLabel97.setText("Remarks");
+        jLabel97.setName("lblremarks"); // NOI18N
 
         delvdate.setDateFormatString("yyyy-MM-dd");
 
         jLabel8.setText("Delivery Date");
+        jLabel8.setName("lbldelvdate"); // NOI18N
 
         jLabel11.setText("Zip");
+        jLabel11.setName("lblzip"); // NOI18N
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -1285,6 +1312,7 @@ public class FOMaint extends javax.swing.JPanel {
         );
 
         btquote.setText("RFQ");
+        btquote.setName("btfrq"); // NOI18N
         btquote.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btquoteActionPerformed(evt);
@@ -1292,6 +1320,7 @@ public class FOMaint extends javax.swing.JPanel {
         });
 
         bttender.setText("Tender");
+        bttender.setName("bttender"); // NOI18N
         bttender.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bttenderActionPerformed(evt);
@@ -1301,24 +1330,32 @@ public class FOMaint extends javax.swing.JPanel {
         ddstatus.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Open", "Quoted", "Tendered", "Accepted", "Declined", "Cancelled", "InTransit", "Delivered", "Close" }));
 
         jLabel87.setText("Status");
+        jLabel87.setName("lblstatus"); // NOI18N
 
         jPanel5.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         jLabel85.setText("EquipType");
+        jLabel85.setName("lblequipmenttype"); // NOI18N
 
         jLabel92.setText("Proposed Carrier");
+        jLabel92.setName("lblproposedcarrier"); // NOI18N
 
         jLabel101.setText("Assigned Carrier");
+        jLabel101.setName("lblassignedcarrier"); // NOI18N
 
         jLabel5.setText("Cust Frt Nbr");
+        jLabel5.setName("lblcustfreightnumber"); // NOI18N
 
         jLabel6.setText("Customer");
+        jLabel6.setName("lblcust"); // NOI18N
 
         jLabel7.setText("TPID");
+        jLabel7.setName("lbltpid"); // NOI18N
 
         ddreasoncode.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "CPT Capacity Type", "CPU Capacity Unavailable", "EQT Equipment Type", "EQU Equipment Unavailable", "LNH Length of Haul", "PRM Permits", "WGT Weight" }));
 
         jLabel12.setText("ReasonCode");
+        jLabel12.setName("lblreasoncode"); // NOI18N
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -1384,6 +1421,7 @@ public class FOMaint extends javax.swing.JPanel {
         );
 
         btaccept.setText("Accept");
+        btaccept.setName("btaccept"); // NOI18N
         btaccept.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btacceptActionPerformed(evt);
@@ -1391,6 +1429,7 @@ public class FOMaint extends javax.swing.JPanel {
         });
 
         btdecline.setText("Decline");
+        btdecline.setName("btdecline"); // NOI18N
         btdecline.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdeclineActionPerformed(evt);
@@ -1519,10 +1558,13 @@ public class FOMaint extends javax.swing.JPanel {
         jPanel4.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         jLabel84.setText("Pickup Phone");
+        jLabel84.setName("lblpickupphone"); // NOI18N
 
         jLabel79.setText("Pickup Contact");
+        jLabel79.setName("lblpickupcontact"); // NOI18N
 
         jLabel78.setText("Pickup");
+        jLabel78.setName("lblpickup"); // NOI18N
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -1591,6 +1633,7 @@ public class FOMaint extends javax.swing.JPanel {
         jPanelQuotes.setPreferredSize(new java.awt.Dimension(840, 634));
 
         bthidequotefiles.setText("Hide EDI");
+        bthidequotefiles.setName("bthideedi"); // NOI18N
         bthidequotefiles.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bthidequotefilesActionPerformed(evt);
@@ -1678,6 +1721,7 @@ public class FOMaint extends javax.swing.JPanel {
         jPanelTenders.setPreferredSize(new java.awt.Dimension(840, 634));
 
         bthidetendersfiles.setText("Hide EDI");
+        bthidetendersfiles.setName("bthideedi"); // NOI18N
         bthidetendersfiles.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bthidetendersfilesActionPerformed(evt);
@@ -1765,6 +1809,7 @@ public class FOMaint extends javax.swing.JPanel {
         jPanelStatus.setPreferredSize(new java.awt.Dimension(840, 634));
 
         bthideEDIStatus.setText("Hide EDI");
+        bthideEDIStatus.setName("bthideedi"); // NOI18N
         bthideEDIStatus.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bthideEDIStatusActionPerformed(evt);
@@ -1772,6 +1817,7 @@ public class FOMaint extends javax.swing.JPanel {
         });
 
         bthidemap.setText("Hide Map");
+        bthidemap.setName("bthidemap"); // NOI18N
         bthidemap.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bthidemapActionPerformed(evt);

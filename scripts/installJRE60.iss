@@ -3,7 +3,7 @@
 
 #define MyAppName "BlueSeer"
 #define MyAppVersion "6.0"
-#define MyAppPublisher "VCSCode"
+#define MyAppPublisher 
 #define MyAppURL "http://www.blueseer.com/"
 #define MyAppExeName "javaw"
 #define bsconfig "bsconfig"
