@@ -616,7 +616,7 @@ public class CashTran extends javax.swing.JPanel {
                        // }
                         // lets add each item to inventory
                         OVData.UpdateInventoryDiscrete(detailtable.getValueAt(j, 1).toString(), site,
-                                "", "", Double.valueOf("1"));
+                                "", "", "", "", Double.valueOf("1"));
                         // now lets add detail voucher
                         //amt = Integer.valueOf(detailtable.getValueAt(j, 3).toString());
                         

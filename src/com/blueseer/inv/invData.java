@@ -61,8 +61,8 @@ public class invData {
                         + "it_sell_price, it_pur_price, it_ovh_cost, it_out_cost, it_mtl_cost, it_code, it_type, it_group, "
                         + "it_prodline, it_drawing, it_rev, it_custrev, it_wh, it_loc, it_site, it_comments, "
                         + "it_status, it_uom, it_net_wt, it_ship_wt, it_cont, it_contqty, "
-                        + "it_leadtime, it_safestock, it_minordqty, it_mrp, it_sched, it_plan, it_wf, it_taxcode, it_createdate ) "
-                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
+                        + "it_leadtime, it_safestock, it_minordqty, it_mrp, it_sched, it_plan, it_wf, it_taxcode, it_createdate, it_expire, it_expiredays ) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
         try (Connection con = DriverManager.getConnection(url + db, user, pass);
              PreparedStatement ps = con.prepareStatement(sqlSelect);) {
              ps.setString(1, x.it_item);
@@ -103,6 +103,8 @@ public class invData {
             psi.setString(32, x.it_wf);
             psi.setString(33, x.it_taxcode);
             psi.setString(34, x.it_createdate);
+            psi.setString(35, x.it_expire);
+            psi.setString(36, x.it_expiredays);
             int rows = psi.executeUpdate();
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
             } else {
@@ -125,11 +127,12 @@ public class invData {
                 "it_sell_price = ?, it_pur_price = ?, it_ovh_cost = ?, it_out_cost = ?, it_mtl_cost = ?, it_code = ?, it_type = ?, it_group = ?, " +
                 "it_prodline = ?, it_drawing = ?, it_rev = ?, it_custrev = ?, it_wh = ?, it_loc = ?, it_site = ?, it_comments = ?, " +
                 "it_status = ?, it_uom = ?, it_net_wt = ?, it_ship_wt = ?, it_cont = ?, it_contqty = ?, " +
-                "it_leadtime = ?, it_safestock = ?, it_minordqty = ?, it_mrp = ?, it_sched = ?, it_plan = ?, it_wf = ?, it_taxcode = ?, it_createdate = ? " +
+                "it_leadtime = ?, it_safestock = ?, it_minordqty = ?, it_mrp = ?, it_sched = ?, it_plan = ?, it_wf = ?, it_taxcode = ?, it_createdate = ?, " +
+                "it_expire = ?, it_expiredays = ? " +
                 " where it_item = ? ; ";
         try (Connection con = DriverManager.getConnection(url + db, user, pass);
 	PreparedStatement psu = con.prepareStatement(sql)) {
-        psu.setString(34, x.it_item);
+        psu.setString(36, x.it_item);
             psu.setString(1, x.it_desc);
             psu.setString(2, x.it_lotsize);
             psu.setString(3, x.it_sell_price);
@@ -163,6 +166,8 @@ public class invData {
             psu.setString(31, x.it_wf);
             psu.setString(32, x.it_taxcode);
             psu.setString(33, x.it_createdate);
+            psu.setString(34, x.it_expire);
+            psu.setString(35, x.it_expiredays);
         int rows = psu.executeUpdate();
         m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
         } catch (SQLException s) {
@@ -247,7 +252,7 @@ public class invData {
                     res.getString("it_loc"), res.getString("it_site"), res.getString("it_comments"), res.getString("it_status"), res.getString("it_uom"),
                     res.getString("it_net_wt").replace('.',defaultDecimalSeparator), res.getString("it_ship_wt").replace('.',defaultDecimalSeparator), res.getString("it_cont"), res.getString("it_contqty").replace('.',defaultDecimalSeparator), 
                     res.getString("it_leadtime").replace('.',defaultDecimalSeparator), res.getString("it_safestock").replace('.',defaultDecimalSeparator), res.getString("it_minordqty").replace('.',defaultDecimalSeparator), res.getInt("it_mrp"), 
-                    res.getInt("it_sched"), res.getInt("it_plan"), res.getString("it_wf"), res.getString("it_taxcode"), res.getString("it_createdate")
+                    res.getInt("it_sched"), res.getInt("it_plan"), res.getString("it_wf"), res.getString("it_taxcode"), res.getString("it_createdate"), res.getString("it_expire"), res.getString("it_expiredays")
         );
                     }
                 }
@@ -1928,12 +1933,13 @@ public class invData {
         String it_loc, String it_site, String it_comments, String it_status, String it_uom, 
         String it_net_wt, String it_ship_wt, String it_cont, String it_contqty,
         String it_leadtime, String it_safestock, String it_minordqty, int it_mrp,
-        int it_sched, int it_plan, String it_wf, String it_taxcode, String it_createdate) {
+        int it_sched, int it_plan, String it_wf, String it_taxcode, String it_createdate,
+        String it_expire, String it_expiredays) {
         public ItemMstr(String[] m) {
             this(m, "", "", "", "", "", "", "", "", "", "",
                     "", "", "", "", "", "", "", "", "", "",
                     "", "", "", "", "", "", "", "", 0, 0,
-                    0, "", "", "");
+                    0, "", "", "", "", "");
         }
     }
     

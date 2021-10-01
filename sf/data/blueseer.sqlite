@@ -909,6 +909,8 @@ CREATE TABLE "in_mstr" (
   "in_loc" varchar(30) COLLATE NOCASE DEFAULT '',
   "in_wh" varchar(10) COLLATE NOCASE DEFAULT '',
   "in_site" varchar(10) COLLATE NOCASE DEFAULT '',
+  "in_serial" varchar(20) COLLATE NOCASE DEFAULT '',
+  "in_expire" varchar(10) COLLATE NOCASE DEFAULT '',
   "in_userid" varchar(8) COLLATE NOCASE DEFAULT '',
   "in_prog" varchar(30) COLLATE NOCASE DEFAULT '');
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -991,7 +993,9 @@ CREATE TABLE "item_mstr" (
   "it_taxcode" varchar(10) NOT NULL DEFAULT '',
   "it_createdate" date NOT NULL DEFAULT '0000-00-00',
   "it_cont" varchar(30) NOT NULL DEFAULT '',
-  "it_contqty" int(8) COLLATE NOCASE DEFAULT '');
+  "it_contqty" int(8) COLLATE NOCASE DEFAULT '0',
+  "it_expire" varchar(10) COLLATE NOCASE DEFAULT '',
+  "it_expiredays" int(4) COLLATE NOCASE DEFAULT '0');
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -2148,6 +2152,7 @@ CREATE TABLE "tran_mstr" (
   "tr_op" varchar(10) COLLATE NOCASE DEFAULT '',
   "tr_loc" varchar(30) COLLATE NOCASE DEFAULT '',
   "tr_wh" varchar(10) COLLATE NOCASE DEFAULT '',
+  "tr_expire" varchar(10) COLLATE NOCASE DEFAULT '',
   "tr_cc" varchar(10) COLLATE NOCASE DEFAULT '',
   "tr_wc" varchar(10) COLLATE NOCASE DEFAULT '',
   "tr_wf" varchar(10) COLLATE NOCASE DEFAULT '',

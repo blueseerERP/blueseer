@@ -16,7 +16,7 @@
     <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="0"/>
     <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
     <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
-    <AuxValue name="designerSize" type="java.awt.Dimension" value="-84,-19,0,5,115,114,0,18,106,97,118,97,46,97,119,116,46,68,105,109,101,110,115,105,111,110,65,-114,-39,-41,-84,95,68,20,2,0,2,73,0,6,104,101,105,103,104,116,73,0,5,119,105,100,116,104,120,112,0,0,1,-27,0,0,2,40"/>
+    <AuxValue name="designerSize" type="java.awt.Dimension" value="-84,-19,0,5,115,114,0,18,106,97,118,97,46,97,119,116,46,68,105,109,101,110,115,105,111,110,65,-114,-39,-41,-84,95,68,20,2,0,2,73,0,6,104,101,105,103,104,116,73,0,5,119,105,100,116,104,120,112,0,0,1,-24,0,0,2,40"/>
   </AuxValues>
 
   <Layout class="org.netbeans.modules.form.compat2.layouts.DesignFlowLayout"/>
@@ -44,14 +44,16 @@
                               <Component id="jLabel2" alignment="1" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel3" alignment="1" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel1" alignment="1" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel12" alignment="1" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="tbqty" alignment="0" min="-2" pref="74" max="-2" attributes="0"/>
                               <Component id="tbrmks" alignment="0" min="-2" pref="327" max="-2" attributes="0"/>
                               <Component id="dcdate" alignment="0" min="-2" pref="149" max="-2" attributes="0"/>
-                              <Component id="tblot" alignment="0" min="-2" pref="172" max="-2" attributes="0"/>
+                              <Component id="tbserial" alignment="0" min="-2" pref="172" max="-2" attributes="0"/>
                               <Component id="tbpart" alignment="0" min="-2" pref="190" max="-2" attributes="0"/>
+                              <Component id="dcexpire" alignment="0" min="-2" pref="149" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       </Group>
@@ -97,8 +99,13 @@
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="tblot" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="tbserial" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="dcexpire" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabel12" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
                   <Component id="jScrollPane1" min="-2" pref="99" max="-2" attributes="0"/>
@@ -361,7 +368,7 @@
             <Property name="name" type="java.lang.String" value="lbleffdate" noResource="true"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="tblot">
+        <Component class="javax.swing.JTextField" name="tbserial">
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel1">
           <Properties>
@@ -371,7 +378,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel5">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Lot/SerialNo:"/>
+            <Property name="text" type="java.lang.String" value="Serial"/>
             <Property name="name" type="java.lang.String" value="lblserial" noResource="true"/>
           </Properties>
         </Component>
@@ -419,6 +426,17 @@
             </Component>
           </SubComponents>
         </Container>
+        <Component class="com.toedter.calendar.JDateChooser" name="dcexpire">
+          <Properties>
+            <Property name="dateFormatString" type="java.lang.String" value="yyyy-MM-dd"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel12">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Expire"/>
+            <Property name="name" type="java.lang.String" value="lblexpiredate" noResource="true"/>
+          </Properties>
+        </Component>
       </SubComponents>
     </Container>
   </SubComponents>

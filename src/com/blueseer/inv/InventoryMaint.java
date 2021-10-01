@@ -422,6 +422,8 @@ public class InventoryMaint extends javax.swing.JPanel {
         jLabel10 = new javax.swing.JLabel();
         btLookUpItemDesc = new javax.swing.JButton();
         btLookUpAcctDesc = new javax.swing.JButton();
+        dcexpire = new com.toedter.calendar.JDateChooser();
+        jLabel11 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -473,8 +475,8 @@ public class InventoryMaint extends javax.swing.JPanel {
         jLabel4.setText("Location:");
         jLabel4.setName("lblloc"); // NOI18N
 
-        btadd.setText("Add");
-        btadd.setName("btadd"); // NOI18N
+        btadd.setText("Commit");
+        btadd.setName("btcommit"); // NOI18N
         btadd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddActionPerformed(evt);
@@ -513,6 +515,11 @@ public class InventoryMaint extends javax.swing.JPanel {
             }
         });
 
+        dcexpire.setDateFormatString("yyyy-MM-dd");
+
+        jLabel11.setText("Expire");
+        jLabel11.setName("lblexpiredate"); // NOI18N
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -531,7 +538,8 @@ public class InventoryMaint extends javax.swing.JPanel {
                     .addComponent(jLabel7)
                     .addComponent(jLabel8)
                     .addComponent(jLabel9)
-                    .addComponent(jLabel10))
+                    .addComponent(jLabel10)
+                    .addComponent(jLabel11))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(tbrmks, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -548,7 +556,8 @@ public class InventoryMaint extends javax.swing.JPanel {
                             .addComponent(tbqty, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(dcdate, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(tblotserial, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(tbref, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 147, Short.MAX_VALUE))
+                            .addComponent(tbref, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 147, Short.MAX_VALUE)
+                            .addComponent(dcexpire, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(btLookUpItemDesc, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -599,6 +608,10 @@ public class InventoryMaint extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(dcdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabel6))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(dcexpire, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel11))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tblotserial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -717,17 +730,21 @@ public class InventoryMaint extends javax.swing.JPanel {
                     proceed = false;
                     bsmf.MainFrame.show(getMessageTag(1035));
                     return;
-                }
+        }
+        String expire = "";
+        if (dcexpire.getDate() != null) {
+            expire = dfdate.format(dcdate.getDate());
+        }
         
         if (proceed) {
         // now lets do the tran_hist write
            isError = OVData.TRHistIssDiscrete(dcdate.getDate(), tbpart.getText(), qty, op, type, 0.00, cost, 
-                site, loc, wh,
+                site, loc, wh, expire,
                 "", "", "", 0, "", "", tblotserial.getText(), tbrmks.getText(), tbref.getText(), 
-                acct, cc, "", "", "InventoryMiscPanel", bsmf.MainFrame.userid);
+                acct, cc, "", "", "InventoryMaint", bsmf.MainFrame.userid);
         
         if (! isError) {
-            isError = OVData.UpdateInventoryDiscrete(tbpart.getText(), site, loc, wh, Double.valueOf(qty)); 
+            isError = OVData.UpdateInventoryDiscrete(tbpart.getText(), site, loc, wh, tblotserial.getText(), expire, Double.valueOf(qty)); 
         } else {
             bsmf.MainFrame.show(getMessageTag(1010, "TRHistIssDiscrete"));
         }
@@ -816,6 +833,7 @@ public class InventoryMaint extends javax.swing.JPanel {
     private javax.swing.JButton btLookUpItemDesc;
     private javax.swing.JButton btadd;
     private com.toedter.calendar.JDateChooser dcdate;
+    private com.toedter.calendar.JDateChooser dcexpire;
     private static javax.swing.JComboBox ddacct;
     private javax.swing.JComboBox ddcc;
     private javax.swing.JComboBox ddloc;
@@ -824,6 +842,7 @@ public class InventoryMaint extends javax.swing.JPanel {
     private javax.swing.JComboBox<String> ddwh;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;

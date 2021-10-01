@@ -238,7 +238,7 @@ public class LocationTransfer extends javax.swing.JPanel {
         tbpart = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        tblot = new javax.swing.JTextField();
+        tbserial = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -248,6 +248,8 @@ public class LocationTransfer extends javax.swing.JPanel {
         bttransfer = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tablelocqty = new javax.swing.JTable();
+        dcexpire = new com.toedter.calendar.JDateChooser();
+        jLabel12 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -394,7 +396,7 @@ public class LocationTransfer extends javax.swing.JPanel {
         jLabel1.setText("Part:");
         jLabel1.setName("lblitem"); // NOI18N
 
-        jLabel5.setText("Lot/SerialNo:");
+        jLabel5.setText("Serial");
         jLabel5.setName("lblserial"); // NOI18N
 
         jLabel4.setText("Remarks:");
@@ -423,6 +425,11 @@ public class LocationTransfer extends javax.swing.JPanel {
         ));
         jScrollPane1.setViewportView(tablelocqty);
 
+        dcexpire.setDateFormatString("yyyy-MM-dd");
+
+        jLabel12.setText("Expire");
+        jLabel12.setName("lblexpiredate"); // NOI18N
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
@@ -436,14 +443,16 @@ public class LocationTransfer extends javax.swing.JPanel {
                             .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING))
+                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel12, javax.swing.GroupLayout.Alignment.TRAILING))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(tbqty, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(tbrmks, javax.swing.GroupLayout.PREFERRED_SIZE, 327, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(dcdate, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tblot, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tbpart, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(tbserial, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tbpart, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(dcexpire, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                         .addGap(0, 13, Short.MAX_VALUE)
@@ -476,8 +485,12 @@ public class LocationTransfer extends javax.swing.JPanel {
                     .addComponent(jLabel4))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tblot, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tbserial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(dcexpire, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel12))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -503,6 +516,11 @@ public class LocationTransfer extends javax.swing.JPanel {
         String whto = "";
         String locfrom = "";
         String locto = "";
+        
+        String expire = "";
+        if (dcexpire.getDate() != null) {
+            expire = dfdate.format(dcexpire.getDate());
+        }
         
         if (ddlocfrom.getSelectedItem() != null)
         locfrom = ddlocfrom.getSelectedItem().toString();
@@ -562,30 +580,31 @@ public class LocationTransfer extends javax.swing.JPanel {
                 siteto, 
                 locto,  
                 whto,
+                expire,
                 "", 
                 "", 
                 "", 
                 0, 
                 "", 
                 "", 
-                tblot.getText(), // lot 
+                tbserial.getText(), // lot 
                 tbrmks.getText(), //rmks
-                tblot.getText(), //ref
+                tbserial.getText(), //ref
                 "", 
                 "", 
                 "", 
-                tblot.getText(),  // serial
+                tbserial.getText(),  // serial
                 "LocactionTransferMaint", // program
                 bsmf.MainFrame.userid
                 );
             
         // do the 'to' side
-       rtn = OVData.UpdateInventoryDiscrete(tbpart.getText(), siteto, ddlocto.getSelectedItem().toString(), whto, qty);
+       rtn = OVData.UpdateInventoryDiscrete(tbpart.getText(), siteto, ddlocto.getSelectedItem().toString(), whto, tbserial.getText(), expire, qty);
       
        // now do the 'from' side
        if (! rtn) {
        qty = -1 * qty;
-       rtn = OVData.UpdateInventoryDiscrete(tbpart.getText(), sitefrom, ddlocfrom.getSelectedItem().toString(), whfrom, qty);
+       rtn = OVData.UpdateInventoryDiscrete(tbpart.getText(), sitefrom, ddlocfrom.getSelectedItem().toString(), whfrom, tbserial.getText(), expire, qty);
        }
        
       
@@ -635,6 +654,7 @@ public class LocationTransfer extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bttransfer;
     private com.toedter.calendar.JDateChooser dcdate;
+    private com.toedter.calendar.JDateChooser dcexpire;
     private javax.swing.JComboBox ddlocfrom;
     private javax.swing.JComboBox ddlocto;
     private javax.swing.JComboBox ddsitefrom;
@@ -644,6 +664,7 @@ public class LocationTransfer extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -658,9 +679,9 @@ public class LocationTransfer extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tablelocqty;
-    private javax.swing.JTextField tblot;
     private javax.swing.JTextField tbpart;
     private javax.swing.JTextField tbqty;
     private javax.swing.JTextField tbrmks;
+    private javax.swing.JTextField tbserial;
     // End of variables declaration//GEN-END:variables
 }

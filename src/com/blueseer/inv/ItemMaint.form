@@ -101,26 +101,34 @@
                           <Group type="102" attributes="0">
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <EmptySpace min="90" pref="90" max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                          <Component id="dduom" pref="112" max="32767" attributes="0"/>
-                                          <Component id="ddcode" max="32767" attributes="0"/>
+                                  <Group type="103" alignment="0" groupAlignment="0" attributes="0">
+                                      <Group type="102" alignment="0" attributes="0">
+                                          <EmptySpace min="90" pref="90" max="-2" attributes="0"/>
+                                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                              <Component id="dduom" pref="112" max="32767" attributes="0"/>
+                                              <Component id="ddcode" max="32767" attributes="0"/>
+                                          </Group>
+                                      </Group>
+                                      <Group type="102" alignment="1" attributes="0">
+                                          <Group type="103" groupAlignment="1" attributes="0">
+                                              <Component id="jLabel38" min="-2" max="-2" attributes="0"/>
+                                              <Component id="jLabel39" alignment="1" min="-2" max="-2" attributes="0"/>
+                                          </Group>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                              <Component id="ddtype" pref="112" max="32767" attributes="0"/>
+                                              <Component id="ddsite" max="32767" attributes="0"/>
+                                          </Group>
                                       </Group>
                                   </Group>
-                                  <Group type="102" alignment="1" attributes="0">
-                                      <Group type="103" groupAlignment="1" attributes="0">
-                                          <Component id="jLabel38" min="-2" max="-2" attributes="0"/>
-                                          <Component id="jLabel39" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      </Group>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <EmptySpace min="-2" pref="56" max="-2" attributes="0"/>
+                                      <Component id="jLabel12" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                          <Component id="ddtype" pref="112" max="32767" attributes="0"/>
-                                          <Component id="ddsite" max="32767" attributes="0"/>
-                                      </Group>
+                                      <Component id="dcexpire" min="-2" pref="149" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
-                              <EmptySpace min="-2" pref="110" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="63" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="1" attributes="0">
                                   <Component id="jLabel78" alignment="1" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel72" alignment="1" min="-2" max="-2" attributes="0"/>
@@ -228,6 +236,10 @@
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="ddloc" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel78" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Group type="103" alignment="0" groupAlignment="1" attributes="0">
+                                      <Component id="jLabel12" min="-2" max="-2" attributes="0"/>
+                                      <Component id="dcexpire" min="-2" max="-2" attributes="0"/>
+                                  </Group>
                               </Group>
                               <EmptySpace pref="40" max="32767" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
@@ -454,6 +466,17 @@
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btlookupActionPerformed"/>
                       </Events>
                     </Component>
+                    <Component class="com.toedter.calendar.JDateChooser" name="dcexpire">
+                      <Properties>
+                        <Property name="dateFormatString" type="java.lang.String" value="yyyy-MM-dd"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabel12">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="expire"/>
+                        <Property name="name" type="java.lang.String" value="lblexpiredate" noResource="true"/>
+                      </Properties>
+                    </Component>
                   </SubComponents>
                 </Container>
                 <Container class="javax.swing.JPanel" name="jPanel4">
@@ -550,10 +573,6 @@
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="tbsafestock" min="-2" pref="97" max="-2" attributes="0"/>
                                   </Group>
-                                  <Group type="102" attributes="0">
-                                      <Component id="tbmtlcost" min="-2" pref="115" max="-2" attributes="0"/>
-                                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                                  </Group>
                                   <Group type="102" alignment="0" attributes="0">
                                       <Component id="ddrouting" min="-2" pref="146" max="-2" attributes="0"/>
                                       <EmptySpace min="-2" pref="53" max="-2" attributes="0"/>
@@ -567,12 +586,24 @@
                                           <Component id="cbplan" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Component id="tboutcost" min="-2" pref="115" max="-2" attributes="0"/>
-                                      <EmptySpace max="32767" attributes="0"/>
-                                      <Component id="jLabel10" min="-2" max="-2" attributes="0"/>
+                                  <Group type="102" alignment="1" attributes="0">
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Group type="102" attributes="0">
+                                              <Component id="tboutcost" min="-2" pref="115" max="-2" attributes="0"/>
+                                              <EmptySpace max="32767" attributes="0"/>
+                                              <Component id="jLabel10" min="-2" max="-2" attributes="0"/>
+                                          </Group>
+                                          <Group type="102" attributes="0">
+                                              <Component id="tbmtlcost" min="-2" pref="115" max="-2" attributes="0"/>
+                                              <EmptySpace max="32767" attributes="0"/>
+                                              <Component id="jLabel11" min="-2" max="-2" attributes="0"/>
+                                          </Group>
+                                      </Group>
                                       <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="tbcontqty" min="-2" pref="97" max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                          <Component id="tbcontqty" pref="97" max="32767" attributes="0"/>
+                                          <Component id="tbexpiredays" max="32767" attributes="0"/>
+                                      </Group>
                                   </Group>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
@@ -603,7 +634,7 @@
                                   <Component id="jLabel61" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel67" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace pref="8" max="32767" attributes="0"/>
+                              <EmptySpace pref="10" max="32767" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="tbcreatedate" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel80" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -642,6 +673,8 @@
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="tbmtlcost" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel75" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="tbexpiredays" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel11" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
@@ -655,7 +688,7 @@
                                           <Component id="ddtax" alignment="3" min="-2" max="-2" attributes="0"/>
                                           <Component id="jLabel79" alignment="3" min="-2" max="-2" attributes="0"/>
                                       </Group>
-                                      <EmptySpace pref="8" max="32767" attributes="0"/>
+                                      <EmptySpace pref="10" max="32767" attributes="0"/>
                                       <Group type="103" groupAlignment="3" attributes="0">
                                           <Component id="btadd" alignment="3" min="-2" max="-2" attributes="0"/>
                                           <Component id="btupdate" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -943,6 +976,14 @@
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btprintlabelActionPerformed"/>
                       </Events>
+                    </Component>
+                    <Component class="javax.swing.JTextField" name="tbexpiredays">
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabel11">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Expire Days"/>
+                        <Property name="name" type="java.lang.String" value="lblexpiredays" noResource="true"/>
+                      </Properties>
                     </Component>
                   </SubComponents>
                 </Container>

@@ -4884,7 +4884,7 @@ return myitem;
                 String curr = OVData.getDefaultCurrency();
                 String basecurr = curr;
                                
-             // 0=issue/receipt,1=part,2=site,3=location,4=acct,5=cc,6=qty,7=date,8=serial,9=ref,10=remarks,11=warehouse
+             // 0=issue/receipt,1=part,2=site,3=location,4=acct,5=cc,6=qty,7=date,8=serial,9=ref,10=remarks,11=warehouse,12=expire
                 for (String rec : list) {
                     ld = rec.split(":", -1);
                     
@@ -4908,12 +4908,12 @@ return myitem;
         
            // now lets do the tran_hist write
            isError = OVData.TRHistIssDiscrete(dfdate.parse(ld[7]), ld[1], qty, op, type, 0.00, cost, 
-                ld[2], ld[3], ld[11], 
+                ld[2], ld[3], ld[11], ld[12], 
                 "", "", "", 0, "", "", ld[8], ld[10], ld[9], 
                 ld[4], ld[5], "", "", "MassLoad", bsmf.MainFrame.userid);
         
         if (! isError) {
-            isError = OVData.UpdateInventoryDiscrete(ld[1], ld[2], ld[3], ld[11], qty); 
+            isError = OVData.UpdateInventoryDiscrete(ld[1], ld[2], ld[3], ld[11], ld[12], "", qty); 
         } else {
             bsmf.MainFrame.show("Error during TRHistIssDiscrete of MassLoad");
         }
@@ -5419,6 +5419,7 @@ return myitem;
           
             String pmcode = "";
             String tranhisttype = "";
+            String expire = ""; // should be blank for component issues
             
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
@@ -5502,10 +5503,10 @@ return myitem;
                        tranhisttype = ctype;
                    }
                    OVData.TRHistIssDiscrete(BlueSeerUtils.mysqlDateFormat.parse(date), child.get(j).toString(), (-1 * qty), op, tranhisttype, 0, 0, csite, 
-                           loc.get(j).toString(), wh.get(j).toString(), "", "", part + ":" + op, 0, "", "", "", cref, "", "", "", "", serial, program, userid);
+                           loc.get(j).toString(), wh.get(j).toString(), expire, "", "", part + ":" + op, 0, "", "", "", cref, "", "", "", "", serial, program, userid);
                    
                    // update inventory
-                   OVData.UpdateInventoryDiscrete(child.get(j).toString(), csite, loc.get(j).toString(), wh.get(j).toString(), Double.valueOf(qtyper.get(j).toString()) * qty * -1);    
+                   OVData.UpdateInventoryDiscrete(child.get(j).toString(), csite, loc.get(j).toString(), wh.get(j).toString(), "", "", Double.valueOf(qtyper.get(j).toString()) * qty * -1);    
               
                
                
@@ -5579,7 +5580,7 @@ return myitem;
                     String curr = OVData.getDefaultCurrency();
                     String basecurr = curr;
             
-            
+            String expire = "";  //should be "" for components
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
@@ -5628,10 +5629,10 @@ return myitem;
                    
                    // process tran_hist
                    OVData.TRHistIssDiscrete(BlueSeerUtils.mysqlDateFormat.parse(date), child.get(j).toString(), (-1 * qty), op, "ISS-WIP", 0, 0, csite, 
-                           loc.get(j).toString(), wh.get(j).toString(), "", "", part + ":" + op, 0, "", "", "", cref, "", "", "", "", serial, program, userid);
+                           loc.get(j).toString(), wh.get(j).toString(), expire, "", "", part + ":" + op, 0, "", "", "", cref, "", "", "", "", serial, program, userid);
                    
                    // update inventory
-                   OVData.UpdateInventoryDiscrete(child.get(j).toString(), csite, loc.get(j).toString(), wh.get(j).toString(), Double.valueOf(qtyper.get(j).toString()) * qty * -1);    
+                   OVData.UpdateInventoryDiscrete(child.get(j).toString(), csite, loc.get(j).toString(), wh.get(j).toString(), "", "", Double.valueOf(qtyper.get(j).toString()) * qty * -1);    
                 }
                 
                 
@@ -10926,7 +10927,7 @@ return myitem;
         
     /* start of inventory related functions */
                 
-         public static boolean UpdateInventoryDiscrete(String part, String site, String loc, String wh, Double qty) {
+        public static boolean UpdateInventoryDiscrete(String part, String site, String loc, String wh, String serial, String expire, Double qty) {
               boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
         try{
             
@@ -10938,27 +10939,29 @@ return myitem;
                 ResultSet res = null;
                 ResultSet nres = null;
                 
-               java.util.Date now = new java.util.Date();
+                java.util.Date now = new java.util.Date();
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
                 String mydate = dfdate.format(now);
                 
-                // Skip item code "S" when adjusting inventory
+                // Skip item code "S" when adjusting inventory -- service item
                 String itemcode = invData.getItemCode(part);
-                if (itemcode.equals("S")) {
+                if (itemcode.equals("S")) {  
                     return false;
                 }
                 
                 
                  double sum = 0.00;
                      
-                        // check if in_mstr record exists for this part,loc,site combo
+                        // check if in_mstr record exists for this part, loc, wh, site, serial, expire combo
                         // if not add it
                         nres = st2.executeQuery("select in_qoh from in_mstr where "
                                 + " in_part = " + "'" + part + "'" 
                                 + " and in_loc = " + "'" + loc + "'"
                                 + " and in_wh = " + "'" + wh + "'"
                                 + " and in_site = " + "'" + site + "'"
+                                + " and in_serial = " + "'" + serial + "'"
+                                + " and in_expire = " + "'" + expire + "'"        
                                 + ";");
                         int z = 0;
                          double qoh = 0.00;
@@ -10972,12 +10975,14 @@ return myitem;
                         if (z == 0) {
                          sum = qty;
                          st3.executeUpdate("insert into in_mstr "
-                                + "(in_site, in_part, in_loc, in_wh, in_qoh, in_date ) "
+                                + "(in_site, in_part, in_loc, in_wh, in_serial, in_expire, in_qoh, in_date ) "
                                 + " values ( " 
                                 + "'" + site + "'" + ","
                                 + "'" + part + "'" + ","
                                 + "'" + loc + "'" + ","
                                 + "'" + wh + "'" + ","
+                                + "'" + serial + "'" + ","
+                                + "'" + expire + "'" + ","        
                                 + "'" + sum + "'" + ","
                                 + "'" + mydate + "'"
                                 + ")"
@@ -10993,6 +10998,8 @@ return myitem;
                                 + " and in_loc = " + "'" + loc + "'"
                                 + " and in_wh = " + "'" + wh + "'"
                                 + " and in_site = " + "'" + site + "'"
+                                + " and in_serial = " + "'" + serial + "'"
+                                + " and in_expire = " + "'" + expire + "'"        
                                 + ";");
                         }
                         
@@ -11013,9 +11020,8 @@ return myitem;
         return myerror;
         
          }
-         
-         
-    public static void UpdateInventoryFromPOS(String nbr, boolean isVoid, Connection bscon) throws SQLException {
+                  
+        public static void UpdateInventoryFromPOS(String nbr, boolean isVoid, Connection bscon) throws SQLException {
         
         Connection con = DriverManager.getConnection(url + db, user, pass);
         Statement st = con.createStatement();
@@ -11138,7 +11144,7 @@ return myitem;
         
          }
          
-         public static boolean UpdateInventoryFromShipper(String shipper) {
+        public static boolean UpdateInventoryFromShipper(String shipper) {
               boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
         try{
             
@@ -11165,12 +11171,14 @@ return myitem;
                     String loc = "";
                     String wh = "";
                     String site = "";
+                    String serial = "";
+                    String expire = "";
                     double sum = 0;
                     int i = 0;
                   
                     
                    
-                      res = st.executeQuery("select sh_site, shd_part, shd_qty, shd_uom, shd_loc, shd_wh, shd_site " +
+                      res = st.executeQuery("select sh_site, shd_part, shd_qty, shd_uom, shd_loc, shd_wh, shd_site, shd_serial " +
                               " from ship_det inner join ship_mstr on sh_id = shd_id  " +
                               " where shd_id = " + "'" + shipper + "'" +";");
                       
@@ -11184,6 +11192,7 @@ return myitem;
                         loc = res.getString("shd_loc");
                         wh = res.getString("shd_wh");
                         site = res.getString("sh_site");
+                        serial = res.getString("shd_serial");
                         baseqty = OVData.getUOMBaseQty(part, site, uom, qty);
                       //  bsmf.MainFrame.show(baseqty + "/" + uom + "/" + qty);
                         
@@ -11222,6 +11231,8 @@ return myitem;
                                 + " and in_loc = " + "'" + loc + "'"
                                 + " and in_wh = " + "'" + wh + "'"
                                 + " and in_site = " + "'" + site + "'"
+                                + " and in_serial = " + "'" + serial + "'"
+                                + " and in_expire = " + "'" + expire + "'"        
                                 + ";");
                         
                         while (nres.next()) {
@@ -11234,12 +11245,14 @@ return myitem;
                         if (z == 0) {
                          sum = (-1 * baseqty);
                          st3.executeUpdate("insert into in_mstr "
-                                + "(in_site, in_part, in_loc, in_wh, in_qoh, in_date ) "
+                                + "(in_site, in_part, in_loc, in_wh, in_serial, in_expire, in_qoh, in_date ) "
                                 + " values ( " 
                                 + "'" + site + "'" + ","
                                 + "'" + part + "'" + ","
                                 + "'" + loc + "'" + ","
                                 + "'" + wh + "'" + ","
+                                + "'" + serial + "'" + ","
+                                + "'" + expire + "'" + ","   
                                 + "'" + sum + "'" + ","
                                 + "'" + mydate + "'"
                                 + ")"
@@ -11255,6 +11268,8 @@ return myitem;
                                 + " and in_loc = " + "'" + loc + "'"
                                 + " and in_wh = " + "'" + wh + "'"
                                 + " and in_site = " + "'" + site + "'"
+                                + " and in_serial = " + "'" + serial + "'"
+                                + " and in_expire = " + "'" + expire + "'"               
                                 + ";");
                         }
                         
@@ -11277,7 +11292,7 @@ return myitem;
         
          }
          
-           public static boolean UpdateInventoryFromShipperRV(String shipper) {
+        public static boolean UpdateInventoryFromShipperRV(String shipper) {
               boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
         try{
             
@@ -11304,12 +11319,14 @@ return myitem;
                     String loc = "";
                     String wh = "";
                     String site = "";
+                    String serial = "";
+                    String expire = "";
                     double sum = 0;
                     int i = 0;
                   
                     
                    
-                      res = st.executeQuery("select sh_site, shd_part, shd_qty, shd_loc, shd_wh, shd_uom " +
+                      res = st.executeQuery("select sh_site, shd_part, shd_qty, shd_loc, shd_wh, shd_uom, shd_serial " +
                               " from ship_det inner join ship_mstr on sh_id = shd_id  " +
                               " where shd_id = " + "'" + shipper + "'" +";");
                       
@@ -11323,6 +11340,7 @@ return myitem;
                         wh = res.getString("shd_wh");
                         site = res.getString("sh_site");
                         uom = res.getString("shd_uom");
+                        serial = res.getString("shd_serial");
                         baseqty = OVData.getUOMBaseQty(part, site, uom, qty);
                         
                         // reverse quantity
@@ -11355,6 +11373,8 @@ return myitem;
                                 + " and in_loc = " + "'" + loc + "'"
                                 + " and in_wh = " + "'" + wh + "'"
                                 + " and in_site = " + "'" + site + "'"
+                                + " and in_serial = " + "'" + serial + "'"
+                                + " and in_expire = " + "'" + expire + "'"        
                                 + ";");
                         
                          int z = 0;
@@ -11369,12 +11389,14 @@ return myitem;
                         if (z == 0) {
                          sum = (-1 * baseqty);
                          st3.executeUpdate("insert into in_mstr "
-                                + "(in_site, in_part, in_loc, in_wh, in_qoh, in_date ) "
+                                + "(in_site, in_part, in_loc, in_wh, in_serial, in_expire, in_qoh, in_date ) "
                                 + " values ( " 
                                 + "'" + site + "'" + ","
                                 + "'" + part + "'" + ","
                                 + "'" + loc + "'" + ","
                                 + "'" + wh + "'" + ","
+                                + "'" + serial + "'" + ","
+                                + "'" + expire + "'" + ","        
                                 + "'" + sum + "'" + ","
                                 + "'" + mydate + "'"
                                 + ")"
@@ -11390,6 +11412,8 @@ return myitem;
                                 + " and in_loc = " + "'" + loc + "'"
                                 + " and in_wh = " + "'" + wh + "'"
                                 + " and in_site = " + "'" + site + "'"
+                                + " and in_serial = " + "'" + serial + "'"
+                                + " and in_expire = " + "'" + expire + "'"        
                                 + ";");
                         }
                 
@@ -11408,9 +11432,8 @@ return myitem;
         return myerror;
         
          }
-         
-         
-         public static boolean UpdateInventoryFromReceiver(String receiver) {
+                  
+        public static boolean UpdateInventoryFromReceiver(String receiver) {
               boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
         try{
             
@@ -11434,6 +11457,8 @@ return myitem;
                     String loc = "";
                     String wh = "";
                     String site = "";
+                    String serial = "";
+                    String expire = "";
                     double sum = 0.00;
                     String uom = "";
                   
@@ -11447,6 +11472,7 @@ return myitem;
                         wh = res.getString("rvd_wh");
                         site = res.getString("rvd_site");
                         uom = res.getString("rvd_uom"); 
+                        serial = res.getString("rvd_serial");
                         baseqty = OVData.getUOMBaseQty(part, site, uom, qty);
                         
                         // check if in_mstr record exists for this part,loc,site combo
@@ -11456,6 +11482,8 @@ return myitem;
                                 + " and in_loc = " + "'" + loc + "'"
                                 + " and in_wh = " + "'" + wh + "'"
                                 + " and in_site = " + "'" + site + "'"
+                                + " and in_serial = " + "'" + serial + "'"
+                                + " and in_expire = " + "'" + expire + "'"        
                                 + ";");
                          int z = 0;
                          double qoh = 0.00;
@@ -11469,12 +11497,14 @@ return myitem;
                         if (z == 0) {
                          sum = baseqty;
                          st3.executeUpdate("insert into in_mstr "
-                                + "(in_site, in_part, in_loc, in_wh, in_qoh, in_date ) "
+                                + "(in_site, in_part, in_loc, in_wh, in_serial, in_expire, in_qoh, in_date ) "
                                 + " values ( " 
                                 + "'" + site + "'" + ","
                                 + "'" + part + "'" + ","
                                 + "'" + loc + "'" + ","
                                 + "'" + wh + "'" + ","
+                                + "'" + serial + "'" + ","
+                                + "'" + expire + "'" + ","        
                                 + "'" + sum + "'" + ","
                                 + "'" + mydate + "'"
                                 + ")"
@@ -11490,6 +11520,8 @@ return myitem;
                                 + " and in_loc = " + "'" + loc + "'"
                                 + " and in_wh = " + "'" + wh + "'"
                                 + " and in_site = " + "'" + site + "'"
+                                + " and in_serial = " + "'" + serial + "'"
+                                + " and in_expire = " + "'" + expire + "'"        
                                 + ";");
                         }
                         
@@ -12213,7 +12245,7 @@ return myitem;
                   /* if this is last op... */
                   /* adjust inventory for this part FG being produced ...if last OP */
                   if (islastop) {
-                     OVData.UpdateInventoryDiscrete(_part, _site, _loc, _wh, _qty);
+                     OVData.UpdateInventoryDiscrete(_part, _site, _loc, _wh, "", "", _qty);
                      double cost = (invData.getItemCost(_part, "standard", _site) * _qty);
                      OVData.wip_to_fg(_part, _site, cost, _date, mytrkey, "RCT-FG", _remarks);
                   }
@@ -12359,7 +12391,7 @@ return myitem;
       }
       
       public static boolean TRHistIssDiscrete(Date effdate, String part, double qty, String op, String type, double price, double cost, String site, 
-              String loc, String wh, String cust, String nbr, String order, int line, String po, String terms, String lot, String rmks, 
+              String loc, String wh, String expire, String cust, String nbr, String order, int line, String po, String terms, String lot, String rmks, 
               String ref, String acct, String cc, String jobnbr, String serial, String program, String userid) {
         boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
         try{
@@ -12379,7 +12411,7 @@ return myitem;
                 st2.executeUpdate("insert into tran_mstr "
                                 + "(tr_site, tr_part, tr_qty, tr_base_qty, tr_uom, tr_op, tr_ent_date, tr_eff_date, "
                                 + " tr_userid, tr_ref, tr_addrcode, tr_type, tr_rmks, tr_nbr, "
-                                + " tr_acct, tr_cc, tr_lot, tr_serial, tr_program, tr_loc, tr_wh, "
+                                + " tr_acct, tr_cc, tr_lot, tr_serial, tr_program, tr_loc, tr_wh, tr_expire, "
                                 + " tr_order, tr_line, tr_po, tr_price, tr_cost, tr_terms ) "
                                 + " values ( " 
                                 + "'" + site + "'" + ","
@@ -12403,6 +12435,7 @@ return myitem;
                                 + "'" + program + "'" + ","
                                 + "'" + loc + "'" + ","
                                 + "'" + wh + "'" + ","
+                                + "'" + expire + "'" + ","        
                                 + "'" + order + "'" + ","
                                 + "'" + line + "'" + ","
                                 + "'" + po + "'" + ","
@@ -21459,6 +21492,7 @@ MainFrame.bslog(e);
                 OVData.getDefaultSite(), 
                 "locA",  // location
                 "", // warehouse
+                "", // expire
                 "", 
                 "", 
                 "", 
@@ -21477,8 +21511,8 @@ MainFrame.bslog(e);
                 );
         
         
-          OVData.UpdateInventoryDiscrete(partno, "BS", "locA", "warehouse", (-1 * Double.valueOf(qty)));
-          OVData.UpdateInventoryDiscrete(partno, "BS", "locB", "warehouse", Double.valueOf(qty)); 
+          OVData.UpdateInventoryDiscrete(partno, "BS", "locA", "warehouse", "", "", (-1 * Double.valueOf(qty)));
+          OVData.UpdateInventoryDiscrete(partno, "BS", "locB", "warehouse", "", "", Double.valueOf(qty)); 
                
       }
       

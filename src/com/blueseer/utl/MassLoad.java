@@ -1125,7 +1125,8 @@ public class MassLoad extends javax.swing.JPanel {
         list.add("serial,s,30,optional,unvalidated");
         list.add("reference,s,30,mandatory,unvalidated");
         list.add("remarks,s,50,optional,unvalidated");
-        list.add("remarks,s,30,mandatory,validated");
+        list.add("warehouse,s,10,mandatory,validated");
+        list.add("expire,s,10,optional,unvalidated");
         return list;
     }
     
