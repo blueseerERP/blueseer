@@ -28,7 +28,10 @@ package com.blueseer.lbl;
 
 import bsmf.MainFrame;
 import static bsmf.MainFrame.con;
+import static bsmf.MainFrame.tags;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.OVData;
+import java.awt.Component;
 import java.awt.print.PrinterJob;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -53,6 +56,14 @@ import javax.print.SimpleDoc;
 import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
 import javax.print.attribute.standard.Copies;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 
 /**
  *
@@ -79,6 +90,7 @@ String sitecitystatezip = "";
      */
     public LabelAddrMaint() {
         initComponents();
+        setLanguageTags(this);
     }
 
     
@@ -104,11 +116,11 @@ String sitecitystatezip = "";
                 }
                
                 if (i == 0)
-                    bsmf.MainFrame.show("No Address Record found for site " + site );
+                    bsmf.MainFrame.show(getMessageTag(1141,site));
 
             } catch (SQLException s){
                  MainFrame.bslog(s);
-                 bsmf.MainFrame.show("Unable to retrieve site_mstr");
+                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             finally {
                if (res != null) res.close();
@@ -146,12 +158,12 @@ String sitecitystatezip = "";
                 }
                
                 if (i == 0)
-                    bsmf.MainFrame.show("No Address Record found for billto/shipto " + billto + "/" + shipto );
+                    bsmf.MainFrame.show(getMessageTag(1143, billto + "/" + shipto));
 
             
             } catch (SQLException s){
                  MainFrame.bslog(s);
-                 bsmf.MainFrame.show("Unable to retrieve cms_det");
+                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             finally {
                if (res != null) res.close();
@@ -165,7 +177,51 @@ String sitecitystatezip = "";
         }
     }
     
-      public void initvars(String[] arg) {
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+    
+    public void initvars(String[] arg) {
         ddshipto.removeAllItems();
         ddbillto.removeAllItems();
         ArrayList mycusts = OVData.getcustmstrlist();
@@ -185,7 +241,7 @@ String sitecitystatezip = "";
         getSiteAddress(OVData.getDefaultSite());
         
          if (ddprinter.getItemCount() == 0) {
-            bsmf.MainFrame.show("No Printers Available");
+            bsmf.MainFrame.show(getMessageTag(1139));
             btprint.setEnabled(false);
         }
         
@@ -214,10 +270,13 @@ String sitecitystatezip = "";
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Address Label Print"));
+        jPanel1.setName("panelmain"); // NOI18N
 
         jLabel1.setText("Shipto Code:");
+        jLabel1.setName("lblship"); // NOI18N
 
         btprint.setText("Print");
+        btprint.setName("btprint"); // NOI18N
         btprint.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btprintActionPerformed(evt);
@@ -225,10 +284,13 @@ String sitecitystatezip = "";
         });
 
         jLabel3.setText("Billto Code:");
+        jLabel3.setName("lblcust"); // NOI18N
 
         jLabel2.setText("Printer:");
+        jLabel2.setName("lblprinter"); // NOI18N
 
         btGetShipToList.setText("Get ShipTo List");
+        btGetShipToList.setName("btgetshiptolist"); // NOI18N
         btGetShipToList.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btGetShipToListActionPerformed(evt);
@@ -244,6 +306,7 @@ String sitecitystatezip = "";
         lbladdr.setFont(new java.awt.Font("SansSerif", 1, 10)); // NOI18N
         lbladdr.setText("                                                                                                                                                 ");
         lbladdr.setBorder(javax.swing.BorderFactory.createTitledBorder("Address"));
+        lbladdr.setName("paneladdress"); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -256,14 +319,6 @@ String sitecitystatezip = "";
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(ddshipto, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(ddprinter, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(btGetShipToList, javax.swing.GroupLayout.Alignment.TRAILING)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(197, 197, 197)
                         .addComponent(jLabel3)
@@ -272,7 +327,13 @@ String sitecitystatezip = "";
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btprint)))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(ddprinter, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(btGetShipToList, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btprint, javax.swing.GroupLayout.Alignment.TRAILING))))
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
@@ -309,7 +370,7 @@ String sitecitystatezip = "";
     private void btprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btprintActionPerformed
 
             if (ddprinter.getSelectedItem() == null) {
-                 bsmf.MainFrame.show("No Selected Zebra Printer");
+                 bsmf.MainFrame.show(getMessageTag(1140));
                  return;
             }
 

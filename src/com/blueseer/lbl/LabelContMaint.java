@@ -27,8 +27,11 @@ package com.blueseer.lbl;
 
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.tags;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.OVData;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.print.PrinterJob;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -59,6 +62,14 @@ import javax.print.SimpleDoc;
 import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
 import javax.print.attribute.standard.Copies;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 
 /**
  *
@@ -102,6 +113,7 @@ String shipcountry = "";
      */
     public LabelContMaint() {
         initComponents();
+        setLanguageTags(this);
     }
 
     
@@ -126,11 +138,11 @@ String shipcountry = "";
                 }
                
                 if (i == 0)
-                    bsmf.MainFrame.show("No Address Record found for site " + site );
+                    bsmf.MainFrame.show(getMessageTag(1141,site));
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to retrieve site_mstr");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -169,7 +181,7 @@ String shipcountry = "";
                
                 
                 if (i == 0)
-                    bsmf.MainFrame.show("No order / line found for " + order + " / " + line );
+                    bsmf.MainFrame.show(getMessageTag(1143, order + "/" + line));
                 
                 
                 // get shipto addr info
@@ -189,7 +201,7 @@ String shipcountry = "";
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to retrieve tables for order line container label");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -197,7 +209,51 @@ String shipcountry = "";
         }
     }
     
-      public void initvars(String[] arg) {
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+    
+    public void initvars(String[] arg) {
         tbqty.setText("");
         tbordnbr.setText("");
         tbline.setText("");
@@ -253,8 +309,10 @@ String shipcountry = "";
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Container Label Print (4 x 6)"));
+        jPanel1.setName("panelmain"); // NOI18N
 
         btprint.setText("Print");
+        btprint.setName("btprint"); // NOI18N
         btprint.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btprintActionPerformed(evt);
@@ -262,21 +320,28 @@ String shipcountry = "";
         });
 
         jLabel3.setText("Order Number");
+        jLabel3.setName("lblorder"); // NOI18N
 
         jLabel2.setText("Printer");
+        jLabel2.setName("lblprinter"); // NOI18N
 
         jLabel4.setText("Quantity");
+        jLabel4.setName("lblqty"); // NOI18N
 
         lblstatus.setBackground(java.awt.Color.white);
         lblstatus.setForeground(java.awt.Color.red);
 
         jLabel6.setText("Order Line");
+        jLabel6.setName("lblorderline"); // NOI18N
 
         jLabel7.setText("Number of Labels");
+        jLabel7.setName("lblnumber"); // NOI18N
 
         jLabel8.setText("Reference");
+        jLabel8.setName("lblref"); // NOI18N
 
         jLabel9.setText("Lot");
+        jLabel9.setName("lbllot"); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -372,29 +437,33 @@ String shipcountry = "";
         Pattern p = Pattern.compile("^[1-9]\\d*$");
         Matcher m = p.matcher(tbqty.getText());
         if (!m.find() || tbqty.getText() == null) {
-            bsmf.MainFrame.show("Invalid Qty");
+            bsmf.MainFrame.show(getMessageTag(1026));
+            tbqty.requestFocus();
            return;
         }
         
         
         if (tbordnbr.getText().isEmpty()) {
-            bsmf.MainFrame.show("Order cannot be blank");
+            bsmf.MainFrame.show(getMessageTag(1024));
+            tbordnbr.requestFocus();
             return;
         }
         if (tbline.getText().isEmpty()) {
-            bsmf.MainFrame.show("Line cannot be blank");
+            bsmf.MainFrame.show(getMessageTag(1024));
+            tbline.requestFocus();
             return;
         }
         
         p = Pattern.compile("^[1-9]\\d*$");
         m = p.matcher(tblblqty.getText());
         if (!m.find() || tblblqty.getText() == null) {
-            bsmf.MainFrame.show("Invalid Label Qty");
+            bsmf.MainFrame.show(getMessageTag(1026));
+            tblblqty.requestFocus();
            return;
         }
         
         if (ddprinter.getSelectedItem() == null) {
-            bsmf.MainFrame.show("No Selected Zebra Printer");
+            bsmf.MainFrame.show(getMessageTag(1140));
             return;
         }
         
@@ -471,7 +540,7 @@ concatline = concatline.replace("$TODAYTIME", dftime.format(now));
  
  initvars(null);
 } else {
-    bsmf.MainFrame.show("zebra dir/file does not exist " + labelfile);
+    bsmf.MainFrame.show(getMessageTag(1142,labelfile));
 }
 
 

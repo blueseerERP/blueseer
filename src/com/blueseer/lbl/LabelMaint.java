@@ -27,13 +27,24 @@ SOFTWARE.
 package com.blueseer.lbl;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.tags;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.OVData;
+import java.awt.Component;
 import java.io.File;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 
 /**
  *
@@ -46,6 +57,7 @@ public class LabelMaint extends javax.swing.JPanel {
      */
     public LabelMaint() {
         initComponents();
+        setLanguageTags(this);
     }
 
     
@@ -80,11 +92,11 @@ public class LabelMaint extends javax.swing.JPanel {
                 }
                
                 if (i == 0)
-                    bsmf.MainFrame.show("No Label File Record found for " + mykey);
+                    bsmf.MainFrame.show(getMessageTag(1143,mykey));
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to retrieve label_zebra");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -93,7 +105,51 @@ public class LabelMaint extends javax.swing.JPanel {
 
     }
     
-      public void initvars(String[] arg) {
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+    
+    public void initvars(String[] arg) {
         tbcode.setText("");
         tbdesc.setText("");
         tbfile.setText("");
@@ -135,12 +191,16 @@ public class LabelMaint extends javax.swing.JPanel {
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Label Master"));
+        jPanel1.setName("panelmain"); // NOI18N
 
         jLabel1.setText("Label Code:");
+        jLabel1.setName("lblid"); // NOI18N
 
         jLabel2.setText("Description:");
+        jLabel2.setName("lbldesc"); // NOI18N
 
         btget.setText("get");
+        btget.setName("btget"); // NOI18N
         btget.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btgetActionPerformed(evt);
@@ -148,6 +208,7 @@ public class LabelMaint extends javax.swing.JPanel {
         });
 
         btdelete.setText("delete");
+        btdelete.setName("btdelete"); // NOI18N
         btdelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdeleteActionPerformed(evt);
@@ -155,6 +216,7 @@ public class LabelMaint extends javax.swing.JPanel {
         });
 
         btadd.setText("add");
+        btadd.setName("btadd"); // NOI18N
         btadd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddActionPerformed(evt);
@@ -162,6 +224,7 @@ public class LabelMaint extends javax.swing.JPanel {
         });
 
         btupdate.setText("update");
+        btupdate.setName("btupdate"); // NOI18N
         btupdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btupdateActionPerformed(evt);
@@ -169,8 +232,10 @@ public class LabelMaint extends javax.swing.JPanel {
         });
 
         jLabel3.setText("Label ZPL File:");
+        jLabel3.setName("lblzplfile"); // NOI18N
 
         jLabel4.setText("Label Type:");
+        jLabel4.setName("lbltype"); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -250,13 +315,15 @@ public class LabelMaint extends javax.swing.JPanel {
                 // check the site field
                 if (tbcode.getText().isEmpty()) {
                     proceed = false;
-                    bsmf.MainFrame.show("Must enter a label code");
+                    bsmf.MainFrame.show(getMessageTag(1024));
+                    tbcode.requestFocus();
                     return;
                 }
                 
                 if (! isFile(tbfile.getText())) {
                     proceed = false;
-                    bsmf.MainFrame.show("Not a legitimate file in Zebra Directory");
+                    bsmf.MainFrame.show(getMessageTag(1145,tbfile.getText()));
+                    tbfile.requestFocus();
                     return;
                 }
                 
@@ -275,9 +342,9 @@ public class LabelMaint extends javax.swing.JPanel {
                             + "'" + tbfile.getText() + "'"
                             + ")"
                             + ";");
-                        bsmf.MainFrame.show("Added Label File Record");
+                        bsmf.MainFrame.show(getMessageTag(1007));
                     } else {
-                        bsmf.MainFrame.show("Label File Already Exists");
+                        bsmf.MainFrame.show(getMessageTag(1014));
                     }
 
                    initvars(null);
@@ -285,7 +352,7 @@ public class LabelMaint extends javax.swing.JPanel {
                 } // if proceed
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to Add to label_zebra");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -304,13 +371,15 @@ public class LabelMaint extends javax.swing.JPanel {
                 // check the code field
                 if (tbcode.getText().isEmpty()) {
                     proceed = false;
-                    bsmf.MainFrame.show("Must enter a code");
+                    bsmf.MainFrame.show(getMessageTag(1024));
+                    tbcode.requestFocus();
                     return;
                 }
                 
                 if (! isFile(tbfile.getText())) {
                     proceed = false;
-                    bsmf.MainFrame.show("Not a legitimate file in Zebra Directory");
+                    bsmf.MainFrame.show(getMessageTag(1145,tbfile.getText()));
+                    tbfile.requestFocus();
                     return;
                 }
                 
@@ -320,13 +389,13 @@ public class LabelMaint extends javax.swing.JPanel {
                             + "lblz_type = " + "'" + ddtype.getSelectedItem().toString() + "'"
                             + " where lblz_code = " + "'" + tbcode.getText() + "'"                             
                             + ";");
-                    bsmf.MainFrame.show("Updated Label File Record");
+                    bsmf.MainFrame.show(getMessageTag(1008));
                     initvars(null);
                 } 
          
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Problem updating label_zebra");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -336,7 +405,7 @@ public class LabelMaint extends javax.swing.JPanel {
 
     private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
          
-        boolean proceed = bsmf.MainFrame.warn("Are you sure?");
+        boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
         if (proceed) {
         try {
 
@@ -347,12 +416,12 @@ public class LabelMaint extends javax.swing.JPanel {
               
                    int i = st.executeUpdate("delete from label_zebra where lblz_code = " + "'" + tbcode.getText() + "'" + ";");
                     if (i > 0) {
-                    bsmf.MainFrame.show("deleted code " + tbcode.getText());
+                    bsmf.MainFrame.show(getMessageTag(1031,tbcode.getText()));
                     initvars(null);
                     }
                 } catch (SQLException s) {
                     MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to Delete Label File Record");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {

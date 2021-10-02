@@ -25,9 +25,10 @@
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-            <TitledBorder title="Nitride Label Print"/>
+            <TitledBorder title="Scan Label Print"/>
           </Border>
         </Property>
+        <Property name="name" type="java.lang.String" value="panelmain" noResource="true"/>
       </Properties>
 
       <Layout>
@@ -108,6 +109,7 @@
         <Component class="javax.swing.JButton" name="btprint">
           <Properties>
             <Property name="text" type="java.lang.String" value="Print"/>
+            <Property name="name" type="java.lang.String" value="btprint" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btprintActionPerformed"/>
@@ -115,7 +117,8 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel3">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Cut Ticket:"/>
+            <Property name="text" type="java.lang.String" value="Ticket:"/>
+            <Property name="name" type="java.lang.String" value="lblticket" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JComboBox" name="ddprinter">
@@ -128,6 +131,7 @@
         <Component class="javax.swing.JLabel" name="jLabel2">
           <Properties>
             <Property name="text" type="java.lang.String" value="Printer:"/>
+            <Property name="name" type="java.lang.String" value="lblprinter" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="tbqty">
@@ -139,6 +143,7 @@
         <Component class="javax.swing.JLabel" name="jLabel4">
           <Properties>
             <Property name="text" type="java.lang.String" value="Quantity"/>
+            <Property name="name" type="java.lang.String" value="lblqty" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="tbscan">
@@ -150,11 +155,13 @@
         <Component class="javax.swing.JLabel" name="jLabel5">
           <Properties>
             <Property name="text" type="java.lang.String" value="Scan:"/>
+            <Property name="name" type="java.lang.String" value="lblscan" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="btcommit">
           <Properties>
             <Property name="text" type="java.lang.String" value="Commit"/>
+            <Property name="name" type="java.lang.String" value="btcommit" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btcommitActionPerformed"/>

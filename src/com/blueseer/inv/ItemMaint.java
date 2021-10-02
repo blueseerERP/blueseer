@@ -30,7 +30,6 @@ import bsmf.MainFrame;
 import static bsmf.MainFrame.defaultDecimalSeparator;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
-import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import com.blueseer.inv.invData.ItemMstr;
 import static com.blueseer.inv.invData.addItemMstr;
@@ -49,18 +48,11 @@ import static com.blueseer.utl.BlueSeerUtils.ludialog;
 import static com.blueseer.utl.BlueSeerUtils.luinput;
 import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
-import static com.blueseer.utl.BlueSeerUtils.lurb2;
 import com.blueseer.utl.DTData;
-import com.blueseer.utl.IBlueSeer;
 import com.blueseer.utl.IBlueSeerT;
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.Image;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -76,6 +68,7 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -111,7 +104,7 @@ import org.apache.commons.io.FilenameUtils;
  *
  * @author vaughnte
  */
-public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
+public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
 
     // global variable declarations
                 boolean isLoad = false;
@@ -386,10 +379,14 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
       tbtotcostcur.setText("");
       
       tboutcost.setText("");
-       tbovhcost.setText("");
-       tbmtlcost.setText("");
-       
-        ddprodcode.removeAllItems();
+      tbovhcost.setText("");
+      tbmtlcost.setText("");
+      
+      tbexpiredays.setText("");
+      dcexpire.setDate(null);
+      
+      
+       ddprodcode.removeAllItems();
        ddsite.removeAllItems();
        dduom.removeAllItems();
        ddtax.removeAllItems();
@@ -574,6 +571,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
     public String[] getRecord(String[] key) {
         
         ItemMstr x = getItemMstr(key);  
+       
         tbkey.setText(x.it_item());
         tbdesc.setText(x.it_desc());
         ddprodcode.setSelectedItem(x.it_prodline());
@@ -606,6 +604,8 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbmtlcost.setText(x.it_mtl_cost());
         tbovhcost.setText(x.it_ovh_cost());
         tboutcost.setText(x.it_out_cost());
+        tbexpiredays.setText(x.it_expiredays());
+        dcexpire.setDate(BlueSeerUtils.parseDate(x.it_expire()));
         bind_tree_op(key[0]);                    
         getrecenttrans(key[0]);                    
         getlocqty(key[0]);                    
@@ -1281,12 +1281,13 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT {
                     .addComponent(jLabel76)
                     .addComponent(ddwh, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ddloc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel78)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addComponent(jLabel12)
-                        .addComponent(dcexpire, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(dcexpire, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(ddloc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel78)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()

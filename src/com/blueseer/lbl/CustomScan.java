@@ -28,8 +28,11 @@ package com.blueseer.lbl;
 
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.tags;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.OVData;
 import java.awt.Color;
+import java.awt.Component;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -47,12 +50,20 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 
 /**
  *
  * @author vaughnte
  */
-public class LabelItemMaint extends javax.swing.JPanel {
+public class CustomScan extends javax.swing.JPanel {
 
 String partnumber = "";
 String custpart = "";
@@ -70,13 +81,14 @@ String sitecitystatezip = "";
     /**
      * Creates new form CarrierMaintPanel
      */
-    public LabelItemMaint() {
+    public CustomScan() {
         initComponents();
+        setLanguageTags(this);
     }
 
     
     public void validateScan(String scan) {
-            if (OVData.isPlan(scan)) {
+      if (OVData.isPlan(scan)) {
        tbqty.setText(String.valueOf(OVData.getPlanSchedQty(scan)));
        partlabel.setText(OVData.getPlanPart(scan));
        partlabel.setForeground(Color.blue);
@@ -85,9 +97,9 @@ String sitecitystatezip = "";
       } else {
               btcommit.setEnabled(false);
               tbcutticket.setText("");
-              partlabel.setText("Bad Ticket");
+              partlabel.setText(getMessageTag(1070,""));
               partlabel.setForeground(Color.red);
-        // bsmf.MainFrame.show("Bad Ticket: " + scan);
+       
          tbcutticket.requestFocusInWindow();
             return;
       }
@@ -114,11 +126,11 @@ String sitecitystatezip = "";
                 }
                
                 if (i == 0)
-                    bsmf.MainFrame.show("No Address Record found for site " + site );
+                    bsmf.MainFrame.show(getMessageTag(1143,site));
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to retrieve site_mstr");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -145,11 +157,11 @@ String sitecitystatezip = "";
                 }
                
                 if (i == 0)
-                    bsmf.MainFrame.show("No Item Master Record found for billto/shipto " + part );
+                    bsmf.MainFrame.show(getMessageTag(1143,part));
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to retrieve item_mstr");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -157,7 +169,51 @@ String sitecitystatezip = "";
         }
     }
     
-      public void initvars(String[] arg) {
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+    
+    public void initvars(String[] arg) {
         tbqty.setText("");
         tbscan.setText("");
        partlabel.setText("");
@@ -170,12 +226,11 @@ String sitecitystatezip = "";
         for (int i = 0; i < mylist.size(); i++) {
             ddprinter.addItem(mylist.get(i));
         }
-        ddprinter.setSelectedItem("CHROMEROD");
         
         getSiteAddress(OVData.getDefaultSite());
         
          if (ddprinter.getItemCount() == 0) {
-            bsmf.MainFrame.show("No Printers Available");
+            bsmf.MainFrame.show(getMessageTag(1139));
             btprint.setEnabled(false);
         }
         
@@ -206,18 +261,22 @@ String sitecitystatezip = "";
 
         setBackground(new java.awt.Color(0, 102, 204));
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Nitride Label Print"));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Scan Label Print"));
+        jPanel1.setName("panelmain"); // NOI18N
 
         btprint.setText("Print");
+        btprint.setName("btprint"); // NOI18N
         btprint.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btprintActionPerformed(evt);
             }
         });
 
-        jLabel3.setText("Cut Ticket:");
+        jLabel3.setText("Ticket:");
+        jLabel3.setName("lblticket"); // NOI18N
 
         jLabel2.setText("Printer:");
+        jLabel2.setName("lblprinter"); // NOI18N
 
         tbqty.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -229,6 +288,7 @@ String sitecitystatezip = "";
         });
 
         jLabel4.setText("Quantity");
+        jLabel4.setName("lblqty"); // NOI18N
 
         tbscan.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -240,8 +300,10 @@ String sitecitystatezip = "";
         });
 
         jLabel5.setText("Scan:");
+        jLabel5.setName("lblscan"); // NOI18N
 
         btcommit.setText("Commit");
+        btcommit.setName("btcommit"); // NOI18N
         btcommit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btcommitActionPerformed(evt);
@@ -344,12 +406,12 @@ String sitecitystatezip = "";
         Pattern p = Pattern.compile("^[1-9]\\d*$");
         Matcher m = p.matcher(tbqty.getText());
         if (!m.find() || tbqty.getText() == null) {
-            bsmf.MainFrame.show("Invalid Qty");
+            bsmf.MainFrame.show(getMessageTag(1026));
            return;
         }
         
         if (ddprinter.getSelectedItem() == null) {
-            bsmf.MainFrame.show("No Selected Zebra Printer");
+            bsmf.MainFrame.show(getMessageTag(1140));
             return;
         }
         
@@ -398,46 +460,11 @@ concatline = concatline.replace("$SITECSZ", sitecitystatezip);
 concatline = concatline.replace("$TODAYDATE", dfdate.format(now));
 
 
-/*
-
- String commands = "^XA~TA000~JSN^LT0^MMT^MCY^MNW^MTT^PON^PMN^LH0,0^JMA^PR4,4^MD0^JUS^LRN^CI0^XZ" +
-"^XA^LL1218" +
-"^BY2,3,106^FT406,949^B3B,N,,N,N" +
-"^FD661400C01000^FS" +
-"^FT585,970^A0B,65,60^FH\\^FDPC3332^FS" +
-"^FT168,1198^A0B,133,122^FH\\^FD661400C01000^FS" +
-"^FT578,1094^A0B,28,28^FH\\^FDPART:^FS" +
-"^PQ1,0,1,Y^XZ";
-
-*/
-
  OVData.printLabelStream(concatline, ddprinter.getSelectedItem().toString());
 
  
  initvars(null);
 
- //ps.println(commands);
- //                   ps.print("\f");
- //                   ps.close();
-
-
-/*
-try {
-        
-        Process p = Runtime.getRuntime().exec("sleep 5");
-    }
-    catch (Exception ex) {
-        ex.printStackTrace();
-    }
-*/
-
-
-//printer.println(concatline);
-//printer.flush();
-
-// close and free the device
-// printer.close();
-//fos.close();
 } catch (Exception e) {
 MainFrame.bslog(e);
 }
@@ -446,30 +473,19 @@ MainFrame.bslog(e);
     private void btcommitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcommitActionPerformed
        
         if (! OVData.isLabel(tbscan.getText())) {
-            bsmf.MainFrame.show("Bad Label");
+            bsmf.MainFrame.show(getMessageTag(1070,tbscan.getText()));
             return;
         }
         if (OVData.isLabel(tbscan.getText()) &&  OVData.getLabelStatus(tbscan.getText()) == 1 ) {
-            bsmf.MainFrame.show("Already Scanned");
+            bsmf.MainFrame.show(getMessageTag(1071,tbscan.getText()));
             return;
         }
         if (OVData.isLabel(tbscan.getText()) &&  OVData.getLabelStatus(tbscan.getText()) > 1 ) {
-            bsmf.MainFrame.show("Trutech scanned...too late");
+            bsmf.MainFrame.show(getMessageTag(1144));
             return;
         }
         
-       // if (OVData.isLabel(tbscan.getText()) &&  OVData.getLabelStatus(tbscan.getText()) < 1 ) {
-               
-        //   try {
-            //   OVData.nitrideTransferCR2AVM(tbscan.getText());
-         //      bsmf.MainFrame.show("Scan Complete!");
-          //     initvars(null);
-          // } 
-         //  catch (ParseException ex) {
-          //     Logger.getLogger(LabelPartPanel.class.getName()).log(Level.SEVERE, null, ex);
-          // }
-           
-       //} 
+     
     }//GEN-LAST:event_btcommitActionPerformed
 
     private void tbqtyFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbqtyFocusGained

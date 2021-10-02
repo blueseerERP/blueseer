@@ -240,8 +240,8 @@ public class invData {
         ps.setString(1, x[0]);
              try (ResultSet res = ps.executeQuery();) {
                 if (! res.isBeforeFirst()) {
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};
-                r = new ItemMstr(m);
+                m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1001)};
+                r = new ItemMstr(m);  // minimum return
                 } else {
                     while(res.next()) {
                         m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
@@ -259,7 +259,7 @@ public class invData {
             }
         } catch (SQLException s) {   
 	       MainFrame.bslog(s);  
-               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getClassName() + "." + Thread.currentThread().getStackTrace()[1].getMethodName())}; 
                r = new ItemMstr(m);
         }
         return r;
@@ -1923,6 +1923,7 @@ public class invData {
          return burden;
      }
 
+    
     
     
                

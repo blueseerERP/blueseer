@@ -31,7 +31,11 @@ import com.blueseer.utl.OVData;
 import com.blueseer.edi.EDILogBrowse;
 import static bsmf.MainFrame.checkperms;
 import static bsmf.MainFrame.reinitpanels;
+import static bsmf.MainFrame.tags;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
 import static com.blueseer.utl.BlueSeerUtils.luTable;
 import static com.blueseer.utl.BlueSeerUtils.lual;
@@ -73,10 +77,16 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -111,7 +121,26 @@ public class FOMaint extends javax.swing.JPanel {
    // OVData avmdata = new OVData();
     javax.swing.table.DefaultTableModel myorddetmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
-                "line", "FONbr", "Type", "Shipper", "Ref", "Name", "Addr1", "Addr2", "City", "State", "Zip", "Contact", "Phone", "Email", "Units", "Weight", "DelvDate", "DelvTime", "ShipDate", "ShipTime"
+                getGlobalColumnTag("line"), 
+                getGlobalColumnTag("order"), 
+                getGlobalColumnTag("type"), 
+                getGlobalColumnTag("shipper"), 
+                getGlobalColumnTag("reference"), 
+                getGlobalColumnTag("name"), 
+                getGlobalColumnTag("addr1"), 
+                getGlobalColumnTag("addr2"), 
+                getGlobalColumnTag("city"), 
+                getGlobalColumnTag("state"), 
+                getGlobalColumnTag("zip"), 
+                getGlobalColumnTag("contact"), 
+                getGlobalColumnTag("phone"), 
+                getGlobalColumnTag("email"), 
+                getGlobalColumnTag("units"), 
+                getGlobalColumnTag("weight"), 
+                getGlobalColumnTag("delvdate"), 
+                getGlobalColumnTag("delvtime"), 
+                getGlobalColumnTag("shipdate"), 
+                getGlobalColumnTag("shiptime")
             });
       
    public boolean lock_ddshipper = false;
@@ -294,7 +323,7 @@ public class FOMaint extends javax.swing.JPanel {
                 globalstatus = status;
                
                 if (i == 0) {
-                   bsmf.MainFrame.show("No Order Record found for " + mykey);
+                   bsmf.MainFrame.show(getMessageTag(1001));
                 } else {
                     
                             if (status.compareTo("Open") == 0) {
@@ -353,7 +382,7 @@ public class FOMaint extends javax.swing.JPanel {
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to retrieve fo_mstr");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -526,8 +555,53 @@ public class FOMaint extends javax.swing.JPanel {
    
     public FOMaint() {
         initComponents();
+        setLanguageTags(this);
     }
 
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+    
     
      public void clearAddrFields() {
                     tbname.setText("");
@@ -827,9 +901,9 @@ public class FOMaint extends javax.swing.JPanel {
         luTable.setModel(luModel);
         luTable.getColumnModel().getColumn(0).setMaxWidth(50);
         if (luModel.getRowCount() < 1) {
-            ludialog.setTitle("No Records Found!");
+            ludialog.setTitle(getMessageTag(1001));
         } else {
-            ludialog.setTitle(luModel.getRowCount() + " Records Found!");
+            ludialog.setTitle(getMessageTag(1002, String.valueOf(luModel.getRowCount())));
         }
         }
         };
@@ -849,8 +923,9 @@ public class FOMaint extends javax.swing.JPanel {
         };
         luTable.addMouseListener(luml);
       
-        callDialog("FONbr", "Carrier"); 
         
+        callDialog(getClassLabelTag("lblid", this.getClass().getSimpleName()), 
+                getClassLabelTag("lblcarrier", this.getClass().getSimpleName())); 
         
     }
 
@@ -1340,11 +1415,11 @@ public class FOMaint extends javax.swing.JPanel {
         jLabel92.setText("Proposed Carrier");
         jLabel92.setName("lblproposedcarrier"); // NOI18N
 
-        jLabel101.setText("Assigned Carrier");
-        jLabel101.setName("lblassignedcarrier"); // NOI18N
+        jLabel101.setText("Carrier");
+        jLabel101.setName("lblcarrier"); // NOI18N
 
         jLabel5.setText("Cust Frt Nbr");
-        jLabel5.setName("lblcustfreightnumber"); // NOI18N
+        jLabel5.setName("lblcustfreightnbr"); // NOI18N
 
         jLabel6.setText("Customer");
         jLabel6.setName("lblcust"); // NOI18N
@@ -1955,7 +2030,7 @@ public class FOMaint extends javax.swing.JPanel {
             tbcity.getText().toString().isEmpty() ||
             ddstate.getSelectedItem().toString().isEmpty()    
              ) {
-            bsmf.MainFrame.show("Insufficient Shipto Info");
+            bsmf.MainFrame.show(getMessageTag(1138));
             canproceed = false;
             return;
         }
@@ -1982,15 +2057,17 @@ public class FOMaint extends javax.swing.JPanel {
                  // Pattern.compile("^[0-9]\\d*(\\.\\d+)?$");
         Matcher m = p.matcher(tbweight.getText());
         if (!m.find() || tbweight.getText() == null) {
-            bsmf.MainFrame.show("Invalid Weight");
-            canproceed = false;
+            bsmf.MainFrame.show(getMessageTag(1026));
+            tbweight.requestFocus();
+            return;
         }
         
          p = Pattern.compile("^[0-9]\\d*$");
         m = p.matcher(tbunits.getText());
         if (!m.find() || tbunits.getText() == null) {
-            bsmf.MainFrame.show("Invalid Pallet Count");
-            canproceed = false;
+            bsmf.MainFrame.show(getMessageTag(1026));
+            tbunits.requestFocus();
+            return;
         }
         
        
@@ -2079,13 +2156,13 @@ public class FOMaint extends javax.swing.JPanel {
                     // update every shipper with freight order number assignment...sh_freight = freightorder
                     OVData.updateShipperWithFreightOrder(orddet);
                     
-                    bsmf.MainFrame.show("Freight Order has been added");
+                    bsmf.MainFrame.show(getMessageTag(1007));
                    initvars(null);
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Cannot add Freight Order");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -2098,10 +2175,10 @@ public class FOMaint extends javax.swing.JPanel {
         int[] rows = orddet.getSelectedRows();
         for (int i : rows) {
             if (orddet.getValueAt(i, 2).toString().equals("LD")) {
-                bsmf.MainFrame.show("Cannot Delete Load Line");
+                bsmf.MainFrame.show(getMessageTag(1046));
                 return;
                             } else {
-            bsmf.MainFrame.show("Removing row " + i);
+            bsmf.MainFrame.show(getMessageTag(1031,String.valueOf(i)));
             ((javax.swing.table.DefaultTableModel) orddet.getModel()).removeRow(i);
             }
         }
@@ -2168,13 +2245,13 @@ public class FOMaint extends javax.swing.JPanel {
                     // update every shipper with freight order number assignment...sh_freight = freightorder
                     OVData.updateShipperWithFreightOrder(orddet);
                     
-                    bsmf.MainFrame.show("Freight Order has been edited");
+                    bsmf.MainFrame.show(getMessageTag(1008));
                    initvars(null);
                     // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Cannot add Freight Order");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -2332,10 +2409,10 @@ public class FOMaint extends javax.swing.JPanel {
     }//GEN-LAST:event_btacceptActionPerformed
 
     private void btdeclineActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeclineActionPerformed
-        boolean proceed = bsmf.MainFrame.warn("Are you sure you want to Decline?");
+        boolean proceed = bsmf.MainFrame.warn(getMessageTag(1137));
         
         if (ddreasoncode.getSelectedItem().toString().isEmpty()) {
-            bsmf.MainFrame.show("Must choose a reasoncode if declining");
+            bsmf.MainFrame.show(getMessageTag(1136));
             proceed = false;
         }
         

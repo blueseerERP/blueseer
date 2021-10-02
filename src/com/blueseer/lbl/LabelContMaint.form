@@ -28,6 +28,7 @@
             <TitledBorder title="Container Label Print (4 x 6)"/>
           </Border>
         </Property>
+        <Property name="name" type="java.lang.String" value="panelmain" noResource="true"/>
       </Properties>
 
       <Layout>
@@ -126,6 +127,7 @@
         <Component class="javax.swing.JButton" name="btprint">
           <Properties>
             <Property name="text" type="java.lang.String" value="Print"/>
+            <Property name="name" type="java.lang.String" value="btprint" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btprintActionPerformed"/>
@@ -134,6 +136,7 @@
         <Component class="javax.swing.JLabel" name="jLabel3">
           <Properties>
             <Property name="text" type="java.lang.String" value="Order Number"/>
+            <Property name="name" type="java.lang.String" value="lblorder" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JComboBox" name="ddprinter">
@@ -146,6 +149,7 @@
         <Component class="javax.swing.JLabel" name="jLabel2">
           <Properties>
             <Property name="text" type="java.lang.String" value="Printer"/>
+            <Property name="name" type="java.lang.String" value="lblprinter" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="tbqty">
@@ -153,6 +157,7 @@
         <Component class="javax.swing.JLabel" name="jLabel4">
           <Properties>
             <Property name="text" type="java.lang.String" value="Quantity"/>
+            <Property name="name" type="java.lang.String" value="lblqty" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lblstatus">
@@ -172,6 +177,7 @@
         <Component class="javax.swing.JLabel" name="jLabel6">
           <Properties>
             <Property name="text" type="java.lang.String" value="Order Line"/>
+            <Property name="name" type="java.lang.String" value="lblorderline" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="tblblqty">
@@ -179,6 +185,7 @@
         <Component class="javax.swing.JLabel" name="jLabel7">
           <Properties>
             <Property name="text" type="java.lang.String" value="Number of Labels"/>
+            <Property name="name" type="java.lang.String" value="lblnumber" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="tbref">
@@ -188,11 +195,13 @@
         <Component class="javax.swing.JLabel" name="jLabel8">
           <Properties>
             <Property name="text" type="java.lang.String" value="Reference"/>
+            <Property name="name" type="java.lang.String" value="lblref" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel9">
           <Properties>
             <Property name="text" type="java.lang.String" value="Lot"/>
+            <Property name="name" type="java.lang.String" value="lbllot" noResource="true"/>
           </Properties>
         </Component>
       </SubComponents>

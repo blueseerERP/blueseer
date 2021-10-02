@@ -847,8 +847,8 @@
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel101">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Assigned Carrier"/>
-                <Property name="name" type="java.lang.String" value="lblassignedcarrier" noResource="true"/>
+                <Property name="text" type="java.lang.String" value="Carrier"/>
+                <Property name="name" type="java.lang.String" value="lblcarrier" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="tbcustfrtnbr">
@@ -856,7 +856,7 @@
             <Component class="javax.swing.JLabel" name="jLabel5">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Cust Frt Nbr"/>
-                <Property name="name" type="java.lang.String" value="lblcustfreightnumber" noResource="true"/>
+                <Property name="name" type="java.lang.String" value="lblcustfreightnbr" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel6">
