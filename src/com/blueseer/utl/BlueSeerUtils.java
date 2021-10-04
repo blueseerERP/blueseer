@@ -636,6 +636,10 @@ public class BlueSeerUtils {
     public static int boolToInt(boolean b) {
         return b ? 1 : 0;
     }
+    
+    public static String boolToString(boolean b) {
+        return b ? String.valueOf(1) : String.valueOf(0);
+    }
 
     
     public static String xNull(String mystring) {
