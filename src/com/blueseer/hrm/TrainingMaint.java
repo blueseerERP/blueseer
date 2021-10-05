@@ -48,12 +48,19 @@ import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.mydialog;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
+import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.IBlueSeer;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JViewport;
@@ -75,7 +82,9 @@ public class TrainingMaint extends javax.swing.JPanel implements IBlueSeer {
     // global datatablemodel declarations 
     javax.swing.table.DefaultTableModel empmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                     new String[]{
-                   "EmpID", "LastName", "FirstName"
+                   getGlobalColumnTag("empid"), 
+                        getGlobalColumnTag("lastname"), 
+                        getGlobalColumnTag("firstname")
                    });
     
     class SomeRenderer extends DefaultTableCellRenderer {
@@ -102,6 +111,7 @@ public class TrainingMaint extends javax.swing.JPanel implements IBlueSeer {
     
     public TrainingMaint() {
         initComponents();
+        setLanguageTags(this);
     }
     
     
@@ -238,6 +248,50 @@ public class TrainingMaint extends javax.swing.JPanel implements IBlueSeer {
             }
     } 
     
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+    
     public void setComponentDefaultValues() {
        isLoad = true;
         tbdesc.setText("");
@@ -306,35 +360,35 @@ public class TrainingMaint extends javax.swing.JPanel implements IBlueSeer {
                                 
                 if (tbkey.getText().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a code");
+                    bsmf.MainFrame.show(getMessageTag(1024));
                     tbkey.requestFocus();
                     return b;
                 }
                 
                 if (tbdesc.getText().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a description");
+                    bsmf.MainFrame.show(getMessageTag(1024));
                     tbdesc.requestFocus();
                     return b;
                 }
                 
                 if (tbinstructor.getText().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("must enter an instructor");
+                    bsmf.MainFrame.show(getMessageTag(1024));
                     tbinstructor.requestFocus();
                     return b;
                 }
                 
                 if (tblocation.getText().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a location");
+                    bsmf.MainFrame.show(getMessageTag(1024));
                     tblocation.requestFocus();
                     return b;
                 }
                 
                 if (tbhours.getText().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("must enter hours");
+                    bsmf.MainFrame.show(getMessageTag(1024));
                     tbhours.requestFocus();
                     return b;
                 }
@@ -581,6 +635,7 @@ public class TrainingMaint extends javax.swing.JPanel implements IBlueSeer {
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Training Maintenance"));
+        jPanel1.setName("panelmain"); // NOI18N
 
         btadd.setText("Add");
         btadd.addActionListener(new java.awt.event.ActionListener() {
@@ -590,6 +645,7 @@ public class TrainingMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         jLabel46.setText("Description");
+        jLabel46.setName("lbldesc"); // NOI18N
 
         tbkey.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -598,26 +654,33 @@ public class TrainingMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         jLabel47.setText("Instructor");
+        jLabel47.setName("lblinstructor"); // NOI18N
 
         jLabel49.setText("Code");
+        jLabel49.setName("lblid"); // NOI18N
 
         jLabel50.setText("StartDate");
+        jLabel50.setName("lblstartdate"); // NOI18N
 
         jLabel51.setText("EndDate");
+        jLabel51.setName("lblenddate"); // NOI18N
 
         taUMperms1.setColumns(20);
         taUMperms1.setRows(5);
         jScrollPane7.setViewportView(taUMperms1);
 
         jLabel2.setText("Hours");
+        jLabel2.setName("lblhours"); // NOI18N
 
         startdate.setDateFormatString("yyyy-MM-dd");
 
         enddate.setDateFormatString("yyyy-MM-dd");
 
         jLabel52.setText("EmpID");
+        jLabel52.setName("lblempid"); // NOI18N
 
         btaddempid.setText("Add");
+        btaddempid.setName("btadd"); // NOI18N
         btaddempid.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddempidActionPerformed(evt);
@@ -653,14 +716,17 @@ public class TrainingMaint extends javax.swing.JPanel implements IBlueSeer {
         jScrollPane1.setViewportView(emptable);
 
         jLabel53.setText("Location");
+        jLabel53.setName("lbllocation"); // NOI18N
 
         comments.setColumns(20);
         comments.setRows(5);
         jScrollPane2.setViewportView(comments);
 
         jLabel54.setText("Comments");
+        jLabel54.setName("lblcomments"); // NOI18N
 
         jButton1.setText("Delete");
+        jButton1.setName("btdelete"); // NOI18N
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -682,6 +748,7 @@ public class TrainingMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         btnew.setText("New");
+        btnew.setName("btnew"); // NOI18N
         btnew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnewActionPerformed(evt);
@@ -696,6 +763,7 @@ public class TrainingMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         btclear.setText("Clear");
+        btclear.setName("btclear"); // NOI18N
         btclear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btclearActionPerformed(evt);
@@ -857,7 +925,7 @@ public class TrainingMaint extends javax.swing.JPanel implements IBlueSeer {
             }
             catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to Add User To Table");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
            } catch (Exception e) {
@@ -875,7 +943,7 @@ public class TrainingMaint extends javax.swing.JPanel implements IBlueSeer {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         int[] rows = emptable.getSelectedRows();
         for (int i : rows) {
-            bsmf.MainFrame.show("Removing row " + i);
+            bsmf.MainFrame.show(getMessageTag(1031,String.valueOf(i)));
             ((javax.swing.table.DefaultTableModel) emptable.getModel()).removeRow(i);
         }
         

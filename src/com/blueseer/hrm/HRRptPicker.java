@@ -50,8 +50,11 @@ import static bsmf.MainFrame.menumap;
 import static bsmf.MainFrame.panelmap;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
+import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.RPData;
 import java.lang.reflect.InvocationTargetException;
@@ -64,8 +67,15 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.UIManager;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
@@ -152,6 +162,7 @@ public class HRRptPicker extends javax.swing.JPanel {
      */
     public HRRptPicker() {
         initComponents();
+        setLanguageTags(this);
     }
 
     
@@ -174,8 +185,50 @@ public class HRRptPicker extends javax.swing.JPanel {
             return this;
         }
     }
-    
-    
+        
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
     
     public void initvars(String[] arg) {
       isLoad = true;
@@ -201,7 +254,6 @@ public class HRRptPicker extends javax.swing.JPanel {
      isLoad = false;
     }
    
-    
     
     /* misc methods */   
     public void hidePanels() {
@@ -295,8 +347,8 @@ public class HRRptPicker extends javax.swing.JPanel {
            resetVariables();
            hidePanels();
            showPanels(new String[]{"tb1"});
-           lbkey1.setText("From EmpNbr:");
-           lbkey2.setText("To EmpNbr:");
+           lbkey1.setText(getClassLabelTag("lblfromempid", this.getClass().getSimpleName()));
+           lbkey2.setText(getClassLabelTag("lbltoempid", this.getClass().getSimpleName()));
           // java.util.Date now = new java.util.Date();
           // dcdate1.setDate(now);
           // dcdate2.setDate(now);
@@ -321,7 +373,16 @@ public class HRRptPicker extends javax.swing.JPanel {
             // column 1 is always 'select' and always type ImageIcon
             // the remaining columns are whatever you require
              javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-             new String[]{"select", "EmpID", "LastName", "FirstName", "Dept", "Status", "Shift", "StartDate", "TermDate"})
+             new String[]{
+                 getGlobalColumnTag("select"), 
+                 getGlobalColumnTag("empid"), 
+                 getGlobalColumnTag("lastname"), 
+                 getGlobalColumnTag("firstname"), 
+                 getGlobalColumnTag("department"), 
+                 getGlobalColumnTag("status"), 
+                 getGlobalColumnTag("shift"), 
+                 getGlobalColumnTag("startdate"), 
+                 getGlobalColumnTag("termdate")})
                    {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -377,7 +438,7 @@ public class HRRptPicker extends javax.swing.JPanel {
             Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
               while (en.hasMoreElements()) {
                  TableColumn tc = en.nextElement();
-                 if (tc.getIdentifier().toString().equals("select")) {
+                 if (tc.getClass().getSimpleName().equals("ImageIcon")) {
                      continue;
                  }
                  tc.setCellRenderer(new HRRptPicker.renderer1());

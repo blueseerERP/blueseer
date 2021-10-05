@@ -64,10 +64,20 @@ import static bsmf.MainFrame.menumap;
 import static bsmf.MainFrame.mydialog;
 import static bsmf.MainFrame.panelmap;
 import static bsmf.MainFrame.pass;
+import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
+import javax.swing.BorderFactory;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 
 /**
  *
@@ -76,10 +86,26 @@ import java.util.Locale;
 public class LabelBrowse extends javax.swing.JPanel {
  
      MyTableModel mymodel = new LabelBrowse.MyTableModel(new Object[][]{},
-                        new String[]{"Detail", "LabelNbr", "Part", "Qty", "Cust", "Order", "Line", "Ref", "Lot", "CreateDate", "Status", "Void"});
+                        new String[]{
+                            getGlobalColumnTag("detail"), 
+                            getGlobalColumnTag("number"), 
+                            getGlobalColumnTag("item"), 
+                            getGlobalColumnTag("quantity"), 
+                            getGlobalColumnTag("customer"), 
+                            getGlobalColumnTag("order"), 
+                            getGlobalColumnTag("line"), 
+                            getGlobalColumnTag("reference"), 
+                            getGlobalColumnTag("lot"), 
+                            getGlobalColumnTag("createdate"), 
+                            getGlobalColumnTag("status"), 
+                            getGlobalColumnTag("void")});
     
     MyTableModel modeltrans = new LabelBrowse.MyTableModel(new Object[][]{},
-                        new String[]{"Serial", "Part", "Qty", "Type", "Date"});
+                        new String[]{getGlobalColumnTag("serial"), 
+                            getGlobalColumnTag("item"), 
+                            getGlobalColumnTag("quantity"), 
+                            getGlobalColumnTag("type"), 
+                            getGlobalColumnTag("date")});
     /**
      * Creates new form ScrapReportPanel
      */
@@ -165,10 +191,54 @@ public class LabelBrowse extends javax.swing.JPanel {
         
     public LabelBrowse() {
         initComponents();
+        setLanguageTags(this);
     }
 
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
     
-      public void getdetail(String serial) {
+    public void getdetail(String serial) {
       
          modeltrans.setNumRows(0);
          double total = 0.00;
@@ -201,7 +271,7 @@ public class LabelBrowse extends javax.swing.JPanel {
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to get Tran Detail");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -268,17 +338,23 @@ public class LabelBrowse extends javax.swing.JPanel {
 
         setBackground(new java.awt.Color(0, 102, 204));
 
+        jPanel1.setName("panelmain"); // NOI18N
+
         labelcount.setText("0");
 
         jLabel7.setText("Count");
+        jLabel7.setName("lblcount"); // NOI18N
 
         jLabel8.setText("Qty");
+        jLabel8.setName("lblqty"); // NOI18N
 
         labelqty.setText("0");
 
         jLabel3.setText("To Date");
+        jLabel3.setName("lbltodate"); // NOI18N
 
         btRun.setText("Run");
+        btRun.setName("btrun"); // NOI18N
         btRun.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btRunActionPerformed(evt);
@@ -286,6 +362,7 @@ public class LabelBrowse extends javax.swing.JPanel {
         });
 
         btexport.setText("Export");
+        btexport.setName("btexport"); // NOI18N
         btexport.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btexportActionPerformed(evt);
@@ -293,18 +370,23 @@ public class LabelBrowse extends javax.swing.JPanel {
         });
 
         jLabel1.setText("From Part");
+        jLabel1.setName("lblfromitem"); // NOI18N
 
         dcFrom.setDateFormatString("yyyy-MM-dd");
 
         jLabel6.setText("To Label");
+        jLabel6.setName("lbltolabel"); // NOI18N
 
         dcTo.setDateFormatString("yyyy-MM-dd");
 
         jLabel2.setText("From Date");
+        jLabel2.setName("lblfromdate"); // NOI18N
 
         jLabel5.setText("From Label");
+        jLabel5.setName("lblfromlabel"); // NOI18N
 
         btdetail.setText("Hide Trans");
+        btdetail.setName("bthidedetail"); // NOI18N
         btdetail.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdetailActionPerformed(evt);
@@ -312,6 +394,7 @@ public class LabelBrowse extends javax.swing.JPanel {
         });
 
         jLabel4.setText("To Part");
+        jLabel4.setName("lbltoitem"); // NOI18N
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -594,7 +677,7 @@ try {
                 labelqty.setText(String.valueOf(qty));
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Cannot execute sql query for Label Report");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             con.close();
         } catch (Exception e) {

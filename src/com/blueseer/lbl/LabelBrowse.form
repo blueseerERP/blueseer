@@ -32,6 +32,9 @@
   </Layout>
   <SubComponents>
     <Container class="javax.swing.JPanel" name="jPanel1">
+      <Properties>
+        <Property name="name" type="java.lang.String" value="panelmain" noResource="true"/>
+      </Properties>
 
       <Layout>
         <DimensionLayout dim="0">
@@ -120,11 +123,13 @@
             <Component class="javax.swing.JLabel" name="jLabel7">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Count"/>
+                <Property name="name" type="java.lang.String" value="lblcount" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel8">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Qty"/>
+                <Property name="name" type="java.lang.String" value="lblqty" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="labelqty">
@@ -233,11 +238,13 @@
                 <Component class="javax.swing.JLabel" name="jLabel3">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="To Date"/>
+                    <Property name="name" type="java.lang.String" value="lbltodate" noResource="true"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JButton" name="btRun">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Run"/>
+                    <Property name="name" type="java.lang.String" value="btrun" noResource="true"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btRunActionPerformed"/>
@@ -246,6 +253,7 @@
                 <Component class="javax.swing.JButton" name="btexport">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Export"/>
+                    <Property name="name" type="java.lang.String" value="btexport" noResource="true"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btexportActionPerformed"/>
@@ -256,6 +264,7 @@
                 <Component class="javax.swing.JLabel" name="jLabel1">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="From Part"/>
+                    <Property name="name" type="java.lang.String" value="lblfromitem" noResource="true"/>
                   </Properties>
                 </Component>
                 <Component class="com.toedter.calendar.JDateChooser" name="dcFrom">
@@ -266,6 +275,7 @@
                 <Component class="javax.swing.JLabel" name="jLabel6">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="To Label"/>
+                    <Property name="name" type="java.lang.String" value="lbltolabel" noResource="true"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="tblblto">
@@ -282,16 +292,19 @@
                 <Component class="javax.swing.JLabel" name="jLabel2">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="From Date"/>
+                    <Property name="name" type="java.lang.String" value="lblfromdate" noResource="true"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel5">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="From Label"/>
+                    <Property name="name" type="java.lang.String" value="lblfromlabel" noResource="true"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JButton" name="btdetail">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Hide Trans"/>
+                    <Property name="name" type="java.lang.String" value="bthidedetail" noResource="true"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btdetailActionPerformed"/>
@@ -300,6 +313,7 @@
                 <Component class="javax.swing.JLabel" name="jLabel4">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="To Part"/>
+                    <Property name="name" type="java.lang.String" value="lbltoitem" noResource="true"/>
                   </Properties>
                 </Component>
               </SubComponents>

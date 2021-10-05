@@ -59,10 +59,21 @@ import static bsmf.MainFrame.mydialog;
 import static bsmf.MainFrame.panelmap;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
+import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 
 import static com.blueseer.utl.ReportPanel.TableReport;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 
 /**
  *
@@ -71,15 +82,70 @@ import static com.blueseer.utl.ReportPanel.TableReport;
 public class TrainingRpt extends javax.swing.JPanel {
 
      javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"TranID", "EmpID", "LastName", "FirstName", "Training", "StartDate", "EndDate", "Hours", "Instructor", "Location" });
+                        new String[]{
+                            getGlobalColumnTag("id"), 
+                            getGlobalColumnTag("empid"), 
+                            getGlobalColumnTag("lastname"), 
+                            getGlobalColumnTag("firstname"), 
+                            getGlobalColumnTag("description"), 
+                            getGlobalColumnTag("startdate"), 
+                            getGlobalColumnTag("enddate"), 
+                            getGlobalColumnTag("hours"), 
+                            getGlobalColumnTag("instructor"), 
+                            getGlobalColumnTag("location") });
     /**
      * Creates new form CCReportPanel
      */
     public TrainingRpt() {
         initComponents();
+        setLanguageTags(this);
         
     }
 
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+    
     public void initvars(String[] arg) {
        
         mymodel.setRowCount(0);
@@ -196,6 +262,8 @@ public class TrainingRpt extends javax.swing.JPanel {
         });
         jScrollPane1.setViewportView(tablereport);
 
+        jPanel1.setName("panelmain"); // NOI18N
+
         ddempid.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ddempidActionPerformed(evt);
@@ -203,14 +271,17 @@ public class TrainingRpt extends javax.swing.JPanel {
         });
 
         jLabel2.setText("Date From:");
+        jLabel2.setName("lblfromdate"); // NOI18N
 
         dcfrom.setDateFormatString("yyyy-MM-dd");
 
         jLabel1.setText("Date To:");
+        jLabel1.setName("lbltodate"); // NOI18N
 
         dcto.setDateFormatString("yyyy-MM-dd");
 
         btcsv.setText("Export");
+        btcsv.setName("btexport"); // NOI18N
         btcsv.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btcsvActionPerformed(evt);
@@ -218,6 +289,7 @@ public class TrainingRpt extends javax.swing.JPanel {
         });
 
         btview.setText("View");
+        btview.setName("btview"); // NOI18N
         btview.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btviewActionPerformed(evt);
@@ -225,6 +297,7 @@ public class TrainingRpt extends javax.swing.JPanel {
         });
 
         jLabel3.setText("EmployeeID");
+        jLabel3.setName("lblempid"); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -354,7 +427,7 @@ public class TrainingRpt extends javax.swing.JPanel {
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to select emp_mstr");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             con.close();
         } catch (Exception e) {
@@ -406,10 +479,10 @@ public class TrainingRpt extends javax.swing.JPanel {
                             res.getString("location"); 
                     output.write(newstring + '\n');
                 }
-             bsmf.MainFrame.show("file has been created");
+             bsmf.MainFrame.show(getMessageTag(1126));
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-               bsmf.MainFrame.show("Cannot extract training data");
+               bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             con.close();
         } catch (Exception e) {
@@ -452,7 +525,7 @@ public class TrainingRpt extends javax.swing.JPanel {
                 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("unable to select emp_mstr");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             con.close();
         } catch (Exception e) {

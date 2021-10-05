@@ -49,9 +49,13 @@ import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.mydialog;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
+import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
 import static com.blueseer.utl.BlueSeerUtils.luTable;
 import static com.blueseer.utl.BlueSeerUtils.lual;
@@ -71,9 +75,13 @@ import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JViewport;
@@ -94,11 +102,23 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeer {
     // global datatablemodel declarations
     javax.swing.table.DefaultTableModel excmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
-                "Type", "Desc", "AmountType", "Amt"
+                getGlobalColumnTag("type"), 
+                getGlobalColumnTag("description"), 
+                getGlobalColumnTag("amounttype"), 
+                getGlobalColumnTag("amount")
             });
           
     javax.swing.table.DefaultTableModel mymodel =  new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{"select", "RecID", "EmpNbr", "CheckNbr", "PayDate","tothrs", "GrossAmt", "Deduct", "NetAmt"})
+                      new String[]{
+                          getGlobalColumnTag("select"), 
+                          getGlobalColumnTag("id"), 
+                          getGlobalColumnTag("empid"), 
+                          getGlobalColumnTag("checknbr"), 
+                          getGlobalColumnTag("paydate"),
+                          getGlobalColumnTag("hours"), 
+                          getGlobalColumnTag("grossamount"), 
+                          getGlobalColumnTag("deducttion"), 
+                          getGlobalColumnTag("netamount")})
                        {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -109,7 +129,15 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeer {
                         }; 
                 
     javax.swing.table.DefaultTableModel modeldetail = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"select", "ID", "Code", "InDate", "InTime", "OutDate", "OutTime", "tothrs"}){
+                        new String[]{
+                            getGlobalColumnTag("select"), 
+                            getGlobalColumnTag("id"), 
+                            getGlobalColumnTag("code"), 
+                            getGlobalColumnTag("indate"), 
+                            getGlobalColumnTag("intime"), 
+                            getGlobalColumnTag("outdate"), 
+                            getGlobalColumnTag("outtime"), 
+                            getGlobalColumnTag("totalhours")}){
                       @Override  
                       public Class getColumnClass(int col) {  
                         if (col == 0)       
@@ -118,14 +146,27 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeer {
                       }  
                         };
     javax.swing.table.DefaultTableModel modelearnings = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"EmpID", "type", "code", "desc", "rate", "amt"});
+                        new String[]{
+                            getGlobalColumnTag("empid"), 
+                            getGlobalColumnTag("type"), 
+                            getGlobalColumnTag("code"), 
+                            getGlobalColumnTag("description"), 
+                            getGlobalColumnTag("rate"), 
+                            getGlobalColumnTag("amount")});
     
     javax.swing.table.DefaultTableModel modeldeduct = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"EmpID", "type", "code", "desc", "rate", "amt"});
+                        new String[]{
+                            getGlobalColumnTag("empid"), 
+                            getGlobalColumnTag("type"), 
+                            getGlobalColumnTag("code"), 
+                            getGlobalColumnTag("description"), 
+                            getGlobalColumnTag("rate"), 
+                            getGlobalColumnTag("amount")});
       
     
     public EmployeeMaint() {
         initComponents();
+        setLanguageTags(this);
     }
 
     
@@ -261,6 +302,50 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeer {
                 }
             }
     } 
+    
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
     
     public void setComponentDefaultValues() {
        isLoad = true;
@@ -405,42 +490,42 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeer {
         boolean b = true;
                 if (ddsite.getSelectedItem() == null || ddsite.getSelectedItem().toString().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("must choose a site");
+                    bsmf.MainFrame.show(getMessageTag(1026));
                     ddsite.requestFocus();
                     return b;
                 }
                
                 if (dddept.getSelectedItem() == null || dddept.getSelectedItem().toString().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("must choose a site");
+                    bsmf.MainFrame.show(getMessageTag(1026));
                     dddept.requestFocus();
                     return b;
                 }
                 
                 if (tbkey.getText().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a code");
+                    bsmf.MainFrame.show(getMessageTag(1024));
                     tbkey.requestFocus();
                     return b;
                 }
                 
                 if (lastname.getText().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a last name");
+                    bsmf.MainFrame.show(getMessageTag(1024));
                     lastname.requestFocus();
                     return b;
                 }
                 
                 if (firstname.getText().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a first name");
+                    bsmf.MainFrame.show(getMessageTag(1024));
                     firstname.requestFocus();
                     return b;
                 }
                 
                 if ( tbprofile.getText().isEmpty() || ! OVData.isValidProfile(tbprofile.getText())) {
                           b = false;
-                          bsmf.MainFrame.show("Must enter valid Profile code");
+                          bsmf.MainFrame.show(getMessageTag(1026));
                           tbprofile.requestFocus();
                           return b;
                       }
@@ -791,9 +876,9 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeer {
         luTable.setModel(luModel);
         luTable.getColumnModel().getColumn(0).setMaxWidth(50);
         if (luModel.getRowCount() < 1) {
-            ludialog.setTitle("No Records Found!");
+            ludialog.setTitle(getMessageTag(1001));
         } else {
-            ludialog.setTitle(luModel.getRowCount() + " Records Found!");
+            ludialog.setTitle(getMessageTag(1002, String.valueOf(luModel.getRowCount())));
         }
         }
         };
@@ -813,8 +898,9 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeer {
         };
         luTable.addMouseListener(luml);
       
-        callDialog("EmpNbr", "LastName", "FirstName"); 
-        
+              callDialog(getClassLabelTag("lblid", this.getClass().getSimpleName()), 
+                getClassLabelTag("lbllastname", this.getClass().getSimpleName()), 
+                getClassLabelTag("lblfirstname", this.getClass().getSimpleName())); 
         
     }
 
@@ -903,7 +989,7 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeer {
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to get browse detail");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             } finally {
                if (res != null) res.close();
                if (st != null) st.close();
@@ -990,7 +1076,7 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeer {
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to get browse detail");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -1047,7 +1133,7 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeer {
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to get browse detail");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -1084,7 +1170,7 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeer {
             }
             catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to retrieve employee pay record");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -1125,7 +1211,7 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeer {
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Cannot SQL User_Mstr");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             con.close();
         } catch (Exception e) {
@@ -1292,8 +1378,10 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeer {
         add(jTabbedPane1);
 
         jPanelMain.setBorder(javax.swing.BorderFactory.createTitledBorder("Employee Maintenance"));
+        jPanelMain.setName("panelmain"); // NOI18N
 
         btadd.setText("Add");
+        btadd.setName("btadd"); // NOI18N
         btadd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddActionPerformed(evt);
@@ -1301,6 +1389,7 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         btupdate.setText("Update");
+        btupdate.setName("btupdate"); // NOI18N
         btupdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btupdateActionPerformed(evt);
@@ -1314,6 +1403,7 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         jLabel46.setText("Employee Number");
+        jLabel46.setName("lblid"); // NOI18N
 
         comments.setColumns(20);
         comments.setRows(5);
@@ -1324,24 +1414,34 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeer {
         jScrollPane7.setViewportView(taUMperms1);
 
         jLabel15.setText("Comments");
+        jLabel15.setName("lblcomments"); // NOI18N
 
         jLabel10.setText("State");
+        jLabel10.setName("lblstate"); // NOI18N
 
         jLabel7.setText("City");
+        jLabel7.setName("lblcity"); // NOI18N
 
         jLabel12.setText("Phone");
+        jLabel12.setName("lblphone"); // NOI18N
 
         jLabel8.setText("ZipCode");
+        jLabel8.setName("lblzip"); // NOI18N
 
         jLabel17.setText("Emergency Number");
+        jLabel17.setName("lblemergencynumber"); // NOI18N
 
         jLabel6.setText("Addrline2");
+        jLabel6.setName("lbladdr2"); // NOI18N
 
         jLabel11.setText("Country");
+        jLabel11.setName("lblcountry"); // NOI18N
 
         jLabel16.setText("Emergency Contact");
+        jLabel16.setName("lblemergencycontact"); // NOI18N
 
         jLabel5.setText("Addrline1");
+        jLabel5.setName("lbladdr1"); // NOI18N
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -1430,36 +1530,49 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeer {
         );
 
         jLabel55.setText("Date Of Birth");
+        jLabel55.setName("lbldob"); // NOI18N
 
         dcdob.setDateFormatString("yyyy-MM-dd");
 
         termdate.setDateFormatString("yyyy-MM-dd");
 
         jLabel49.setText("FirstName");
+        jLabel49.setName("lblfirstname"); // NOI18N
 
         jLabel13.setText("Vacation Days");
+        jLabel13.setName("lblvacdays"); // NOI18N
 
         jLabel14.setText("Vac Days Taken");
+        jLabel14.setName("lblvacdaystaken"); // NOI18N
 
         jLabel47.setText("LastName");
+        jLabel47.setName("lbllastname"); // NOI18N
 
         jLabel2.setText("Middle Initial");
+        jLabel2.setName("lblmiddle"); // NOI18N
 
         jLabel56.setText("Job Title");
+        jLabel56.setName("lbljobtitle"); // NOI18N
 
         jLabel50.setText("HireDate");
+        jLabel50.setName("lblhiredate"); // NOI18N
 
         jLabel51.setText("TermDate");
+        jLabel51.setName("lbltermdate"); // NOI18N
 
         hiredate.setDateFormatString("yyyy-MM-dd");
 
         jLabel18.setText("Supervisor");
+        jLabel18.setName("lblsupervisor"); // NOI18N
 
         jLabel19.setText("Clocked In?");
+        jLabel19.setName("lblclockedin"); // NOI18N
 
         cbautoclock.setText("AutoClock");
+        cbautoclock.setName("cbautoclock"); // NOI18N
 
         cbactive.setText("Active?");
+        cbactive.setName("cbactive"); // NOI18N
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -1569,22 +1682,29 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeer {
         );
 
         jLabel9.setText("FMLA Days");
+        jLabel9.setName("lblfmladays"); // NOI18N
 
         jLabel54.setText("Gender");
+        jLabel54.setName("lblgender"); // NOI18N
 
         jLabel53.setText("Shift");
+        jLabel53.setName("lblshift"); // NOI18N
 
         ddgender.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "M", "F" }));
 
         jLabel1.setText("SSN");
+        jLabel1.setName("lblssn"); // NOI18N
 
         jLabel48.setText("Dept");
+        jLabel48.setName("lbldept"); // NOI18N
 
         ddstatus.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Active", "Inactive" }));
 
         jLabel52.setText("Status");
+        jLabel52.setName("lblstatus"); // NOI18N
 
         jLabel28.setText("Site");
+        jLabel28.setName("lblsite"); // NOI18N
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -1658,6 +1778,7 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeer {
         );
 
         btdelete.setText("Delete");
+        btdelete.setName("btdelete"); // NOI18N
         btdelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdeleteActionPerformed(evt);
@@ -1665,6 +1786,7 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         btnew.setText("New");
+        btnew.setName("btnew"); // NOI18N
         btnew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnewActionPerformed(evt);
@@ -1672,6 +1794,7 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         tbclear.setText("Clear");
+        tbclear.setName("btclear"); // NOI18N
         tbclear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tbclearActionPerformed(evt);
@@ -1762,6 +1885,7 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeer {
         add(jPanelMain);
 
         jPanelPay.setBorder(javax.swing.BorderFactory.createTitledBorder("Payroll Options"));
+        jPanelPay.setName("panelpayroll"); // NOI18N
         jPanelPay.setPreferredSize(new java.awt.Dimension(938, 622));
 
         jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder("Exceptions"));
@@ -1777,10 +1901,13 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeer {
         jScrollPane2.setViewportView(exctable);
 
         percentlabel.setText("Percent/Amount");
+        percentlabel.setName("lblpercentamt"); // NOI18N
 
         jLabel21.setText("Desc");
+        jLabel21.setName("lbldesc"); // NOI18N
 
         btexcadd.setText("add");
+        btexcadd.setName("btadd"); // NOI18N
         btexcadd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btexcaddActionPerformed(evt);
@@ -1799,8 +1926,10 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeer {
         ddexctype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "earning", "deduction" }));
 
         jLabel22.setText("Type");
+        jLabel22.setName("lbltype"); // NOI18N
 
         jLabel23.setText("AmountType");
+        jLabel23.setName("lblamounttype"); // NOI18N
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -1858,10 +1987,13 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeer {
         ddpaytype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "check", "direct deposit" }));
 
         jLabel24.setText("PayType");
+        jLabel24.setName("lblpaytype"); // NOI18N
 
         jLabel25.setText("Bank Routing");
+        jLabel25.setName("lblbankrouting"); // NOI18N
 
         jLabel26.setText("Bank Account");
+        jLabel26.setName("lblbankacct"); // NOI18N
 
         tbrate.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -1870,16 +2002,20 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         jLabel3.setText("Rate/hr");
+        jLabel3.setName("lblratehr"); // NOI18N
 
         ddtype.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Hourly", "Salary", "Temp" }));
 
         jLabel4.setText("Type");
+        jLabel4.setName("lbltype"); // NOI18N
 
         jLabel20.setText("Profile");
+        jLabel20.setName("lblprofile"); // NOI18N
 
         ddpayfrequency.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "bi-monthly", "monthly", "weekly" }));
 
         jLabel27.setText("Pay Frequency");
+        jLabel27.setName("lblpayfreq"); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -2088,14 +2224,14 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeer {
         Pattern p = Pattern.compile("^[0-9]\\d*(\\.\\d+)?$");
         Matcher m = p.matcher(tbexcamt.getText());
         if (!m.find() || tbexcamt.getText() == null) {
-            bsmf.MainFrame.show("Invalid amount format");
+            bsmf.MainFrame.show(getMessageTag(1028));
             proceed = false;
             tbexcamt.requestFocus();
             return;
         }
 
         if (tbexcdesc.getText().isEmpty()) {
-            bsmf.MainFrame.show("Description cannot be blank");
+            bsmf.MainFrame.show(getMessageTag(1024));
             proceed = false;
             tbexcdesc.requestFocus();
             return;
@@ -2109,7 +2245,7 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeer {
     private void btexcdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btexcdeleteActionPerformed
         int[] rows = exctable.getSelectedRows();
         for (int i : rows) {
-            bsmf.MainFrame.show("Removing row " + i);
+            bsmf.MainFrame.show(getMessageTag(1031,String.valueOf(i)));
             ((javax.swing.table.DefaultTableModel) exctable.getModel()).removeRow(i);
         }
     }//GEN-LAST:event_btexcdeleteActionPerformed
@@ -2150,7 +2286,7 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeer {
         if (x.equals("error")) {
             tbrate.setText("");
             tbrate.setBackground(Color.yellow);
-            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            bsmf.MainFrame.show(getMessageTag(1000));
             tbrate.requestFocus();
         } else {
             tbrate.setText(x);
