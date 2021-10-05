@@ -436,7 +436,7 @@ public class APRptPicker extends javax.swing.JPanel {
             Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
               while (en.hasMoreElements()) {
                  TableColumn tc = en.nextElement();
-                 if (tc.getClass().getSimpleName().equals("ImageIcon")) {
+                 if (mymodel.getColumnClass(tc.getModelIndex()).getSimpleName().equals("ImageIcon")) {
                      continue;
                  }
                  tc.setCellRenderer(new APRptPicker.renderer1());
@@ -538,7 +538,7 @@ public class APRptPicker extends javax.swing.JPanel {
             Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
               while (en.hasMoreElements()) {
                  TableColumn tc = en.nextElement();
-                 if (tc.getClass().getSimpleName().equals("ImageIcon")) {
+                 if (mymodel.getColumnClass(tc.getModelIndex()).getSimpleName().equals("ImageIcon")) {
                      continue;
                  }
                  tc.setCellRenderer(new APRptPicker.renderer1());

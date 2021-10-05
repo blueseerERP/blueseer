@@ -503,6 +503,49 @@ public class BlueSeerUtils {
         return z;
     }
     
+    public static String bsFormatDouble(double invalue, String precision) {
+        String pattern = "";
+        String outvalue = "";
+        
+       
+        if (precision.equals("2")) {
+         pattern = "#0.00"; 
+        } else if (precision.equals("3")) {
+         pattern = "#0.000";  
+        } else if (precision.equals("4")) {
+         pattern = "#0.0000";   
+        } else if (precision.equals("5")) {
+         pattern = "#0.00000";    
+         } else if (precision.equals("0")) {
+         pattern = "#0";    
+        } else {
+         pattern = "#0.00";    
+        }
+       
+        DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.getDefault());    
+        df.applyPattern(pattern);
+        outvalue = df.format(invalue); 
+        return outvalue;
+    }
+    
+    public static String bsFormatDouble(double invalue) {
+        String outvalue = "";
+        String pattern = "#0.00"; 
+        DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.getDefault());    
+        df.applyPattern(pattern);
+        outvalue = df.format(invalue); 
+        return outvalue;
+    }
+    
+    public static String bsFormatDouble5(double invalue) {
+        String outvalue = "";
+        String pattern = "#0.00000"; 
+        DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.getDefault());    
+        df.applyPattern(pattern);
+        outvalue = df.format(invalue); 
+        return outvalue;
+    }
+    
     public static String bsformat(String type, String invalue, String precision) {
         String pattern = "";
         String outvalue = "";

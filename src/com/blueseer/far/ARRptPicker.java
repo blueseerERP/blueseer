@@ -433,7 +433,7 @@ public class ARRptPicker extends javax.swing.JPanel {
             Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
               while (en.hasMoreElements()) {
                  TableColumn tc = en.nextElement();
-                 if (tc.getClass().getSimpleName().equals("ImageIcon")) {
+                 if (mymodel.getColumnClass(tc.getModelIndex()).getSimpleName().equals("ImageIcon")) {
                      continue;
                  }
                  tc.setCellRenderer(new ARRptPicker.renderer1());
@@ -547,7 +547,7 @@ public class ARRptPicker extends javax.swing.JPanel {
             Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
               while (en.hasMoreElements()) {
                  TableColumn tc = en.nextElement();
-                 if (tc.getClass().getSimpleName().equals("ImageIcon")) {
+                 if (mymodel.getColumnClass(tc.getModelIndex()).getSimpleName().equals("ImageIcon")) {
                      continue;
                  }
                  tc.setCellRenderer(new ARRptPicker.renderer1());
@@ -671,7 +671,7 @@ public class ARRptPicker extends javax.swing.JPanel {
             Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
               while (en.hasMoreElements()) {
                  TableColumn tc = en.nextElement();
-                 if (tc.getClass().getSimpleName().equals("ImageIcon")) {
+                 if (mymodel.getColumnClass(tc.getModelIndex()).getSimpleName().equals("ImageIcon")) {
                      continue;
                  }
                  tc.setCellRenderer(new ARRptPicker.renderer1());
@@ -786,7 +786,7 @@ public class ARRptPicker extends javax.swing.JPanel {
             Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
               while (en.hasMoreElements()) {
                  TableColumn tc = en.nextElement();
-                 if (tc.getClass().getSimpleName().equals("ImageIcon")) {
+                 if (mymodel.getColumnClass(tc.getModelIndex()).getSimpleName().equals("ImageIcon")) {
                      continue;
                  }
                  tc.setCellRenderer(new ARRptPicker.renderer1());

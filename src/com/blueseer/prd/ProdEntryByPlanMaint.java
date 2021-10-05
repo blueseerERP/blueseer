@@ -467,8 +467,8 @@ String sitecitystatezip = "";
         // now lets sum up qtys posted previously (if any) for this OP and this Ticket and make sure
         // qty field is not greater than qty previous + qty scheduled
         // this should work for multiscan and nonmultican conditions
-        int prevscanned = OVData.getPlanDetTotQtyByOp(tbscan.getText(), ddop.getSelectedItem().toString());
-        int schedqty = OVData.getPlanSchedQty(tbscan.getText());
+        double prevscanned = OVData.getPlanDetTotQtyByOp(tbscan.getText(), ddop.getSelectedItem().toString());
+        double schedqty = OVData.getPlanSchedQty(tbscan.getText());
         if ( qty > (schedqty - prevscanned) ) {
              lblmessage.setText("Qty Exceeds limit (Already Scanned Qty: " + String.valueOf(prevscanned) + " out of SchedQty: " + String.valueOf(schedqty) + ")");
             lblmessage.setForeground(Color.red);

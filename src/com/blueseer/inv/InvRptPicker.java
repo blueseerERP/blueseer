@@ -439,7 +439,7 @@ public class InvRptPicker extends javax.swing.JPanel {
             Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
               while (en.hasMoreElements()) {
                  TableColumn tc = en.nextElement();
-                 if (tc.getModelIndex() == 0) { // select column
+                 if (mymodel.getColumnClass(tc.getModelIndex()).getSimpleName().equals("ImageIcon")) { // select column
                      continue;
                  }
                  tc.setCellRenderer(new InvRptPicker.renderer1());
@@ -543,7 +543,7 @@ public class InvRptPicker extends javax.swing.JPanel {
             Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
               while (en.hasMoreElements()) {
                  TableColumn tc = en.nextElement();
-                 if (tc.getModelIndex() == 0) { // select column
+                 if (mymodel.getColumnClass(tc.getModelIndex()).getSimpleName().equals("ImageIcon")) { // select column
                      continue;
                  }
                  tc.setCellRenderer(new InvRptPicker.renderer1());
@@ -645,7 +645,7 @@ public class InvRptPicker extends javax.swing.JPanel {
             Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
               while (en.hasMoreElements()) {
                  TableColumn tc = en.nextElement();
-                 if (tc.getModelIndex() == 0) { // select column
+                 if (mymodel.getColumnClass(tc.getModelIndex()).getSimpleName().equals("ImageIcon")) { // select column
                      continue;
                  }
                  tc.setCellRenderer(new InvRptPicker.renderer1());
@@ -749,7 +749,7 @@ public class InvRptPicker extends javax.swing.JPanel {
             Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
               while (en.hasMoreElements()) {
                  TableColumn tc = en.nextElement();
-                 if (tc.getModelIndex() == 0) { // select column
+                 if (mymodel.getColumnClass(tc.getModelIndex()).getSimpleName().equals("ImageIcon")) { // select column
                      continue;
                  }
                  tc.setCellRenderer(new InvRptPicker.renderer1());
@@ -854,8 +854,8 @@ public class InvRptPicker extends javax.swing.JPanel {
             Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
               while (en.hasMoreElements()) {
                  TableColumn tc = en.nextElement();
-                 if (tc.getModelIndex() == 0) { // select column
-                     continue;
+                 if (mymodel.getColumnClass(tc.getModelIndex()).getSimpleName().equals("ImageIcon")) { // select column
+                     continue;  
                  }
                  tc.setCellRenderer(new InvRptPicker.renderer1());
              }
@@ -956,7 +956,7 @@ public class InvRptPicker extends javax.swing.JPanel {
             Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
               while (en.hasMoreElements()) {
                  TableColumn tc = en.nextElement();
-                 if (tc.getModelIndex() == 0) { // select column
+                 if (mymodel.getColumnClass(tc.getModelIndex()).getSimpleName().equals("ImageIcon")) { // select column
                      continue;
                  }
                  tc.setCellRenderer(new InvRptPicker.renderer1());

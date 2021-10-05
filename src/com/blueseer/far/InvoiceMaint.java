@@ -31,6 +31,8 @@ import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
+import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
@@ -74,8 +76,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.util.HashMap;
 import java.util.Locale;
 import javax.print.Doc;
@@ -619,7 +619,7 @@ public class InvoiceMaint extends javax.swing.JPanel {
                      for (String[] s : orderlines) {
                          z++;
                          if (! s[0].isEmpty() && ! s[1].isEmpty()) {
-                             _adjustedqty = Double.valueOf(s[4]) - Double.valueOf(s[5]);
+                             _adjustedqty = bsParseDouble(s[4]) - bsParseDouble(s[5]);
                              if (_adjustedqty > 0) {
                                  finalstatus = "backorder";
                              }
@@ -686,9 +686,7 @@ public class InvoiceMaint extends javax.swing.JPanel {
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
             try {
                 Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
-                int i = 0;
+                ResultSet res = null; int i = 0;
                 int d = 0;
                 String order = "";
                 String po = "";
@@ -744,9 +742,9 @@ public class InvoiceMaint extends javax.swing.JPanel {
                     dcinvduedate.setDate(bsmf.MainFrame.dfdate.parse(res.getString("ar_duedate")));
                     tbterms.setText(res.getString("ar_terms"));
                     tbtaxcode.setText(res.getString("ar_tax_code"));
-                    tbaramt.setText(df.format(res.getDouble("ar_amt")));
-                    tbartaxamt.setText(df.format(res.getDouble("ar_amt_tax")));
-                    tbopenamt.setText(df.format(res.getDouble("ar_open_amt")));
+                    tbaramt.setText(bsFormatDouble(res.getDouble("ar_amt")));
+                    tbartaxamt.setText(bsFormatDouble(res.getDouble("ar_amt_tax")));
+                    tbopenamt.setText(bsFormatDouble(res.getDouble("ar_open_amt")));
                     tbbank.setText(res.getString("ar_bank"));
                     ddshipvia.setSelectedItem(res.getString("sh_shipvia"));
                     ddsite.setSelectedItem(res.getString("sh_site"));
@@ -839,23 +837,23 @@ public class InvoiceMaint extends javax.swing.JPanel {
     public void sumqty() {
         double qty = 0;
          for (int j = 0; j < tabledetail.getRowCount(); j++) {
-             qty = qty + Double.valueOf(tabledetail.getValueAt(j, 4).toString()); 
+             qty = qty + bsParseDouble(tabledetail.getValueAt(j, 4).toString()); 
          }
          tbtotqty.setText(String.valueOf(qty));
     }
     
     public void sumdollars() {
-        DecimalFormat df = new DecimalFormat("#.00", new DecimalFormatSymbols(Locale.US));
+        
         double dol = 0;
          for (int j = 0; j < tabledetail.getRowCount(); j++) {
-             dol = dol + ( Double.valueOf(tabledetail.getValueAt(j, 4).toString()) * Double.valueOf(tabledetail.getValueAt(j, 5).toString()) ); 
+             dol = dol + ( bsParseDouble(tabledetail.getValueAt(j, 4).toString()) * bsParseDouble(tabledetail.getValueAt(j, 5).toString()) ); 
          }
          // now add trailer/summary charges if any
          for (int j = 0; j < sactable.getRowCount(); j++) {
             if (sactable.getValueAt(j,2).toString().equals("charge"))
-            dol += Double.valueOf(sactable.getValueAt(j,4).toString());
+            dol += bsParseDouble(sactable.getValueAt(j,4).toString());
         }
-         tbtotdollars.setText(df.format(dol));
+         tbtotdollars.setText(bsFormatDouble(dol));
     }
      
     public void retotal() {

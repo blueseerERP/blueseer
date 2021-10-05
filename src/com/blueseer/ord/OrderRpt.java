@@ -112,7 +112,7 @@ public class OrderRpt extends javax.swing.JPanel {
                       @Override  
                       public Class getColumnClass(int col) {  
                         if (col == 0)       
-                            return ImageIcon.class;  
+                            return ImageIcon.class;   
                         else return String.class;  //other columns accept String values  
                       }  
                         };
@@ -123,7 +123,7 @@ public class OrderRpt extends javax.swing.JPanel {
      */
     
      
-          class ButtonRenderer extends JButton implements TableCellRenderer {
+    class ButtonRenderer extends JButton implements TableCellRenderer {
 
         public ButtonRenderer() {
             setOpaque(true);
@@ -144,7 +144,7 @@ public class OrderRpt extends javax.swing.JPanel {
     }
      
      
-     class MyTableModel extends DefaultTableModel {  
+    class MyTableModel extends DefaultTableModel {  
       
         public MyTableModel(Object rowData[][], Object columnNames[]) {  
              super(rowData, columnNames);  
@@ -156,6 +156,9 @@ public class OrderRpt extends javax.swing.JPanel {
                 return Integer.class;  
             else if (col == 8)
                 return Double.class;
+            else if (col == 0)
+                return ImageIcon.class;
+
             else return String.class;  //other columns accept String values  
           
 // return String.class;
@@ -598,8 +601,7 @@ try {
                 Enumeration<TableColumn> en = tableorder.getColumnModel().getColumns();
                  while (en.hasMoreElements()) {
                      TableColumn tc = en.nextElement();
-                     if (tc.getIdentifier().toString().equals("Select") || 
-                             tc.getIdentifier().toString().equals("Print") ) {
+                     if (mymodel.getColumnClass(tc.getModelIndex()).getSimpleName().equals("ImageIcon")) {
                          continue;
                      }
                      tc.setCellRenderer(new OrderRpt.SomeRenderer());
