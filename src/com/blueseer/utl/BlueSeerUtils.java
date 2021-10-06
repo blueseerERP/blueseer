@@ -503,6 +503,19 @@ public class BlueSeerUtils {
         return z;
     }
     
+    public static double bsParseDoubleUS(String x) {
+        double z = 0;
+        NumberFormat format = NumberFormat.getInstance(Locale.US);
+        Number number = 0;
+                    try {
+                        number = format.parse(x);
+                    } catch (ParseException ex) {
+                        bsmf.MainFrame.show("Problem parsing double");
+                    }
+        z = number.doubleValue();
+        return z;
+    }
+    
     public static String bsFormatDouble(double invalue, String precision) {
         String pattern = "";
         String outvalue = "";

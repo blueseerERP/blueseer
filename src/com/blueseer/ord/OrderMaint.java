@@ -1242,21 +1242,12 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
                  // myorddetmodel  "Line", "Part", "CustPart", "SO", "PO", "Qty", "UOM", "ListPrice", "Discount", "NetPrice", "QtyShip", "Status"
                 res = st.executeQuery("select * from sod_det where sod_nbr = " + "'" + x[0] + "'" + ";");
                 while (res.next()) {
-                  if (defaultDecimalSeparator != '.') {
                     myorddetmodel.addRow(new Object[]{res.getString("sod_line"), res.getString("sod_part"),
                       res.getString("sod_custpart"), res.getString("sod_nbr"), 
                       res.getString("sod_po"), res.getString("sod_ord_qty").replace('.', defaultDecimalSeparator), res.getString("sod_uom"), BlueSeerUtils.priceformat(res.getString("sod_listprice").replace('.', defaultDecimalSeparator)),
                       BlueSeerUtils.priceformat(res.getString("sod_disc").replace('.', defaultDecimalSeparator)), BlueSeerUtils.priceformat(res.getString("sod_netprice").replace('.', defaultDecimalSeparator)), res.getString("sod_shipped_qty").replace('.', defaultDecimalSeparator), res.getString("sod_status"),
                       res.getString("sod_wh"), res.getString("sod_loc"), res.getString("sod_desc"), res.getString("sod_taxamt").replace('.', defaultDecimalSeparator)
                   });
-                  } else { 
-                  myorddetmodel.addRow(new Object[]{res.getString("sod_line"), res.getString("sod_part"),
-                      res.getString("sod_custpart"), res.getString("sod_nbr"), 
-                      res.getString("sod_po"), res.getString("sod_ord_qty"), res.getString("sod_uom"), BlueSeerUtils.priceformat(res.getString("sod_listprice")),
-                      BlueSeerUtils.priceformat(res.getString("sod_disc")), BlueSeerUtils.priceformat(res.getString("sod_netprice")), res.getString("sod_shipped_qty"), res.getString("sod_status"),
-                      res.getString("sod_wh"), res.getString("sod_loc"), res.getString("sod_desc"), res.getString("sod_taxamt")
-                  });
-                  }
                 }
                 
                 // set Action if Record found (i > 0)

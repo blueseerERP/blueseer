@@ -29,9 +29,12 @@ package com.blueseer.far;
 import bsmf.MainFrame;
 import static bsmf.MainFrame.checkperms;
 import static bsmf.MainFrame.con;
+import static bsmf.MainFrame.defaultDecimalSeparator;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
+import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.OVData;
@@ -49,8 +52,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DateFormat;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -279,8 +280,7 @@ public class ARAgingView extends javax.swing.JPanel {
          modeldetail.setNumRows(0);
          modelpayment.setNumRows(0);
          double total = 0.00;
-         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
-        
+          
           tabledetail.getColumnModel().getColumn(6).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
           tabledetail.getColumnModel().getColumn(7).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
           tabledetail.getColumnModel().getColumn(8).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
@@ -354,8 +354,8 @@ public class ARAgingView extends javax.swing.JPanel {
                 
                  
                 while (res.next()) {
-                    dol = dol + (res.getDouble("0") + res.getDouble("30") + res.getDouble("60") + res.getDouble("90") + res.getDouble("90p") );
-                    qty = qty + 0;
+                   dol = dol + (res.getDouble("0") + res.getDouble("30") + res.getDouble("60") + res.getDouble("90") + res.getDouble("90p") );
+                   qty = qty + 0;
                     i++;
                         modeldetail.addRow(new Object[]{
                             BlueSeerUtils.clickflag,
@@ -364,11 +364,11 @@ public class ARAgingView extends javax.swing.JPanel {
                             res.getString("ar_type"),
                             res.getString("ar_effdate"),
                             res.getString("ar_duedate"),
-                                Double.valueOf(df.format(res.getDouble("0"))),
-                                Double.valueOf(df.format(res.getDouble("30"))),
-                                Double.valueOf(df.format(res.getDouble("60"))),
-                                Double.valueOf(df.format(res.getDouble("90"))),
-                                Double.valueOf(df.format(res.getDouble("90p")))
+                            res.getString("0").replace('.', defaultDecimalSeparator),
+                            res.getString("30").replace('.', defaultDecimalSeparator),
+                            res.getString("60").replace('.', defaultDecimalSeparator),
+                            res.getString("90").replace('.', defaultDecimalSeparator),
+                            res.getString("90p").replace('.', defaultDecimalSeparator)
                             });
                    }
                
@@ -395,8 +395,7 @@ public class ARAgingView extends javax.swing.JPanel {
       
          modelpayment.setNumRows(0);
          double total = 0.00;
-         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
-        
+         
           tablepayment.getColumnModel().getColumn(6).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
           tablepayment.getColumnModel().getColumn(7).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
         
@@ -435,8 +434,8 @@ public class ARAgingView extends javax.swing.JPanel {
                             res.getString("b.ar_duedate"),
                             res.getString("ar_type"),
                             res.getString("ar_ref"),
-                            Double.valueOf(df.format(res.getDouble("ard_amt"))),
-                            Double.valueOf(df.format(res.getDouble("ar_amt")))
+                            res.getString("ard_amt").replace('.', defaultDecimalSeparator),
+                            res.getString("ar_amt").replace('.', defaultDecimalSeparator)
                             });
                    }
                
@@ -853,7 +852,6 @@ try {
             try {
                 int qty = 0;
                 
-                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
                 int i = 0;
                
                 tablesummary.setModel(modelsummary);
@@ -927,18 +925,18 @@ try {
                          " group by ar_cust, cm_name order by ar_cust;");
                  }
                   while (res.next()) {
-                    dol = dol + (res.getDouble("0") + res.getDouble("30") + res.getDouble("60") + res.getDouble("90") + res.getDouble("90p") );
-                    qty = qty + 0;
+                   dol = dol + (res.getDouble("0") + res.getDouble("30") + res.getDouble("60") + res.getDouble("90") + res.getDouble("90p") );
+                   qty = qty + 0;
                     i++;
                         modelsummary.addRow(new Object[]{
                                 BlueSeerUtils.clickbasket,
                                 res.getString("ar_cust"),
                                 res.getString("cm_name"),
-                                Double.valueOf(df.format(res.getDouble("0"))),
-                                Double.valueOf(df.format(res.getDouble("30"))),
-                                Double.valueOf(df.format(res.getDouble("60"))),
-                                Double.valueOf(df.format(res.getDouble("90"))),
-                                Double.valueOf(df.format(res.getDouble("90p")))
+                                res.getString("0").replace('.', defaultDecimalSeparator),
+                            res.getString("30").replace('.', defaultDecimalSeparator),
+                            res.getString("60").replace('.', defaultDecimalSeparator),
+                            res.getString("90").replace('.', defaultDecimalSeparator),
+                            res.getString("90p").replace('.', defaultDecimalSeparator)
                             });
                 }
                  
@@ -956,7 +954,7 @@ try {
              } // for each customer in range
                  
                 labelcount.setText(String.valueOf(i));
-                labeldollar.setText(String.valueOf(df.format(dol)));
+                labeldollar.setText(String.valueOf(bsFormatDouble(dol)));
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));

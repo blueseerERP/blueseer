@@ -33,6 +33,7 @@ import com.blueseer.edi.EDI;
 
 import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.dbtype;
+import static bsmf.MainFrame.defaultDecimalSeparator;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
@@ -41,6 +42,7 @@ import com.blueseer.inv.invData;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble5;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble; 
+import static com.blueseer.utl.BlueSeerUtils.bsParseDoubleUS;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.io.BufferedReader;
@@ -824,10 +826,10 @@ public class OVData {
                             + "'" + part + "'" + ","
                             + "'" + set + "'" + ","
                             + "'" + site + "'" + ","
-                            + "'" + bsFormatDouble(mtl,"5") + "'" + ","
-                            + "'" + bsFormatDouble(ovh,"5") + "'" + ","
-                            + "'" + bsFormatDouble(out,"5") + "'" + ","
-                            + "'" + bsFormatDouble(tot,"5") + "'"
+                            + "'" + bsFormatDouble(mtl,"5").replace(defaultDecimalSeparator, '.') + "'" + ","
+                            + "'" + bsFormatDouble(ovh,"5").replace(defaultDecimalSeparator, '.') + "'" + ","
+                            + "'" + bsFormatDouble(out,"5").replace(defaultDecimalSeparator, '.') + "'" + ","
+                            + "'" + bsFormatDouble(tot,"5").replace(defaultDecimalSeparator, '.') + "'"
                             + ")"
                             + ";");
                 }
@@ -2827,7 +2829,7 @@ return myitem;
                         + " inner join cm_mstr on cm_tax_code = tax_code and cm_code = " + "'" + cust + "'"
                         + " order by tax_code ;");
                 while (res.next()) {
-                    taxpercent += bsParseDouble(res.getString("taxd_percent"));
+                    taxpercent += res.getDouble("taxd_percent");
                 }
 
             } catch (SQLException s) {
@@ -2866,7 +2868,7 @@ return myitem;
                         + " where tax_code = " + "'" + taxcode + "'"
                         + " order by tax_code ;");
                 while (res.next()) {
-                    taxpercent += bsParseDouble(res.getString("taxd_percent"));
+                    taxpercent += res.getDouble("taxd_percent");
                 }
 
             } catch (SQLException s) {
@@ -2901,7 +2903,7 @@ return myitem;
 
                 res = st.executeQuery("select shs_amt from shs_det where shs_type = 'charge' and shs_nbr = " + "'" + shipper + "'" + ";");
                 while (res.next()) {
-                    amt += bsParseDouble(res.getString("shs_amt"));
+                    amt += res.getDouble("shs_amt");
                 }
             } catch (SQLException s) {
                 MainFrame.bslog(s);
@@ -2939,7 +2941,7 @@ return myitem;
                         + " inner join item_mstr on it_taxcode = tax_code and it_item = " + "'" + item + "'"
                         + " order by tax_code ;");
                 while (res.next()) {
-                    taxpercent += bsParseDouble(res.getString("taxd_percent"));
+                    taxpercent += res.getDouble("taxd_percent");
                 }
 
                 if (taxpercent > 0) {
@@ -2985,7 +2987,7 @@ return myitem;
                         + " inner join cm_mstr on cm_tax_code = tax_code and cm_code = " + "'" + cust + "'"
                         + " order by tax_code ;");
                 while (res.next()) {
-                    taxpercent += bsParseDouble(res.getString("taxd_percent"));
+                    taxpercent += res.getDouble("taxd_percent");
                 }
 
                 if (taxpercent > 0) {
@@ -3031,7 +3033,7 @@ return myitem;
                         + " where tax_code  = " + "'" + taxcode + "'"
                         + " order by tax_code ;");
                 while (res.next()) {
-                    taxpercent += bsParseDouble(res.getString("taxd_percent"));
+                    taxpercent += res.getDouble("taxd_percent");
                 }
 
                 if (taxpercent > 0) {
@@ -3077,7 +3079,7 @@ return myitem;
                         + " inner join so_mstr on so_taxcode = tax_code and so_nbr = " + "'" + order + "'"
                         + " order by tax_code ;");
                 while (res.next()) {
-                    taxpercent += bsParseDouble(res.getString("taxd_percent"));
+                    taxpercent += res.getDouble("taxd_percent");
                 }
 
                 if (taxpercent > 0) {
@@ -3123,7 +3125,7 @@ return myitem;
                         + " inner join ship_mstr on sh_taxcode = tax_code and sh_id = " + "'" + shipper + "'"
                         + " order by tax_code ;");
                 while (res.next()) {
-                    taxpercent += bsParseDouble(res.getString("taxd_percent"));
+                    taxpercent += res.getDouble("taxd_percent");
                 }
 
                 if (taxpercent > 0) {
@@ -4375,11 +4377,11 @@ return myitem;
                             "'" +  ld[6] + "'" + "," +          
                             "'" +  ld[7] + "'" + "," +  
                             "'" +  dfdate.format(now) + "'" + "," + 
-                            "'" +  bsFormatDouble5(bsParseDouble(ld[8])) + "'" + "," +  
-                            "'" +  bsFormatDouble5(bsParseDouble(ld[9])) + "'" + "," +  
-                            "'" +  bsFormatDouble5(bsParseDouble(ld[10])) + "'" + "," +  
-                            "'" +  bsFormatDouble5(bsParseDouble(ld[11])) + "'" + "," +  
-                            "'" +  bsFormatDouble5(bsParseDouble(ld[12])) + "'" + "," +  
+                            "'" +  bsFormatDouble5(bsParseDouble(ld[8])).replace(defaultDecimalSeparator, '.') + "'" + "," +  
+                            "'" +  bsFormatDouble5(bsParseDouble(ld[9])).replace(defaultDecimalSeparator, '.') + "'" + "," +  
+                            "'" +  bsFormatDouble5(bsParseDouble(ld[10])).replace(defaultDecimalSeparator, '.') + "'" + "," +  
+                            "'" +  bsFormatDouble5(bsParseDouble(ld[11])).replace(defaultDecimalSeparator, '.') + "'" + "," +  
+                            "'" +  bsFormatDouble5(bsParseDouble(ld[12])).replace(defaultDecimalSeparator, '.') + "'" + "," +  
                             "'" +  ld[13] + "'" + "," +  
                             "'" +  ld[14] + "'" + "," +  
                             "'" +  ld[15] + "'" + "," +  
@@ -4456,11 +4458,11 @@ return myitem;
                             "'" +  "" + "'" + "," +  
                             "'" +  "1" + "'" + "," +  
                             "'" +  date + "'" + "," +          
-                            "'" +  bsFormatDouble5(bsParseDouble(cost)) + "'" + "," +  
-                            "'" +  bsFormatDouble5(bsParseDouble(cost)) + "'" + "," +  
-                            "'" +  bsFormatDouble5(bsParseDouble(cost)) + "'" + "," +  
-                            "'" +  bsFormatDouble5(bsParseDouble("0")) + "'" + "," +  
-                            "'" +  bsFormatDouble5(bsParseDouble("0")) + "'" + "," +  
+                            "'" +  bsFormatDouble5(bsParseDouble(cost)).replace(defaultDecimalSeparator, '.') + "'" + "," +  
+                            "'" +  bsFormatDouble5(bsParseDouble(cost)).replace(defaultDecimalSeparator, '.') + "'" + "," +  
+                            "'" +  bsFormatDouble5(bsParseDouble(cost)).replace(defaultDecimalSeparator, '.') + "'" + "," +  
+                            "'" +  bsFormatDouble5(bsParseDouble("0")).replace(defaultDecimalSeparator, '.') + "'" + "," +  
+                            "'" +  bsFormatDouble5(bsParseDouble("0")).replace(defaultDecimalSeparator, '.') + "'" + "," +  
                             "'" +  "ASSET" + "'" + "," +  
                             "'" +  "" + "'" + "," +  
                             "'" +  "" + "'" + "," +  
@@ -4820,7 +4822,7 @@ return myitem;
                     "'" +  calarray[0] + "'" + "," +  
                     "'" +  calarray[1] + "'" + "," +  
                     "'" +  ld[2] + "'" + "," +  
-                    "'" +  bsFormatDouble(bsParseDouble(ld[3])) + "'" + 
+                    "'" +  bsFormatDouble(bsParseDouble(ld[3])).replace(defaultDecimalSeparator, '.') + "'" + 
                     " );"
                     );     
                 }    // end loop
@@ -5428,7 +5430,7 @@ return myitem;
                     acct_dr.add(res.getString("pl_scrap"));
                     cc_cr.add(res.getString("pl_line"));
                     cc_dr.add(res.getString("pl_line"));
-                    cost.add((bsParseDouble(res.getString("itc_total")) * qty));
+                    cost.add((res.getDouble("itc_total") * qty));
                     site.add(thissite);
                     ref.add(thisref);
                     type.add(thistype);
@@ -5450,7 +5452,7 @@ return myitem;
                     acct_dr.add(par_acct_dr);
                     cc_cr.add(res.getString("pl_line"));
                     cc_dr.add(par_cc_dr);
-                    cost.add((bsParseDouble(res.getString("ps_qty_per")) * bsParseDouble(res.getString("itc_total")) * qty));
+                    cost.add((res.getDouble("ps_qty_per") * res.getDouble("itc_total") * qty));
                     site.add(thissite);
                     ref.add(thisref);
                     type.add("ISS-SUB");
@@ -5458,7 +5460,7 @@ return myitem;
                     child.add(res.getString("ps_child"));
                     loc.add(res.getString("it_loc"));
                     wh.add(res.getString("it_wh"));
-                    qtyper.add(bsParseDouble(res.getString("ps_qty_per")));
+                    qtyper.add(res.getDouble("ps_qty_per"));
                    
             //       Date effdate, String part, int qty, String type, double price, double cost, String site, 
            //   String loc, String cust, String nbr, String order, int line, String po, String terms, String lot, String rmks, 
@@ -5586,7 +5588,7 @@ return myitem;
                    cc_cr.add(res.getString("pl_line"));
                     acct_dr.add(par_acct_dr);
                     cc_dr.add(par_cc_dr);
-                   cost.add((bsParseDouble(res.getString("ps_qty_per")) * bsParseDouble(res.getString("itc_total")) * qty));
+                   cost.add((res.getDouble("ps_qty_per") * res.getDouble("itc_total") * qty));
                    site.add(thissite);
                     ref.add(thisref);
                     type.add(thistype);
@@ -5594,7 +5596,7 @@ return myitem;
                     child.add(res.getString("ps_child"));
                     loc.add(res.getString("it_loc"));
                     wh.add(res.getString("it_wh"));
-                    qtyper.add(bsParseDouble(res.getString("ps_qty_per")));
+                    qtyper.add(res.getDouble("ps_qty_per"));
                 }
                
               
@@ -5849,7 +5851,7 @@ return myitem;
                     desc_bdn.add(part + " - bdn op " + op);
                    // child.add(res.getString("ps_child"));
                   //  loc.add(res.getString("it_loc"));
-                //   qtyper.add(bsParseDouble(res.getString("ps_qty_per"));
+                //   qtyper.add(res.getDouble("ps_qty_per"));
                    
                 }
               
@@ -7285,7 +7287,7 @@ return myitem;
                         ";" );
                while (res.next()) {
                    if (invalue > 0) {
-                   outvalue = invalue / bsParseDouble(res.getString("exc_rate"));            
+                   outvalue = invalue / res.getDouble("exc_rate");            
                    } 
                 }
                
@@ -7603,7 +7605,7 @@ return myitem;
                             " AND conv_tocode = " + "'" + order_uom + "'" + ";" ); 
                     while (res.next()) {
                         z++;
-                        baseqty = order_qty * ( bsParseDouble(res.getString("conv_fromamt")) / bsParseDouble(res.getString("conv_toamt")));                    
+                        baseqty = order_qty * ( res.getDouble("conv_fromamt") / res.getDouble("conv_toamt"));                    
                     }
                         if (z == 0) {
                             // try reverse
@@ -7611,7 +7613,7 @@ return myitem;
                                 " conv_fromcode = " + "'" + order_uom + "'" +
                                 " AND conv_tocode = " + "'" + baseuom + "'" + ";" ); 
                             while (res.next()) {
-                            baseqty = order_qty * ( bsParseDouble(res.getString("conv_toamt")) / bsParseDouble(res.getString("conv_fromamt")));                    
+                            baseqty = order_qty * ( res.getDouble("conv_toamt") / res.getDouble("conv_fromamt"));                    
                             }
                         }
                 }
@@ -7958,7 +7960,7 @@ return myitem;
 
                 res = st.executeQuery("select posc_taxpercent from pos_ctrl;" );
                while (res.next()) {
-                percent = bsParseDouble(res.getString("posc_taxpercent"));                    
+                percent = res.getDouble("posc_taxpercent");                    
                 }
                
            }
@@ -8055,7 +8057,7 @@ return myitem;
                         " AND in_site = " + "'" + site + "'" +
                         " order by in_qoh desc limit 1;" );
                while (res.next()) {
-                qty = bsParseDouble(res.getString("in_qoh"));                    
+                qty = res.getDouble("in_qoh");                    
                 }
                
            }
@@ -9767,8 +9769,8 @@ return myitem;
                         " where it_item = " + "'" + part + "'" +
                         " AND wf_op = " + "'" + op + "'" + ";");
                while (res.next()) {
-                    labor += ( ((bsParseDouble(res.getString("wc_setup_rate")) * bsParseDouble(res.getString("wf_setup_hours"))) / bsParseDouble(res.getString("it_lotsize")) ) +
-                            (bsParseDouble(res.getString("wc_run_rate")) * bsParseDouble(res.getString("wf_run_hours")) * bsParseDouble(res.getString("wc_run_crew")))  );
+                    labor += ( ((res.getDouble("wc_setup_rate") * res.getDouble("wf_setup_hours")) / res.getDouble("it_lotsize") ) +
+                            (res.getDouble("wc_run_rate") * res.getDouble("wf_run_hours") * res.getDouble("wc_run_crew"))  );
                 }
                labor = bsParseDouble(bsFormatDouble5(labor));
            }
@@ -9800,8 +9802,8 @@ return myitem;
                         " where it_item = " + "'" + part + "'" +
                         " AND wf_op = " + "'" + op + "'" + ";");
                while (res.next()) {
-                     burden += ( ((bsParseDouble(res.getString("wc_bdn_rate")) * bsParseDouble(res.getString("wf_setup_hours"))) / bsParseDouble(res.getString("it_lotsize")) ) +
-                            (bsParseDouble(res.getString("wc_bdn_rate")) * bsParseDouble(res.getString("wf_run_hours")) * bsParseDouble(res.getString("wc_run_crew")))  );
+                     burden += ( ((res.getDouble("wc_bdn_rate") * res.getDouble("wf_setup_hours")) / res.getDouble("it_lotsize") ) +
+                            (res.getDouble("wc_bdn_rate") * res.getDouble("wf_run_hours") * res.getDouble("wc_run_crew"))  );
                 }
                burden = bsParseDouble(bsFormatDouble5(burden));
            }
@@ -9835,7 +9837,7 @@ return myitem;
                         " where it_item = " + "'" + part + "'" +
                         " AND wf_op = " + "'" + op + "'" + ";");
                while (res.next()) {
-                    labor += ((bsParseDouble(res.getString("wc_run_rate")) * bsParseDouble(res.getString("wf_run_hours")) * bsParseDouble(res.getString("wc_run_crew")))  );
+                    labor += (res.getDouble("wc_run_rate") * res.getDouble("wf_run_hours") * res.getDouble("wc_run_crew"));
                 }
                labor = bsParseDouble(bsFormatDouble5(labor));
            }
@@ -9868,12 +9870,12 @@ return myitem;
                         " where it_item = " + "'" + part + "'" + ";");
                while (res.next()) {
                
-                if (bsParseDouble(res.getString("it_lotsize")) == 0) {
-                    labor += ( ((bsParseDouble(res.getString("wc_setup_rate")) * bsParseDouble(res.getString("wf_setup_hours"))) ) +
-                            (bsParseDouble(res.getString("wc_run_rate")) * bsParseDouble(res.getString("wf_run_hours")) * bsParseDouble(res.getString("wc_run_crew"))));
+                if (res.getDouble("it_lotsize") == 0) {
+                    labor += ( ((res.getDouble("wc_setup_rate") * res.getDouble("wf_setup_hours")) ) +
+                            (res.getDouble("wc_run_rate") * res.getDouble("wf_run_hours") * res.getDouble("wc_run_crew")));
                    } else {
-                     labor += ( ((bsParseDouble(res.getString("wc_setup_rate")) * bsParseDouble(res.getString("wf_setup_hours"))) / bsParseDouble(res.getString("it_lotsize")) ) +
-                            (bsParseDouble(res.getString("wc_run_rate")) * bsParseDouble(res.getString("wf_run_hours")) * bsParseDouble(res.getString("wc_run_crew"))));
+                     labor += ( ((res.getDouble("wc_setup_rate") * res.getDouble("wf_setup_hours")) / res.getDouble("it_lotsize") ) +
+                            (res.getDouble("wc_run_rate") * res.getDouble("wf_run_hours") * res.getDouble("wc_run_crew")));
                    }
                
                
@@ -9910,12 +9912,12 @@ return myitem;
                         " inner join wc_mstr on wc_cell = wf_cell  " +
                         " where it_item = " + "'" + part + "'" + ";");
                while (res.next()) {
-                if (bsParseDouble(res.getString("it_lotsize")) == 0) {
-                    burden += ( ((bsParseDouble(res.getString("wc_bdn_rate")) * bsParseDouble(res.getString("wf_setup_hours")))  ) +
-                            (bsParseDouble(res.getString("wc_bdn_rate")) * bsParseDouble(res.getString("wf_run_hours"))  )  );
+                if (res.getDouble("it_lotsize") == 0) {
+                    burden += ( ((res.getDouble("wc_bdn_rate") * res.getDouble("wf_setup_hours"))  ) +
+                            (res.getDouble("wc_bdn_rate") * res.getDouble("wf_run_hours")  )  );
                    } else {
-                    burden += ( ((bsParseDouble(res.getString("wc_bdn_rate")) * bsParseDouble(res.getString("wf_setup_hours"))) / bsParseDouble(res.getString("it_lotsize")) ) +
-                            (bsParseDouble(res.getString("wc_bdn_rate")) * bsParseDouble(res.getString("wf_run_hours")) )  );  
+                    burden += ( ((res.getDouble("wc_bdn_rate") * res.getDouble("wf_setup_hours"))) / res.getDouble("it_lotsize") ) +
+                            (res.getDouble("wc_bdn_rate") * res.getDouble("wf_run_hours") ) ;  
                    }
                
                }
@@ -9949,7 +9951,7 @@ return myitem;
                         " where it_item = " + "'" + part + "'" +
                         " AND wf_op = " + "'" + op + "'" + ";");
                while (res.next()) {
-                     burden += (bsParseDouble(res.getString("wc_bdn_rate")) * bsParseDouble(res.getString("wf_run_hours")) );
+                     burden += (res.getDouble("wc_bdn_rate") * res.getDouble("wf_run_hours") );
                 }
                burden = bsParseDouble(bsFormatDouble5(burden));
            }
@@ -10042,12 +10044,12 @@ return myitem;
                                 + "'" + "standard" + "'" + ","
                                 + "'" + routing + "'" + ","
                                 + "'" + elements[1].toString() + "'" + ","
-                                + "'" + bsFormatDouble5(bsParseDouble(elements[17].toString())) + "'" + "," 
-                                + "'" + bsFormatDouble5(bsParseDouble(elements[6].toString())) + "'" + ","   
-                                + "'" + bsFormatDouble5(bsParseDouble(elements[7].toString())) + "'" + ","
-                                + "'" + bsFormatDouble5(bsParseDouble(elements[8].toString())) + "'" + ","
-                                + "'" + bsFormatDouble5(bsParseDouble(elements[9].toString())) + "'" + ","
-                                + "'" + bsFormatDouble5(bsParseDouble(elements[10].toString())) + "'" + ","
+                                + "'" + bsFormatDouble5(bsParseDouble(elements[17].toString())).replace(defaultDecimalSeparator, '.') + "'" + "," 
+                                + "'" + bsFormatDouble5(bsParseDouble(elements[6].toString())).replace(defaultDecimalSeparator, '.') + "'" + ","   
+                                + "'" + bsFormatDouble5(bsParseDouble(elements[7].toString())).replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + bsFormatDouble5(bsParseDouble(elements[8].toString())).replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + bsFormatDouble5(bsParseDouble(elements[9].toString())).replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + bsFormatDouble5(bsParseDouble(elements[10].toString())).replace(defaultDecimalSeparator, '.') + "'" + ","
                                 + "'" + "0" + "'" + ","
                                 + "'" + "0" + "'" + ","
                                 + "'" + "0" + "'" + ","
@@ -10113,11 +10115,11 @@ return myitem;
                    i++;
                    
                    if (i == 1) {
-                       stdopcost = bsParseDouble(res.getString("itr_total"));
+                       stdopcost = res.getDouble("itr_total");
                    } else {
-                       stdopcost = bsParseDouble(res.getString("itr_total")) - prevcost;
+                       stdopcost = res.getDouble("itr_total") - prevcost;
                    }
-                   prevcost = bsParseDouble(res.getString("itr_total"));
+                   prevcost = res.getDouble("itr_total");
                    
                    op = res.getString("wf_op");
                    cell = res.getString("wf_cell");
@@ -10128,16 +10130,16 @@ return myitem;
                    material = 0.0;
                    labor = 0.0;
                    burden = 0.0;
-                   if (bsParseDouble(res.getString("it_lotsize")) == 0) {
-                    labor += ( ((bsParseDouble(res.getString("wc_setup_rate")) * bsParseDouble(res.getString("wf_setup_hours"))) ) +
-                            (bsParseDouble(res.getString("wc_run_rate"))) * bsParseDouble(res.getString("wf_run_hours")) * bsParseDouble(res.getString("wc_run_crew")));
-                    burden += ( ((bsParseDouble(res.getString("wc_bdn_rate")) * bsParseDouble(res.getString("wf_setup_hours")))  ) +
-                            (bsParseDouble(res.getString("wc_bdn_rate")) * bsParseDouble(res.getString("wf_run_hours")) )  );
+                   if (res.getDouble("it_lotsize") == 0) {
+                    labor += ( ((res.getDouble("wc_setup_rate") * res.getDouble("wf_setup_hours")) ) +
+                            (res.getDouble("wc_run_rate")) * res.getDouble("wf_run_hours") * res.getDouble("wc_run_crew"));
+                    burden += ( ((res.getDouble("wc_bdn_rate") * res.getDouble("wf_setup_hours"))  ) +
+                            (res.getDouble("wc_bdn_rate") * res.getDouble("wf_run_hours") )  );
                    } else {
-                     labor += ( ((bsParseDouble(res.getString("wc_setup_rate")) * bsParseDouble(res.getString("wf_setup_hours"))) / bsParseDouble(res.getString("it_lotsize")) ) +
-                             (bsParseDouble(res.getString("wc_run_rate")) * bsParseDouble(res.getString("wf_run_hours")) * bsParseDouble(res.getString("wc_run_crew")) )  );
-                    burden += ( ((bsParseDouble(res.getString("wc_bdn_rate")) * bsParseDouble(res.getString("wf_setup_hours"))) / bsParseDouble(res.getString("it_lotsize")) ) +
-                            (bsParseDouble(res.getString("wc_bdn_rate")) * bsParseDouble(res.getString("wf_run_hours")) )  );  
+                     labor += ( ((res.getDouble("wc_setup_rate") * res.getDouble("wf_setup_hours")) / res.getDouble("it_lotsize") ) +
+                             (res.getDouble("wc_run_rate") * res.getDouble("wf_run_hours") * res.getDouble("wc_run_crew") )  );
+                    burden += ( ((res.getDouble("wc_bdn_rate") * res.getDouble("wf_setup_hours")) / res.getDouble("it_lotsize") ) +
+                            (res.getDouble("wc_bdn_rate") * res.getDouble("wf_run_hours") )  );  
                    }
                
                    // now do the matl for this operation
@@ -10253,16 +10255,16 @@ return myitem;
                        
                        
                    } else {
-                       if (bsParseDouble(res.getString("it_lotsize")) == 0) {
-                        labor += ( ((bsParseDouble(res.getString("wc_setup_rate")) * bsParseDouble(res.getString("wf_setup_hours"))) ) +
-                                (bsParseDouble(res.getString("wc_run_rate")) * bsParseDouble(res.getString("wf_run_hours")) * bsParseDouble(res.getString("wc_run_crew")) )  );
-                        burden += ( ((bsParseDouble(res.getString("wc_bdn_rate")) * bsParseDouble(res.getString("wf_setup_hours")))  ) +
-                                (bsParseDouble(res.getString("wc_bdn_rate")) * bsParseDouble(res.getString("wf_run_hours")) )  );
+                       if (res.getDouble("it_lotsize") == 0) {
+                        labor += ( ((res.getDouble("wc_setup_rate") * res.getDouble("wf_setup_hours")) ) +
+                                (res.getDouble("wc_run_rate") * res.getDouble("wf_run_hours") * res.getDouble("wc_run_crew"))   );
+                        burden += ( ((res.getDouble("wc_bdn_rate") * res.getDouble("wf_setup_hours"))  ) +
+                                (res.getDouble("wc_bdn_rate") * res.getDouble("wf_run_hours") )  );
                        } else {
-                         labor += ( ((bsParseDouble(res.getString("wc_setup_rate")) * bsParseDouble(res.getString("wf_setup_hours"))) / bsParseDouble(res.getString("it_lotsize")) ) +
-                                 (bsParseDouble(res.getString("wc_run_rate")) * bsParseDouble(res.getString("wf_run_hours")) * bsParseDouble(res.getString("wc_run_crew")) )  );
-                        burden += ( ((bsParseDouble(res.getString("wc_bdn_rate")) * bsParseDouble(res.getString("wf_setup_hours"))) / bsParseDouble(res.getString("it_lotsize")) ) +
-                                (bsParseDouble(res.getString("wc_bdn_rate")) * bsParseDouble(res.getString("wf_run_hours")) )  );  
+                         labor += ( ((res.getDouble("wc_setup_rate") * res.getDouble("wf_setup_hours")) / res.getDouble("it_lotsize") ) +
+                                 (res.getDouble("wc_run_rate") * res.getDouble("wf_run_hours") * res.getDouble("wc_run_crew"))   );
+                        burden += ( ((res.getDouble("wc_bdn_rate") * res.getDouble("wf_setup_hours")) / res.getDouble("it_lotsize") ) +
+                                (res.getDouble("wc_bdn_rate") * res.getDouble("wf_run_hours") )  );  
                        }
                    }
                    
@@ -11022,9 +11024,9 @@ return myitem;
                         part = res.getString("posd_item");
                         
                         if (isVoid) {
-                        qty = (-1 * bsParseDouble(res.getString("posd_qty")));
+                        qty = (-1 * res.getDouble("posd_qty"));
                         } else {
-                         qty = bsParseDouble(res.getString("posd_qty"));   
+                         qty = res.getDouble("posd_qty");   
                         }
                         
                         
@@ -11151,7 +11153,7 @@ return myitem;
                       
                         i = 0;
                         part = res.getString("shd_part");
-                        qty = bsParseDouble(res.getString("shd_qty"));
+                        qty = res.getDouble("shd_qty");
                         uom = res.getString("shd_uom");
                         loc = res.getString("shd_loc");
                         wh = res.getString("shd_wh");
@@ -11299,7 +11301,7 @@ return myitem;
                       
                         i = 0;
                         part = res.getString("shd_part");
-                        qty = bsParseDouble(res.getString("shd_qty"));
+                        qty = res.getDouble("shd_qty");
                         loc = res.getString("shd_loc");
                         wh = res.getString("shd_wh");
                         site = res.getString("sh_site");
@@ -11431,7 +11433,7 @@ return myitem;
                       res = st.executeQuery("select * from recv_det where rvd_id = " + "'" + receiver + "'" +";");
                     while (res.next()) {
                         part = res.getString("rvd_part");
-                        qty = bsParseDouble(res.getString("rvd_qty"));
+                        qty = res.getDouble("rvd_qty");
                         loc = res.getString("rvd_loc");
                         wh = res.getString("rvd_wh");
                         site = res.getString("rvd_site");
@@ -11609,7 +11611,7 @@ return myitem;
                     res = st.executeQuery("select * from recv_det left outer join item_cost on itc_set = 'standard' and itc_item = rvd_part where rvd_id = " + "'" + receiver + "'" +";");
                     while (res.next()) {
                         part = res.getString("rvd_part");
-                        qty = bsParseDouble(res.getString("rvd_qty"));
+                        qty = res.getDouble("rvd_qty");
                         order = res.getString("rvd_po");
                         po = res.getString("rvd_po");
                         line = res.getInt("rvd_poline");
@@ -11617,8 +11619,8 @@ return myitem;
                         loc = res.getString("rvd_loc");
                         jobnbr = res.getString("rvd_jobnbr");
                         serial = res.getString("rvd_serial");
-                        price = bsParseDouble(res.getString("rvd_netprice"));
-                        cost = bsParseDouble(res.getString("itc_total"));
+                        price = res.getDouble("rvd_netprice");
+                        cost = res.getDouble("itc_total");
                         uom = res.getString("rvd_uom");
                         baseqty = OVData.getUOMBaseQty(part, site, uom, qty);
                         
@@ -11727,7 +11729,7 @@ return myitem;
                     while (res.next()) {
                         part = res.getString("shd_part");
                         uom = res.getString("shd_uom");
-                        qty = bsParseDouble(res.getString("shd_qty"));
+                        qty = res.getDouble("shd_qty");
                         order = res.getString("shd_so");
                         po = res.getString("shd_po");
                         line = res.getInt("shd_soline");
@@ -11829,9 +11831,9 @@ return myitem;
                     while (res.next()) {
                         part = res.getString("posd_item");
                         if (isVoid) {
-                        qty = (-1 * bsParseDouble(res.getString("posd_qty")));
+                        qty = (-1 * res.getDouble("posd_qty"));
                         } else {
-                        qty = bsParseDouble(res.getString("posd_qty"));    
+                        qty = res.getDouble("posd_qty");    
                         }
                         baseqty = qty;
                         uom = OVData.getUOMFromItemSite(part, site);  //always base uom for POS program
@@ -11939,7 +11941,7 @@ return myitem;
                     while (res.next()) {
                         part = res.getString("shd_part");
                         uom = res.getString("shd_uom");
-                        qty = bsParseDouble(res.getString("shd_qty"));
+                        qty = res.getDouble("shd_qty");
                         order = res.getString("shd_so");
                         po = res.getString("shd_po");
                         line = res.getInt("shd_soline");
@@ -12485,8 +12487,8 @@ return myitem;
                         + " values ( " + "'" + acct_cr + "'" + ","
                         + "'" + cc_cr + "'" + ","
                         + "'" + date + "'" + ","
-                        + "'" + bsFormatDouble(-1 * amt) + "'" + ","
-                        + "'" + bsFormatDouble(-1 * baseamt) + "'" + ","        
+                        + "'" + bsFormatDouble(-1 * amt).replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "'" + bsFormatDouble(-1 * baseamt).replace(defaultDecimalSeparator, '.') + "'" + ","        
                         + "'" + curr + "'" + ","
                         + "'" + basecurr + "'" + ","
                         + "'" + ref + "'" + ","        
@@ -12502,8 +12504,8 @@ return myitem;
                         + " values ( " + "'" + acct_dr + "'" + ","
                         + "'" + cc_dr + "'" + ","
                         + "'" + date + "'" + ","
-                        + "'" + bsFormatDouble(amt) + "'" + ","
-                        + "'" + bsFormatDouble(baseamt) + "'" + ","  
+                        + "'" + bsFormatDouble(amt).replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "'" + bsFormatDouble(baseamt).replace(defaultDecimalSeparator, '.') + "'" + ","  
                         + "'" + curr + "'" + ","
                         + "'" + basecurr + "'" + ","        
                          + "'" + ref + "'" + ","
@@ -12564,8 +12566,8 @@ return myitem;
                         + " values ( " + "'" + acct_cr + "'" + ","
                         + "'" + cc_cr + "'" + ","
                         + "'" + date + "'" + ","
-                        + "'" + bsFormatDouble(-1 * amt) + "'" + ","
-                        + "'" + bsFormatDouble(-1 * baseamt) + "'" + ","        
+                        + "'" + bsFormatDouble(-1 * amt).replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "'" + bsFormatDouble(-1 * baseamt).replace(defaultDecimalSeparator, '.') + "'" + ","        
                         + "'" + curr + "'" + ","
                         + "'" + basecurr + "'" + ","
                         + "'" + ref + "'" + ","        
@@ -12581,8 +12583,8 @@ return myitem;
                         + " values ( " + "'" + acct_dr + "'" + ","
                         + "'" + cc_dr + "'" + ","
                         + "'" + date + "'" + ","
-                        + "'" + bsFormatDouble(amt) + "'" + ","
-                        + "'" + bsFormatDouble(baseamt) + "'" + ","  
+                        + "'" + bsFormatDouble(amt).replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "'" + bsFormatDouble(baseamt).replace(defaultDecimalSeparator, '.') + "'" + ","  
                         + "'" + curr + "'" + ","
                         + "'" + basecurr + "'" + ","        
                          + "'" + ref + "'" + ","
@@ -12640,10 +12642,10 @@ return myitem;
                     acct_dr.add(res.getString("poc_rcpt_acct"));
                     cc_cr.add(res.getString("ap_cc"));
                     cc_dr.add(res.getString("poc_rcpt_cc"));
-                    cost.add(bsParseDouble(res.getString("ap_amt")));
-                    basecost.add(bsParseDouble(res.getString("ap_base_amt")));
-                    curr.add(bsParseDouble(res.getString("ap_curr")));
-                    basecurr.add(bsParseDouble(res.getString("ap_base_curr")));
+                    cost.add(res.getDouble("ap_amt"));
+                    basecost.add(res.getDouble("ap_base_amt"));
+                    curr.add(res.getDouble("ap_curr"));
+                    basecurr.add(res.getDouble("ap_base_curr"));
                     site.add(res.getString("ap_site"));
                     ref.add(res.getString("ap_ref"));
                     type.add(thistype);
@@ -12708,7 +12710,7 @@ return myitem;
                     Double amt = 0.00;   
                     while (res.next()) {
                      // credit vendor AP Acct (AP Voucher) and debit unvouchered receipts (po_rcpts acct)
-                    amt = bsParseDouble(res.getString("vod_qty")) * bsParseDouble(res.getString("vod_voprice"));
+                    amt = res.getDouble("vod_qty") * res.getDouble("vod_voprice");
                        acct_cr.add(res.getString("ap_acct"));
                     acct_dr.add(res.getString("vod_expense_acct"));
                     cc_cr.add(res.getString("ap_cc"));
@@ -12799,7 +12801,7 @@ return myitem;
                     Double amt = 0.00;   
                     while (res.next()) {
                      // credit Cash account and debit labor expense
-                    amt = bsParseDouble(res.getString("pyd_payamt"));
+                    amt = res.getDouble("pyd_payamt");
                        acct_cr.add(bankacct);
                     acct_dr.add(laboracct);
                     cc_cr.add(res.getString("pyd_empdept"));
@@ -12834,7 +12836,7 @@ return myitem;
                        taxacct = defaulttaxacct; 
                     }  
                      
-                    amt = bsParseDouble(res.getString("pyl_amt"));
+                    amt = res.getDouble("pyl_amt");
                     acct_cr.add(withhold);
                     acct_dr.add(taxacct);
                     cc_cr.add(res.getString("pyd_empdept"));
@@ -12918,7 +12920,7 @@ return myitem;
                     Double amt = 0.00;   
                     while (res.next()) {
                      // credit vendor AP Acct (AP Voucher) and debit unvouchered receipts (po_rcpts acct)
-                    amt = bsParseDouble(res.getString("vod_qty")) * bsParseDouble(res.getString("vod_voprice"));
+                    amt = res.getDouble("vod_qty") * res.getDouble("vod_voprice");
                     acct_cr.add(res.getString("ap_acct"));
                     acct_dr.add(res.getString("vod_expense_acct"));
                     cc_cr.add(res.getString("ap_cc"));
@@ -13010,8 +13012,8 @@ return myitem;
                     acct_dr.add(res.getString("ar_acct"));
                     cc_cr.add(res.getString("ard_cc"));
                     cc_dr.add(res.getString("ar_cc"));
-                    cost.add(bsParseDouble(res.getString("ard_amt")));
-                    basecost.add(bsParseDouble(res.getString("ard_base_amt")));
+                    cost.add(res.getDouble("ard_amt"));
+                    basecost.add(res.getDouble("ard_base_amt"));
                     curr.add(res.getString("ard_curr"));
                     basecurr.add(res.getString("ard_base_curr"));
                     site.add(res.getString("ar_site"));
@@ -13095,10 +13097,10 @@ return myitem;
                     while (res.next()) {
                      // credit AR Acct and debit cash account
                      thisdesc = "Cust Check: " + res.getString("ar_ref");
-                     amt = bsParseDouble(res.getString("ard_amt"));
-                     baseamt = bsParseDouble(res.getString("ard_base_amt"));
-                     net = bsParseDouble(res.getString("ard_amt")) - bsParseDouble(res.getString("ard_amt_tax")); // credit AR for sales less tax
-                     netbase = bsParseDouble(res.getString("ard_base_amt")) - bsParseDouble(res.getString("ard_base_amt_tax")); // credit AR for sales less tax
+                     amt = res.getDouble("ard_amt");
+                     baseamt = res.getDouble("ard_base_amt");
+                     net = res.getDouble("ard_amt") - res.getDouble("ard_amt_tax"); // credit AR for sales less tax
+                     netbase = res.getDouble("ard_base_amt") - res.getDouble("ard_base_amt_tax"); // credit AR for sales less tax
                      acct_cr.add(res.getString("cm_ar_acct"));
                     acct_dr.add(res.getString("bk_acct"));
                     cc_cr.add(res.getString("cm_ar_cc"));
@@ -13254,7 +13256,7 @@ return myitem;
                     v_acct_dr.add(res.getString("bk_acct"));
                     v_cc_cr.add(res.getString("pos_arcc"));
                     v_cc_dr.add(res.getString("pos_arcc"));
-                    v_cost.add(bsParseDouble(res.getString("pos_grossamt")));
+                    v_cost.add(res.getDouble("pos_grossamt"));
                     v_ref.add(res.getString("pos_nbr"));
                     v_site.add(OVData.getDefaultSite());
                     v_desc.add("Point Of Sales");
@@ -13266,7 +13268,7 @@ return myitem;
                     v_acct_dr.add(res.getString("posc_taxacct"));
                     v_cc_cr.add(res.getString("pos_arcc"));
                     v_cc_dr.add(res.getString("pos_arcc"));
-                    v_cost.add(bsParseDouble(res.getString("pos_tottax")));
+                    v_cost.add(res.getDouble("pos_tottax"));
                     v_ref.add(res.getString("pos_nbr"));
                     v_site.add(OVData.getDefaultSite());
                     v_desc.add("POS Sales Tax");
@@ -13332,7 +13334,7 @@ return myitem;
                     acct_dr.add(res.getString("bk_acct"));
                     cc_cr.add(res.getString("pos_arcc"));
                     cc_dr.add(res.getString("pos_arcc"));
-                    cost.add((-1 * bsParseDouble(res.getString("pos_grossamt"))));
+                    cost.add((-1 * res.getDouble("pos_grossamt")));
                     site.add(OVData.getDefaultSite());
                     ref.add(res.getString("pos_nbr"));
                     type.add(thistype);
@@ -13344,7 +13346,7 @@ return myitem;
                     acct_dr.add(res.getString("posc_taxacct"));
                     cc_cr.add(res.getString("pos_arcc"));
                     cc_dr.add(res.getString("pos_arcc"));
-                    cost.add((-1 * bsParseDouble(res.getString("pos_tottax"))));
+                    cost.add((-1 * res.getDouble("pos_tottax")));
                     site.add(OVData.getDefaultSite());
                     ref.add(res.getString("pos_nbr"));
                     type.add(thistype);
@@ -13422,11 +13424,11 @@ return myitem;
                       res = st.executeQuery("select rvd_part, rvd_qty, rvd_loc, rvd_site, rvd_id, rvd_netprice, rvd_po, po_curr from recv_det inner join po_mstr on rvd_po = po_nbr where rvd_id = " + "'" + receiver + "'" +";");
                     while (res.next()) {
                         part = res.getString("rvd_part");
-                        qty = bsParseDouble(res.getString("rvd_qty"));
+                        qty = res.getDouble("rvd_qty");
                         loc = res.getString("rvd_loc");
                         thissite = res.getString("rvd_site");
                         thisref = res.getString("rvd_id");
-                        price = bsParseDouble(res.getString("rvd_netprice"));
+                        price = res.getDouble("rvd_netprice");
                         thisdesc = "Receipts";
                         curr = res.getString("po_curr");
                         
@@ -13594,16 +13596,16 @@ return myitem;
                       res = st.executeQuery("select * from ship_det where shd_id = " + "'" + shipper + "'" +";");
                     while (res.next()) {
                         part = res.getString("shd_part");
-                        qty = bsParseDouble(res.getString("shd_qty"));
+                        qty = res.getDouble("shd_qty");
                         uom = res.getString("shd_uom");
                         loc = res.getString("shd_loc");
                         thisref = res.getString("shd_id");
                         baseqty = OVData.getUOMBaseQty(part, thissite, uom, qty);
                         
                         if (basecurr.toUpperCase().equals(curr.toUpperCase())) {
-                        netprice = bsParseDouble(res.getString("shd_netprice"));   
+                        netprice = res.getDouble("shd_netprice");   
                         } else {
-                        basenetprice = OVData.getExchangeBaseValue(basecurr, curr, bsParseDouble(res.getString("shd_netprice")));  
+                        basenetprice = OVData.getExchangeBaseValue(basecurr, curr, res.getDouble("shd_netprice"));  
                         }
                         
                        
@@ -13632,8 +13634,8 @@ return myitem;
                     acct_dr.add(nres.getString("pl_cogs_mtl"));
                     cc_cr.add(nres.getString("pl_line"));
                     cc_dr.add(nres.getString("pl_line"));
-                    cost.add(((bsParseDouble(nres.getString("itc_mtl_top")) + bsParseDouble(nres.getString("itc_mtl_low"))) * baseqty));
-                    basecost.add(((bsParseDouble(nres.getString("itc_mtl_top")) + bsParseDouble(nres.getString("itc_mtl_low"))) * baseqty));
+                    cost.add(((bsParseDoubleUS(nres.getString("itc_mtl_top")) + bsParseDoubleUS(nres.getString("itc_mtl_low"))) * baseqty));
+                    basecost.add(((bsParseDoubleUS(nres.getString("itc_mtl_top")) + bsParseDoubleUS(nres.getString("itc_mtl_low"))) * baseqty));
                     site.add(thissite);
                     ref.add(thisref);
                     type.add(thistype);
@@ -13645,8 +13647,8 @@ return myitem;
                     acct_dr.add(nres.getString("pl_cogs_lbr"));
                     cc_cr.add(nres.getString("pl_line"));
                     cc_dr.add(nres.getString("pl_line"));
-                    cost.add(((bsParseDouble(nres.getString("itc_lbr_top")) + bsParseDouble(nres.getString("itc_lbr_low"))) * baseqty));
-                    basecost.add(((bsParseDouble(nres.getString("itc_lbr_top")) + bsParseDouble(nres.getString("itc_lbr_low"))) * baseqty));
+                    cost.add(((bsParseDoubleUS(nres.getString("itc_lbr_top")) + bsParseDoubleUS(nres.getString("itc_lbr_low"))) * baseqty));
+                    basecost.add(((bsParseDoubleUS(nres.getString("itc_lbr_top")) + bsParseDoubleUS(nres.getString("itc_lbr_low"))) * baseqty));
                     site.add(thissite);
                     ref.add(thisref);
                     type.add(thistype);
@@ -13657,8 +13659,8 @@ return myitem;
                     acct_dr.add(nres.getString("pl_cogs_bdn"));
                     cc_cr.add(nres.getString("pl_line"));
                     cc_dr.add(nres.getString("pl_line"));
-                    cost.add(((bsParseDouble(nres.getString("itc_bdn_top")) + bsParseDouble(nres.getString("itc_bdn_low"))) * baseqty));
-                    basecost.add(((bsParseDouble(nres.getString("itc_bdn_top")) + bsParseDouble(nres.getString("itc_bdn_low"))) * baseqty));
+                    cost.add(((bsParseDoubleUS(nres.getString("itc_bdn_top")) + bsParseDoubleUS(nres.getString("itc_bdn_low"))) * baseqty));
+                    basecost.add(((bsParseDoubleUS(nres.getString("itc_bdn_top")) + bsParseDoubleUS(nres.getString("itc_bdn_low"))) * baseqty));
                     site.add(thissite);
                     ref.add(thisref);
                     type.add(thistype);
@@ -13670,8 +13672,8 @@ return myitem;
                     acct_dr.add(nres.getString("pl_cogs_ovh"));
                     cc_cr.add(nres.getString("pl_line"));
                     cc_dr.add(nres.getString("pl_line"));
-                    cost.add(((bsParseDouble(nres.getString("itc_ovh_top")) + bsParseDouble(nres.getString("itc_ovh_low"))) * baseqty));
-                    basecost.add(((bsParseDouble(nres.getString("itc_ovh_top")) + bsParseDouble(nres.getString("itc_ovh_low"))) * baseqty));
+                    cost.add(((bsParseDoubleUS(nres.getString("itc_ovh_top")) + bsParseDoubleUS(nres.getString("itc_ovh_low"))) * baseqty));
+                    basecost.add(((bsParseDoubleUS(nres.getString("itc_ovh_top")) + bsParseDoubleUS(nres.getString("itc_ovh_low"))) * baseqty));
                     site.add(thissite);
                     ref.add(thisref);
                     type.add(thistype);
@@ -13682,8 +13684,8 @@ return myitem;
                     acct_dr.add(nres.getString("pl_cogs_out"));
                     cc_cr.add(nres.getString("pl_line"));
                     cc_dr.add(nres.getString("pl_line"));
-                    cost.add(((bsParseDouble(nres.getString("itc_out_top")) + bsParseDouble(nres.getString("itc_out_low"))) * baseqty));
-                    basecost.add(((bsParseDouble(nres.getString("itc_out_top")) + bsParseDouble(nres.getString("itc_out_low"))) * baseqty));
+                    cost.add(((bsParseDoubleUS(nres.getString("itc_out_top")) + bsParseDoubleUS(nres.getString("itc_out_low"))) * baseqty));
+                    basecost.add(((bsParseDoubleUS(nres.getString("itc_out_top")) + bsParseDoubleUS(nres.getString("itc_out_low"))) * baseqty));
                     site.add(thissite);
                     ref.add(thisref);
                     type.add(thistype);
@@ -13695,11 +13697,11 @@ return myitem;
                     acct_dr.add(aracct);
                     cc_cr.add(nres.getString("pl_line"));
                     cc_dr.add(arcc);
-                    cost.add((bsParseDouble(res.getString("shd_netprice")) * qty));
+                    cost.add((res.getDouble("shd_netprice") * qty));
                     if (basecurr.toUpperCase().equals(curr.toUpperCase())) {
-                     basecost.add((bsParseDouble(res.getString("shd_netprice")) * qty));   
+                     basecost.add((res.getDouble("shd_netprice") * qty));   
                     } else {
-                     basecost.add((OVData.getExchangeBaseValue(basecurr, curr, bsParseDouble(res.getString("shd_netprice"))) * qty));  
+                     basecost.add((OVData.getExchangeBaseValue(basecurr, curr, res.getDouble("shd_netprice")) * qty));  
                     }
                     
                     site.add(thissite);
@@ -13722,11 +13724,11 @@ return myitem;
                         acct_dr.add(OVData.getCustSalesAcct(cust));
                         
                         cc_dr.add(OVData.getCustSalesCC(cust));
-                        cost.add((bsParseDouble(res.getString("shd_netprice")) * qty));
+                        cost.add((res.getDouble("shd_netprice") * qty));
                         if (basecurr.toUpperCase().equals(curr.toUpperCase())) {
-                        basecost.add((bsParseDouble(res.getString("shd_netprice")) * qty));   
+                        basecost.add((res.getDouble("shd_netprice") * qty));   
                         } else {
-                        basecost.add((OVData.getExchangeBaseValue(basecurr, curr, bsParseDouble(res.getString("shd_netprice"))) * qty));  
+                        basecost.add((OVData.getExchangeBaseValue(basecurr, curr, res.getDouble("shd_netprice")) * qty));  
                         }
                         site.add(thissite);
                         ref.add(thisref);
@@ -13775,7 +13777,7 @@ return myitem;
                     
                     
                    for (int j = 0; j < acct_cr.size(); j++) {
-                      glEntry(acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), dfdate.format(effdate), bsParseDouble(cost.get(j).toString()), bsParseDouble(basecost.get(j).toString()), curr, basecurr, ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString());  
+                      glEntry(acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), dfdate.format(effdate), bsParseDoubleUS(cost.get(j).toString()), bsParseDoubleUS(basecost.get(j).toString()), curr, basecurr, ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString());  
                     }
                     
                     
@@ -13864,7 +13866,7 @@ return myitem;
                       res = st.executeQuery("select * from ship_det where shd_id = " + "'" + shipper + "'" +";");
                     while (res.next()) {
                         part = res.getString("shd_part");
-                        qty = bsParseDouble(res.getString("shd_qty"));
+                        qty = res.getDouble("shd_qty");
                         loc = res.getString("shd_loc");
                         thisref = res.getString("shd_id");
                         baseqty = OVData.getUOMBaseQty(part, thissite, uom, qty);
@@ -13875,9 +13877,9 @@ return myitem;
                         
                         
                         if (basecurr.toUpperCase().equals(curr.toUpperCase())) {
-                        netprice = bsParseDouble(res.getString("shd_netprice"));   
+                        netprice = res.getDouble("shd_netprice");   
                         } else {
-                        basenetprice = OVData.getExchangeBaseValue(basecurr, curr, bsParseDouble(res.getString("shd_netprice")));  
+                        basenetprice = OVData.getExchangeBaseValue(basecurr, curr, res.getDouble("shd_netprice"));  
                         }
                         
                        
@@ -13971,11 +13973,11 @@ return myitem;
                     acct_dr.add(aracct);
                     cc_cr.add(nres.getString("pl_line"));
                     cc_dr.add(arcc);
-                    cost.add((bsParseDouble(res.getString("shd_netprice")) * qty));
+                    cost.add((res.getDouble("shd_netprice") * qty));
                     if (basecurr.toUpperCase().equals(curr.toUpperCase())) {
-                     basecost.add((bsParseDouble(res.getString("shd_netprice")) * qty));   
+                     basecost.add((res.getDouble("shd_netprice") * qty));   
                     } else {
-                     basecost.add((OVData.getExchangeBaseValue(basecurr, curr, bsParseDouble(res.getString("shd_netprice"))) * qty));  
+                     basecost.add((OVData.getExchangeBaseValue(basecurr, curr, res.getDouble("shd_netprice")) * qty));  
                     }
                     site.add(thissite);
                     ref.add(thisref);
@@ -13991,11 +13993,11 @@ return myitem;
                         acct_dr.add(OVData.getCustSalesAcct(cust));
                         cc_cr.add(OVData.getDefaultSalesCC());
                         cc_dr.add(OVData.getCustSalesCC(cust));
-                        cost.add((bsParseDouble(res.getString("shd_netprice")) * qty));
+                        cost.add((res.getDouble("shd_netprice") * qty));
                         if (basecurr.toUpperCase().equals(curr.toUpperCase())) {
-                        basecost.add((bsParseDouble(res.getString("shd_netprice")) * qty));   
+                        basecost.add((res.getDouble("shd_netprice") * qty));   
                         } else {
-                        basecost.add((OVData.getExchangeBaseValue(basecurr, curr, bsParseDouble(res.getString("shd_netprice"))) * qty));  
+                        basecost.add((OVData.getExchangeBaseValue(basecurr, curr, res.getDouble("shd_netprice")) * qty));  
                         }
                         site.add(thissite);
                         ref.add(thisref);
@@ -14111,8 +14113,8 @@ return myitem;
                         acct_dr.add(res.getString("ap_acct"));
                         cc_cr.add(res.getString("ap_cc"));
                         cc_dr.add(res.getString("ap_cc"));
-                        cost.add(bsParseDouble(res.getString("ap_amt")));
-                        basecost.add(bsParseDouble(res.getString("ap_base_amt")));
+                        cost.add(res.getDouble("ap_amt"));
+                        basecost.add(res.getDouble("ap_base_amt"));
                         curr.add(res.getString("ap_curr"));
                         basecurr.add(res.getString("ap_base_curr"));
                         site.add(res.getString("ap_site"));
@@ -15048,7 +15050,7 @@ return myitem;
                         ";");
                 
                        while (res.next()) {
-                          amt = bsParseDouble(res.getString(("acb_amt")));
+                          amt = res.getDouble(("acb_amt"));
                        }
                
            }
@@ -15079,7 +15081,7 @@ return myitem;
                         ";");
                 
                        while (res.next()) {
-                          amt = bsParseDouble(res.getString(("sum")));
+                          amt = res.getDouble(("sum"));
                        }
                
            }
@@ -15134,7 +15136,7 @@ return myitem;
                         ";");
                 
                        while (res.next()) {
-                          amt += bsParseDouble(res.getString("sum"));
+                          amt += res.getDouble("sum");
                        }
                   } else {
                      // must be income statement
@@ -15145,7 +15147,7 @@ return myitem;
                         ";");
                 
                        while (res.next()) {
-                          amt += bsParseDouble(res.getString("sum"));
+                          amt += res.getDouble("sum");
                        }
                   }
                   
@@ -15159,7 +15161,7 @@ return myitem;
                         " group by glh_acct ;");
                 
                        while (res.next()) {
-                          amt += bsParseDouble(res.getString("sum")); 
+                          amt += res.getDouble("sum"); 
                        }
             
              // bsmf.MainFrame.show("2: " + datestart + "/" + indate + "/" + amt);         
@@ -15199,7 +15201,7 @@ return myitem;
                         ";");
                 
                        while (res.next()) {
-                          amt = bsParseDouble(res.getString(("sum")));
+                          amt = res.getDouble(("sum"));
                        }
                
            }
@@ -15231,7 +15233,7 @@ return myitem;
                         " glh_cc = " + "'" + cc + "'" + ";" );
 
                 while (res.next()) {
-                   myamt = bsParseDouble(res.getString("sum"));
+                   myamt = res.getDouble("sum");
                 }
 
             } catch (SQLException s) {
@@ -15259,7 +15261,7 @@ return myitem;
                         " glh_acct = " + "'" + acct + "'" +  
                         " group by glh_acct " + ";" );
                 while (res.next()) {
-                   myamt = bsParseDouble(res.getString("sum"));
+                   myamt = res.getDouble("sum");
                 }
 
             } catch (SQLException s) {
@@ -15397,7 +15399,7 @@ return myitem;
                
                 res = st.executeQuery("select glic_seq from glic_def where glic_name = " + "'" + name + "'"  + ";");
                        while (res.next()) {
-                          myreturn = bsParseDouble(res.getString("glic_seq")); 
+                          myreturn = res.getDouble("glic_seq"); 
                        }
                
            }
@@ -15459,7 +15461,7 @@ return myitem;
                         " AND acb_per = " + "'" + per + "'" +
                         ";");
                        while (res.next()) {
-                          myamt = begamt - bsParseDouble(res.getString("sum"));
+                          myamt = begamt - res.getDouble("sum");
                        }
                
            }
@@ -15493,7 +15495,7 @@ return myitem;
                         " AND acb_per = " + "'" + per + "'" +
                         ";");
                        while (res.next()) {
-                          myamt = begamt + bsParseDouble(res.getString("sum"));
+                          myamt = begamt + res.getDouble("sum");
                        }
                
            }
@@ -15578,7 +15580,7 @@ return myitem;
                         ";");
                 
                        while (res.next()) {
-                          begbal += bsParseDouble(res.getString("sum"));
+                          begbal += res.getDouble("sum");
                        }
                   } else {
                      // must be income statement
@@ -15589,7 +15591,7 @@ return myitem;
                         ";");
                 
                        while (res.next()) {
-                          begbal += bsParseDouble(res.getString("sum"));
+                          begbal += res.getDouble("sum");
                        }
                   }
                   
@@ -15607,7 +15609,7 @@ return myitem;
                         ";");
                 
                        while (res.next()) {
-                          activity += bsParseDouble(res.getString(("sum")));
+                          activity += res.getDouble(("sum"));
                        }
                                   
                  endbal = begbal + activity;
@@ -15704,7 +15706,7 @@ return myitem;
                         ";");
                 
                        while (res.next()) {
-                          begbal += bsParseDouble(res.getString("sum"));
+                          begbal += res.getDouble("sum");
                        }
                   } else {
                      // must be income statement
@@ -15715,7 +15717,7 @@ return myitem;
                         ";");
                 
                        while (res.next()) {
-                          begbal += bsParseDouble(res.getString("sum"));
+                          begbal += res.getDouble("sum");
                        }
                   }
                   
@@ -15733,7 +15735,7 @@ return myitem;
                         ";");
                 
                        while (res.next()) {
-                          activity += bsParseDouble(res.getString("sum"));
+                          activity += res.getDouble("sum");
                        }
                                   
                  endbal = begbal + activity;
@@ -15830,7 +15832,7 @@ return myitem;
                         " group by acb_acct, acb_cc order by acb_acct, acb_cc, acb_year, acb_per;");
                 
                        while (res.next()) {
-                           endbal = bsParseDouble(res.getString("sum"));
+                           endbal = res.getDouble("sum");
                            acctid = res.getString("acb_acct");
                            cc = res.getString("acb_cc");
                         mylist.add(acctid + "," + cc + "," + period + "," + year + "," + bsFormatDouble(endbal) );
@@ -15846,7 +15848,7 @@ return myitem;
                         " group by acb_acct, acb_cc order by acb_acct, acb_cc, acb_year, acb_per;");
                 
                        while (res.next()) {
-                           endbal = bsParseDouble(res.getString("sum"));
+                           endbal = res.getDouble("sum");
                            acctid = res.getString("acb_acct");
                            cc = res.getString("acb_cc");
                         mylist.add(acctid + "," + cc + "," + period + "," + year + "," + bsFormatDouble(endbal) );
@@ -15942,7 +15944,7 @@ return myitem;
                         " group by acb_acct, acb_cc order by acb_acct, acb_cc, acb_year, acb_per;");
                   }
                        while (res.next()) {
-                           endbal = bsParseDouble(res.getString("sum"));
+                           endbal = res.getDouble("sum");
                            acctid = res.getString("acb_acct");
                            cc = res.getString("acb_cc");
                            if (supress && endbal == 0) 
@@ -15966,7 +15968,7 @@ return myitem;
                        
                        
                        while (res.next()) {
-                           endbal = bsParseDouble(res.getString("sum"));
+                           endbal = res.getDouble("sum");
                            acctid = res.getString("acb_acct");
                            cc = res.getString("acb_cc");
                            if (supress && endbal == 0) 
@@ -16025,7 +16027,7 @@ return myitem;
                         " group by acb_acct, ac_desc, ac_type " +
                         ";");
                 while (res.next()) {
-                   amt = bsParseDouble(res.getString("sum"));
+                   amt = res.getDouble("sum");
                    acct = res.getString("acb_acct");
                    accttype = res.getString("ac_type");
                    acctdesc = (res.getString("ac_desc") == null) ? "" : res.getString("ac_desc");
@@ -16096,7 +16098,7 @@ return myitem;
                         " group by acb_acct, ac_desc, ac_type " +
                         ";");
                 while (res.next()) {
-                   amt = bsParseDouble(res.getString("sum"));
+                   amt = res.getDouble("sum");
                    acct = res.getString("acb_acct");
                   
                   
@@ -16174,12 +16176,12 @@ return myitem;
                 
                        while (res.next()) {
                           j++;
-                          newamt = amt + bsParseDouble(res.getString(("acb_amt")));
+                          newamt = amt + res.getDouble(("acb_amt"));
                        }
                    
                      if (j > 0) { 
                      st.executeUpdate("update acb_mstr set "
-                            + " acb_amt = " + "'" + bsFormatDouble(newamt) + "'"
+                            + " acb_amt = " + "'" + bsFormatDouble(newamt).replace(defaultDecimalSeparator, '.') + "'"
                             + " where acb_acct = " + "'" + acct + "'" 
                             + " AND acb_cc = " + "'" + cc + "'" 
                              + " AND acb_site = " + "'" + site + "'" 
@@ -16193,7 +16195,7 @@ return myitem;
                                   + "'" + cc + "'" + "," 
                                   + "'" + per + "'" + "," 
                                   + "'" + year + "'" + "," 
-                                  + "'" + bsFormatDouble(newamt) + "'" + ","
+                                  + "'" + bsFormatDouble(newamt).replace(defaultDecimalSeparator, '.') + "'" + ","
                                   + "'" + site + "'" 
                                   + ");");
                                   
@@ -16247,7 +16249,7 @@ return myitem;
                 gltran.add(res.getInt("glt_id"));
                 acct = res.getString("glt_acct");
                 cc = res.getString("glt_cc");
-                amt = bsParseDouble(res.getString("glt_base_amt"));
+                amt = res.getDouble("glt_base_amt");
                 per = res.getInt("glc_per");
                 year = res.getInt("glc_year");
                 site = res.getString("glt_site");
@@ -16276,7 +16278,7 @@ return myitem;
                    
                      if (j > 0) {
                      st3.executeUpdate("update acb_mstr set "
-                            + " acb_amt = " + "'" + bsFormatDouble(newamt) + "'"
+                            + " acb_amt = " + "'" + bsFormatDouble(newamt).replace(defaultDecimalSeparator, '.') + "'"
                             + " where acb_acct = " + "'" + res.getString("glt_acct") + "'" 
                             + " AND acb_cc = " + "'" + res.getString("glt_cc") + "'" 
                              + " AND acb_site = " + "'" + res.getString("glt_site") + "'" 
@@ -16290,7 +16292,7 @@ return myitem;
                                   + "'" + res.getString("glt_cc") + "'" + "," 
                                   + "'" + per + "'" + "," 
                                   + "'" + year + "'" + "," 
-                                  + "'" + bsFormatDouble(newamt) + "'" + ","
+                                  + "'" + bsFormatDouble(newamt).replace(defaultDecimalSeparator, '.') + "'" + ","
                                   + "'" + site + "'" 
                                   + ");");
                                   
@@ -16432,7 +16434,7 @@ return myitem;
                    // now create the AP_MSTR associated with each record returned...creating a unique check nbr for each...
                    while (res.next()) {
                         vend = res.getString("apd_vend");
-                        sum = bsParseDouble(res.getString("sum"));
+                        sum = res.getDouble("sum");
                         acct = res.getString("vd_ap_acct");
                         cc = res.getString("vd_ap_cc");
                         terms = res.getString("vd_terms");
@@ -16442,9 +16444,9 @@ return myitem;
                         
                         
                         if (OVData.isCurrSameAsDefault(curr)) {
-                        sumbase = bsParseDouble(res.getString("sum"));
+                        sumbase = res.getDouble("sum");
                         } else {
-                        sumbase = OVData.getExchangeBaseValue(basecurr, curr, bsParseDouble(res.getString("sum")));    
+                        sumbase = OVData.getExchangeBaseValue(basecurr, curr, res.getDouble("sum"));    
                         }
                         
                         
@@ -16455,8 +16457,8 @@ return myitem;
                         + " values ( " + "'" + vend + "'" + ","
                         + "'" + site + "'" + ","
                         + "'" + checknbr + "'" + ","
-                        + "'" + bsFormatDouble(sum) + "'" + ","
-                        + "'" + bsFormatDouble(sumbase) + "'" + ","   
+                        + "'" + bsFormatDouble(sum).replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "'" + bsFormatDouble(sumbase).replace(defaultDecimalSeparator, '.') + "'" + ","   
                         + "'" + curr + "'" + ","
                         + "'" + basecurr + "'" + ","        
                         + "'" + "C" + "'" + ","
@@ -16545,7 +16547,7 @@ return myitem;
                    // now create the AP_MSTR associated with each record returned...creating a unique check nbr for each...
                    while (res.next()) {
                         vend = res.getString("apd_vend");
-                        sum = bsParseDouble(res.getString("sum"));
+                        sum = res.getDouble("sum");
                         curr = res.getString("ap_curr");
                         acct = res.getString("vd_ap_acct");
                         cc = res.getString("vd_ap_cc");
@@ -16568,8 +16570,8 @@ return myitem;
                         + " values ( " + "'" + vend + "'" + ","
                         + "'" + site + "'" + ","
                         + "'" + checknbr + "'" + ","
-                        + "'" + bsFormatDouble(sum) + "'" + ","
-                        + "'" + bsFormatDouble(baseamt) + "'" + ","        
+                        + "'" + bsFormatDouble(sum).replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "'" + bsFormatDouble(baseamt).replace(defaultDecimalSeparator, '.') + "'" + ","        
                         + "'" + "E" + "'" + ","
                         + "'" + ref + "'" + ","
                         + "'" + checknbr + "'" + ","
@@ -16627,7 +16629,7 @@ return myitem;
                         + "'" + mytable.getValueAt(i,0).toString() + "'" + ","
                         + "'" + mytable.getValueAt(i,2).toString() + "'" + ","
                         + "'" + mytable.getValueAt(i,3).toString() + "'" + ","
-                        + "'" + bsFormatDouble(bsParseDouble(mytable.getValueAt(i, 6).toString())) + "'" 
+                        + "'" + bsFormatDouble(bsParseDouble(mytable.getValueAt(i, 6).toString())).replace(defaultDecimalSeparator, '.') + "'" 
                         + ")"
                         + ";");
            }      
@@ -16664,7 +16666,7 @@ return myitem;
                         + "'" + vend + "'" + ","
                         + "'" + voucher + "'" + ","
                         + "'" + invoice + "'" + ","
-                        + "'" + bsFormatDouble(amount) + "'" 
+                        + "'" + bsFormatDouble(amount).replace(defaultDecimalSeparator, '.') + "'" 
                         + ")"
                         + ";");
        
@@ -16708,9 +16710,9 @@ return myitem;
                 
                 while (res.next()) {
                         voucher = res.getString("ap_nbr");
-                        apamt = bsParseDouble(res.getString("ap_amt"));
-                        checkamt = bsParseDouble(res.getString("apd_voamt"));
-                        applied = bsParseDouble(res.getString("ap_applied"));
+                        apamt = res.getDouble("ap_amt");
+                        checkamt = res.getDouble("apd_voamt");
+                        applied = res.getDouble("ap_applied");
                         newamt = applied + checkamt;
                 
                   if (apamt <= newamt) {
@@ -16834,8 +16836,8 @@ return myitem;
                    
                     res = st.executeQuery("select * from ship_det where shd_id = " + "'" + shipper + "'" +";");
                     while (res.next()) {
-                    amt += (bsParseDouble(res.getString("shd_qty")) * bsParseDouble(res.getString("shd_netprice")));
-                    matltax += OVData.getTaxAmtApplicableByItem(res.getString("shd_part"),bsParseDouble(res.getString("shd_qty")) * bsParseDouble(res.getString("shd_netprice"))); // line level matl tax
+                    amt += (res.getDouble("shd_qty") * res.getDouble("shd_netprice"));
+                    matltax += OVData.getTaxAmtApplicableByItem(res.getString("shd_part"),res.getDouble("shd_qty") * res.getDouble("shd_netprice")); // line level matl tax
                     }
                     res.close();
                     
@@ -16845,7 +16847,7 @@ return myitem;
                             " and shs_type = 'charge' " +               
                             ";");
                     while (res.next()) {
-                    amt += bsParseDouble(res.getString("shs_amt"));
+                    amt += res.getDouble("shs_amt");
                     }
                     res.close();
                     
@@ -16911,13 +16913,13 @@ return myitem;
                         + "ar_terms, ar_tax_code, ar_bank, ar_site, ar_status) "
                         + " values ( " + "'" + cust + "'" + ","
                         + "'" + shipper + "'" + ","
-                        + "'" + bsFormatDouble(amt + taxamt) + "'" + ","
-                        + "'" + bsFormatDouble(baseamt + basetaxamt) + "'" + ","   
+                        + "'" + bsFormatDouble(amt + taxamt).replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "'" + bsFormatDouble(baseamt + basetaxamt).replace(defaultDecimalSeparator, '.') + "'" + ","   
                         + "'" + curr + "'" + ","   
                         + "'" + basecurr + "'" + ","        
-                        + "'" + bsFormatDouble(taxamt) + "'" + ","
-                        + "'" + bsFormatDouble(basetaxamt) + "'" + ","        
-                        + "'" + bsFormatDouble(amt + taxamt) + "'" + "," // open_amount.....should this be base or foreign ?  currently it's foreign
+                        + "'" + bsFormatDouble(taxamt).replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "'" + bsFormatDouble(basetaxamt).replace(defaultDecimalSeparator, '.') + "'" + ","        
+                        + "'" + bsFormatDouble(amt + taxamt).replace(defaultDecimalSeparator, '.') + "'" + "," // open_amount.....should this be base or foreign ?  currently it's foreign
                         + "'" + "I" + "'" + ","
                         + "'" + ref + "'" + ","
                         + "'" + rmks + "'" + ","
@@ -16962,13 +16964,13 @@ return myitem;
                         + "ar_terms, ar_tax_code, ar_bank, ar_site, ar_status) "
                         + " values ( " + "'" + cust + "'" + ","
                         + "'" + arnbr + "'" + ","
-                        + "'" + bsFormatDouble(amt + taxamt) + "'" + ","
-                        + "'" + bsFormatDouble(baseamt + basetaxamt) + "'" + ","   
+                        + "'" + bsFormatDouble(amt + taxamt).replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "'" + bsFormatDouble(baseamt + basetaxamt).replace(defaultDecimalSeparator, '.') + "'" + ","   
                         + "'" + curr + "'" + ","   
                         + "'" + basecurr + "'" + ","        
-                        + "'" + bsFormatDouble(taxamt) + "'" + ","
-                        + "'" + bsFormatDouble(basetaxamt) + "'" + ","        
-                        + "'" + bsFormatDouble(amt + taxamt) + "'" + "," // open_amount.....should this be base or foreign ?  currently it's foreign
+                        + "'" + bsFormatDouble(taxamt).replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "'" + bsFormatDouble(basetaxamt).replace(defaultDecimalSeparator, '.') + "'" + ","        
+                        + "'" + bsFormatDouble(amt + taxamt).replace(defaultDecimalSeparator, '.') + "'" + "," // open_amount.....should this be base or foreign ?  currently it's foreign
                         + "'" + "P" + "'" + ","
                         + "'" + "cash" + "'" + ","
                         + "'" + rmks + "'" + ","
@@ -16993,10 +16995,10 @@ return myitem;
                             + "'" + shipper + "'" + ","
                             + "'" + "1" + "'" + ","
                             + "'" + dfdate.format(effdate) + "'" + ","
-                            + "'" + bsFormatDouble(amt) + "'"  + ","
-                            + "'" + bsFormatDouble(taxamt) + "'"  + ","
-                            + "'" + bsFormatDouble(baseamt) + "'"  + ","                
-                            + "'" + bsFormatDouble(basetaxamt) + "'" + "," 
+                            + "'" + bsFormatDouble(amt).replace(defaultDecimalSeparator, '.') + "'"  + ","
+                            + "'" + bsFormatDouble(taxamt).replace(defaultDecimalSeparator, '.') + "'"  + ","
+                            + "'" + bsFormatDouble(baseamt).replace(defaultDecimalSeparator, '.') + "'"  + ","                
+                            + "'" + bsFormatDouble(basetaxamt).replace(defaultDecimalSeparator, '.') + "'" + "," 
                             + "'" + curr + "'"  + ","
                             + "'" + basecurr + "'" + ","
                             + "'" + acct + "'" + ","
@@ -17064,9 +17066,9 @@ return myitem;
                    
                     res = st.executeQuery("select * from ship_det where shd_id = " + "'" + shipper + "'" +";");
                     while (res.next()) {
-                    bsmf.MainFrame.show(url + db);
-                    amt += (bsParseDouble(res.getString("shd_qty")) * bsParseDouble(res.getString("shd_netprice")));
-                    matltax += OVData.getTaxAmtApplicableByItem(res.getString("shd_part"),bsParseDouble(res.getString("shd_qty")) * bsParseDouble(res.getString("shd_netprice"))); // line level matl tax
+                  
+                    amt += (res.getDouble("shd_qty") * res.getDouble("shd_netprice"));
+                    matltax += OVData.getTaxAmtApplicableByItem(res.getString("shd_part"),res.getDouble("shd_qty") * res.getDouble("shd_netprice")); // line level matl tax
                     }
                     res.close();
                     
@@ -17076,7 +17078,7 @@ return myitem;
                             " and shs_type = 'charge' " +               
                             ";");
                     while (res.next()) {
-                    amt += bsParseDouble(res.getString("shs_amt"));
+                    amt += res.getDouble("shs_amt");
                     }
                     res.close();
                     
@@ -17142,13 +17144,13 @@ return myitem;
                         + "ar_terms, ar_tax_code, ar_bank, ar_site, ar_status) "
                         + " values ( " + "'" + cust + "'" + ","
                         + "'" + shipper + "'" + ","
-                        + "'" + bsFormatDouble(amt + taxamt) + "'" + ","
-                        + "'" + bsFormatDouble(baseamt + basetaxamt) + "'" + ","   
+                        + "'" + bsFormatDouble(amt + taxamt).replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "'" + bsFormatDouble(baseamt + basetaxamt).replace(defaultDecimalSeparator, '.') + "'" + ","   
                         + "'" + curr + "'" + ","   
                         + "'" + basecurr + "'" + ","        
-                        + "'" + bsFormatDouble(taxamt) + "'" + ","
-                        + "'" + bsFormatDouble(basetaxamt) + "'" + ","        
-                        + "'" + bsFormatDouble(amt + taxamt) + "'" + "," // open_amount.....should this be base or foreign ?  currently it's foreign
+                        + "'" + bsFormatDouble(taxamt).replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "'" + bsFormatDouble(basetaxamt).replace(defaultDecimalSeparator, '.') + "'" + ","        
+                        + "'" + bsFormatDouble(amt + taxamt).replace(defaultDecimalSeparator, '.') + "'" + "," // open_amount.....should this be base or foreign ?  currently it's foreign
                         + "'" + "I" + "'" + ","
                         + "'" + ref + "'" + ","
                         + "'" + rmks + "'" + ","
@@ -17175,7 +17177,7 @@ return myitem;
                                 + " values ( " + "'" + shipper + "'" + ","
                                 + "'" + elements[0] + "'" + ","
                                 + "'" + elements[2] + "'" + ","
-                                + "'" + (amt * ( bsParseDouble(elements[1]) / 100 )) + "'" + ","   // amount is currently 'foreign' ...not base
+                                + "'" + bsFormatDouble(amt * ( bsParseDouble(elements[1]) / 100 )).replace(defaultDecimalSeparator, '.') + "'" + ","   // amount is currently 'foreign' ...not base
                                 + "'" + elements[1] + "'" 
                                 + ")"
                                 + ";");
@@ -17220,7 +17222,7 @@ return myitem;
                    
                       res = st.executeQuery("select * from ship_det where shd_id = " + "'" + shipper + "'" +";");
                     while (res.next()) {
-                    amt = amt + (bsParseDouble(res.getString("shd_qty")) * bsParseDouble(res.getString("shd_netprice")));
+                    amt = amt + (res.getDouble("shd_qty") * res.getDouble("shd_netprice"));
                     }
                     
                     // reverse the sign on the amount
@@ -17277,11 +17279,11 @@ return myitem;
                         + "ar_terms, ar_bank, ar_site, ar_status, ar_reverse ) "
                         + " values ( " + "'" + cust + "'" + ","
                         + "'" + shipper + "'" + ","
-                        + "'" + bsFormatDouble(amt) + "'" + ","
-                        + "'" + bsFormatDouble(baseamt) + "'" + ","
+                        + "'" + bsFormatDouble(amt).replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "'" + bsFormatDouble(baseamt).replace(defaultDecimalSeparator, '.') + "'" + ","
                         + "'" + curr + "'" + ","
                          + "'" + basecurr + "'" + ","                 
-                        + "'" + bsFormatDouble(amt) + "'" + ","
+                        + "'" + bsFormatDouble(amt).replace(defaultDecimalSeparator, '.') + "'" + ","
                         + "'" + "I" + "'" + ","
                         + "'" + ref + "'" + ","
                         + "'" + rmks + "'" + ","
@@ -17338,9 +17340,9 @@ return myitem;
                     
                     while (res.next()) {
                         ardref.add(res.getString("ard_ref"));
-                        newamt.add(bsParseDouble(res.getString("ard_amt")) + bsParseDouble(res.getString("ar_applied")));
-                        openamt.add(bsParseDouble(res.getString("ar_amt")) - bsParseDouble(res.getString("ar_applied")) - bsParseDouble(res.getString("ard_amt")));
-                        if ( (bsParseDouble(res.getString("ard_amt")) + bsParseDouble(res.getString("ar_applied"))) >= bsParseDouble(res.getString("ar_amt")) ) {
+                        newamt.add(res.getDouble("ard_amt") + res.getDouble("ar_applied"));
+                        openamt.add(res.getDouble("ar_amt") - res.getDouble("ar_applied") - res.getDouble("ard_amt"));
+                        if ( (res.getDouble("ard_amt") + res.getDouble("ar_applied")) >= res.getDouble("ar_amt") ) {
                          status.add("c");
                         } else {
                          status.add("o");
@@ -17852,8 +17854,8 @@ return myitem;
                 // get material tax for each item (if any) associated with this shipper
                 res = st.executeQuery("select shd_taxamt, shd_qty, shd_netprice from ship_det where shd_id = " + "'" + shipper + "'" + ";");
                  while (res.next()) {
-                     matltax += bsParseDouble(res.getString("shd_taxamt"));
-                     totamt += bsParseDouble(res.getString("shd_qty")) * bsParseDouble(res.getString("shd_netprice"));
+                     matltax += res.getDouble("shd_taxamt");
+                     totamt += res.getDouble("shd_qty") * res.getDouble("shd_netprice");
                  }
                  
                  
@@ -17883,7 +17885,7 @@ return myitem;
                                      "'" + s[1] + "'" + "," +
                                      "'" + s[2] + "'" + "," +
                                      "'" + myamttype + "'" + "," +
-                                     "'" + bsFormatDouble(myamt) + "'" + 
+                                     "'" + bsFormatDouble(myamt).replace(defaultDecimalSeparator, '.') + "'" + 
                                      ") ;");
                      }
                      // now insert matltax if any for summary purposes
@@ -17893,7 +17895,7 @@ return myitem;
                                      "'" + "MatlTax" + "'" + "," +
                                      "'" + "tax" + "'" + "," +
                                      "'" + "amount" + "'" + "," +
-                                     "'" + bsFormatDouble(matltax) + "'" + 
+                                     "'" + bsFormatDouble(matltax).replace(defaultDecimalSeparator, '.') + "'" + 
                                      ") ;");
                  }
                         
@@ -19569,7 +19571,7 @@ MainFrame.bslog(e);
                             + "'" + voucherdet.getValueAt(j, 1).toString() + "'" + ","
                             + "'" + voucherdet.getValueAt(j, 2).toString() + "'" + ","
                             + "'" + voucherdet.getValueAt(j, 3).toString() + "'" + ","
-                            + "'" + bsFormatDouble(bsParseDouble(voucherdet.getValueAt(j, 4).toString())) + "'" + ","
+                            + "'" + bsFormatDouble(bsParseDouble(voucherdet.getValueAt(j, 4).toString())).replace(defaultDecimalSeparator, '.') + "'" + ","
                             + "'" + dfdate.format(effdate) + "'" + ","
                             + "'" + invoice + "'" + ","
                             + "'" + apacct + "'" + ","
@@ -19587,8 +19589,8 @@ MainFrame.bslog(e);
                         + " AND rvd_rline = " + "'" + voucherdet.getValueAt(j, 1).toString() + "'"
                         );
                 while (res.next()) {
-                    voqty = bsParseDouble(res.getString("rvd_voqty"));
-                    rvqty = bsParseDouble(res.getString("rvd_qty"));
+                    voqty = res.getDouble("rvd_voqty");
+                    rvqty = res.getDouble("rvd_qty");
                     if ((voqty + qty) >= rvqty) {
                         status = "1";
                     }     
@@ -19637,8 +19639,8 @@ MainFrame.bslog(e);
                         + " values ( " + "'" + vend + "'" + ","
                               + "'" + site + "'" + ","
                         + "'" + nbr + "'" + ","
-                        + "'" + bsFormatDouble(amt) + "'" + ","
-                        + "'" + bsFormatDouble(baseamt) + "'" + ","        
+                        + "'" + bsFormatDouble(amt).replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "'" + bsFormatDouble(baseamt).replace(defaultDecimalSeparator, '.') + "'" + ","        
                         + "'" + "V" + "'" + ","
                         + "'" + invoice + "'" + ","
                         + "'" + remarks + "'" + ","
@@ -20126,14 +20128,14 @@ MainFrame.bslog(e);
                             + "'" + dettable.getValueAt(j, 3).toString().replace("'", "") + "'" + ","
                             + "'" + dettable.getValueAt(j, 4).toString().replace("'", "") + "'" + ","        
                             + "'" + shipdate + "'" + ","        
-                            + "'" + dettable.getValueAt(j, 5).toString() + "'" + ","
+                            + "'" + dettable.getValueAt(j, 5).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
                             + "'" + dettable.getValueAt(j, 6).toString() + "'" + ","
-                            + "'" + dettable.getValueAt(j, 7).toString() + "'" + ","        
-                            + "'" + dettable.getValueAt(j, 8).toString() + "'" + ","
-                            + "'" + dettable.getValueAt(j, 9).toString() + "'" + ","
+                            + "'" + dettable.getValueAt(j, 7).toString().replace(defaultDecimalSeparator, '.') + "'" + ","        
+                            + "'" + dettable.getValueAt(j, 8).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
+                            + "'" + dettable.getValueAt(j, 9).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
                             + "'" + dettable.getValueAt(j, 12).toString() + "'" + ","
                             + "'" + dettable.getValueAt(j, 13).toString() + "'" + ","
-                            + "'" + dettable.getValueAt(j, 14).toString() + "'" + ","
+                            + "'" + dettable.getValueAt(j, 14).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
                             + "'" + dettable.getValueAt(j, 15).toString() + "'" + ","        
                             + "'" + site + "'"
                             + ")"
@@ -21001,7 +21003,7 @@ MainFrame.bslog(e);
                  res = st.executeQuery("select plan_qty_sched from plan_mstr where plan_nbr = " + "'" + serialno + "'" 
                          + " ;");
                while (res.next()) {
-                   myreturn = bsParseDouble(res.getString("plan_qty_sched"));
+                   myreturn = res.getDouble("plan_qty_sched");
                }
               
             } catch (SQLException s) {
@@ -21032,7 +21034,7 @@ MainFrame.bslog(e);
                          + " AND pland_op = " + "'" + op + "'"
                          + " ;");
                while (res.next()) {
-                   myreturn = bsParseDouble(res.getString("mysum"));
+                   myreturn = res.getDouble("mysum");
                }
               
             } catch (SQLException s) {
@@ -21820,11 +21822,11 @@ MainFrame.bslog(e);
                                          ";" );
                     while (res.next()) {
                      part = res.getString("it_item");
-                     qoh = bsParseDouble(res.getString("in_qoh"));
-                     qtywk = bsParseDouble(res.getString("2week"));
-                     demand = bsParseDouble(res.getString("mydemand")); 
+                     qoh = res.getDouble("in_qoh");
+                     qtywk = res.getDouble("2week");
+                     demand = res.getDouble("mydemand"); 
                      site = res.getString("sod_site");
-                     qtyyear = bsParseDouble(res.getString("ita_fct"));
+                     qtyyear = res.getDouble("ita_fct");
                     
                       if (qtywk < 2) {
                         qtywk = 2;
@@ -22000,7 +22002,7 @@ MainFrame.bslog(e);
                      part = res.getString("sod_part");
                      order = res.getString("sod_nbr");
                      line = res.getString("sod_line");
-                     qty = bsParseDouble(res.getString("sod_ord_qty")) - bsParseDouble(res.getString("sod_shipped_qty"));
+                     qty = res.getDouble("sod_ord_qty") - res.getDouble("sod_shipped_qty");
                      duedate = res.getString("sod_due_date");
                      k = 0;
                     
