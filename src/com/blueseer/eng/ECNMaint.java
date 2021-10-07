@@ -129,7 +129,7 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
     // global datatablemodel declarations     
      javax.swing.table.DefaultTableModel taskmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
-                getGlobalColumnTag("Sequence"), 
+                getGlobalColumnTag("sequence"), 
                 getGlobalColumnTag("owner"), 
                 getGlobalColumnTag("task"), 
                 getGlobalColumnTag("assigndate"), 
@@ -660,8 +660,8 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
         
         taskmodel.setRowCount(0);
         tasktable.setModel(taskmodel);
-        tasktable.getColumn("Sequence").setCellRenderer(new ButtonRenderer());
-        tasktable.getColumn("Sequence").setCellEditor(
+        tasktable.getColumn(getGlobalColumnTag("sequence")).setCellRenderer(new ButtonRenderer());
+        tasktable.getColumn(getGlobalColumnTag("sequence")).setCellEditor(
                         new ButtonEditor(new JCheckBox()));
         
         
@@ -1117,8 +1117,8 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
                 taskmodel.addRow(new Object[]{res.getString("ecnt_seq"), res.getString("ecnt_owner"), res.getString("ecnt_task"), res.getString("ecnt_assigndate"), res.getString("ecnt_closedate"), res.getString("ecnt_status")});
                 }
                 tasktable.setModel(taskmodel);
-                tasktable.getColumn("Sequence").setCellRenderer(new ButtonRenderer());
-                tasktable.getColumn("Sequence").setCellEditor(
+                tasktable.getColumn(getGlobalColumnTag("sequence")).setCellRenderer(new ButtonRenderer());
+                tasktable.getColumn(getGlobalColumnTag("sequence")).setCellEditor(
                         new ButtonEditor(new JCheckBox()));
                
                 

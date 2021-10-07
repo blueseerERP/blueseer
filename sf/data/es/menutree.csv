@@ -1,0 +1,288 @@
+CustomerMenu,CustMaint,1,JMenuItem,Mantenimiento del cliente,,,,1,1
+CustomerMenu,CustReport1,2,JMenuItem,Navegación de clientes,,1,,1,1
+CustomerMenu,CustXrefMaint,3,JMenuItem,Mantenimiento Xref del cliente,,,,1,1
+CustomerMenu,CustXrefBrowse,4,JMenuItem,Navegación de referencias externas del cliente,,,,1,1
+CustomerMenu,CustPriceMaint,5,JMenuItem,Mantenimiento del precio del cliente,,,,1,1
+CustomerMenu,CustPriceReport,6,JMenuItem,Consultar precio del cliente,,,,1,1
+CustomerMenu,CusRptPicker,7,JMenuItem,Selector de informes de clientes,,,,1,1
+CustomerMenu,CustomerReports,8,JMenu,Otros informes de clientes,,,,1,1
+CustomerMenu,CustControl,9,JMenuItem,Control del cliente,,,,1,1
+Dirección,CustomerMenu,1,JMenu,Menú cliente,,,,1,1
+Dirección,VendorMenu,2,JMenu,Menú de proveedores,,,,1,1
+Dirección,EDIMenu,3,JMenu,Menú EDI,,,,1,1
+Dirección,LabelMenu,4,JMenu,Menú de etiquetas,,,,1,1
+Dirección,CarrierMaint,5,JMenuItem,Mantenimiento del transportista,,,,1,1
+Dirección,CarrierBrowse,6,JMenuItem,Navegación de operador,,1,,1,1
+Dirección,FreightMaint,7,JMenuItem,Mantenimiento de fletes,,,,1,1
+Dirección,FreightBrowse,8,JMenuItem,Navegación de carga,,1,,1,1
+Dirección,TermsMaint,9,JMenuItem,Mantenimiento de Términos,,,,1,1
+Dirección,TermsBrowse,10,JMenuItem,Términos Examinar,,1,,1,1
+Dirección,TaxMaint,11,JMenuItem,Mantenimiento de impuestos,,,,1,1
+Dirección,TaxBrowse,12,JMenuItem,Examinar impuestos,,1,,1,1
+CustomerReports,piechart_salesbycust,1,JMenuItem,Ventas por cliente (PieChart),,1,,1,1
+CustomerReports,piechart_custAR,2,JMenuItem,Cuentas por cobrar por cliente (PieChart),,1,,1,1
+VendorMenu,VendMaint,1,JMenuItem,Mantenimiento de proveedores,,,,1,1
+VendorMenu,VendBrowse,2,JMenuItem,Búsqueda de proveedores,,1,,1,1
+VendorMenu,VendXrefMaint,3,JMenuItem,Mantenimiento de Xref del proveedor,,,,1,1
+VendorMenu,VendXrefRpt1,4,JMenuItem,Navegación de Xref de proveedor,,,,1,1
+VendorMenu,VendPriceMaint,5,JMenuItem,Mantenimiento del precio del proveedor,,,,1,1
+VendorMenu,VendPriceRpt1,6,JMenuItem,Búsqueda de precios de proveedores,,,,1,1
+VendorMenu,VenRptPicker,7,JMenuItem,Selector de informes de proveedores,,,,1,1
+VendorMenu,VendControl,8,JMenuItem,Control de proveedores,,,,1,1
+EDIMenu,EDILoad,1,JMenuItem,Carga EDI,,,,1,1
+EDIMenu,EDILog,2,JMenuItem,Registro EDI,,,,1,1
+EDIMenu,EDIPartnerMaint,3,JMenuItem,Mantenimiento de socios EDI,,,,1,1
+EDIMenu,EDIPartnerDocMaint,4,JMenuItem,Mantenimiento de transacciones de socios,,,,1,1
+EDIMenu,EDIPartnerDocBrowse,5,JMenuItem,Exploración de transacciones de socios de EDI,,1,,1,1
+EDIMenu,EDIDocumentMaint,6,JMenuItem,Mantenimiento de reconocimiento de documentos,,,,1,1
+EDIMenu,EDIControl,7,JMenuItem,Control EDI,,,,1,1
+LabelMenu,LabelsContGeneric,1,JMenuItem,Etiquetas de contenedores,,,,1,1
+LabelMenu,AddrLabel,2,JMenuItem,Etiquetas de dirección,,,,1,1
+LabelMenu,LabelBrowse,3,JMenuItem,Exploración de etiquetas,,1,,1,1
+LabelMenu,LabelFileMaint,4,JMenuItem,Mantenimiento de archivos de etiquetas,,,,1,1
+LabelMenu,LabelFileBrowse,5,JMenuItem,Exploración de archivos de etiquetas,,1,,1,1
+Adquisitivo,POMaintMenu,1,JMenuItem,Mantenimiento de órdenes de compra,,,,1,1
+Adquisitivo,POBrowse,2,JMenuItem,Exploración de órdenes de compra,,1,,1,1
+Adquisitivo,ReceiverMaintMenu,3,JMenuItem,Mantenimiento del receptor,,,,1,1
+Adquisitivo,RecvBrowse,4,JMenuItem,Navegación del receptor,,1,,1,1
+Adquisitivo,RecvByPOBrowse,5,JMenuItem,Navegación del receptor por orden de compra,,1,,1,1
+Adquisitivo,PurRptPicker,6,JMenuItem,Selector de informes de compras,,1,,1,1
+Adquisitivo,RequisitionMenu,7,JMenu,Menú de solicitud,,,,1,1
+Adquisitivo,POControl,8,JMenuItem,Control de PO,,1,,1,1
+RequisitionMenu,ReqMaint,1,JMenuItem,Mantenimiento de solicitudes,,,,1,1
+RequisitionMenu,ReqBrowseAll,2,JMenuItem,Búsqueda de solicitudes,,1,,1,1
+RequisitionMenu,PendReqRpt1,5,JMenuItem,Solicitudes pendientes,,1,,1,1
+RequisitionMenu,ApprovedReqBrowse,3,JMenuItem,Requisiciones aprobadas,,1,,1,1
+RequisitionMenu,ReqPendingApproval,4,JMenuItem,Pendiente por aprobador,,1,,1,1
+RequisitionMenu,ReqByUserRpt,6,JMenuItem,Solicitudes por usuario,,1,,1,1
+RequisitionMenu,ReqChartsMenu,7,JMenu,Menú gráfico,,,,1,1
+ReqChartsMenu,ReqAmtByDeptChart,1,JMenuItem,Dólares por departamento,,1,,1,1
+ReqChartsMenu,ReqFreqByUserChart,2,JMenuItem,Solicitudes por usuario,,1,,1,1
+ReqChartsMenu,ReqAmtByAcctChart,3,JMenuItem,Dólares por cuenta,,1,,1,1
+Pedido,OrderMaint,1,JMenuItem,Mantenimiento de pedidos,,,,1,1
+Pedido,OrderBrowse,2,JMenuItem,Buscar pedido,,1,,1,1
+Pedido,ServiceOrderMaint,3,JMenuItem,Mantenimiento de la orden de servicio,,,,1,1
+Pedido,ServiceOrderBrowse,4,JMenuItem,Exploración de órdenes de servicio,,,,1,1
+Pedido,OrderSourceBrowse,5,JMenuItem,Origen del pedido Buscar,,1,,1,1
+Pedido,OrdLineBrowse,6,JMenuItem,Exploración de la línea de pedido,,1,,1,1
+Pedido,SchedOrdBrowse,7,JMenuItem,Exploración de pedidos programados,,1,,1,1
+Pedido,FileOrderLoad,8,JMenuItem,Ordenar carga por archivo CSV,,,,1,1
+Pedido,OrdRptPicker,9,JMenuItem,Selector de informes de pedidos,,,,1,1
+Pedido,OrderReports,10,JMenu,Otros informes,,,,1,1
+Pedido,POSMenu,11,JMenu,Menú POS,,,,1,1
+Pedido,DOMenu,12,JMenu,Menú de distribución,,,,1,1
+Pedido,OrderSource,13,JMenuItem,Origen de la orden,,,,1,1
+Pedido,OrderControl,14,JMenuItem,Control de pedidos,,,,1,1
+OrderReports,pcOpenOrdersByCust,1,JMenuItem,Órdenes abiertas por cliente por fecha de vencimiento (PieChart),,1,,1,1
+OrderReports,DiscreteOrderPerWeekUnits,2,JMenuItem,Ordenar unidades por semana (gráfico de barras),,1,,1,1
+OrderReports,DiscreteOrderPerWeekDollars,3,JMenuItem,Ordenar ventas por semana (gráfico de barras),,1,,1,1
+Envío,ShipMaint,1,JMenuItem,Mantenimiento del remitente,,,,1,1
+Envío,ShipperBrowse,2,JMenuItem,Navegación del remitente,,1,,1,1
+Envío,ShipperBrowseDet,3,JMenuItem,Navegación detallada del remitente,,1,,1,1
+Envío,ShipConfirm,4,JMenuItem,Remitente Confirmar,,,,1,1
+Envío,ShipUnconfirm,5,JMenuItem,Remitente Desconfirmar,,,,1,1
+Envío,TransportationMenu,6,JMenu,Menú de transporte,,,,1,1
+Envío,ShpRptPicker,7,JMenuItem,Selector de informes de envío,,,,1,1
+Envío,ShipReports,8,JMenu,Otros informes,,,,1,1
+Envío,ShipperControl,9,JMenuItem,Control de remitente,,,,1,1
+ShipReports,ShipPerWeekDollarsChart,1,JMenuItem,Dólares de envío por semana (BarChart),,1,,1,1
+Finanzas,LedgerSetupMenu,1,JMenu,Configuración del libro mayor,,,,1,1
+LedgerSetupMenu,AcctMaint,1,JMenuItem,Mantenimiento de la cuenta,,,,1,1
+LedgerSetupMenu,AcctBrowse,2,JMenuItem,Explorar cuenta,,1,,1,1
+LedgerSetupMenu,DeptMaint,3,JMenuItem,Dept / CC Mantenimiento,,,,1,1
+LedgerSetupMenu,DeptBrowse,4,JMenuItem,Dept / CC Examinar,,1,,1,1
+LedgerSetupMenu,GLCalMaint,5,JMenuItem,Calendario de contabilidad,,,,1,1
+LedgerSetupMenu,CalendarBrowse,6,JMenuItem,Exploración del calendario contable,,1,,1,1
+LedgerSetupMenu,BankMaint,7,JMenuItem,Mantenimiento bancario,,,,1,1
+LedgerSetupMenu,BankBrowse,8,JMenuItem,Navegación bancaria,,1,,1,1
+LedgerSetupMenu,CurrencyMaint,9,JMenuItem,Mantenimiento de moneda,,,,1,1
+LedgerSetupMenu,ExchangeMaint,10,JMenuItem,Mantenimiento del tipo de cambio,,,,1,1
+LedgerSetupMenu,GLControl,11,JMenuItem,Control GL,,,,1,1
+LedgerSetupMenu,GLIncStmtDef,12,JMenuItem,Definición del estado de resultados,,,,1,1
+Finanzas,LedgerReportsMenu,2,JMenu,Informes del libro mayor,,,,1,1
+LedgerReportsMenu,GLAcctBalSummaryByPeriod,1,JMenuItem,Informe de saldo de cuenta,,,,1,1
+LedgerReportsMenu,TrialBalanceRpt,2,JMenuItem,Informe de balance de comprobación,,,,1,1
+LedgerReportsMenu,GLAcctBalSummaryByYear,3,JMenuItem,Actividad de la cuenta (año),,,,1,1
+LedgerReportsMenu,AcctBalSumYTD,4,JMenuItem,Saldo de la cuenta hasta la fecha,,,,1,1
+LedgerReportsMenu,UnPostedTransRpt,5,JMenuItem,Transacciones no contabilizadas,,1,,1,1
+LedgerReportsMenu,GLTranRpt1,6,JMenuItem,Informe de transacciones del libro mayor,,1,,1,1
+LedgerReportsMenu,LedgerBalanceExport,7,JMenuItem,Vista / Exportación del saldo del libro mayor,,,,1,1
+LedgerReportsMenu,IncomeStatement1,8,JMenuItem,Estado de resultados,,1,,1,1
+LedgerReportsMenu,IncomeStatementYear,9,JMenuItem,Estado de resultados (año),,1,,1,1
+LedgerReportsMenu,ReconAccount,10,JMenuItem,Reconciliación de la cuenta,,1,,1,1
+Finanzas,PostGLTrans,3,JMenuItem,Publicar transacciones,,,,1,1
+Finanzas,GLTranMaint,4,JMenuItem,Mantenimiento de transacciones GL,,,,1,1
+Finanzas,ExpenseMaint,5,JMenuItem,Mantenimiento de gastos,,,,1,1
+Finanzas,IncomeMaint,5,JMenuItem,Mantenimiento de ingresos,,,,1,1
+Finanzas,ARMenu,7,JMenu,Menú de cuentas por cobrar,,,,1,1
+Finanzas,APMenu,8,JMenu,Menú de cuentas a pagar,,,,1,1
+Finanzas,CashTransactionMenu,9,JMenu,Menú de efectivo rápido,,,,1,1
+Finanzas,PayRollMenu,10,JMenu,Menú de nómina,,,,1,1
+ARMenu,ARPaymentMaint,1,JMenuItem,Mantenimiento de pagos,,,,1,1
+ARMenu,ARPaymentBrowse,2,JMenuItem,Navegación de pago,,1,,1,1
+ARMenu,ARMemoMaint,3,JMenuItem,Mantenimiento de notas,,,,1,1
+ARMenu,ARAgingView,4,JMenuItem,Vista de envejecimiento de AR,,,,1,1
+ARMenu,ARTranRpt1,5,JMenuItem,Informe de transacciones de AR,,1,,1,1
+ARMenu,InvoiceMaint,6,JMenuItem,Ver / Mantenimiento de facturas,,,,1,1
+ARMenu,InvoiceBrowse,7,JMenuItem,Navegación de facturas,,1,,1,1
+ARMenu,ARRptPicker,8,JMenuItem,Selector de informes de RA,,1,,1,1
+ARMenu,ARControl,9,JMenuItem,Control de RA,,,,1,1
+PayRollMenu,PayRollMaint,1,JMenuItem,Mantenimiento de nómina,,,,1,1
+PayRollMenu,PayRollBrowse,2,JMenuItem,Navegación de PayRoll,,1,,1,1
+PayRollMenu,PayProfileMaint,3,JMenuItem,Mantenimiento del perfil de pago,,,,1,1
+PayRollMenu,PayProfileBrowse,4,JMenuItem,Buscar perfil de pago,,1,,1,1
+PayRollMenu,PayControl,5,JMenuItem,PayRoll Control,,1,,1,1
+CashTransactionMenu,CashTran,1,JMenuItem,Transacción de efectivo rápido,,,,1,1
+CashTransactionMenu,CashTranBrowse,2,JMenuItem,Exploración rápida de efectivo,,,,1,1
+APMenu,VouchMaintPanel,1,JMenuItem,Mantenimiento de cupones,,,,1,1
+APMenu,VoucherBrowse,2,JMenuItem,Búsqueda de cupones,,,,1,1
+APMenu,PaymentMaint,3,JMenuItem,Mantenimiento de pagos,,,,1,1
+APMenu,APAgingView,4,JMenuItem,Vista de envejecimiento AP,,,,1,1
+APMenu,APRptPicker,5,JMenuItem,Selector de informes AP,,,,1,1
+APMenu,APControl,6,JMenuItem,Control AP,,,,1,1
+Inventario,ProdCodeMaint,1,JMenuItem,Mantenimiento del código de producto,,,,1,1
+Inventario,ProdCodeBrowse,2,JMenuItem,Navegar por código de producto,,1,,1,1
+Inventario,WareHouseMaint,3,JMenuItem,Mantenimiento de almacén,,,,1,1
+Inventario,WareHouseBrowse,4,JMenuItem,Navegar por el almacén,,1,,1,1
+Inventario,LocationMaint,5,JMenuItem,Mantenimiento de la ubicación,,,,1,1
+Inventario,LocationBrowse,6,JMenuItem,Buscar ubicación,,1,,1,1
+Inventario,ItemMenu,7,JMenu,Menú de elementos,,,,1,1
+Inventario,RoutingMenu,8,JMenu,Menú de enrutamiento,,,,1,1
+Inventario,BOMMenu,9,JMenu,Menú de lista de materiales,,,,1,1
+Inventario,ProductionMenu,10,JMenu,Menú de producción,,,,1,1
+Inventario,ScrapMenu,11,JMenu,Menú de chatarra,,,,1,1
+Inventario,InvAdjustmentsMenu,12,JMenu,Menú de ajustes de inventario,,,,1,1
+Inventario,ScheduleMenu,13,JMenu,Menú de programación,,,,1,1
+Inventario,MRPMenu,14,JMenu,Menú MRP,,,,1,1
+Inventario,InvRptPicker,15,JMenuItem,Selector de informes de inventario,,1,,1,1
+Inventario,InventoryReportsMenu,16,JMenu,Informes varios de inventario,,,,1,1
+Inventario,InventoryCtrl,17,JMenuItem,Control de inventario,,,,1,1
+InvAdjustmentsMenu,LocationTransfer,1,JMenuItem,Transferencia de ubicación,,,,1,1
+InvAdjustmentsMenu,InventoryAdjustment,2,JMenuItem,Ajuste de inventario,,,,1,1
+InventoryReportsMenu,TransBrowse,1,JMenuItem,Exploración de transacciones,,1,,1,1
+ItemMenu,ItemMaint,1,JMenuItem,Mantenimiento del artículo,,,,1,1
+ItemMenu,ItemBrowse,2,JMenuItem,Explorar artículo,,1,,1,1
+ItemMenu,UOMMaint,3,JMenuItem,Mantenimiento de UOM,,,,1,1
+ItemMenu,UOMConvMaint,4,JMenuItem,Mantenimiento de conversión de UOM,,,,1,1
+ItemMenu,CostRoll,5,JMenuItem,Mantenimiento de costos,,,,1,1
+ItemMenu,CostRollRange,6,JMenuItem,Coste por rango,,,,1,1
+ItemMenu,CostReports,7,JMenu,Reportes de costos,,,,1,1
+RoutingMenu,WorkCellMaint,1,JMenuItem,Mantenimiento de la celda de trabajo,,,,1,1
+RoutingMenu,WorkCellBrowse,2,JMenuItem,Navegación de celda de trabajo,,1,,1,1
+RoutingMenu,RoutingMaint,3,JMenuItem,Mantenimiento de enrutamiento,,,,1,1
+RoutingMenu,RoutingBrowse,4,JMenuItem,Exploración de enrutamiento,,1,,1,1
+RoutingMenu,ItemRoutingRpt,5,JMenuItem,Informe de enrutamiento de artículos,,,,1,1
+BOMMenu,BOMMaint,1,JMenuItem,Mantenimiento de la lista de materiales,,,,1,1
+BOMMenu,BOMBrowse,2,JMenuItem,Examinar lista de materiales,,1,,1,1
+BOMMenu,BOMTree,3,JMenuItem,Árbol de lista de materiales,,,,1,1
+BOMMenu,WhereUsedUtility,4,JMenuItem,Dónde se utiliza la utilidad,,,,1,1
+ProductionMenu,ProdEntryMaint,1,JMenuItem,Entrada de producción,,,,1,1
+ProductionMenu,ProdEntryByPlan,2,JMenuItem,Entrada de producción por plan,,,,1,1
+ProductionMenu,OEEEntry,3,JMenuItem,Entrada OEE,,,,1,1
+ProductionMenu,ProductionReports,4,JMenu,Reportes de producción,,,,1,1
+ProductionReports,ProdRptDet,1,JMenuItem,Detalle del informe de producción,,1,,1,1
+ProductionReports,ProdByWeekFGUnits,2,JMenuItem,Unidades de producción de FG semanales (BarChart),,1,,1,1
+ProductionReports,ProdByWeekFGDollars,3,JMenuItem,Dólares semanales de producción de FG (BarChart),,1,,1,1
+ScrapMenu,ScrapEntry,1,JMenuItem,Entrada de chatarra,,,,1,1
+ScrapMenu,ScrapReports,2,JMenu,Informes de chatarra,,,,1,1
+ScrapReports,ScrapRpt1,1,JMenuItem,Informe de chatarra,,1,,1,1
+ScrapReports,ScrapChartQtyByCode,2,JMenuItem,Cantidad de chatarra por código (gráfico de barras),,1,,1,1
+ScrapReports,ScrapChartQtyByPart,3,JMenuItem,Cantidad de chatarra por pieza (gráfico de barras),,1,,1,1
+ScrapReports,ScrapChartQtyByDept,4,JMenuItem,Cantidad de chatarra por departamento (gráfico de barras),,1,,1,1
+ScrapReports,ScrapChartDolByCode,5,JMenuItem,Dólares de desecho por código (gráfico de barras),,1,,1,1
+ScrapReports,ScrapChartDolByPart,6,JMenuItem,Dólares de chatarra por pieza (gráfico de barras),,1,,1,1
+ScrapReports,ScrapChartDolByDept,7,JMenuItem,Dólares de chatarra por departamento (BarChart),,1,,1,1
+ScrapReports,ScrapPerWeek,8,JMenuItem,Chatarra por semana (gráfico de barras),,1,,1,1
+ScheduleMenu,Scheduler,1,JMenuItem,Programador,,,,1,1
+ScheduleMenu,SchRptPicker,2,JMenuItem,Selector de informes de programación,,1,,1,1
+ScheduleMenu,ProdSchedRpt1,3,JMenuItem,Informe del plan programado,,1,,1,1
+ScheduleMenu,PlanMiscMaint,4,JMenuItem,Mantenimiento del plan misceláneo,,,,1,1
+ScheduleMenu,ForecastMaint,5,JMenuItem,Mantenimiento de pronósticos,,,,1,1
+ScheduleMenu,ForecastBrowse,6,JMenuItem,Exploración de pronósticos,,1,,1,1
+ScheduleMenu,forecast13weeks,7,JMenuItem,Vista de pronóstico 13 semanas,,1,,1,1
+ScheduleMenu,FcstToPlan,8,JMenuItem,Pronóstico para planificar la sincronización,,,,1,1
+ScheduleMenu,DemdToPlan,9,JMenuItem,Demanda para planificar la sincronización,,,,1,1
+MRPMenu,ItemLevelCalculate,1,JMenuItem,MRP Regenerar,,,,1,1
+MRPMenu,MRPBrowse,2,JMenuItem,Explorar MRP,,1,,1,1
+MRPMenu,RetailReorderRpt,3,JMenuItem,Informe de reabastecimiento minorista,,1,,1,1
+CostReports,noStdCostBrowse,1,JMenuItem,Artículo sin costo estándar,,1,,1,1
+Calidad,QPRMaint,1,JMenuItem,Mantenimiento QPR,,,,1,1
+Calidad,QPRBrowse,2,JMenuItem,Navegación QPR,,1,,1,1
+HR,EmployeeMaster,1,JMenuItem,Mantenimiento de empleados,,,,1,1
+HR,EmpBrowse,2,JMenuItem,Exploración de empleados,,1,,1,1
+HR,HRRptPicker,3,JMenuItem,Selector de informes de recursos humanos,,1,,1,1
+HR,ShiftMaintenance,4,JMenuItem,Mantenimiento de turnos,,,,1,1
+HR,ShiftBrowse,5,JMenuItem,Shift Examinar,,1,,1,1
+HR,HRTrainingMenu,6,JMenu,Menú de entrenamiento,,,,1,1
+HR,TimeClockMenu,7,JMenu,Menú del reloj de tiempo,,,,1,1
+HRTrainingMenu,TrainingMaint,1,JMenuItem,Mantenimiento de formación,,,,1,1
+HRTrainingMenu,TrainingRpt1,2,JMenuItem,Informe de entrenamiento,,1,,1,1
+TimeClockMenu,TimeClockEntry,1,JMenuItem,TimeClock,,,,1,1
+TimeClockMenu,TCAdminMenu,2,JMenu,Administración,,,,1,1
+TCAdminMenu,ClockApprovalMaint,1,JMenuItem,Aprobación del supervisor,,,,1,1
+TCAdminMenu,ClockAutoMaint,2,JMenuItem,Mantenimiento automático del reloj,,,,1,1
+TCAdminMenu,TimeClockAdjust,3,JMenuItem,Mantenimiento de registro de reloj,,,,1,1
+TCAdminMenu,ClockCodeMaint,4,JMenuItem,Mantenimiento del código de reloj,,,,1,1
+TCAdminMenu,ClockCodeBrowse,5,JMenuItem,Navegación de código de reloj,,1,,1,1
+TCAdminMenu,ClockControl,6,JMenuItem,Control de reloj,,,,1,1
+TimeClockMenu,TCReportsMenu,3,JMenu,Informes,,,,1,1
+TCReportsMenu,ClockDetailRpt,1,JMenuItem,Informe de detalles del reloj,,1,,1,1
+TCReportsMenu,ClockCode66Browse,2,JMenuItem,Informe Código 66,,1,,1,1
+TCReportsMenu,ClockChartByDept,3,JMenuItem,Horas por departamento (gráfico),,1,,1,1
+TCReportsMenu,ClockChartByCode,4,JMenuItem,Horas por código (gráfico),,1,,1,1
+TCReportsMenu,ClockChartByEmp,5,JMenuItem,Horas por empleado (gráfico),,1,,1,1
+TCReportsMenu,ClockChartByWeek,6,JMenuItem,Horas totales por semana (gráfico),,1,,1,1
+Admin,DefaultMaint,1,JMenuItem,Mantenimiento predeterminado,,,,1,1
+Admin,SiteMaint,2,JMenuItem,Mantenimiento del sitio,,,,1,1
+Admin,SiteBrowse,3,JMenuItem,Navegar por el sitio,,1,,1,1
+Admin,UserMaint,4,JMenuItem,Mantenimiento del usuario,,,,1,1
+Admin,UserPermsMaint,5,JMenuItem,Mantenimiento de permisos de usuario,,,,1,1
+Admin,UserBrowse,6,JMenuItem,Navegación de usuario,,1,,1,1
+Admin,PanelMaint,7,JMenuItem,Registro de clases,,,,1,1
+Admin,PanelBrowse,8,JMenuItem,Exploración de clases,,1,,1,1
+Admin,MenuMaint,9,JMenuItem,Mantenimiento del menú,,,,1,1
+Admin,MenuBrowse,10,JMenuItem,Navegar por el menú,,1,,1,1
+Admin,GenericCodeMaint,11,JMenuItem,Mantenimiento de código genérico,,,,1,1
+Admin,GenCodeBrowse,12,JMenuItem,Exploración de código genérico,,1,,1,1
+Admin,KeyMaint,13,JMenuItem,Mantenimiento clave,,,,1,1
+Admin,PrinterMaint,14,JMenuItem,Mantenimiento de la impresora,,,,1,1
+Admin,PrinterBrowse,15,JMenuItem,Examinar la impresora,,1,,1,1
+Admin,ChangeUserid,16,JMenuItem,Cambiar ID de usuario,,,changeUserID,1,1
+Admin,changeDB,17,JMenuItem,Cambiar IP: DB,,,changeIPandDB,1,1
+Admin,SystemControl,18,JMenuItem,Control de sistema,,,,1,1
+Admin,TreeMaint,19,JMenuItem,Mantenimiento del árbol de menús,,,,1,1
+Admin,FTPMaint,20,JMenuItem,Mantenimiento FTP,,,,1,1
+Admin,MassLoad,21,JMenuItem,Importación de datos maestros,,,,1,1
+Admin,JasperRptMaint,22,JMenuItem,Mantenimiento del informe Jasper,,,,1,1
+Ayudar,About,1,JMenuItem,Sobre,,,,1,1
+Ayudar,Update,2,JMenuItem,Actualizar,,,,1,1
+Ayudar,PlantDirectoryMenu,3,JMenuItem,Directorio de plantas,,1,,1,1
+Ayudar,menuscreen,4,JMenuItem,Resolución de la pantalla,,,getScreenSize,1,1
+Ayudar,NavCodeBrowse,5,JMenuItem,Lista de códigos NAV,,1,,1,1
+Ayudar,SchemaBrowse,6,JMenuItem,Esquema,,1,,1,1
+Ayudar,BrowseUtil,7,JMenuItem,NavegarUtil,,1,,1,1
+Ayudar,SysInfo,8,JMenuItem,SysInfo,,1,,1,1
+root,Dirección,1,JMenu,Dirección,,,,1,1
+root,Adquisitivo,2,JMenu,Adquisitivo,,,,1,1
+root,Pedido,3,JMenu,Pedido,,,,1,1
+root,Envío,4,JMenu,Transporte,,,,1,1
+root,Finanzas,5,JMenu,Finanzas,,,,1,1
+root,Inventario,6,JMenu,Inventario,,,,1,1
+root,Ingenieria,7,JMenu,Ingenieria,,,,1,1
+root,Calidad,8,JMenu,Calidad,,,,1,1
+root,Personalizado,9,JMenu,Personalizado,,,,1,0
+root,HR,10,JMenu,HR,,,,1,1
+root,Admin,11,JMenu,Admin,,,,1,1
+root,Ayudar,12,JMenu,Ayudar,,,,1,1
+POSMenu,POSMaint,1,JMenuItem,Entrada POS,,,,1,1
+POSMenu,POSControlMaint,3,JMenuItem,Control POS,,,,1,1
+POSMenu,POSBrowse,2,JMenuItem,POS Examinar,,1,,1,1
+DOMenu,DOMaint,1,JMenuItem,Mantenimiento de orden de distribución,,,,1,1
+DOMenu,DOBrowse,2,JMenuItem,Búsqueda de orden de distribución,,,,1,1
+TransportationMenu,FOMaint,1,JMenuItem,Mantenimiento de pedidos de flete,,,,1,1
+TransportationMenu,FOBrowse,2,JMenuItem,Navegar por orden de flete,,,,1,1
+RequisitionMenu,ReqControl,8,JMenuItem,Req Control,,,,1,1
+Ingenieria,ECNMaint,1,JMenuItem,Mantenimiento ECN,,,,1,1
+Ingenieria,ECNBrowse,2,JMenuItem,Navegación ECN,,1,,1,1
+Ingenieria,TaskMaint,3,JMenuItem,Mantenimiento de tareas,,,,1,1
+Ingenieria,TaskBrowse,4,JMenuItem,Exploración de tareas,,1,,1,1

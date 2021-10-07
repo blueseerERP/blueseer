@@ -273,7 +273,7 @@ root,Qualité,8,JMenu,Qualité,,,,1,1
 root,Personnalisé,9,JMenu,Personnalisé,,,,1,0
 root,HR,10,JMenu,HR,,,,1,1
 root,Admin,11,JMenu,Admin,,,,1,1
-root,Help,12,JMenu,Aider,,,,1,1
+root,Aider,12,JMenu,Aider,,,,1,1
 POSMenu,POSMaint,1,JMenuItem,Saisie au point de vente,,,,1,1
 POSMenu,POSControlMaint,3,JMenuItem,Contrôle de point de vente,,,,1,1
 POSMenu,POSBrowse,2,JMenuItem,Parcourir les points de vente,,1,,1,1

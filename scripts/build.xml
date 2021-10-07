@@ -10,10 +10,7 @@
     <property name="lib.dir" location="../lib" />
     <property name="classpath.property" 
 	    value="dist/" />
-    <property name="JDK16dir" location="C:\java\jdk-16.0.2+7" />
     <property name="JDK17dir" location="C:\java\jdk-17" />
-    <property name="javac16" location="${JDK16dir}/bin/javac" />
-    <property name="java16" location="${JDK16dir}/bin/java" />
     <property name="javac17" location="${JDK17dir}/bin/javac" />
     <property name="java17" location="${JDK17dir}/bin/java" />
     <property name="lang" value="en" />
@@ -43,10 +40,6 @@
     <!-- Compiles the java code (including the usage of library for JUnit -->
     <target name="compile17" depends="clean, makedir">
         <javac executable="${javac17}" fork="yes" srcdir="${src.dir}" destdir="${build.dir}" classpathref="build.classpath" includeantruntime="false" debug="true">
-        </javac>
-    </target>
-    <target name="compile16" depends="clean, makedir">
-        <javac executable="${javac16}" fork="yes" srcdir="${src.dir}" destdir="${build.dir}" classpathref="build.classpath" includeantruntime="false" debug="true">
         </javac>
     </target>
     <target name="compile" depends="clean, makedir">
@@ -129,20 +122,6 @@
 	    <jvmarg value="-Djava.util.logging.config.file=bslogging.properties"/>
         </java>
 </target>
-<target name="run16">
-    <path id="runtime.path">
-	    <fileset dir="../dist" includes="*.jar"/>
-	    <!--  <fileset dir="../lib" includes="*.jar"/> -->
-	    <fileset dir="${test.dir}/edi/maps" includes="*.jar"/>
-    </path>
-    <echo>running in ....${test.dir}</echo>
-    <java classname="bsmf.MainFrame" jvm="${java16}" fork="true" classpathref="runtime.path" dir="${test.dir}">
-	    <arg value="-debug"/> 
-	    <jvmarg value="-Duser.language=en"/>
-	    <jvmarg value="-Duser.country=US"/>
-	    <jvmarg value="-Djava.util.logging.config.file=bslogging.properties"/>
-        </java>
-</target>
 <target name="run17">
     <path id="runtime.path">
 	    <fileset dir="../dist" includes="*.jar"/>
@@ -152,45 +131,14 @@
     <echo>running in ....${test.dir}</echo>
     <java classname="bsmf.MainFrame" jvm="${java17}" fork="true" classpathref="runtime.path" dir="${test.dir}">
 	    <arg value="-debug"/> 
-	    <jvmarg value="-Duser.language=en"/>
-	    <jvmarg value="-Duser.country=US"/>
-	    <jvmarg value="-Djava.util.logging.config.file=bslogging.properties"/>
-        </java>
-</target>
-<target name="run16fr">
-    <path id="runtime.path">
-	    <fileset dir="../dist" includes="*.jar"/>
-	    <!--  <fileset dir="../lib" includes="*.jar"/> -->
-	    <fileset dir="${test.dir}/edi/maps" includes="*.jar"/>
-    </path>
-    <echo>running in ....${test.dir}</echo>
-    <java classname="bsmf.MainFrame" jvm="${java16}" fork="true" classpathref="runtime.path" dir="${test.dir}">
-	    <arg value="-debug"/> 
-	    <jvmarg value="-Duser.language=fr"/>
-	    <jvmarg value="-Duser.country=FR"/>
-	    <jvmarg value="-Djava.util.logging.config.file=bslogging.properties"/>
-        </java>
-</target>
-<target name="run17fr">
-    <path id="runtime.path">
-	    <fileset dir="../dist" includes="*.jar"/>
-	    <!--  <fileset dir="../lib" includes="*.jar"/> -->
-	    <fileset dir="${test.dir}/edi/maps" includes="*.jar"/>
-    </path>
-    <echo>running in ....${test.dir}</echo>
-    <java classname="bsmf.MainFrame" jvm="${java17}" fork="true" classpathref="runtime.path" dir="${test.dir}">
-	    <arg value="-debug"/> 
-	    <jvmarg value="-Duser.language=fr"/>
-	    <jvmarg value="-Duser.country=FR"/>
+	    <jvmarg value="-Duser.language=${l}"/>
+	    <jvmarg value="-Duser.country=${c}"/>
 	    <jvmarg value="-Djava.util.logging.config.file=bslogging.properties"/>
         </java>
 </target>
 
 
     <target name="main" depends="compile, jar">
-        <description>Main target</description>
-    </target>
-    <target name="main16" depends="compile16, jar">
         <description>Main target</description>
     </target>
     <target name="main17" depends="compile17, jar">

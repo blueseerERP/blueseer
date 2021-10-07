@@ -380,10 +380,10 @@ public class BOMMaint extends javax.swing.JPanel {
            tbkey.setEditable(false);
            tbkey.setForeground(Color.blue);
         } else if (i == 0) {
-           m = new String[]{BlueSeerUtils.ErrorBit, "No BOM found for this Item"};  
+           m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1146)};  
                    tbkey.setForeground(Color.red); 
         } else {
-            m = new String[]{BlueSeerUtils.ErrorBit, "Item has no Routing"}; 
+            m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1147)}; 
                     tbkey.setEditable(true);
                     tbkey.setForeground(Color.red); 
         }
@@ -1508,7 +1508,7 @@ public class BOMMaint extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 69, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 72, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btadd)
                     .addComponent(btdelete)
@@ -1553,12 +1553,12 @@ public class BOMMaint extends javax.swing.JPanel {
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap(20, Short.MAX_VALUE)
+                .addContainerGap(13, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap(72, Short.MAX_VALUE))))
+                        .addContainerGap(76, Short.MAX_VALUE))))
         );
 
         add(jPanel2);
