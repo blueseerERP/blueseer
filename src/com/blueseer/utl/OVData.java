@@ -43,6 +43,8 @@ import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble5;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble; 
 import static com.blueseer.utl.BlueSeerUtils.bsParseDoubleUS;
+import static com.blueseer.utl.BlueSeerUtils.bsformat;
+import static com.blueseer.utl.BlueSeerUtils.currformatDoubleUS;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.io.BufferedReader;
@@ -826,10 +828,10 @@ public class OVData {
                             + "'" + part + "'" + ","
                             + "'" + set + "'" + ","
                             + "'" + site + "'" + ","
-                            + "'" + bsFormatDouble(mtl,"5").replace(defaultDecimalSeparator, '.') + "'" + ","
-                            + "'" + bsFormatDouble(ovh,"5").replace(defaultDecimalSeparator, '.') + "'" + ","
-                            + "'" + bsFormatDouble(out,"5").replace(defaultDecimalSeparator, '.') + "'" + ","
-                            + "'" + bsFormatDouble(tot,"5").replace(defaultDecimalSeparator, '.') + "'"
+                            + "'" + mtl + "'" + ","
+                            + "'" + ovh + "'" + ","
+                            + "'" + out + "'" + ","
+                            + "'" + tot + "'"
                             + ")"
                             + ";");
                 }
@@ -4461,8 +4463,8 @@ return myitem;
                             "'" +  bsFormatDouble5(bsParseDouble(cost)).replace(defaultDecimalSeparator, '.') + "'" + "," +  
                             "'" +  bsFormatDouble5(bsParseDouble(cost)).replace(defaultDecimalSeparator, '.') + "'" + "," +  
                             "'" +  bsFormatDouble5(bsParseDouble(cost)).replace(defaultDecimalSeparator, '.') + "'" + "," +  
-                            "'" +  bsFormatDouble5(bsParseDouble("0")).replace(defaultDecimalSeparator, '.') + "'" + "," +  
-                            "'" +  bsFormatDouble5(bsParseDouble("0")).replace(defaultDecimalSeparator, '.') + "'" + "," +  
+                            "'" +  "0" + "'" + "," +  
+                            "'" +  "0" + "'" + "," +  
                             "'" +  "ASSET" + "'" + "," +  
                             "'" +  "" + "'" + "," +  
                             "'" +  "" + "'" + "," +  
@@ -9752,73 +9754,7 @@ return myitem;
         return myreturn;
         
     }
-         
-        public static Double getLaborWithSetup(String part, String op) {
         
-             Double labor = 0.0;
-              try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select it_lotsize, wc_run_crew, wf_run_hours, wf_setup_hours, wc_run_rate, wc_setup_rate, wc_bdn_rate from wf_mstr " + 
-                        " inner join item_mstr on it_wf = wf_id " + 
-                        " inner join wc_mstr on wc_cell = wf_cell " +
-                        " where it_item = " + "'" + part + "'" +
-                        " AND wf_op = " + "'" + op + "'" + ";");
-               while (res.next()) {
-                    labor += ( ((res.getDouble("wc_setup_rate") * res.getDouble("wf_setup_hours")) / res.getDouble("it_lotsize") ) +
-                            (res.getDouble("wc_run_rate") * res.getDouble("wf_run_hours") * res.getDouble("wc_run_crew"))  );
-                }
-               labor = bsParseDouble(bsFormatDouble5(labor));
-           }
-            catch (SQLException s){
-                 JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Labor Cost");
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-             return labor;
-            
-         }
-         
-        public static Double getBurdenWithSetup(String part, String op) {
-        
-             Double burden = 0.0;
-              try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select it_lotsize, wc_run_crew, wf_run_hours, wf_setup_hours, wc_run_rate, wc_setup_rate, wc_bdn_rate from wf_mstr " + 
-                        " inner join item_mstr on it_wf = wf_id " + 
-                        " inner join wc_mstr on wc_cell = wf_cell " +
-                        " where it_item = " + "'" + part + "'" +
-                        " AND wf_op = " + "'" + op + "'" + ";");
-               while (res.next()) {
-                     burden += ( ((res.getDouble("wc_bdn_rate") * res.getDouble("wf_setup_hours")) / res.getDouble("it_lotsize") ) +
-                            (res.getDouble("wc_bdn_rate") * res.getDouble("wf_run_hours") * res.getDouble("wc_run_crew"))  );
-                }
-               burden = bsParseDouble(bsFormatDouble5(burden));
-           }
-            catch (SQLException s){
-                 JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Labor Cost");
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-             return burden;
-            
-         }
-         
         
         public static Double getLaborWithOutSetup(String part, String op) {
         
@@ -9839,7 +9775,7 @@ return myitem;
                while (res.next()) {
                     labor += (res.getDouble("wc_run_rate") * res.getDouble("wf_run_hours") * res.getDouble("wc_run_crew"));
                 }
-               labor = bsParseDouble(bsFormatDouble5(labor));
+               
            }
             catch (SQLException s){
                 MainFrame.bslog(s);
@@ -9882,7 +9818,7 @@ return myitem;
                
                
                }
-               labor = bsParseDouble(bsFormatDouble5(labor));
+               
            }
             catch (SQLException s){
                  bsmf.MainFrame.show("SQL cannot get Labor Cost All Ops");
@@ -9921,7 +9857,7 @@ return myitem;
                    }
                
                }
-               burden = bsParseDouble(bsFormatDouble5(burden));
+               
            }
             catch (SQLException s){
                  bsmf.MainFrame.show("SQL cannot get Burden Cost All Ops");
@@ -9953,7 +9889,7 @@ return myitem;
                while (res.next()) {
                      burden += (res.getDouble("wc_bdn_rate") * res.getDouble("wf_run_hours") );
                 }
-               burden = bsParseDouble(bsFormatDouble5(burden));
+               
            }
             catch (SQLException s){
                  JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Labor Cost");
@@ -10044,12 +9980,12 @@ return myitem;
                                 + "'" + "standard" + "'" + ","
                                 + "'" + routing + "'" + ","
                                 + "'" + elements[1].toString() + "'" + ","
-                                + "'" + bsFormatDouble5(bsParseDouble(elements[17].toString())).replace(defaultDecimalSeparator, '.') + "'" + "," 
-                                + "'" + bsFormatDouble5(bsParseDouble(elements[6].toString())).replace(defaultDecimalSeparator, '.') + "'" + ","   
-                                + "'" + bsFormatDouble5(bsParseDouble(elements[7].toString())).replace(defaultDecimalSeparator, '.') + "'" + ","
-                                + "'" + bsFormatDouble5(bsParseDouble(elements[8].toString())).replace(defaultDecimalSeparator, '.') + "'" + ","
-                                + "'" + bsFormatDouble5(bsParseDouble(elements[9].toString())).replace(defaultDecimalSeparator, '.') + "'" + ","
-                                + "'" + bsFormatDouble5(bsParseDouble(elements[10].toString())).replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + bsformat("",elements[17].toString(),"5") + "'" + "," 
+                                + "'" + bsformat("",elements[6].toString(),"5") + "'" + ","   
+                                + "'" + bsformat("",elements[7].toString(),"5") + "'" + ","
+                                + "'" + bsformat("",elements[8].toString(),"5") + "'" + ","
+                                + "'" + bsformat("",elements[9].toString(),"5") + "'" + ","
+                                + "'" + bsformat("",elements[10].toString(),"5") + "'" + ","
                                 + "'" + "0" + "'" + ","
                                 + "'" + "0" + "'" + ","
                                 + "'" + "0" + "'" + ","
@@ -12487,8 +12423,8 @@ return myitem;
                         + " values ( " + "'" + acct_cr + "'" + ","
                         + "'" + cc_cr + "'" + ","
                         + "'" + date + "'" + ","
-                        + "'" + bsFormatDouble(-1 * amt).replace(defaultDecimalSeparator, '.') + "'" + ","
-                        + "'" + bsFormatDouble(-1 * baseamt).replace(defaultDecimalSeparator, '.') + "'" + ","        
+                        + "'" + currformatDoubleUS(-1 * amt) + "'" + ","
+                        + "'" + currformatDoubleUS(-1 * baseamt) + "'" + ","        
                         + "'" + curr + "'" + ","
                         + "'" + basecurr + "'" + ","
                         + "'" + ref + "'" + ","        
@@ -12504,8 +12440,8 @@ return myitem;
                         + " values ( " + "'" + acct_dr + "'" + ","
                         + "'" + cc_dr + "'" + ","
                         + "'" + date + "'" + ","
-                        + "'" + bsFormatDouble(amt).replace(defaultDecimalSeparator, '.') + "'" + ","
-                        + "'" + bsFormatDouble(baseamt).replace(defaultDecimalSeparator, '.') + "'" + ","  
+                        + "'" + currformatDoubleUS(amt) + "'" + ","
+                        + "'" + currformatDoubleUS(baseamt) + "'" + ","  
                         + "'" + curr + "'" + ","
                         + "'" + basecurr + "'" + ","        
                          + "'" + ref + "'" + ","
@@ -12566,8 +12502,8 @@ return myitem;
                         + " values ( " + "'" + acct_cr + "'" + ","
                         + "'" + cc_cr + "'" + ","
                         + "'" + date + "'" + ","
-                        + "'" + bsFormatDouble(-1 * amt).replace(defaultDecimalSeparator, '.') + "'" + ","
-                        + "'" + bsFormatDouble(-1 * baseamt).replace(defaultDecimalSeparator, '.') + "'" + ","        
+                        + "'" + currformatDoubleUS(-1 * amt) + "'" + ","
+                        + "'" + currformatDoubleUS(-1 * baseamt) + "'" + ","        
                         + "'" + curr + "'" + ","
                         + "'" + basecurr + "'" + ","
                         + "'" + ref + "'" + ","        
@@ -12583,8 +12519,8 @@ return myitem;
                         + " values ( " + "'" + acct_dr + "'" + ","
                         + "'" + cc_dr + "'" + ","
                         + "'" + date + "'" + ","
-                        + "'" + bsFormatDouble(amt).replace(defaultDecimalSeparator, '.') + "'" + ","
-                        + "'" + bsFormatDouble(baseamt).replace(defaultDecimalSeparator, '.') + "'" + ","  
+                        + "'" + currformatDoubleUS(amt) + "'" + ","
+                        + "'" + currformatDoubleUS(baseamt) + "'" + ","  
                         + "'" + curr + "'" + ","
                         + "'" + basecurr + "'" + ","        
                          + "'" + ref + "'" + ","
@@ -15621,7 +15557,7 @@ return myitem;
                //  if (begbal == 0 && endbal == 0 && activity == 0)
                //      bsmf.MainFrame.show(account);
                
-                 mylist.add(acctid + "," + acctdesc + "," + year + "," + period + "," + bsFormatDouble(endbal) + ",");
+                 mylist.add(acctid + "," + acctdesc + "," + year + "," + period + "," + currformatDoubleUS(endbal) + ",");
                
                 
                         } // account
@@ -15747,9 +15683,9 @@ return myitem;
                //  if (begbal == 0 && endbal == 0 && activity == 0)
                //      bsmf.MainFrame.show(account);
                  if (accttype.equals("L") || accttype.equals("A")) {
-                 mylist.add(acctid + "," + acctdesc + "," + year + "," + period + "," + bsFormatDouble(endbal) + ",");
+                 mylist.add(acctid + "," + acctdesc + "," + year + "," + period + "," + currformatDoubleUS(endbal) + ",");
                  } else {
-                 mylist.add(acctid + "," + acctdesc + "," + year + "," + period + "," + bsFormatDouble(activity) + ",");    
+                 mylist.add(acctid + "," + acctdesc + "," + year + "," + period + "," + currformatDoubleUS(activity) + ",");    
                  }       
                  
                 
@@ -15835,7 +15771,7 @@ return myitem;
                            endbal = res.getDouble("sum");
                            acctid = res.getString("acb_acct");
                            cc = res.getString("acb_cc");
-                        mylist.add(acctid + "," + cc + "," + period + "," + year + "," + bsFormatDouble(endbal) );
+                        mylist.add(acctid + "," + cc + "," + period + "," + year + "," + currformatDoubleUS(endbal) );
                        }
                      
                  //now income statement
@@ -15851,7 +15787,7 @@ return myitem;
                            endbal = res.getDouble("sum");
                            acctid = res.getString("acb_acct");
                            cc = res.getString("acb_cc");
-                        mylist.add(acctid + "," + cc + "," + period + "," + year + "," + bsFormatDouble(endbal) );
+                        mylist.add(acctid + "," + cc + "," + period + "," + year + "," + currformatDoubleUS(endbal) );
                        }      
                        
                        
@@ -15949,7 +15885,7 @@ return myitem;
                            cc = res.getString("acb_cc");
                            if (supress && endbal == 0) 
                                continue;
-                        mylist.add(acctid + "," + cc + "," + period + "," + year + "," + bsFormatDouble(endbal) );
+                        mylist.add(acctid + "," + cc + "," + period + "," + year + "," + currformatDoubleUS(endbal) );
                        }
                       
                        
@@ -15973,7 +15909,7 @@ return myitem;
                            cc = res.getString("acb_cc");
                            if (supress && endbal == 0) 
                                continue;
-                        mylist.add(acctid + "," + cc + "," + period + "," + year + "," + bsFormatDouble(endbal) );
+                        mylist.add(acctid + "," + cc + "," + period + "," + year + "," + currformatDoubleUS(endbal) );
                            
                        }      
                        
@@ -16106,7 +16042,7 @@ return myitem;
                   if (amt != 0) {
                       String[] c = new String[2];
                       c[0] = acct;
-                      c[1] = bsFormatDouble(-1 * amt);
+                      c[1] = currformatDoubleUS(-1 * amt);
                       accounts.add(i, c);
                        i++;
                   }
@@ -16181,7 +16117,7 @@ return myitem;
                    
                      if (j > 0) { 
                      st.executeUpdate("update acb_mstr set "
-                            + " acb_amt = " + "'" + bsFormatDouble(newamt).replace(defaultDecimalSeparator, '.') + "'"
+                            + " acb_amt = " + "'" + currformatDoubleUS(newamt).replace(defaultDecimalSeparator, '.') + "'"
                             + " where acb_acct = " + "'" + acct + "'" 
                             + " AND acb_cc = " + "'" + cc + "'" 
                              + " AND acb_site = " + "'" + site + "'" 
@@ -16195,7 +16131,7 @@ return myitem;
                                   + "'" + cc + "'" + "," 
                                   + "'" + per + "'" + "," 
                                   + "'" + year + "'" + "," 
-                                  + "'" + bsFormatDouble(newamt).replace(defaultDecimalSeparator, '.') + "'" + ","
+                                  + "'" + currformatDoubleUS(newamt).replace(defaultDecimalSeparator, '.') + "'" + ","
                                   + "'" + site + "'" 
                                   + ");");
                                   
@@ -16278,7 +16214,7 @@ return myitem;
                    
                      if (j > 0) {
                      st3.executeUpdate("update acb_mstr set "
-                            + " acb_amt = " + "'" + bsFormatDouble(newamt).replace(defaultDecimalSeparator, '.') + "'"
+                            + " acb_amt = " + "'" + currformatDoubleUS(newamt).replace(defaultDecimalSeparator, '.') + "'"
                             + " where acb_acct = " + "'" + res.getString("glt_acct") + "'" 
                             + " AND acb_cc = " + "'" + res.getString("glt_cc") + "'" 
                              + " AND acb_site = " + "'" + res.getString("glt_site") + "'" 
@@ -16292,7 +16228,7 @@ return myitem;
                                   + "'" + res.getString("glt_cc") + "'" + "," 
                                   + "'" + per + "'" + "," 
                                   + "'" + year + "'" + "," 
-                                  + "'" + bsFormatDouble(newamt).replace(defaultDecimalSeparator, '.') + "'" + ","
+                                  + "'" + currformatDoubleUS(newamt).replace(defaultDecimalSeparator, '.') + "'" + ","
                                   + "'" + site + "'" 
                                   + ");");
                                   
@@ -16457,8 +16393,8 @@ return myitem;
                         + " values ( " + "'" + vend + "'" + ","
                         + "'" + site + "'" + ","
                         + "'" + checknbr + "'" + ","
-                        + "'" + bsFormatDouble(sum).replace(defaultDecimalSeparator, '.') + "'" + ","
-                        + "'" + bsFormatDouble(sumbase).replace(defaultDecimalSeparator, '.') + "'" + ","   
+                        + "'" + currformatDoubleUS(sum).replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "'" + currformatDoubleUS(sumbase).replace(defaultDecimalSeparator, '.') + "'" + ","   
                         + "'" + curr + "'" + ","
                         + "'" + basecurr + "'" + ","        
                         + "'" + "C" + "'" + ","
@@ -16570,8 +16506,8 @@ return myitem;
                         + " values ( " + "'" + vend + "'" + ","
                         + "'" + site + "'" + ","
                         + "'" + checknbr + "'" + ","
-                        + "'" + bsFormatDouble(sum).replace(defaultDecimalSeparator, '.') + "'" + ","
-                        + "'" + bsFormatDouble(baseamt).replace(defaultDecimalSeparator, '.') + "'" + ","        
+                        + "'" + currformatDoubleUS(sum).replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "'" + currformatDoubleUS(baseamt).replace(defaultDecimalSeparator, '.') + "'" + ","        
                         + "'" + "E" + "'" + ","
                         + "'" + ref + "'" + ","
                         + "'" + checknbr + "'" + ","
@@ -16666,7 +16602,7 @@ return myitem;
                         + "'" + vend + "'" + ","
                         + "'" + voucher + "'" + ","
                         + "'" + invoice + "'" + ","
-                        + "'" + bsFormatDouble(amount).replace(defaultDecimalSeparator, '.') + "'" 
+                        + "'" + currformatDoubleUS(amount).replace(defaultDecimalSeparator, '.') + "'" 
                         + ")"
                         + ";");
        
@@ -16723,7 +16659,7 @@ return myitem;
                   
                    // now store record in arraylist
                 rec[0] = voucher;
-                rec[1] = bsFormatDouble(newamt);
+                rec[1] = currformatDoubleUS(newamt);
                 rec[2] = status;
                 mylist.add(rec);
                   
@@ -16913,13 +16849,13 @@ return myitem;
                         + "ar_terms, ar_tax_code, ar_bank, ar_site, ar_status) "
                         + " values ( " + "'" + cust + "'" + ","
                         + "'" + shipper + "'" + ","
-                        + "'" + bsFormatDouble(amt + taxamt).replace(defaultDecimalSeparator, '.') + "'" + ","
-                        + "'" + bsFormatDouble(baseamt + basetaxamt).replace(defaultDecimalSeparator, '.') + "'" + ","   
+                        + "'" + currformatDoubleUS(amt + taxamt) + "'" + ","
+                        + "'" + currformatDoubleUS(baseamt + basetaxamt) + "'" + ","   
                         + "'" + curr + "'" + ","   
                         + "'" + basecurr + "'" + ","        
-                        + "'" + bsFormatDouble(taxamt).replace(defaultDecimalSeparator, '.') + "'" + ","
-                        + "'" + bsFormatDouble(basetaxamt).replace(defaultDecimalSeparator, '.') + "'" + ","        
-                        + "'" + bsFormatDouble(amt + taxamt).replace(defaultDecimalSeparator, '.') + "'" + "," // open_amount.....should this be base or foreign ?  currently it's foreign
+                        + "'" + currformatDoubleUS(taxamt) + "'" + ","
+                        + "'" + currformatDoubleUS(basetaxamt) + "'" + ","        
+                        + "'" + currformatDoubleUS(amt + taxamt) + "'" + "," // open_amount.....should this be base or foreign ?  currently it's foreign
                         + "'" + "I" + "'" + ","
                         + "'" + ref + "'" + ","
                         + "'" + rmks + "'" + ","
@@ -16964,13 +16900,13 @@ return myitem;
                         + "ar_terms, ar_tax_code, ar_bank, ar_site, ar_status) "
                         + " values ( " + "'" + cust + "'" + ","
                         + "'" + arnbr + "'" + ","
-                        + "'" + bsFormatDouble(amt + taxamt).replace(defaultDecimalSeparator, '.') + "'" + ","
-                        + "'" + bsFormatDouble(baseamt + basetaxamt).replace(defaultDecimalSeparator, '.') + "'" + ","   
+                        + "'" + currformatDoubleUS(amt + taxamt) + "'" + ","
+                        + "'" + currformatDoubleUS(baseamt + basetaxamt) + "'" + ","   
                         + "'" + curr + "'" + ","   
                         + "'" + basecurr + "'" + ","        
-                        + "'" + bsFormatDouble(taxamt).replace(defaultDecimalSeparator, '.') + "'" + ","
-                        + "'" + bsFormatDouble(basetaxamt).replace(defaultDecimalSeparator, '.') + "'" + ","        
-                        + "'" + bsFormatDouble(amt + taxamt).replace(defaultDecimalSeparator, '.') + "'" + "," // open_amount.....should this be base or foreign ?  currently it's foreign
+                        + "'" + currformatDoubleUS(taxamt) + "'" + ","
+                        + "'" + currformatDoubleUS(basetaxamt) + "'" + ","        
+                        + "'" + currformatDoubleUS(amt + taxamt) + "'" + "," // open_amount.....should this be base or foreign ?  currently it's foreign
                         + "'" + "P" + "'" + ","
                         + "'" + "cash" + "'" + ","
                         + "'" + rmks + "'" + ","
@@ -16995,10 +16931,10 @@ return myitem;
                             + "'" + shipper + "'" + ","
                             + "'" + "1" + "'" + ","
                             + "'" + dfdate.format(effdate) + "'" + ","
-                            + "'" + bsFormatDouble(amt).replace(defaultDecimalSeparator, '.') + "'"  + ","
-                            + "'" + bsFormatDouble(taxamt).replace(defaultDecimalSeparator, '.') + "'"  + ","
-                            + "'" + bsFormatDouble(baseamt).replace(defaultDecimalSeparator, '.') + "'"  + ","                
-                            + "'" + bsFormatDouble(basetaxamt).replace(defaultDecimalSeparator, '.') + "'" + "," 
+                            + "'" + currformatDoubleUS(amt) + "'"  + ","
+                            + "'" + currformatDoubleUS(taxamt) + "'"  + ","
+                            + "'" + currformatDoubleUS(baseamt) + "'"  + ","                
+                            + "'" + currformatDoubleUS(basetaxamt) + "'" + "," 
                             + "'" + curr + "'"  + ","
                             + "'" + basecurr + "'" + ","
                             + "'" + acct + "'" + ","
@@ -17144,13 +17080,13 @@ return myitem;
                         + "ar_terms, ar_tax_code, ar_bank, ar_site, ar_status) "
                         + " values ( " + "'" + cust + "'" + ","
                         + "'" + shipper + "'" + ","
-                        + "'" + bsFormatDouble(amt + taxamt).replace(defaultDecimalSeparator, '.') + "'" + ","
-                        + "'" + bsFormatDouble(baseamt + basetaxamt).replace(defaultDecimalSeparator, '.') + "'" + ","   
+                        + "'" + currformatDoubleUS(amt + taxamt) + "'" + ","
+                        + "'" + currformatDoubleUS(baseamt + basetaxamt) + "'" + ","   
                         + "'" + curr + "'" + ","   
                         + "'" + basecurr + "'" + ","        
-                        + "'" + bsFormatDouble(taxamt).replace(defaultDecimalSeparator, '.') + "'" + ","
-                        + "'" + bsFormatDouble(basetaxamt).replace(defaultDecimalSeparator, '.') + "'" + ","        
-                        + "'" + bsFormatDouble(amt + taxamt).replace(defaultDecimalSeparator, '.') + "'" + "," // open_amount.....should this be base or foreign ?  currently it's foreign
+                        + "'" + currformatDoubleUS(taxamt) + "'" + ","
+                        + "'" + currformatDoubleUS(basetaxamt) + "'" + ","        
+                        + "'" + currformatDoubleUS(amt + taxamt) + "'" + "," // open_amount.....should this be base or foreign ?  currently it's foreign
                         + "'" + "I" + "'" + ","
                         + "'" + ref + "'" + ","
                         + "'" + rmks + "'" + ","
@@ -17177,7 +17113,7 @@ return myitem;
                                 + " values ( " + "'" + shipper + "'" + ","
                                 + "'" + elements[0] + "'" + ","
                                 + "'" + elements[2] + "'" + ","
-                                + "'" + bsFormatDouble(amt * ( bsParseDouble(elements[1]) / 100 )).replace(defaultDecimalSeparator, '.') + "'" + ","   // amount is currently 'foreign' ...not base
+                                + "'" + currformatDoubleUS(amt * ( bsParseDouble(elements[1]) / 100 )) + "'" + ","   // amount is currently 'foreign' ...not base
                                 + "'" + elements[1] + "'" 
                                 + ")"
                                 + ";");
@@ -17279,11 +17215,11 @@ return myitem;
                         + "ar_terms, ar_bank, ar_site, ar_status, ar_reverse ) "
                         + " values ( " + "'" + cust + "'" + ","
                         + "'" + shipper + "'" + ","
-                        + "'" + bsFormatDouble(amt).replace(defaultDecimalSeparator, '.') + "'" + ","
-                        + "'" + bsFormatDouble(baseamt).replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "'" + currformatDoubleUS(amt) + "'" + ","
+                        + "'" + currformatDoubleUS(baseamt) + "'" + ","
                         + "'" + curr + "'" + ","
                          + "'" + basecurr + "'" + ","                 
-                        + "'" + bsFormatDouble(amt).replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "'" + currformatDoubleUS(amt) + "'" + ","
                         + "'" + "I" + "'" + ","
                         + "'" + ref + "'" + ","
                         + "'" + rmks + "'" + ","
@@ -17885,7 +17821,7 @@ return myitem;
                                      "'" + s[1] + "'" + "," +
                                      "'" + s[2] + "'" + "," +
                                      "'" + myamttype + "'" + "," +
-                                     "'" + bsFormatDouble(myamt).replace(defaultDecimalSeparator, '.') + "'" + 
+                                     "'" + currformatDoubleUS(myamt) + "'" + 
                                      ") ;");
                      }
                      // now insert matltax if any for summary purposes
@@ -17895,7 +17831,7 @@ return myitem;
                                      "'" + "MatlTax" + "'" + "," +
                                      "'" + "tax" + "'" + "," +
                                      "'" + "amount" + "'" + "," +
-                                     "'" + bsFormatDouble(matltax).replace(defaultDecimalSeparator, '.') + "'" + 
+                                     "'" + currformatDoubleUS(matltax) + "'" + 
                                      ") ;");
                  }
                         
@@ -19639,8 +19575,8 @@ MainFrame.bslog(e);
                         + " values ( " + "'" + vend + "'" + ","
                               + "'" + site + "'" + ","
                         + "'" + nbr + "'" + ","
-                        + "'" + bsFormatDouble(amt).replace(defaultDecimalSeparator, '.') + "'" + ","
-                        + "'" + bsFormatDouble(baseamt).replace(defaultDecimalSeparator, '.') + "'" + ","        
+                        + "'" + currformatDoubleUS(amt) + "'" + ","
+                        + "'" + currformatDoubleUS(baseamt) + "'" + ","        
                         + "'" + "V" + "'" + ","
                         + "'" + invoice + "'" + ","
                         + "'" + remarks + "'" + ","

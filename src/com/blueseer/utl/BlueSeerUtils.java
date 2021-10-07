@@ -116,6 +116,7 @@ public class BlueSeerUtils {
     public static String updateRecordSuccess = getMessageTag(1008);
     public static String deleteRecordSuccess = getMessageTag(1009);
     
+    public static String noRecordFound = getMessageTag(1001);
     public static String getRecordError = getMessageTag(1010);
     public static String addRecordError = getMessageTag(1011);
     public static String updateRecordError = getMessageTag(1012);
@@ -610,6 +611,31 @@ public class BlueSeerUtils {
         }
         return x;
     }
+    
+    public static String currformatUS(String invalue) {
+        String x = "";
+        String pattern = "#0.00###";
+       // DecimalFormat df = new DecimalFormat("#0.00###", new DecimalFormatSymbols(Locale.getDefault())); 
+        DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.US);
+        df.applyPattern(pattern);
+        try {   
+            x = df.format(df.parse(invalue));
+        } catch (ParseException ex) {
+            bslog(ex);
+        }
+        return x;
+    }
+    
+    public static String currformatDoubleUS(double invalue) {
+        String x = "";
+        String pattern = "#0.00###";
+       // DecimalFormat df = new DecimalFormat("#0.00###", new DecimalFormatSymbols(Locale.getDefault())); 
+        DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.US);
+        df.applyPattern(pattern);
+        x = df.format(invalue);
+        return x;
+    }
+    
     
     public static String priceformat(String invalue) {
         String x = "";

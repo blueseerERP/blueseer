@@ -575,6 +575,9 @@
             <Component class="javax.swing.JTextField" name="tbgroup">
             </Component>
             <Component class="javax.swing.JTextField" name="tbcreditlimit">
+              <Events>
+                <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="tbcreditlimitFocusLost"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel14">
               <Properties>

@@ -26,23 +26,23 @@ SOFTWARE.
 package com.blueseer.ctr;
 
 import bsmf.MainFrame;
-import static bsmf.MainFrame.db;
-import static bsmf.MainFrame.defaultDecimalSeparator;
-import static bsmf.MainFrame.pass;
-import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
-import static bsmf.MainFrame.url;
-import static bsmf.MainFrame.user;
-import static com.blueseer.ctr.cusData.addCMCDet;
+import static com.blueseer.ctr.cusData.addCMCDetSrv;
+import static com.blueseer.ctr.cusData.addCMSDetSrv;
 import static com.blueseer.ctr.cusData.addCustomerTransactionSrv;
 import com.blueseer.ctr.cusData.cm_mstr;
 import com.blueseer.ctr.cusData.cmc_det;
 import com.blueseer.ctr.cusData.cms_det;
-import static com.blueseer.ctr.cusData.deleteCMCDet;
-import com.blueseer.inv.invData;
+import static com.blueseer.ctr.cusData.deleteCMCDetSrv;
+import static com.blueseer.ctr.cusData.deleteCMSDetSrv;
+import static com.blueseer.ctr.cusData.deleteCustMstrSrv;
+import static com.blueseer.ctr.cusData.getCMCDetSrv;
+import static com.blueseer.ctr.cusData.getCMSDetSrv;
+import static com.blueseer.ctr.cusData.getCustMstrSrv;
+import static com.blueseer.ctr.cusData.updateCMCDetSrv;
+import static com.blueseer.ctr.cusData.updateCMSDetSrv;
+import static com.blueseer.ctr.cusData.updateCustMstrSrv;
 import com.blueseer.utl.BlueSeerUtils;
-import com.blueseer.ord.OrderMaint;
-import static com.blueseer.utl.BlueSeerUtils.bsformat;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
@@ -57,7 +57,7 @@ import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import static com.blueseer.utl.BlueSeerUtils.lurb2;
 import static com.blueseer.utl.BlueSeerUtils.lurb3;
 import com.blueseer.utl.DTData;
-import com.blueseer.utl.IBlueSeer;
+import com.blueseer.utl.IBlueSeerT;
 import com.blueseer.utl.OVData;
 import java.awt.Color;
 import java.awt.Component;
@@ -65,23 +65,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -95,7 +85,7 @@ import javax.swing.SwingWorker;
  *
  * @author vaughnte
  */
-public class CustMaint extends javax.swing.JPanel implements IBlueSeer {
+public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
 
     // global variable declarations
      boolean editmode = false;
@@ -357,9 +347,9 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeer {
         
     }
     
-    public String[] setAction(int i) {
+    public void setAction(String[] x) {
         String[] m = new String[2];
-        if (i > 0) {
+        if (x[0].equals("0")) {
             m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
                    setPanelComponentState(this, true);
                    btadd.setEnabled(false);
@@ -369,13 +359,12 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeer {
            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
                    tbkey.setForeground(Color.red); 
         }
-        return m;
     }
     
     public String[] addRecord(String[] x) {
         String[] m = new String[2];
         if (cbshipto.isSelected()) {
-        m = addCustomerTransactionSrv(createRecord(), contacttable, createCMSDet());
+        m = addCustomerTransactionSrv(createRecord(), contacttable, createCMSDet(true));
         } else { 
         m = addCustomerTransactionSrv(createRecord(), contacttable, null);    
         }   
@@ -385,99 +374,18 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeer {
     
     public String[] updateRecord(String[] x) {
         String[] m = new String[2];
-           
-           try {
-           Class.forName(bsmf.MainFrame.driver).newInstance();
-           bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-           Statement st = bsmf.MainFrame.con.createStatement();
-           ResultSet res = null;
-            try {
-               st.executeUpdate("update cm_mstr set " + 
-                       " cm_name = " + "'" + tbname.getText().replace("'", "") + "'" + "," +
-                       " cm_line1 = " + "'" + tbline1.getText().replace("'", "") + "'" + "," +
-                       " cm_line2 = " + "'" + tbline2.getText().replace("'", "") + "'" + "," +
-                       " cm_line3 = " + "'" + tbline3.getText().replace("'", "") + "'" + "," +
-                       " cm_city = " + "'" + tbcity.getText().replace("'", "") + "'" + "," +
-                       " cm_state = " + "'" + ddstate.getSelectedItem().toString() + "'" + "," +
-                       " cm_zip = " + "'" + tbzip.getText().replace("'", "") + "'" + "," +
-                       " cm_country = " + "'" + ddcountry.getSelectedItem().toString() + "'" + "," +
-                       " cm_datemod = " + "'" + tbdatemod.getText() + "'" + "," +
-                       " cm_usermod = " + "'" + bsmf.MainFrame.userid + "'" + "," +
-                       " cm_group = "  + "'" + tbgroup.getText() + "'" + "," +
-                       " cm_market = " + "'" + tbmarket.getText() + "'" + "," +
-                       " cm_creditlimit = " + "'" + tbcreditlimit.getText() + "'" + "," +
-                       " cm_onhold = " + "'" + BlueSeerUtils.boolToInt(cbonhold.isSelected()) + "'" + "," +
-                       " cm_carrier = " + "'" + ddcarrier.getSelectedItem().toString() + "'" + "," +
-                       " cm_terms = " + "'" + ddterms.getSelectedItem().toString() + "'" + "," +
-                       " cm_freight_type = " + "'" + ddfreightterms.getSelectedItem().toString() + "'" + "," +
-                       " cm_price_code = " + "'" + tbpricecode.getText() + "'" + "," +
-                       " cm_disc_code = " + "'" + tbdisccode.getText() + "'" + "," +
-                       " cm_tax_code = " + "'" + ddtax.getSelectedItem().toString() + "'" + "," +
-                       " cm_salesperson = " + "'" + tbsalesrep.getText().replace("'", "") + "'" + "," +
-                       " cm_ar_acct = " + "'" + ddaccount.getSelectedItem().toString() + "'" + "," +
-                       " cm_ar_cc = " + "'" + ddcc.getSelectedItem().toString() + "'" + "," +
-                       " cm_bank = " + "'" + ddbank.getSelectedItem().toString() + "'" + "," +
-                        " cm_curr = " + "'" + ddcurr.getSelectedItem().toString() + "'" + "," +        
-                       " cm_label = " + "'" + ddlabel.getSelectedItem().toString() + "'" + "," +
-                       " cm_ps_jasper = " + "'" + tbshpformat.getText() + "'" + "," +
-                       " cm_iv_jasper = " + "'" + tbinvformat.getText() + "'" + "," +
-                       " cm_remarks = " + "'" + tbremarks.getText().replace("'", "") + "'" + "," +
-                       " cm_phone = " + "'" + tbmainphone.getText().replace("'", "") + "'" + "," +
-                       " cm_email = " + "'" + tbmainemail.getText().replace("'", "") + "'" +         
-                       " where " + 
-                        " cm_code = " + "'" + x[0] + "'" +  ";");
-
-                              
-               m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};    
-              
-             } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};   
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
-         }
-        } catch (Exception e) {
-            m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1020, Thread.currentThread().getStackTrace()[1].getMethodName())};
-            MainFrame.bslog(e);
-        }
-     return m;
+        m = updateCustMstrSrv(createRecord());
+        initvars(null);
+        return m;   
      }
      
     public String[] deleteRecord(String[] x) {
         String[] m = new String[2];
         boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
-        
         if (proceed) {
-        try {
-
-           Class.forName(bsmf.MainFrame.driver).newInstance();
-           bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-           Statement st = bsmf.MainFrame.con.createStatement();
-           ResultSet res = null;
-            try {
-                
-              
-                   int i = st.executeUpdate("delete from cm_mstr where cm_code = " + "'" + tbkey.getText() + "'" + ";");
-                   st.executeUpdate("delete from cpr_mstr where cpr_cust = " + "'" + tbkey.getText() + "'" + ";");
-                   st.executeUpdate("delete from cup_mstr where cup_cust = " + "'" + tbkey.getText() + "'" + ";");
-                   st.executeUpdate("delete from cms_det where cms_code = " + "'" + tbkey.getText() + "'" + ";");
-                   st.executeUpdate("delete from cmc_det where cmc_code = " + "'" + tbkey.getText() + "'" + ";");
-                    if (i > 0) {
-                      m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
-                    }
-                 } catch (SQLException s) {
-                            MainFrame.bslog(s);
-                        m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
-                 } finally {
-                   if (res != null) res.close();
-                   if (st != null) st.close();
-                   if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
-                 }
-                } catch (Exception e) {
-                    MainFrame.bslog(e);
-                }
+        m = deleteCustMstrSrv(createRecord());
+        initvars(null);
+        return m;   
         } else {
            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled};  
         }
@@ -485,84 +393,45 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeer {
      }
     
     public String[] getRecord(String[] x) {
-        String[] m = new String[2];
+        cm_mstr k = getCustMstrSrv(x);
+        tbkey.setText(k.cm_code());
+        tbname.setText(k.cm_name());
+        tbline1.setText(k.cm_line1());
+        tbline2.setText(k.cm_line2());
+        tbline3.setText(k.cm_line3());
+        tbcity.setText(k.cm_city());
+        ddstate.setSelectedItem(k.cm_state());
+        ddcountry.setSelectedItem(k.cm_country());
+        tbzip.setText(k.cm_zip());
+        tbdateadded.setText(k.cm_dateadd());
+        tbdatemod.setText(k.cm_datemod());
+        tbgroup.setText(k.cm_group());
+        tbmarket.setText(k.cm_market());
+        tbcreditlimit.setText(k.cm_creditlimit());
+        cbonhold.setSelected(BlueSeerUtils.ConvertStringToBool(k.cm_onhold()));
+        ddcarrier.setSelectedItem(k.cm_carrier());
+        ddbank.setSelectedItem(k.cm_bank());
+        ddcurr.setSelectedItem(k.cm_curr());
+        ddlabel.setSelectedItem(k.cm_label());
+        tbinvformat.setText(k.cm_iv_jasper());
+        tbshpformat.setText(k.cm_ps_jasper());
+        ddfreightterms.setSelectedItem(k.cm_freight_type());
+        ddterms.setSelectedItem(k.cm_terms());
+        tbpricecode.setText(k.cm_price_code());
+        tbdisccode.setText(k.cm_disc_code());
+        ddtax.setSelectedItem(k.cm_tax_code());
+        tbsalesrep.setText(k.cm_salesperson());
+        ddaccount.setSelectedItem(k.cm_ar_acct());
+        ddcc.setSelectedItem(k.cm_ar_cc());
+        tbremarks.setText(k.cm_remarks());
+        tbmainphone.setText(k.cm_phone());
+        tbmainemail.setText(k.cm_email());
         contactmodel.setRowCount(0);
         clearShipTo();
         clearContacts();
-        int i = 0;
-         
-        try {
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            Statement st = bsmf.MainFrame.con.createStatement();
-            ResultSet res = null;
-            try {
-                res = st.executeQuery("select * from cm_mstr where cm_code = " + "'" + x[0] + "'"  + ";");
-                while (res.next()) {
-                 i++;   
-                tbkey.setText(res.getString("cm_code"));
-                tbname.setText(res.getString("cm_name"));
-                tbline1.setText(res.getString("cm_line1"));
-                tbline2.setText(res.getString("cm_line2"));
-                tbline3.setText(res.getString("cm_line3"));
-                tbcity.setText(res.getString("cm_city"));
-                ddstate.setSelectedItem(res.getString("cm_state"));
-                ddcountry.setSelectedItem(res.getString("cm_country"));
-                if (res.getString("cm_country").equals("US")) {
-                    ddcountry.setSelectedItem("USA");
-                } 
-                if (res.getString("cm_country").equals("United States")) {
-                    ddcountry.setSelectedItem("USA");
-                } 
-                 if (res.getString("cm_country").equals("CA")) {
-                    ddcountry.setSelectedItem("Canada");
-                } 
-                tbzip.setText(res.getString("cm_zip"));
-                
-                tbdateadded.setText(res.getString("cm_dateadd"));
-                tbdatemod.setText(res.getString("cm_datemod"));
-                tbgroup.setText(res.getString("cm_group"));
-                tbmarket.setText(res.getString("cm_market"));
-                tbcreditlimit.setText(res.getString("cm_creditlimit"));
-                //if (res.getString("cm_onhold") != null) {
-                cbonhold.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("cm_onhold")));
-               // }
-                ddcarrier.setSelectedItem(res.getString("cm_carrier"));
-                ddbank.setSelectedItem(res.getString("cm_bank"));
-                ddcurr.setSelectedItem(res.getString("cm_curr"));
-                ddlabel.setSelectedItem(res.getString("cm_label"));
-                tbinvformat.setText(res.getString("cm_iv_jasper"));
-                tbshpformat.setText(res.getString("cm_ps_jasper"));
-                ddfreightterms.setSelectedItem(res.getString("cm_freight_type"));
-                ddterms.setSelectedItem(res.getString("cm_terms"));
-                
-                tbpricecode.setText(res.getString("cm_price_code"));
-                tbdisccode.setText(res.getString("cm_disc_code"));
-                ddtax.setSelectedItem(res.getString("cm_tax_code"));
-                tbsalesrep.setText(res.getString("cm_salesperson"));
-                ddaccount.setSelectedItem(res.getString("cm_ar_acct"));
-                ddcc.setSelectedItem(res.getString("cm_ar_cc"));
-                tbremarks.setText(res.getString("cm_remarks"));
-                tbmainphone.setText(res.getString("cm_phone"));
-                tbmainemail.setText(res.getString("cm_email"));
-                }
-                
-                // set Action if Record found (i > 0)
-                m = setAction(i);
-            
-         } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};  
-         } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
-         }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-             m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1020, Thread.currentThread().getStackTrace()[1].getMethodName())};   
-        } 
-     return m;
+        refreshContactTable(x[0]);
+        setAction(k.m());
+        return k.m();
     }
      
     public cm_mstr createRecord() { 
@@ -604,8 +473,24 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeer {
         return x;
     }
     
-    public cms_det createCMSDet() { 
-        cusData.cms_det x = new cusData.cms_det(null, 
+    public cms_det createCMSDet(boolean sameAs) { 
+        // added sameAs boolean to distinguish intial customer creation from post customer creation
+        cusData.cms_det x = null;
+        if (sameAs) {
+        x = new cusData.cms_det(null, 
+                tbkey.getText(),
+                tbkey.getText(),
+                tbname.getText(),
+                tbline1.getText(),
+                tbline2.getText(),
+                tbline3.getText(),
+                tbcity.getText(),
+                ddstate.getSelectedItem().toString(),
+                tbzip.getText(),
+                ddcountry.getSelectedItem().toString()
+                );
+        } else {
+        x = new cusData.cms_det(null, 
                 tbkey.getText(),
                 tbshipcode.getText(),
                 tbshipname.getText(),
@@ -617,9 +502,22 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeer {
                 tbshipzip.getText(),
                 ddshipcountry.getSelectedItem().toString()
                 );
+        }
         return x;
     }
     
+    public cmc_det createCMCDet(String id) {
+        cusData.cmc_det x = new cusData.cmc_det(null, 
+                id,
+                tbkey.getText(),
+                ddcontacttype.getSelectedItem().toString(),
+                tbcontactname.getText(),
+                tbphone.getText(),
+                tbfax.getText(),
+                tbemail.getText()
+                );
+        return x;
+    }
     
     
     
@@ -655,13 +553,6 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeer {
 
           }
 
-          if ( ! tbcreditlimit.getText().toString().matches("\\d+") ) {
-              r = false;
-              bsmf.MainFrame.show(getMessageTag(1033));
-              tbcreditlimit.requestFocus();
-              return r;
-
-         }
               return r;
      }
      
@@ -711,7 +602,7 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeer {
                 if ( column == 0) {
                     ludialog.dispose();
                     if (option.equals("shipto")) {
-                        getShipTo(new String[]{target.getValueAt(row,2).toString(), target.getValueAt(row,1).toString()});
+                        getShipTo(new String[]{target.getValueAt(row,1).toString(), target.getValueAt(row,2).toString()});
                     } else {
                     initvars(new String[]{target.getValueAt(row,1).toString(), target.getValueAt(row,2).toString()});
                     }
@@ -731,213 +622,58 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeer {
 
     
     // additional functions 
-     public void overrideComponentState() {
+    public void overrideComponentState() {
          tbdateadded.setEditable(false);
          tbdatemod.setEditable(false);
     }
-    
-    
-    public void addShipTo(String cust, String ship) {
-        try {
-
-           Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-          
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                boolean proceed = true;
-                int i = 0;
-
-                
-                       
-                
-                if (proceed) {
-                    st.executeUpdate("insert into cms_det "
-                        + "(cms_code, cms_shipto, cms_name, cms_line1, cms_line2, "
-                        + "cms_line3, cms_city, cms_state, cms_zip, "
-                        + "cms_country "
-                        + " ) "
-                        + " values ( " + "'" + cust + "'" + ","
-                        + "'" + ship + "'" + ","
-                        + "'" + tbname.getText().replace("'", "") + "'" + ","
-                        + "'" + tbline1.getText().replace("'", "") + "'" + ","
-                        + "'" + tbline2.getText().replace("'", "") + "'" + ","
-                        + "'" + tbline3.getText().replace("'", "") + "'" + ","
-                        + "'" + tbcity.getText() + "'" + ","
-                        + "'" + ddstate.getSelectedItem() + "'" + ","
-                        + "'" + tbzip.getText() + "'" + ","
-                        + "'" + ddcountry.getSelectedItem() + "'"                           
-                        + ")"
-                        + ";");
         
-                    if (jTabbedPane1.getSelectedIndex() == 1)
-                    bsmf.MainFrame.show(getMessageTag(1007));                  
-                  
-                    
-                } // if proceed
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
+    public void addShipTo() {
+        String[] m = addCMSDetSrv(createCMSDet(false));
+        bsmf.MainFrame.show(m[1]);
+    }
+    
+    public void updateShipTo() {
+        String[] m = updateCMSDetSrv(createCMSDet(false));
+        bsmf.MainFrame.show(m[1]);
+    }
+    
+    public void deleteShipTo() {
+        String[] m = deleteCMSDetSrv(createCMSDet(false));
+        bsmf.MainFrame.show(m[1]);
+        
     }
     
     public void addContact(String cust) {
-        try {
-
-           Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-          
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                boolean proceed = true;
-                int i = 0;
-
-                if (proceed) {
-                    st.executeUpdate("insert into cmc_det "
-                        + "(cmc_code, cmc_type, cmc_name, cmc_phone, cmc_fax, "
-                            + "cmc_email ) "
-                            + " values ( " + "'" + cust + "'" + ","
-                            + "'" + ddcontacttype.getSelectedItem().toString() + "'" + ","
-                            + "'" + tbcontactname.getText().replace("'", "") + "'" + ","
-                            + "'" + tbphone.getText().replace("'", "") + "'" + ","
-                            + "'" + tbfax.getText().replace("'", "") + "'" + ","
-                            + "'" + tbemail.getText().replace("'", "") + "'"                           
-                            + ")"
-                            + ";");
-        
-                   
-                    bsmf.MainFrame.show(getMessageTag(1007));
-                    
-                  
-                    
-                } // if proceed
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
+        String[] m = addCMCDetSrv(createCMCDet(""));
+        bsmf.MainFrame.show(m[1]);
     }
     
     public void editContact(String cust, String z) {
-        try {
-
-           Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-          
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                boolean proceed = true;
-                int i = 0;
-
-                if (proceed) {
-                    st.executeUpdate("update cmc_det set "
-                            + "cmc_type = " + "'" + ddcontacttype.getSelectedItem().toString() + "'" + ","
-                            + "cmc_name = " + "'" + tbcontactname.getText().replace("'", "") + "'" + ","
-                            + "cmc_phone = " + "'" + tbphone.getText().replace("'", "") + "'" + ","
-                            + "cmc_fax = " +  "'" + tbfax.getText().replace("'", "") + "'" + ","
-                            + "cmc_email = " + "'" + tbemail.getText().replace("'", "") + "'"                           
-                            + " where cmc_code = " + "'" + cust + "'"
-                            + " and cmc_id = " + "'" + z + "'" 
-                            + ";");
-        
-                   
-                    bsmf.MainFrame.show(getMessageTag(1008));
-                    
-                  
-                    
-                } // if proceed
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
+        String[] m = updateCMCDetSrv(createCMCDet(z));
+        bsmf.MainFrame.show(m[1]);
     }
     
     public void deleteContact(String cust, String z) {
-        try {
-
-           Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-          
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                boolean proceed = true;
-                int i = 0;
-
-                if (proceed) {
-                    st.executeUpdate("delete from cmc_det where cmc_id = " + "'" + z + "'"
-                            + " AND cmc_code = " + "'" + cust + "'"
-                            + ";");
-                    bsmf.MainFrame.show(getMessageTag(1009));
-                } // if proceed
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
+       String[] m = deleteCMCDetSrv(createCMCDet(z));
+        bsmf.MainFrame.show(m[1]);
     }
     
     public String[] getShipTo(String[] x) {
         String[] m = new String[2];
-        int i = 0;
-        try {
-            
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-              
-                res = st.executeQuery("select * from cms_det where cms_code = " + "'" + x[0] + "'"  + 
-                        " AND cms_shipto = " + "'" + x[1] + "'" + ";");
-                while (res.next()) {
-                    i++;
-                tbshipcode.setText(res.getString("cms_shipto"));
-                tbshipname.setText(res.getString("cms_name"));
-                tbshipline1.setText(res.getString("cms_line1"));
-                tbshipline2.setText(res.getString("cms_line2"));
-                tbshipline3.setText(res.getString("cms_line3"));
-                tbshipcity.setText(res.getString("cms_city"));
-                ddshipstate.setSelectedItem(res.getString("cms_state"));
-                ddshipcountry.setSelectedItem(res.getString("cms_country"));
-                if (res.getString("cms_country").equals("US")) {
-                    ddshipcountry.setSelectedItem("USA");
-                } 
-                if (res.getString("cms_country").equals("United States")) {
-                    ddshipcountry.setSelectedItem("USA");
-                } 
-                 if (res.getString("cms_country").equals("CA")) {
-                    ddshipcountry.setSelectedItem("Canada");
-                } 
-                tbshipzip.setText(res.getString("cms_zip"));
-              
-                }
+        cms_det k = getCMSDetSrv(x[0], x[1]);
+        tbshipcode.setText(k.cms_shipto());
+        tbshipname.setText(k.cms_code());
+        tbshipline1.setText(k.cms_line1());
+        tbshipline2.setText(k.cms_line2());
+        tbshipline3.setText(k.cms_line3());
+        tbshipcity.setText(k.cms_city());
+        ddshipstate.setSelectedItem(k.cms_state());
+        ddshipcountry.setSelectedItem(k.cms_country());
+        if (k.m()[0].equals("0")) {
             btshipedit.setEnabled(true);
             btshipnew.setEnabled(true);
             btshipadd.setEnabled(false);
-           
-           // set Action if Record found (i > 0)
-           if (i > 0) {
-            btshipedit.setEnabled(true);
-            btshipnew.setEnabled(true);
-            btshipadd.setEnabled(false);
+            tbshipcode.setEditable(false);
             m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};;
            } else {
             btshipedit.setEnabled(false);
@@ -945,47 +681,22 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeer {
             btshipadd.setEnabled(false);   
             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};
            }
-                         
-           jTabbedPane1.setSelectedIndex(1);
-                    
-         } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};   
-        }
      return m;
         
     }
-    
+        
     public void refreshContactTable(String cust) {
       contactmodel.setRowCount(0);
-       try {
-            
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                res = st.executeQuery("select * from cmc_det where cmc_code = " + "'" + cust + "'" + ";");
-                while (res.next()) {
-                    contactmodel.addRow(new Object[]{res.getString("cmc_id"), res.getString("cmc_type"), res.getString("cmc_name"), res.getString("cmc_phone"), res.getString("cmc_fax"), res.getString("cmc_email") }); 
-                }
-                contacttable.setModel(contactmodel);
-                
-                 } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-       
-     }
+      ArrayList<cmc_det> k = getCMCDetSrv(tbkey.getText());
+      for (cmc_det cmc : k) {
+          contactmodel.addRow(new Object[]{cmc.cmc_id(), 
+              cmc.cmc_type(), 
+              cmc.cmc_name(), 
+              cmc.cmc_phone(), 
+              cmc.cmc_fax(), 
+              cmc.cmc_email() }); 
+      }
+    }
       
     public void clearShipTo() {
          tbshipname.setText("");
@@ -1497,6 +1208,12 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeer {
 
         jLabel11.setText("LastMod");
         jLabel11.setName("lbllastmod"); // NOI18N
+
+        tbcreditlimit.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbcreditlimitFocusLost(evt);
+            }
+        });
 
         jLabel14.setText("CreditLimit");
         jLabel14.setName("lblcreditlimit"); // NOI18N
@@ -2074,44 +1791,13 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeer {
                   bsmf.MainFrame.show(getMessageTag(1014));
                   return;
               } 
-        addShipTo(tbkey.getText(),tbshipcode.getText());
+        addShipTo();
     }//GEN-LAST:event_btshipaddActionPerformed
 
     private void btshipeditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btshipeditActionPerformed
-       
-        java.util.Date now = new java.util.Date();
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-      
-           
-           try {
-             Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-              
-               st.executeUpdate("update cms_det set " + 
-                       " cms_name = " + "'" + tbshipname.getText() + "'" + "," +
-                       " cms_line1 = " + "'" + tbshipline1.getText() + "'" + "," +
-                       " cms_line2 = " + "'" + tbshipline2.getText() + "'" + "," +
-                       " cms_line3 = " + "'" + tbshipline3.getText() + "'" + "," +
-                       " cms_city = " + "'" + tbshipcity.getText() + "'" + "," +
-                       " cms_state = " + "'" + ddshipstate.getSelectedItem().toString() + "'" + "," +
-                       " cms_zip = " + "'" + tbshipzip.getText() + "'" + "," +
-                       " cms_country = " + "'" + ddshipcountry.getSelectedItem().toString() + "'" + 
-                       " where cms_code = " + "'" + tbkey.getText() + "'" +
-                       " AND cms_shipto = " + "'" + tbshipcode.getText() + "'" +
-                       ";");
-               
-               bsmf.MainFrame.show(getMessageTag(1008));
-                          
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            }
-              } catch (Exception e) {
-            MainFrame.bslog(e);
-        }   
+       if (OVData.isValidCustShipTo(tbkey.getText(),tbshipcode.getText())) {
+           updateShipTo();
+       } 
     }//GEN-LAST:event_btshipeditActionPerformed
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
@@ -2128,13 +1814,14 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeer {
     private void btshipnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btshipnewActionPerformed
         clearShipTo();
          if (OVData.isAutoCust()) {
-        tbshipcode.setText(String.valueOf(OVData.getNextNbr("shipto")));
-        tbshipcode.setEnabled(false);
+              tbshipcode.setText(String.valueOf(OVData.getNextNbr("shipto")));
+              tbshipcode.setEditable(false);
               btshipadd.setEnabled(true);
               btshipedit.setEnabled(false);
         } else {
+              tbshipcode.setEditable(true);
               tbshipcode.requestFocus();
-              btshipadd.setEnabled(false);
+              btshipadd.setEnabled(true);
               btshipedit.setEnabled(false);
               
          }
@@ -2186,6 +1873,23 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeer {
     private void btlookupShipToActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btlookupShipToActionPerformed
         lookUpFrame("shipto");
     }//GEN-LAST:event_btlookupShipToActionPerformed
+
+    private void tbcreditlimitFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbcreditlimitFocusLost
+         if (! tbcreditlimit.getText().isEmpty()) {
+        String x = BlueSeerUtils.bsformat("", tbcreditlimit.getText(), "0");
+            if (x.equals("error")) {
+                tbcreditlimit.setText("");
+                tbcreditlimit.setBackground(Color.yellow);
+                bsmf.MainFrame.show("Non-Numeric character in textbox");
+                tbcreditlimit.requestFocus();
+            } else {
+                tbcreditlimit.setText(x);
+                tbcreditlimit.setBackground(Color.white);
+            }
+        } else {
+             tbcreditlimit.setBackground(Color.white);
+         }
+    }//GEN-LAST:event_tbcreditlimitFocusLost
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
