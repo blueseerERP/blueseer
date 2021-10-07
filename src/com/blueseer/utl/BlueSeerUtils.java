@@ -612,6 +612,17 @@ public class BlueSeerUtils {
         return x;
     }
     
+    public static String currformatDouble(double invalue) {
+        String x = "";
+        String pattern = "#0.00###";
+       // DecimalFormat df = new DecimalFormat("#0.00###", new DecimalFormatSymbols(Locale.getDefault())); 
+        DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.getDefault());
+        df.applyPattern(pattern);
+        x = df.format(invalue);
+        return x;
+    }
+    
+    
     public static String currformatUS(String invalue) {
         String x = "";
         String pattern = "#0.00###";
@@ -625,7 +636,7 @@ public class BlueSeerUtils {
         }
         return x;
     }
-    
+        
     public static String currformatDoubleUS(double invalue) {
         String x = "";
         String pattern = "#0.00###";

@@ -27,21 +27,21 @@ package com.blueseer.ctr;
 
 import bsmf.MainFrame;
 import static bsmf.MainFrame.tags;
-import static com.blueseer.ctr.cusData.addCMCDetSrv;
-import static com.blueseer.ctr.cusData.addCMSDetSrv;
-import static com.blueseer.ctr.cusData.addCustomerTransactionSrv;
+import static com.blueseer.ctr.cusData.addCMCDet;
+import static com.blueseer.ctr.cusData.addCMSDet;
+import static com.blueseer.ctr.cusData.addCustomerTransaction;
 import com.blueseer.ctr.cusData.cm_mstr;
 import com.blueseer.ctr.cusData.cmc_det;
 import com.blueseer.ctr.cusData.cms_det;
-import static com.blueseer.ctr.cusData.deleteCMCDetSrv;
-import static com.blueseer.ctr.cusData.deleteCMSDetSrv;
-import static com.blueseer.ctr.cusData.deleteCustMstrSrv;
-import static com.blueseer.ctr.cusData.getCMCDetSrv;
-import static com.blueseer.ctr.cusData.getCMSDetSrv;
-import static com.blueseer.ctr.cusData.getCustMstrSrv;
-import static com.blueseer.ctr.cusData.updateCMCDetSrv;
-import static com.blueseer.ctr.cusData.updateCMSDetSrv;
-import static com.blueseer.ctr.cusData.updateCustMstrSrv;
+import static com.blueseer.ctr.cusData.deleteCMCDet;
+import static com.blueseer.ctr.cusData.deleteCMSDet;
+import static com.blueseer.ctr.cusData.deleteCustMstr;
+import static com.blueseer.ctr.cusData.getCMCDet;
+import static com.blueseer.ctr.cusData.getCMSDet;
+import static com.blueseer.ctr.cusData.getCustMstr;
+import static com.blueseer.ctr.cusData.updateCMCDet;
+import static com.blueseer.ctr.cusData.updateCMSDet;
+import static com.blueseer.ctr.cusData.updateCustMstr;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
@@ -364,9 +364,9 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
     public String[] addRecord(String[] x) {
         String[] m = new String[2];
         if (cbshipto.isSelected()) {
-        m = addCustomerTransactionSrv(createRecord(), contacttable, createCMSDet(true));
+        m = addCustomerTransaction(createRecord(), contacttable, createCMSDet(true));
         } else { 
-        m = addCustomerTransactionSrv(createRecord(), contacttable, null);    
+        m = addCustomerTransaction(createRecord(), contacttable, null);    
         }   
         initvars(null);
         return m;   
@@ -374,7 +374,7 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
     
     public String[] updateRecord(String[] x) {
         String[] m = new String[2];
-        m = updateCustMstrSrv(createRecord());
+        m = updateCustMstr(createRecord());
         initvars(null);
         return m;   
      }
@@ -383,7 +383,7 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
         String[] m = new String[2];
         boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
         if (proceed) {
-        m = deleteCustMstrSrv(createRecord());
+        m = deleteCustMstr(createRecord());
         initvars(null);
         return m;   
         } else {
@@ -393,7 +393,7 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
      }
     
     public String[] getRecord(String[] x) {
-        cm_mstr k = getCustMstrSrv(x);
+        cm_mstr k = getCustMstr(x);
         tbkey.setText(k.cm_code());
         tbname.setText(k.cm_name());
         tbline1.setText(k.cm_line1());
@@ -628,39 +628,39 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
         
     public void addShipTo() {
-        String[] m = addCMSDetSrv(createCMSDet(false));
+        String[] m = addCMSDet(createCMSDet(false));
         bsmf.MainFrame.show(m[1]);
     }
     
     public void updateShipTo() {
-        String[] m = updateCMSDetSrv(createCMSDet(false));
+        String[] m = updateCMSDet(createCMSDet(false));
         bsmf.MainFrame.show(m[1]);
     }
     
     public void deleteShipTo() {
-        String[] m = deleteCMSDetSrv(createCMSDet(false));
+        String[] m = deleteCMSDet(createCMSDet(false));
         bsmf.MainFrame.show(m[1]);
         
     }
     
     public void addContact(String cust) {
-        String[] m = addCMCDetSrv(createCMCDet(""));
+        String[] m = addCMCDet(createCMCDet(""));
         bsmf.MainFrame.show(m[1]);
     }
     
     public void editContact(String cust, String z) {
-        String[] m = updateCMCDetSrv(createCMCDet(z));
+        String[] m = updateCMCDet(createCMCDet(z));
         bsmf.MainFrame.show(m[1]);
     }
     
     public void deleteContact(String cust, String z) {
-       String[] m = deleteCMCDetSrv(createCMCDet(z));
+       String[] m = deleteCMCDet(createCMCDet(z));
         bsmf.MainFrame.show(m[1]);
     }
     
     public String[] getShipTo(String[] x) {
         String[] m = new String[2];
-        cms_det k = getCMSDetSrv(x[0], x[1]);
+        cms_det k = getCMSDet(x[0], x[1]);
         tbshipcode.setText(k.cms_shipto());
         tbshipname.setText(k.cms_code());
         tbshipline1.setText(k.cms_line1());
@@ -687,7 +687,7 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
         
     public void refreshContactTable(String cust) {
       contactmodel.setRowCount(0);
-      ArrayList<cmc_det> k = getCMCDetSrv(tbkey.getText());
+      ArrayList<cmc_det> k = getCMCDet(tbkey.getText());
       for (cmc_det cmc : k) {
           contactmodel.addRow(new Object[]{cmc.cmc_id(), 
               cmc.cmc_type(), 

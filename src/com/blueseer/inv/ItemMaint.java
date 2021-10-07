@@ -31,7 +31,7 @@ import static bsmf.MainFrame.defaultDecimalSeparator;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import static bsmf.MainFrame.tags;
-import com.blueseer.inv.invData.ItemMstr;
+import com.blueseer.inv.invData.item_mstr;
 import static com.blueseer.inv.invData.addItemMstr;
 import static com.blueseer.inv.invData.deleteItemMstr;
 import static com.blueseer.inv.invData.getItemMstr;
@@ -570,7 +570,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
     
     public String[] getRecord(String[] key) {
         
-        ItemMstr x = getItemMstr(key);  
+        item_mstr x = getItemMstr(key);  
        
         tbkey.setText(x.it_item());
         tbdesc.setText(x.it_desc());
@@ -595,9 +595,9 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
         tbminordqty.setText(x.it_minordqty());
         tbsafestock.setText(x.it_safestock());
         tbleadtime.setText(x.it_leadtime());
-        cbmrp.setSelected(BlueSeerUtils.ConvertIntegerToBool(x.it_mrp()));
-        cbplan.setSelected(BlueSeerUtils.ConvertIntegerToBool(x.it_plan()));
-        cbschedule.setSelected(BlueSeerUtils.ConvertIntegerToBool(x.it_sched())); 
+        cbmrp.setSelected(BlueSeerUtils.ConvertStringToBool(x.it_mrp()));
+        cbplan.setSelected(BlueSeerUtils.ConvertStringToBool(x.it_plan()));
+        cbschedule.setSelected(BlueSeerUtils.ConvertStringToBool(x.it_sched())); 
         tblotsize.setText(x.it_lotsize());
         tbsellprice.setText(x.it_sell_price());
         tbpurchprice.setText(x.it_pur_price());
@@ -614,14 +614,14 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
         return x.m();
     }
     
-    public ItemMstr createRecord() { 
+    public item_mstr createRecord() { 
         String expire = "";
         if (dcexpire.getDate() != null) {
             expire = bsmf.MainFrame.dfdate.format(dcexpire.getDate());
         }
-        ItemMstr x = new ItemMstr(null, tbkey.getText().toString(),
+        item_mstr x = new item_mstr(null, tbkey.getText().toString(),
                 tbdesc.getText().toUpperCase(),
-                bsformat("i", tblotsize.getText(), ""),
+                bsformat("i", tblotsize.getText(), "").replace(defaultDecimalSeparator, '.'),
                 bsformat("d", tbsellprice.getText(), "5").replace(defaultDecimalSeparator, '.'),
                 bsformat("d", tbpurchprice.getText(), "5").replace(defaultDecimalSeparator, '.'),
                 bsformat("d", tbovhcost.getText(), "5").replace(defaultDecimalSeparator, '.'),
@@ -647,9 +647,9 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 bsformat("d", tbleadtime.getText(), "0").replace(defaultDecimalSeparator, '.'),
                 bsformat("d", tbsafestock.getText(), "0").replace(defaultDecimalSeparator, '.'),
                 bsformat("d", tbminordqty.getText(), "0").replace(defaultDecimalSeparator, '.'),
-                BlueSeerUtils.boolToInt(cbmrp.isSelected()),
-                BlueSeerUtils.boolToInt(cbschedule.isSelected()),
-                BlueSeerUtils.boolToInt(cbplan.isSelected()),
+                BlueSeerUtils.boolToString(cbmrp.isSelected()),
+                BlueSeerUtils.boolToString(cbschedule.isSelected()),
+                BlueSeerUtils.boolToString(cbplan.isSelected()),
                 ddrouting.getSelectedItem().toString(),
                 ddtax.getSelectedItem().toString(),
                 bsmf.MainFrame.dfdate.format(new Date()),
@@ -2268,17 +2268,19 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
 
     private void tbsellpriceFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbsellpriceFocusLost
         if (! tbsellprice.getText().isEmpty()) {
-        String x = BlueSeerUtils.bsformat("", tbsellprice.getText(), "5");
-        if (x.equals("error")) {
-            tbsellprice.setText("");
-            tbsellprice.setBackground(Color.yellow);
-            bsmf.MainFrame.show("Non-Numeric character in textbox");
-            tbsellprice.requestFocus();
+            String x = BlueSeerUtils.bsformat("", tbsellprice.getText(), "5");
+            if (x.equals("error")) {
+                tbsellprice.setText("");
+                tbsellprice.setBackground(Color.yellow);
+                bsmf.MainFrame.show("Non-Numeric character in textbox");
+                tbsellprice.requestFocus();
+            } else {
+                tbsellprice.setText(x);
+                tbsellprice.setBackground(Color.white);
+            }
         } else {
-            tbsellprice.setText(x);
-            tbsellprice.setBackground(Color.white);
-        }
-        }
+             tbsellprice.setBackground(Color.white);
+         }
     }//GEN-LAST:event_tbsellpriceFocusLost
 
     private void tbsellpriceFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbsellpriceFocusGained
@@ -2289,18 +2291,20 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
 
     private void tbpurchpriceFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbpurchpriceFocusLost
         if (! tbpurchprice.getText().isEmpty()) {
-        String x = BlueSeerUtils.bsformat("", tbpurchprice.getText(), "5");
-        if (x.equals("error")) {
-            tbpurchprice.setText("");
-            tbpurchprice.setBackground(Color.yellow);
-            bsmf.MainFrame.show("Non-Numeric character in textbox");
-            tbpurchprice.requestFocus();
+            String x = BlueSeerUtils.bsformat("", tbpurchprice.getText(), "5");
+            if (x.equals("error")) {
+                tbpurchprice.setText("");
+                tbpurchprice.setBackground(Color.yellow);
+                bsmf.MainFrame.show("Non-Numeric character in textbox");
+                tbpurchprice.requestFocus();
+            } else {
+                tbpurchprice.setText(x);
+                tbmtlcost.setText(x);
+                tbpurchprice.setBackground(Color.white);
+            }
         } else {
-            tbpurchprice.setText(x);
-            tbmtlcost.setText(x);
-            tbpurchprice.setBackground(Color.white);
-        }
-        }
+             tbpurchprice.setBackground(Color.white);
+         }
     }//GEN-LAST:event_tbpurchpriceFocusLost
 
     private void tbpurchpriceFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbpurchpriceFocusGained
@@ -2311,17 +2315,19 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
 
     private void tbmtlcostFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbmtlcostFocusLost
         if (! tbmtlcost.getText().isEmpty()) {
-        String x = BlueSeerUtils.bsformat("", tbmtlcost.getText(), "5");
-        if (x.equals("error")) {
-            tbmtlcost.setText("");
-            tbmtlcost.setBackground(Color.yellow);
-            bsmf.MainFrame.show("Non-Numeric character in textbox");
-            tbmtlcost.requestFocus();
+            String x = BlueSeerUtils.bsformat("", tbmtlcost.getText(), "5");
+            if (x.equals("error")) {
+                tbmtlcost.setText("");
+                tbmtlcost.setBackground(Color.yellow);
+                bsmf.MainFrame.show("Non-Numeric character in textbox");
+                tbmtlcost.requestFocus();
+            } else {
+                tbmtlcost.setText(x);
+                tbmtlcost.setBackground(Color.white);
+            }
         } else {
-            tbmtlcost.setText(x);
-            tbmtlcost.setBackground(Color.white);
-        }
-        }
+             tbmtlcost.setBackground(Color.white);
+         }
     }//GEN-LAST:event_tbmtlcostFocusLost
 
     private void tboutcostFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tboutcostFocusLost
@@ -2341,92 +2347,104 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
 
     private void tbovhcostFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbovhcostFocusLost
         if (! tbovhcost.getText().isEmpty()) {
-        String x = BlueSeerUtils.bsformat("", tbovhcost.getText(), "5");
-        if (x.equals("error")) {
-            tbovhcost.setText("");
-            tbovhcost.setBackground(Color.yellow);
-            bsmf.MainFrame.show("Non-Numeric character in textbox");
-            tbovhcost.requestFocus();
+            String x = BlueSeerUtils.bsformat("", tbovhcost.getText(), "5");
+            if (x.equals("error")) {
+                tbovhcost.setText("");
+                tbovhcost.setBackground(Color.yellow);
+                bsmf.MainFrame.show("Non-Numeric character in textbox");
+                tbovhcost.requestFocus();
+            } else {
+                tbovhcost.setText(x);
+                tbovhcost.setBackground(Color.white);
+            }
         } else {
-            tbovhcost.setText(x);
-            tbovhcost.setBackground(Color.white);
-        }
-        }
+             tbovhcost.setBackground(Color.white);
+         }
     }//GEN-LAST:event_tbovhcostFocusLost
 
     private void tbnetwtFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbnetwtFocusLost
         if (! tbnetwt.getText().isEmpty()) {
-        String x = BlueSeerUtils.bsformat("", tbnetwt.getText(), "3");
-        if (x.equals("error")) {
-            tbnetwt.setText("");
-            tbnetwt.setBackground(Color.yellow);
-            bsmf.MainFrame.show("Non-Numeric character in textbox");
-            tbnetwt.requestFocus();
+            String x = BlueSeerUtils.bsformat("", tbnetwt.getText(), "3");
+            if (x.equals("error")) {
+                tbnetwt.setText("");
+                tbnetwt.setBackground(Color.yellow);
+                bsmf.MainFrame.show("Non-Numeric character in textbox");
+                tbnetwt.requestFocus();
+            } else {
+                tbnetwt.setText(x);
+                tbnetwt.setBackground(Color.white);
+            }
         } else {
-            tbnetwt.setText(x);
-            tbnetwt.setBackground(Color.white);
-        }
-        }
+             tbnetwt.setBackground(Color.white);
+         }
     }//GEN-LAST:event_tbnetwtFocusLost
 
     private void tbshipwtFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbshipwtFocusLost
         if (! tbshipwt.getText().isEmpty()) {
-        String x = BlueSeerUtils.bsformat("", tbshipwt.getText(), "3");
-        if (x.equals("error")) {
-            tbshipwt.setText("");
-            tbshipwt.setBackground(Color.yellow);
-            bsmf.MainFrame.show("Non-Numeric character in textbox");
-            tbshipwt.requestFocus();
+            String x = BlueSeerUtils.bsformat("", tbshipwt.getText(), "3");
+            if (x.equals("error")) {
+                tbshipwt.setText("");
+                tbshipwt.setBackground(Color.yellow);
+                bsmf.MainFrame.show("Non-Numeric character in textbox");
+                tbshipwt.requestFocus();
+            } else {
+                tbshipwt.setText(x);
+                tbshipwt.setBackground(Color.white);
+            }
         } else {
-            tbshipwt.setText(x);
-            tbshipwt.setBackground(Color.white);
-        }
-        }
+             tbshipwt.setBackground(Color.white);
+         }
     }//GEN-LAST:event_tbshipwtFocusLost
 
     private void tbleadtimeFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbleadtimeFocusLost
         if (! tbleadtime.getText().isEmpty()) {
-        String x = BlueSeerUtils.bsformat("", tbleadtime.getText(), "0");
-        if (x.equals("error")) {
-            tbleadtime.setText("");
-            tbleadtime.setBackground(Color.yellow);
-            bsmf.MainFrame.show("Non-Numeric character in textbox");
-            tbleadtime.requestFocus();
+            String x = BlueSeerUtils.bsformat("", tbleadtime.getText(), "0");
+            if (x.equals("error")) {
+                tbleadtime.setText("");
+                tbleadtime.setBackground(Color.yellow);
+                bsmf.MainFrame.show("Non-Numeric character in textbox");
+                tbleadtime.requestFocus();
+            } else {
+                tbleadtime.setText(x);
+                tbleadtime.setBackground(Color.white);
+            }
         } else {
-            tbleadtime.setText(x);
-            tbleadtime.setBackground(Color.white);
-        }
-        }
+             tbleadtime.setBackground(Color.white);
+         }
     }//GEN-LAST:event_tbleadtimeFocusLost
 
     private void tbsafestockFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbsafestockFocusLost
        if (! tbsafestock.getText().isEmpty()) {
-        String x = BlueSeerUtils.bsformat("", tbsafestock.getText(), "0");
-        if (x.equals("error")) {
-            tbsafestock.setText("");
-            tbsafestock.setBackground(Color.yellow);
-            bsmf.MainFrame.show("Non-Numeric character in textbox");
-            tbsafestock.requestFocus();
-        } else {
-            tbsafestock.setText(x);
-            tbsafestock.setBackground(Color.white);
-        }
-       }
+            String x = BlueSeerUtils.bsformat("", tbsafestock.getText(), "0");
+            if (x.equals("error")) {
+                tbsafestock.setText("");
+                tbsafestock.setBackground(Color.yellow);
+                bsmf.MainFrame.show("Non-Numeric character in textbox");
+                tbsafestock.requestFocus();
+            } else {
+                tbsafestock.setText(x);
+                tbsafestock.setBackground(Color.white);
+            }
+       } else {
+             tbsafestock.setBackground(Color.white);
+         }
     }//GEN-LAST:event_tbsafestockFocusLost
 
     private void tbminordqtyFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbminordqtyFocusLost
         if (! tbminordqty.getText().isEmpty()) {
-        String x = BlueSeerUtils.bsformat("", tbminordqty.getText(), "0");
-        if (x.equals("error")) {
-            tbminordqty.setText("");
-            tbminordqty.setBackground(Color.yellow);
-            bsmf.MainFrame.show("Non-Numeric character in textbox");
-            tbminordqty.requestFocus();
+            String x = BlueSeerUtils.bsformat("", tbminordqty.getText(), "0");
+            if (x.equals("error")) {
+                tbminordqty.setText("");
+                tbminordqty.setBackground(Color.yellow);
+                bsmf.MainFrame.show("Non-Numeric character in textbox");
+                tbminordqty.requestFocus();
+            } else {
+                tbminordqty.setText(x);
+                tbminordqty.setBackground(Color.white);
+            }
         } else {
-            tbminordqty.setText(x);
-            tbminordqty.setBackground(Color.white);
-        }
-        }
+             tbminordqty.setBackground(Color.white);
+         }
     }//GEN-LAST:event_tbminordqtyFocusLost
 
     private void btprintlabelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btprintlabelActionPerformed

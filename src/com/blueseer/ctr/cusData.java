@@ -25,31 +25,20 @@ SOFTWARE.
  */
 package com.blueseer.ctr;
 
-import com.blueseer.ord.*;
-import com.blueseer.inv.*;
+
 import bsmf.MainFrame;
 import static bsmf.MainFrame.db;
-import static bsmf.MainFrame.defaultDecimalSeparator;
-import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
-import java.lang.invoke.MethodHandles;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.Statement;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
-import java.util.Locale;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JOptionPane;
 import javax.swing.JTable;
 
 /**
@@ -59,7 +48,7 @@ import javax.swing.JTable;
 public class cusData {
     
     // add customer master customer master table only
-    public static String[] addCustMstrSrv(cm_mstr x) {
+    public static String[] addCustMstr(cm_mstr x) {
         String[] m = new String[2];
         if (x == null) {
             return new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordError};
@@ -67,7 +56,7 @@ public class cusData {
         Connection con = null;
         try { 
             con = DriverManager.getConnection(url + db, user, pass);
-            int rows = addCustMstr(x, con);  // add cms_det
+            int rows = _addCustMstr(x, con);  // add cms_det
             if (rows > 0) {
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
             } else {
@@ -89,14 +78,14 @@ public class cusData {
     }
     
     // add customer master.... multiple table transaction function
-    public static String[] addCustomerTransactionSrv(cm_mstr cm, JTable contacttable, cms_det cms) {
+    public static String[] addCustomerTransaction(cm_mstr cm, JTable contacttable, cms_det cms) {
         String[] m = new String[2];
         Connection bscon = null;
         try { 
             bscon = DriverManager.getConnection(url + db, user, pass);
             bscon.setAutoCommit(false);
-            addCustMstr(cm, bscon);  // add cm_mstr
-            deleteCMCDetAll(cm.cm_code, bscon);    // delete cmc_det
+            _addCustMstr(cm, bscon);  // add cm_mstr
+            _deleteCMCDetAll(cm.cm_code, bscon);    // delete cmc_det
             for (int j = 0; j < contacttable.getRowCount(); j++) {  
             cmc_det z = new cmc_det(null, 
                 contacttable.getValueAt(j, 0).toString(),
@@ -107,9 +96,9 @@ public class cusData {
                 contacttable.getValueAt(j, 4).toString(),
                 contacttable.getValueAt(j, 5).toString()
                 );
-            addCMCDet(z, bscon);  // add cmc_det
+            _addCMCDet(z, bscon);  // add cmc_det
             }
-            addCMSDet(cms, bscon);  // add cms_det
+            _addCMSDet(cms, bscon);  // add cms_det
             bscon.commit();
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
         } catch (SQLException s) {
@@ -134,7 +123,7 @@ public class cusData {
     }
      
     
-    private static int addCustMstr(cm_mstr x, Connection con) throws SQLException {
+    private static int _addCustMstr(cm_mstr x, Connection con) throws SQLException {
         int rows = 0;
         String sqlSelect = "select * from cm_mstr where cm_code = ?";
         String sqlInsert = "insert into cm_mstr (cm_code, cm_name, cm_line1, cm_line2, " 
@@ -149,7 +138,7 @@ public class cusData {
           PreparedStatement ps = con.prepareStatement(sqlSelect);
           ps.setString(1, x.cm_code);
           ResultSet res = ps.executeQuery();
-               PreparedStatement psi = con.prepareStatement(sqlInsert);  
+          PreparedStatement psi = con.prepareStatement(sqlInsert);  
             if (! res.isBeforeFirst()) {
             psi.setString(1, x.cm_code);
             psi.setString(2, x.cm_name);
@@ -186,12 +175,15 @@ public class cusData {
             psi.setString(33,x.cm_email);
             rows = psi.executeUpdate();
             } 
+            ps.close();
+            psi.close();
+            res.close();
             return rows;
     }
      
     
     
-    public static String[] updateCustMstrSrv(cm_mstr x) {
+    public static String[] updateCustMstr(cm_mstr x) {
         String[] m = new String[2];
         if (x == null) {
             return new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordError};
@@ -199,7 +191,7 @@ public class cusData {
         Connection con = null;
         try { 
             con = DriverManager.getConnection(url + db, user, pass);
-            int rows = updateCustMstr(x, con);  // add cms_det
+            int rows = _updateCustMstr(x, con);  // add cms_det
             if (rows > 0) {
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
             } else {
@@ -220,7 +212,7 @@ public class cusData {
     return m;
     }
     
-    private static int updateCustMstr(cm_mstr x, Connection con) {
+    private static int _updateCustMstr(cm_mstr x, Connection con) throws SQLException {
         int rows = 0;
         String sql = "update cm_mstr set " 
                 + " cm_name = ?, cm_line1 = ?, cm_line2 = ?, "
@@ -232,7 +224,7 @@ public class cusData {
                 + "cm_ar_acct = ?, cm_ar_cc = ?, cm_bank = ?, cm_curr = ?, cm_remarks = ?, " 
                 + "cm_label = ?, cm_ps_jasper = ?, cm_iv_jasper = ?, cm_phone = ?, cm_email = ? "
                 + " where cm_code = ? ; ";
-        try (PreparedStatement psu = con.prepareStatement(sql)) {
+        PreparedStatement psu = con.prepareStatement(sql);
         psu.setString(33, x.cm_code);
             psu.setString(1, x.cm_name);
             psu.setString(2, x.cm_line1);
@@ -267,16 +259,12 @@ public class cusData {
             psu.setString(31,x.cm_phone);
             psu.setString(32,x.cm_email);
             rows = psu.executeUpdate();
-        
-        } catch (SQLException s) {
-	       MainFrame.bslog(s);
-               
-        }
+            psu.close();
         return rows;
     }
     
     
-    public static String[] deleteCustMstrSrv(cm_mstr x) {
+    public static String[] deleteCustMstr(cm_mstr x) {
         String[] m = new String[2];
         if (x == null) {
             return new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordError};
@@ -284,7 +272,7 @@ public class cusData {
         Connection con = null;
         try { 
             con = DriverManager.getConnection(url + db, user, pass);
-            deleteCustMstr(x, con);  // add cms_det
+            _deleteCustMstr(x, con);  // add cms_det
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
         } catch (SQLException s) {
              MainFrame.bslog(s);
@@ -301,7 +289,7 @@ public class cusData {
     return m;
     }
     
-    private static void deleteCustMstr(cm_mstr x, Connection con) throws SQLException { 
+    private static void _deleteCustMstr(cm_mstr x, Connection con) throws SQLException { 
        
         PreparedStatement ps = null;  
         String sql = "delete from cm_mstr where cm_code = ?; ";
@@ -320,7 +308,7 @@ public class cusData {
     }
         
     
-    public static cm_mstr getCustMstrSrv(String[] x) {
+    public static cm_mstr getCustMstr(String[] x) {
         cm_mstr r = null;
         String[] m = new String[2];
         String sql = "select * from cm_mstr where cm_code = ? ;";
@@ -356,7 +344,7 @@ public class cusData {
     
     
     // cms_det Customer Shipto Table
-    public static String[] addCMSDetSrv(cms_det x) {
+    public static String[] addCMSDet(cms_det x) {
         String[] m = new String[2];
         if (x == null) {
             return new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordError};
@@ -364,7 +352,7 @@ public class cusData {
         Connection con = null;
         try { 
             con = DriverManager.getConnection(url + db, user, pass);
-            addCMSDet(x, con);  // add cms_det
+            _addCMSDet(x, con);  // add cms_det
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
         } catch (SQLException s) {
              MainFrame.bslog(s);
@@ -381,7 +369,7 @@ public class cusData {
     return m;
     }
     
-    private static void addCMSDet(cms_det x, Connection con) throws SQLException {
+    private static void _addCMSDet(cms_det x, Connection con) throws SQLException {
         if (x == null) return;
         String sqlInsert = "insert into cms_det (cms_code, cms_shipto, cms_name, cms_line1, cms_line2, " 
                         + "cms_line3, cms_city, cms_state, cms_zip, cms_country ) "
@@ -401,7 +389,7 @@ public class cusData {
             psi.close();
     }
         
-    public static String[] updateCMSDetSrv(cms_det x) {
+    public static String[] updateCMSDet(cms_det x) {
         String[] m = new String[2];
         if (x == null) {
             return new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordError};
@@ -409,7 +397,7 @@ public class cusData {
         Connection con = null;
         try { 
             con = DriverManager.getConnection(url + db, user, pass);
-            updateCMSDet(x, con);  // add cms_det
+            _updateCMSDet(x, con);  // add cms_det
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
         } catch (SQLException s) {
              MainFrame.bslog(s);
@@ -426,7 +414,7 @@ public class cusData {
     return m;
     }
     
-    private static int updateCMSDet(cms_det x, Connection con) {
+    private static int _updateCMSDet(cms_det x, Connection con) {
         int rows = 0;
         String sql = "update cms_det set " 
                 + " cms_name = ?, cms_line1 = ?, cms_line2 = ?, "
@@ -453,7 +441,7 @@ public class cusData {
         return rows;
     }
          
-    public static String[] deleteCMSDetSrv(cms_det x) {
+    public static String[] deleteCMSDet(cms_det x) {
         String[] m = new String[2];
         if (x == null) {
             return new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordError};
@@ -461,7 +449,7 @@ public class cusData {
         Connection con = null;
         try { 
             con = DriverManager.getConnection(url + db, user, pass);
-            deleteCMSDet(x.cms_code, x.cms_shipto, con);  // add cms_det
+            _deleteCMSDet(x.cms_code, x.cms_shipto, con);  // add cms_det
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
         } catch (SQLException s) {
              MainFrame.bslog(s);
@@ -478,7 +466,7 @@ public class cusData {
     return m;
     }
     
-    private static void deleteCMSDet(String x, String y, Connection con) throws SQLException { 
+    private static void _deleteCMSDet(String x, String y, Connection con) throws SQLException { 
        
         PreparedStatement ps = null; 
         String sql = "delete from cms_det where cms_code = ? and cms_shipto = ?; ";
@@ -490,7 +478,7 @@ public class cusData {
         
     }
     
-    public static cms_det getCMSDetSrv(String shipto, String code) {
+    public static cms_det getCMSDet(String shipto, String code) {
         cms_det r = null;
         String[] m = new String[2];
         String sql = "select * from cms_det where cms_shipto = ? and cms_code = ? ;";
@@ -520,7 +508,7 @@ public class cusData {
         return r;
     }
     
-    public static ArrayList<cms_det> getCMSDetSrv(String code) {
+    public static ArrayList<cms_det> getCMSDet(String code) {
         cms_det r = null;
         String[] m = new String[2];
         ArrayList<cms_det> list = new ArrayList<cms_det>();
@@ -554,7 +542,7 @@ public class cusData {
     
     
     // cmc_det Customer Contact table
-    public static String[] addCMCDetSrv(cmc_det x) {
+    public static String[] addCMCDet(cmc_det x) {
         String[] m = new String[2];
         if (x == null) {
             return new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordError};
@@ -562,7 +550,7 @@ public class cusData {
         Connection con = null;
         try { 
             con = DriverManager.getConnection(url + db, user, pass);
-            addCMCDet(x, con);  // add cms_det
+            _addCMCDet(x, con);  // add cms_det
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
         } catch (SQLException s) {
              MainFrame.bslog(s);
@@ -579,7 +567,7 @@ public class cusData {
     return m;
     }
     
-    private static void addCMCDet(cmc_det x, Connection con) throws SQLException {
+    private static void _addCMCDet(cmc_det x, Connection con) throws SQLException {
         if (x == null) return;
         String sqlInsert = "insert into cmc_det (cmc_code, cmc_type, cmc_name, " 
                         + "cmc_phone, cmc_fax, cmc_email ) "
@@ -596,7 +584,7 @@ public class cusData {
             
     }
     
-    public static String[] updateCMCDetSrv(cmc_det x) {
+    public static String[] updateCMCDet(cmc_det x) {
         String[] m = new String[2];
         if (x == null) {
             return new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordError};
@@ -604,7 +592,7 @@ public class cusData {
         Connection con = null;
         try { 
             con = DriverManager.getConnection(url + db, user, pass);
-            updateCMCDet(x, con);  // add cms_det 
+            _updateCMCDet(x, con);  // add cms_det 
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
         } catch (SQLException s) {
              MainFrame.bslog(s);
@@ -621,7 +609,7 @@ public class cusData {
     return m;
     }
     
-    private static int updateCMCDet(cmc_det x, Connection con) {
+    private static int _updateCMCDet(cmc_det x, Connection con) {
         int rows = 0;
         String sql = "update cmc_det set " 
                 + " cmc_type = ?, cmc_name = ?, cmc_phone = ?, "
@@ -644,7 +632,7 @@ public class cusData {
         return rows;
     }
         
-    public static String[] deleteCMCDetSrv(cmc_det x) {
+    public static String[] deleteCMCDet(cmc_det x) {
         String[] m = new String[2];
         if (x == null) {
             return new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordError};
@@ -652,7 +640,7 @@ public class cusData {
         Connection con = null;
         try { 
             con = DriverManager.getConnection(url + db, user, pass);
-            deleteCMCDet(x.cmc_id, x.cmc_code, con);  // add cms_det
+            _deleteCMCDet(x.cmc_id, x.cmc_code, con);  // add cms_det
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
         } catch (SQLException s) {
              MainFrame.bslog(s);
@@ -669,7 +657,7 @@ public class cusData {
     return m;
     }
            
-    private static void deleteCMCDet(String x, String y, Connection con) throws SQLException { 
+    private static void _deleteCMCDet(String x, String y, Connection con) throws SQLException { 
         
         PreparedStatement ps = null; 
         String sql = "delete from cmc_det where cmc_id = ? and cmc_code = ?; ";
@@ -681,7 +669,7 @@ public class cusData {
         
     }
     
-    private static void deleteCMCDetAll(String x, Connection con) throws SQLException { 
+    private static void _deleteCMCDetAll(String x, Connection con) throws SQLException { 
         
         PreparedStatement ps = null; 
         String sql = "delete from cmc_det where cmc_code = ?; ";
@@ -692,7 +680,7 @@ public class cusData {
         
     }
     
-    public static cmc_det getCMCDetSrv(String id, String code) {
+    public static cmc_det getCMCDet(String id, String code) {
         cmc_det r = null;
         String[] m = new String[2];
         String sql = "select * from cmc_det where cmc_id = ? and cmc_code = ? ;";
@@ -723,7 +711,7 @@ public class cusData {
         return r;
     }
     
-    public static ArrayList<cmc_det> getCMCDetSrv(String code) {
+    public static ArrayList<cmc_det> getCMCDet(String code) {
         cmc_det r = null;
         String[] m = new String[2];
         ArrayList<cmc_det> list = new ArrayList<cmc_det>();

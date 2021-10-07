@@ -27,11 +27,21 @@ SOFTWARE.
 package com.blueseer.inv;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.defaultDecimalSeparator;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
+import static com.blueseer.inv.invData.addBOM;
+import static com.blueseer.inv.invData.deleteBOM;
+import com.blueseer.inv.invData.pbm_mstr;
+import static com.blueseer.inv.invData.updateBOM;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
+import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble5;
+import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
+import static com.blueseer.utl.BlueSeerUtils.bsformat;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -506,112 +516,23 @@ public class BOMMaint extends javax.swing.JPanel {
     }
     
     public String[] addRecord(String[] x) {
-     String[] m = new String[2];
-     try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            Statement st = bsmf.MainFrame.con.createStatement();
-            ResultSet res = null;
-            try {
-                
-               
-                int i = 0;
-             
-                boolean proceed = validateInput("addRecord");
-                
-                if (proceed) {
-                String type = invData.getItemCode(ddcomp.getSelectedItem().toString());
-                    res = st.executeQuery("SELECT ps_child FROM  pbm_mstr where ps_parent = " + "'" + tbkey.getText().toString() + "'" + 
-                                          " AND ps_child = " + "'" + ddcomp.getSelectedItem().toString() + "'" +
-                                          " AND ps_op = " + "'" + ddop.getSelectedItem().toString() + "'" + ";");
-                    i = 0;
-                    while (res.next()) {
-                        i++;
-                    }
-                    if (i == 0) {
-                        st.executeUpdate("insert into pbm_mstr "
-                            + "(ps_parent, ps_child, ps_qty_per, ps_op, ps_ref, ps_type) "
-                            + " values ( " + "'" + tbkey.getText() + "'" + ","
-                            + "'" + ddcomp.getSelectedItem().toString() + "'" + ","
-                            + "'" + tbqtyper.getText() + "'" + "," 
-                            + "'" + ddop.getSelectedItem().toString() + "'" + ","
-                            + "'" + tbref.getText() + "'" + ","         
-                            + "'" + type + "'" 
-                            + ")"
-                            + ";");
-                        bind_tree(tbkey.getText());
-                        getComponents(tbkey.getText());
-                        callSimulateCost();
-                        getCostSets(tbkey.getText().toString());
-                        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
-                    } else {
-                       m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists}; 
-                    }
-                   
-                  // initvars(new String[]{tbkey.getText()});
-                   
-                } // if proceed
-          } catch (SQLException s) {
-                MainFrame.bslog(s);
-                 m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};  
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-             m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1020, Thread.currentThread().getStackTrace()[1].getMethodName())};
-        }
-    return m;
+        String[] m = new String[2];
+        m = addBOM(createRecord());
+        bind_tree(tbkey.getText());
+        getComponents(tbkey.getText());
+        callSimulateCost();
+        getCostSets(tbkey.getText().toString());
+        return m;
     }
     
     public String[] updateRecord(String[] x) {
      String[] m = new String[2];
-      try {
-            boolean proceed = true;
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            Statement st = bsmf.MainFrame.con.createStatement();
-            ResultSet res = null;
-            try {
-                
-                // check the site field
-                if (tbkey.getText().isEmpty()) {
-                    proceed = false;
-                    bsmf.MainFrame.show(getMessageTag(1024));
-                }
-                
-                if (proceed) {
-                    st.executeUpdate("update pbm_mstr set " +
-                             " ps_qty_per = " + "'" + tbqtyper.getText() + "'" + ","
-                            + " ps_ref = " + "'" + tbref.getText() + "'" + "," 
-                            + " ps_op = " + "'" + ddop.getSelectedItem().toString() + "'" 
-                            + " where ps_parent = " + "'" + tbkey.getText().toString() + "'" + 
-                                          " AND ps_child = " + "'" + ddcomp.getSelectedItem().toString() + "'" + ";");
-                    bind_tree(tbkey.getText());
-                    getComponents(tbkey.getText());
-                    callSimulateCost();
-                    getCostSets(tbkey.getText().toString());
-                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
-                   
-                  
-                } 
-         
-           } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};  
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1020, Thread.currentThread().getStackTrace()[1].getMethodName())};
-        }
-    return m;
+        m = updateBOM(createRecord());
+        bind_tree(tbkey.getText());
+        getComponents(tbkey.getText());
+        callSimulateCost();
+        getCostSets(tbkey.getText().toString());
+        return m;
     }
     
     public String[] deleteRecord(String[] x) {
@@ -622,41 +543,35 @@ public class BOMMaint extends javax.swing.JPanel {
       if (o != null && (level((TreeNode)jTree1.getModel().getRoot(), (TreeNode)o) == 2)) {
        comp = (DefaultMutableTreeNode)o;
       }
-        
-        if (proceed && (comp != null)) {
-            
-        try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            Statement st = bsmf.MainFrame.con.createStatement();
-            ResultSet res = null;
-            try {
-                
-                   int i = st.executeUpdate("delete from pbm_mstr where ps_parent = " + "'" + tbkey.getText().toString() + "'" + 
-                            " AND ps_child = " + "'" + comp.toString() + "'" + ";");
-                   if (i > 0) {
-                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
-                    
-                    }
-                } catch (SQLException s) {
-                 MainFrame.bslog(s); 
-                m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};  
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1020, Thread.currentThread().getStackTrace()[1].getMethodName())};
-        }
+      if (proceed && comp != null) {
+         m = deleteBOM(createRecord(comp.toString())); 
+         // initvars(null);
         } else {
            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
         }
      return m;
     }
    
+    public pbm_mstr createRecord() {
+        pbm_mstr x = new pbm_mstr(null, tbkey.getText().toString(),
+                ddcomp.getSelectedItem().toString(),
+                bsformat("d", tbqtyper.getText(), "0").replace(defaultDecimalSeparator, '.'),
+                ddop.getSelectedItem().toString(),
+                tbref.getText(),
+                tbcomptype.getText());
+        return x;
+    } 
+    
+    public pbm_mstr createRecord(String comp) {
+        pbm_mstr x = new pbm_mstr(null, tbkey.getText().toString(),
+                comp,
+                bsformat("d", tbqtyper.getText(), "0").replace(defaultDecimalSeparator, '.'),
+                ddop.getSelectedItem().toString(),
+                tbref.getText(),
+                tbcomptype.getText());
+        return x;
+    } 
+    
     
     public void lookUpFrame() {
         
@@ -700,17 +615,17 @@ public class BOMMaint extends javax.swing.JPanel {
     }
 
     public void getCostSets(String parent) {
-        DecimalFormat df5 = new DecimalFormat("#.00000", new DecimalFormatSymbols(Locale.US)); 
-        tbparentcostSTD.setText(String.valueOf(df5.format(invData.getItemCost(parent, "STANDARD", OVData.getDefaultSite()))));
+       
+        tbparentcostSTD.setText(String.valueOf(bsFormatDouble5(invData.getItemCost(parent, "STANDARD", OVData.getDefaultSite()))));
              
         calcCost cur = new calcCost();
-        DecimalFormat df = new DecimalFormat("#.00000", new DecimalFormatSymbols(Locale.US)); 
+       
         ArrayList<Double> costlist = new ArrayList<Double>();
         costlist = cur.getTotalCost(parent);
-        double current = costlist.get(0) + costlist.get(1) + costlist.get(2) + costlist.get(3) + costlist.get(4);
-        tbparentcostCUR.setText(df.format(costlist.get(0) + costlist.get(1) + costlist.get(2) + costlist.get(3) + costlist.get(4)));
-        tbtotoperational.setText(df.format(costlist.get(1) + costlist.get(2) + costlist.get(3) + costlist.get(4)));
-        double standard = Double.valueOf(tbparentcostSTD.getText());
+      //  double current = costlist.get(0) + costlist.get(1) + costlist.get(2) + costlist.get(3) + costlist.get(4);
+        tbparentcostCUR.setText(bsFormatDouble5(costlist.get(0) + costlist.get(1) + costlist.get(2) + costlist.get(3) + costlist.get(4)));
+        tbtotoperational.setText(bsFormatDouble5(costlist.get(1) + costlist.get(2) + costlist.get(3) + costlist.get(4)));
+     //   double standard = Double.valueOf(tbparentcostSTD.getText());
          if (! tbparentcostCUR.getText().equals(tbparentcostSTD.getText())) {
                  tbparentcostCUR.setBackground(Color.green);
                  tbparentcostSTD.setBackground(Color.yellow);
@@ -722,7 +637,7 @@ public class BOMMaint extends javax.swing.JPanel {
     }
     
     public void callSimulateCost() {
-        DecimalFormat df = new DecimalFormat("#.00000", new DecimalFormatSymbols(Locale.US)); 
+         
         double pph = 0.00;
         double pps = 0.00;
         double pphsim = 0.00;
@@ -736,23 +651,23 @@ public class BOMMaint extends javax.swing.JPanel {
         double lotsizesim = 0.00;
         
         if (! tbpphsim.getText().isEmpty())
-        pphsim = Double.valueOf(tbpphsim.getText());
+        pphsim = bsParseDouble(tbpphsim.getText());
         
         if (! tbppssim.getText().isEmpty())
-        ppssim = Double.valueOf(tbppssim.getText());
+        ppssim = bsParseDouble(tbppssim.getText());
         
         if (! tbrunratesim.getText().isEmpty())
-        runratesim = Double.valueOf(tbrunratesim.getText());
+        runratesim = bsParseDouble(tbrunratesim.getText());
         if (! tbsetupratesim.getText().isEmpty())
-        setupratesim = Double.valueOf(tbsetupratesim.getText());
+        setupratesim = bsParseDouble(tbsetupratesim.getText());
         if (! tbburdenratesim.getText().isEmpty())
-        burdenratesim = Double.valueOf(tbburdenratesim.getText());
+        burdenratesim = bsParseDouble(tbburdenratesim.getText());
         if (! tbcrewsizesim.getText().isEmpty())
-        crewsizesim = Double.valueOf(tbcrewsizesim.getText());
+        crewsizesim = bsParseDouble(tbcrewsizesim.getText());
         if (! tbsetupsizesim.getText().isEmpty())
-        setupsizesim = Double.valueOf(tbsetupsizesim.getText());
+        setupsizesim = bsParseDouble(tbsetupsizesim.getText());
         if (! tblotsize.getText().isEmpty())
-        lotsizesim = Double.valueOf(tblotsize.getText());
+        lotsizesim = bsParseDouble(tblotsize.getText());
         
         
         if (pphsim != 0) {
@@ -785,12 +700,12 @@ public class BOMMaint extends javax.swing.JPanel {
         // now add material
         double matl = 0.00;
         for (int j = 0; j < matltable.getRowCount(); j++) {
-             matl = matl + (Double.valueOf(matltable.getValueAt(j, 3).toString()) * Double.valueOf(matltable.getValueAt(j, 4).toString()) ); 
+             matl = matl + (bsParseDouble(matltable.getValueAt(j, 3).toString()) * bsParseDouble(matltable.getValueAt(j, 4).toString()) ); 
          }
-        tbtotoperationalsim.setText(String.valueOf(df.format(totalcost)));
+        tbtotoperationalsim.setText(String.valueOf(bsFormatDouble5(totalcost)));
         totalcost += matl;
-        tbtotmaterialsim.setText(String.valueOf(df.format(matl)));
-        tbparentcostsim.setText(String.valueOf(df.format(totalcost)));
+        tbtotmaterialsim.setText(String.valueOf(bsFormatDouble5(matl)));
+        tbparentcostsim.setText(String.valueOf(bsFormatDouble5(totalcost)));
                 
     }
     
@@ -837,7 +752,7 @@ public class BOMMaint extends javax.swing.JPanel {
         
          
        String site = invData.getItemSite(parent);
-       DecimalFormat df = new DecimalFormat("#.00000", new DecimalFormatSymbols(Locale.US)); 
+       
        double matlcost = 0.00;
        tbtotmaterial.setText(String.valueOf(matlcost));
         try {
@@ -876,7 +791,7 @@ public class BOMMaint extends javax.swing.JPanel {
               
                 }
                 res.close();
-               tbtotmaterial.setText(String.valueOf(df.format(matlcost)));
+               tbtotmaterial.setText(String.valueOf(bsFormatDouble5(matlcost)));
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
@@ -890,7 +805,7 @@ public class BOMMaint extends javax.swing.JPanel {
     }
     
     public void getComponentDetail(String component) {
-        DecimalFormat df5 = new DecimalFormat("#.00000", new DecimalFormatSymbols(Locale.US)); 
+       
         tbcomptype.setText("");
         lblcomp.setText("");
         tbcompcost.setText("");
@@ -913,7 +828,7 @@ public class BOMMaint extends javax.swing.JPanel {
                         i++;
                         tbcomptype.setText(res.getString("it_code"));
                         lblcomp.setText(res.getString("it_desc"));
-                        tbcompcost.setText(String.valueOf(df5.format(res.getDouble("itc_total"))));
+                        tbcompcost.setText(String.valueOf(bsFormatDouble5(res.getDouble("itc_total"))));
                         
                     }
                    
@@ -931,7 +846,7 @@ public class BOMMaint extends javax.swing.JPanel {
    
     
     public void setcomponentattributes(String parent, String component, String op) {
-       DecimalFormat df5 = new DecimalFormat("#.00000", new DecimalFormatSymbols(Locale.US));
+       
           tbqtyper.setText("");
           tbref.setText("");
         
@@ -978,7 +893,7 @@ public class BOMMaint extends javax.swing.JPanel {
                         i++;
                         tbcomptype.setText(res.getString("it_code"));
                         lblcomp.setText(res.getString("it_desc"));
-                        tbcompcost.setText(String.valueOf(df5.format(res.getDouble("itc_total"))));
+                        tbcompcost.setText(String.valueOf(bsFormatDouble5(res.getDouble("itc_total"))));
                         
                     }       
                     
@@ -1102,6 +1017,7 @@ public class BOMMaint extends javax.swing.JPanel {
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("BOM Maintenance"));
         jPanel2.setName("BOM Maintenance"); // NOI18N
+        jPanel2.setPreferredSize(new java.awt.Dimension(1071, 620));
 
         jLabel3.setText("Qty Per");
         jLabel3.setName("lblqtyper"); // NOI18N
@@ -1492,68 +1408,56 @@ public class BOMMaint extends javax.swing.JPanel {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 16, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addGap(11, 11, 11)
-                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING)))
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addContainerGap()
-                                        .addComponent(jLabel7))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                        .addContainerGap()
-                                        .addComponent(jLabel8)))
-                                .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING))
-                            .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblparent, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblcomp, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(ddcomp, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(tbqtyper, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(ddop, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(tbref, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btlookup, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btclear))
-                            .addComponent(ddcomp, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(20, 20, 20)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addComponent(lblcomp, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE)
-                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                                            .addComponent(lblparent, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addGap(59, 59, 59)))
-                                    .addComponent(tbcompcost, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(tbcomptype, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                            .addComponent(tbcompcost, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tbcomptype, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 56, Short.MAX_VALUE)
+                        .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btlookup, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btclear)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(23, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(0, 17, Short.MAX_VALUE))
+            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(btroll)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btpdf)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btdelete)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btupdate)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btadd)
-                .addGap(45, 45, 45))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(btroll)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btpdf)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btdelete)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btupdate)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btadd)
+                        .addGap(140, 140, 140))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1604,7 +1508,7 @@ public class BOMMaint extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 69, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btadd)
                     .addComponent(btdelete)
@@ -1625,13 +1529,15 @@ public class BOMMaint extends javax.swing.JPanel {
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 334, Short.MAX_VALUE)
-                .addContainerGap())
+            .addGap(0, 328, Short.MAX_VALUE)
+            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1)
+            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 593, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -1639,18 +1545,20 @@ public class BOMMaint extends javax.swing.JPanel {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGap(0, 10, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
+                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addContainerGap(20, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap(72, Short.MAX_VALUE))))
         );
 
         add(jPanel2);
@@ -1702,8 +1610,6 @@ public class BOMMaint extends javax.swing.JPanel {
      //   Integer level = level((TreeNode)jTree1.getModel().getRoot(), (TreeNode)jTree1.getLastSelectedPathComponent());
      //   bsmf.MainFrame.show("Level:" + level);
      
-     DecimalFormat df = new DecimalFormat("#", new DecimalFormatSymbols(Locale.US)); 
-     DecimalFormat df2 = new DecimalFormat("#.00", new DecimalFormatSymbols(Locale.US)); 
      
             tbrunrate.setText("");
             tbsetuprate.setText("");
@@ -1740,22 +1646,22 @@ public class BOMMaint extends javax.swing.JPanel {
                 pps = 1 / pps;
                 
                 
-                tbrunrate.setText(String.valueOf(df2.format(Double.valueOf(e[0]))));
-                tbsetuprate.setText(String.valueOf(df2.format(Double.valueOf(e[1]))));
-                tbburdenrate.setText(String.valueOf(df2.format(Double.valueOf(e[2]))));
+                tbrunrate.setText(String.valueOf(currformatDouble(Double.valueOf(e[0]))));
+                tbsetuprate.setText(String.valueOf(currformatDouble(Double.valueOf(e[1]))));
+                tbburdenrate.setText(String.valueOf(currformatDouble(Double.valueOf(e[2]))));
                 tbcrewsize.setText(e[3]);
                 tbsetupsize.setText(e[4]);
-                tbpph.setText(String.valueOf(df.format(pph)));
-                tbpps.setText(String.valueOf(df.format(pps)));
+                tbpph.setText(String.valueOf(bsFormatDouble(pph)));
+                tbpps.setText(String.valueOf(bsFormatDouble(pps)));
                 
                 // init simulation
-                 tbrunratesim.setText(String.valueOf(df2.format(Double.valueOf(e[0]))));
-                tbsetupratesim.setText(String.valueOf(df2.format(Double.valueOf(e[1]))));
-                tbburdenratesim.setText(String.valueOf(df2.format(Double.valueOf(e[2]))));
+                 tbrunratesim.setText(String.valueOf(currformatDouble(Double.valueOf(e[0]))));
+                tbsetupratesim.setText(String.valueOf(currformatDouble(Double.valueOf(e[1]))));
+                tbburdenratesim.setText(String.valueOf(currformatDouble(Double.valueOf(e[2]))));
                 tbcrewsizesim.setText(e[3]);
                 tbsetupsizesim.setText(e[4]);
-                tbpphsim.setText(String.valueOf(df.format(pph)));
-                tbppssim.setText(String.valueOf(df.format(pps)));
+                tbpphsim.setText(String.valueOf(bsFormatDouble(pph)));
+                tbppssim.setText(String.valueOf(bsFormatDouble(pps)));
                 
                 callSimulateCost();
             }

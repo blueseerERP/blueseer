@@ -44,8 +44,6 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Locale;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -54,8 +52,37 @@ import javax.swing.JOptionPane;
  */
 public class invData {
     
-     public static String[] addItemMstr(ItemMstr x) {
+    public static String[] addItemMstr(item_mstr x) {
         String[] m = new String[2];
+        if (x == null) {
+            return new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordError};
+        }
+        Connection con = null;
+        try { 
+            con = DriverManager.getConnection(url + db, user, pass);
+            int rows = _addItemMstr(x, con);  
+            if (rows > 0) {
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+            } else {
+            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordError};    
+            }
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordError};
+        } finally {
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
+    }
+    
+    private static int _addItemMstr(item_mstr x, Connection con) throws SQLException {
+        int rows = 0;
         String sqlSelect = "select * from item_mstr where it_item = ?";
         String sqlInsert = "insert into item_mstr (it_item, it_desc, it_lotsize, " 
                         + "it_sell_price, it_pur_price, it_ovh_cost, it_out_cost, it_mtl_cost, it_code, it_type, it_group, "
@@ -63,11 +90,11 @@ public class invData {
                         + "it_status, it_uom, it_net_wt, it_ship_wt, it_cont, it_contqty, "
                         + "it_leadtime, it_safestock, it_minordqty, it_mrp, it_sched, it_plan, it_wf, it_taxcode, it_createdate, it_expire, it_expiredays ) "
                         + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
-             PreparedStatement ps = con.prepareStatement(sqlSelect);) {
-             ps.setString(1, x.it_item);
-          try (ResultSet res = ps.executeQuery();
-               PreparedStatement psi = con.prepareStatement(sqlInsert);) {  
+       
+            PreparedStatement ps = con.prepareStatement(sqlSelect);
+            ps.setString(1, x.it_item);
+            ResultSet res = ps.executeQuery();
+            PreparedStatement psi = con.prepareStatement(sqlInsert);  
             if (! res.isBeforeFirst()) {
             psi.setString(1, x.it_item);
             psi.setString(2, x.it_desc);
@@ -97,32 +124,53 @@ public class invData {
             psi.setString(26, x.it_leadtime);
             psi.setString(27, x.it_safestock);
             psi.setString(28, x.it_minordqty);
-            psi.setInt(29, x.it_mrp);
-            psi.setInt(30, x.it_sched);
-            psi.setInt(31, x.it_plan);
+            psi.setString(29, x.it_mrp);
+            psi.setString(30, x.it_sched);
+            psi.setString(31, x.it_plan);
             psi.setString(32, x.it_wf);
             psi.setString(33, x.it_taxcode);
             psi.setString(34, x.it_createdate);
             psi.setString(35, x.it_expire);
             psi.setString(36, x.it_expiredays);
-            int rows = psi.executeUpdate();
-            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
-            } else {
-            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists};    
-            }
-          } catch (SQLException s) {
-	       MainFrame.bslog(s);
-               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
-          }
-        } catch (SQLException s) {
-	       MainFrame.bslog(s);
-               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
-        }
-        return m;
+            rows = psi.executeUpdate();
+            } 
+            ps.close();
+            psi.close();
+            res.close();
+        return rows;
     }
         
-    public static String[] updateItemMstr(ItemMstr x) {
+    public static String[] updateItemMstr(item_mstr x) {
         String[] m = new String[2];
+        if (x == null) {
+            return new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordError};
+        }
+        Connection con = null;
+        try { 
+            con = DriverManager.getConnection(url + db, user, pass);
+            int rows = _updateItemMstr(x, con);  
+            if (rows > 0) {
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+            } else {
+            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordError};    
+            }
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordError};
+        } finally {
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
+    }
+    
+    private static int _updateItemMstr(item_mstr x, Connection con) throws SQLException {
+        int rows = 0;
         String sql = "update item_mstr set it_desc = ?, it_lotsize = ?, " +
                 "it_sell_price = ?, it_pur_price = ?, it_ovh_cost = ?, it_out_cost = ?, it_mtl_cost = ?, it_code = ?, it_type = ?, it_group = ?, " +
                 "it_prodline = ?, it_drawing = ?, it_rev = ?, it_custrev = ?, it_wh = ?, it_loc = ?, it_site = ?, it_comments = ?, " +
@@ -130,8 +178,7 @@ public class invData {
                 "it_leadtime = ?, it_safestock = ?, it_minordqty = ?, it_mrp = ?, it_sched = ?, it_plan = ?, it_wf = ?, it_taxcode = ?, it_createdate = ?, " +
                 "it_expire = ?, it_expiredays = ? " +
                 " where it_item = ? ; ";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
-	PreparedStatement psu = con.prepareStatement(sql)) {
+        PreparedStatement psu = con.prepareStatement(sql);
         psu.setString(36, x.it_item);
             psu.setString(1, x.it_desc);
             psu.setString(2, x.it_lotsize);
@@ -160,30 +207,46 @@ public class invData {
             psu.setString(25, x.it_leadtime);
             psu.setString(26, x.it_safestock);
             psu.setString(27, x.it_minordqty);
-            psu.setInt(28, x.it_mrp);
-            psu.setInt(29, x.it_sched);
-            psu.setInt(30, x.it_plan);
+            psu.setString(28, x.it_mrp);
+            psu.setString(29, x.it_sched);
+            psu.setString(30, x.it_plan);
             psu.setString(31, x.it_wf);
             psu.setString(32, x.it_taxcode);
             psu.setString(33, x.it_createdate);
             psu.setString(34, x.it_expire);
             psu.setString(35, x.it_expiredays);
-        int rows = psu.executeUpdate();
-        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
-        } catch (SQLException s) {
-	       MainFrame.bslog(s);
-               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
-        }
-        return m;
+            rows = psu.executeUpdate();
+            psu.close();
+        return rows;
     }
     
-    public static String[] deleteItemMstr(ItemMstr x) { 
-       String[] m = new String[2];
-       
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);) {
+    public static String[] deleteItemMstr(item_mstr x) {
+        String[] m = new String[2];
+        if (x == null) {
+            return new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordError};
+        }
+        Connection con = null;
+        try { 
+            con = DriverManager.getConnection(url + db, user, pass);
+            _deleteItemMstr(x, con);  
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordError};
+        } finally {
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
+    }
+    
+    private static void _deleteItemMstr(item_mstr x, Connection con) throws SQLException { 
         PreparedStatement ps = null;   
-        
-        con.setAutoCommit(false);
         String sql = "delete from item_mstr where it_item = ?; ";
         ps = con.prepareStatement(sql);
         ps.setString(1, x.it_item);
@@ -221,18 +284,10 @@ public class invData {
         ps.setString(1, x.it_item);
         ps.executeUpdate();
         ps.close();
-        con.commit();
-        
-        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
-        } catch (SQLException s) {
-	       MainFrame.bslog(s);
-               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
-        } 
-        return m;
     }
         
-    public static ItemMstr getItemMstr(String[] x) {
-        ItemMstr r = null;
+    public static item_mstr getItemMstr(String[] x) {
+        item_mstr r = null;
         String[] m = new String[2];
         String sql = "select * from item_mstr where it_item = ? ;";
         try (Connection con = DriverManager.getConnection(url + db, user, pass);
@@ -240,19 +295,19 @@ public class invData {
         ps.setString(1, x[0]);
              try (ResultSet res = ps.executeQuery();) {
                 if (! res.isBeforeFirst()) {
-                m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1001)};
-                r = new ItemMstr(m);  // minimum return
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new item_mstr(m);  // minimum return
                 } else {
                     while(res.next()) {
                         m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
-                        r = new ItemMstr(m, res.getString("it_item"), res.getString("it_desc"), res.getString("it_lotsize"),
+                        r = new item_mstr(m, res.getString("it_item"), res.getString("it_desc"), res.getString("it_lotsize"),
                     res.getString("it_sell_price").replace('.',defaultDecimalSeparator), res.getString("it_pur_price").replace('.',defaultDecimalSeparator), res.getString("it_ovh_cost").replace('.',defaultDecimalSeparator), res.getString("it_out_cost").replace('.',defaultDecimalSeparator),
                     res.getString("it_mtl_cost").replace('.',defaultDecimalSeparator), res.getString("it_code"), res.getString("it_type"), res.getString("it_group"),
                     res.getString("it_prodline"), res.getString("it_drawing"), res.getString("it_rev"), res.getString("it_custrev"), res.getString("it_wh"),
                     res.getString("it_loc"), res.getString("it_site"), res.getString("it_comments"), res.getString("it_status"), res.getString("it_uom"),
                     res.getString("it_net_wt").replace('.',defaultDecimalSeparator), res.getString("it_ship_wt").replace('.',defaultDecimalSeparator), res.getString("it_cont"), res.getString("it_contqty").replace('.',defaultDecimalSeparator), 
-                    res.getString("it_leadtime").replace('.',defaultDecimalSeparator), res.getString("it_safestock").replace('.',defaultDecimalSeparator), res.getString("it_minordqty").replace('.',defaultDecimalSeparator), res.getInt("it_mrp"), 
-                    res.getInt("it_sched"), res.getInt("it_plan"), res.getString("it_wf"), res.getString("it_taxcode"), res.getString("it_createdate"), res.getString("it_expire"), res.getString("it_expiredays")
+                    res.getString("it_leadtime").replace('.',defaultDecimalSeparator), res.getString("it_safestock").replace('.',defaultDecimalSeparator), res.getString("it_minordqty").replace('.',defaultDecimalSeparator), res.getString("it_mrp"), 
+                    res.getString("it_sched"), res.getString("it_plan"), res.getString("it_wf"), res.getString("it_taxcode"), res.getString("it_createdate"), res.getString("it_expire"), res.getString("it_expiredays")
         );
                     }
                 }
@@ -260,11 +315,150 @@ public class invData {
         } catch (SQLException s) {   
 	       MainFrame.bslog(s);  
                m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getClassName() + "." + Thread.currentThread().getStackTrace()[1].getMethodName())}; 
-               r = new ItemMstr(m);
+               r = new item_mstr(m);
         }
         return r;
     }
     
+    public static String[] addBOM(pbm_mstr x) {
+        String[] m = new String[2];
+        if (x == null) {
+            return new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordError};
+        }
+        Connection con = null;
+        try { 
+            con = DriverManager.getConnection(url + db, user, pass);
+            int rows = _addBOM(x, con);  
+            if (rows > 0) {
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+            } else {
+            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordError};    
+            }
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordError};
+        } finally {
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
+    }
+    
+    private static int _addBOM(pbm_mstr x, Connection con) throws SQLException {
+        int rows = 0;
+        String sqlSelect = "select * from pbm_mstr where ps_parent = ? and ps_child = ? and ps_op = ?";
+        String sqlInsert = "insert into pbm_mstr (ps_parent, ps_child, ps_qty_per, " 
+                        + "ps_op, ps_ref, ps_type ) "
+                        + " values (?,?,?,?,?,?); "; 
+       
+            PreparedStatement ps = con.prepareStatement(sqlSelect);
+            ps.setString(1, x.ps_parent);
+            ps.setString(2, x.ps_child);
+            ps.setString(3, x.ps_op);
+            ResultSet res = ps.executeQuery();
+            PreparedStatement psi = con.prepareStatement(sqlInsert);  
+            if (! res.isBeforeFirst()) {
+            psi.setString(1, x.ps_parent);
+            psi.setString(2, x.ps_child);
+            psi.setString(3, x.ps_qty_per);
+            psi.setString(4, x.ps_op);
+            psi.setString(5, x.ps_ref);
+            psi.setString(6, x.ps_type);
+            rows = psi.executeUpdate();
+            } 
+            ps.close();
+            psi.close();
+            res.close();
+        return rows;
+    }
+    
+    public static String[] updateBOM(pbm_mstr x) {
+        String[] m = new String[2];
+        if (x == null) {
+            return new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordError};
+        }
+        Connection con = null;
+        try { 
+            con = DriverManager.getConnection(url + db, user, pass);
+            int rows = _updateBOM(x, con);  
+            if (rows > 0) {
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+            } else {
+            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordError};    
+            }
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordError};
+        } finally {
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
+    }
+    
+    private static int _updateBOM(pbm_mstr x, Connection con) throws SQLException {
+        int rows = 0;
+        String sqlUpdate = "update pbm_mstr set ps_qty_per = ?, " 
+                        + "ps_ref = ?, ps_type = ? "
+                        + " where ps_parent = ? and ps_child = ? and ps_op = ?; ";
+            PreparedStatement psu = con.prepareStatement(sqlUpdate); 
+            psu.setString(4, x.ps_parent);
+            psu.setString(5, x.ps_child);
+            psu.setString(1, x.ps_qty_per);
+            psu.setString(6, x.ps_op);
+            psu.setString(2, x.ps_ref);
+            psu.setString(3, x.ps_type);
+            rows = psu.executeUpdate();
+            psu.close();
+        return rows;
+    }
+    
+    public static String[] deleteBOM(pbm_mstr x) {
+        String[] m = new String[2];
+        if (x == null) {
+            return new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordError};
+        }
+        Connection con = null;
+        try { 
+            con = DriverManager.getConnection(url + db, user, pass);
+            _deleteBOM(x, con);  
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordError};
+        } finally {
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
+    }
+    
+    private static void _deleteBOM(pbm_mstr x, Connection con) throws SQLException { 
+        PreparedStatement ps = null;   
+        String sql = "delete from pbm_mstr where ps_parent = ? and ps_child = ? and ps_op = ? ; ";
+        ps = con.prepareStatement(sql);
+        ps.setString(1, x.ps_parent);
+        ps.setString(2, x.ps_child);
+        ps.setString(3, x.ps_op);
+        ps.executeUpdate();
+        
+        ps.close();
+    }
     
 
 
@@ -1927,25 +2121,30 @@ public class invData {
     
     
                
-    public record ItemMstr(String[] m, String it_item, String it_desc, String it_lotsize,
+    public record item_mstr(String[] m, String it_item, String it_desc, String it_lotsize,
         String it_sell_price, String it_pur_price, String it_ovh_cost, String it_out_cost,
         String it_mtl_cost, String it_code, String it_type, String it_group,
         String it_prodline, String it_drawing, String it_rev, String it_custrev, String it_wh,
         String it_loc, String it_site, String it_comments, String it_status, String it_uom, 
         String it_net_wt, String it_ship_wt, String it_cont, String it_contqty,
-        String it_leadtime, String it_safestock, String it_minordqty, int it_mrp,
-        int it_sched, int it_plan, String it_wf, String it_taxcode, String it_createdate,
+        String it_leadtime, String it_safestock, String it_minordqty, String it_mrp,
+        String it_sched, String it_plan, String it_wf, String it_taxcode, String it_createdate,
         String it_expire, String it_expiredays) {
-        public ItemMstr(String[] m) {
+        public item_mstr(String[] m) {
             this(m, "", "", "", "", "", "", "", "", "", "",
                     "", "", "", "", "", "", "", "", "", "",
-                    "", "", "", "", "", "", "", "", 0, 0,
-                    0, "", "", "", "", "");
+                    "", "", "", "", "", "", "", "", "", "",
+                    "", "", "", "", "", "");
         }
     }
     
     
-    
+    public record pbm_mstr(String[] m, String ps_parent, String ps_child,
+        String ps_qty_per, String ps_op, String ps_ref, String ps_type) {
+        public pbm_mstr(String[] m) {
+            this(m, "", "", "", "", "", "");
+        }
+    }
      
      
     
