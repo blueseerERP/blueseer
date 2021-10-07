@@ -125,16 +125,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
                         getGlobalColumnTag("warehouse"), 
                         getGlobalColumnTag("qty"), 
                         getGlobalColumnTag("date")});
-    javax.swing.table.DefaultTableModel routingmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                    new String[]{
-                        getGlobalColumnTag("operation"), 
-                        getGlobalColumnTag("description"), 
-                        getGlobalColumnTag("mtl"), 
-                        getGlobalColumnTag("lbr"), 
-                        getGlobalColumnTag("bdn"), 
-                        getGlobalColumnTag("ovh"), 
-                        getGlobalColumnTag("out"), 
-                        getGlobalColumnTag("total")});
+    
     
     public ItemMaint() {
         initComponents();
@@ -329,9 +320,13 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
        
        DefaultMutableTreeNode root = new DefaultMutableTreeNode("");
        jTree1.setModel(new DefaultTreeModel(root));
+       
+       tablelocqty.setModel(locmodel);
+       tabletrans.setModel(transmodel);
+       
        transmodel.setNumRows(0);
        locmodel.setNumRows(0);
-       routingmodel.setNumRows(0);
+       
       
        labelmessage.setText("");
        imagelabel.setIcon(null);
@@ -739,7 +734,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
 
                 
                 transmodel.setRowCount(0);
-                tabletrans.setModel(transmodel);
+               
                             
                 // ReportPanel.TableReport.getColumn("CallID").setCellRenderer(new ButtonRenderer());
                 //          ReportPanel.TableReport.getColumn("CallID").setCellEditor(
@@ -786,7 +781,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
 
                 
                 locmodel.setRowCount(0);
-                tablelocqty.setModel(locmodel);
+                
                             
                 // ReportPanel.TableReport.getColumn("CallID").setCellRenderer(new ButtonRenderer());
                 //          ReportPanel.TableReport.getColumn("CallID").setCellEditor(
