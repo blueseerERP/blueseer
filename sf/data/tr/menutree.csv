@@ -1,0 +1,288 @@
+﻿CustomerMenu,CustMaint,1,JMenuItem,Müşteri Bakımı,,,,1,1
+CustomerMenu,CustReport1,2,JMenuItem,Müşteri Gözat,,1,,1,1
+CustomerMenu,CustXrefMaint,3,JMenuItem,Müşteri Xref Bakımı,,,,1,1
+CustomerMenu,CustXrefBrowse,4,JMenuItem,Müşteri Xref Gözat,,,,1,1
+CustomerMenu,CustPriceMaint,5,JMenuItem,Müşteri Fiyat Bakımı,,,,1,1
+CustomerMenu,CustPriceReport,6,JMenuItem,Müşteri Fiyatına Göz Atın,,,,1,1
+CustomerMenu,CusRptPicker,7,JMenuItem,Müşteri Raporu Seçici,,,,1,1
+CustomerMenu,CustomerReports,8,JMenu,Diğer Müşteri Raporları,,,,1,1
+CustomerMenu,CustControl,9,JMenuItem,Müşteri Kontrolü,,,,1,1
+Adres,CustomerMenu,1,JMenu,Müşteri Menüsü,,,,1,1
+Adres,VendorMenu,2,JMenu,Satıcı Menüsü,,,,1,1
+Adres,EDIMenu,3,JMenu,EDI Menüsü,,,,1,1
+Adres,LabelMenu,4,JMenu,Etiket Menüsü,,,,1,1
+Adres,CarrierMaint,5,JMenuItem,Taşıyıcı Bakımı,,,,1,1
+Adres,CarrierBrowse,6,JMenuItem,Taşıyıcı Gözat,,1,,1,1
+Adres,FreightMaint,7,JMenuItem,Yük Bakımı,,,,1,1
+Adres,FreightBrowse,8,JMenuItem,Navlun Gözat,,1,,1,1
+Adres,TermsMaint,9,JMenuItem,Şartlar Bakım,,,,1,1
+Adres,TermsBrowse,10,JMenuItem,Şartlar Gözat,,1,,1,1
+Adres,TaxMaint,11,JMenuItem,Vergi Bakımı,,,,1,1
+Adres,TaxBrowse,12,JMenuItem,Vergi Gözat,,1,,1,1
+CustomerReports,piechart_salesbycust,1,JMenuItem,Müşteriye Göre Satışlar (PieChart),,1,,1,1
+CustomerReports,piechart_custAR,2,JMenuItem,Müşteriye Göre Alacaklar (PieChart),,1,,1,1
+VendorMenu,VendMaint,1,JMenuItem,Satıcı Bakımı,,,,1,1
+VendorMenu,VendBrowse,2,JMenuItem,Satıcı Gözat,,1,,1,1
+VendorMenu,VendXrefMaint,3,JMenuItem,Satıcı Xref Bakımı,,,,1,1
+VendorMenu,VendXrefRpt1,4,JMenuItem,Satıcı Xref Gözat,,,,1,1
+VendorMenu,VendPriceMaint,5,JMenuItem,Satıcı Fiyatı Bakımı,,,,1,1
+VendorMenu,VendPriceRpt1,6,JMenuItem,Satıcı Fiyatına Göz Atın,,,,1,1
+VendorMenu,VenRptPicker,7,JMenuItem,Satıcı Raporu Seçici,,,,1,1
+VendorMenu,VendControl,8,JMenuItem,Satıcı Kontrolü,,,,1,1
+EDIMenu,EDILoad,1,JMenuItem,EDI Yükü,,,,1,1
+EDIMenu,EDILog,2,JMenuItem,EDI Günlüğü,,,,1,1
+EDIMenu,EDIPartnerMaint,3,JMenuItem,EDI İş Ortağı Bakımı,,,,1,1
+EDIMenu,EDIPartnerDocMaint,4,JMenuItem,İş Ortağı İşlem Bakımı,,,,1,1
+EDIMenu,EDIPartnerDocBrowse,5,JMenuItem,EDI İş Ortağı İşlemine Gözat,,1,,1,1
+EDIMenu,EDIDocumentMaint,6,JMenuItem,Belge Tanıma Bakımı,,,,1,1
+EDIMenu,EDIControl,7,JMenuItem,EDI Kontrolü,,,,1,1
+LabelMenu,LabelsContGeneric,1,JMenuItem,Konteyner Etiketleri,,,,1,1
+LabelMenu,AddrLabel,2,JMenuItem,Adres Etiketleri,,,,1,1
+LabelMenu,LabelBrowse,3,JMenuItem,Etikete Gözat,,1,,1,1
+LabelMenu,LabelFileMaint,4,JMenuItem,Etiket Dosyası Bakımı,,,,1,1
+LabelMenu,LabelFileBrowse,5,JMenuItem,Etiket Dosyası Gözat,,1,,1,1
+Satın alma,POMaintMenu,1,JMenuItem,Satın Alma Siparişi Bakımı,,,,1,1
+Satın alma,POBrowse,2,JMenuItem,Satın Alma Siparişine Gözat,,1,,1,1
+Satın alma,ReceiverMaintMenu,3,JMenuItem,Alıcı Bakımı,,,,1,1
+Satın alma,RecvBrowse,4,JMenuItem,Alıcı Gözat,,1,,1,1
+Satın alma,RecvByPOBrowse,5,JMenuItem,Alıcıya Göre PO Gözat,,1,,1,1
+Satın alma,PurRptPicker,6,JMenuItem,Satın Alma Raporu Seçici,,1,,1,1
+Satın alma,RequisitionMenu,7,JMenu,Talep Menüsü,,,,1,1
+Satın alma,POControl,8,JMenuItem,PO Kontrolü,,1,,1,1
+RequisitionMenu,ReqMaint,1,JMenuItem,Talep Bakımı,,,,1,1
+RequisitionMenu,ReqBrowseAll,2,JMenuItem,Talep Gözat,,1,,1,1
+RequisitionMenu,PendReqRpt1,5,JMenuItem,Bekleyen Talepler,,1,,1,1
+RequisitionMenu,ApprovedReqBrowse,3,JMenuItem,Onaylanmış Talepler,,1,,1,1
+RequisitionMenu,ReqPendingApproval,4,JMenuItem,Onaylayan Tarafından Bekleniyor,,1,,1,1
+RequisitionMenu,ReqByUserRpt,6,JMenuItem,Kullanıcıya Göre Talepler,,1,,1,1
+RequisitionMenu,ReqChartsMenu,7,JMenu,Grafik Menüsü,,,,1,1
+ReqChartsMenu,ReqAmtByDeptChart,1,JMenuItem,Bölüme Göre Dolar,,1,,1,1
+ReqChartsMenu,ReqFreqByUserChart,2,JMenuItem,Kullanıcıya Göre Talepler,,1,,1,1
+ReqChartsMenu,ReqAmtByAcctChart,3,JMenuItem,Hesapla Dolar,,1,,1,1
+Emir,OrderMaint,1,JMenuItem,Sipariş Bakımı,,,,1,1
+Emir,OrderBrowse,2,JMenuItem,Sipariş Gözat,,1,,1,1
+Emir,ServiceOrderMaint,3,JMenuItem,Servis Siparişi Bakımı,,,,1,1
+Emir,ServiceOrderBrowse,4,JMenuItem,Servis Siparişi Gözat,,,,1,1
+Emir,OrderSourceBrowse,5,JMenuItem,Kaynak Araştır,,1,,1,1
+Emir,OrdLineBrowse,6,JMenuItem,Sipariş Hattına Gözat,,1,,1,1
+Emir,SchedOrdBrowse,7,JMenuItem,Planlanmış Sipariş Gözat,,1,,1,1
+Emir,FileOrderLoad,8,JMenuItem,CSV Dosyasına Göre Sipariş Yüklemesi,,,,1,1
+Emir,OrdRptPicker,9,JMenuItem,Sipariş Raporu Seçici,,,,1,1
+Emir,OrderReports,10,JMenu,Diğer Raporlar,,,,1,1
+Emir,POSMenu,11,JMenu,POS Menüsü,,,,1,1
+Emir,DOMenu,12,JMenu,Dağıtım Menüsü,,,,1,1
+Emir,OrderSource,13,JMenuItem,Sipariş Kaynağı,,,,1,1
+Emir,OrderControl,14,JMenuItem,Sipariş Kontrolü,,,,1,1
+OrderReports,pcOpenOrdersByCust,1,JMenuItem,Vade Tarihine Göre Müşteriye Göre Açık Siparişler (PieChart),,1,,1,1
+OrderReports,DiscreteOrderPerWeekUnits,2,JMenuItem,Haftaya Göre Sipariş Birimleri (BarChart),,1,,1,1
+OrderReports,DiscreteOrderPerWeekDollars,3,JMenuItem,Haftaya Göre Sipariş Satışları (BarChart),,1,,1,1
+Nakliye,ShipMaint,1,JMenuItem,Nakliyeci Bakımı,,,,1,1
+Nakliye,ShipperBrowse,2,JMenuItem,Gönderici Gözat,,1,,1,1
+Nakliye,ShipperBrowseDet,3,JMenuItem,Gönderici Detay Gözat,,1,,1,1
+Nakliye,ShipConfirm,4,JMenuItem,Gönderici Onayı,,,,1,1
+Nakliye,ShipUnconfirm,5,JMenuItem,Gönderici Onayı İptal Et,,,,1,1
+Nakliye,TransportationMenu,6,JMenu,Ulaşım Menüsü,,,,1,1
+Nakliye,ShpRptPicker,7,JMenuItem,Gönderi Raporu Seçici,,,,1,1
+Nakliye,ShipReports,8,JMenu,Diğer Raporlar,,,,1,1
+Nakliye,ShipperControl,9,JMenuItem,Gönderici Kontrolü,,,,1,1
+ShipReports,ShipPerWeekDollarsChart,1,JMenuItem,Haftalık Sevkiyat Doları (BarChart),,1,,1,1
+Finans,LedgerSetupMenu,1,JMenu,Defter Kurulumu,,,,1,1
+LedgerSetupMenu,AcctMaint,1,JMenuItem,Hesap Bakımı,,,,1,1
+LedgerSetupMenu,AcctBrowse,2,JMenuItem,Hesap Tarama,,1,,1,1
+LedgerSetupMenu,DeptMaint,3,JMenuItem,Departman/CC Bakım,,,,1,1
+LedgerSetupMenu,DeptBrowse,4,JMenuItem,Bölüm/CC Gözat,,1,,1,1
+LedgerSetupMenu,GLCalMaint,5,JMenuItem,Defter Takvimi,,,,1,1
+LedgerSetupMenu,CalendarBrowse,6,JMenuItem,Defter Takvimine Göz Atın,,1,,1,1
+LedgerSetupMenu,BankMaint,7,JMenuItem,Banka Bakımı,,,,1,1
+LedgerSetupMenu,BankBrowse,8,JMenuItem,Banka Gözat,,1,,1,1
+LedgerSetupMenu,CurrencyMaint,9,JMenuItem,Para Birimi Bakımı,,,,1,1
+LedgerSetupMenu,ExchangeMaint,10,JMenuItem,Döviz Kuru Bakımı,,,,1,1
+LedgerSetupMenu,GLControl,11,JMenuItem,GL Kontrolü,,,,1,1
+LedgerSetupMenu,GLIncStmtDef,12,JMenuItem,Gelir Tablosu Tanımı,,,,1,1
+Finans,LedgerReportsMenu,2,JMenu,Defter Raporları,,,,1,1
+LedgerReportsMenu,GLAcctBalSummaryByPeriod,1,JMenuItem,Hesap Bakiyesi Raporu,,,,1,1
+LedgerReportsMenu,TrialBalanceRpt,2,JMenuItem,Deneme Bakiyesi Raporu,,,,1,1
+LedgerReportsMenu,GLAcctBalSummaryByYear,3,JMenuItem,Hesap Etkinliği (Yıl),,,,1,1
+LedgerReportsMenu,AcctBalSumYTD,4,JMenuItem,Hesap Bakiyesi YTD,,,,1,1
+LedgerReportsMenu,UnPostedTransRpt,5,JMenuItem,Gönderilmemiş İşlemler,,1,,1,1
+LedgerReportsMenu,GLTranRpt1,6,JMenuItem,Defter İşlem Raporu,,1,,1,1
+LedgerReportsMenu,LedgerBalanceExport,7,JMenuItem,Defter Bakiyesi Görünümü/Dışarı Aktarma,,,,1,1
+LedgerReportsMenu,IncomeStatement1,8,JMenuItem,Gelir Tablosu,,1,,1,1
+LedgerReportsMenu,IncomeStatementYear,9,JMenuItem,Gelir Tablosu(Yıl),,1,,1,1
+LedgerReportsMenu,ReconAccount,10,JMenuItem,Hesap mutabakatı,,1,,1,1
+Finans,PostGLTrans,3,JMenuItem,İşlem Sonrası,,,,1,1
+Finans,GLTranMaint,4,JMenuItem,GL İşlem Bakımı,,,,1,1
+Finans,ExpenseMaint,5,JMenuItem,Masraf Bakımı,,,,1,1
+Finans,IncomeMaint,5,JMenuItem,Gelir Bakımı,,,,1,1
+Finans,ARMenu,7,JMenu,Alacak Hesapları Menüsü,,,,1,1
+Finans,APMenu,8,JMenu,Borç Hesapları Menüsü,,,,1,1
+Finans,CashTransactionMenu,9,JMenu,Hızlı Nakit Menüsü,,,,1,1
+Finans,PayRollMenu,10,JMenu,Bordro Menüsü,,,,1,1
+ARMenu,ARPaymentMaint,1,JMenuItem,Ödeme Bakımı,,,,1,1
+ARMenu,ARPaymentBrowse,2,JMenuItem,Ödeme Gözat,,1,,1,1
+ARMenu,ARMemoMaint,3,JMenuItem,Not Bakımı,,,,1,1
+ARMenu,ARAgingView,4,JMenuItem,AR Yaşlanma Görünümü,,,,1,1
+ARMenu,ARTranRpt1,5,JMenuItem,AR İşlem Raporu,,1,,1,1
+ARMenu,InvoiceMaint,6,JMenuItem,Fatura Görünümü / Bakım,,,,1,1
+ARMenu,InvoiceBrowse,7,JMenuItem,Faturaya Gözat,,1,,1,1
+ARMenu,ARRptPicker,8,JMenuItem,AR Raporu Seçici,,1,,1,1
+ARMenu,ARControl,9,JMenuItem,AR Kontrolü,,,,1,1
+PayRollMenu,PayRollMaint,1,JMenuItem,Bordro Bakımı,,,,1,1
+PayRollMenu,PayRollBrowse,2,JMenuItem,Bordro Gözat,,1,,1,1
+PayRollMenu,PayProfileMaint,3,JMenuItem,Ödeme Profili Bakımı,,,,1,1
+PayRollMenu,PayProfileBrowse,4,JMenuItem,Profili Öde,,1,,1,1
+PayRollMenu,PayControl,5,JMenuItem,Bordro Kontrolü,,1,,1,1
+CashTransactionMenu,CashTran,1,JMenuItem,Hızlı Nakit İşlem,,,,1,1
+CashTransactionMenu,CashTranBrowse,2,JMenuItem,Hızlı Nakit Gözat,,,,1,1
+APMenu,VouchMaintPanel,1,JMenuItem,Kupon Bakımı,,,,1,1
+APMenu,VoucherBrowse,2,JMenuItem,Kupon Gözat,,,,1,1
+APMenu,PaymentMaint,3,JMenuItem,Ödeme Bakımı,,,,1,1
+APMenu,APAgingView,4,JMenuItem,AP Yaşlandırma Görünümü,,,,1,1
+APMenu,APRptPicker,5,JMenuItem,AP Rapor Seçici,,,,1,1
+APMenu,APControl,6,JMenuItem,AP Kontrolü,,,,1,1
+Envanter,ProdCodeMaint,1,JMenuItem,Ürün Kodu Bakım,,,,1,1
+Envanter,ProdCodeBrowse,2,JMenuItem,Ürün Kodu Gözat,,1,,1,1
+Envanter,WareHouseMaint,3,JMenuItem,Depo Bakımı,,,,1,1
+Envanter,WareHouseBrowse,4,JMenuItem,Depoya Gözat,,1,,1,1
+Envanter,LocationMaint,5,JMenuItem,Konum Bakımı,,,,1,1
+Envanter,LocationBrowse,6,JMenuItem,Konum Gözat,,1,,1,1
+Envanter,ItemMenu,7,JMenu,Öğe Menüsü,,,,1,1
+Envanter,RoutingMenu,8,JMenu,Yönlendirme Menüsü,,,,1,1
+Envanter,BOMMenu,9,JMenu,Malzeme Listesi Menüsü,,,,1,1
+Envanter,ProductionMenu,10,JMenu,Üretim Menüsü,,,,1,1
+Envanter,ScrapMenu,11,JMenu,Hurda Menüsü,,,,1,1
+Envanter,InvAdjustmentsMenu,12,JMenu,Envanter Düzeltmeleri Menüsü,,,,1,1
+Envanter,ScheduleMenu,13,JMenu,Program Menüsü,,,,1,1
+Envanter,MRPMenu,14,JMenu,MİP Menüsü,,,,1,1
+Envanter,InvRptPicker,15,JMenuItem,Envanter Raporu Seçici,,1,,1,1
+Envanter,InventoryReportsMenu,16,JMenu,Envanter Çeşitli Raporları,,,,1,1
+Envanter,InventoryCtrl,17,JMenuItem,Stok kontrolü,,,,1,1
+InvAdjustmentsMenu,LocationTransfer,1,JMenuItem,Konum Transferi,,,,1,1
+InvAdjustmentsMenu,InventoryAdjustment,2,JMenuItem,Envanter Ayarlama,,,,1,1
+InventoryReportsMenu,TransBrowse,1,JMenuItem,İşlem Gözat,,1,,1,1
+ItemMenu,ItemMaint,1,JMenuItem,Ürün Bakımı,,,,1,1
+ItemMenu,ItemBrowse,2,JMenuItem,Öğe Gözat,,1,,1,1
+ItemMenu,UOMMaint,3,JMenuItem,UOM Bakımı,,,,1,1
+ItemMenu,UOMConvMaint,4,JMenuItem,UOM Dönüşüm Bakımı,,,,1,1
+ItemMenu,CostRoll,5,JMenuItem,Maliyet Bakımı,,,,1,1
+ItemMenu,CostRollRange,6,JMenuItem,Aralığa Göre Maliyet Tablosu,,,,1,1
+ItemMenu,CostReports,7,JMenu,Maliyet Raporları,,,,1,1
+RoutingMenu,WorkCellMaint,1,JMenuItem,Çalışma Hücresi Bakımı,,,,1,1
+RoutingMenu,WorkCellBrowse,2,JMenuItem,Çalışma Hücresine Göz Atma,,1,,1,1
+RoutingMenu,RoutingMaint,3,JMenuItem,Yönlendirme Bakımı,,,,1,1
+RoutingMenu,RoutingBrowse,4,JMenuItem,Yönlendirme Gözat,,1,,1,1
+RoutingMenu,ItemRoutingRpt,5,JMenuItem,Öğe Yönlendirme Raporu,,,,1,1
+BOMMenu,BOMMaint,1,JMenuItem,Malzeme Listesi Bakımı,,,,1,1
+BOMMenu,BOMBrowse,2,JMenuItem,Malzeme Listesine Göz At,,1,,1,1
+BOMMenu,BOMTree,3,JMenuItem,Malzeme Listesi Ağacı,,,,1,1
+BOMMenu,WhereUsedUtility,4,JMenuItem,Kullanım Yeri,,,,1,1
+ProductionMenu,ProdEntryMaint,1,JMenuItem,Üretim Girişi,,,,1,1
+ProductionMenu,ProdEntryByPlan,2,JMenuItem,Plana Göre Üretim Girişi,,,,1,1
+ProductionMenu,OEEEntry,3,JMenuItem,OEE Girişi,,,,1,1
+ProductionMenu,ProductionReports,4,JMenu,Üretim Raporları,,,,1,1
+ProductionReports,ProdRptDet,1,JMenuItem,Üretim Raporu Detayı,,1,,1,1
+ProductionReports,ProdByWeekFGUnits,2,JMenuItem,Haftalık FG Üretim Birimleri (BarChart),,1,,1,1
+ProductionReports,ProdByWeekFGDollars,3,JMenuItem,Haftalık FG Üretim Doları (BarChart),,1,,1,1
+ScrapMenu,ScrapEntry,1,JMenuItem,Hurda Girişi,,,,1,1
+ScrapMenu,ScrapReports,2,JMenu,Hurda Raporları,,,,1,1
+ScrapReports,ScrapRpt1,1,JMenuItem,Hurda Raporu,,1,,1,1
+ScrapReports,ScrapChartQtyByCode,2,JMenuItem,Kodla Hurda Miktarı (BarChart),,1,,1,1
+ScrapReports,ScrapChartQtyByPart,3,JMenuItem,Parçaya Göre Hurda Miktarı (BarChart),,1,,1,1
+ScrapReports,ScrapChartQtyByDept,4,JMenuItem,Departmana Göre Hurda Miktarı (BarChart),,1,,1,1
+ScrapReports,ScrapChartDolByCode,5,JMenuItem,Kodla Hurda Dolar (BarChart),,1,,1,1
+ScrapReports,ScrapChartDolByPart,6,JMenuItem,Parçalara Göre Hurda Dolar (BarChart),,1,,1,1
+ScrapReports,ScrapChartDolByDept,7,JMenuItem,Departmana Göre Hurda Dolar (BarChart),,1,,1,1
+ScrapReports,ScrapPerWeek,8,JMenuItem,Haftalık Hurda (BarChart),,1,,1,1
+ScheduleMenu,Scheduler,1,JMenuItem,zamanlayıcı,,,,1,1
+ScheduleMenu,SchRptPicker,2,JMenuItem,Zamanlama Raporu Seçici,,1,,1,1
+ScheduleMenu,ProdSchedRpt1,3,JMenuItem,Zamanlanmış Plan Raporu,,1,,1,1
+ScheduleMenu,PlanMiscMaint,4,JMenuItem,Çeşitli Plan Bakımı,,,,1,1
+ScheduleMenu,ForecastMaint,5,JMenuItem,Tahmin Bakımı,,,,1,1
+ScheduleMenu,ForecastBrowse,6,JMenuItem,Tahmine Gözat,,1,,1,1
+ScheduleMenu,forecast13weeks,7,JMenuItem,Tahmin Görünümü 13 Hafta,,1,,1,1
+ScheduleMenu,FcstToPlan,8,JMenuItem,Senkronizasyonu Planlamak İçin Tahmin,,,,1,1
+ScheduleMenu,DemdToPlan,9,JMenuItem,Senkronizasyonu Planlama Talebi,,,,1,1
+MRPMenu,ItemLevelCalculate,1,JMenuItem,MRP Yenileme,,,,1,1
+MRPMenu,MRPBrowse,2,JMenuItem,MRP Gözat,,1,,1,1
+MRPMenu,RetailReorderRpt,3,JMenuItem,Perakende İkmal Raporu,,1,,1,1
+CostReports,noStdCostBrowse,1,JMenuItem,Std Maliyeti Olmayan Ürün,,1,,1,1
+Kalite,QPRMaint,1,JMenuItem,QPR Bakımı,,,,1,1
+Kalite,QPRBrowse,2,JMenuItem,QPR Gözat,,1,,1,1
+İK,EmployeeMaster,1,JMenuItem,Çalışan Bakımı,,,,1,1
+İK,EmpBrowse,2,JMenuItem,Çalışan Göz Atma,,1,,1,1
+İK,HRRptPicker,3,JMenuItem,İK Raporu Seçici,,1,,1,1
+İK,ShiftMaintenance,4,JMenuItem,Vardiya Bakımı,,,,1,1
+İK,ShiftBrowse,5,JMenuItem,Shift Gözat,,1,,1,1
+İK,HRTrainingMenu,6,JMenu,Eğitim Menüsü,,,,1,1
+İK,TimeClockMenu,7,JMenu,Zaman Saat Menüsü,,,,1,1
+HRTrainingMenu,TrainingMaint,1,JMenuItem,Eğitim Bakım,,,,1,1
+HRTrainingMenu,TrainingRpt1,2,JMenuItem,Eğitim Raporu,,1,,1,1
+TimeClockMenu,TimeClockEntry,1,JMenuItem,Zaman saati,,,,1,1
+TimeClockMenu,TCAdminMenu,2,JMenu,Yönetim,,,,1,1
+TCAdminMenu,ClockApprovalMaint,1,JMenuItem,Süpervizör Onayı,,,,1,1
+TCAdminMenu,ClockAutoMaint,2,JMenuItem,Otomatik Saat Bakımı,,,,1,1
+TCAdminMenu,TimeClockAdjust,3,JMenuItem,Saat Kaydı Bakımı,,,,1,1
+TCAdminMenu,ClockCodeMaint,4,JMenuItem,Saat Kodu Bakımı,,,,1,1
+TCAdminMenu,ClockCodeBrowse,5,JMenuItem,Saat Koduna Gözat,,1,,1,1
+TCAdminMenu,ClockControl,6,JMenuItem,Saat Kontrolü,,,,1,1
+TimeClockMenu,TCReportsMenu,3,JMenu,Raporlar,,,,1,1
+TCReportsMenu,ClockDetailRpt,1,JMenuItem,Saat Detay Raporu,,1,,1,1
+TCReportsMenu,ClockCode66Browse,2,JMenuItem,Kod 66 Raporu,,1,,1,1
+TCReportsMenu,ClockChartByDept,3,JMenuItem,Departmana Göre Saatler (Grafik),,1,,1,1
+TCReportsMenu,ClockChartByCode,4,JMenuItem,Kodlara Göre Saatler (Grafik),,1,,1,1
+TCReportsMenu,ClockChartByEmp,5,JMenuItem,Çalışan Saati (Grafik),,1,,1,1
+TCReportsMenu,ClockChartByWeek,6,JMenuItem,Haftaya Göre Toplam Saat (Grafik),,1,,1,1
+Admin,DefaultMaint,1,JMenuItem,Varsayılan Bakım,,,,1,1
+Admin,SiteMaint,2,JMenuItem,Site Bakımı,,,,1,1
+Admin,SiteBrowse,3,JMenuItem,Siteye Gözat,,1,,1,1
+Admin,UserMaint,4,JMenuItem,Kullanıcı Bakımı,,,,1,1
+Admin,UserPermsMaint,5,JMenuItem,Kullanıcı İzinleri Bakımı,,,,1,1
+Admin,UserBrowse,6,JMenuItem,Kullanıcı Gözat,,1,,1,1
+Admin,PanelMaint,7,JMenuItem,Sınıf Kaydı,,,,1,1
+Admin,PanelBrowse,8,JMenuItem,Sınıf Tarama,,1,,1,1
+Admin,MenuMaint,9,JMenuItem,Menü Bakımı,,,,1,1
+Admin,MenuBrowse,10,JMenuItem,Menüye Gözat,,1,,1,1
+Admin,GenericCodeMaint,11,JMenuItem,Genel Kod Bakımı,,,,1,1
+Admin,GenCodeBrowse,12,JMenuItem,Genel Kod Gözat,,1,,1,1
+Admin,KeyMaint,13,JMenuItem,Anahtar Bakım,,,,1,1
+Admin,PrinterMaint,14,JMenuItem,Yazıcı Bakımı,,,,1,1
+Admin,PrinterBrowse,15,JMenuItem,Yazıcıya Gözat,,1,,1,1
+Admin,ChangeUserid,16,JMenuItem,Kullanıcı Kimliğini Değiştir,,,changeUserID,1,1
+Admin,changeDB,17,JMenuItem,IP'yi değiştir:DB,,,changeIPandDB,1,1
+Admin,SystemControl,18,JMenuItem,Sistem kontrolü,,,,1,1
+Admin,TreeMaint,19,JMenuItem,Menü Ağacı Bakımı,,,,1,1
+Admin,FTPMaint,20,JMenuItem,FTP Bakımı,,,,1,1
+Admin,MassLoad,21,JMenuItem,Ana Verileri İçe Aktarma,,,,1,1
+Admin,JasperRptMaint,22,JMenuItem,Jasper Rapor Bakımı,,,,1,1
+Yardım,About,1,JMenuItem,Hakkında,,,,1,1
+Yardım,Update,2,JMenuItem,Güncelleme,,,,1,1
+Yardım,PlantDirectoryMenu,3,JMenuItem,Tesis Rehberi,,1,,1,1
+Yardım,menuscreen,4,JMenuItem,Ekran çözünürlüğü,,,getScreenSize,1,1
+Yardım,NavCodeBrowse,5,JMenuItem,NAVCode Listesi,,1,,1,1
+Yardım,SchemaBrowse,6,JMenuItem,Şema,,1,,1,1
+Yardım,BrowseUtil,7,JMenuItem,,,1,,1,1
+Yardım,SysInfo,8,JMenuItem,Sistem Bilgisi,,1,,1,1
+root,Adres,1,JMenu,Adres,,,,1,1
+root,Satın alma,2,JMenu,Satın alma,,,,1,1
+root,Emir,3,JMenu,Emir,,,,1,1
+root,Nakliye,4,JMenu,Nakliye,,,,1,1
+root,finans,5,JMenu,finans,,,,1,1
+root,Envanter,6,JMenu,Envanter,,,,1,1
+root,Mühendislik,7,JMenu,Mühendislik,,,,1,1
+root,Kalite,8,JMenu,Kalite,,,,1,1
+root,Gelenek,9,JMenu,Gelenek,,,,1,0
+root,İK,10,JMenu,İK,,,,1,1
+root,yönetici,11,JMenu,yönetici,,,,1,1
+root,Yardım,12,JMenu,Yardım,,,,1,1
+POSMenu,POSMaint,1,JMenuItem,POS Girişi,,,,1,1
+POSMenu,POSControlMaint,3,JMenuItem,POS Kontrolü,,,,1,1
+POSMenu,POSBrowse,2,JMenuItem,POS Gözat,,1,,1,1
+DOMenu,DOMaint,1,JMenuItem,Dist Order Bakımı,,,,1,1
+DOMenu,DOBrowse,2,JMenuItem,Dist Order Gözat,,,,1,1
+TransportationMenu,FOMaint,1,JMenuItem,Navlun Siparişi Bakımı,,,,1,1
+TransportationMenu,FOBrowse,2,JMenuItem,Navlun Siparişi Gözat,,,,1,1
+RequisitionMenu,ReqControl,8,JMenuItem,Talep Kontrolü,,,,1,1
+Mühendislik,ECNMaint,1,JMenuItem,ECN Bakımı,,,,1,1
+Mühendislik,ECNBrowse,2,JMenuItem,ECN Gözat,,1,,1,1
+Mühendislik,TaskMaint,3,JMenuItem,Görev Bakımı,,,,1,1
+Mühendislik,TaskBrowse,4,JMenuItem,Göreve Göz Atma,,1,,1,1
