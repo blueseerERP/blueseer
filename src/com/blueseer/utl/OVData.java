@@ -18423,11 +18423,24 @@ return myitem;
                 ResultSet res = null;
                
                  String cust = ""; 
-                String site = ""; 
-                res = st.executeQuery("select sh_cust, sh_site from ship_mstr where sh_id = " + "'" + invoice + "'" + ";");
+                 String site = ""; 
+                 String site_csz = "";
+                 String bill_csz = "";
+                 String ship_csz = "";
+                 
+                res = st.executeQuery("select sh_cust, sh_site, cm_city, cm_state, cm_zip, " +
+                        " cms_city, cms_state, cms_zip, site_city, site_state, site_zip " +
+                        " from ship_mstr " +
+                        " inner join cm_mstr on cm_code = sh_cust " +
+                        " left outer join cms_det on cms_code = sh_cust and cms_shipto = sh_ship " +
+                        " inner join site_mstr on site_site = sh_site " +
+                        " where sh_id = " + "'" + invoice + "'" + ";");
                        while (res.next()) {
                           cust = res.getString(("sh_cust"));
                           site = res.getString(("sh_site"));
+                          site_csz = res.getString(("site_city")) + " " + res.getString(("site_state")) + " " + res.getString(("site_zip"));
+                          bill_csz = res.getString(("cm_city")) + " " + res.getString(("cm_state")) + " " + res.getString(("cm_zip"));
+                          ship_csz = res.getString(("cms_city")) + " " + res.getString(("cms_state")) + " " + res.getString(("cms_zip"));
                        }
                 
                 
@@ -18447,6 +18460,9 @@ return myitem;
                 HashMap hm = new HashMap();
                 hm.put("REPORT_TITLE", "INVOICE");
                 hm.put("myid",  invoice);
+                hm.put("site_csz", site_csz);
+                hm.put("bill_csz", bill_csz);
+                hm.put("ship_csz", ship_csz);
                 hm.put("imagepath", imagepath);
                 hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
                // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_part, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
@@ -18482,17 +18498,34 @@ return myitem;
                  String cust = ""; 
                  String site = ""; 
                  String invoice = "";
-                res = st.executeQuery("select sh_id, sh_cust, sh_site from ship_mstr inner join ship_det on shd_id = sh_id where shd_so = " + "'" + order + "'" + ";");
-                int i = 0;       
-                while (res.next()) {
-                    i++;
-                          cust = res.getString("sh_cust");
-                          site = res.getString("sh_site");
+               
+                 
+                 String site_csz = "";
+                 String bill_csz = "";
+                 String ship_csz = "";
+                 
+                res = st.executeQuery("select sh_id, sh_cust, sh_site, cm_city, cm_state, cm_zip, " +
+                        " cms_city, cms_state, cms_zip, site_city, site_state, site_zip " +
+                        " from ship_mstr " +
+                        " inner join ship_det on shd_id = sh_id " +
+                        " inner join cm_mstr on cm_code = sh_cust " +
+                        " left outer join cms_det on cms_code = sh_cust and cms_shipto = sh_ship " +
+                        " inner join site_mstr on site_site = sh_site " +
+                        " where shd_so = " + "'" + order + "'" + ";");
+                       int i = 0;
+                       while (res.next()) {
+                          i++;
+                          cust = res.getString(("sh_cust"));
+                          site = res.getString(("sh_site"));
+                          site_csz = res.getString(("site_city")) + " " + res.getString(("site_state")) + " " + res.getString(("site_zip"));
+                          bill_csz = res.getString(("cm_city")) + " " + res.getString(("cm_state")) + " " + res.getString(("cm_zip"));
+                          ship_csz = res.getString(("cms_city")) + " " + res.getString(("cms_state")) + " " + res.getString(("cms_zip"));
                           invoice = res.getString("sh_id");
                           if (i > 1) {
                               break;
                           }
-                }
+                       }
+                
                 
                 
                 String imagepath = "";
@@ -18513,6 +18546,9 @@ return myitem;
                 HashMap hm = new HashMap();
                 hm.put("REPORT_TITLE", "INVOICE");
                 hm.put("myid",  invoice);
+                hm.put("site_csz", site_csz);
+                hm.put("bill_csz", bill_csz);
+                hm.put("ship_csz", ship_csz);
                 hm.put("imagepath", imagepath);
                 hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
                // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_part, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
@@ -18612,15 +18648,26 @@ return myitem;
                 Statement st = con.createStatement();
                 ResultSet res = null;
                
-                 String cust = ""; 
+                String cust = ""; 
                 String site = ""; 
-                res = st.executeQuery("select sh_cust, sh_site from ship_mstr where sh_id = " + "'" + shipper + "'" + ";");
+                String site_csz = "";
+                String bill_csz = "";
+                String ship_csz = "";
+                 
+                res = st.executeQuery("select sh_cust, sh_site, cm_city, cm_state, cm_zip, " +
+                        " cms_city, cms_state, cms_zip, site_city, site_state, site_zip " +
+                        " from ship_mstr " +
+                        " inner join cm_mstr on cm_code = sh_cust " +
+                        " left outer join cms_det on cms_code = sh_cust and cms_shipto = sh_ship " +
+                        " inner join site_mstr on site_site = sh_site " +
+                        " where sh_id = " + "'" + shipper + "'" + ";");
                        while (res.next()) {
                           cust = res.getString(("sh_cust"));
                           site = res.getString(("sh_site"));
+                          site_csz = res.getString(("site_city")) + " " + res.getString(("site_state")) + " " + res.getString(("site_zip"));
+                          bill_csz = res.getString(("cm_city")) + " " + res.getString(("cm_state")) + " " + res.getString(("cm_zip"));
+                          ship_csz = res.getString(("cms_city")) + " " + res.getString(("cms_state")) + " " + res.getString(("cms_zip"));
                        }
-                
-                
                 String imagepath = "";
                 String logo = "";
                 logo = OVData.getCustLogo(cust);
@@ -18634,6 +18681,9 @@ return myitem;
                 HashMap hm = new HashMap();
                 hm.put("REPORT_TITLE", "RECEIPT");
                 hm.put("myid",  shipper);
+                hm.put("site_csz", site_csz);
+                hm.put("bill_csz", bill_csz);
+                hm.put("ship_csz", ship_csz);
                 hm.put("imagepath", imagepath);
                 hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
                // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_part, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
@@ -18706,10 +18756,23 @@ return myitem;
                 ResultSet res = null;
                 String cust = "";
                 String site = "";
-                res = st.executeQuery("select sh_cust, sh_site from ship_mstr where sh_id = " + "'" + shipper + "'" + ";");
+                 String site_csz = "";
+                 String bill_csz = "";
+                 String ship_csz = "";
+                 
+                res = st.executeQuery("select sh_cust, sh_site, cm_city, cm_state, cm_zip, " +
+                        " cms_city, cms_state, cms_zip, site_city, site_state, site_zip " +
+                        " from ship_mstr " +
+                        " inner join cm_mstr on cm_code = sh_cust " +
+                        " left outer join cms_det on cms_code = sh_cust and cms_shipto = sh_ship " +
+                        " inner join site_mstr on site_site = sh_site " +
+                        " where sh_id = " + "'" + shipper + "'" + ";");
                        while (res.next()) {
                           cust = res.getString(("sh_cust"));
                           site = res.getString(("sh_site"));
+                          site_csz = res.getString(("site_city")) + " " + res.getString(("site_state")) + " " + res.getString(("site_zip"));
+                          bill_csz = res.getString(("cm_city")) + " " + res.getString(("cm_state")) + " " + res.getString(("cm_zip"));
+                          ship_csz = res.getString(("cms_city")) + " " + res.getString(("cms_state")) + " " + res.getString(("cms_zip"));
                        }
                 String imagepath = "";
                 String logo = OVData.getCustLogo(cust);
@@ -18726,6 +18789,9 @@ return myitem;
                 HashMap hm = new HashMap();
                 hm.put("REPORT_TITLE", "SHIPPER");
                 hm.put("myid",  shipper);
+                hm.put("site_csz", site_csz);
+                hm.put("bill_csz", bill_csz);
+                hm.put("ship_csz", ship_csz);
                 hm.put("imagepath", imagepath);
                 hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
                // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_part, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
@@ -18760,17 +18826,32 @@ return myitem;
                 String cust = "";
                 String site = "";
                 String shipper = "";
-                res = st.executeQuery("select sh_id, sh_cust, sh_site from ship_mstr inner join ship_det on shd_id = sh_id where shd_so = " + "'" + order + "'" + ";");
-                int i = 0;       
-                while (res.next()) {
-                    i++;
-                          cust = res.getString("sh_cust");
-                          site = res.getString("sh_site");
+                 String site_csz = "";
+                 String bill_csz = "";
+                 String ship_csz = "";
+                 
+                res = st.executeQuery("select sh_id, sh_cust, sh_site, cm_city, cm_state, cm_zip, " +
+                        " cms_city, cms_state, cms_zip, site_city, site_state, site_zip " +
+                        " from ship_mstr " +
+                        " inner join ship_det on shd_id = sh_id " +
+                        " inner join cm_mstr on cm_code = sh_cust " +
+                        " left outer join cms_det on cms_code = sh_cust and cms_shipto = sh_ship " +
+                        " inner join site_mstr on site_site = sh_site " +
+                        " where shd_so = " + "'" + order + "'" + ";");
+                       int i = 0;
+                       while (res.next()) {
+                          i++;
+                          cust = res.getString(("sh_cust"));
+                          site = res.getString(("sh_site"));
+                          site_csz = res.getString(("site_city")) + " " + res.getString(("site_state")) + " " + res.getString(("site_zip"));
+                          bill_csz = res.getString(("cm_city")) + " " + res.getString(("cm_state")) + " " + res.getString(("cm_zip"));
+                          ship_csz = res.getString(("cms_city")) + " " + res.getString(("cms_state")) + " " + res.getString(("cms_zip"));
                           shipper = res.getString("sh_id");
                           if (i > 1) {
                               break;
                           }
-                }
+                       }
+                
                 String imagepath = "";
                 String logo = OVData.getCustLogo(cust);
                 if (logo.isEmpty()) {
@@ -18786,6 +18867,9 @@ return myitem;
                 HashMap hm = new HashMap();
                 hm.put("REPORT_TITLE", "SHIPPER");
                 hm.put("myid",  shipper);
+                hm.put("site_csz", site_csz);
+                hm.put("bill_csz", bill_csz);
+                hm.put("ship_csz", ship_csz);
                 hm.put("imagepath", imagepath);
                 hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
                // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_part, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
@@ -18817,10 +18901,21 @@ return myitem;
                 ResultSet res = null;
                 String vend = "";
                 String site = "";
-                res = st.executeQuery("select po_vend, po_site from po_mstr where po_nbr = " + "'" + po + "'" + ";");
+                String site_csz = "";
+                String vend_csz = "";
+                String ship_csz = "";
+                res = st.executeQuery("select po_vend, po_site, " +
+                        " vd_city, vd_state, vd_zip, site_city, site_state, site_zip " +
+                        " from po_mstr " +
+                        " inner join vd_mstr on vd_addr = po_vend " +
+                        " inner join site_mstr on site_site = po_site " +
+                        " where po_nbr = " + "'" + po + "'" + ";");
                        while (res.next()) {
                           vend = res.getString(("po_vend"));
                           site = res.getString(("po_site"));
+                          site_csz = res.getString(("site_city")) + " " + res.getString(("site_state")) + " " + res.getString(("site_zip"));
+                          vend_csz = res.getString(("vd_city")) + " " + res.getString(("vd_state")) + " " + res.getString(("vd_zip"));
+                          ship_csz = site_csz;
                        }
                 String imagepath = "";
                 String logo = OVData.getSiteLogo(site);
@@ -18834,6 +18929,9 @@ return myitem;
                 HashMap hm = new HashMap();
                 hm.put("REPORT_TITLE", "SHIPPER");
                 hm.put("myid",  po);
+                hm.put("site_csz", site_csz);
+                hm.put("vend_csz", vend_csz);
+                hm.put("ship_csz", ship_csz);
                 hm.put("imagepath", imagepath);
                 hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
                // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_part, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
@@ -18864,12 +18962,24 @@ return myitem;
                 Statement st = con.createStatement();
                 ResultSet res = null;
                
-                 String cust = ""; 
+                String cust = ""; 
                 String site = ""; 
-                res = st.executeQuery("select so_cust, so_site from so_mstr where so_nbr = " + "'" + order + "'" + ";");
+                String site_csz = "";
+                String bill_csz = "";
+                String ship_csz = "";
+                res = st.executeQuery("select so_cust, so_site, " +
+                        " cm_city, cm_state, cm_zip, cms_city, cms_state, cms_zip, site_city, site_state, site_zip " +
+                        " from so_mstr " +
+                        " inner join cm_mstr on cm_code = so_cust " +
+                        " left outer join cms_det on cms_code = so_cust and cms_shipto = so_ship " +
+                        " inner join site_mstr on site_site = so_site " +
+                        " where so_nbr = " + "'" + order + "'" + ";");
                        while (res.next()) {
                           cust = res.getString(("so_cust"));
                           site = res.getString(("so_site"));
+                          site_csz = res.getString(("site_city")) + " " + res.getString(("site_state")) + " " + res.getString(("site_zip"));
+                          bill_csz = res.getString(("cm_city")) + " " + res.getString(("cm_state")) + " " + res.getString(("cm_zip"));
+                          ship_csz = res.getString(("cms_city")) + " " + res.getString(("cms_state")) + " " + res.getString(("cms_zip"));
                        }
                 
                 
@@ -18887,6 +18997,9 @@ return myitem;
                 HashMap hm = new HashMap();
                 hm.put("REPORT_TITLE", "ORDER");
                 hm.put("myid",  order);
+                hm.put("site_csz", site_csz);
+                hm.put("bill_csz", bill_csz);
+                hm.put("ship_csz", ship_csz);
                 hm.put("imagepath", imagepath);
                 hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
                // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_part, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
@@ -18920,11 +19033,23 @@ return myitem;
                  String cust = ""; 
                 String site = ""; 
                 String type = "";
-                res = st.executeQuery("select sv_cust, sv_site, sv_type from sv_mstr where sv_nbr = " + "'" + order + "'" + ";");
+                String site_csz = "";
+                String bill_csz = "";
+                String ship_csz = "";
+                res = st.executeQuery("select sv_cust, sv_site, sv_type, " +
+                        " cm_city, cm_state, cm_zip, cms_city, cms_state, cms_zip, site_city, site_state, site_zip " +
+                        " from sv_mstr " +
+                        " inner join cm_mstr on cm_code = sv_cust " +
+                        " left outer join cms_det on cms_code = sv_cust and cms_shipto = sv_ship " +
+                        " inner join site_mstr on site_site = sv_site " +
+                        " where sv_nbr = " + "'" + order + "'" + ";");
                        while (res.next()) {
                           cust = res.getString("sv_cust");
                           site = res.getString("sv_site");
                           type = res.getString("sv_type");
+                          site_csz = res.getString(("site_city")) + " " + res.getString(("site_state")) + " " + res.getString(("site_zip"));
+                          bill_csz = res.getString(("cm_city")) + " " + res.getString(("cm_state")) + " " + res.getString(("cm_zip"));
+                          ship_csz = res.getString(("cms_city")) + " " + res.getString(("cms_state")) + " " + res.getString(("cms_zip"));
                        }
                 
                 
@@ -18936,9 +19061,6 @@ return myitem;
                 }
                
                String jasperfile = "serviceorder.jasper";
-               if (dbtype.equals("mysql")) {
-                   jasperfile = "serviceorder_mysql.jasper";
-               } 
                
                imagepath = "images/" + logo;
                 HashMap hm = new HashMap();
@@ -18948,6 +19070,9 @@ return myitem;
                 hm.put("REPORT_TITLE", "QUOTE");    
                 }
                 hm.put("myid",  order);
+                hm.put("site_csz", site_csz);
+                hm.put("bill_csz", bill_csz);
+                hm.put("ship_csz", ship_csz);
                 hm.put("imagepath", imagepath);
                 hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
                // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_part, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
@@ -19949,8 +20074,10 @@ MainFrame.bslog(e);
                 }
                 
                 // override cust currency with order currency
-                curr = OVData.getOrderCurrency(so);
-                
+                String order_curr = OVData.getOrderCurrency(so);
+                if (! order_curr.isEmpty()) {
+                curr = order_curr;
+                }
                 // logic for asset type shipment/sale
                 if (shiptype.equals("A")) {
                     terms = "N00";

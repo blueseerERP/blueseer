@@ -20,6 +20,9 @@
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="site_csz" class="java.lang.String"/>
+	<parameter name="bill_csz" class="java.lang.String"/>
+	<parameter name="ship_csz" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[select shd_id, sh_curr, it_desc, cm_terms,
 (select case when sum(shs_amt) is null then 0 else sum(shs_amt) end 
@@ -32,12 +35,10 @@ sh_cust, sh_confdate, sh_shipvia, sh_bol, sh_ref, sh_rmks,
 sh_boxes, sh_pallets, shd_po, shd_part, shd_custpart, 
 shd_serial, shd_cont, shd_qty, shd_netprice, shd_listprice, 
 shd_taxamt, shd_taxpercent, cm_code, cm_name, cm_line1, 
-cm_line2, cm_city, cm_state, cm_zip, 
-cm_city || " " || cm_state || " " || cm_zip as bt_citystatezip, 
+cm_line2, 
 cms_name, cms_line1, cms_line2, 
-cms_city || " " || cms_state || " " || cms_zip as st_citystatezip, 
-site_desc, site_line1, 
-site_city || " " || site_state || " " || site_zip as site_csz from ship_det 
+site_desc, site_line1 
+from ship_det 
 left outer join item_mstr on it_item = shd_part 
 inner join ship_mstr on sh_id = shd_id 
 inner join cm_mstr on cm_code = sh_cust 
@@ -62,17 +63,11 @@ where shd_id =  $P{myid}]]>
 	<field name="cm_name" class="java.lang.Object"/>
 	<field name="cm_line1" class="java.lang.Object"/>
 	<field name="cm_line2" class="java.lang.Object"/>
-	<field name="cm_city" class="java.lang.Object"/>
-	<field name="cm_state" class="java.lang.Object"/>
-	<field name="cm_zip" class="java.lang.Object"/>
-	<field name="bt_citystatezip" class="java.lang.Object"/>
 	<field name="cms_name" class="java.lang.Object"/>
 	<field name="cms_line1" class="java.lang.Object"/>
 	<field name="cms_line2" class="java.lang.Object"/>
-	<field name="st_citystatezip" class="java.lang.Object"/>
 	<field name="site_desc" class="java.lang.Object"/>
 	<field name="site_line1" class="java.lang.Object"/>
-	<field name="site_csz" class="java.lang.Object"/>
 	<field name="sh_confdate" class="java.lang.String"/>
 	<field name="shd_taxamt" class="java.lang.Double"/>
 	<field name="shd_taxpercent" class="java.lang.Double"/>
@@ -137,7 +132,7 @@ where shd_id =  $P{myid}]]>
 			</textField>
 			<textField>
 				<reportElement x="192" y="29" width="152" height="15" uuid="41a902b3-2046-4b7e-9ffd-cd9d1e35d1b8"/>
-				<textFieldExpression><![CDATA[$F{site_csz}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{site_csz}]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
@@ -171,7 +166,7 @@ where shd_id =  $P{myid}]]>
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{bt_citystatezip}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{bill_csz}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="268" y="2" width="62" height="14" uuid="2d308b9b-b8e0-434a-8c1f-226e5fbb1a8a"/>
@@ -199,7 +194,7 @@ where shd_id =  $P{myid}]]>
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{st_citystatezip}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{ship_csz}]]></textFieldExpression>
 			</textField>
 			<rectangle>
 				<reportElement x="0" y="79" width="109" height="30" uuid="a8bfe80a-7d14-452a-afe5-2cb9bca9b4de"/>

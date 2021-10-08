@@ -16,8 +16,11 @@
 	<parameter name="SUBREPORT_DIR" class="java.lang.String">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="site_csz" class="java.lang.String"/>
+	<parameter name="bill_csz" class="java.lang.String"/>
+	<parameter name="ship_csz" class="java.lang.String"/>
 	<queryString>
-		<![CDATA[select shd_id, it_desc, sh_cust, sh_shipvia, sh_ref, sh_bol, sh_rmks, sh_boxes, sh_pallets, shd_po, shd_part, shd_custpart, shd_qty, shd_netprice, shd_serial, shd_cont, cm_code, cm_name, cm_terms, cm_line1, cm_line2, cm_city, cm_state, cm_zip, cm_city || " " || cm_state || " " || cm_zip as 'bt_citystatezip', cms_city || " " || cms_state || " " || cms_zip as 'st_citystatezip', cms_name, cms_line1, site_desc, site_line1, site_city || " " || site_state || " " || site_zip as 'site_csz' from ship_det left outer join item_mstr on it_item = shd_part inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust left outer join cms_det on cms_code = sh_cust and cms_shipto = sh_ship inner join site_mstr on site_site = sh_site where shd_id =  $P{myid};]]>
+		<![CDATA[select shd_id, it_desc, sh_cust, sh_shipvia, sh_ref, sh_bol, sh_rmks, sh_boxes, sh_pallets, shd_po, shd_part, shd_custpart, shd_qty, shd_netprice, shd_serial, shd_cont, cm_code, cm_name, cm_terms, cm_line1, cm_line2, cms_name, cms_line1, site_desc, site_line1 from ship_det left outer join item_mstr on it_item = shd_part inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust left outer join cms_det on cms_code = sh_cust and cms_shipto = sh_ship inner join site_mstr on site_site = sh_site where shd_id =  $P{myid};]]>
 	</queryString>
 	<field name="shd_id" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
@@ -58,17 +61,6 @@
 	<field name="cm_line2" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="cm_city" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="cm_state" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="cm_zip" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="bt_citystatezip" class="java.lang.String"/>
-	<field name="st_citystatezip" class="java.lang.String"/>
 	<field name="cms_name" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
@@ -81,7 +73,6 @@
 	<field name="site_line1" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="site_csz" class="java.lang.String"/>
 	<field name="sh_boxes" class="java.lang.String"/>
 	<field name="sh_pallets" class="java.lang.String"/>
 	<field name="sh_shipvia" class="java.lang.String"/>
@@ -103,27 +94,36 @@
 				<imageExpression><![CDATA[$P{imagepath}]]></imageExpression>
 			</image>
 			<image>
-				<reportElement x="209" y="42" width="100" height="31" uuid="3182d172-4323-47ed-b8bb-b2f9b3f2b8cd"/>
+				<reportElement x="390" y="42" width="100" height="31" uuid="3182d172-4323-47ed-b8bb-b2f9b3f2b8cd"/>
 				<imageExpression><![CDATA[new net.sf.jasperreports.components.barbecue.BarbecueRenderer(net.sourceforge.barbecue.BarcodeFactory.createCode39($F{shd_id}, false))]]></imageExpression>
 			</image>
 			<textField>
-				<reportElement x="312" y="0" width="198" height="36" uuid="647a1539-8712-4bae-be82-4dd8c3e504b3"/>
+				<reportElement x="268" y="-1" width="299" height="36" uuid="647a1539-8712-4bae-be82-4dd8c3e504b3"/>
 				<textElement>
-					<font size="24"/>
+					<font size="18"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{jasper.ps.lbltitle}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="128" y="3" width="181" height="12" uuid="88b77605-23ea-4bc5-ac85-ed7c43871d17"/>
+				<reportElement x="130" y="0" width="120" height="11" uuid="2a2005b0-d06d-4c04-a21a-f226207b1af3"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$F{site_desc}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="128" y="14" width="100" height="12" uuid="4a0e1a7d-6e47-4eb4-b11f-9354c5c50d98"/>
+				<reportElement x="130" y="11" width="100" height="11" uuid="4e82197f-518c-4efd-a5d5-b3e3dae86ffc"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$F{site_line1}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="128" y="24" width="100" height="12" uuid="1f7b82e5-6a70-4be0-9db0-b195f6365056"/>
-				<textFieldExpression><![CDATA[$F{site_csz}]]></textFieldExpression>
+				<reportElement x="130" y="20" width="100" height="11" uuid="dba18fa3-8c22-4407-a7cc-b5ab4118b6d2"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{site_csz}]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
@@ -164,7 +164,7 @@
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{bt_citystatezip}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{bill_csz}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="268" y="4" width="62" height="14" uuid="a1158ad1-fae3-45cc-8088-a9cb13b3e7b9"/>
@@ -192,7 +192,7 @@
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{st_citystatezip}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{ship_csz}]]></textFieldExpression>
 			</textField>
 			<rectangle>
 				<reportElement x="0" y="79" width="109" height="30" uuid="a8bfe80a-7d14-452a-afe5-2cb9bca9b4de"/>
@@ -334,13 +334,6 @@
 				<textFieldExpression><![CDATA[$R{jasper.ps.lblponbr}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="109" y="0" width="72" height="20" uuid="7d867743-8d1f-4a2d-b7f2-02d2fdb4588c"/>
-				<textElement>
-					<font isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$R{jasper.ps.lblcustitem}]]></textFieldExpression>
-			</textField>
-			<textField>
 				<reportElement x="209" y="0" width="72" height="20" uuid="0b6672ec-5c3a-4c30-8f8d-86236eec2a55"/>
 				<textElement>
 					<font isBold="true"/>
@@ -352,14 +345,14 @@
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{jasper.ps.lblquantity}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{jasper.ps.lblqty}]]></textFieldExpression>
 			</textField>
 		</band>
 	</columnHeader>
 	<detail>
 		<band height="33" splitType="Stretch">
 			<textField>
-				<reportElement x="19" y="0" width="90" height="16" uuid="978682a3-4259-41c3-adae-54872ecfe90a"/>
+				<reportElement x="19" y="0" width="109" height="16" uuid="978682a3-4259-41c3-adae-54872ecfe90a"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
@@ -387,14 +380,14 @@
 				<textFieldExpression><![CDATA[$F{it_desc}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="109" y="0" width="98" height="16" uuid="ee72a0da-c3b3-48c4-a45e-ef0e73f30c87"/>
+				<reportElement x="19" y="16" width="109" height="16" uuid="ee72a0da-c3b3-48c4-a45e-ef0e73f30c87"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{shd_custpart}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="20" y="17" width="187" height="16" uuid="debbf339-06a3-40ac-a357-e894ca2f939d"/>
+				<reportElement x="209" y="16" width="187" height="16" uuid="debbf339-06a3-40ac-a357-e894ca2f939d"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
@@ -418,7 +411,7 @@
 				<reportElement x="338" y="0" width="100" height="20" uuid="21d9fb28-5824-4c0b-9114-913f90eb34e1"/>
 				<textFieldExpression><![CDATA[$R{jasper.ps.lbltotalqty}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField pattern="¤ #,##0.00">
 				<reportElement x="438" y="0" width="100" height="20" uuid="378a8a9d-5625-4e24-8803-f36c873089fe"/>
 				<textFieldExpression><![CDATA[$V{mysum}]]></textFieldExpression>
 			</textField>

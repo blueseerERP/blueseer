@@ -108,7 +108,7 @@ FOBrowse,,com.blueseer.frt.FOBrowse,JMenuItem,forb
 WareHouseMaint,,com.blueseer.dst.WareHouseMaint,JMenuItem,wahm
 WareHouseBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,wahb
 LocationTransfer,,com.blueseer.inv.LocationTransfer,JMenuItem,loaj
-MRPBrowse,,com.blueseer.sch.MRPBrowse1,JMenuItem,mrpb
+MRPBrowse,,com.blueseer.sch.MRPBrowse,JMenuItem,mrpb
 OrderBrowse,,com.blueseer.ord.OrderRpt,JMenuItem,ordb
 OrderMaint,,com.blueseer.ord.OrderMaint,JMenuItem,ordm
 ServiceOrderMaint,,com.blueseer.ord.ServiceOrderMaint,JMenuItem,srvm
@@ -165,7 +165,7 @@ TrainingMaint,,com.blueseer.hrm.TrainingMaint,JMenuItem,tram
 UserPermsMaint,,com.blueseer.adm.UserPermsMaint,JMenuItem,uspm
 VendXrefMaint,,com.blueseer.vdr.VendXrefMaint,JMenuItem,vdxm
 VendXrefRpt1,,com.blueseer.vdr.VendXrefRpt,JMenuItem,vdxr
-VouchMaintPanel,,com.blueseer.fap.VouchMaint,JMenuItem,vocm
+VouchMaintPanel,,com.blueseer.fap.VoucherMaint,JMenuItem,vocm
 VoucherBrowse,,com.blueseer.fap.VoucherBrowse,JMenuItem,vocb
 WhereUsedUtility,,com.blueseer.inv.WhereUsedUtility,JMenuItem,where
 CustReport1,,com.blueseer.utl.ReportPanel,JMenuItem,cus2

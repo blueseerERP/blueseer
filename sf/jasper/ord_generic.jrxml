@@ -20,11 +20,14 @@
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="site_csz" class="java.lang.String"/>
+	<parameter name="bill_csz" class="java.lang.String"/>
+	<parameter name="ship_csz" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[select so_nbr, sod_nbr, so_curr, sod_desc, 
 (select case when sum(sos_amt) is null then 0 else sum(sos_amt) end from sos_det where sos_nbr = $P{myid} and sos_amttype = 'amount' and sos_type <> 'tax') as charges, 
 (select case when sum(sos_amt) is null then 0 else sum(sos_amt)  end from sos_det where sos_nbr = $P{myid} and sos_amttype = 'amount' and sos_type = 'tax') as taxes,
-so_cust, so_create_date,  so_rmks, sod_po, sod_part, sod_custpart, sod_ord_qty, sod_netprice, sod_listprice, sod_taxamt, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, cm_city || " " || cm_state || " " || cm_zip as bt_citystatezip, cms_name, cms_line1, cms_line2, cms_city || " " || cms_state || " " || cms_zip as st_citystatezip, site_desc, site_line1, site_city || " " || site_state || " " || site_zip as site_csz from sod_det  inner join so_mstr on so_nbr = sod_nbr inner join cm_mstr on cm_code = so_cust left outer join cms_det on cms_code = so_cust and cms_shipto = so_ship inner join site_mstr on site_site = so_site where sod_nbr =  $P{myid}]]>
+so_cust, so_create_date,  so_rmks, sod_po, sod_part, sod_custpart, sod_ord_qty, sod_netprice, sod_listprice, sod_taxamt, cm_code, cm_name, cm_line1, cm_line2,  cms_name, cms_line1, cms_line2,  site_desc, site_line1 from sod_det  inner join so_mstr on so_nbr = sod_nbr inner join cm_mstr on cm_code = so_cust left outer join cms_det on cms_code = so_cust and cms_shipto = so_ship inner join site_mstr on site_site = so_site where sod_nbr =  $P{myid}]]>
 	</queryString>
 	<field name="so_nbr" class="java.lang.String"/>
 	<field name="sod_nbr" class="java.lang.String"/>
@@ -46,17 +49,11 @@ so_cust, so_create_date,  so_rmks, sod_po, sod_part, sod_custpart, sod_ord_qty, 
 	<field name="cm_name" class="java.lang.String"/>
 	<field name="cm_line1" class="java.lang.String"/>
 	<field name="cm_line2" class="java.lang.String"/>
-	<field name="cm_city" class="java.lang.String"/>
-	<field name="cm_state" class="java.lang.String"/>
-	<field name="cm_zip" class="java.lang.String"/>
-	<field name="bt_citystatezip" class="java.lang.String"/>
 	<field name="cms_name" class="java.lang.String"/>
 	<field name="cms_line1" class="java.lang.String"/>
 	<field name="cms_line2" class="java.lang.String"/>
-	<field name="st_citystatezip" class="java.lang.String"/>
 	<field name="site_desc" class="java.lang.String"/>
 	<field name="site_line1" class="java.lang.String"/>
-	<field name="site_csz" class="java.lang.String"/>
 	<variable name="mysum" class="java.lang.Double" calculation="Sum">
 		<variableExpression><![CDATA[$F{sod_ord_qty}]]></variableExpression>
 	</variable>
@@ -111,7 +108,7 @@ so_cust, so_create_date,  so_rmks, sod_po, sod_part, sod_custpart, sod_ord_qty, 
 			</textField>
 			<textField>
 				<reportElement x="192" y="29" width="152" height="15" uuid="41a902b3-2046-4b7e-9ffd-cd9d1e35d1b8"/>
-				<textFieldExpression><![CDATA[$F{site_csz}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{site_csz}]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
@@ -145,7 +142,7 @@ so_cust, so_create_date,  so_rmks, sod_po, sod_part, sod_custpart, sod_ord_qty, 
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{bt_citystatezip}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{bill_csz}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="268" y="2" width="62" height="14" uuid="7f2e5f07-875b-4e3f-a987-31c29fa78c80"/>
@@ -173,7 +170,7 @@ so_cust, so_create_date,  so_rmks, sod_po, sod_part, sod_custpart, sod_ord_qty, 
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{st_citystatezip}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{ship_csz}]]></textFieldExpression>
 			</textField>
 			<rectangle>
 				<reportElement x="0" y="79" width="109" height="30" uuid="a8bfe80a-7d14-452a-afe5-2cb9bca9b4de"/>
@@ -298,7 +295,7 @@ so_cust, so_create_date,  so_rmks, sod_po, sod_part, sod_custpart, sod_ord_qty, 
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{jasper.order.lblquantity}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{jasper.order.lblqty}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="406" y="1" width="45" height="20" uuid="03a1ccb5-d6a9-456d-ad8a-9a599894500b"/>

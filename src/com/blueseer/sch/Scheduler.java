@@ -232,7 +232,7 @@ public class Scheduler extends javax.swing.JPanel {
             // plan is closed
             if (mytable.getModel().getValueAt(rowIndex, 12).equals(getGlobalProgTag("closed"))) {   // 1
                canEdit = new boolean[]{false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};  
-            } else if (mytable.getModel().getValueAt(rowIndex, 12).equals(getGlobalProgTag("voided"))) {   // -1
+            } else if (mytable.getModel().getValueAt(rowIndex, 12).equals(getGlobalProgTag("void"))) {   // -1
                canEdit = new boolean[]{false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};  
             } else {
                canEdit = new boolean[]{false, false, false, false, false, true, true, false, false, true, false, false, false, false, false, false};  
@@ -343,7 +343,7 @@ public class Scheduler extends javax.swing.JPanel {
              
               if (status.equals(getGlobalProgTag("closed"))) {
               setForeground(Color.blue);
-             } else if (status.equals(getGlobalProgTag("voided"))) {
+             } else if (status.equals(getGlobalProgTag("void"))) {
               setForeground(Color.red);   
              } else {
               setBackground(table.getBackground());
@@ -1363,7 +1363,7 @@ public class Scheduler extends javax.swing.JPanel {
                     if ( mytable.getValueAt(row, 12).equals(getGlobalProgTag("open"))) {
                         OVData.updatePlanStatus(mytable.getValueAt(row, 0).toString(), "-1");
                         bsmf.MainFrame.show(getMessageTag(1072, mytable.getValueAt(row, 0).toString()));
-                        mytable.setValueAt(getGlobalProgTag("voided"), row, 12);
+                        mytable.setValueAt(getGlobalProgTag("void"), row, 12);
                    } 
         }
         
@@ -1455,9 +1455,9 @@ public class Scheduler extends javax.swing.JPanel {
                     //             new ProdSchedPanel.ButtonEditor(new JCheckBox()));
                 //      mytable.getColumn("Void").setCellEditor(
                     //              new ProdSchedPanel.ButtonEditor(new JCheckBox()));
-                mytable.getColumn("Update").setMaxWidth(100);
-                mytable.getColumn("Print").setMaxWidth(100);
-                mytable.getColumn("Void").setMaxWidth(100);
+                mytable.getColumn(getGlobalColumnTag("update")).setMaxWidth(100);
+                mytable.getColumn(getGlobalColumnTag("print")).setMaxWidth(100);
+                mytable.getColumn(getGlobalColumnTag("void")).setMaxWidth(100);
 
                 mymodel.setRowCount(0);
 
@@ -1509,7 +1509,7 @@ public class Scheduler extends javax.swing.JPanel {
                     schtot = schtot + res.getInt("plan_qty_sched");
                     if (res.getString("plan_status").equals("0")) { status = getGlobalProgTag("open"); }
                     if (res.getString("plan_status").equals("1")) { status = getGlobalProgTag("closed"); }
-                    if (res.getString("plan_status").equals("-1")) { status = getGlobalProgTag("voided"); }
+                    if (res.getString("plan_status").equals("-1")) { status = getGlobalProgTag("void"); }
 
                     mymodel.addRow(new Object[]{
                         res.getString("plan_nbr"),
@@ -1559,7 +1559,7 @@ public class Scheduler extends javax.swing.JPanel {
 
         for (int i = 0 ; i < mymodel.getRowCount(); i++) {
 
-            if (! mymodel.getValueAt(i, 12).equals(getGlobalProgTag("open")) && ! mymodel.getValueAt(i, 12).equals(getGlobalProgTag("closed")) && ! mymodel.getValueAt(i, 12).equals(getGlobalProgTag("voided"))) {
+            if (! mymodel.getValueAt(i, 12).equals(getGlobalProgTag("open")) && ! mymodel.getValueAt(i, 12).equals(getGlobalProgTag("closed")) && ! mymodel.getValueAt(i, 12).equals(getGlobalProgTag("void"))) {
                 bsmf.MainFrame.show(getMessageTag(1124));
                 commit = false;
                 break;

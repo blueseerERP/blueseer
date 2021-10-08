@@ -20,9 +20,12 @@
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="site_csz" class="java.lang.String"/>
+	<parameter name="bill_csz" class="java.lang.String"/>
+	<parameter name="ship_csz" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[select sv_nbr, svd_nbr, svd_due_date, svd_create_date,
-sv_cust,  sv_rmks, sv_curr, svd_item, svd_desc, svd_qty, svd_netprice, cm_code, cm_terms, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, cm_city || " " || cm_state || " " || cm_zip as bt_citystatezip, cms_name, cms_line1, cms_line2, cms_city || " " || cms_state || " " || cms_zip as st_citystatezip, site_desc, site_line1, site_city || " " || site_state || " " || site_zip as site_csz from svd_det  inner join sv_mstr on sv_nbr = svd_nbr inner join cm_mstr on cm_code = sv_cust left outer join cms_det on cms_code = sv_cust and cms_shipto = sv_ship inner join site_mstr on site_site = sv_site where svd_nbr =  $P{myid}]]>
+sv_cust,  sv_rmks, sv_curr, svd_item, svd_desc, svd_qty, svd_netprice, cm_code, cm_terms, cm_code, cm_name, cm_line1, cm_line2, cms_name, cms_line1, cms_line2, site_desc, site_line1 from svd_det  inner join sv_mstr on sv_nbr = svd_nbr inner join cm_mstr on cm_code = sv_cust left outer join cms_det on cms_code = sv_cust and cms_shipto = sv_ship inner join site_mstr on site_site = sv_site where svd_nbr =  $P{myid}]]>
 	</queryString>
 	<field name="sv_nbr" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="sv_nbr"/>
@@ -68,21 +71,6 @@ sv_cust,  sv_rmks, sv_curr, svd_item, svd_desc, svd_qty, svd_netprice, cm_code, 
 		<property name="com.jaspersoft.studio.field.label" value="cm_line2"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="cm_mstr"/>
 	</field>
-	<field name="cm_city" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="cm_city"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="cm_mstr"/>
-	</field>
-	<field name="cm_state" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="cm_state"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="cm_mstr"/>
-	</field>
-	<field name="cm_zip" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="cm_zip"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="cm_mstr"/>
-	</field>
-	<field name="bt_citystatezip" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="bt_citystatezip"/>
-	</field>
 	<field name="cms_name" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="cms_name"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="cms_det"/>
@@ -95,9 +83,6 @@ sv_cust,  sv_rmks, sv_curr, svd_item, svd_desc, svd_qty, svd_netprice, cm_code, 
 		<property name="com.jaspersoft.studio.field.label" value="cms_line2"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="cms_det"/>
 	</field>
-	<field name="st_citystatezip" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="st_citystatezip"/>
-	</field>
 	<field name="site_desc" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="site_desc"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="site_mstr"/>
@@ -105,9 +90,6 @@ sv_cust,  sv_rmks, sv_curr, svd_item, svd_desc, svd_qty, svd_netprice, cm_code, 
 	<field name="site_line1" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="site_line1"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="site_mstr"/>
-	</field>
-	<field name="site_csz" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="site_csz"/>
 	</field>
 	<field name="svd_due_date" class="java.lang.String"/>
 	<field name="svd_create_date" class="java.lang.String"/>
@@ -143,10 +125,10 @@ sv_cust,  sv_rmks, sv_curr, svd_item, svd_desc, svd_qty, svd_netprice, cm_code, 
 			</textField>
 			<textField>
 				<reportElement x="192" y="29" width="152" height="15" uuid="41a902b3-2046-4b7e-9ffd-cd9d1e35d1b8"/>
-				<textFieldExpression><![CDATA[$F{site_csz}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{site_csz}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="330" y="-60" width="235" height="40" uuid="01c74bab-0889-4359-a687-d193e9431d97">
+				<reportElement x="192" y="-60" width="373" height="40" uuid="01c74bab-0889-4359-a687-d193e9431d97">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement>
@@ -186,7 +168,7 @@ sv_cust,  sv_rmks, sv_curr, svd_item, svd_desc, svd_qty, svd_netprice, cm_code, 
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{bt_citystatezip}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{bill_csz}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="268" y="2" width="62" height="14" uuid="56e4a92c-996d-4583-871c-81effa14b47a"/>
@@ -214,7 +196,7 @@ sv_cust,  sv_rmks, sv_curr, svd_item, svd_desc, svd_qty, svd_netprice, cm_code, 
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{st_citystatezip}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{ship_csz}]]></textFieldExpression>
 			</textField>
 			<rectangle>
 				<reportElement x="0" y="98" width="109" height="30" uuid="a8bfe80a-7d14-452a-afe5-2cb9bca9b4de"/>

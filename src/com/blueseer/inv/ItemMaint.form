@@ -103,7 +103,14 @@
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="103" alignment="0" groupAlignment="0" attributes="0">
                                       <Group type="102" alignment="0" attributes="0">
-                                          <EmptySpace min="90" pref="90" max="-2" attributes="0"/>
+                                          <Group type="103" groupAlignment="0" attributes="0">
+                                              <Group type="102" attributes="0">
+                                                  <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
+                                                  <Component id="jLabel88" min="-2" max="-2" attributes="0"/>
+                                              </Group>
+                                              <Component id="jLabel37" alignment="1" min="-2" max="-2" attributes="0"/>
+                                          </Group>
+                                          <EmptySpace max="-2" attributes="0"/>
                                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                               <Component id="dduom" pref="112" max="32767" attributes="0"/>
                                               <Component id="ddcode" max="32767" attributes="0"/>
@@ -151,8 +158,6 @@
                               <Group type="103" groupAlignment="1" attributes="0">
                                   <Component id="jLabel22" alignment="1" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel23" alignment="1" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jLabel88" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jLabel37" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
@@ -1226,10 +1231,13 @@
                                       <Component id="tboutstd" alignment="0" max="32767" attributes="0"/>
                                       <Component id="jLabel7" alignment="0" max="32767" attributes="0"/>
                                       <Component id="tbtotcoststd" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="tbmtlstd" alignment="0" max="32767" attributes="0"/>
                                       <Component id="tblbrstd" alignment="0" max="32767" attributes="0"/>
                                       <Component id="tbbdnstd" alignment="0" max="32767" attributes="0"/>
                                       <Component id="tbovhstd" alignment="0" max="32767" attributes="0"/>
+                                      <Group type="102" alignment="0" attributes="0">
+                                          <Component id="tbmtlstd" min="-2" pref="86" max="-2" attributes="0"/>
+                                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                      </Group>
                                   </Group>
                               </Group>
                               <Group type="102" attributes="0">
@@ -1237,16 +1245,16 @@
                                   <Component id="btstandard" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
-                          <EmptySpace max="32767" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="tblbrcur" alignment="0" max="32767" attributes="0"/>
-                              <Component id="tbmtlcur" alignment="0" max="32767" attributes="0"/>
                               <Component id="jLabel8" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="tboutcur" alignment="0" max="32767" attributes="0"/>
                               <Component id="tbbdncur" alignment="0" max="32767" attributes="0"/>
                               <Component id="tbovhcur" alignment="0" max="32767" attributes="0"/>
                               <Component id="tbtotcostcur" alignment="0" max="32767" attributes="0"/>
                               <Component id="btcurrent" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="tbmtlcur" alignment="0" min="-2" pref="95" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                       </Group>

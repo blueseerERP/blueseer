@@ -60,12 +60,12 @@ import javax.swing.tree.MutableTreeNode;
  *
  * @author vaughnte
  */
-public class MenuTree extends javax.swing.JPanel {
+public class MenuTreeMaint extends javax.swing.JPanel {
 
     /**
      * Creates new form BOMMaintPanel
      */
-    public MenuTree() {
+    public MenuTreeMaint() {
         initComponents();
         setLanguageTags(this);
     }

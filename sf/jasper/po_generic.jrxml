@@ -13,8 +13,10 @@
 	<parameter name="imagepath" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
+	<parameter name="site_csz" class="java.lang.String"/>
+	<parameter name="vend_csz" class="java.lang.String"/>
 	<queryString>
-		<![CDATA[select po_nbr, it_desc, po_vend, po_rmks, pod_part, pod_vendpart, pod_ord_qty, pod_netprice, vd_addr, vd_name, vd_line1, vd_line2, vd_city, vd_state, vd_zip, vd_city || " " || vd_state || " " || vd_zip as 'vd_citystatezip',site_desc, site_line1, site_city || " " || site_state || " " || site_zip as 'site_csz' from pod_mstr left outer join item_mstr on it_item = pod_part inner join po_mstr on po_nbr = pod_nbr inner join vd_mstr on vd_addr = po_vend inner join site_mstr on site_site = po_site where pod_nbr =  $P{myid};]]>
+		<![CDATA[select po_nbr, it_desc, po_vend, po_rmks, pod_part, pod_vendpart, pod_ord_qty, pod_netprice, vd_addr, vd_name, vd_line1, vd_line2, site_desc, site_line1  from pod_mstr left outer join item_mstr on it_item = pod_part inner join po_mstr on po_nbr = pod_nbr inner join vd_mstr on vd_addr = po_vend inner join site_mstr on site_site = po_site where pod_nbr =  $P{myid};]]>
 	</queryString>
 	<field name="po_nbr" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
@@ -52,23 +54,12 @@
 	<field name="vd_line2" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="vd_city" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="vd_state" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="vd_zip" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="vd_citystatezip" class="java.lang.String"/>
 	<field name="site_desc" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="site_line1" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="site_csz" class="java.lang.String"/>
 	<variable name="mysum" class="java.lang.Double" calculation="Sum">
 		<variableExpression><![CDATA[new Double($F{pod_ord_qty}.doubleValue() * $F{pod_netprice}.doubleValue())]]></variableExpression>
 	</variable>
@@ -105,7 +96,7 @@
 			</textField>
 			<textField>
 				<reportElement x="128" y="24" width="100" height="12" uuid="1f7b82e5-6a70-4be0-9db0-b195f6365056"/>
-				<textFieldExpression><![CDATA[$F{site_csz}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{site_csz}]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
@@ -146,7 +137,7 @@
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{vd_citystatezip}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{vend_csz}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="268" y="4" width="62" height="14" uuid="0fa77a6b-9198-4bdc-9ebf-c47b60bd4069"/>
@@ -174,7 +165,7 @@
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{site_csz}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{site_csz}]]></textFieldExpression>
 			</textField>
 			<rectangle>
 				<reportElement x="0" y="79" width="109" height="30" uuid="a8bfe80a-7d14-452a-afe5-2cb9bca9b4de"/>
