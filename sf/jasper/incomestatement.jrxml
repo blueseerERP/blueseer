@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="567" leftMargin="14" rightMargin="14" topMargin="72" bottomMargin="72" uuid="5c23a538-9f5b-41f2-97dc-c7635f83e5fc">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
@@ -12,7 +13,7 @@
 	<field name="COLUMN_1" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-        <field name="COLUMN_2" class="java.lang.Double">
+	<field name="COLUMN_2" class="java.lang.Double">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<background>
@@ -20,20 +21,20 @@
 	</background>
 	<title>
 		<band height="48" splitType="Stretch">
-			<staticText>
-				<reportElement x="152" y="0" width="235" height="36" uuid="40005f77-30de-4bc9-bf2a-5a5097b52235"/>
+			<textField>
+				<reportElement x="152" y="0" width="235" height="36" uuid="fce969de-9b30-479b-a8b5-7a767112e757"/>
 				<textElement>
 					<font size="24"/>
 				</textElement>
-				<text><![CDATA[Income Statement]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{jasper.incomestatement.lbltitle}]]></textFieldExpression>
+			</textField>
 		</band>
 	</title>
 	<pageHeader>
 		<band height="24" splitType="Stretch">
 			<textField>
 				<reportElement x="446" y="0" width="61" height="20" uuid="17f2000b-3748-4dcf-99ec-80100e74f0cc"/>
-				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{jasper.incomestatement.lblpage} + " " + $V{PAGE_NUMBER}+" of "]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report">
 				<reportElement x="507" y="0" width="38" height="20" uuid="e3347eeb-bbb7-42d5-b9db-d8de409a7ae5"/>
@@ -43,30 +44,30 @@
 	</pageHeader>
 	<columnHeader>
 		<band height="23" splitType="Stretch">
-			<staticText>
-				<reportElement x="19" y="0" width="109" height="20" uuid="c72e011a-e8a6-4364-b9ce-0c7ebfa56375"/>
+			<textField>
+				<reportElement x="19" y="0" width="109" height="20" uuid="b1cb5bdf-635b-4db2-81e7-fbefe245a7c5"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[Category]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{jasper.incomestatement.lblcategory}]]></textFieldExpression>
+			</textField>
 			<line>
 				<reportElement x="0" y="19" width="555" height="1" uuid="c9e36006-c5df-41ef-96b1-529b4e6ddb52"/>
 			</line>
-			<staticText>
-				<reportElement x="432" y="0" width="123" height="20" uuid="af0d717d-dd79-4532-a003-f6671dd54665"/>
+			<textField>
+				<reportElement x="432" y="0" width="123" height="20" uuid="0a7b0efd-4d41-4918-98db-a6a2e962eb37"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[Amount]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="194" y="0" width="109" height="20" uuid="a09c838b-1774-4b85-a777-d3f55dfb8ab9"/>
+				<textFieldExpression><![CDATA[$R{jasper.incomestatement.lblamount}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="194" y="0" width="109" height="20" uuid="c2cf3013-abd3-4cd9-9a6f-1c853adcf357"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[Description]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{jasper.incomestatement.lbldesc}]]></textFieldExpression>
+			</textField>
 		</band>
 	</columnHeader>
 	<detail>

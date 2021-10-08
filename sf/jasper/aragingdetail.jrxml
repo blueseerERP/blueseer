@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="567" leftMargin="14" rightMargin="14" topMargin="72" bottomMargin="72" uuid="5c23a538-9f5b-41f2-97dc-c7635f83e5fc">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
@@ -38,20 +39,20 @@
 	</background>
 	<title>
 		<band height="48" splitType="Stretch">
-			<staticText>
-				<reportElement x="181" y="0" width="203" height="36" uuid="40005f77-30de-4bc9-bf2a-5a5097b52235"/>
+			<textField>
+				<reportElement x="181" y="0" width="203" height="36" uuid="8e510a4f-7484-44c8-84d4-e1348058d5cc"/>
 				<textElement>
 					<font size="24"/>
 				</textElement>
-				<text><![CDATA[AR Aging Report]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{jasper.araging.lbltitle}]]></textFieldExpression>
+			</textField>
 		</band>
 	</title>
 	<pageHeader>
 		<band height="24" splitType="Stretch">
 			<textField>
 				<reportElement x="446" y="0" width="61" height="20" uuid="17f2000b-3748-4dcf-99ec-80100e74f0cc"/>
-				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{jasper.araging.lblpage} + " " + $V{PAGE_NUMBER}+" " + $R{jasper.araging.lblof} + " "]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report">
 				<reportElement x="507" y="0" width="38" height="20" uuid="e3347eeb-bbb7-42d5-b9db-d8de409a7ae5"/>
@@ -61,58 +62,58 @@
 	</pageHeader>
 	<columnHeader>
 		<band height="20" splitType="Stretch">
-			<staticText>
-				<reportElement x="19" y="0" width="72" height="20" uuid="c72e011a-e8a6-4364-b9ce-0c7ebfa56375"/>
+			<textField>
+				<reportElement x="19" y="0" width="72" height="20" uuid="da78b4b8-c163-4aa2-ad61-29502669e30b"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[Invoice]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{jasper.araging.lblinvoice}]]></textFieldExpression>
+			</textField>
 			<line>
 				<reportElement x="0" y="19" width="555" height="1" uuid="c9e36006-c5df-41ef-96b1-529b4e6ddb52"/>
 			</line>
-			<staticText>
-				<reportElement x="109" y="0" width="72" height="20" uuid="13f9b695-ff05-4d5f-b062-becc4685abbb"/>
+			<textField>
+				<reportElement x="109" y="0" width="72" height="20" uuid="9898e56b-54bd-4a26-b935-90597cf1d4ba"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[InvDate]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="181" y="0" width="72" height="20" uuid="26dcdc59-03d3-4e77-b98d-19109334d0ee"/>
+				<textFieldExpression><![CDATA[$R{jasper.araging.lblinvdate}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="181" y="0" width="72" height="20" uuid="59961083-26ef-4a1c-836e-312a5673397b"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[DueDate]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="476" y="0" width="76" height="20" uuid="af0d717d-dd79-4532-a003-f6671dd54665"/>
+				<textFieldExpression><![CDATA[$R{jasper.araging.lblduedate}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="476" y="0" width="76" height="20" uuid="620c1e3e-d16d-4338-8bdd-a9a3fd005078"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[90DaysOld]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="264" y="0" width="72" height="20" uuid="ff5aafb1-a307-49dd-9c72-821fb46e7670"/>
+				<textFieldExpression><![CDATA[$R{jasper.araging.lbl90daysold}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="264" y="0" width="72" height="20" uuid="d69bf217-e618-403c-b992-621f7a4fba9c"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[0DaysOld]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="336" y="0" width="64" height="20" uuid="30933660-b057-4408-8963-609875170b57"/>
+				<textFieldExpression><![CDATA[$R{jasper.araging.lbl0daysold}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="336" y="0" width="64" height="20" uuid="72fbb72e-7c41-4e6d-b076-a9d02a8be76b"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[30DaysOld]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="400" y="0" width="76" height="20" uuid="1b337c91-7cd6-4264-a17c-c42249a76bbe"/>
+				<textFieldExpression><![CDATA[$R{jasper.araging.lbl30daysold}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="400" y="0" width="76" height="20" uuid="e54569b4-d935-4c38-b932-3e3d7657e732"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[60DaysOld]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{jasper.araging.lbl60daysold}]]></textFieldExpression>
+			</textField>
 		</band>
 	</columnHeader>
 	<detail>

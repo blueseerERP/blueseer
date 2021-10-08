@@ -91,13 +91,13 @@ where ps_parent  =  $P{myid};]]>
 				<reportElement x="160" y="0" width="100" height="31" uuid="3182d172-4323-47ed-b8bb-b2f9b3f2b8cd"/>
 				<imageExpression><![CDATA[new net.sf.jasperreports.components.barbecue.BarbecueRenderer(net.sourceforge.barbecue.BarcodeFactory.createCode39($F{ps_parent}, false))]]></imageExpression>
 			</image>
-			<staticText>
-				<reportElement x="312" y="0" width="198" height="36" uuid="40005f77-30de-4bc9-bf2a-5a5097b52235"/>
+			<textField>
+				<reportElement x="312" y="0" width="198" height="36" uuid="77e00d3d-36b9-47b0-ae80-1f33ccb0ff91"/>
 				<textElement>
 					<font size="24"/>
 				</textElement>
-				<text><![CDATA[BOM Report]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{jasper.bom.lblbom}]]></textFieldExpression>
+			</textField>
 		</band>
 	</title>
 	<pageHeader>
@@ -105,62 +105,62 @@ where ps_parent  =  $P{myid};]]>
 			<textField>
 				<reportElement x="417" y="0" width="80" height="20" uuid="c838f78f-8f27-4e07-b216-d42e6f860995"/>
 				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{jasper.bom.lblpage} + " " + $V{PAGE_NUMBER}+" " + $R{jasper.bom.lblof} + " "]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report">
 				<reportElement x="497" y="0" width="40" height="20" uuid="7bb51d99-d65a-48b5-86af-507492912f2e"/>
 				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
-			<staticText>
-				<reportElement x="416" y="39" width="62" height="19" uuid="ff72763b-4033-4879-9b04-d9390211079c"/>
+			<textField>
+				<reportElement x="416" y="39" width="62" height="19" uuid="39be8147-2c50-48d2-89f2-9f365be9396a"/>
 				<textElement textAlignment="Right"/>
-				<text><![CDATA[Date:]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{jasper.bom.lbldate}]]></textFieldExpression>
+			</textField>
 			<textField pattern="dd/MM/yy">
 				<reportElement x="482" y="38" width="66" height="20" uuid="9af12406-6714-4cf5-ae65-6668bf752aa1"/>
 				<textFieldExpression><![CDATA[new SimpleDateFormat("MM/dd/yyyy").format( new java.util.Date() )]]></textFieldExpression>
 			</textField>
-			<staticText>
-				<reportElement x="29" y="10" width="61" height="19" uuid="07425326-7b17-4af6-b48b-dc15658ef3ff"/>
+			<textField>
+				<reportElement x="29" y="10" width="61" height="19" uuid="899cf146-94c5-4fbe-a916-eafb2ee0d1ae"/>
 				<textElement textAlignment="Right"/>
-				<text><![CDATA[Parent Item:]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{jasper.bom.lblparent}]]></textFieldExpression>
+			</textField>
 			<textField>
 				<reportElement x="100" y="10" width="66" height="19" uuid="b3942233-34d2-4d95-9aa0-5a057f00fcbe"/>
 				<textFieldExpression><![CDATA[$F{ps_parent}]]></textFieldExpression>
 			</textField>
-			<staticText>
-				<reportElement x="30" y="32" width="61" height="19" uuid="9141e20a-3214-4c3a-8693-f0e3f1468ee3"/>
+			<textField>
+				<reportElement x="30" y="32" width="61" height="19" uuid="bb696aa7-61c9-48ce-bdb8-b1261267d3d9"/>
 				<textElement textAlignment="Right"/>
-				<text><![CDATA[Description:]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{jasper.bom.lbldesc}]]></textFieldExpression>
+			</textField>
 			<textField>
 				<reportElement x="100" y="32" width="159" height="19" uuid="7de1c4e6-3317-4cea-87bd-1a102f1a4612"/>
 				<textFieldExpression><![CDATA[$F{it_desc}]]></textFieldExpression>
 			</textField>
-			<staticText>
-				<reportElement x="11" y="56" width="80" height="19" uuid="dbe0b0b6-5375-49db-b0ee-d4c8f4a16ea8"/>
+			<textField>
+				<reportElement x="11" y="56" width="80" height="19" uuid="407272ca-6ecb-4d69-9f43-89d1758070d8"/>
 				<textElement textAlignment="Right"/>
-				<text><![CDATA[Operational Cost:]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{jasper.bom.lbloperation}]]></textFieldExpression>
+			</textField>
 			<textField pattern="¤ ###0.00###">
 				<reportElement x="100" y="56" width="62" height="16" uuid="bf1434d6-06cf-42c0-8a62-1cd1f6dd66e3"/>
 				<textFieldExpression><![CDATA[$F{itr_bdn_top} + $F{itr_lbr_top} + $F{itr_ovh_top} + $F{itr_out_top}]]></textFieldExpression>
 			</textField>
-			<staticText>
-				<reportElement x="10" y="78" width="80" height="19" uuid="f533f65d-7ae0-4451-8364-d5430dc1e287"/>
+			<textField>
+				<reportElement x="10" y="78" width="80" height="19" uuid="df06f1d5-545b-4501-b0d1-25f4531a6365"/>
 				<textElement textAlignment="Right"/>
-				<text><![CDATA[Material Cost:]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{jasper.bom.lblmatcost}]]></textFieldExpression>
+			</textField>
 			<textField pattern="¤ ###0.00###">
 				<reportElement x="101" y="78" width="62" height="16" uuid="c7e8159d-aa08-4ef1-92e0-695c54ca9a96"/>
 				<textFieldExpression><![CDATA[$F{itr_mtl_top} + $F{itr_mtl_low}]]></textFieldExpression>
 			</textField>
-			<staticText>
-				<reportElement x="11" y="100" width="80" height="19" uuid="ce992de4-427f-45c5-a2df-1d93cd061454"/>
+			<textField>
+				<reportElement x="11" y="100" width="80" height="19" uuid="ba68d7da-86fb-4df5-a6e9-ecc1a8b4bc6e"/>
 				<textElement textAlignment="Right"/>
-				<text><![CDATA[Total Cost:]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{jasper.bom.lbltotalcost}]]></textFieldExpression>
+			</textField>
 			<textField pattern="¤ ###0.00###">
 				<reportElement x="100" y="100" width="62" height="16" uuid="2f29b36f-1c37-43f1-a0f2-43cf87ff7db0"/>
 				<textFieldExpression><![CDATA[$F{itr_total}]]></textFieldExpression>
@@ -169,51 +169,51 @@ where ps_parent  =  $P{myid};]]>
 	</pageHeader>
 	<columnHeader>
 		<band height="25" splitType="Stretch">
-			<staticText>
-				<reportElement x="19" y="0" width="72" height="20" uuid="c72e011a-e8a6-4364-b9ce-0c7ebfa56375"/>
+			<textField>
+				<reportElement x="19" y="0" width="72" height="20" uuid="0ff780fc-8069-4fd5-986b-c02ea08fc766"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[Component Item]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{jasper.bom.lblcomponent}]]></textFieldExpression>
+			</textField>
 			<line>
 				<reportElement x="0" y="19" width="555" height="1" uuid="c9e36006-c5df-41ef-96b1-529b4e6ddb52"/>
 			</line>
-			<staticText>
-				<reportElement x="299" y="0" width="73" height="20" uuid="ff5aafb1-a307-49dd-9c72-821fb46e7670"/>
+			<textField>
+				<reportElement x="299" y="0" width="73" height="20" uuid="e644d1f5-f4d5-425b-ac32-5df7d261d21f"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[Operation]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="250" y="1" width="40" height="20" uuid="13f9b695-ff05-4d5f-b062-becc4685abbb"/>
+				<textFieldExpression><![CDATA[$R{jasper.bom.lbloperation}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="250" y="1" width="40" height="20" uuid="a1cfdf8d-30f1-49f7-8e4d-9b49c3dbb42b"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[Type]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="100" y="-1" width="72" height="20" uuid="26dcdc59-03d3-4e77-b98d-19109334d0ee"/>
+				<textFieldExpression><![CDATA[$R{jasper.bom.lbltype}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="-1" width="72" height="20" uuid="a10bd22e-38a5-443a-9848-7784115e7bd7"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[Description]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="382" y="0" width="64" height="20" uuid="30933660-b057-4408-8963-609875170b57"/>
+				<textFieldExpression><![CDATA[$R{jasper.bom.lbldesc}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="382" y="0" width="64" height="20" uuid="1ca66945-1d11-40e1-b879-a906a7415776"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[Qty Per]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="460" y="0" width="64" height="20" uuid="59875b79-4b56-461e-b416-16d5a522fa08"/>
+				<textFieldExpression><![CDATA[$R{jasper.bom.lblqtyper}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="460" y="0" width="64" height="20" uuid="66ecc0be-b066-49be-b133-1db7a8ffd48f"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[Cost]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{jasper.bom.lblcost}]]></textFieldExpression>
+			</textField>
 		</band>
 	</columnHeader>
 	<detail>

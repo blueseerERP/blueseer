@@ -122,25 +122,19 @@ order by wf_op;]]>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="19" y="2" width="160" height="15" uuid="fc8ba0bd-5b6b-4e28-a5ff-dc21bdcad188">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-				<textFieldExpression><![CDATA[$P{REPORT_TITLE}.toString()]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="509" y="4" width="47" height="18" uuid="44899533-668f-495d-b651-40d1b900d60d"/>
+				<reportElement x="509" y="4" width="47" height="18" uuid="d4db997d-e206-46ee-9cc8-9664d0086f2d"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<text><![CDATA[Print Date:]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="656" y="2" width="33" height="20" uuid="ddf7afc3-8718-4cd5-8a5f-906b8d4e0db6"/>
+				<textFieldExpression><![CDATA[$R{jasper.jobticket.lblprintdate}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="656" y="2" width="33" height="20" uuid="805c8360-67d7-49a1-8232-4cb88891f800"/>
 				<textElement>
 					<font size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Cell:]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{jasper.jobticket.lblcell}]]></textFieldExpression>
+			</textField>
 			<textField>
 				<reportElement x="689" y="2" width="71" height="20" uuid="71f6067a-9231-45b5-907e-c5a3d77eda41"/>
 				<textElement>
@@ -153,7 +147,7 @@ order by wf_op;]]>
 				<textElement>
 					<font size="18"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{BUSINESSTITLE}.toString()]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{jasper.jobticket.lbltitle}]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
@@ -162,13 +156,13 @@ order by wf_op;]]>
 			<line>
 				<reportElement x="0" y="5" width="760" height="1" uuid="560d1dfe-9162-4754-8cd9-0565a997b349"/>
 			</line>
-			<staticText>
-				<reportElement x="19" y="11" width="62" height="17" uuid="c30747ba-2dad-45e3-b4ee-e74a54cc8e1d"/>
+			<textField>
+				<reportElement x="19" y="11" width="62" height="17" uuid="1d6cdd3c-1ec7-4d6e-a768-c9ca56536dbe"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[Job/Lot#:]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{jasper.jobticket.lbljoblot}]]></textFieldExpression>
+			</textField>
 			<textField>
 				<reportElement x="91" y="11" width="100" height="20" uuid="780e4fa8-14ac-4057-92af-f71e667a90dc"/>
 				<textFieldExpression><![CDATA[$F{plan_nbr}]]></textFieldExpression>
@@ -177,13 +171,13 @@ order by wf_op;]]>
 				<reportElement x="61" y="92" width="73" height="17" uuid="86590877-3129-4043-a34e-8fca5e40d2ad"/>
 				<textFieldExpression><![CDATA[$F{it_wf}]]></textFieldExpression>
 			</textField>
-			<staticText>
-				<reportElement x="223" y="6" width="47" height="14" uuid="f6e59878-ac4a-4a2f-b06b-391500f383da"/>
+			<textField>
+				<reportElement x="223" y="6" width="47" height="14" uuid="603b2d1f-617d-495f-ba17-31d9df1cc15a"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[Part No:]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{jasper.jobticket.lblitem}]]></textFieldExpression>
+			</textField>
 			<textField>
 				<reportElement x="280" y="3" width="174" height="20" uuid="8337b8f0-509d-4326-9311-206093ec714c"/>
 				<textElement>
@@ -212,52 +206,52 @@ order by wf_op;]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{plan_qty_sched}]]></textFieldExpression>
 			</textField>
-			<staticText>
-				<reportElement x="223" y="45" width="47" height="18" uuid="9967513d-73e7-49da-ad40-6d373f837682"/>
+			<textField>
+				<reportElement x="223" y="45" width="47" height="18" uuid="04f25bcd-8f7c-425a-a8ae-99866cceb95d"/>
 				<textElement>
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
-				<text><![CDATA[Cust Part:]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="223" y="67" width="47" height="18" uuid="b136a10f-569b-4af6-817c-88c92508d9e3"/>
+				<textFieldExpression><![CDATA[$R{jasper.jobticket.lblcustitem}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="223" y="67" width="47" height="18" uuid="bb8956f2-7e19-44c8-a9f7-473c00f426f6"/>
 				<textElement>
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
-				<text><![CDATA[Customer:]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="19" y="92" width="42" height="17" uuid="673b00a3-0b38-46ea-93ec-d3d0d149dece"/>
+				<textFieldExpression><![CDATA[$R{jasper.jobticket.lblcustomer}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="19" y="92" width="42" height="17" uuid="e741c66e-0a10-4855-9d84-d9e63b376355"/>
 				<textElement>
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
-				<text><![CDATA[Routing:]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="607" y="5" width="62" height="14" uuid="5db044ef-be57-46ba-868e-778bd7196174"/>
+				<textFieldExpression><![CDATA[$R{jasper.jobticket.lblrouting}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="607" y="5" width="62" height="14" uuid="f54ab5ad-cd16-4150-a0b5-625afb6435b7"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[Quantity:]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="442" y="30" width="78" height="20" uuid="87805905-dadc-4764-8fd6-71d184c708e6">
+				<textFieldExpression><![CDATA[$R{jasper.jobticket.lblqty}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="442" y="30" width="78" height="20" uuid="b7a21ef4-e383-44b7-a7f4-a7fe2d5eae78">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement>
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
-				<text><![CDATA[Plan Due Date:]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="442" y="51" width="78" height="20" uuid="9514b42e-7051-47cc-9fb1-884a371c88dc">
+				<textFieldExpression><![CDATA[$R{jasper.jobticket.lblduedate}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="442" y="51" width="78" height="20" uuid="90cb00ed-1bc5-4746-8670-a48b557ec473">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement>
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
-				<text><![CDATA[Plan Create Date:]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{jasper.jobticket.lblcreatedate}]]></textFieldExpression>
+			</textField>
 			<image>
 				<reportElement x="19" y="28" width="172" height="50" uuid="8861bf31-2830-45b3-b2bb-96c92992523b"/>
 				<imageExpression><![CDATA[new net.sf.jasperreports.components.barbecue.BarbecueRenderer(net.sourceforge.barbecue.BarcodeFactory.createCode39($P{myid}, false))]]></imageExpression>
@@ -276,15 +270,15 @@ order by wf_op;]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{plan_date_create}]]></textFieldExpression>
 			</textField>
-			<staticText>
-				<reportElement x="442" y="71" width="78" height="20" uuid="e4860c0e-53f8-4be9-8698-57659d25a42a">
+			<textField>
+				<reportElement x="442" y="71" width="78" height="20" uuid="f083cb41-e809-4899-9f09-ab908325ba88">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement>
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
-				<text><![CDATA[Plan Sched Date:]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{jasper.jobticket.lblscheddate}]]></textFieldExpression>
+			</textField>
 			<textField>
 				<reportElement x="520" y="71" width="136" height="20" uuid="449bdd55-6acd-4a46-b1c3-4e48b688c595"/>
 				<textElement>
@@ -292,13 +286,13 @@ order by wf_op;]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{plan_date_sched}]]></textFieldExpression>
 			</textField>
-			<staticText>
-				<reportElement x="223" y="89" width="47" height="18" uuid="352a63fb-6482-47d1-b873-5c27b565e044"/>
+			<textField>
+				<reportElement x="223" y="89" width="47" height="18" uuid="a68e8836-95c5-4c86-99a9-dad61c49bf39"/>
 				<textElement>
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
-				<text><![CDATA[PO:]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{jasper.jobticket.lblpo}]]></textFieldExpression>
+			</textField>
 			<textField>
 				<reportElement x="280" y="89" width="140" height="17" uuid="cebe414d-6f6e-41a0-9226-e9c447ecb1d7"/>
 				<textElement>
@@ -306,26 +300,26 @@ order by wf_op;]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{custpo}]]></textFieldExpression>
 			</textField>
-			<staticText>
-				<reportElement x="442" y="92" width="42" height="20" uuid="50f5ff4c-99d7-4a15-8085-838d4b24698d">
+			<textField>
+				<reportElement x="442" y="92" width="42" height="20" uuid="4133097b-5f9e-4164-9e85-76bb21558c97">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement>
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
-				<text><![CDATA[OrderType:]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{jasper.jobticket.lblordertype}]]></textFieldExpression>
+			</textField>
 			<textField>
 				<reportElement x="520" y="92" width="73" height="17" uuid="73971ff4-00d5-4d37-a030-f6217fca5ac5"/>
 				<textFieldExpression><![CDATA[$F{plan_type}]]></textFieldExpression>
 			</textField>
-			<staticText>
-				<reportElement x="223" y="25" width="47" height="18" uuid="2274dde6-551d-4570-846e-85884da4c548"/>
+			<textField>
+				<reportElement x="223" y="25" width="47" height="18" uuid="db741a12-65cb-40e9-96dc-ce95914e976b"/>
 				<textElement>
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
-				<text><![CDATA[Description:]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{jasper.jobticket.lbldesc}]]></textFieldExpression>
+			</textField>
 			<textField>
 				<reportElement x="280" y="25" width="140" height="17" uuid="0ddfe843-94d7-43ca-a60b-94427905a20b">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -339,51 +333,51 @@ order by wf_op;]]>
 	</pageHeader>
 	<columnHeader>
 		<band height="27" splitType="Stretch">
-			<staticText>
-				<reportElement x="19" y="0" width="72" height="20" uuid="c72e011a-e8a6-4364-b9ce-0c7ebfa56375"/>
+			<textField>
+				<reportElement x="19" y="0" width="72" height="20" uuid="75d4b49c-6e1e-4a7e-ac04-2d0312b1b0d4"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[Operation]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="330" y="0" width="55" height="20" uuid="ff5aafb1-a307-49dd-9c72-821fb46e7670"/>
+				<textFieldExpression><![CDATA[$R{jasper.jobticket.lbloperation}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="330" y="0" width="55" height="20" uuid="92a31bb1-e9d8-470d-9922-7458fc88f16b"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[Work Ctr]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{jasper.jobticket.lblwc}]]></textFieldExpression>
+			</textField>
 			<line>
 				<reportElement x="4" y="19" width="756" height="1" uuid="c9e36006-c5df-41ef-96b1-529b4e6ddb52"/>
 			</line>
-			<staticText>
-				<reportElement x="509" y="2" width="67" height="16" uuid="0fffd97f-7e60-4d08-a152-6468408b7447"/>
+			<textField>
+				<reportElement x="509" y="2" width="67" height="16" uuid="48d924f9-8b2d-4e1c-a8c5-e0b2cc2a2a9a"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[Qty Good]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="591" y="2" width="78" height="16" uuid="f94c6c89-db4e-4d79-962b-a33138580b5d"/>
+				<textFieldExpression><![CDATA[$R{jasper.jobticket.lblqtycomp}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="591" y="2" width="78" height="16" uuid="60ac3857-2e43-467e-a193-bf40cb36c714"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[Qty Scrapped]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="91" y="0" width="43" height="19" uuid="ab096a1d-6ff1-4399-a20f-768d81419d0a"/>
+				<textFieldExpression><![CDATA[$R{jasper.jobticket.lblqtyscrap}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="91" y="0" width="43" height="19" uuid="464508d8-3bf4-4dd7-9818-32d281acf332"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[Desc]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="405" y="0" width="69" height="20" uuid="59ff2ff0-ead4-4f1e-aa83-8550c4b43b60"/>
+				<textFieldExpression><![CDATA[$R{jasper.jobticket.lbldesc}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="405" y="0" width="69" height="20" uuid="129c15d0-f172-4a67-9280-3eac2feb8660"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[Rate(per/hr)]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{jasper.jobticket.lblpiecesperhour}]]></textFieldExpression>
+			</textField>
 		</band>
 	</columnHeader>
 	<detail>
