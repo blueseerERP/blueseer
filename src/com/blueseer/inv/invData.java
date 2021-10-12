@@ -1063,9 +1063,8 @@ public class invData {
 
     }
 
-
     public static Double getItemQOHTotal(String item, String site) {
-       Double cost = 0.00;
+       Double qty = 0.00;
      try{
         Class.forName(driver).newInstance();
         Connection con = DriverManager.getConnection(url + db, user, pass);
@@ -1078,7 +1077,7 @@ public class invData {
                             + " and in_site = " + "'" + site + "'"
                             + ";");
            while (res.next()) {
-            cost += res.getDouble("in_qoh");                    
+            qty += res.getDouble("in_qoh");                    
             }
 
        }
@@ -1090,10 +1089,9 @@ public class invData {
     catch (Exception e){
         MainFrame.bslog(e);
     }
-    return cost;
+    return qty;
 
     }
-
 
     public static Double getItemQOHUnallocated(String item, String site, String currentorder) {
        Double qohu = 0.00;
@@ -1138,7 +1136,6 @@ public class invData {
     return qohu;
 
     }   
-
 
     public static Double getItemQtyByWarehouse(String item, String site, String wh) {
        Double cost = 0.00;

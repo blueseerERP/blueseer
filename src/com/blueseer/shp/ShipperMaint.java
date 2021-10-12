@@ -30,6 +30,9 @@ import static bsmf.MainFrame.bslog;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.tags;
 import com.blueseer.inv.invData;
+import static com.blueseer.shp.shpData.addShipperTransaction;
+import com.blueseer.shp.shpData.ship_det;
+import com.blueseer.shp.shpData.ship_mstr;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
@@ -649,7 +652,7 @@ public class ShipperMaint extends javax.swing.JPanel {
                     btadd.setEnabled(false);
                     btedit.setEnabled(false);
                     btconfirm.setEnabled(false);
-                    lblstatus.setText("Shipper has been Invoiced");
+                    lblstatus.setText(getMessageTag(1148));
                     lblstatus.setForeground(Color.blue);
                     btPrintShp.setEnabled(true);
                     btPrintInv.setEnabled(true);
@@ -660,7 +663,7 @@ public class ShipperMaint extends javax.swing.JPanel {
                      if (OVData.isConfirmInShipMaint()) {
                         btconfirm.setEnabled(true);
                     }
-                    lblstatus.setText("Shipper has not been Invoiced");
+                    lblstatus.setText(getMessageTag(1149));
                     lblstatus.setForeground(Color.red);
                     btPrintShp.setEnabled(true);
                     btPrintInv.setEnabled(false);
@@ -730,7 +733,39 @@ public class ShipperMaint extends javax.swing.JPanel {
         }
     }
     
-      
+    public String getUniquePO() {
+        int d = 0;
+        String uniqpo = "";
+        for (int j = 0; j < tabledetail.getRowCount(); j++) {
+         if (d > 0) {
+           if ( uniqpo.compareTo(tabledetail.getValueAt(j, 4).toString()) != 0) {
+           uniqpo = "multi-PO";
+           break;
+           }
+         }
+         d++;
+         uniqpo = tabledetail.getValueAt(j, 4).toString();
+       }
+        return uniqpo;
+    }  
+    
+    public String getUniqueWH() {
+           // lets collect single or multiple Warehouse status
+        int d = 0;
+        String uniqwh = "";
+       for (int j = 0; j < tabledetail.getRowCount(); j++) {
+         if (d > 0) {
+           if ( uniqwh.compareTo(tabledetail.getValueAt(j, 8).toString()) != 0) {
+           uniqwh = "multi-WH";
+           break;
+           }
+         }
+         d++;
+         uniqwh = tabledetail.getValueAt(j, 8).toString();
+       }
+       return uniqwh;
+    }
+    
     public void setLabelByShipTo(String shipto) {
         try {
 
@@ -1157,7 +1192,64 @@ public class ShipperMaint extends javax.swing.JPanel {
         
     }
 
-     
+    public ship_mstr createRecord() {
+        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+        String uniqwh = getUniqueWH();
+        String uniqpo = getUniquePO();
+               
+        ship_mstr x = new ship_mstr(null, 
+                tbshipper.getText(),
+                ddbillto.getSelectedItem().toString(),
+                ddshipto.getSelectedItem().toString(),
+                tbpallets.getText(),
+                tbboxes.getText(),
+                ddshipvia.getSelectedItem().toString(),  
+                dfdate.format(dcshipdate.getDate()),
+                podate,
+                tbref.getText().replace("'", ""),
+                uniqpo,
+                tbremarks.getText(),
+                bsmf.MainFrame.userid,
+                ddsite.getSelectedItem().toString(),
+                curr,
+                uniqwh,
+                terms,
+                taxcode,
+                aracct,
+                arcc );
+                
+        return x;        
+    }
+    
+    public ArrayList<ship_det> createDetRecord() {
+        ArrayList<ship_det> list = new ArrayList<ship_det>();
+        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+        String uniqwh = getUniqueWH();
+        String uniqpo = getUniquePO();
+        for (int j = 0; j < tabledetail.getRowCount(); j++) {       
+        ship_det x = new ship_det(null, 
+                tbshipper.getText(),
+                tabledetail.getValueAt(j, 0).toString(),
+                tabledetail.getValueAt(j, 1).toString(),
+                tabledetail.getValueAt(j, 2).toString(),
+                tabledetail.getValueAt(j, 3).toString(),  
+                dfdate.format(dcshipdate.getDate()),
+                tabledetail.getValueAt(j, 4).toString(),
+                tabledetail.getValueAt(j, 5).toString(),
+                tabledetail.getValueAt(j, 6).toString(),
+                tabledetail.getValueAt(j, 10).toString(),
+                tabledetail.getValueAt(j, 11).toString(),
+                tabledetail.getValueAt(j, 7).toString(),
+                tabledetail.getValueAt(j, 8).toString(),
+                tabledetail.getValueAt(j, 9).toString(),
+                tabledetail.getValueAt(j, 12).toString(),
+                tabledetail.getValueAt(j, 13).toString(),
+                tabledetail.getValueAt(j, 14).toString(),     
+                ddsite.getSelectedItem().toString());
+        list.add(x);
+        }      
+        return list;        
+    }
     
     
     /**
@@ -2041,24 +2133,6 @@ public class ShipperMaint extends javax.swing.JPanel {
         line = getmaxline();
         
         
-         Pattern p = Pattern.compile("^[0-9]\\d*(\\.\\d+)?$");
-        Matcher m = p.matcher(tbprice.getText());
-        if (!m.find() || tbprice.getText() == null) {
-            bsmf.MainFrame.show(getMessageTag(1023,"2"));
-            tbprice.requestFocus();
-            canproceed = false;
-            return;
-        }
-                
-        p = Pattern.compile("^[1-9]\\d*$");
-        m = p.matcher(tbqty.getText());
-        if (!m.find() || tbqty.getText() == null) {
-            bsmf.MainFrame.show(getMessageTag(1033));
-            tbqty.requestFocus();
-            canproceed = false;
-            return;
-        }
-        
         int nbrOfContainers = 0;
         int remainder = 0;
         if (cbexplode.isSelected() && ! tbcontqty.getText().isEmpty()) {
@@ -2129,139 +2203,15 @@ public class ShipperMaint extends javax.swing.JPanel {
     }//GEN-LAST:event_btadditemActionPerformed
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
-    try {
-         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-        Class.forName(bsmf.MainFrame.driver).newInstance();
-        bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-        try {
-            Statement st = bsmf.MainFrame.con.createStatement();
-            ResultSet res = null;
-            boolean proceed = true;
-            int i = 0;
-            int d = 0;
-            String uniqpo = "";
-            String uniqwh = "";
-
-
-            if ( OVData.isGLPeriodClosed(dfdate.format(dcshipdate.getDate()))) {
-                proceed = false;
+        if ( OVData.isGLPeriodClosed(BlueSeerUtils.setDateFormat(dcshipdate.getDate()))) { 
                 bsmf.MainFrame.show(getMessageTag(1035));
                 return;
-            }
-
-            if (proceed) {
-
-                   // lets collect single or multiple PO status
-                   for (int j = 0; j < tabledetail.getRowCount(); j++) {
-                     if (d > 0) {
-                       if ( uniqpo.compareTo(tabledetail.getValueAt(j, 4).toString()) != 0) {
-                       uniqpo = "multi-PO";
-                       break;
-                       }
-                     }
-                     d++;
-                     uniqpo = tabledetail.getValueAt(j, 4).toString();
-                   }
-
-                    // lets collect single or multiple Warehouse status
-                    d = 0;
-                   for (int j = 0; j < tabledetail.getRowCount(); j++) {
-                     if (d > 0) {
-                       if ( uniqwh.compareTo(tabledetail.getValueAt(j, 8).toString()) != 0) {
-                       uniqwh = "multi-WH";
-                       break;
-                       }
-                     }
-                     d++;
-                     uniqwh = tabledetail.getValueAt(j, 8).toString();
-                   }
-                int pallets = 0;
-                if (! tbpallets.getText().isEmpty()) {
-                    pallets = Integer.valueOf(tbpallets.getText());
-                }  
-                
-                int boxes = 0;
-                if (! tbboxes.getText().isEmpty()) {
-                    boxes = Integer.valueOf(tbboxes.getText());
-                }
-                
-
-                st.executeUpdate("insert into ship_mstr " 
-                    + " (sh_id, sh_cust, sh_ship, sh_pallets, sh_boxes,  sh_shipvia, "
-                    + " sh_shipdate, sh_po_date, sh_ref, sh_po, " 
-                    + " sh_rmks, sh_userid, sh_site, sh_curr, sh_wh, "
-                    + " sh_cust_terms, sh_taxcode, sh_ar_acct, sh_ar_cc ) "
-                    + " values ( " + "'" + tbshipper.getText() + "'" + "," 
-                    + "'" + ddbillto.getSelectedItem().toString() + "'" + "," 
-                    + "'" + ddshipto.getSelectedItem().toString() + "'" + ","
-                    + "'" + pallets + "'" + "," 
-                    + "'" + boxes + "'" + ","      
-                    + "'" + ddshipvia.getSelectedItem().toString() + "'" + ","         
-                    + "'" + dfdate.format(dcshipdate.getDate()) + "'" + ","
-                    + "'" + podate + "'" + ","
-                    + "'" + tbref.getText().replace("'", "") + "'" + "," 
-                    + "'" + uniqpo + "'" + "," 
-                    + "'" + tbremarks.getText().replace("'", "") + "'" + "," 
-                    + "'" + bsmf.MainFrame.userid + "'" + "," 
-                    + "'" + ddsite.getSelectedItem().toString() + "'" + ","
-                    + "'" + curr + "'" + ","
-                    + "'" + uniqwh + "'" + ","        
-                    + "'" + terms + "'" + ","
-                    + "'" + taxcode + "'" + ","
-                    + "'" + aracct + "'" + ","
-                    + "'" + arcc + "'"
-                    + ");" );
-
-
-
-
-
-                for (int j = 0; j < tabledetail.getRowCount(); j++) {
-
-                    st.executeUpdate("insert into ship_det "
-                        + "(shd_id, shd_line, shd_part, shd_so, shd_soline, shd_date, shd_po, shd_qty,"
-                        + "shd_netprice, shd_disc, shd_listprice, shd_desc, shd_wh, shd_loc, shd_taxamt, shd_cont, shd_serial, shd_site ) "
-                        + " values ( " + "'" + tbshipper.getText() + "'" + ","
-                        + "'" + tabledetail.getValueAt(j, 0).toString() + "'" + ","
-                        + "'" + tabledetail.getValueAt(j, 1).toString().replace("'", "") + "'" + ","
-                        + "'" + tabledetail.getValueAt(j, 2).toString().replace("'", "") + "'" + ","
-                        + "'" + tabledetail.getValueAt(j, 3).toString() + "'" + ","        
-                        + "'" + dfdate.format(dcshipdate.getDate()) + "'" + ","        
-                        + "'" + tabledetail.getValueAt(j, 4).toString().replace("'", "") + "'" + ","
-                        + "'" + tabledetail.getValueAt(j, 5).toString() + "'" + ","
-                        + "'" + tabledetail.getValueAt(j, 6).toString() + "'" + ","
-                        + "'" + tabledetail.getValueAt(j, 10).toString() + "'" + ","
-                        + "'" + tabledetail.getValueAt(j, 11).toString() + "'" + ","
-                        + "'" + tabledetail.getValueAt(j, 7).toString().replace("'", "") + "'" + ","
-                        + "'" + tabledetail.getValueAt(j, 8).toString() + "'" + ","
-                        + "'" + tabledetail.getValueAt(j, 9).toString() + "'" + ","
-                        + "'" + tabledetail.getValueAt(j, 12).toString() + "'" + ","   
-                        + "'" + tabledetail.getValueAt(j, 13).toString() + "'" + ","
-                        + "'" + tabledetail.getValueAt(j, 14).toString() + "'" + ","        
-                        + "'" + ddsite.getSelectedItem().toString() + "'"
-                        + ")"
-                        + ";");
-                }
-
-               
-                
-                // now update shs_det
-                OVData.updateShipperSAC(tbshipper.getText());
-
-
-              
-                initvars(new String[]{tbshipper.getText()});
-
-
-            } // if proceed
-        } catch (SQLException s) {
-            MainFrame.bslog(s);
-            bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-        }
-        bsmf.MainFrame.con.close();
-    } catch (Exception e) {
-        MainFrame.bslog(e);
-    }
+        } 
+        String[] m = new String[2];
+        m = addShipperTransaction(createDetRecord(), createRecord());
+        OVData.updateShipperSAC(tbshipper.getText());
+        initvars(new String[]{tbshipper.getText()});
+        
     }//GEN-LAST:event_btaddActionPerformed
 
     private void btdelitemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdelitemActionPerformed

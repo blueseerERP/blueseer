@@ -33,6 +33,17 @@ import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import com.blueseer.inv.invData;
+import static com.blueseer.inv.invData.getItemQOHTotal;
+import static com.blueseer.ord.ordData.addOrderTransaction;
+import static com.blueseer.ord.ordData.deleteOrderLines;
+import static com.blueseer.ord.ordData.getOrderItemAllocatedQty;
+import static com.blueseer.ord.ordData.getOrderLines;
+import com.blueseer.ord.ordData.sod_det;
+import com.blueseer.ord.ordData.so_mstr;
+import com.blueseer.ord.ordData.so_tax;
+import com.blueseer.ord.ordData.sod_tax;
+import com.blueseer.ord.ordData.sos_det;
+import static com.blueseer.ord.ordData.updateOrderTransaction;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
@@ -119,6 +130,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
                 String basecurr = OVData.getDefaultCurrency();
                 boolean custitemonly = true;
                 boolean autoallocate = false;
+                String allocationStatus = "";
                 
                 DecimalFormat df = new DecimalFormat("#0.0000", new DecimalFormatSymbols(Locale.getDefault()));
                 Map<Integer, ArrayList<String[]>> linetax = new HashMap<Integer, ArrayList<String[]>>();
@@ -726,428 +738,40 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
     
     public String[] addRecord(String[] x) {
      String[] m = new String[2];
-     
-     try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                boolean proceed = true;
-                int i = 0;
-                
-                proceed = validateInput("addRecord");
-                
-                if (proceed) {
-                       
-                        // lets collect single or multiple Warehouse status
-                        int d = 0;
-                        String uniqwh = "";
-                       for (int j = 0; j < orddet.getRowCount(); j++) {
-                         if (d > 0) {
-                           if ( uniqwh.compareTo(orddet.getValueAt(j, 12).toString()) != 0) {
-                           uniqwh = "multi-WH";
-                           break;
-                           }
-                         }
-                         d++;
-                         uniqwh = orddet.getValueAt(j, 12).toString();
-                       }
-                       
-                       String ordertype = "";
-                       if (cbblanket.isSelected()) {
-                           ordertype = "BLANKET";
-                       } else {
-                           ordertype = "DISCRETE";
-                       }
-                       
-                       
-                       
-                        
-                        
-                         int invqty = 0;
-                         int allqty = 0;
-                         int qohunall = 0;
-                         int allocationvalue = 0;
-                         boolean completeAllocation = true;
-                        for (int j = 0; j < orddet.getRowCount(); j++) {
-                            // get total inventory for line item
-                            // get allocated on current 'open' orders
-                             // now get QOH
-                                    res = st.executeQuery("SELECT  sum(in_qoh) as totqty  " +
-                                    " FROM  in_mstr  " +
-                                    " where in_part = " + "'" + orddet.getValueAt(j, 1).toString() + "'" + 
-                                    " group by in_part ;");
-
-                                    while (res.next()) {
-                                    invqty = res.getInt("totqty");
-                                    }
-                                    
-                                    res = st.executeQuery("SELECT  sum(case when sod_all_qty = '' then 0 else (sod_all_qty - sod_shipped_qty) end) as allqty  " +
-                                    " FROM  sod_det inner join so_mstr on so_nbr = sod_nbr  " +
-                                    " where sod_part = " + "'" + orddet.getValueAt(j, 1).toString() + "'" + 
-                                    " AND so_status <> " + "'" + getGlobalProgTag("closed") + "'" +
-                                    " AND so_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +          
-                                    " group by sod_part ;");
-
-                                    while (res.next()) {
-                                    allqty = res.getInt("allqty");
-                                    }
-                                    
-                                 qohunall = invqty - allqty; 
-                                 
-                                 if (Integer.valueOf(orddet.getValueAt(j,5).toString()) <= qohunall) {
-                                     allocationvalue = Integer.valueOf(orddet.getValueAt(j,5).toString());
-                                 } else {
-                                     allocationvalue = qohunall;
-                                     completeAllocation = false;
-                                 }
-                            
-                            st.executeUpdate("insert into sod_det "
-                                + "(sod_line, sod_part, sod_custpart, sod_nbr, sod_po, sod_ord_qty, sod_uom, sod_all_qty, sod_listprice, sod_disc, sod_netprice, sod_ord_date, sod_due_date, "
-                                + "sod_shipped_qty, sod_status, sod_wh, sod_loc, sod_desc, sod_taxamt, sod_site) "
-                                + " values ( " 
-                                + "'" + orddet.getValueAt(j, 0).toString() + "'" + ","
-                                + "'" + orddet.getValueAt(j, 1).toString() + "'" + ","
-                                + "'" + orddet.getValueAt(j, 2).toString() + "'" + ","
-                                + "'" + orddet.getValueAt(j, 3).toString() + "'" + ","
-                                + "'" + orddet.getValueAt(j, 4).toString() + "'" + ","
-                                + "'" + orddet.getValueAt(j, 5).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
-                                + "'" + orddet.getValueAt(j, 6).toString() + "'" + ","        
-                                + "'" + allocationvalue + "'" + ","  // sod_all_qty is allocated
-                                + "'" + orddet.getValueAt(j, 7).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
-                                + "'" + orddet.getValueAt(j, 8).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
-                                + "'" + orddet.getValueAt(j, 9).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
-                                + "'" + bsmf.MainFrame.dfdate.format(orddate.getDate()).toString() + "'" + ","
-                                + "'" + bsmf.MainFrame.dfdate.format(duedate.getDate()).toString() + "'" + ","
-                                + "'" + orddet.getValueAt(j, 10).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
-                                + "'" + orddet.getValueAt(j, 11).toString() + "'" + ","
-                                + "'" + orddet.getValueAt(j, 12).toString() + "'" + ","
-                                + "'" + orddet.getValueAt(j, 13).toString() + "'" + ","
-                                + "'" + orddet.getValueAt(j, 14).toString() + "'" + ","
-                                + "'" + orddet.getValueAt(j, 15).toString().replace(defaultDecimalSeparator, '.') + "'" + ","        
-                                + "'" + ddsite.getSelectedItem().toString() + "'" 
-                                + ")"
-                                + ";");
-
-                              if (linetax.containsKey(orddet.getValueAt(j,0))) {
-                                  for (String[] s : (ArrayList<String[]>)linetax.get(orddet.getValueAt(j,0))) {
-                                          st.executeUpdate("insert into sod_tax "
-                                    + "(sodt_nbr, sodt_line, sodt_desc, sodt_percent, sodt_type ) "
-                                    + " values ( " 
-                                    + "'" + tbkey.getText().toString() + "'" + ","
-                                    + "'" + orddet.getValueAt(j, 0).toString() + "'" + ","
-                                    + "'" + s[0].toString() + "'" + ","
-                                    + "'" + s[1].toString() + "'" + ","
-                                    + "'" + s[2].toString() + "'"  
-                                    + ")"
-                                    + ";");
-                                  }
-                              }
-                        } 
-                        
-                        
-                        
-                        
-                        
-                        
-                        // now add applied discounts and summary charges
-                     for (int j = 0; j < sactable.getRowCount(); j++) {
-                        st.executeUpdate("insert into sos_det "
-                            + "(sos_nbr, sos_desc, sos_type, sos_amttype, sos_amt ) "
-                            + " values ( " 
-                            + "'" + tbkey.getText().toString() + "'" + ","
-                            + "'" + sactable.getValueAt(j, 1).toString().replace("'", "") + "'" + ","
-                            + "'" + sactable.getValueAt(j, 0).toString().replace("'", "") + "'" + ","
-                            + "'" + sactable.getValueAt(j, 2).toString().replace("'", "") + "'" + ","
-                            + "'" + sactable.getValueAt(j, 3).toString().replace("'", "") + "'" 
-                            + ")"
-                            + ";");
-                    }
-                     
-                     // now add headertax if any
-                     if (! headertax.isEmpty()) {
-                              for (String[] s : headertax) {
-                                      st.executeUpdate("insert into so_tax "
-                                + "(sot_nbr, sot_desc, sot_percent, sot_type ) "
-                                + " values ( " 
-                                + "'" + tbkey.getText().toString() + "'" + ","
-                                + "'" + s[0].toString() + "'" + ","
-                                + "'" + s[1].toString() + "'" + ","
-                                + "'" + s[2].toString() + "'"  
-                                + ")"
-                                + ";");
-                                      
-                              }
-                          }
-                     
-                      String isallocated = "";
-                        if (cbisallocated.isSelected()) {
-                          isallocated = "c";
-                          if (! completeAllocation) {
-                              isallocated = "p";
-                          }
-                        }
-                        
-                      // insert order header
-                         st.executeUpdate("insert into so_mstr "
-                        + "(so_nbr, so_cust, so_ship, so_site, so_curr, so_shipvia, so_wh, so_po, so_due_date, so_ord_date, "
-                        + " so_create_date, so_userid, so_status, so_isallocated, "
-                        + " so_terms, so_ar_acct, so_ar_cc, so_rmks, so_type, so_taxcode ) "
-                        + " values ( " + "'" + tbkey.getText().toString() + "'" + ","
-                        + "'" + ddcust.getSelectedItem() + "'" + ","
-                        + "'" + ddship.getSelectedItem() + "'" + ","
-                        + "'" + ddsite.getSelectedItem().toString() + "'" + ","
-                        + "'" + ddcurr.getSelectedItem().toString() + "'" + ","        
-                        + "'" + ddshipvia.getSelectedItem().toString() + "'" + ","
-                        + "'" + uniqwh + "'" + ","
-                        + "'" + ponbr.getText().replace("'", "") + "'" + ","
-                        + "'" + bsmf.MainFrame.dfdate.format(duedate.getDate()).toString() + "'" + ","
-                        + "'" + bsmf.MainFrame.dfdate.format(orddate.getDate()).toString() + "'" + ","
-                        + "'" + bsmf.MainFrame.dfdate.format(new Date()) + "'" + ","
-                        + "'" + bsmf.MainFrame.userid + "'" + ","
-                        + "'" + ddstatus.getSelectedItem().toString() + "'" + ","
-                        + "'" + isallocated + "'" + ","        
-                        + "'" + terms + "'" + ","
-                        + "'" + aracct + "'" + ","
-                        + "'" + arcc + "'" + ","
-                        + "'" + remarks.getText().replace("'", "") + "'" + "," 
-                        + "'" + ordertype + "'" + ","
-                        + "'" + ddtax.getSelectedItem().toString() + "'"
-                        + ")"
-                        + ";");
-                     
-                     
-                     
-                  m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
-                   
-                // if autoinvoice
-                if (OVData.isAutoInvoice()) {
-                 
-                boolean sure = bsmf.MainFrame.warn("This is an auto-invoice order...Are you sure you want to auto-invoice?");     
-                    if (sure) {     
-                       m = autoInvoiceOrder();
-                    }
-                } // if autoinvoice
-                  
-                  
-                } // if proceed
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordSQLError};  
+     m = addOrderTransaction(createDetRecord(), createRecord(), createTaxRecord(), createTaxDetRecord(), createSOSRecord());
+      // if autoinvoice
+        if (OVData.isAutoInvoice()) {
+        boolean sure = bsmf.MainFrame.warn("This is an auto-invoice order...Are you sure you want to auto-invoice?");     
+            if (sure) {     
+               m = autoInvoiceOrder();
             }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordConnError};
-        }
-     
+        } // if autoinvoice
      return m;
      }
      
     public String[] updateRecord(String[] x) {
-     String[] m = new String[2];
-     
-     try {
-            boolean proceed = true;
-            int i = 0;
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;   
-               proceed = validateInput("updateRecord");
-                
-                if (proceed) {
-                      int invqty = 0;
-                         int allqty = 0;
-                         int qohunall = 0;
-                         int allocationvalue = 0;
-                         boolean completeAllocation = true;   
-                     
-                    // first delete any sod_det line records that have been
-                    // disposed from the current orddet table
-                    ArrayList<String> deletes = new ArrayList<String>();
-                    boolean goodLine = false;
-                    res = st.executeQuery("Select sod_line from sod_det where sod_nbr = " + "'" + tbkey.getText() + "'"  + ";" );
-                    while (res.next()) {
-                      goodLine = false;
-                      for (int j = 0; j < orddet.getRowCount(); j++) {
-                         if (orddet.getValueAt(j, 0).toString().equals(res.getString("sod_line"))) {
-                             goodLine = true;
-                         }
-                      }
-                      if (! goodLine) {
-                          deletes.add(res.getString("sod_line"));
-                      }
-                    }
-                    for (String d : deletes) {
-                       st.executeUpdate("delete from sod_det " + 
-                               " where sod_nbr = " + "'" + tbkey.getText() + "'" +
-                               " and sod_line = " + "'" + d + "'" +
-                               ";");
-                    }
-                    
-                    
-                    
-                    for (int j = 0; j < orddet.getRowCount(); j++) {
-                         i = 0;
-                        // skip closed lines
-                        if (orddet.getValueAt(j, 11).toString().equals(getGlobalProgTag("closed")))
-                            continue;
-                        
-                        
-                        
-                           // get total inventory for line item
-                            // get allocated on current 'open' orders
-                             // now get QOH
-                        
-                                invqty = 0;
-                                allqty = 0;
-                                qohunall = 0;
-                                allocationvalue = 0;
-                                
-                                    res = st.executeQuery("SELECT  sum(in_qoh) as totqty  " +
-                                    " FROM  in_mstr  " +
-                                    " where in_part = " + "'" + orddet.getValueAt(j, 1).toString() + "'" + 
-                                    " group by in_part ;");
-
-                                    while (res.next()) {
-                                    invqty = res.getInt("totqty");
-                                    }
-                                    
-                                    res = st.executeQuery("SELECT  sum(case when sod_all_qty = '' then 0 else (sod_all_qty - sod_shipped_qty) end) as allqty  " +
-                                    " FROM  sod_det inner join so_mstr on so_nbr = sod_nbr  " +
-                                    " where sod_part = " + "'" + orddet.getValueAt(j, 1).toString() + "'" + 
-                                    " AND so_status <> " + "'" + getGlobalProgTag("closed") + "'" + 
-                                    " AND so_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +   
-                                    " AND so_nbr <> " + "'" + tbkey.getText() + "'" +
-                                    " group by sod_part ;");
-
-                                    while (res.next()) {
-                                    allqty = res.getInt("allqty");
-                                    }
-                                    
-                                 qohunall = invqty - allqty; 
-                                 
-                                 if (Integer.valueOf(orddet.getValueAt(j,5).toString()) <= qohunall) {
-                                     allocationvalue = Integer.valueOf(orddet.getValueAt(j,5).toString());
-                                 } else {
-                                     allocationvalue = qohunall;
-                                     completeAllocation = false;
-                                 }  
-                        
-                        
-                        
-                            res = st.executeQuery("Select sod_line from sod_det where sod_nbr = " + "'" + tbkey.getText() + "'" +
-                                " and sod_line = " + "'" + orddet.getValueAt(j, 0).toString() + "'" + ";" );
-                            while (res.next()) {
-                            i++;
-                            }
-                            if (i > 0) {                                
-                              st.executeUpdate("update sod_det set "
-                            + " sod_part = " + "'" + orddet.getValueAt(j, 1).toString() + "'" + ","
-                            + " sod_custpart = " + "'" + orddet.getValueAt(j, 2).toString() + "'" + ","
-                            + " sod_po = " + "'" + ponbr.getText().replace("'", "") + "'" + ","
-                            + " sod_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + ","        
-                            + " sod_ord_qty = " + "'" + orddet.getValueAt(j, 5).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
-                            + " sod_uom = " + "'" + orddet.getValueAt(j, 6).toString() + "'" + ","        
-                            + " sod_all_qty = " + "'" + allocationvalue + "'" + ","        
-                            + " sod_listprice = " + "'" + orddet.getValueAt(j, 7).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
-                            + " sod_disc = " + "'" + orddet.getValueAt(j, 8).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
-                            + " sod_wh = " + "'" + orddet.getValueAt(j, 12).toString() + "'" + ","
-                            + " sod_loc = " + "'" + orddet.getValueAt(j, 13).toString() + "'" + ","
-                            + " sod_due_date = " + "'" + bsmf.MainFrame.dfdate.format(duedate.getDate()).toString() + "'" + ","
-                            + " sod_ord_date = " + "'" + bsmf.MainFrame.dfdate.format(orddate.getDate()).toString() + "'" + ","        
-                            + " sod_netprice = " + "'" + orddet.getValueAt(j, 9).toString().replace(defaultDecimalSeparator, '.') + "'"
-                            + " where sod_nbr = " + "'" + tbkey.getText() + "'" 
-                            + " AND sod_line = " + "'" + orddet.getValueAt(j, 0).toString() + "'"
-                            + ";");
-                            } else {
-                             st.executeUpdate("insert into sod_det "
-                            + "(sod_line, sod_part, sod_custpart, sod_nbr, sod_po, sod_ord_qty, sod_uom, sod_all_qty, sod_listprice, sod_disc, sod_netprice, sod_ord_date, sod_due_date, "
-                            + "sod_shipped_qty, sod_status, sod_wh, sod_loc, sod_site) "
-                            + " values ( " 
-                            + "'" + orddet.getValueAt(j, 0).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 1).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 2).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 3).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 4).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 5).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
-                            + "'" + orddet.getValueAt(j, 6).toString() + "'" + ","        
-                            + "'" + allocationvalue + "'" + ","  // sod_all_qty is allocated
-                            + "'" + orddet.getValueAt(j, 7).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
-                            + "'" + orddet.getValueAt(j, 8).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
-                            + "'" + orddet.getValueAt(j, 9).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
-                            + "'" + bsmf.MainFrame.dfdate.format(orddate.getDate()).toString() + "'" + ","
-                            + "'" + bsmf.MainFrame.dfdate.format(duedate.getDate()).toString() + "'" + ","        
-                            + "'" + orddet.getValueAt(j, 10).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
-                            + "'" + orddet.getValueAt(j, 11).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 12).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 13).toString() + "'" + ","                
-                            + "'" + ddsite.getSelectedItem().toString() + "'"
-                            + ")"
-                            + ";");   
-                            }
-
-                    }
-                    
-                    // now delete all applicable sos_det and re-add applied discounts and summary charges
-                     st.executeUpdate("delete from sos_det where sos_nbr = " + "'" + tbkey.getText().toString() + "'" + ";");
-                     for (int j = 0; j < sactable.getRowCount(); j++) {
-                        st.executeUpdate("insert into sos_det "
-                            + "(sos_nbr, sos_desc, sos_type, sos_amttype, sos_amt ) "
-                            + " values ( " 
-                            + "'" + tbkey.getText().toString() + "'" + ","
-                            + "'" + sactable.getValueAt(j, 1).toString() + "'" + ","
-                            + "'" + sactable.getValueAt(j, 0).toString() + "'" + ","
-                            + "'" + sactable.getValueAt(j, 2).toString() + "'" + ","
-                            + "'" + sactable.getValueAt(j, 3).toString().replace(defaultDecimalSeparator, '.') + "'" 
-                            + ")"
-                            + ";");
-
-                    }
-                     
-                     
-                     // now update the order
-                     String isallocated = "";
-                        if (cbisallocated.isSelected()) {
-                          isallocated = "c";
-                          if (! completeAllocation) {
-                              isallocated = "p";
-                          }
-                        }
-                      st.executeUpdate("update so_mstr "
-                        + " set so_ship = " + "'" + ddship.getSelectedItem() + "'" + ","
-                        + " so_po = " + "'" + ponbr.getText().replace("'", "") + "'" + ","
-                        + " so_isallocated = " + "'" + isallocated + "'" + ","        
-                        + " so_rmks = " + "'" + remarks.getText().replace("'", "") + "'" + ","        
-                        + " so_status = " + "'" + ddstatus.getSelectedItem() + "'" + ","
-                        + " so_site = " + "'" + ddsite.getSelectedItem() + "'" + ","  
-                        + " so_curr = " + "'" + ddcurr.getSelectedItem() + "'" + ","        
-                        + " so_taxcode = " + "'" + ddtax.getSelectedItem() + "'" + ","
-                        + " so_shipvia = " + "'" + ddshipvia.getSelectedItem() + "'" + ","        
-                        + " so_due_date = " + "'" + bsmf.MainFrame.dfdate.format(duedate.getDate()).toString() + "'" + ","
-                        + " so_ord_date = " + "'" + bsmf.MainFrame.dfdate.format(orddate.getDate()).toString() + "'" 
-                        + " where so_nbr = " + "'" + tbkey.getText().toString() + "'"
-                        + ";");
-                     
-                     
-                    
-                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
-                    initvars(null);
-                } 
-         
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError};  
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordConnError};
+        String[] m = new String[2];
+        // first delete any sod_det line records that have been
+        // disposed from the current orddet table
+        ArrayList<String> lines = new ArrayList<String>();
+        ArrayList<String> badlines = new ArrayList<String>();
+        boolean goodLine = false;
+        
+        lines = getOrderLines(tbkey.getText());
+       for (String line : lines) {
+          goodLine = false;
+          for (int j = 0; j < orddet.getRowCount(); j++) {
+             if (orddet.getValueAt(j, 0).toString().equals(line)) {
+                 goodLine = true;
+             }
+          }
+          if (! goodLine) {
+              badlines.add(line);
+          }
         }
+        
+        // now update
+        m = updateOrderTransaction(tbkey.getText(), badlines, createDetRecord(), createRecord(), createTaxRecord(), createTaxDetRecord(), createSOSRecord());
      
      return m;
      }
@@ -1264,6 +888,158 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
         }
       return m;
     }
+    
+    public so_mstr createRecord() { 
+        // lets collect single or multiple Warehouse status
+        int d = 0;
+        String uniqwh = "";
+        for (int j = 0; j < orddet.getRowCount(); j++) {
+         if (d > 0) {
+           if ( uniqwh.compareTo(orddet.getValueAt(j, 12).toString()) != 0) {
+           uniqwh = "multi-WH";
+           break;
+           }
+         }
+         d++;
+         uniqwh = orddet.getValueAt(j, 12).toString();
+        }
+        
+        String ordertype = "";
+        if (cbblanket.isSelected()) {
+           ordertype = "BLANKET";
+        } else {
+           ordertype = "DISCRETE";
+        }
+        so_mstr x = new so_mstr(null, tbkey.getText().toString(),
+                 ddcust.getSelectedItem().toString(),
+                 ddship.getSelectedItem().toString(),
+                 ddsite.getSelectedItem().toString(),
+                 ddcurr.getSelectedItem().toString(),   
+                 ddshipvia.getSelectedItem().toString(),
+                 uniqwh,
+                 ponbr.getText(),
+                 bsmf.MainFrame.dfdate.format(duedate.getDate()).toString(),
+                 bsmf.MainFrame.dfdate.format(orddate.getDate()).toString(),
+                 bsmf.MainFrame.dfdate.format(new Date()),
+                 bsmf.MainFrame.userid,
+                 ddstatus.getSelectedItem().toString(),
+                 allocationStatus,   // order level allocation status (global variable) set by createDetRecord 
+                 terms,
+                 aracct,
+                 arcc,
+                 remarks.getText(),
+                 ordertype,
+                 ddtax.getSelectedItem().toString()
+                );
+        return x;
+    }
+   
+    public ArrayList<sod_det> createDetRecord() {
+        ArrayList<sod_det> list = new ArrayList<sod_det>();
+        
+            double invqty = 0;
+            double allqty = 0;
+            double qohunall = 0;
+            double allocationvalue = 0;
+            boolean completeAllocation = true;
+            for (int j = 0; j < orddet.getRowCount(); j++) {
+                // get total inventory for line item
+                // get allocated on current 'open' orders
+                 // now get QOH
+                invqty = getItemQOHTotal(orddet.getValueAt(j, 1).toString(), ddsite.getSelectedItem().toString());
+                allqty = getOrderItemAllocatedQty(orddet.getValueAt(j, 1).toString(), ddsite.getSelectedItem().toString());        
+
+
+                 qohunall = invqty - allqty; 
+
+                 if (Integer.valueOf(orddet.getValueAt(j,5).toString()) <= qohunall) {
+                     allocationvalue = Integer.valueOf(orddet.getValueAt(j,5).toString());
+                 } else {
+                     allocationvalue = qohunall;
+                     completeAllocation = false;
+                 }
+                            
+                sod_det x = new sod_det(null, 
+                tbkey.getText().toString(),
+                orddet.getValueAt(j, 0).toString(),
+                orddet.getValueAt(j, 1).toString(),
+                orddet.getValueAt(j, 2).toString(),
+                orddet.getValueAt(j, 4).toString(),
+                orddet.getValueAt(j, 5).toString().replace(defaultDecimalSeparator, '.'),
+                orddet.getValueAt(j, 6).toString(),
+                String.valueOf(allocationvalue),
+                orddet.getValueAt(j, 7).toString().replace(defaultDecimalSeparator, '.'),
+                orddet.getValueAt(j, 8).toString().replace(defaultDecimalSeparator, '.'),
+                orddet.getValueAt(j, 9).toString().replace(defaultDecimalSeparator, '.'),
+                bsmf.MainFrame.dfdate.format(orddate.getDate()).toString(),
+                bsmf.MainFrame.dfdate.format(duedate.getDate()).toString(),   
+                orddet.getValueAt(j, 10).toString().replace(defaultDecimalSeparator, '.'),
+                orddet.getValueAt(j, 11).toString(),
+                orddet.getValueAt(j, 12).toString(),
+                orddet.getValueAt(j, 13).toString(),
+                orddet.getValueAt(j, 14).toString(),  
+                orddet.getValueAt(j, 15).toString().replace(defaultDecimalSeparator, '.'), 
+                ddsite.getSelectedItem().toString()        
+                );  
+                list.add(x);
+            }    
+            // set global variable status of total order allocation
+            if (cbisallocated.isSelected()) {
+              allocationStatus = "c";
+              if (! completeAllocation) {
+                  allocationStatus = "p";
+              }
+            }
+            
+        return list;
+    }
+    
+    public ArrayList<sos_det> createSOSRecord() {
+         ArrayList<sos_det> list = new ArrayList<sos_det>();
+         for (int j = 0; j < sactable.getRowCount(); j++) {
+             sos_det x = new sos_det(null, tbkey.getText().toString(),
+                sactable.getValueAt(j, 1).toString(),
+                sactable.getValueAt(j, 0).toString(),
+                sactable.getValueAt(j, 2).toString(),
+                sactable.getValueAt(j, 3).toString());     
+                list.add(x);
+         }
+       
+        return list;
+    }
+    
+    public ArrayList<so_tax> createTaxRecord() {
+         ArrayList<so_tax> list = new ArrayList<so_tax>();
+         if (! headertax.isEmpty()) {
+          for (String[] s : headertax) {
+              so_tax x = new so_tax(null, tbkey.getText().toString(),
+                s[0].toString(),
+                s[1].toString(),
+                s[2].toString()); 
+                list.add(x);
+          }
+         }
+        return list;
+    }
+    
+    public ArrayList<sod_tax> createTaxDetRecord() {
+         ArrayList<sod_tax> list = new ArrayList<sod_tax>();
+         for (int j = 0; j < orddet.getRowCount(); j++) {
+             if (linetax.containsKey(orddet.getValueAt(j,0))) {
+                  for (String[] s : (ArrayList<String[]>)linetax.get(orddet.getValueAt(j,0))) {
+                      sod_tax x = new sod_tax(null, tbkey.getText().toString(),
+                        orddet.getValueAt(j, 0).toString(),
+                        s[0].toString(),
+                        s[1].toString(),
+                        s[2].toString());     
+                        list.add(x);
+                  }
+            }
+        }
+       
+        return list;
+    }
+    
     
     public void lookUpFrame() {
         

@@ -87,7 +87,7 @@ import org.w3c.dom.Element;
 public class BlueSeerUtils {
     
     public static DateFormat mysqlDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-    
+    public static DateFormat bsdate = new SimpleDateFormat("yyyy-MM-dd");
     public static ImageIcon clickflag = new ImageIcon(BlueSeerUtils.class.getResource("/images/flag.png")); 
     public static ImageIcon clickbasket = new ImageIcon(BlueSeerUtils.class.getResource("/images/basket.png")); 
     public static ImageIcon clickfind = new ImageIcon(BlueSeerUtils.class.getResource("/images/find.png")); 
