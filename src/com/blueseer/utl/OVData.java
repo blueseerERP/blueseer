@@ -37,8 +37,10 @@ import static bsmf.MainFrame.defaultDecimalSeparator;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import com.blueseer.ctr.cusData;
 import com.blueseer.inv.calcCost;
 import com.blueseer.inv.invData;
+import com.blueseer.ord.ordData;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble5;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble; 
@@ -10298,38 +10300,6 @@ return myitem;
              return billto;
          }
          
-         public static String getOrderCurrency(String order) {
-             String curr = "";
-              try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-               java.util.Date now = new java.util.Date();
-                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-                DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
-                String mydate = dfdate.format(now);
-                
-                   
-                   
-                      res = st.executeQuery("select so_curr from so_mstr where so_nbr = " + "'" + order + "'" +";");
-                    while (res.next()) {
-                        curr = res.getString("so_curr");
-                    }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-                 
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-            
-        }
-             return curr;
-         }
          
          
          public static ArrayList getOrderWHSource(String order) {
@@ -20165,7 +20135,6 @@ MainFrame.bslog(e);
           boolean isError = false; 
           
           try {
-
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
           
@@ -20239,7 +20208,7 @@ MainFrame.bslog(e);
                 }
                 
                 // override cust currency with order currency
-                String order_curr = OVData.getOrderCurrency(so);
+                String order_curr = ordData.getOrderCurrency(so);
                 if (! order_curr.isEmpty()) {
                 curr = order_curr;
                 }

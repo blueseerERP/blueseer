@@ -31,6 +31,7 @@ import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import com.blueseer.inv.invData;
+import com.blueseer.shp.shpData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
@@ -850,59 +851,40 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
     }
   
     public String[] autoInvoiceOrder() {
-        java.util.Date now = new java.util.Date();
+        
+         java.util.Date now = new java.util.Date();
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-         String[] message = new String[2];
-        message[0] = "";
-        message[1] = ""; 
-         int shipperid = OVData.getNextNbr("shipper");     
-                     boolean error = OVData.CreateShipperHdr(String.valueOf(shipperid), ddsite.getSelectedItem().toString(),
+        int shipperid = OVData.getNextNbr("shipper");   
+         
+        shpData.ship_mstr sh = shpData.createShipMstrJRT(String.valueOf(shipperid), ddsite.getSelectedItem().toString(),
                              String.valueOf(shipperid), 
                               ddcust.getSelectedItem().toString(),
                               ddship.getSelectedItem().toString(),
                               tbkey.getText(),
-                              tbpo.getText().replace("'", ""),  // po
-                              tbpo.getText().replace("'", ""),  // ref
+                              tbpo.getText(),  // po
+                              tbpo.getText(),  // ref
                               dfdate.format(duedate.getDate()).toString(),
                               dfdate.format(createdate.getDate()).toString(),
                               remarks.getText().replace("'", ""),
-                              "", // shipvia
+                              "",
                               "S" ); 
-
-                     if (error) {
-                         return message = new String[]{"1", "Error creating service order shipper header"};
-                     }  
-                    
-                    //  "line", "Part", "Order", "Qty", "Price"
-                   //  nbr, part, custpart, skupart, so, po, qty, listprice, discpercent, netprice, shipdate, desc, line, site, wh, loc, taxamt
-                     for (int j = 0; j < orddet.getRowCount(); j++) {
-                             OVData.CreateShipperDet(String.valueOf(shipperid), orddet.getValueAt(j, 1).toString(), "", "", tbkey.getText(), tbpo.getText().replace("'", ""), orddet.getValueAt(j, 5).toString(), 
-                                     orddet.getValueAt(j, 7).toString(), orddet.getValueAt(j, 6).toString(), "0", orddet.getValueAt(j, 6).toString(), dfdate.format(now), 
-                                     orddet.getValueAt(j, 2).toString(), orddet.getValueAt(j, 0).toString(), ddsite.getSelectedItem().toString(), "", "", "0");
-                         }
-                    
-
-                     // now confirm shipment
-                     message = OVData.confirmShipment(String.valueOf(shipperid), now);
-                     if (message[0].equals("1")) { // if error
-                       return message;
-                     } else {
-                         OVData.updateServiceOrderFromShipper(String.valueOf(shipperid));
-                       message = new String[]{"0", "Service Order has been invoiced"};
-                     }
-                     
-                    // now auto payment
-                    if (cbpaid.isSelected())
-                    message = OVData.AREntry("P", String.valueOf(shipperid), now);
-                    
-                                    
-                    
-                    // autopost
-                    if (OVData.isAutoPost()) {
-                        OVData.PostGL2();
-                    }
-                    
-                 return message;
+        ArrayList<String[]> detail = tableToArrayList();
+        ArrayList<shpData.ship_det> shd = shpData.createShipDetJRTmin(detail, String.valueOf(shipperid), dfdate.format(createdate.getDate()).toString(), ddsite.getSelectedItem().toString());
+        shpData.addShipperTransaction(shd, sh);
+        OVData.updateShipperSAC(String.valueOf(shipperid));
+        // now confirm shipment
+        String[] message = OVData.confirmShipment(String.valueOf(shipperid), now);
+        OVData.updateServiceOrderFromShipper(String.valueOf(shipperid));
+        message = new String[]{"0", "Service Order has been invoiced"};    
+        // now auto payment
+        if (cbpaid.isSelected()) {
+          OVData.AREntry("P", String.valueOf(shipperid), now);
+        }
+        // autopost
+        if (OVData.isAutoPost()) {
+            OVData.PostGL2();
+        }        
+        return message;
     }
         
     public void sumlinecount() {
@@ -937,6 +919,24 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
             }
          }
         return max;
+    }
+   
+    public ArrayList<String[]> tableToArrayList() {
+        ArrayList<String[]> list = new ArrayList<String[]>();
+         for (int j = 0; j < orddet.getRowCount(); j++) {
+             String[] s = new String[]{
+                 orddet.getValueAt(j, 0).toString(),
+                 orddet.getValueAt(j, 1).toString(),
+                 orddet.getValueAt(j, 2).toString(),
+                 orddet.getValueAt(j, 3).toString(),
+                 orddet.getValueAt(j, 4).toString(),
+                 orddet.getValueAt(j, 5).toString(),
+                 orddet.getValueAt(j, 6).toString(),
+                 orddet.getValueAt(j, 7).toString()};
+             list.add(s);
+         }
+        
+        return list;
     }
    
     

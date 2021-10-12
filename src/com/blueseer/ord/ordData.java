@@ -720,7 +720,34 @@ public class ordData {
     }
         return lines;
     }
-               
+     
+    public static String getOrderCurrency(String order) {
+        String curr = "";
+        try{
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
+            try{
+                res = st.executeQuery("select so_curr from so_mstr where so_nbr = " + "'" + order + "'" +";");
+                while (res.next()) {
+                    curr = res.getString("so_curr");
+                }
+            }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+             return curr;
+    }
+    
+    
     public record so_mstr(String[] m, String so_nbr, String so_cust, String so_ship, String so_site,
     String so_curr, String so_shipvia, String so_wh, String so_po, String so_due_date,
     String so_ord_date, String so_create_date, String so_userid, String so_status, String so_isallocated,

@@ -29,14 +29,21 @@ import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import com.blueseer.ctr.cusData;
+import com.blueseer.ctr.cusData.cm_mstr;
+import com.blueseer.ord.ordData;
 import com.blueseer.utl.BlueSeerUtils;
+import com.blueseer.utl.OVData;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import javax.swing.JTable;
 /**
  *
  * @author terryva
@@ -190,6 +197,118 @@ public class shpData {
     return m;
     }
     
+    public static ship_mstr createShipMstrJRT(String nbr, String site, String bol, String billto, String shipto, String so, String po, String ref, String shipdate, String orddate, String remarks, String shipvia, String shiptype) {
+        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+        cm_mstr cm = cusData.getCustMstr(new String[]{billto});
+        String acct = cm.cm_ar_acct();
+        String cc = cm.cm_ar_cc();
+        String terms = cm.cm_terms();
+        String carrier = cm.cm_carrier();
+        String onhold = cm.cm_onhold();
+        String taxcode = cm.cm_tax_code();
+        String curr = cm.cm_curr();
+        // logic for asset type shipment/sale
+        if (shiptype.equals("A")) {
+            terms = "N00";
+        }
+        // override default cust carrier from inbound shipvia variable
+        if (! shipvia.isEmpty()) {
+            carrier = shipvia;
+        }  
+        // override cust currency with order currency
+        String order_curr = ordData.getOrderCurrency(so);
+        if (! order_curr.isEmpty()) {
+        curr = order_curr;
+        }
+        ship_mstr x = new ship_mstr(null, 
+                nbr,
+                billto,
+                shipto,
+                "0", // pallets
+                "0",  // boxes
+                carrier,  
+                shipdate,
+                orddate,
+                so,
+                po,
+                remarks,
+                bsmf.MainFrame.userid,
+                site,
+                curr,
+                "", // warehouse
+                terms,
+                taxcode,
+                acct,
+                cc );
+                
+        return x;        
+    }
+    
+    public static ArrayList<ship_det> createShipDetJRT(ArrayList<String[]> detail, String shippernbr, String shipdate, String site) {
+        ArrayList<ship_det> list = new ArrayList<ship_det>();
+        for (String[] d : detail) {            
+            // field order:  "Line", "Part", "CustPart", "SO", "PO", "Qty", "UOM", "ListPrice", "Discount", "NetPrice", "QtyShip", "Status", "WH", "LOC", "Desc", "Taxamt"
+            // service order field order:  line, item, type, desc, order, qty, price, uom
+            ship_det x = new ship_det(null,
+                  shippernbr,
+                  d[0], //shline
+                  d[1], //item
+                  d[2], //custitem
+                  d[3], // so
+                  d[0], // soline = shline  
+                  shipdate, //shipdate
+                  d[4], // po
+                  d[5], // qty
+                  d[6], // uom
+                  "", // currency  
+                  d[9], // netprice
+                  d[8], // disc
+                  d[7], // listprice
+                  d[14], // desc
+                  d[12], // wh
+                  d[13], // loc
+                  d[15], // taxamt
+                  "", // cont
+                  "", // ref
+                  "", // serial
+                  site );
+          list.add(x);
+        }
+        return list;
+    }
+    
+    public static ArrayList<ship_det> createShipDetJRTmin(ArrayList<String[]> detail, String shippernbr, String shipdate, String site) {
+        ArrayList<ship_det> list = new ArrayList<ship_det>();
+        for (String[] d : detail) {            
+              // service order field order:  line, item, type, desc, order, qty, price, uom
+            ship_det x = new ship_det(null,
+                  shippernbr,
+                  d[0], //shline
+                  d[1], //item
+                  d[1], //custitem
+                  d[4], // so
+                  d[0], // soline = shline  
+                  shipdate, //shipdate
+                  d[4], // po
+                  d[5], // qty
+                  d[7], // uom
+                  "", // currency  
+                  d[6], // netprice
+                  "0", // disc
+                  d[6], // listprice
+                  d[3], // desc
+                  "", // wh
+                  "", // loc
+                  "0", // taxamt
+                  "", // cont
+                  "", // ref
+                  "", // serial
+                  site );
+          list.add(x);
+        }
+        return list;
+    }
+    
     
     public record ship_mstr(String[] m, String sh_id, String sh_cust, String sh_ship, String sh_pallets, 
         String sh_boxes, String sh_shipvia, String sh_shipdate, String sh_po_date,
@@ -203,14 +322,15 @@ public class shpData {
         }
     }
    
-    public record ship_det(String[] m, String shd_id, String shd_line, String shd_part, String shd_so,
-        String shd_soline, String shd_date, String shd_po, String shd_qty,
+    public record ship_det(String[] m, String shd_id, String shd_line, String shd_part, String shd_custpart, String shd_so,
+        String shd_soline, String shd_date, String shd_po, String shd_qty, String shd_uom, String shd_curr,
         String shd_netprice, String shd_disc, String shd_listprice, String shd_desc, 
-        String shd_wh, String shd_loc, String shd_taxamt, String shd_cont, 
+        String shd_wh, String shd_loc, String shd_taxamt, String shd_cont, String shd_ref,
         String shd_serial, String shd_site) {
         public ship_det(String[] m) {
             this(m, "", "", "", "", "", "", "", "", "", "",
-                    "", "", "", "", "", "", "", ""
+                    "", "", "", "", "", "", "", "", "", "",
+                    "", ""
             );
         }
     }

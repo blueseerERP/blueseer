@@ -27,6 +27,7 @@ package com.blueseer.shp;
 
 import bsmf.MainFrame;
 import static bsmf.MainFrame.bslog;
+import static bsmf.MainFrame.defaultDecimalSeparator;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.tags;
 import com.blueseer.inv.invData;
@@ -627,14 +628,14 @@ public class ShipperMaint extends javax.swing.JPanel {
                       res.getString("shd_so"),
                       res.getString("shd_soline"),
                       res.getString("shd_po"), 
-                      res.getString("shd_qty"), 
-                      res.getString("shd_netprice"),
+                      res.getString("shd_qty").replace('.', defaultDecimalSeparator), 
+                      res.getString("shd_netprice").replace('.', defaultDecimalSeparator),
                       res.getString("shd_desc"),
                       res.getString("shd_wh"),
                       res.getString("shd_loc"),
                       res.getString("shd_disc"),
-                      res.getString("shd_listprice"),
-                      res.getString("shd_taxamt"),
+                      res.getString("shd_listprice").replace('.', defaultDecimalSeparator),
+                      res.getString("shd_taxamt").replace('.', defaultDecimalSeparator),
                       res.getString("shd_serial"),
                       res.getString("shd_cont")
                   });
@@ -1226,24 +1227,29 @@ public class ShipperMaint extends javax.swing.JPanel {
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
         String uniqwh = getUniqueWH();
         String uniqpo = getUniquePO();
-        for (int j = 0; j < tabledetail.getRowCount(); j++) {       
-        ship_det x = new ship_det(null, 
-                tbshipper.getText(),
-                tabledetail.getValueAt(j, 0).toString(),
-                tabledetail.getValueAt(j, 1).toString(),
-                tabledetail.getValueAt(j, 2).toString(),
-                tabledetail.getValueAt(j, 3).toString(),  
+        // line, item, order, orderline, po, qty, netprice, desc, wh, loc, disc, listprice, tax, cont, serial
+        for (int j = 0; j < tabledetail.getRowCount(); j++) { 
+            ship_det x = new ship_det(null, 
+                tbshipper.getText(), // shipper
+                tabledetail.getValueAt(j, 0).toString(), //shline
+                tabledetail.getValueAt(j, 1).toString(), // item
+                tabledetail.getValueAt(j, 1).toString(), // custimtem
+                tabledetail.getValueAt(j, 2).toString(),  // order
+                tabledetail.getValueAt(j, 0).toString(), //soline    
                 dfdate.format(dcshipdate.getDate()),
                 tabledetail.getValueAt(j, 4).toString(),
-                tabledetail.getValueAt(j, 5).toString(),
-                tabledetail.getValueAt(j, 6).toString(),
-                tabledetail.getValueAt(j, 10).toString(),
-                tabledetail.getValueAt(j, 11).toString(),
+                tabledetail.getValueAt(j, 5).toString().replace(defaultDecimalSeparator, '.'),
+                "", //uom
+                "", //currency
+                tabledetail.getValueAt(j, 6).toString().replace(defaultDecimalSeparator, '.'),
+                tabledetail.getValueAt(j, 10).toString().replace(defaultDecimalSeparator, '.'),
+                tabledetail.getValueAt(j, 11).toString().replace(defaultDecimalSeparator, '.'),
                 tabledetail.getValueAt(j, 7).toString(),
                 tabledetail.getValueAt(j, 8).toString(),
                 tabledetail.getValueAt(j, 9).toString(),
                 tabledetail.getValueAt(j, 12).toString(),
-                tabledetail.getValueAt(j, 13).toString(),
+                tabledetail.getValueAt(j, 13).toString().replace(defaultDecimalSeparator, '.'),
+                "",
                 tabledetail.getValueAt(j, 14).toString(),     
                 ddsite.getSelectedItem().toString());
         list.add(x);
@@ -2421,16 +2427,20 @@ public class ShipperMaint extends javax.swing.JPanel {
     }//GEN-LAST:event_btlookupActionPerformed
 
     private void tbqtyFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbqtyFocusLost
-            String x = BlueSeerUtils.bsformat("", tbqty.getText(), "0");
-        if (x.equals("error")) {
-            tbqty.setText("");
-            tbqty.setBackground(Color.yellow);
-            bsmf.MainFrame.show(getMessageTag(1000));
-            tbqty.requestFocus();
+        if (! tbqty.getText().isEmpty()) {
+            String x = BlueSeerUtils.bsformat("", tbqty.getText(), "2");
+            if (x.equals("error")) {
+                tbqty.setText("");
+                tbqty.setBackground(Color.yellow);
+                bsmf.MainFrame.show(getMessageTag(1000));
+                tbqty.requestFocus();
+            } else {
+                tbqty.setText(x);
+                tbqty.setBackground(Color.white);
+            }
         } else {
-            tbqty.setText(x);
-            tbqty.setBackground(Color.white);
-        }
+             tbqty.setBackground(Color.white);
+         }
     }//GEN-LAST:event_tbqtyFocusLost
 
     private void btlookupOrderLineActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btlookupOrderLineActionPerformed

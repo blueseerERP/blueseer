@@ -44,6 +44,8 @@ import com.blueseer.ord.ordData.so_tax;
 import com.blueseer.ord.ordData.sod_tax;
 import com.blueseer.ord.ordData.sos_det;
 import static com.blueseer.ord.ordData.updateOrderTransaction;
+import com.blueseer.shp.shpData;
+import com.blueseer.shp.shpData.ship_mstr;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
@@ -1001,7 +1003,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
                 sactable.getValueAt(j, 1).toString(),
                 sactable.getValueAt(j, 0).toString(),
                 sactable.getValueAt(j, 2).toString(),
-                sactable.getValueAt(j, 3).toString());     
+                sactable.getValueAt(j, 3).toString().replace(defaultDecimalSeparator, '.'));     
                 list.add(x);
          }
        
@@ -1014,7 +1016,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
           for (String[] s : headertax) {
               so_tax x = new so_tax(null, tbkey.getText().toString(),
                 s[0].toString(),
-                s[1].toString(),
+                s[1].toString().replace(defaultDecimalSeparator, '.'),
                 s[2].toString()); 
                 list.add(x);
           }
@@ -1030,7 +1032,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
                       sod_tax x = new sod_tax(null, tbkey.getText().toString(),
                         orddet.getValueAt(j, 0).toString(),
                         s[0].toString(),
-                        s[1].toString(),
+                        s[1].toString().replace(defaultDecimalSeparator, '.'),
                         s[2].toString());     
                         list.add(x);
                   }
@@ -1209,8 +1211,9 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
     public String[] autoInvoiceOrder() {
         java.util.Date now = new java.util.Date();
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-         int shipperid = OVData.getNextNbr("shipper");     
-                     boolean error = OVData.CreateShipperHdr(String.valueOf(shipperid), ddsite.getSelectedItem().toString(),
+        int shipperid = OVData.getNextNbr("shipper");   
+         
+        ship_mstr sh = shpData.createShipMstrJRT(String.valueOf(shipperid), ddsite.getSelectedItem().toString(),
                              String.valueOf(shipperid), 
                               ddcust.getSelectedItem().toString(),
                               ddship.getSelectedItem().toString(),
@@ -1222,19 +1225,14 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
                               remarks.getText().replace("'", ""),
                               ddshipvia.getSelectedItem().toString(),
                               "S" ); 
-
-                     if (! error) {
-                         OVData.CreateShipperDetFromTable(orddet, String.valueOf(shipperid), dfdate.format(duedate.getDate()).toString(), ddsite.getSelectedItem().toString());
-                     }
-                     
-                     if (! error) {
-                       OVData.updateShipperSAC(String.valueOf(shipperid));
-                     }
-
-                     // now confirm shipment
-                     String[] message = OVData.confirmShipment(String.valueOf(shipperid), now);
+        ArrayList<String[]> detail = tableToArrayList();
+        ArrayList<shpData.ship_det> shd = shpData.createShipDetJRT(detail, String.valueOf(shipperid), dfdate.format(orddate.getDate()).toString(), ddsite.getSelectedItem().toString());
+        shpData.addShipperTransaction(shd, sh);
+        OVData.updateShipperSAC(String.valueOf(shipperid));
+        // now confirm shipment
+        String[] message = OVData.confirmShipment(String.valueOf(shipperid), now);
                     
-                 return message;
+        return message;
     }
     
     public void custChangeEvent(String mykey) {
@@ -1797,6 +1795,31 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
       return true;   
     }
     
+    public ArrayList<String[]> tableToArrayList() {
+        ArrayList<String[]> list = new ArrayList<String[]>();
+         for (int j = 0; j < orddet.getRowCount(); j++) {
+             String[] s = new String[]{
+                 orddet.getValueAt(j, 0).toString(),
+                 orddet.getValueAt(j, 1).toString(),
+                 orddet.getValueAt(j, 2).toString(),
+                 orddet.getValueAt(j, 3).toString(),
+                 orddet.getValueAt(j, 4).toString(),
+                 orddet.getValueAt(j, 5).toString(),
+                 orddet.getValueAt(j, 6).toString(),
+                 orddet.getValueAt(j, 7).toString(),
+                 orddet.getValueAt(j, 8).toString(),
+                 orddet.getValueAt(j, 9).toString(),
+                 orddet.getValueAt(j, 10).toString(),
+                 orddet.getValueAt(j, 11).toString(),
+                 orddet.getValueAt(j, 12).toString(),
+                 orddet.getValueAt(j, 13).toString(),
+                 orddet.getValueAt(j, 14).toString(),
+                 orddet.getValueAt(j, 15).toString()};
+             list.add(s);
+         }
+        
+        return list;
+    }
    
     
     
@@ -3245,7 +3268,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
 
     private void qtyshippedFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_qtyshippedFocusLost
        
-          String x = BlueSeerUtils.bsformat("", qtyshipped.getText(), "0");
+        String x = BlueSeerUtils.bsformat("", qtyshipped.getText(), "0");
         if (x.equals("error")) {
             qtyshipped.setText("");
             qtyshipped.setBackground(Color.yellow);
