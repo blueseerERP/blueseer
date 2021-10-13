@@ -26,6 +26,7 @@ SOFTWARE.
 package com.blueseer.shp;
 import bsmf.MainFrame;
 import static bsmf.MainFrame.db;
+import static bsmf.MainFrame.defaultDecimalSeparator;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
@@ -258,16 +259,16 @@ public class shpData {
                   d[0], // soline = shline  
                   shipdate, //shipdate
                   d[4], // po
-                  d[5], // qty
+                  d[5].replace(defaultDecimalSeparator, '.'), // qty
                   d[6], // uom
                   "", // currency  
-                  d[9], // netprice
-                  d[8], // disc
-                  d[7], // listprice
+                  d[9].replace(defaultDecimalSeparator, '.'), // netprice
+                  d[8].replace(defaultDecimalSeparator, '.'), // disc
+                  d[7].replace(defaultDecimalSeparator, '.'), // listprice
                   d[14], // desc
                   d[12], // wh
                   d[13], // loc
-                  d[15], // taxamt
+                  d[15].replace(defaultDecimalSeparator, '.'), // taxamt
                   "", // cont
                   "", // ref
                   "", // serial
@@ -290,12 +291,12 @@ public class shpData {
                   d[0], // soline = shline  
                   shipdate, //shipdate
                   d[4], // po
-                  d[5], // qty
+                  d[5].replace(defaultDecimalSeparator, '.'), // qty
                   d[7], // uom
                   "", // currency  
-                  d[6], // netprice
+                  d[6].replace(defaultDecimalSeparator, '.'), // netprice
                   "0", // disc
-                  d[6], // listprice
+                  d[6].replace(defaultDecimalSeparator, '.'), // listprice
                   d[3], // desc
                   "", // wh
                   "", // loc
