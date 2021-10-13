@@ -100,7 +100,7 @@ public class POBrowse extends javax.swing.JPanel {
                             getGlobalColumnTag("po"), 
                             getGlobalColumnTag("code"), 
                             getGlobalColumnTag("name"), 
-                            getGlobalColumnTag("orddate"), 
+                            getGlobalColumnTag("orderdate"), 
                             getGlobalColumnTag("type"),
                             getGlobalColumnTag("status"), 
                             getGlobalColumnTag("amount")})

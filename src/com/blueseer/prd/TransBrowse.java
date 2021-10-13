@@ -90,7 +90,7 @@ public class TransBrowse extends javax.swing.JPanel {
                             getGlobalColumnTag("number"), 
                             getGlobalColumnTag("item"), 
                             getGlobalColumnTag("type"), 
-                            getGlobalColumnTag("quantity"), 
+                            getGlobalColumnTag("qty"), 
                             getGlobalColumnTag("uom"), 
                             getGlobalColumnTag("baseqty"), 
                             getGlobalColumnTag("operation"), 
