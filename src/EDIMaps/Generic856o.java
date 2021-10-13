@@ -26,6 +26,7 @@ SOFTWARE.
 
 package EDIMaps;
 
+import com.blueseer.ctr.cusData;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -70,7 +71,7 @@ public class Generic856o extends com.blueseer.edi.EDIMap {
          H.add("HL" + ed + "1" + ed + ed + "S" + ed + "1");
          H.add("TD5" + ed + "B" + ed + "2" + ed + h[8] + ed + "ZZ" + ed + h[8]);
          H.add("REF" + ed + "CN" + h[10]);
-         H.add("N1" + ed + "ST" + ed + OVData.getCustName(h[0]) + ed + "92" + h[1]);
+         H.add("N1" + ed + "ST" + ed + cusData.getCustName(h[0]) + ed + "92" + h[1]);
          H.add("N1" + ed + "SF" + ed + OVData.getDefaultSiteName() + ed + "92" + h[12]);
          H.add("HL" + ed + "2" + ed + "1" + ed + "O" + ed + "1");
          H.add("PRF" + ed + h[3] + ed + "00" + ed + ed + h[4]);

@@ -32,6 +32,7 @@ import com.blueseer.utl.BlueSeerUtils;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
+import com.blueseer.ctr.cusData;
 import com.blueseer.inv.invData;
 import static com.blueseer.inv.invData.getItemQOHTotal;
 import static com.blueseer.ord.ordData.addOrderTransaction;
@@ -521,7 +522,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
         ddcust.removeAllItems();
         ddcust.insertItemAt("", 0);
         ddcust.setSelectedIndex(0);
-        ArrayList mycusts = OVData.getcustmstrlist();
+        ArrayList mycusts = cusData.getcustmstrlist();
         for (int i = 0; i < mycusts.size(); i++) {
             ddcust.addItem(mycusts.get(i));
         }
@@ -686,9 +687,9 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
                                 
                 
                 
-                terms = OVData.getCustTerms(ddcust.getSelectedItem().toString());
-                arcc = OVData.getCustSalesCC(ddcust.getSelectedItem().toString());
-                aracct = OVData.getCustSalesAcct(ddcust.getSelectedItem().toString());
+                terms = cusData.getCustTerms(ddcust.getSelectedItem().toString());
+                arcc = cusData.getCustSalesCC(ddcust.getSelectedItem().toString());
+                aracct = cusData.getCustSalesAcct(ddcust.getSelectedItem().toString());
                 curr = ddcurr.getSelectedItem().toString();
                 if (terms == null   || aracct == null   || arcc == null || curr == null ||
                         terms.isEmpty() || aracct.isEmpty() || arcc.isEmpty() || curr.isEmpty()
@@ -1248,7 +1249,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
             
            
             
-            ArrayList mycusts = OVData.getcustshipmstrlist(ddcust.getSelectedItem().toString());
+            ArrayList mycusts = cusData.getcustshipmstrlist(ddcust.getSelectedItem().toString());
             for (int i = 0; i < mycusts.size(); i++) {
                 ddship.addItem(mycusts.get(i));
             }
@@ -1307,7 +1308,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
             clearShipAddress();
             ddship.removeAllItems();
             
-            ArrayList mycusts = OVData.getcustshipmstrlist(mykey);
+            ArrayList mycusts = cusData.getcustshipmstrlist(mykey);
             for (int i = 0; i < mycusts.size(); i++) {
                 ddship.addItem(mycusts.get(i));
             }
@@ -1459,7 +1460,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
             netprice.setText("0");
             qtyshipped.setText("0");
             tbdesc.setText(invData.getItemDesc(ddpart.getSelectedItem().toString()));
-            custnumber.setText(OVData.getCustPartFromPart(ddcust.getSelectedItem().toString(),ddpart.getSelectedItem().toString()));
+            custnumber.setText(cusData.getCustPartFromPart(ddcust.getSelectedItem().toString(),ddpart.getSelectedItem().toString()));
             dduom.setSelectedItem(OVData.getUOMFromItemSite(ddpart.getSelectedItem().toString(), ddsite.getSelectedItem().toString()));
             ddpart.setForeground(Color.blue);
             custnumber.setForeground(Color.blue);

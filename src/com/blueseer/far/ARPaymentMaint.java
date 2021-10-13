@@ -28,6 +28,7 @@ package com.blueseer.far;
 import bsmf.MainFrame;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
+import com.blueseer.ctr.cusData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
@@ -376,7 +377,7 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
         dcdate.setDate(now);
               
         ddcust.removeAllItems();
-        ArrayList mycust = OVData.getcustmstrlist();
+        ArrayList mycust = cusData.getcustmstrlist();
         for (int i = 0; i < mycust.size(); i++) {
             ddcust.addItem(mycust.get(i));
         }
@@ -395,7 +396,7 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
         for (int i = 0; i < curr.size(); i++) {
             ddcurr.addItem(curr.get(i));
         }
-        ddcurr.setSelectedItem(OVData.getCustCurrency(ddcust.getSelectedItem().toString()));
+        ddcurr.setSelectedItem(cusData.getCustCurrency(ddcust.getSelectedItem().toString()));
         
         
        isLoad = false;
@@ -1401,8 +1402,8 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
         armodel.setRowCount(0);
         lbcust.setText("");
         if ( ddcust.getSelectedItem() != null && ! ddcust.getSelectedItem().toString().isEmpty()  && ! isLoad) {
-        ddcurr.setSelectedItem(OVData.getCustCurrency(ddcust.getSelectedItem().toString()));
-        lbcust.setText(OVData.getCustName(ddcust.getSelectedItem().toString()));
+        ddcurr.setSelectedItem(cusData.getCustCurrency(ddcust.getSelectedItem().toString()));
+        lbcust.setText(cusData.getCustName(ddcust.getSelectedItem().toString()));
         getreferences(ddcust.getSelectedItem().toString());
         setcustvariables(ddcust.getSelectedItem().toString());
         }

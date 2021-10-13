@@ -75,6 +75,7 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import com.blueseer.ctr.cusData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -279,7 +280,7 @@ public class OrderRpt extends javax.swing.JPanel {
          
           ddfromcust.removeAllItems();
          ddtocust.removeAllItems(); 
-         ArrayList mycusts = OVData.getcustmstrlist();
+         ArrayList mycusts = cusData.getcustmstrlist();
         for (int i = 0; i < mycusts.size(); i++) {
             ddfromcust.addItem(mycusts.get(i));
         }

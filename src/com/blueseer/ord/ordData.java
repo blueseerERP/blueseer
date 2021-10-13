@@ -190,6 +190,7 @@ public class ordData {
             }
             if (bscon != null) {
                 try {
+                    bscon.setAutoCommit(true);
                     bscon.close();
                 } catch (SQLException ex) {
                     MainFrame.bslog(ex);
@@ -209,7 +210,7 @@ public class ordData {
         ResultSet res = null;
         try { 
             con = DriverManager.getConnection(url + db, user, pass);
-            int rows = _updateOrderMstr(x, con);  // add cms_det
+            int rows = _updateOrderMstr(x, con, ps);  // add cms_det
             if (rows > 0) {
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
             } else {
@@ -244,40 +245,39 @@ public class ordData {
     return m;
     }
    
-    private static int _updateOrderMstr(so_mstr x, Connection con) throws SQLException {
+    private static int _updateOrderMstr(so_mstr x, Connection con, PreparedStatement ps) throws SQLException {
         int rows = 0;
         String sql = "update so_mstr set so_cust = ?, so_ship = ?, " +
                 "so_site = ?, so_curr = ?, so_shipvia = ?, so_wh = ?, so_po = ?, so_due_date = ?, so_ord_date = ?, so_create_date = ?, " +
                 "so_userid = ?, so_status = ?, so_isallocated = ?, so_terms = ?, so_ar_acct = ?, so_ar_cc = ?, so_rmks = ?, so_type = ?, " +
                 "so_taxcode = ? " +
                  " where so_nbr = ? ; ";
-	PreparedStatement psu = con.prepareStatement(sql) ;
-        psu.setString(20, x.so_nbr);
-            psu.setString(1, x.so_cust);
-            psu.setString(2, x.so_ship);
-            psu.setString(3, x.so_site);
-            psu.setString(4, x.so_curr);
-            psu.setString(5, x.so_shipvia);
-            psu.setString(6, x.so_wh);
-            psu.setString(7, x.so_po);
-            psu.setString(8, x.so_due_date);
-            psu.setString(9, x.so_ord_date);
-            psu.setString(10, x.so_create_date);
-            psu.setString(11, x.so_userid);
-            psu.setString(12, x.so_status);
-            psu.setString(13, x.so_isallocated);
-            psu.setString(14, x.so_terms);
-            psu.setString(15, x.so_ar_acct);
-            psu.setString(16, x.so_ar_cc);
-            psu.setString(17, x.so_rmks);
-            psu.setString(18, x.so_type);
-            psu.setString(19, x.so_taxcode);
-            rows = psu.executeUpdate();
-            psu.close();
+	ps = con.prepareStatement(sql) ;
+        ps.setString(20, x.so_nbr);
+            ps.setString(1, x.so_cust);
+            ps.setString(2, x.so_ship);
+            ps.setString(3, x.so_site);
+            ps.setString(4, x.so_curr);
+            ps.setString(5, x.so_shipvia);
+            ps.setString(6, x.so_wh);
+            ps.setString(7, x.so_po);
+            ps.setString(8, x.so_due_date);
+            ps.setString(9, x.so_ord_date);
+            ps.setString(10, x.so_create_date);
+            ps.setString(11, x.so_userid);
+            ps.setString(12, x.so_status);
+            ps.setString(13, x.so_isallocated);
+            ps.setString(14, x.so_terms);
+            ps.setString(15, x.so_ar_acct);
+            ps.setString(16, x.so_ar_cc);
+            ps.setString(17, x.so_rmks);
+            ps.setString(18, x.so_type);
+            ps.setString(19, x.so_taxcode);
+            rows = ps.executeUpdate();
         return rows;
     }
     
-    private static int _updateOrderDet(sod_det x, Connection con) throws SQLException {
+    private static int _updateOrderDet(sod_det x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
         int rows = 0;
         String sqlSelect = "select * from sod_det where sod_nbr = ? and sod_line = ?";
         String sqlUpdate = "update sod_det set sod_part = ?, sod_custpart = ?, " +
@@ -292,64 +292,61 @@ public class ordData {
                         + "sod_shipped_qty, sod_status, sod_wh, sod_loc, "
                         + "sod_desc, sod_taxamt, sod_site ) "
                         + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
-        PreparedStatement ps = con.prepareStatement(sqlSelect); 
+        ps = con.prepareStatement(sqlSelect); 
         ps.setString(1, x.sod_nbr);
         ps.setString(2, x.sod_line);
-        ResultSet res = ps.executeQuery();
+        res = ps.executeQuery();
         if (! res.isBeforeFirst()) {  // insert
-	PreparedStatement psi = con.prepareStatement(sqlInsert) ;
-            psi.setString(1, x.sod_nbr);
-            psi.setString(2, x.sod_line);
-            psi.setString(3, x.sod_part);
-            psi.setString(4, x.sod_custpart);
-            psi.setString(5, x.sod_po);
-            psi.setString(6, x.sod_ord_qty);
-            psi.setString(7, x.sod_uom);
-            psi.setString(8, x.sod_all_qty);
-            psi.setString(9, x.sod_listprice);
-            psi.setString(10, x.sod_disc);
-            psi.setString(11, x.sod_netprice);
-            psi.setString(12, x.sod_ord_date);
-            psi.setString(13, x.sod_due_date);
-            psi.setString(14, x.sod_shipped_qty);
-            psi.setString(15, x.sod_status);
-            psi.setString(16, x.sod_wh);
-            psi.setString(17, x.sod_loc);
-            psi.setString(18, x.sod_desc);
-            psi.setString(19, x.sod_taxamt);
-            psi.setString(20, x.sod_site);
-            rows = psi.executeUpdate();
-            psi.close();
+	 ps = con.prepareStatement(sqlInsert) ;
+            ps.setString(1, x.sod_nbr);
+            ps.setString(2, x.sod_line);
+            ps.setString(3, x.sod_part);
+            ps.setString(4, x.sod_custpart);
+            ps.setString(5, x.sod_po);
+            ps.setString(6, x.sod_ord_qty);
+            ps.setString(7, x.sod_uom);
+            ps.setString(8, x.sod_all_qty);
+            ps.setString(9, x.sod_listprice);
+            ps.setString(10, x.sod_disc);
+            ps.setString(11, x.sod_netprice);
+            ps.setString(12, x.sod_ord_date);
+            ps.setString(13, x.sod_due_date);
+            ps.setString(14, x.sod_shipped_qty);
+            ps.setString(15, x.sod_status);
+            ps.setString(16, x.sod_wh);
+            ps.setString(17, x.sod_loc);
+            ps.setString(18, x.sod_desc);
+            ps.setString(19, x.sod_taxamt);
+            ps.setString(20, x.sod_site);
+            rows = ps.executeUpdate();
         } else {    // update
-        PreparedStatement psu = con.prepareStatement(sqlUpdate) ;
-            psu.setString(19, x.sod_nbr);
-            psu.setString(20, x.sod_line);
-            psu.setString(1, x.sod_part);
-            psu.setString(2, x.sod_custpart);
-            psu.setString(3, x.sod_po);
-            psu.setString(4, x.sod_ord_qty);
-            psu.setString(5, x.sod_uom);
-            psu.setString(6, x.sod_all_qty);
-            psu.setString(7, x.sod_listprice);
-            psu.setString(8, x.sod_disc);
-            psu.setString(9, x.sod_netprice);
-            psu.setString(10, x.sod_ord_date);
-            psu.setString(11, x.sod_due_date);
-            psu.setString(12, x.sod_shipped_qty);
-            psu.setString(13, x.sod_status);
-            psu.setString(14, x.sod_wh);
-            psu.setString(15, x.sod_loc);
-            psu.setString(16, x.sod_desc);
-            psu.setString(17, x.sod_taxamt);
-            psu.setString(18, x.sod_site);
-            rows = psu.executeUpdate();
-            psu.close();
+         ps = con.prepareStatement(sqlUpdate) ;
+            ps.setString(19, x.sod_nbr);
+            ps.setString(20, x.sod_line);
+            ps.setString(1, x.sod_part);
+            ps.setString(2, x.sod_custpart);
+            ps.setString(3, x.sod_po);
+            ps.setString(4, x.sod_ord_qty);
+            ps.setString(5, x.sod_uom);
+            ps.setString(6, x.sod_all_qty);
+            ps.setString(7, x.sod_listprice);
+            ps.setString(8, x.sod_disc);
+            ps.setString(9, x.sod_netprice);
+            ps.setString(10, x.sod_ord_date);
+            ps.setString(11, x.sod_due_date);
+            ps.setString(12, x.sod_shipped_qty);
+            ps.setString(13, x.sod_status);
+            ps.setString(14, x.sod_wh);
+            ps.setString(15, x.sod_loc);
+            ps.setString(16, x.sod_desc);
+            ps.setString(17, x.sod_taxamt);
+            ps.setString(18, x.sod_site);
+            rows = ps.executeUpdate();
         }
             
         return rows;
     }
-     
-    
+        
      // update order master.... multiple table transaction function
     public static String[] updateOrderTransaction(String x, ArrayList<String> lines, ArrayList<sod_det> sod, so_mstr so, ArrayList<so_tax> sot, ArrayList<sod_tax> sotd, ArrayList<sos_det> sos) {
         String[] m = new String[2];
@@ -366,7 +363,7 @@ public class ordData {
                 if (z.sod_status.equals(getGlobalProgTag("closed"))) {
                     continue;
                 }
-                _updateOrderDet(z, bscon);
+                _updateOrderDet(z, bscon, ps, res);
             }
             _deleteOrderTaxMstr(so.so_nbr, bscon);
             for (so_tax z : sot) {
@@ -380,7 +377,7 @@ public class ordData {
             for (sos_det z : sos) {
                 _addOrderSummaryDet(z, bscon, ps, res);
             }
-             _updateOrderMstr(so, bscon);  // update so_mstr
+             _updateOrderMstr(so, bscon, ps);  // update so_mstr
             bscon.commit();
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
         } catch (SQLException s) {
@@ -392,6 +389,20 @@ public class ordData {
                  MainFrame.bslog(rb);
              }
         } finally {
+            if (res != null) {
+                try {
+                    res.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
             if (bscon != null) {
                 try {
                     bscon.setAutoCommit(true);
@@ -519,9 +530,7 @@ public class ordData {
         ps.executeUpdate();
         ps.close();
     }
-    
-    
-    
+        
     public static so_mstr getOrderMstr(String[] x) {
         so_mstr r = null;
         String[] m = new String[2];
@@ -656,10 +665,314 @@ public class ordData {
             ps.setString(4, x.sot_type);
             rows = ps.executeUpdate();
             } 
-           
-            res.close();
             return rows;
     }
+    
+    public static String[] addServiceOrderMstr(sv_mstr x) {
+        String[] m = new String[2];
+        if (x == null) {
+            return new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordError};
+        }
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet res = null;
+        try { 
+            con = DriverManager.getConnection(url + db, user, pass);
+            int rows = _addServiceOrderMstr(x, con, ps, res);  
+            if (rows > 0) {
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+            } else {
+            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordError};    
+            }
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordError};
+        } finally {
+            if (res != null) {
+                try {
+                    res.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
+    }
+    
+    private static int _addServiceOrderMstr(sv_mstr x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+        int rows = 0;
+        String sqlSelect = "select * from sv_mstr where sv_nbr = ?";
+        String sqlInsert = "insert into sv_mstr (sv_nbr, sv_cust, sv_ship, sv_site, " +
+                          " sv_po, sv_due_date, sv_create_date, sv_type, sv_status, sv_rmks  ) "
+                        + " values (?,?,?,?,?,?,?,?,?,?); "; 
+       
+          ps = con.prepareStatement(sqlSelect); 
+          ps.setString(1, x.sv_nbr);
+          res = ps.executeQuery();
+          ps = con.prepareStatement(sqlInsert);
+            if (! res.isBeforeFirst()) {
+            ps.setString(1, x.sv_nbr);
+            ps.setString(2, x.sv_cust);
+            ps.setString(3, x.sv_ship);
+            ps.setString(4, x.sv_site);
+            ps.setString(5, x.sv_po);
+            ps.setString(6, x.sv_due_date);
+            ps.setString(7, x.sv_create_date);
+            ps.setString(8, x.sv_type);
+            ps.setString(9, x.sv_status);
+            ps.setString(10, x.sv_rmks);
+            rows = ps.executeUpdate();
+            } 
+            return rows;
+    }
+    
+    private static int _addServiceOrderDet(svd_det x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+        int rows = 0;
+        String sqlSelect = "select * from svd_det where svd_nbr = ? and svd_line = ?";
+        String sqlInsert = "insert into svd_det (svd_line, svd_item, svd_type, svd_desc, " +
+                           " svd_nbr, svd_qty, svd_uom, svd_netprice  ) "
+                        + " values (?,?,?,?,?,?,?,?); "; 
+       
+          ps = con.prepareStatement(sqlSelect); 
+          ps.setString(1, x.svd_nbr);
+          ps.setString(2, x.svd_line);
+          res = ps.executeQuery();
+          ps = con.prepareStatement(sqlInsert);  
+            if (! res.isBeforeFirst()) {
+            ps.setString(1, x.svd_line);
+            ps.setString(2, x.svd_item);
+            ps.setString(3, x.svd_type);
+            ps.setString(4, x.svd_desc);
+            ps.setString(5, x.svd_nbr);
+            ps.setString(6, x.svd_qty);
+            ps.setString(7, x.svd_uom);
+            ps.setString(8, x.svd_netprice);
+            rows = ps.executeUpdate();
+            } 
+            return rows;
+    }
+    
+    public static String[] addServiceOrderTransaction(ArrayList<svd_det> svd, sv_mstr sv) {
+        String[] m = new String[2];
+        Connection bscon = null;
+        PreparedStatement ps = null;
+        ResultSet res = null;
+        try { 
+            bscon = DriverManager.getConnection(url + db, user, pass);
+            bscon.setAutoCommit(false);
+            _addServiceOrderMstr(sv, bscon, ps, res);  
+            for (svd_det z : svd) {
+                _addServiceOrderDet(z, bscon, ps, res);
+            }
+            bscon.commit();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             try {
+                 bscon.rollback();
+                 m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordError};
+             } catch (SQLException rb) {
+                 MainFrame.bslog(rb);
+             }
+        } finally {
+            if (res != null) {
+                try {
+                    res.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (bscon != null) {
+                try {
+                    bscon.setAutoCommit(true);
+                    bscon.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
+    }
+        
+    public static String[] updateServiceOrderMstr(sv_mstr x) {
+        String[] m = new String[2];
+        if (x == null) {
+            return new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordError};
+        }
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet res = null;
+        try { 
+            con = DriverManager.getConnection(url + db, user, pass);
+            int rows = _updateServiceOrderMstr(x, con, ps);  // add cms_det
+            if (rows > 0) {
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+            } else {
+            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordError};    
+            }
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordError};
+        } finally {
+            if (res != null) {
+                try {
+                    res.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
+    }
+   
+    private static int _updateServiceOrderMstr(sv_mstr x, Connection con, PreparedStatement ps) throws SQLException {
+        int rows = 0;
+        String sql = "update sv_mstr set sv_cust = ?, sv_ship = ?, " +
+                "sv_po = ?, sv_due_date = ?, sv_crew = ?, sv_rmks = ?, sv_status = ?  " +
+                 " where sv_nbr = ? ; ";
+	ps = con.prepareStatement(sql) ;
+        ps.setString(8, x.sv_nbr);
+            ps.setString(1, x.sv_cust);
+            ps.setString(2, x.sv_ship);
+            ps.setString(3, x.sv_po);
+            ps.setString(4, x.sv_due_date);
+            ps.setString(5, x.sv_crew);
+            ps.setString(6, x.sv_rmks);
+            ps.setString(7, x.sv_status);
+            rows = ps.executeUpdate();
+        return rows;
+    }
+    
+    private static int _updateServiceOrderDet(svd_det x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+        int rows = 0;
+        String sqlSelect = "select * from svd_det where svd_nbr = ? and svd_line = ?";
+        String sqlUpdate = "update svd_det set svd_item = ?, svd_qty = ?, " +
+                 "svd_uom = ?, svd_netprice = ? " +
+                 " where svd_nbr = ? and svd_line = ? ; ";
+        String sqlInsert = "insert into svd_det (svd_line, svd_item, svd_type, svd_desc, " +
+                           " svd_nbr, svd_qty, svd_uom, svd_netprice  ) "
+                        + " values (?,?,?,?,?,?,?,?); ";  
+        ps = con.prepareStatement(sqlSelect); 
+        ps.setString(1, x.svd_nbr);
+        ps.setString(2, x.svd_line);
+        res = ps.executeQuery();
+        if (! res.isBeforeFirst()) {  // insert
+	ps = con.prepareStatement(sqlInsert) ;
+            ps.setString(1, x.svd_line);
+            ps.setString(2, x.svd_item);
+            ps.setString(3, x.svd_type);
+            ps.setString(4, x.svd_desc);
+            ps.setString(5, x.svd_nbr);
+            ps.setString(6, x.svd_qty);
+            ps.setString(7, x.svd_uom);
+            ps.setString(8, x.svd_netprice);
+            rows = ps.executeUpdate();
+        } else {    // update
+        ps = con.prepareStatement(sqlUpdate) ;
+            ps.setString(5, x.svd_nbr);
+            ps.setString(6, x.svd_line);
+            ps.setString(1, x.svd_item);
+            ps.setString(2, x.svd_qty);
+            ps.setString(3, x.svd_uom);
+            ps.setString(4, x.svd_netprice);
+            rows = ps.executeUpdate();
+        }
+            
+        return rows;
+    }
+        
+     // update order master.... multiple table transaction function
+    public static String[] updateServiceOrderTransaction(String x, ArrayList<String> lines, ArrayList<svd_det> svd, sv_mstr sv) {
+        String[] m = new String[2];
+        Connection bscon = null;
+        PreparedStatement ps = null;
+        ResultSet res = null;
+        try { 
+            bscon = DriverManager.getConnection(url + db, user, pass);
+            bscon.setAutoCommit(false);
+            for (String line : lines) {
+               _deleteOrderLines(x, line, bscon);  // discard unwanted lines
+             }
+            for (svd_det z : svd) {
+                if (z.svd_status.equals(getGlobalProgTag("closed"))) {
+                    continue;
+                }
+                _updateServiceOrderDet(z, bscon, ps, res);
+            }
+             _updateServiceOrderMstr(sv, bscon, ps);  // update so_mstr
+            bscon.commit();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             try {
+                 bscon.rollback();
+                 m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordError};
+             } catch (SQLException rb) {
+                 MainFrame.bslog(rb);
+             }
+        } finally {
+            if (res != null) {
+                try {
+                    res.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (bscon != null) {
+                try {
+                    bscon.setAutoCommit(true);
+                    bscon.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
+    }
+    
+    
     
     // miscellaneous SQL queries
     public static Double getOrderItemAllocatedQty(String item, String site) {
@@ -720,7 +1033,34 @@ public class ordData {
     }
         return lines;
     }
+    
+    public static ArrayList<String> getServiceOrderLines(String order) {
+        ArrayList<String> lines = new ArrayList<String>();
+        try{
+        Class.forName(driver).newInstance();
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+           res = st.executeQuery("SELECT svd_line from svd_det " +
+                   " where svd_nbr = " + "'" + order + "'" + ";");
+                        while (res.next()) {
+                          lines.add(res.getString("svd_line"));
+                        }
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+        return lines;
+    }
      
+    
     public static String getOrderCurrency(String order) {
         String curr = "";
         try{
@@ -793,4 +1133,33 @@ public class ordData {
         }
     }
     
+    
+     public record sv_mstr(String[] m, String sv_nbr, String sv_cust, String sv_ship, String sv_po,
+        String sv_crew, String sv_create_date, String sv_due_date, String sv_rmks,
+    String sv_status, String sv_issched, String sv_userid, String sv_type,
+    String sv_char1, String sv_char2, String sv_char3, String sv_terms, 
+    String sv_curr, String sv_ar_acct, String sv_ar_cc,String sv_onhold, 
+    String sv_taxcode, String sv_site) {
+        public sv_mstr(String[] m) {
+            this(m, "", "", "", "", "", "", "", "", "", "",
+                    "", "", "", "", "", "", "", "", "", "",
+                    "", ""
+                    );
+        }
+    }
+    
+      public record svd_det(String[] m, String svd_nbr, String svd_line, String svd_uom, 
+        String svd_item, String svd_desc, String svd_type, String svd_custpart, 
+        String svd_qty, String svd_completed_hrs, String svd_po,  String svd_ord_date, 
+        String svd_due_date, String svd_create_date, String svd_char1, String svd_char2, String svd_char3,
+        String svd_status, String svd_listprice, String svd_netprice, String svd_disc,  
+        String svd_taxamt, String svd_taxcode, String svd_site) {
+        public svd_det(String[] m) {
+            this (m, "", "", "", "", "", "", "", "", "", "",
+                    "", "", "", "", "", "", "", "", "", "",
+                    "", "", "");
+        }
+    }
+    
+       
 }

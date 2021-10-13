@@ -32,6 +32,7 @@ import static bsmf.MainFrame.con;
 import static bsmf.MainFrame.defaultDecimalSeparator;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
+import com.blueseer.ctr.cusData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
@@ -532,7 +533,7 @@ public class ARAgingView extends javax.swing.JPanel {
          
         ddfromcust.removeAllItems();
         ddtocust.removeAllItems();
-        ArrayList mycusts = OVData.getcustmstrlist();
+        ArrayList mycusts = cusData.getcustmstrlist();
         for (int i = 0; i < mycusts.size(); i++) {
             ddfromcust.addItem(mycusts.get(i));
         }
@@ -892,7 +893,7 @@ try {
                 }
                  
                  
-                ArrayList custs = OVData.getcustmstrlistBetween(fromcust, tocust);
+                ArrayList custs = cusData.getcustmstrlistBetween(fromcust, tocust);
                  
                  for (int j = 0; j < custs.size(); j++) {
                  

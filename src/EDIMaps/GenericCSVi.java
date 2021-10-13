@@ -26,6 +26,7 @@ SOFTWARE.
 
 package EDIMaps;
 
+import com.blueseer.ctr.cusData;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -111,7 +112,7 @@ public class GenericCSVi {
                   e.get(i).setDetItem(i,part);
                   uom = OVData.getUOMByPart(part);
                   e.get(i).setDetUOM(i,uom); 
-                listprice = invData.getItemPriceFromCust(billto, part, uom, OVData.getCustCurrency(billto));
+                listprice = invData.getItemPriceFromCust(billto, part, uom, cusData.getCustCurrency(billto));
                   e.get(i).setDetListPrice(i,df.format(listprice));
                 discount = invData.getItemDiscFromCust(billto);
                   e.get(i).setDetDisc(i,df.format(discount));
@@ -132,7 +133,7 @@ public class GenericCSVi {
                   e.get(i).setDetItem(i,part);
                   uom = OVData.getUOMByPart(part);
                   e.get(i).setDetUOM(i,uom); 
-                listprice = invData.getItemPriceFromCust(billto, part, uom, OVData.getCustCurrency(billto));
+                listprice = invData.getItemPriceFromCust(billto, part, uom, cusData.getCustCurrency(billto));
                   e.get(i).setDetListPrice(i,df.format(listprice));
                 discount = invData.getItemDiscFromCust(billto);
                   e.get(i).setDetDisc(i,df.format(discount));

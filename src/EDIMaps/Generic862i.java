@@ -26,6 +26,7 @@ SOFTWARE.
 
 package EDIMaps;
 
+import com.blueseer.ctr.cusData;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -122,7 +123,7 @@ public class Generic862i {
                  return;
                } else {
                 e.setOVShipTo(shipto);
-                   billto = OVData.getcustBillTo(shipto);
+                   billto = cusData.getcustBillTo(shipto);
                    if (billto.isEmpty()) {
                        EDData.writeEDILog(control, "ERROR", "No Billto Found for shipto: " + shipto.toString());
                    } else {

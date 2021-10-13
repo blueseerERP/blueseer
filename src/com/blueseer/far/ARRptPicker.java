@@ -485,7 +485,7 @@ public class ARRptPicker extends javax.swing.JPanel {
             try{
                 
                 
-            ArrayList custs = OVData.getcustmstrlistBetween(fromcust, tocust);
+            ArrayList custs = cusData.getcustmstrlistBetween(fromcust, tocust);
                  
             for (int j = 0; j < custs.size(); j++) {    
                 
@@ -604,7 +604,7 @@ public class ARRptPicker extends javax.swing.JPanel {
             try{
                 
                 
-            ArrayList custs = OVData.getcustmstrlistBetween(fromcust, tocust);
+            ArrayList custs = cusData.getcustmstrlistBetween(fromcust, tocust);
                  
             for (int j = 0; j < custs.size(); j++) {    
                 
@@ -738,7 +738,7 @@ public class ARRptPicker extends javax.swing.JPanel {
             try{
                 
                 
-            ArrayList custs = OVData.getcustmstrlistBetween(fromcust, tocust);
+            ArrayList custs = cusData.getcustmstrlistBetween(fromcust, tocust);
                  
             for (int j = 0; j < custs.size(); j++) {    
                 

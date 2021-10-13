@@ -29,6 +29,7 @@ package com.blueseer.lbl;
 import bsmf.MainFrame;
 import static bsmf.MainFrame.con;
 import static bsmf.MainFrame.tags;
+import com.blueseer.ctr.cusData;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.OVData;
 import java.awt.Component;
@@ -224,7 +225,7 @@ String sitecitystatezip = "";
     public void initvars(String[] arg) {
         ddshipto.removeAllItems();
         ddbillto.removeAllItems();
-        ArrayList mycusts = OVData.getcustmstrlist();
+        ArrayList mycusts = cusData.getcustmstrlist();
         for (int i = 0; i < mycusts.size(); i++) {
             ddbillto.addItem(mycusts.get(i));
         }
@@ -410,7 +411,7 @@ String sitecitystatezip = "";
 
     private void btGetShipToListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btGetShipToListActionPerformed
          ddshipto.removeAllItems();
-        ArrayList mycusts = OVData.getcustshipmstrlist(ddbillto.getSelectedItem().toString());
+        ArrayList mycusts = cusData.getcustshipmstrlist(ddbillto.getSelectedItem().toString());
         for (int i = 0; i < mycusts.size(); i++) {
             ddshipto.addItem(mycusts.get(i));
         }

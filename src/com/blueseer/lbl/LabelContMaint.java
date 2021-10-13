@@ -28,6 +28,7 @@ package com.blueseer.lbl;
 
 import bsmf.MainFrame;
 import static bsmf.MainFrame.tags;
+import com.blueseer.ctr.cusData;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.OVData;
 import java.awt.Color;
@@ -487,8 +488,8 @@ String shipcountry = "";
   //          FileOutputStream fos = new FileOutputStream("10.17.4.99");
  //           PrintStream ps = new PrintStream(fos);
 
-String cust = OVData.getCustFromOrder(tbordnbr.getText());
-String label = OVData.getCustLabel(cust);
+String cust = cusData.getCustFromOrder(tbordnbr.getText());
+String label = cusData.getCustLabel(cust);
 label = label + ".prn";
 String labelfile = "zebra/" + label;
 File f = new File(labelfile);

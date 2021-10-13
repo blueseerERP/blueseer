@@ -28,6 +28,7 @@ package com.blueseer.far;
 
 import bsmf.MainFrame;
 import static bsmf.MainFrame.tags;
+import com.blueseer.ctr.cusData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -354,7 +355,7 @@ public class ARTranRpt extends javax.swing.JPanel {
          detailpanel.setVisible(false);
          btdetail.setEnabled(false);
          
-              ArrayList mycusts = OVData.getcustmstrlist();
+              ArrayList mycusts = cusData.getcustmstrlist();
         for (int i = 0; i < mycusts.size(); i++) {
             ddfromcust.addItem(mycusts.get(i));
         }

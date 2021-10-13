@@ -26,6 +26,7 @@ SOFTWARE.
 
 package EDIMaps;
 
+import com.blueseer.ctr.cusData;
 import java.util.ArrayList;
 import com.blueseer.edi.EDI;
 import com.blueseer.utl.OVData;
@@ -78,7 +79,7 @@ public class Generic810o extends com.blueseer.edi.EDIMap {
               for (String[] d : lines) {
                   
                   if (d[8].isEmpty() && d[8] != null) {
-                      sku = OVData.getCustAltItem(h[0], d[0]);
+                      sku = cusData.getCustAltItem(h[0], d[0]);
                   }
                                     
                   sumqty = sumqty + Integer.valueOf(d[2]);

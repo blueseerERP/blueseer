@@ -30,6 +30,7 @@ import static bsmf.MainFrame.bslog;
 import static bsmf.MainFrame.defaultDecimalSeparator;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.tags;
+import com.blueseer.ctr.cusData;
 import com.blueseer.inv.invData;
 import static com.blueseer.shp.shpData.addShipperTransaction;
 import com.blueseer.shp.shpData.ship_det;
@@ -287,7 +288,7 @@ public class ShipperMaint extends javax.swing.JPanel {
          ddshipto.removeAllItems();
          ddshipto.insertItemAt("", 0);
         ddshipto.setSelectedIndex(0);
-        ArrayList<String> myshipto = OVData.getCustShipToListAll(); 
+        ArrayList<String> myshipto = cusData.getCustShipToListAll(); 
         for (int i = 0; i < myshipto.size(); i++) {
             ddshipto.addItem(myshipto.get(i));
         }
@@ -298,7 +299,7 @@ public class ShipperMaint extends javax.swing.JPanel {
           ddbillto.removeAllItems();
          ddbillto.insertItemAt("", 0);
         ddbillto.setSelectedIndex(0);
-        ArrayList<String> mybillto = OVData.getcustmstrlist(); 
+        ArrayList<String> mybillto = cusData.getcustmstrlist(); 
         for (int i = 0; i < mybillto.size(); i++) {
             ddbillto.addItem(mybillto.get(i));
         }
@@ -686,7 +687,7 @@ public class ShipperMaint extends javax.swing.JPanel {
 
     public void custChangeEvent(String billto) {
          ddshipto.removeAllItems();
-            ArrayList<String> mycusts = OVData.getcustshipmstrlist(billto);
+            ArrayList<String> mycusts = cusData.getcustshipmstrlist(billto);
             for (int i = 0; i < mycusts.size(); i++) {
                 ddshipto.addItem(mycusts.get(i));
             }

@@ -194,7 +194,7 @@ public class CustPriceMaint extends javax.swing.JPanel {
          price.setText("");
          price.setBackground(Color.WHITE);
          
-        ArrayList mycusts = OVData.getcustmstrlist();
+        ArrayList mycusts = cusData.getcustmstrlist();
         ArrayList pricegroups = OVData.getPriceGroupList();
         ddcustcode.removeAllItems();
         ddcustcode_disc.removeAllItems();
@@ -815,7 +815,7 @@ public class CustPriceMaint extends javax.swing.JPanel {
               setPriceList();
               setData();
          String custcode = OVData.getPriceGroupCodeFromCust(ddcustcode.getSelectedItem().toString());
-         lbcust.setText(OVData.getCustName(ddcustcode.getSelectedItem().toString()));
+         lbcust.setText(cusData.getCustName(ddcustcode.getSelectedItem().toString()));
          if (! custcode.isEmpty()) {
              lblpricecode.setText("Cust belongs to Price Code " + custcode);
              lblpricecode.setVisible(true);

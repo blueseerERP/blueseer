@@ -1827,630 +1827,9 @@ public class OVData {
         return myreturn;
     }
 
-    public static String getCustSalesAcct(String cust) {
-           String myitem = "";
-         try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select cm_ar_acct from cm_mstr where cm_code = " + "'" + cust + "'" + ";" );
-               while (res.next()) {
-                myitem = res.getString("cm_ar_acct");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myitem;
-        
-    }
-                
-    public static String getCustSalesCC(String cust) {
-           String myitem = "";
-         try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select cm_ar_cc from cm_mstr where cm_code = " + "'" + cust + "'" + ";" );
-               while (res.next()) {
-                myitem = res.getString("cm_ar_cc");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myitem;
-        
-    }
-         
-    public static String getCustCurrency(String cust) {
-           String myitem = null;
-         try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select cm_curr from cm_mstr where cm_code = " + "'" + cust + "'" + ";" );
-               while (res.next()) {
-                myitem = res.getString("cm_curr");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myitem;
-        
-    }
-         
-    public static String getCustTerms(String cust) {
-           String myitem = null;
-         try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select cm_terms from cm_mstr where cm_code = " + "'" + cust + "'" + ";" );
-               while (res.next()) {
-                myitem = res.getString("cm_terms");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myitem;
-        
-    }
     
-    public static String getCustEmail(String cust) {
-        String x = "";
-        try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try{
-            
-                res = st.executeQuery("select cm_email from cm_mstr where cm_code = " + "'" + cust + "'" + ";");
-               while (res.next()) {
-                    x = res.getString("cm_email");
-                }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return x;
-    }
     
-    public static String getCustEmailByInvoice(String invoice) {
-        String x = "";
-        try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try{
-            
-                res = st.executeQuery("select cm_email from cm_mstr " +
-                        " inner join ship_mstr on sh_cust = cm_code " +
-                        " where sh_id = " + "'" + invoice + "'" + ";");
-               while (res.next()) {
-                    x = res.getString("cm_email");
-                }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return x;
-    }
-        
-    public static ArrayList getcustmstrlist() {
-       ArrayList myarray = new ArrayList();
-        try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try{
-                
-
-                res = st.executeQuery("select cm_code from cm_mstr order by cm_code ;");
-               while (res.next()) {
-                    myarray.add(res.getString("cm_code"));
-                }
-               
-           }
-            catch (SQLException s){
-                 bsmf.MainFrame.show("SQL cannot get Cust list");
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myarray;
-        
-    }
     
-    public static ArrayList getcustmstrlistBetween(String from, String to) {
-        ArrayList myarray = new ArrayList();
-        try {
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-
-                res = st.executeQuery("select cm_code from cm_mstr "
-                        + " where cm_code >= " + "'" + from + "'"
-                        + " and cm_code <= " + "'" + to + "'"
-                        + " order by cm_code ;");
-                while (res.next()) {
-                    myarray.add(res.getString("cm_code"));
-                }
-
-            } catch (SQLException s) {
-                bsmf.MainFrame.show("SQL cannot get Cust list");
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                if (con != null) {
-                    con.close();
-                }
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-        return myarray;
-
-    }
-
-    public static ArrayList getCustShipToListAll() {
-        ArrayList myarray = new ArrayList();
-        try {
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-
-                res = st.executeQuery("select cms_shipto from cms_det order by cms_shipto ;");
-                while (res.next()) {
-                    myarray.add(res.getString("cms_shipto"));
-                }
-
-            } catch (SQLException s) {
-                bsmf.MainFrame.show("SQL cannot get Cust list");
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                if (con != null) {
-                    con.close();
-                }
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-        return myarray;
-
-    }
-
-    public static ArrayList getcustshipmstrlist(String cust) {
-        ArrayList myarray = new ArrayList();
-        try {
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-
-                res = st.executeQuery("select cms_shipto from cms_det where cms_code = " + "'" + cust + "'" + " order by cms_shipto;");
-                while (res.next()) {
-                    myarray.add(res.getString("cms_shipto"));
-
-                }
-
-            } catch (SQLException s) {
-                bsmf.MainFrame.show("SQL cannot get cms_det list");
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                if (con != null) {
-                    con.close();
-                }
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-        return myarray;
-
-    }
-
-    public static String getcustBillTo(String shipto) {
-        String mystring = "";
-        try {
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-
-                res = st.executeQuery("select cms_code from cms_det where cms_shipto = " + "'" + shipto + "'" + " order by cms_shipto;");
-                while (res.next()) {
-                    mystring = res.getString("cms_code");
-                }
-
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                if (con != null) {
-                    con.close();
-                }
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-        return mystring;
-
-    }
-     
-    public static ArrayList getcusttermslist() {
-        ArrayList myarray = new ArrayList();
-        try {
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-
-                res = st.executeQuery("select cut_code from cust_term order by cut_code ;");
-                while (res.next()) {
-                    myarray.add(res.getString("cut_code"));
-
-                }
-
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("SQL cannot get Terms Master");
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                if (con != null) {
-                    con.close();
-                }
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-        return myarray;
-
-    }
-
-    public static String getCustAltItem(String cust, String part) {
-   String mystring = "";
-    try{
-        
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
-            Statement st = con.createStatement();
-            ResultSet res = null;
-
-            res = st.executeQuery("select cup_citem2 from cup_mstr where cup_cust = " + "'" + cust + "'" + 
-                                  " AND cup_item = " + "'" + part + "'" + ";");
-           while (res.next()) {
-               mystring = res.getString("cup_citem2");
-
-            }
-
-       }
-        catch (SQLException s){
-             JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Cup_Mstr");
-        }
-        con.close();
-    }
-    catch (Exception e){
-        MainFrame.bslog(e);
-    }
-    return mystring;
-
-}
-
-    public static String getCustSku(String cust, String part) {
-    String mystring = "";
-    try{
-        
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
-            Statement st = con.createStatement();
-            ResultSet res = null;
-
-            res = st.executeQuery("select cup_sku from cup_mstr where cup_cust = " + "'" + cust + "'" + 
-                                  " AND cup_item = " + "'" + part + "'" + ";");
-           while (res.next()) {
-               mystring = res.getString("cup_sku");
-
-            }
-
-       }
-        catch (SQLException s){
-             JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Cup_Mstr");
-        }
-        con.close();
-    }
-    catch (Exception e){
-        MainFrame.bslog(e);
-    }
-    return mystring;
-
-    }
-
-    public static String getCustPartFromPart(String cust, String part) {
-    String mystring = "";
-    try{
-        
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
-            Statement st = con.createStatement();
-            ResultSet res = null;
-
-            res = st.executeQuery("select cup_citem from cup_mstr where cup_cust = " + "'" + cust + "'" + 
-                                  " AND cup_item = " + "'" + part + "'" + ";");
-           while (res.next()) {
-               mystring = res.getString("cup_citem");
-
-            }
-
-       }
-        catch (SQLException s){
-             JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Cup_Mstr");
-        }
-        con.close();
-    }
-    catch (Exception e){
-        MainFrame.bslog(e);
-    }
-    return mystring;
-
-    }
-
-    public static String getCustFromOrder(String order) {
-           String myitem = "";
-         try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select so_cust from so_mstr where so_nbr = " + "'" + order + "';" );
-               while (res.next()) {
-                myitem = res.getString("so_cust");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-          con.close();  
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myitem;
-        
-    }
-              
-    public static String getCustName(String cust) {
-String myitem = "";
-try{
-
-Connection con = DriverManager.getConnection(url + db, user, pass);
-try{
-    Statement st = con.createStatement();
-    ResultSet res = null;
-
-    res = st.executeQuery("select cm_name from cm_mstr where cm_code = " + "'" + cust + "';" );
-   while (res.next()) {
-    myitem = res.getString("cm_name");                    
-    }
-
-}
-catch (SQLException s){
-     MainFrame.bslog(s);
-}
-con.close();  
-}
-catch (Exception e){
-MainFrame.bslog(e);
-}
-return myitem;
-
-}
-
-    public static String getCustLabel(String cust) {
-String myitem = "";
-try{
-
-Connection con = DriverManager.getConnection(url + db, user, pass);
-try{
-    Statement st = con.createStatement();
-    ResultSet res = null;
-
-    res = st.executeQuery("select cm_label from cm_mstr where cm_code = " + "'" + cust + "';" );
-   while (res.next()) {
-    myitem = res.getString("cm_label");                    
-    }
-
-}
-catch (SQLException s){
-     MainFrame.bslog(s);
-}
-con.close();  
-}
-catch (Exception e){
-MainFrame.bslog(e);
-}
-return myitem;
-
-}
-
-    public static String getCustLogo(String cust) {
-String myitem = "";
-try{
-
-Connection con = DriverManager.getConnection(url + db, user, pass);
-try{
-    Statement st = con.createStatement();
-    ResultSet res = null;
-
-    res = st.executeQuery("select cm_logo from cm_mstr where cm_code = " + "'" + cust + "';" );
-   while (res.next()) {
-    myitem = res.getString("cm_logo");                    
-    }
-
-}
-catch (SQLException s){
-     MainFrame.bslog(s);
-}
-con.close();  
-}
-catch (Exception e){
-MainFrame.bslog(e);
-}
-return myitem;
-
-}
-
-    public static String getCustInvoiceJasper(String cust) {
-           String myitem = "";
-         try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select cm_iv_jasper from cm_mstr where cm_code = " + "'" + cust + "';" );
-               while (res.next()) {
-                myitem = res.getString("cm_iv_jasper");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myitem;
-        
-    }
-          
-    public static String getCustShipperJasper(String cust) {
-           String myitem = "";
-         try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select cm_ps_jasper from cm_mstr where cm_code = " + "'" + cust + "';" );
-               while (res.next()) {
-                myitem = res.getString("cm_ps_jasper");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myitem;
-        
-    } 
-             
     
     public static ArrayList getpanelslist() {
         ArrayList myarray = new ArrayList();
@@ -13627,9 +13006,9 @@ return myitem;
                         acct_cr.add(OVData.getDefaultSalesAcct());  
                         cc_cr.add(OVData.getDefaultSalesCC());
                         }
-                        acct_dr.add(OVData.getCustSalesAcct(cust));
+                        acct_dr.add(cusData.getCustSalesAcct(cust));
                         
-                        cc_dr.add(OVData.getCustSalesCC(cust));
+                        cc_dr.add(cusData.getCustSalesCC(cust));
                         cost.add((res.getDouble("shd_netprice") * qty));
                         if (basecurr.toUpperCase().equals(curr.toUpperCase())) {
                         basecost.add((res.getDouble("shd_netprice") * qty));   
@@ -13663,9 +13042,9 @@ return myitem;
                     charges = OVData.getShipperTrailerCharges(shipper);
                     if (charges > 0) {
                        acct_cr.add(OVData.getDefaultSalesAcct());
-                        acct_dr.add(OVData.getCustSalesAcct(cust));
+                        acct_dr.add(cusData.getCustSalesAcct(cust));
                         cc_cr.add(OVData.getDefaultSalesCC());
-                        cc_dr.add(OVData.getCustSalesCC(cust));
+                        cc_dr.add(cusData.getCustSalesCC(cust));
                         cost.add(charges);
                         if (basecurr.toUpperCase().equals(curr.toUpperCase())) {
                         basecost.add(charges);   
@@ -13896,9 +13275,9 @@ return myitem;
                       if (i == 0) {
                           // must be misc...just do sales / AR GL transaction
                          acct_cr.add(OVData.getDefaultSalesAcct());
-                        acct_dr.add(OVData.getCustSalesAcct(cust));
+                        acct_dr.add(cusData.getCustSalesAcct(cust));
                         cc_cr.add(OVData.getDefaultSalesCC());
-                        cc_dr.add(OVData.getCustSalesCC(cust));
+                        cc_dr.add(cusData.getCustSalesCC(cust));
                         cost.add((res.getDouble("shd_netprice") * qty));
                         if (basecurr.toUpperCase().equals(curr.toUpperCase())) {
                         basecost.add((res.getDouble("shd_netprice") * qty));   
@@ -13929,9 +13308,9 @@ return myitem;
                     charges = OVData.getShipperTrailerCharges(shipper);
                     if (tottax > 0) {
                        acct_cr.add(OVData.getDefaultSalesAcct());
-                        acct_dr.add(OVData.getCustSalesAcct(cust));
+                        acct_dr.add(cusData.getCustSalesAcct(cust));
                         cc_cr.add(OVData.getDefaultSalesCC());
-                        cc_dr.add(OVData.getCustSalesCC(cust));
+                        cc_dr.add(cusData.getCustSalesCC(cust));
                         cost.add(charges);
                         if (basecurr.toUpperCase().equals(curr.toUpperCase())) {
                         basecost.add(charges);   
@@ -17176,7 +16555,7 @@ return myitem;
                     
                     
                     // let's handle the currency exchange...if any
-                    String curr = OVData.getCustCurrency(cust);
+                    String curr = cusData.getCustCurrency(cust);
                     String basecurr = OVData.getDefaultCurrency();
                     String exchangerate = OVData.getExchangeRate(basecurr, curr);
                     
@@ -18539,13 +17918,13 @@ return myitem;
                 
                 String imagepath = "";
                 String logo = "";
-                logo = OVData.getCustLogo(cust);
+                logo = cusData.getCustLogo(cust);
                 if (logo.isEmpty()) {
                     logo = OVData.getSiteLogo(site);
                 }
                 
                 String jasperfile = "";
-               jasperfile = OVData.getCustInvoiceJasper(cust);
+               jasperfile = cusData.getCustInvoiceJasper(cust);
                 if (jasperfile.isEmpty()) {
                     jasperfile = OVData.getDefaultInvoiceJasper(site);
                 }
@@ -18631,13 +18010,13 @@ return myitem;
                 
                 String imagepath = "";
                 String logo = "";
-                logo = OVData.getCustLogo(cust);
+                logo = cusData.getCustLogo(cust);
                 if (logo.isEmpty()) {
                     logo = OVData.getSiteLogo(site);
                 }
                 
                 String jasperfile = "";
-               jasperfile = OVData.getCustInvoiceJasper(cust);
+               jasperfile = cusData.getCustInvoiceJasper(cust);
                 if (jasperfile.isEmpty()) {
                     jasperfile = OVData.getDefaultInvoiceJasper(site);
                 }
@@ -18779,7 +18158,7 @@ return myitem;
                        }
                 String imagepath = "";
                 String logo = "";
-                logo = OVData.getCustLogo(cust);
+                logo = cusData.getCustLogo(cust);
                 if (logo.isEmpty()) {
                     logo = OVData.getSiteLogo(site);
                 }
@@ -18881,12 +18260,12 @@ return myitem;
                           ship_csz = res.getString(("cms_city")) + " " + res.getString(("cms_state")) + " " + res.getString(("cms_zip"));
                        }
                 String imagepath = "";
-                String logo = OVData.getCustLogo(cust);
+                String logo = cusData.getCustLogo(cust);
                 if (logo.isEmpty()) {
                     logo = OVData.getSiteLogo(site);
                 }
                 
-                String jasperfile = OVData.getCustShipperJasper(cust);
+                String jasperfile = cusData.getCustShipperJasper(cust);
                 if (jasperfile.isEmpty()) {
                     jasperfile = OVData.getDefaultShipperJasper(site);
                 }
@@ -18959,12 +18338,12 @@ return myitem;
                        }
                 
                 String imagepath = "";
-                String logo = OVData.getCustLogo(cust);
+                String logo = cusData.getCustLogo(cust);
                 if (logo.isEmpty()) {
                     logo = OVData.getSiteLogo(site);
                 }
                 
-                String jasperfile = OVData.getCustShipperJasper(cust);
+                String jasperfile = cusData.getCustShipperJasper(cust);
                 if (jasperfile.isEmpty()) {
                     jasperfile = OVData.getDefaultShipperJasper(site);
                 }
@@ -19107,7 +18486,7 @@ return myitem;
                 
                 String imagepath = "";
                 String logo = "";
-                logo = OVData.getCustLogo(cust);
+                logo = cusData.getCustLogo(cust);
                 if (logo.isEmpty()) {
                     logo = OVData.getSiteLogo(site);
                 }
@@ -19185,7 +18564,7 @@ return myitem;
                 
                 String imagepath = "";
                 String logo = "";
-                logo = OVData.getCustLogo(cust);
+                logo = cusData.getCustLogo(cust);
                 if (logo.isEmpty()) {
                     logo = OVData.getSiteLogo(site);
                 }
@@ -19670,7 +19049,7 @@ MainFrame.bslog(e);
         
         
         String custEmail = "";
-        custEmail = getCustEmailByInvoice(invoice);
+        custEmail = cusData.getCustEmailByInvoice(invoice);
         File file = new File("temp/ivprt.pdf");
         if (file.exists()) {
             if (custEmail == null || custEmail.isEmpty()) {

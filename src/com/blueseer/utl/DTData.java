@@ -5056,7 +5056,7 @@ public class DTData {
          public static DefaultTableModel getEmployeeAll() {
            
            javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{getGlobalColumnTag("select"), "EmpID", "LastName", "FirstName", "Dept", getGlobalColumnTag("status"), getGlobalColumnTag("shift"), getGlobalColumnTag("type"), getGlobalColumnTag("startdate"), getGlobalColumnTag("termdate")})
+                        new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("empid"), getGlobalColumnTag("lastname"), getGlobalColumnTag("firstname"), getGlobalColumnTag("department"), getGlobalColumnTag("status"), getGlobalColumnTag("shift"), getGlobalColumnTag("type"), getGlobalColumnTag("startdate"), getGlobalColumnTag("termdate")})
                    {
                       @Override  
                       public Class getColumnClass(int col) {  

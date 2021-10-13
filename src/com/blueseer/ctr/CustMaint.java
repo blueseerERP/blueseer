@@ -789,7 +789,7 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
         }
         
         ddterms.removeAllItems();
-        ArrayList custterms = OVData.getcusttermslist();
+        ArrayList custterms = cusData.getcusttermslist();
         for (int i = 0; i < custterms.size(); i++) {
             ddterms.addItem(custterms.get(i));
         }

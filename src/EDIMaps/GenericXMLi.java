@@ -39,6 +39,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.ParserConfigurationException;
 import bsmf.MainFrame;
+import com.blueseer.ctr.cusData;
 import com.blueseer.inv.invData;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
@@ -137,7 +138,7 @@ public class GenericXMLi {
                   e.get(i).setDetItem(i,part);
                   uom = OVData.getUOMByPart(part);
                   e.get(i).setDetUOM(i,uom); 
-                listprice = invData.getItemPriceFromCust(billto, part, uom, OVData.getCustCurrency(billto));
+                listprice = invData.getItemPriceFromCust(billto, part, uom, cusData.getCustCurrency(billto));
                   e.get(i).setDetListPrice(i,df.format(listprice));
                 discount = invData.getItemDiscFromCust(billto);
                   e.get(i).setDetDisc(i,df.format(discount));

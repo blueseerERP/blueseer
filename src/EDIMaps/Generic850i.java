@@ -26,6 +26,7 @@ SOFTWARE.
 
 package EDIMaps;
 
+import com.blueseer.ctr.cusData;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import com.blueseer.utl.OVData;
@@ -149,7 +150,7 @@ public class Generic850i extends com.blueseer.edi.EDIMap {
               
                
               if (! e.getOVShipTo().isEmpty()) {
-              e.setOVBillTo(OVData.getcustBillTo(e.getOVShipTo()));
+              e.setOVBillTo(cusData.getcustBillTo(e.getOVShipTo()));
               } 
               
              
@@ -191,7 +192,7 @@ public class Generic850i extends com.blueseer.edi.EDIMap {
 
 
                       /* lets get the internal list price and discounts*/
-                      listprice = invData.getItemPriceFromCust(e.getOVBillTo(), part, uom, OVData.getCustCurrency(e.getOVBillTo()));
+                      listprice = invData.getItemPriceFromCust(e.getOVBillTo(), part, uom, cusData.getCustCurrency(e.getOVBillTo()));
                       discount = invData.getItemDiscFromCust(e.getOVBillTo());
                       netprice = listprice;
 

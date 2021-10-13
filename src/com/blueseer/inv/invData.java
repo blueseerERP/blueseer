@@ -469,10 +469,10 @@ public class invData {
 
         Class.forName(driver).newInstance();
         Connection con = DriverManager.getConnection(url + db, user, pass);
-
+        Statement st = con.createStatement();
+        ResultSet res = null;
         try {
-            Statement st = con.createStatement();
-            ResultSet res = null;
+            
 
             res = st.executeQuery("select cup_item from cup_mstr where cup_cust = " + "'" + cust.toString() + "'" + ";");
             while (res.next()) {
@@ -480,9 +480,16 @@ public class invData {
             }
 
         } catch (SQLException s) {
-            bsmf.MainFrame.show("SQL Code does not execute");
-        }
-        con.close();
+            MainFrame.bslog(s);
+        } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+          }
     } catch (Exception e) {
         MainFrame.bslog(e);
     }
@@ -494,9 +501,10 @@ public class invData {
     try{
        Class.forName(driver).newInstance();
         Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
         try{
-            Statement st = con.createStatement();
-            ResultSet res = null;
+            
 
             res = st.executeQuery("select cup_item from cup_mstr where cup_cust = " + "'" + cust + "'" + 
                                   " AND cup_citem = " + "'" + custpart + "'" + ";");
@@ -508,8 +516,15 @@ public class invData {
        }
         catch (SQLException s){
              MainFrame.bslog(s);
-        }
-        con.close();
+        } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+          }
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -525,9 +540,10 @@ public class invData {
     try{
         Class.forName(driver).newInstance();
         Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
         try{
-            Statement st = con.createStatement();
-            ResultSet res = null;
+            
 
             res = st.executeQuery("select cm_price_code from cm_mstr where cm_code = " + "'" + cust + "'" + ";");
              while (res.next()) {
@@ -552,8 +568,15 @@ public class invData {
        }
         catch (SQLException s){
              MainFrame.bslog(s);
-        }
-        con.close();
+        } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+          }
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -569,9 +592,10 @@ public class invData {
     try{
     Class.forName(driver).newInstance();
     Connection con = DriverManager.getConnection(url + db, user, pass);
+    Statement st = con.createStatement();
+    ResultSet res = null;
     try{
-        Statement st = con.createStatement();
-        ResultSet res = null; 
+      
         res = st.executeQuery("select cpr_price from cpr_mstr where cpr_cust = " + "'" + code + "'" + 
                               " AND cpr_item = " + "'" + part + "'" +
                               " AND cpr_uom = " + "'" + uom + "'" +
@@ -582,9 +606,16 @@ public class invData {
         }
     }
     catch (SQLException s){
-         bsmf.MainFrame.show("SQL cannot get Cpr_Mstr");
-    }
-    con.close();
+          MainFrame.bslog(s);
+    } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+          }
     }
     catch (Exception e){
     MainFrame.bslog(e);
@@ -600,9 +631,10 @@ public class invData {
     try{
     Class.forName(driver).newInstance();
     Connection con = DriverManager.getConnection(url + db, user, pass);
+    Statement st = con.createStatement();
+    ResultSet res = null;
     try{
-        Statement st = con.createStatement();
-        ResultSet res = null;
+        
 
          res = st.executeQuery("select cm_disc_code from cm_mstr where cm_code = " + "'" + cust + "'" + ";");
          while (res.next()) {
@@ -626,8 +658,15 @@ public class invData {
     }
     catch (SQLException s){
          MainFrame.bslog(s);
-    }
-    con.close();
+    } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+          }
     }
     catch (Exception e){
     MainFrame.bslog(e);
@@ -642,10 +681,9 @@ public class invData {
         try{
             Class.forName(driver).newInstance();
             Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
                 res = st.executeQuery("select cup_item from cup_mstr where cup_cust = " + "'" + cust + "'" + 
                                       " AND cup_citem2 = " + "'" + custpart + "'" + ";");
                while (res.next()) {
@@ -655,9 +693,16 @@ public class invData {
 
            }
             catch (SQLException s){
-                 JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Cup_Mstr");
-            }
-            con.close();
+                  MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+          }
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -671,10 +716,10 @@ public class invData {
         try{
             Class.forName(driver).newInstance();
             Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
+              
                 res = st.executeQuery("select cup_item from cup_mstr where cup_cust = " + "'" + cust + "'" + 
                                       " AND cup_upc = " + "'" + custpart + "'" + ";");
                while (res.next()) {
@@ -684,9 +729,16 @@ public class invData {
 
            }
             catch (SQLException s){
-                 JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Cup_Mstr");
-            }
-            con.close();
+                  MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+          }
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -702,10 +754,10 @@ public class invData {
         try{
             Class.forName(driver).newInstance();
             Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
+             
                 res = st.executeQuery("select vd_price_code from vd_mstr where vd_addr = " + "'" + vend + "'" + ";");
                  while (res.next()) {
                    pricecode = res.getString("vd_price_code");
@@ -728,8 +780,15 @@ public class invData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-            }
-            con.close();
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+          }
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -750,10 +809,10 @@ public class invData {
             try{
                 Class.forName(driver).newInstance();
                 Connection con = DriverManager.getConnection(url + db, user, pass);
+                Statement st = con.createStatement();
+                ResultSet res = null;
                 try{
-                    Statement st = con.createStatement();
-                    ResultSet res = null;
-
+                    
                     // customer based pricing
                     if (type.equals("c")) {
                         res = st.executeQuery("select cm_price_code from cm_mstr where cm_code = " + "'" + entity + "'" + ";");
@@ -820,8 +879,15 @@ public class invData {
                }
                 catch (SQLException s){
                      MainFrame.bslog(s);
+                } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
                 }
                 con.close();
+          }
             }
             catch (Exception e){
                 MainFrame.bslog(e);
@@ -835,11 +901,10 @@ public class invData {
              try{
                 Class.forName(driver).newInstance();
                 Connection con = DriverManager.getConnection(url + db, user, pass);
+                Statement st = con.createStatement();
+                ResultSet res = null;
                 try{
-                    Statement st = con.createStatement();
-                    ResultSet res = null;
-
-
+                  
                     res = st.executeQuery("select pl_line from pl_mstr order by pl_line ;" );
                     while (res.next()) {
                     String[] arr = new String[]{"prodline",res.getString("pl_line")};
@@ -891,8 +956,15 @@ public class invData {
                }
                 catch (SQLException s){
                     MainFrame.bslog(s);
+                } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
                 }
                 con.close();
+          }
             }
             catch (Exception e){
                 MainFrame.bslog(e);
@@ -906,10 +978,9 @@ public class invData {
              try{
                 Class.forName(driver).newInstance();
                 Connection con = DriverManager.getConnection(url + db, user, pass);
+                Statement st = con.createStatement();
+                ResultSet res = null;
                 try{
-                    Statement st = con.createStatement();
-                    ResultSet res = null;
-
                     res = st.executeQuery("select iti_file from item_image where iti_item = " + "'" + item + "'" + " order by iti_order ;" );
                    while (res.next()) {
                     myarray.add(res.getString("iti_file"));                    
@@ -917,8 +988,15 @@ public class invData {
                }
                 catch (SQLException s){
                     MainFrame.bslog(s);
+                } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
                 }
                 con.close();
+          }
             }
             catch (Exception e){
                 MainFrame.bslog(e);
@@ -932,10 +1010,10 @@ public class invData {
     try{
     Class.forName(driver).newInstance();
     Connection con = DriverManager.getConnection(url + db, user, pass);
+    Statement st = con.createStatement();
+    ResultSet res = null;
     try{
-        Statement st = con.createStatement();
-        ResultSet res = null;
-
+     
         res = st.executeQuery("select it_code from item_mstr where it_item = " + "'" + mypart.toString() + "';" );
        while (res.next()) {
         myitem = res.getString("it_code");                    
@@ -944,9 +1022,15 @@ public class invData {
     }
     catch (SQLException s){
         MainFrame.bslog(s);
-         bsmf.MainFrame.show("SQL cannot get pm code from item");
-    }
-    con.close();
+    } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+          }
     }
     catch (Exception e){
     MainFrame.bslog(e);
@@ -959,10 +1043,10 @@ public class invData {
     try{
     Class.forName(driver).newInstance();
     Connection con = DriverManager.getConnection(url + db, user, pass);
+    Statement st = con.createStatement();
+    ResultSet res = null;
     try{
-        Statement st = con.createStatement();
-        ResultSet res = null;
-
+        
         res = st.executeQuery("select it_type from item_mstr where it_item = " + "'" + mypart.toString() + "';" );
        while (res.next()) {
         myitem = res.getString("it_type");                    
@@ -970,9 +1054,16 @@ public class invData {
 
     }
     catch (SQLException s){
-         bsmf.MainFrame.show("SQL cannot get type from item");
-    }
-    con.close();
+          MainFrame.bslog(s);
+    } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+          }
     }
     catch (Exception e){
     MainFrame.bslog(e);
@@ -986,10 +1077,9 @@ public class invData {
     try{
     Class.forName(driver).newInstance();
     Connection con = DriverManager.getConnection(url + db, user, pass);
+    Statement st = con.createStatement();
+    ResultSet res = null;
     try{
-        Statement st = con.createStatement();
-        ResultSet res = null;
-
         res = st.executeQuery("select it_site from item_mstr where it_item = " + "'" + item + "'" +  ";" );
        while (res.next()) {
         myreturn = res.getString("it_site");                    
@@ -998,8 +1088,15 @@ public class invData {
     }
     catch (SQLException s){
          MainFrame.bslog(s);
-    }
-    con.close();
+    } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+          }
     }
     catch (Exception e){
     MainFrame.bslog(e);
@@ -1008,14 +1105,16 @@ public class invData {
 
     }
 
+    
     public static String getItemLotSize(String item) {
     String myreturn = "";
     try{
     Class.forName(driver).newInstance();
     Connection con = DriverManager.getConnection(url + db, user, pass);
-    try{
-        Statement st = con.createStatement();
+    Statement st = con.createStatement();
         ResultSet res = null;
+    try{
+        
 
         res = st.executeQuery("select it_lotsize from item_mstr where it_item = " + "'" + item + "'" +  ";" );
        while (res.next()) {
@@ -1025,8 +1124,15 @@ public class invData {
     }
     catch (SQLException s){
          MainFrame.bslog(s);
-    }
-    con.close();
+    } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+          }
     }
     catch (Exception e){
     MainFrame.bslog(e);
@@ -1035,15 +1141,15 @@ public class invData {
 
     }
 
-
     public static String getItemRouting(String item) {
     String myreturn = "";
     try{
     Class.forName(driver).newInstance();
     Connection con = DriverManager.getConnection(url + db, user, pass);
-    try{
-        Statement st = con.createStatement();
+    Statement st = con.createStatement();
         ResultSet res = null;
+    try{
+        
 
         res = st.executeQuery("select it_wf from item_mstr where it_item = " + "'" + item + "'" +  ";" );
        while (res.next()) {
@@ -1053,8 +1159,15 @@ public class invData {
     }
     catch (SQLException s){
          MainFrame.bslog(s);
-    }
-    con.close();
+    }finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+          }
     }
     catch (Exception e){
     MainFrame.bslog(e);
@@ -1068,9 +1181,10 @@ public class invData {
      try{
         Class.forName(driver).newInstance();
         Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
-            Statement st = con.createStatement();
+        Statement st = con.createStatement();
             ResultSet res = null;
+        try{
+            
 
            res = st.executeQuery("select in_qoh from in_mstr where "
                             + " in_part = " + "'" + item + "'" 
@@ -1083,8 +1197,15 @@ public class invData {
        }
         catch (SQLException s){
              MainFrame.bslog(s);
-        }
-        con.close();
+        } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+          }
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -1098,9 +1219,10 @@ public class invData {
      try{
         Class.forName(driver).newInstance();
         Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
-            Statement st = con.createStatement();
+        Statement st = con.createStatement();
             ResultSet res = null;
+        try{
+            
 
            res = st.executeQuery("select in_qoh from in_mstr where "
                             + " in_part = " + "'" + item + "'" 
@@ -1121,14 +1243,18 @@ public class invData {
                 while (res.next()) {
                 qohu -= res.getInt("allqty");
                 }
-
-
-
        }
         catch (SQLException s){
              MainFrame.bslog(s);
-        }
-        con.close();
+        } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+          }
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -1142,9 +1268,10 @@ public class invData {
      try{
         Class.forName(driver).newInstance();
         Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
-            Statement st = con.createStatement();
+        Statement st = con.createStatement();
             ResultSet res = null;
+        try{
+            
 
            res = st.executeQuery("select in_qoh from in_mstr where "
                             + " in_part = " + "'" + item + "'" 
@@ -1158,8 +1285,15 @@ public class invData {
        }
         catch (SQLException s){
              MainFrame.bslog(s);
-        }
-        con.close();
+        } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+          }
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -1173,9 +1307,10 @@ public class invData {
      try{
         Class.forName(driver).newInstance();
         Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
-            Statement st = con.createStatement();
+        Statement st = con.createStatement();
             ResultSet res = null;
+        try{
+            
 
            res = st.executeQuery("select in_qoh from in_mstr where "
                             + " in_part = " + "'" + item + "'" 
@@ -1190,8 +1325,15 @@ public class invData {
        }
         catch (SQLException s){
              MainFrame.bslog(s);
-        }
-        con.close();
+        } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+          }
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -1205,20 +1347,25 @@ public class invData {
      try{
         Class.forName(driver).newInstance();
         Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
-            Statement st = con.createStatement();
+        Statement st = con.createStatement();
             ResultSet res = null;
-
+        try{
             res = st.executeQuery("select it_sell_price from item_mstr where it_item = " + "'" + item + "'" + ";" );
            while (res.next()) {
             price = res.getDouble("it_sell_price");                    
             }
-
        }
         catch (SQLException s){
              MainFrame.bslog(s);
-        }
-        con.close();
+        } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+          }
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -1232,9 +1379,10 @@ public class invData {
      try{
         Class.forName(driver).newInstance();
         Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
-            Statement st = con.createStatement();
+        Statement st = con.createStatement();
             ResultSet res = null;
+        try{
+            
 
             res = st.executeQuery("select it_disc_pct from item_mstr where it_item = " + "'" + item + "'" + ";" );
            while (res.next()) {
@@ -1244,8 +1392,15 @@ public class invData {
        }
         catch (SQLException s){
              MainFrame.bslog(s);
-        }
-        con.close();
+        } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+          }
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -1259,9 +1414,10 @@ public class invData {
              try{
                 Class.forName(driver).newInstance();
                 Connection con = DriverManager.getConnection(url + db, user, pass);
-                try{
-                    Statement st = con.createStatement();
+                Statement st = con.createStatement();
                     ResultSet res = null;
+                try{
+                    
 
                     res = st.executeQuery("select itc_total from item_cost where itc_item = " + "'" + item + "'" +  " AND " 
                             + " itc_set = " + "'" + set + "'" + " AND "
@@ -1273,8 +1429,15 @@ public class invData {
                }
                 catch (SQLException s){
                      MainFrame.bslog(s);
+                } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
                 }
                 con.close();
+          }
             }
             catch (Exception e){
                 MainFrame.bslog(e);
@@ -1288,9 +1451,10 @@ public class invData {
              try{
                 Class.forName(driver).newInstance();
                 Connection con = DriverManager.getConnection(url + db, user, pass);
-                try{
-                    Statement st = con.createStatement();
+                Statement st = con.createStatement();
                     ResultSet res = null;
+                try{
+                    
                     ///  if this is material type 'P'...just return standard cost for item.
                     if (getItemCode(item).toUpperCase().equals("P")) {
                       res = st.executeQuery("select itc_total from item_cost where itc_item = " + "'" + item + "'" +  " AND " 
@@ -1312,8 +1476,15 @@ public class invData {
                }
                 catch (SQLException s){
                      MainFrame.bslog(s);
+                } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
                 }
                 con.close();
+          }
             }
             catch (Exception e){
                 MainFrame.bslog(e);
@@ -1327,9 +1498,10 @@ public class invData {
              try{
                 Class.forName(driver).newInstance();
                 Connection con = DriverManager.getConnection(url + db, user, pass);
-                try{
-                    Statement st = con.createStatement();
+                Statement st = con.createStatement();
                     ResultSet res = null;
+                try{
+                  
 
                     res = st.executeQuery("select * from item_cost where itc_item = " + "'" + item + "'" +  " AND " 
                             + " itc_set = " + "'" + set + "'" + " AND "
@@ -1352,8 +1524,15 @@ public class invData {
                }
                 catch (SQLException s){
                      MainFrame.bslog(s);
+                } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
                 }
                 con.close();
+          }
             }
             catch (Exception e){
                 MainFrame.bslog(e);
@@ -1368,9 +1547,10 @@ public class invData {
              try{
                 Class.forName(driver).newInstance();
                 Connection con = DriverManager.getConnection(url + db, user, pass);
-                try{
-                    Statement st = con.createStatement();
+                Statement st = con.createStatement();
                     ResultSet res = null;
+                try{
+                   
 
                     res = st.executeQuery("select * from item_cost inner join item_mstr on it_item = itc_item where itc_item = " + "'" + item + "'" +  " AND " 
                             + " itc_set = " + "'" + set + "'" + " AND "
@@ -1391,8 +1571,15 @@ public class invData {
                }
                 catch (SQLException s){
                      MainFrame.bslog(s);
+                } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
                 }
                 con.close();
+          }
             }
             catch (Exception e){
                 MainFrame.bslog(e);
@@ -1407,9 +1594,10 @@ public class invData {
     try{
     Class.forName(driver).newInstance();
     Connection con = DriverManager.getConnection(url + db, user, pass);
+    Statement st = con.createStatement();
+                    ResultSet res = null;
     try{
-        Statement st = con.createStatement();
-        ResultSet res = null;
+       
 
         res = st.executeQuery("select * from item_cost where itc_item = " + "'" + item + "'" +  " AND " 
                 + " itc_set = " + "'" + set + "'" + " AND "
@@ -1424,8 +1612,15 @@ public class invData {
     }
     catch (SQLException s){
          MainFrame.bslog(s);
-    }
-    con.close();
+    } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+          }
     }
     catch (Exception e){
     MainFrame.bslog(e);
@@ -1439,9 +1634,10 @@ public class invData {
     try{
     Class.forName(driver).newInstance();
     Connection con = DriverManager.getConnection(url + db, user, pass);
+    Statement st = con.createStatement();
+                    ResultSet res = null;
     try{
-        Statement st = con.createStatement();
-        ResultSet res = null;
+        
 
         res = st.executeQuery("select itc_mtl_top, itc_mtl_low from item_cost where itc_item = " + "'" + item + "'" +  " AND " 
                 + " itc_set = " + "'" + set + "'" + " AND "
@@ -1453,8 +1649,15 @@ public class invData {
     }
     catch (SQLException s){
          MainFrame.bslog(s);
-    }
-    con.close();
+    } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+          }
     }
     catch (Exception e){
     MainFrame.bslog(e);
@@ -1468,9 +1671,10 @@ public class invData {
     try{
     Class.forName(driver).newInstance();
     Connection con = DriverManager.getConnection(url + db, user, pass);
+    Statement st = con.createStatement();
+                    ResultSet res = null;
     try{
-        Statement st = con.createStatement();
-        ResultSet res = null;
+       
 
         res = st.executeQuery("select it_mtl_cost from item_mstr where it_item = " + "'" + item + "'" + ";" );
        while (res.next()) {
@@ -1480,8 +1684,15 @@ public class invData {
     }
     catch (SQLException s){
          MainFrame.bslog(s);
-    }
-    con.close();
+    } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+          }
     }
     catch (Exception e){
     MainFrame.bslog(e);
@@ -1495,9 +1706,10 @@ public class invData {
     try{
     Class.forName(driver).newInstance();
     Connection con = DriverManager.getConnection(url + db, user, pass);
+    Statement st = con.createStatement();
+                    ResultSet res = null;
     try{
-        Statement st = con.createStatement();
-        ResultSet res = null;
+       
 
         res = st.executeQuery("select itc_ovh_top, itc_ovh_low from item_cost where itc_item = " + "'" + item + "'" +  " AND " 
                 + " itc_set = " + "'" + set + "'" + " AND "
@@ -1509,8 +1721,15 @@ public class invData {
     }
     catch (SQLException s){
          MainFrame.bslog(s);
-    }
-    con.close();
+    } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+          }
     }
     catch (Exception e){
     MainFrame.bslog(e);
@@ -1524,9 +1743,10 @@ public class invData {
     try{
     Class.forName(driver).newInstance();
     Connection con = DriverManager.getConnection(url + db, user, pass);
+    Statement st = con.createStatement();
+                    ResultSet res = null;
     try{
-        Statement st = con.createStatement();
-        ResultSet res = null;
+       
 
         res = st.executeQuery("select it_ovh_cost from item_mstr where it_item = " + "'" + item + "'" + ";" );
        while (res.next()) {
@@ -1536,8 +1756,15 @@ public class invData {
     }
     catch (SQLException s){
          MainFrame.bslog(s);
-    }
-    con.close();
+    } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+          }
     }
     catch (Exception e){
     MainFrame.bslog(e);
@@ -1551,9 +1778,10 @@ public class invData {
     try{
     Class.forName(driver).newInstance();
     Connection con = DriverManager.getConnection(url + db, user, pass);
+    Statement st = con.createStatement();
+                    ResultSet res = null;
     try{
-        Statement st = con.createStatement();
-        ResultSet res = null;
+        
 
         res = st.executeQuery("select itc_out_top, itc_out_low from item_cost where itc_item = " + "'" + item + "'" +  " AND " 
                 + " itc_set = " + "'" + set + "'" + " AND "
@@ -1565,8 +1793,15 @@ public class invData {
     }
     catch (SQLException s){
          MainFrame.bslog(s);
-    }
-    con.close();
+    } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+          }
     }
     catch (Exception e){
     MainFrame.bslog(e);
@@ -1580,10 +1815,10 @@ public class invData {
          try{
             Class.forName(driver).newInstance();
             Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+                    ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
+               
                 res = st.executeQuery("select it_out_cost from item_mstr where it_item = " + "'" + item + "'" + ";" );
                while (res.next()) {
                 cost = res.getDouble("it_out_cost");                    
@@ -1592,8 +1827,15 @@ public class invData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-            }
-            con.close();
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+          }
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1607,10 +1849,10 @@ public class invData {
          try{
             Class.forName(driver).newInstance();
             Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+                    ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
+                
                 res = st.executeQuery("select it_status from item_mstr where it_item = " + "'" + mypart.toString() + "';" );
                while (res.next()) {
                 myitem = res.getString("it_status");                    
@@ -1618,9 +1860,16 @@ public class invData {
 
            }
             catch (SQLException s){
-                 bsmf.MainFrame.show("SQL cannot get info from item");
-            }
-            con.close();
+                  MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+          }
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1634,9 +1883,10 @@ public class invData {
          try{
             Class.forName(driver).newInstance();
             Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+                    ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+               
 
                 res = st.executeQuery("select it_desc from item_mstr where it_item = " + "'" + mypart.toString() + "';" );
                while (res.next()) {
@@ -1645,9 +1895,16 @@ public class invData {
 
            }
             catch (SQLException s){
-                 bsmf.MainFrame.show("SQL cannot get desc from item");
-            }
-            con.close();
+                  MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+          }
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1679,7 +1936,6 @@ public class invData {
                 }
           } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("SQL cannot get Item Master");
             } finally {
                 if (res != null) {
                     res.close();
@@ -1687,10 +1943,8 @@ public class invData {
                 if (st != null) {
                     st.close();
                 }
-                if (con != null) {
-                    con.close();
-                }
-            }
+                con.close();
+          }
         } catch (Exception e){
             MainFrame.bslog(e);
         }
@@ -1703,10 +1957,10 @@ public class invData {
         try{
             Class.forName(driver).newInstance();
             Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+                    ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
+                
                  res = st.executeQuery("SELECT itr_op from itemr_cost where itr_item = " + "'" + myitem.toString() + "'" + " order by itr_op;");
                while (res.next()) {
                     myarray.add(res.getString("itr_op"));
@@ -1715,8 +1969,15 @@ public class invData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-            }
-            con.close();
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+          }
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1730,10 +1991,10 @@ public class invData {
         try{
             Class.forName(driver).newInstance();
             Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+                    ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
+               
                  res = st.executeQuery("SELECT wf_op from wf_mstr inner join item_mstr on it_wf = wf_id where it_item = " + "'" + myitem.toString() + "'" + " order by wf_op;");
                while (res.next()) {
                     myarray.add(res.getString("wf_op"));
@@ -1742,8 +2003,15 @@ public class invData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-            }
-            con.close();
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+          }
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1757,10 +2025,10 @@ public class invData {
         try{
             Class.forName(driver).newInstance();
             Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+                    ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
+                
                 res = st.executeQuery("select it_item from item_mstr where it_sched = '1' order by it_item;");
                while (res.next()) {
                     myarray.add(res.getString("it_item"));
@@ -1769,8 +2037,15 @@ public class invData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-            }
-            con.close();
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+          }
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1784,10 +2059,10 @@ public class invData {
         try{
             Class.forName(driver).newInstance();
             Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+                    ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
+               
                 res = st.executeQuery("select it_item from item_mstr where it_code = 'M' order by it_item;");
                while (res.next()) {
                     myarray.add(res.getString("it_item"));
@@ -1796,8 +2071,15 @@ public class invData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-            }
-            con.close();
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+          }
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1812,10 +2094,10 @@ public class invData {
         try{
             Class.forName(driver).newInstance();
             Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+                    ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
+                
                 res = st.executeQuery("select it_item from item_mstr where it_code = 'A' order by it_item;");
                while (res.next()) {
                     myarray.add(res.getString("it_item"));
@@ -1824,8 +2106,15 @@ public class invData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-            }
-            con.close();
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+          }
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1839,9 +2128,10 @@ public class invData {
         try{
             Class.forName(driver).newInstance();
             Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+                    ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+               
 
                 res = st.executeQuery("select it_item from item_mstr  " +
                         " where it_code = 'A' and it_status = 'ACTIVE' order by it_item;");
@@ -1852,8 +2142,15 @@ public class invData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-            }
-            con.close();
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+          }
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1868,10 +2165,10 @@ public class invData {
         try{
            Class.forName(driver).newInstance();
             Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+                    ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
+                
                 res = st.executeQuery("select it_item from item_mstr where it_code = 'P' order by it_item ;");
                while (res.next()) {
                     myarray.add(res.getString("it_item"));
@@ -1880,9 +2177,16 @@ public class invData {
 
            }
             catch (SQLException s){
-                 JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Item Master FG");
-            }
-            con.close();
+                  MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+          }
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1896,10 +2200,10 @@ public class invData {
         try{
            Class.forName(driver).newInstance();
             Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+                    ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
+              
                 res = st.executeQuery("select it_item from item_mstr where it_type = " + "'" + type + "'" +
                         " order by it_item ;");
 
@@ -1910,9 +2214,16 @@ public class invData {
 
            }
             catch (SQLException s){
-                 JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Item Master FG");
-            }
-            con.close();
+                  MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+          }
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1927,10 +2238,10 @@ public class invData {
         try{
            Class.forName(driver).newInstance();
             Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+                    ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
+                
                 res = st.executeQuery("select it_item from item_mstr order by it_item ;");
                while (res.next()) {
                     myarray.add(res.getString("it_item"));
@@ -1940,9 +2251,15 @@ public class invData {
            }
             catch (SQLException s){
                 MainFrame.bslog(s);
-                 JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Item Master FG");
-            }
-            con.close();
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+          }
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1956,10 +2273,10 @@ public class invData {
         try{
            Class.forName(driver).newInstance();
             Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+                    ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
+               
                 res = st.executeQuery("select it_item from item_mstr " +
                         " where it_site = " + "'" + site + "'" + " order by it_item ;");
                while (res.next()) {
@@ -1970,9 +2287,15 @@ public class invData {
            }
             catch (SQLException s){
                 MainFrame.bslog(s);
-                 JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Item Master FG");
-            }
-            con.close();
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+          }
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1987,10 +2310,10 @@ public class invData {
         try{
            Class.forName(driver).newInstance();
             Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+                    ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
+               
                 res = st.executeQuery("select it_item from item_mstr where it_item >= " + "'" + fromitem + "'" +
                         " and it_item <= " + "'" + toitem + "'" + 
                         " and it_site = " + "'" + site + "'" + " order by it_item ;");
@@ -2002,9 +2325,15 @@ public class invData {
            }
             catch (SQLException s){
                 MainFrame.bslog(s);
-                 JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Item Master FG");
-            }
-            con.close();
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+          }
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -2019,10 +2348,10 @@ public class invData {
         try{
            Class.forName(driver).newInstance();
             Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+                    ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
+               
                 res = st.executeQuery("select it_item from item_mstr where it_item >= " + "'" + fromitem + "'" +
                         " and it_item <= " + "'" + toitem + "'" + 
                         " and it_code = " + "'" + classcode + "'" +        
@@ -2035,9 +2364,15 @@ public class invData {
            }
             catch (SQLException s){
                 MainFrame.bslog(s);
-                 JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Item Master FG");
-            }
-            con.close();
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+          }
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -2052,9 +2387,10 @@ public class invData {
               try{
             Class.forName(driver).newInstance();
             Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+                    ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+               
 
                 res = st.executeQuery("select itr_lbr_top, itr_lbr_low from itemr_cost inner join item_mstr on it_item = itr_item " + 
                         " where itr_item = " + "'" + part + "'" +
@@ -2070,9 +2406,15 @@ public class invData {
            }
             catch (SQLException s){
                 MainFrame.bslog(s);
-                 bsmf.MainFrame.show("SQL cannot get Labor Cost");
-            }
-            con.close();
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+          }
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -2086,10 +2428,10 @@ public class invData {
           try{
         Class.forName(driver).newInstance();
         Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+                    ResultSet res = null;
         try{
-            Statement st = con.createStatement();
-            ResultSet res = null;
-
+           
             res = st.executeQuery("select itr_bdn_top, itr_bdn_low from itemr_cost inner join item_mstr on it_item = itr_item " + 
                     " where itr_item = " + "'" + part + "'" +
                     " AND itr_op = " + "'" + op + "'" + 
@@ -2104,9 +2446,15 @@ public class invData {
        }
         catch (SQLException s){
             MainFrame.bslog(s);
-             bsmf.MainFrame.show("SQL cannot get Labor Cost");
-        }
-        con.close();
+        } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+          }
     }
     catch (Exception e){
         MainFrame.bslog(e);

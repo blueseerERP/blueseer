@@ -26,6 +26,9 @@
   <Layout class="org.netbeans.modules.form.compat2.layouts.DesignFlowLayout"/>
   <SubComponents>
     <Container class="javax.swing.JPanel" name="jPanel1">
+      <Properties>
+        <Property name="name" type="java.lang.String" value="panelmain" noResource="true"/>
+      </Properties>
 
       <Layout>
         <DimensionLayout dim="0">
@@ -81,6 +84,7 @@
         <Component class="javax.swing.JButton" name="btupload">
           <Properties>
             <Property name="text" type="java.lang.String" value="Upload"/>
+            <Property name="name" type="java.lang.String" value="btupload" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btuploadActionPerformed"/>
@@ -89,6 +93,7 @@
         <Component class="javax.swing.JLabel" name="jLabel1">
           <Properties>
             <Property name="text" type="java.lang.String" value="Master Table:"/>
+            <Property name="name" type="java.lang.String" value="lblid" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JComboBox" name="ddtable">
@@ -136,6 +141,7 @@
         <Component class="javax.swing.JButton" name="btdescribe">
           <Properties>
             <Property name="text" type="java.lang.String" value="Define"/>
+            <Property name="name" type="java.lang.String" value="btdefine" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btdescribeActionPerformed"/>
@@ -144,6 +150,7 @@
         <Component class="javax.swing.JCheckBox" name="cboverride">
           <Properties>
             <Property name="text" type="java.lang.String" value="Menu Integrity Override"/>
+            <Property name="name" type="java.lang.String" value="cboverride" noResource="true"/>
           </Properties>
         </Component>
       </SubComponents>

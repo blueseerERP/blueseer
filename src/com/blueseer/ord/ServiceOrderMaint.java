@@ -26,11 +26,17 @@ SOFTWARE.
 package com.blueseer.ord;
 
 import bsmf.MainFrame;
-import com.blueseer.dst.*;
+import static bsmf.MainFrame.defaultDecimalSeparator;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
+import com.blueseer.ctr.cusData;
 import com.blueseer.inv.invData;
+import static com.blueseer.ord.ordData.addServiceOrderTransaction;
+import static com.blueseer.ord.ordData.getServiceOrderLines;
+import com.blueseer.ord.ordData.sv_mstr;
+import com.blueseer.ord.ordData.svd_det;
+import static com.blueseer.ord.ordData.updateServiceOrderTransaction;
 import com.blueseer.shp.shpData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
@@ -57,27 +63,20 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DateFormat;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JComponent;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
-import javax.swing.JTextArea;
 import javax.swing.JViewport;
 import javax.swing.SwingWorker;
 import javax.swing.event.TableModelEvent;
-import javax.swing.text.JTextComponent;
 
 
 /**
@@ -348,7 +347,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
         ddcust.removeAllItems();
         ddcust.insertItemAt("", 0);
         ddcust.setSelectedIndex(0);
-        ArrayList mycusts = OVData.getcustmstrlist();
+        ArrayList mycusts = cusData.getcustmstrlist();
         for (int i = 0; i < mycusts.size(); i++) {
             ddcust.addItem(mycusts.get(i));
         }
@@ -515,7 +514,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
                 while (res.next()) {
                   myorddetmodel.addRow(new Object[]{res.getString("svd_line"), res.getString("svd_item"),
                       res.getString("svd_type"), res.getString("svd_desc"), res.getString("svd_nbr"),
-                      res.getString("svd_qty"), res.getString("svd_netprice"), res.getString("svd_uom")});
+                      res.getString("svd_qty").replace('.', defaultDecimalSeparator), res.getString("svd_netprice").replace('.', defaultDecimalSeparator), res.getString("svd_uom")});
                 }
                
                
@@ -537,144 +536,34 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
     }
     
     public String[] addRecord(String[] x) {
-        String[] m = new String[2];
-         try {
-           Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-           
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-               
-                
-                String site = OVData.getDefaultSite();
-                
-                boolean proceed = validateInput("addRecord");
-                
-                if (proceed) {
-                    st.executeUpdate("insert into sv_mstr "
-                        + "(sv_nbr, sv_cust, sv_ship, sv_site, sv_po, sv_due_date, sv_create_date, sv_type, sv_status, sv_rmks ) "
-                        + " values ( " + "'" + x[0] + "'" + ","
-                        + "'" + ddcust.getSelectedItem().toString() + "'" + ","
-                        + "'" + ddship.getSelectedItem().toString() + "'" + ","
-                        + "'" + site + "'" + ","
-                        + "'" + tbpo.getText() + "'" + ","
-                        + "'" + bsmf.MainFrame.dfdate.format(duedate.getDate()).toString() + "'" + ","
-                        + "'" + bsmf.MainFrame.dfdate.format(new java.util.Date()).toString() + "'" + ","        
-                        + "'" + ddtype.getSelectedItem().toString() + "'" + ","
-                        + "'" + "open" + "'" + ","
-                        + "'" + remarks.getText().replace("'", "") + "'"
-                        + ")"
-                        + ";");
-
-                  
-                 
-                    for (int j = 0; j < orddet.getRowCount(); j++) {
-                        st.executeUpdate("insert into svd_det "
-                            + "(svd_line, svd_item, svd_type, svd_desc, svd_nbr, svd_qty, svd_uom, svd_netprice ) "
-                            + " values ( " 
-                            + "'" + orddet.getValueAt(j, 0).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 1).toString().replace("'", "") + "'" + ","
-                            + "'" + orddet.getValueAt(j, 2).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 3).toString() + "'" + ","        
-                            + "'" + orddet.getValueAt(j, 4).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 5).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 7).toString() + "'" + ","        
-                            + "'" + orddet.getValueAt(j, 6).toString() + "'" 
-                            + ")"
-                            + ";");
-
-                    }
-                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
-                   
-                   
-                } // if proceed
-          } catch (SQLException s) {
-                MainFrame.bslog(s);
-                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordSQLError};  
-            }
-            bsmf.MainFrame.con.close();
-            
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordConnError};
-        }
-     
+     String[] m = new String[2];
+     m = addServiceOrderTransaction(createDetRecord(), createRecord());
      return m;
     } 
     
     public String[] updateRecord(String[] x) {
-        String[] m = new String[2];
-          try {
-       
-           Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-          
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                int i = 0;
-                
-                boolean proceed = validateInput("updateRecord");
-               
-                if (proceed) {
-                    st.executeUpdate("update sv_mstr "
-                        + " set sv_ship = " + "'" + ddship.getSelectedItem() + "'" + ","
-                        + " sv_po = " + "'" + tbpo.getText().replace("'", "") + "'" + ","
-                        + " sv_rmks = " + "'" + remarks.getText().replace("'", "") + "'" + ","        
-                        + " sv_status = " + "'" + ddstatus.getSelectedItem() + "'" + ","
-                        + " sv_due_date = " + "'" + bsmf.MainFrame.dfdate.format(duedate.getDate()).toString() + "'" + ","
-                        + " sv_crew = " + "'" + ddcrew.getSelectedItem() + "'" 
-                        + " where sv_nbr = " + "'" + tbkey.getText().toString() + "'"
-                        + ";");
-
-                    // if available sod_det line item...then update....else insert
-                    for (int j = 0; j < orddet.getRowCount(); j++) {
-                         i = 0;
-                        // skip closed lines
-                        
-                        res = st.executeQuery("Select svd_line from svd_det where svd_nbr = " + "'" + tbkey.getText() + "'" +
-                                " and svd_line = " + "'" + orddet.getValueAt(j, 0).toString() + "'" + ";" );
-                            while (res.next()) {
-                            i++;
-                            }
-                            if (i > 0) {
-                              st.executeUpdate("update svd_det set "
-                            + " svd_item = " + "'" + orddet.getValueAt(j, 1).toString().replace("'", "") + "'" + ","
-                            + " svd_qty = " + "'" + orddet.getValueAt(j, 5).toString() + "'" + ","
-                            + " svd_uom = " + "'" + orddet.getValueAt(j, 7).toString() + "'" + ","        
-                            + " svd_netprice = " + "'" + orddet.getValueAt(j, 6).toString() + "'"
-                            + " where svd_nbr = " + "'" + tbkey.getText() + "'" 
-                            + " AND svd_line = " + "'" + orddet.getValueAt(j, 0).toString() + "'"
-                            + ";");
-                            } else {
-                            st.executeUpdate("insert into svd_det "
-                            + "(svd_line, svd_item, svd_nbr, svd_qty, svd_uom, svd_netprice ) "
-                            + " values ( " 
-                            + "'" + orddet.getValueAt(j, 0).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 1).toString().replace("'", "") + "'" + ","
-                            + "'" + orddet.getValueAt(j, 2).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 3).toString() + "'" + ","               
-                            + "'" + orddet.getValueAt(j, 4).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 5).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 7).toString() + "'" + ","        
-                            + "'" + orddet.getValueAt(j, 6).toString() + "'" 
-                            + ")"
-                            + ";");
-                            }
-
-                    }
-                     m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
-                } // if proceed
-           } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError};  
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordConnError};
+               String[] m = new String[2];
+        // first delete any sod_det line records that have been
+        // disposed from the current orddet table
+        ArrayList<String> lines = new ArrayList<String>();
+        ArrayList<String> badlines = new ArrayList<String>();
+        boolean goodLine = false;
+        
+        lines = getServiceOrderLines(tbkey.getText());
+       for (String line : lines) {
+          goodLine = false;
+          for (int j = 0; j < orddet.getRowCount(); j++) {
+             if (orddet.getValueAt(j, 0).toString().equals(line)) {
+                 goodLine = true;
+             }
+          }
+          if (! goodLine) {
+              badlines.add(line);
+          }
         }
+        
+        // now update
+        m = updateServiceOrderTransaction(tbkey.getText(), badlines, createDetRecord(), createRecord());
      
      return m;
     }
@@ -710,6 +599,78 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
         }
      return m;
     } 
+    
+    public sv_mstr createRecord() {
+        cusData.cm_mstr cm = cusData.getCustMstr(new String[]{ddcust.getSelectedItem().toString()});
+        String acct = cm.cm_ar_acct();
+        String cc = cm.cm_ar_cc();
+        String terms = cm.cm_terms();
+        String carrier = cm.cm_carrier();
+        String onhold = cm.cm_onhold();
+        String taxcode = cm.cm_tax_code();
+        String curr = cm.cm_curr();
+        sv_mstr x = new sv_mstr(null, tbkey.getText().toString(),
+                 ddcust.getSelectedItem().toString(),
+                 ddship.getSelectedItem().toString(),
+                 "", // po
+                 "", // crew
+                bsmf.MainFrame.dfdate.format(createdate.getDate()).toString(),
+                bsmf.MainFrame.dfdate.format(duedate.getDate()).toString(),
+                remarks.getText(),
+                ddstatus.getSelectedItem().toString(),
+                "", // isched
+                bsmf.MainFrame.userid,
+                ddtype.getSelectedItem().toString(),
+                "", // char1
+                "", // char2
+                "", // char3
+                terms,
+                curr,
+                acct,
+                cc,
+                onhold, // onhold
+                taxcode, // taxcode
+                 ddsite.getSelectedItem().toString()
+                );
+        return x;
+    }
+   
+    public ArrayList<svd_det> createDetRecord() {
+        ArrayList<svd_det> list = new ArrayList<svd_det>();
+        
+           
+            for (int j = 0; j < orddet.getRowCount(); j++) {
+                // line, item, type, desc, order, qty, price, uom
+                svd_det x = new svd_det(null, 
+                tbkey.getText(),
+                orddet.getValueAt(j, 0).toString(), // line
+                orddet.getValueAt(j, 7).toString(), // uom
+                orddet.getValueAt(j, 1).toString(), // item
+                orddet.getValueAt(j, 3).toString(), //desc
+                ddtype.getSelectedItem().toString(), // type
+                "", // custitem
+                orddet.getValueAt(j, 5).toString().replace(defaultDecimalSeparator, '.'), // qty
+                "", // completed hours        
+                "", // po
+                bsmf.MainFrame.dfdate.format(createdate.getDate()).toString(), // orddate
+                bsmf.MainFrame.dfdate.format(duedate.getDate()).toString(),  // duedate
+                bsmf.MainFrame.dfdate.format(createdate.getDate()).toString(), // createdate       
+                "", // char1
+                "", // char2
+                "", // char3
+                ddstatus.getSelectedItem().toString(),
+                orddet.getValueAt(j, 6).toString().replace(defaultDecimalSeparator, '.'), // listprice
+                orddet.getValueAt(j, 6).toString().replace(defaultDecimalSeparator, '.'), // netprice
+                "0", // disc 
+                "0", // taxamt  
+                "", // taxcode        
+                ddsite.getSelectedItem().toString()        
+                );  
+                list.add(x);
+            }  
+            
+        return list;
+    }
     
     public void lookUpFrame() {
         
@@ -774,7 +735,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
             
            
             
-            ArrayList mycusts = OVData.getcustshipmstrlist(ddcust.getSelectedItem().toString());
+            ArrayList mycusts = cusData.getcustshipmstrlist(ddcust.getSelectedItem().toString());
             for (int i = 0; i < mycusts.size(); i++) {
                 ddship.addItem(mycusts.get(i));
             }

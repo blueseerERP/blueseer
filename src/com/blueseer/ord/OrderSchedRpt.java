@@ -62,6 +62,7 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import com.blueseer.ctr.cusData;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.text.DecimalFormatSymbols;
@@ -181,7 +182,7 @@ public class OrderSchedRpt extends javax.swing.JPanel {
          dcFrom.setDate(now);
          dcTo.setDate(now);
          
-         ArrayList mycusts = OVData.getcustmstrlist();
+         ArrayList mycusts = cusData.getcustmstrlist();
         for (int i = 0; i < mycusts.size(); i++) {
             ddfromcust.addItem(mycusts.get(i));
         }

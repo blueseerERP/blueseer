@@ -27,9 +27,11 @@ SOFTWARE.
 package com.blueseer.utl;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.tags;
 import com.blueseer.inv.invData;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.awt.Component;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -48,10 +50,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
@@ -74,9 +80,10 @@ public class MassLoad extends javax.swing.JPanel {
      */
     public MassLoad() {
         initComponents();
+        setLanguageTags(this);
     }
 
-      public void setPanelComponentState(Object myobj, boolean b) {
+    public void setPanelComponentState(Object myobj, boolean b) {
         JPanel panel = null;
         JTabbedPane tabpane = null;
         JScrollPane scrollpane = null;
@@ -138,6 +145,50 @@ public class MassLoad extends javax.swing.JPanel {
                 }
             }
     } 
+    
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
     
     public void setComponentDefaultValues() {
        isLoad = true;
@@ -321,16 +372,16 @@ public class MassLoad extends javax.swing.JPanel {
                    temp = checkItemMaster(recs, i);
                    if (! temp) {
                        proceed = false;
-                       m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 
+                       m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
                    }
                }
             }
             fsr.close();
              if (proceed) {
                    if(! OVData.addItemMaster(list))
-                       m = new String[] {BlueSeerUtils.SuccessBit, "File is clean " + i + " lines have been loaded"};
+                       m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151)};
                    } else {
-                  m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 
+                  m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
             }
              return m;
     }
@@ -415,16 +466,16 @@ public class MassLoad extends javax.swing.JPanel {
                temp = checkBOMMaster(recs, i);
                    if (! temp) {
                        proceed = false;
-                       m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 
+                       m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
                    }
                
             }
             fsr.close();
              if (proceed) {
                    if(! OVData.addBOMMstrRecord(list))
-                       m = new String[] {BlueSeerUtils.SuccessBit, "File is clean " + i + " lines have been loaded"};
+                       m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151)};
                    } else {
-                  m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 
+                  m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
             }
              return m;
            
@@ -501,16 +552,16 @@ public class MassLoad extends javax.swing.JPanel {
                    temp = checkGLAcctBalances(recs, i);
                    if (! temp) {
                        proceed = false;
-                       m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 
+                       m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
                    }
                }
             }
             fsr.close();
              if (proceed) {
                    if(! OVData.addGLAcctBalances(list))
-                       m = new String[] {BlueSeerUtils.SuccessBit, "File is clean " + i + " lines have been loaded"};
+                       m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151)};
                    } else {
-                  m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 
+                  m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
             }
              return m;
     }
@@ -577,16 +628,16 @@ public class MassLoad extends javax.swing.JPanel {
                    temp = checkGenericCode(recs, i);
                    if (! temp) {
                        proceed = false;
-                       m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 
+                       m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
                    }
                }
             }
             fsr.close();
             if (proceed) {
                    if(! OVData.addGenericCode(list))
-                       m = new String[] {BlueSeerUtils.SuccessBit, "File is clean " + i + " lines have been loaded"};
+                       m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151)};
                    } else {
-                  m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 
+                  m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
             }
              return m;
             
@@ -677,16 +728,16 @@ public class MassLoad extends javax.swing.JPanel {
                temp = checkCustXref(recs, i);
                    if (! temp) {
                        proceed = false;
-                       m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 
+                       m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
                    }
                
             }
             fsr.close();
             if (proceed) {
                    if(! OVData.addCustXref(list))
-                       m = new String[] {BlueSeerUtils.SuccessBit, "File is clean " + i + " lines have been loaded"};
+                       m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151)};
                    } else {
-                  m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 
+                  m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
             }
              return m;
             
@@ -749,16 +800,16 @@ public class MassLoad extends javax.swing.JPanel {
                temp = checkCarrier(recs, i);
                    if (! temp) {
                        proceed = false;
-                       m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 
+                       m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
                    }
                
             }
             fsr.close();
             if (proceed) {
                    if(! OVData.addCarrier(list))
-                       m = new String[] {BlueSeerUtils.SuccessBit, "File is clean " + i + " lines have been loaded"};
+                       m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151)};
                    } else {
-                  m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 
+                  m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
             }
              return m;
             
@@ -820,16 +871,16 @@ public class MassLoad extends javax.swing.JPanel {
                temp = checkEDIPartners(recs, i);
                    if (! temp) {
                        proceed = false;
-                       m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 
+                       m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
                    }
                
             }
             fsr.close();
             if (proceed) {
                    if(! EDData.addEDIPartner(list))
-                       m = new String[] {BlueSeerUtils.SuccessBit, "File is clean " + i + " lines have been loaded"};
+                       m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151)};
                    } else {
-                  m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 
+                  m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
             }
              return m;
            
@@ -905,16 +956,16 @@ public class MassLoad extends javax.swing.JPanel {
                temp = checkEDIDocumentStructures(recs, i);
                    if (! temp) {
                        proceed = false;
-                       m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 
+                       m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
                    }
                
             }
             fsr.close();
             if (proceed) {
                    if(! EDData.addEDIDocumentStructures(list))
-                       m = new String[] {BlueSeerUtils.SuccessBit, "File is clean " + i + " lines have been loaded"};
+                       m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151)};
                    } else {
-                  m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 
+                  m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
             }
              return m;
             
@@ -996,16 +1047,16 @@ public class MassLoad extends javax.swing.JPanel {
                temp = checkEDIPartnerTransactions(recs, i);
                    if (! temp) {
                        proceed = false;
-                       m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 
+                       m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
                    }
                
             }
             fsr.close();
             if (proceed) {
                    if(! EDData.addEDIMstrRecord(list))
-                       m = new String[] {BlueSeerUtils.SuccessBit, "File is clean " + i + " lines have been loaded"};
+                       m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151)};
                    } else {
-                  m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 
+                  m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
             }
              return m;
             
@@ -1095,16 +1146,16 @@ public class MassLoad extends javax.swing.JPanel {
                temp = checkVendXref(recs, i);
                    if (! temp) {
                        proceed = false;
-                       m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 
+                       m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
                    }
                
             }
            fsr.close();
             if (proceed) {
                    if(! OVData.addVendXref(list))
-                       m = new String[] {BlueSeerUtils.SuccessBit, "File is clean " + i + " lines have been loaded"};
+                       m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151)};
                    } else {
-                  m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 
+                  m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
             }
              return m;
             
@@ -1221,16 +1272,16 @@ public class MassLoad extends javax.swing.JPanel {
                temp = checkInvAdjustment(recs, i);
                    if (! temp) {
                        proceed = false;
-                       m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 
+                       m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
                    }
                
             }
             fsr.close();
             if (proceed) {
                    if(! OVData.addInvAdjustments(list))
-                       m = new String[] {BlueSeerUtils.SuccessBit, "File is clean " + i + " lines have been loaded"};
+                       m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151)};
                    } else {
-                  m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 
+                  m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
             }
              return m;
              
@@ -1322,16 +1373,16 @@ public class MassLoad extends javax.swing.JPanel {
                temp = checkCustPriceList(recs, i);
                    if (! temp) {
                        proceed = false;
-                       m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 
+                       m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
                    }
                
             }
             fsr.close();
              if (proceed) {
                    if(! OVData.addCustPriceList(list))
-                       m = new String[] {BlueSeerUtils.SuccessBit, "File is clean " + i + " lines have been loaded"};
+                       m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151)};
                    } else {
-                  m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 
+                  m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
             }
              return m;
              
@@ -1421,16 +1472,16 @@ public class MassLoad extends javax.swing.JPanel {
                temp = checkVendPriceList(recs, i);
                    if (! temp) {
                        proceed = false;
-                       m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 
+                       m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
                    }
                
             }
             fsr.close();
              if (proceed) {
                    if(! OVData.addVendPriceList(list))
-                       m = new String[] {BlueSeerUtils.SuccessBit, "File is clean " + i + " lines have been loaded"};
+                       m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151)};
                    } else {
-                  m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 
+                  m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
             }
              return m;
             
@@ -1551,16 +1602,16 @@ public class MassLoad extends javax.swing.JPanel {
                temp = checkVendMstr(recs, i);
                    if (! temp) {
                        proceed = false;
-                       m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 
+                       m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
                    }
                
             }
             fsr.close();
              if (proceed) {
                    if(! OVData.addVendMstr(list))
-                       m = new String[] {BlueSeerUtils.SuccessBit, "File is clean " + i + " lines have been loaded"};
+                       m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151)};
                    } else {
-                  m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 
+                  m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
             }
              return m;
             
@@ -1687,16 +1738,16 @@ public class MassLoad extends javax.swing.JPanel {
                temp = checkCustMstr(recs, i);
                    if (! temp) {
                        proceed = false;
-                       m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 
+                       m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
                    }
                
             }
             fsr.close();
              if (proceed) {
                    if(! OVData.addCustMstrWShipTo(list))
-                       m = new String[] {BlueSeerUtils.SuccessBit, "File is clean " + i + " lines have been loaded"};
+                       m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151)};
                    } else {
-                  m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 
+                  m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
             }
              return m;
             
@@ -1790,16 +1841,16 @@ public class MassLoad extends javax.swing.JPanel {
                temp = checkCustShipToMstr(recs, i);
                    if (! temp) {
                        proceed = false;
-                       m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 
+                       m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
                    }
                
             }
             fsr.close();
             if (proceed) {
                    if(! OVData.addCustShipToMstr(list))
-                       m = new String[] {BlueSeerUtils.SuccessBit, "File is clean " + i + " lines have been loaded"};
+                       m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151)};
                    } else {
-                  m = new String[] {BlueSeerUtils.ErrorBit, "File has errors...correct file and try again."}; 
+                  m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
             }
              return m;
             
@@ -1917,10 +1968,10 @@ public class MassLoad extends javax.swing.JPanel {
             fsr.close();
             // now we should have a clean file....attempt to load
             if (proceed) {
-                   bsmf.MainFrame.show("File is clean.");
+                   bsmf.MainFrame.show(getMessageTag(1151));
                
             } else {
-                bsmf.MainFrame.show("File has errors.");
+                bsmf.MainFrame.show(getMessageTag(1150));
             }
         
        
@@ -2089,7 +2140,10 @@ public class MassLoad extends javax.swing.JPanel {
 
         setBackground(new java.awt.Color(0, 102, 204));
 
+        jPanel1.setName("panelmain"); // NOI18N
+
         btupload.setText("Upload");
+        btupload.setName("btupload"); // NOI18N
         btupload.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btuploadActionPerformed(evt);
@@ -2097,6 +2151,7 @@ public class MassLoad extends javax.swing.JPanel {
         });
 
         jLabel1.setText("Master Table:");
+        jLabel1.setName("lblid"); // NOI18N
 
         ddtable.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item Master", "BOM Master", "Customer Master", "Customer ShipTo Master", "Customer Xref", "Customer Price List", "Vendor Master", "Vendor Xref", "Vendor Price List", "Inventory Adjustment", "GL Account Balances", "Generic Code", "EDI Partners", "EDI Partner Transactions", "EDI Document Structures", "Carrier Master" }));
         ddtable.addActionListener(new java.awt.event.ActionListener() {
@@ -2110,6 +2165,7 @@ public class MassLoad extends javax.swing.JPanel {
         jScrollPane1.setViewportView(tacomments);
 
         btdescribe.setText("Define");
+        btdescribe.setName("btdefine"); // NOI18N
         btdescribe.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdescribeActionPerformed(evt);
@@ -2117,6 +2173,7 @@ public class MassLoad extends javax.swing.JPanel {
         });
 
         cboverride.setText("Menu Integrity Override");
+        cboverride.setName("cboverride"); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);

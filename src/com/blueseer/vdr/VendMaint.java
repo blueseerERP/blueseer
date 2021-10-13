@@ -29,6 +29,7 @@ import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
+import com.blueseer.ctr.cusData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
@@ -339,7 +340,7 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeer {
         }
         
        ddterms.removeAllItems();
-        ArrayList custterms = OVData.getcusttermslist();
+        ArrayList custterms = cusData.getcusttermslist();
         for (int i = 0; i < custterms.size(); i++) {
             ddterms.addItem(custterms.get(i));
         }

@@ -48,6 +48,7 @@ import static bsmf.MainFrame.con;
 import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.tags;
+import com.blueseer.ctr.cusData;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.text.DecimalFormatSymbols;
@@ -243,7 +244,7 @@ public class ARMemoMaint extends javax.swing.JPanel {
         }
         
         ddterms.removeAllItems();
-        ArrayList custterms = OVData.getcusttermslist();
+        ArrayList custterms = cusData.getcusttermslist();
         for (int i = 0; i < custterms.size(); i++) {
             ddterms.addItem(custterms.get(i));
         }
@@ -251,7 +252,7 @@ public class ARMemoMaint extends javax.swing.JPanel {
        
        ddcust.setEnabled(true);
        ddcust.removeAllItems();
-        ArrayList mycusts = OVData.getcustmstrlist();
+        ArrayList mycusts = cusData.getcustmstrlist();
         for (int i = 0; i < mycusts.size(); i++) {
             ddcust.addItem(mycusts.get(i));
         }

@@ -189,6 +189,7 @@ public class shpData {
             }
             if (bscon != null) {
                 try {
+                    bscon.setAutoCommit(true);
                     bscon.close();
                 } catch (SQLException ex) {
                     MainFrame.bslog(ex);
