@@ -502,7 +502,32 @@ public class purData {
        
     
     // miscellaneous SQL queries
-   
+    public static ArrayList<String> getPOLines(String order) {
+        ArrayList<String> lines = new ArrayList<String>();
+        try{
+        Class.forName(driver).newInstance();
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+           res = st.executeQuery("SELECT pod_line from pod_mstr " +
+                   " where pod_nbr = " + "'" + order + "'" + ";");
+                        while (res.next()) {
+                          lines.add(res.getString("pod_line"));
+                        }
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+        return lines;
+    }
+    
     
     public record po_mstr(String[] m, String po_nbr, String po_vend, 
      String po_ord_date, String po_due_date, String po_rmks, String po_shipvia,

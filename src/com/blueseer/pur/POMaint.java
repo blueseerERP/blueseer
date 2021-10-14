@@ -26,11 +26,19 @@ SOFTWARE.
 package com.blueseer.pur;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.defaultDecimalSeparator;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import com.blueseer.inv.invData;
+import com.blueseer.ord.ordData;
+import static com.blueseer.pur.purData.addPOTransaction;
+import static com.blueseer.pur.purData.getPOLines;
+import com.blueseer.pur.purData.po_mstr;
+import com.blueseer.pur.purData.pod_mstr;
+import static com.blueseer.pur.purData.updatePOTransaction;
+import static com.blueseer.utl.BlueSeerUtils.bsdate;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
@@ -500,82 +508,9 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeer {
     }
         
     public String[] addRecord(String[] x) {
-         
-         String[] m = new String[2];
-         try {
-
-           Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-           
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                boolean proceed = true;
-                int i = 0;
-                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-               
-                
-               
-                    st.executeUpdate("insert into po_mstr "
-                        + "(po_nbr, po_vend, po_site, po_type, po_curr, po_buyer, po_due_date, "
-                        + " po_ord_date, po_userid, po_status,"
-                        + " po_terms, po_ap_acct, po_ap_cc, po_rmks ) "
-                        + " values ( " + "'" + tbkey.getText().toString() + "'" + ","
-                        + "'" + ddvend.getSelectedItem().toString() + "'" + ","
-                            + "'" + ddsite.getSelectedItem().toString() + "'" + ","
-                        + "'" + BlueSeerUtils.boolToInt(cbblanket.isSelected()) + "'" + ","
-                        + "'" + curr + "'" + ","
-                        + "'" + tbbuyer.getText() + "'" + ","        
-                        + "'" + dfdate.format(duedate.getDate()).toString() + "'" + ","
-                        + "'" + dfdate.format(orddate.getDate()).toString() + "'" + ","
-                        + "'" + userid.getText() + "'" + ","
-                        + "'" + ddstatus.getSelectedItem() + "'" + ","
-                        + "'" + terms + "'" + ","
-                        + "'" + acct + "'" + ","
-                        + "'" + cc + "'" + ","
-                        + "'" + remarks.getText() + "'"
-                        + ")"
-                        + ";");
-
-                  
-                  //"line", "Part", "Desc" ,"VendPart", "PO", "Qty", "UOM", "ListPrice", "Discount", "NetPrice", "QtyRecv", "Status"
-            
-                    for (int j = 0; j < orddet.getRowCount(); j++) {
-                        st.executeUpdate("insert into pod_mstr "
-                            + "(pod_line, pod_part, pod_vendpart, pod_nbr, pod_ord_qty, pod_uom, pod_listprice, pod_disc, pod_netprice, pod_due_date, "
-                            + "pod_rcvd_qty, pod_status, pod_site) "
-                            + " values ( " 
-                            + "'" + orddet.getValueAt(j, 0).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 1).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 3).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 4).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 5).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 6).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 7).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 8).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 9).toString() + "'" + ","
-                            + "'" + dfdate.format(duedate.getDate()).toString() + "'" + ","
-                            + '0' + "," 
-                            + "''" + ","
-                            + "'" + ddsite.getSelectedItem().toString() + "'"
-                            + ")"
-                            + ";");
-
-                    }
-                   m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
-                   
-               
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordSQLError};  
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordConnError};
-        }
-         
-         return m;
+     String[] m = new String[2];
+     m = addPOTransaction(createDetRecord(), createRecord());
+     return m;
      } 
       
     public String[] deleteRecord(String[] x) {
@@ -623,102 +558,25 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeer {
     }
     
     public String[] updateRecord(String[] x) {
-     String[] m = new String[2];
-       try {
-        java.util.Date now = new java.util.Date();
-        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-           Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-          
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                boolean proceed = true;
-                int i = 0;
-                
-               
-               
-               
-                    st.executeUpdate("update po_mstr "
-                       + " set po_status = " + "'" + ddstatus.getSelectedItem().toString() + "'" + ","
-                        + " po_rmks = " + "'" + remarks.getText().replace("'", "''") + "'" + "," 
-                        + " po_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + ","         
-                        + " po_buyer = " + "'" + tbbuyer.getText().replace("'", "''") + "'" + "," 
-                        + " po_due_date = " + "'" + dfdate.format(duedate.getDate()).toString() + "'" + "," 
-                       + " po_shipvia = " + "'" + ddshipvia.getSelectedItem().toString() + "'"          
-                       + " where po_nbr = " + "'" + x[0] + "'"
-                        + ";");
-
-                 
-                   
-                    
-                    // if available pod_mstr line item...then update....else insert
-                    for (int j = 0; j < orddet.getRowCount(); j++) {
-                         i = 0;
-                        // skip closed lines
-                        if (orddet.getValueAt(j, 11).toString().equals(getGlobalProgTag("close")))
-                            continue;
-                        res = st.executeQuery("Select pod_line from pod_mstr where pod_nbr = " + "'" + x[0] + "'" +
-                                " and pod_line = " + "'" + orddet.getValueAt(j, 0).toString() + "'" + ";" );
-                            while (res.next()) {
-                            i++;
-                            }
-                            
-                             //   "line", "Part", "Desc", "VendPart", "PO", "Qty", "UOM", "ListPrice", "Discount", "NetPrice", "QtyRecv", "Status"
-                            if (i > 0) {
-                              st.executeUpdate("update pod_mstr set "
-                            + " pod_part = " + "'" + orddet.getValueAt(j, 1).toString().replace("'", "''") + "'" + ","
-                            + " pod_vendpart = " + "'" + orddet.getValueAt(j, 3).toString().replace("'", "''") + "'" + ","
-                            + " pod_ord_qty = " + "'" + orddet.getValueAt(j, 5).toString() + "'" + ","
-                            + " pod_uom = " + "'" + orddet.getValueAt(j, 6).toString() + "'" + ","        
-                            + " pod_listprice = " + "'" + orddet.getValueAt(j, 7).toString() + "'" + ","
-                            + " pod_disc = " + "'" + orddet.getValueAt(j, 8).toString() + "'" + ","
-                            + " pod_netprice = " + "'" + orddet.getValueAt(j, 9).toString() + "'" + ","
-                            + " pod_due_date = " + "'" + dfdate.format(duedate.getDate()).toString() + "'"  + ","
-                            + " pod_status = " + "'" + ddstatus.getSelectedItem().toString() + "'" + ","
-                            + " pod_site = " + "'" + ddsite.getSelectedItem().toString() + "'"
-                            + " where pod_nbr = " + "'" + x[0] + "'" 
-                            + " AND pod_line = " + "'" + orddet.getValueAt(j, 0).toString() + "'"
-                            + ";");
-                            } else {
-                             st.executeUpdate("insert into pod_mstr "
-                            + "(pod_line, pod_part, pod_vendpart, pod_nbr, pod_ord_qty, pod_uom, pod_listprice, pod_disc, pod_netprice, pod_ord_date, pod_due_date, "
-                            + "pod_rcvd_qty, pod_status, pod_site) "
-                            + " values ( " 
-                            + "'" + orddet.getValueAt(j, 0).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 1).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 3).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 4).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 5).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 6).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 7).toString() + "'" + ","        
-                            + "'" + orddet.getValueAt(j, 8).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 9).toString() + "'" + ","
-                            + "'" + dfdate.format(orddate.getDate()).toString() + "'" + ","
-                            + "'" + dfdate.format(duedate.getDate()).toString() + "'" + ","        
-                            + "'" + "0" + "'" + ","
-                            + "'" + "" + "'" + ","
-                            + "'" + ddsite.getSelectedItem().toString() + "'"
-                            + ")"
-                            + ";");   
-                            }
-
-                    }
-                    
-                   m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};    
-                    
-                    
-                    // btQualProbAdd.setEnabled(false);
-               
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError};   
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordConnError};
-            MainFrame.bslog(e);
+      String[] m = new String[2];
+        // first delete any sod_det line records that have been
+        // disposed from the current orddet table
+        ArrayList<String> lines = new ArrayList<String>();
+        ArrayList<String> badlines = new ArrayList<String>();
+        boolean goodLine = false;
+        lines = getPOLines(tbkey.getText());
+       for (String line : lines) {
+          goodLine = false;
+          for (int j = 0; j < orddet.getRowCount(); j++) {
+             if (orddet.getValueAt(j, 0).toString().equals(line)) {
+                 goodLine = true;
+             }
+          }
+          if (! goodLine) {
+              badlines.add(line);
+          }
         }
+        m = updatePOTransaction(tbkey.getText(), badlines, createDetRecord(), createRecord());
      return m;
     }
          
@@ -791,6 +649,48 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeer {
              m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};   
         }
      return m;
+    }
+    
+    public po_mstr createRecord() {
+        po_mstr x = new po_mstr(null, tbkey.getText().toString(),
+                        ddvend.getSelectedItem().toString(),
+                bsdate.format(orddate.getDate()).toString(),
+                bsdate.format(duedate.getDate()).toString(),
+                remarks.getText(),
+                "", // shipvia
+                ddstatus.getSelectedItem().toString(),
+                userid.getText(),
+                "", // type
+                curr,
+                terms,
+                ddsite.getSelectedItem().toString(),
+                tbbuyer.getText(),  
+                acct,
+                cc);
+        return x;  
+    }
+    
+    public ArrayList<pod_mstr> createDetRecord() {
+        ArrayList<pod_mstr> list = new ArrayList<pod_mstr>();
+         for (int j = 0; j < orddet.getRowCount(); j++) {
+             pod_mstr x = new pod_mstr(null, tbkey.getText().toString(),
+                orddet.getValueAt(j, 0).toString(),
+                orddet.getValueAt(j, 1).toString(),
+                orddet.getValueAt(j, 3).toString(),
+                orddet.getValueAt(j, 5).toString().replace(defaultDecimalSeparator, '.'), // qty
+                "0", // rcvd qty        
+                orddet.getValueAt(j, 9).toString().replace(defaultDecimalSeparator, '.'), // netprice
+                orddet.getValueAt(j, 8).toString().replace(defaultDecimalSeparator, '.'), // disc
+                orddet.getValueAt(j, 7).toString().replace(defaultDecimalSeparator, '.'), // listprice
+                bsdate.format(duedate.getDate()).toString(),
+                orddet.getValueAt(j, 11).toString(),
+                ddsite.getSelectedItem().toString(),
+                bsdate.format(orddate.getDate()).toString(),
+                orddet.getValueAt(j, 6).toString()
+                );
+        list.add(x);
+         }
+        return list;   
     }
     
     public boolean validateInput(String x) {
