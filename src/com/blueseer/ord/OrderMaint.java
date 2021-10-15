@@ -47,6 +47,7 @@ import com.blueseer.ord.ordData.sos_det;
 import static com.blueseer.ord.ordData.updateOrderTransaction;
 import com.blueseer.shp.shpData;
 import com.blueseer.shp.shpData.ship_mstr;
+import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
@@ -80,8 +81,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DateFormat;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -135,7 +134,6 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
                 boolean autoallocate = false;
                 String allocationStatus = "";
                 
-                DecimalFormat df = new DecimalFormat("#0.0000", new DecimalFormatSymbols(Locale.getDefault()));
                 Map<Integer, ArrayList<String[]>> linetax = new HashMap<Integer, ArrayList<String[]>>();
                 ArrayList<String[]> headertax = new ArrayList<String[]>();
      
@@ -1497,21 +1495,20 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
         discount.setText("0");
         String[] TypeAndPrice = new String[]{"","0"};
         if (dduom.getItemCount() > 0 && ddpart.getItemCount() > 0 && ddcust.getItemCount() > 0) {
-                DecimalFormat df = new DecimalFormat("#0.0000", new DecimalFormatSymbols(Locale.getDefault()));
                 
                 TypeAndPrice = invData.getItemPrice("c", ddcust.getSelectedItem().toString(), ddpart.getSelectedItem().toString(), 
                         dduom.getSelectedItem().toString(), ddcurr.getSelectedItem().toString());
                 String pricetype = TypeAndPrice[0].toString();
-                Double price = Double.valueOf(TypeAndPrice[1]);
+                double price = bsParseDouble(TypeAndPrice[1]);
               //  
-                listprice.setText(df.format(price));
+                listprice.setText(bsFormatDouble(price));
                 if (pricetype.equals("cust")) {
                     listprice.setBackground(Color.green);
                 }
                 if (pricetype.equals("item")) {
                     listprice.setBackground(Color.white);
                 }
-                discount.setText(df.format(invData.getItemDiscFromCust(ddcust.getSelectedItem().toString())));
+                discount.setText(bsFormatDouble(invData.getItemDiscFromCust(ddcust.getSelectedItem().toString())));
                 // custnumber.setText(OVData.getCustPartFromPart(ddcust.getSelectedItem().toString(), ddpart.getSelectedItem().toString()));  
                 setNetPrice();
         }
@@ -1545,7 +1542,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
              netprice.setText("0");
            } else {  
            net = list - ((disc / 100) * list);
-           netprice.setText(df.format(net));
+           netprice.setText(bsFormatDouble(net));
            }
         }
 
@@ -1647,7 +1644,6 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
     }
     
     public void sumdollars() throws ParseException {
-        DecimalFormat df = new DecimalFormat("#.00", new DecimalFormatSymbols(Locale.getDefault()));
         NumberFormat nf = NumberFormat.getInstance(Locale.getDefault());
         double dol = 0;
         double summaryTaxPercent = 0;
@@ -1685,8 +1681,8 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
          dol += Double.valueOf(tbtottax.getText()); // add total tax from summation of matl tax + customer specific order tax
          }
          */
-         tbtottax.setText(df.format(totaltax));
-         tbtotdollars.setText(df.format(dol));
+         tbtottax.setText(nf.format(totaltax));
+         tbtotdollars.setText(nf.format(dol));
          lblcurr.setText(ddcurr.getSelectedItem().toString());
     }
       
@@ -1702,7 +1698,6 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
     
     public void retotal() throws ParseException {
         NumberFormat nf = NumberFormat.getInstance(Locale.getDefault());
-        DecimalFormat df = new DecimalFormat("#.00", new DecimalFormatSymbols(Locale.getDefault()));
         double dol = 0;
         double newdisc = 0;
         double newprice = 0;
@@ -3116,7 +3111,6 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
                 bslog(ex);
             }
         int line = 0;
-        
         line = getmaxline();
         line++;
         
@@ -3282,7 +3276,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
         
        
         if (! qtyshipped.getText().isEmpty()) {
-               if (Double.valueOf(qtyshipped.getText()) > invData.getItemQtyByWarehouseAndLocation(ddpart.getSelectedItem().toString(), ddsite.getSelectedItem().toString(), ddwh.getSelectedItem().toString(), ddloc.getSelectedItem().toString())) {
+               if (bsParseDouble(qtyshipped.getText()) > invData.getItemQtyByWarehouseAndLocation(ddpart.getSelectedItem().toString(), ddsite.getSelectedItem().toString(), ddwh.getSelectedItem().toString(), ddloc.getSelectedItem().toString())) {
                    lbqtyavailable.setBackground(Color.red);
                } else {
                    lbqtyavailable.setBackground(Color.green);
@@ -3361,7 +3355,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
            String sqty = String.valueOf(qty);
            lbqtyavailable.setText(prefix + sqty);
            if (! qtyshipped.getText().isEmpty()) {
-               if (Double.valueOf(qtyshipped.getText()) > qty || qty == 0 ) {
+               if (bsParseDouble(qtyshipped.getText()) > qty || qty == 0 ) {
                    lbqtyavailable.setBackground(Color.red);
                } else {
                    lbqtyavailable.setBackground(Color.green);

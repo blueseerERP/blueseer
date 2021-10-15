@@ -26,6 +26,7 @@ SOFTWARE.
 package com.blueseer.inv;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.defaultDecimalSeparator;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
@@ -397,11 +398,11 @@ public class WorkCenterMaint extends javax.swing.JPanel implements IBlueSeer {
                                 + "'" + tbdesc.getText() + "'" + ","
                                 + "'" + ddsite.getSelectedItem().toString() + "'" + ","
                                 + "'" + ddcc.getSelectedItem().toString() + "'" + ","
-                                + "'" + tbrunrate.getText() + "'" + ","
-                                + "'" + tbruncrewsize.getText() + "'" + ","
-                                + "'" + tbsetuprate.getText() + "'" + ","
-                                + "'" + tbsetupcrewsize.getText() + "'" + ","
-                                + "'" + tbbdnrate.getText() + "'" + ","
+                                + "'" + tbrunrate.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + tbruncrewsize.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + tbsetuprate.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + tbsetupcrewsize.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + tbbdnrate.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
                                 + "'" + tarmks.getText() + "'" 
                             + ")"
                             + ";");
@@ -442,11 +443,11 @@ public class WorkCenterMaint extends javax.swing.JPanel implements IBlueSeer {
                     st.executeUpdate("update wc_mstr set wc_desc = " + "'" + tbdesc.getText() + "'" + ","
                             + "wc_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + "," 
                             + "wc_cc = " + "'" + ddcc.getSelectedItem().toString() + "'" + ","
-                            + "wc_run_rate = " + "'" + tbrunrate.getText() + "'" + ","
-                            + "wc_setup_rate = " + "'" + tbsetuprate.getText() + "'" + ","
-                            + "wc_bdn_rate = " + "'" + tbbdnrate.getText() + "'" + ","
-                            + "wc_run_crew = " + "'" + tbruncrewsize.getText() + "'" + ","
-                            + "wc_setup = " + "'" + tbsetupcrewsize.getText() + "'" + ","
+                            + "wc_run_rate = " + "'" + tbrunrate.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
+                            + "wc_setup_rate = " + "'" + tbsetuprate.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
+                            + "wc_bdn_rate = " + "'" + tbbdnrate.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
+                            + "wc_run_crew = " + "'" + tbruncrewsize.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
+                            + "wc_setup = " + "'" + tbsetupcrewsize.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
                             + "wc_remarks = " + "'" + tarmks.getText() + "'"
                             + " where wc_cell = " + "'" + x[0] + "'" 
                             + ";");
@@ -518,11 +519,11 @@ public class WorkCenterMaint extends javax.swing.JPanel implements IBlueSeer {
                     ddsite.setSelectedItem(res.getString("wc_site"));
                     ddcc.setSelectedItem(res.getString("wc_cc"));
                     tarmks.setText(res.getString("wc_remarks"));
-                    tbrunrate.setText(res.getString("wc_run_rate"));
-                    tbsetuprate.setText(res.getString("wc_setup_rate"));
-                    tbbdnrate.setText(res.getString("wc_bdn_rate"));
-                    tbruncrewsize.setText(res.getString("wc_run_crew"));
-                    tbsetupcrewsize.setText(res.getString("wc_setup"));
+                    tbrunrate.setText(res.getString("wc_run_rate").replace('.',defaultDecimalSeparator));
+                    tbsetuprate.setText(res.getString("wc_setup_rate").replace('.',defaultDecimalSeparator));
+                    tbbdnrate.setText(res.getString("wc_bdn_rate").replace('.',defaultDecimalSeparator));
+                    tbruncrewsize.setText(res.getString("wc_run_crew").replace('.',defaultDecimalSeparator));
+                    tbsetupcrewsize.setText(res.getString("wc_setup").replace('.',defaultDecimalSeparator));
                 }
                
                 // set Action if Record found (i > 0)

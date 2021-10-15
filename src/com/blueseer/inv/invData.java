@@ -803,7 +803,7 @@ public class invData {
 
            String[] TypeAndPrice = new String[2];   
            String Type = "none";
-           Double price = 0.00;
+           String price = "0";
            String pricecode = "";
 
             try{
@@ -830,7 +830,7 @@ public class invData {
                                               " AND cpr_curr = " + "'" + curr + "'" +
                                               " AND cpr_type = 'LIST' "+ ";");
                        while (res.next()) {
-                           price = res.getDouble("cpr_price");
+                           price = res.getString("cpr_price").replace('.', defaultDecimalSeparator);
                            Type = "cust";
 
                         }
@@ -853,7 +853,7 @@ public class invData {
                                           " AND vpr_curr = " + "'" + curr + "'" +        
                                           " AND vpr_type = 'LIST' "+ ";");
                    while (res.next()) {
-                       price = res.getDouble("vpr_price");
+                       price = res.getString("vpr_price").replace('.', defaultDecimalSeparator);
                        Type = "vend";
 
                     }
@@ -861,14 +861,14 @@ public class invData {
 
 
                    // if there is no customer specific price...then pull price from item master it_sell_price
-                      if ( price <= 0.00 ) {
+                      if ( price.equals("0") ) {
                          if (type.equals("c")) { 
                          res = st.executeQuery("select it_sell_price as itemprice from item_mstr where it_item = " + "'" + part + "'" + ";");
                          } else {
                          res = st.executeQuery("select it_pur_price as itemprice from item_mstr where it_item = " + "'" + part + "'" + ";");    
                          }
                          while (res.next()) {
-                         price = res.getDouble("itemprice");   
+                         price = res.getString("itemprice").replace('.', defaultDecimalSeparator);   
                          Type = "item";
                          }
                       }

@@ -34,6 +34,7 @@ import com.blueseer.ctr.cusData;
 import com.blueseer.ctr.cusData.cm_mstr;
 import com.blueseer.ord.ordData;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import com.blueseer.utl.OVData;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -198,6 +199,151 @@ public class shpData {
         }
     return m;
     }
+    
+    private static int _updateShipMstr(ship_mstr x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+        int rows = 0;
+        String sql = "update ship_mstr set " 
+                + " sh_shipdate = ?, sh_ref = ?, sh_rmks = ?, "
+                + "sh_shipvia = ?, sh_pallets = ?, sh_boxes = ? "
+                + " where sh_id = ? ; ";
+        ps = con.prepareStatement(sql);
+        ps.setString(7, x.sh_id);
+            ps.setString(1, x.sh_shipdate);
+            ps.setString(2, x.sh_ref);
+            ps.setString(3, x.sh_rmks);
+            ps.setString(4, x.sh_shipvia);
+            ps.setString(5, x.sh_pallets);
+            ps.setString(6, x.sh_boxes);
+            rows = ps.executeUpdate();
+        return rows;
+    }
+    
+    private static int _updateShipDet(ship_det x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+        int rows = 0;
+        String sqlSelect = "select * from ship_det where shd_id = ? and shd_line = ?";
+        String sqlUpdate = "update ship_det set shd_part = ?, shd_so = ?, " +
+                "shd_soline = ?, shd_date = ?, shd_po = ?, shd_qty = ?, " +
+                " shd_netprice = ?, shd_disc = ?, shd_listprice = ?, shd_desc = ?, " +
+                "shd_wh = ?, shd_loc = ?, shd_taxamt = ?, shd_cont = ?, shd_serial = ?, " +
+                " shd_site = ?" +
+                 " where shd_id = ? and shd_line = ? ; ";
+        String sqlInsert = "insert into ship_det (shd_id, shd_line, shd_part, shd_so, shd_soline, " 
+                        + " shd_date, shd_po, shd_qty,"
+                        + "shd_netprice, shd_disc, shd_listprice, shd_desc, shd_wh, "
+                        + " shd_loc, shd_taxamt, shd_cont, shd_serial, shd_site  ) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); ";
+        ps = con.prepareStatement(sqlSelect); 
+        ps.setString(1, x.shd_id);
+        ps.setString(2, x.shd_line);
+        res = ps.executeQuery();
+        if (! res.isBeforeFirst()) {  // insert
+	 ps = con.prepareStatement(sqlInsert) ;
+            ps.setString(1, x.shd_id);
+            ps.setString(2, x.shd_line);
+            ps.setString(3, x.shd_part);
+            ps.setString(4, x.shd_so);
+            ps.setString(5, x.shd_soline);
+            ps.setString(6, x.shd_date);
+            ps.setString(7, x.shd_po);
+            ps.setString(8, x.shd_qty);
+            ps.setString(9, x.shd_netprice);
+            ps.setString(10, x.shd_disc);
+            ps.setString(11, x.shd_listprice);
+            ps.setString(12, x.shd_desc);
+            ps.setString(13, x.shd_wh);
+            ps.setString(14, x.shd_loc);
+            ps.setString(15, x.shd_taxamt);
+            ps.setString(16, x.shd_cont);
+            ps.setString(17, x.shd_serial);
+            ps.setString(18, x.shd_site); 
+            rows = ps.executeUpdate();
+        } else {    // update
+         ps = con.prepareStatement(sqlUpdate) ;
+            ps.setString(17, x.shd_id);
+            ps.setString(18, x.shd_line);
+            ps.setString(1, x.shd_part);
+            ps.setString(2, x.shd_so);
+            ps.setString(3, x.shd_soline);
+            ps.setString(4, x.shd_date);
+            ps.setString(5, x.shd_po);
+            ps.setString(6, x.shd_qty);
+            ps.setString(7, x.shd_netprice);
+            ps.setString(8, x.shd_disc);
+            ps.setString(9, x.shd_listprice);
+            ps.setString(10, x.shd_desc);
+            ps.setString(11, x.shd_wh);
+            ps.setString(12, x.shd_loc);
+            ps.setString(13, x.shd_taxamt);
+            ps.setString(14, x.shd_cont);
+            ps.setString(15, x.shd_serial);
+            ps.setString(16, x.shd_site); 
+            rows = ps.executeUpdate();
+        }
+            
+        return rows;
+    }
+    
+    public static String[] updateShipTransaction(String x, ArrayList<String> lines, ArrayList<ship_det> shd, ship_mstr sh) {
+        String[] m = new String[2];
+        Connection bscon = null;
+        PreparedStatement ps = null;
+        ResultSet res = null;
+        try { 
+            bscon = DriverManager.getConnection(url + db, user, pass);
+            bscon.setAutoCommit(false);
+            for (String line : lines) {
+               _deleteShipperLines(x, line, bscon);  // discard unwanted lines
+             }
+            for (ship_det z : shd) {
+                _updateShipDet(z, bscon, ps, res);
+            }
+             _updateShipMstr(sh, bscon, ps, res);  // update so_mstr
+            bscon.commit();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             try {
+                 bscon.rollback();
+                 m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordError};
+             } catch (SQLException rb) {
+                 MainFrame.bslog(rb);
+             }
+        } finally {
+            if (res != null) {
+                try {
+                    res.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (bscon != null) {
+                try {
+                    bscon.setAutoCommit(true);
+                    bscon.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
+    }
+    
+    private static void _deleteShipperLines(String x, String line, Connection con) throws SQLException { 
+        PreparedStatement ps = null; 
+        String sql = "delete from ship_det where shd_id = ? and shd_line = ?; ";
+        ps = con.prepareStatement(sql);
+        ps.setString(1, x);
+        ps.setString(2, line);
+        ps.executeUpdate();
+    }
+    
     
     public static ship_mstr createShipMstrJRT(String nbr, String site, String bol, String billto, String shipto, String so, String po, String ref, String shipdate, String orddate, String remarks, String shipvia, String shiptype) {
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");

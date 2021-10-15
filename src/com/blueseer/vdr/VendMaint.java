@@ -27,7 +27,6 @@ package com.blueseer.vdr;
 
 import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
-import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import com.blueseer.ctr.cusData;
 import com.blueseer.utl.BlueSeerUtils;
@@ -44,6 +43,9 @@ import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import static com.blueseer.utl.BlueSeerUtils.lurb2;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeer;
+import static com.blueseer.vdr.venData.addVendMstr;
+import static com.blueseer.vdr.venData.updateVendMstr;
+import com.blueseer.vdr.venData.vd_mstr;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -57,13 +59,10 @@ import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -350,7 +349,7 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeer {
         for (int i = 0; i < curr.size(); i++) {
             ddcurr.addItem(curr.get(i));
         }
-        
+         ddcurr.setSelectedItem(OVData.getDefaultCurrency());
         
         ddbank.removeAllItems();
         ArrayList bank = OVData.getbanklist();
@@ -547,132 +546,16 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeer {
     
     public String[] addRecord(String[] key) {
         String[] m = new String[2];
-         try {
-
-           Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-          
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                
-                int i = 0;
-                
-                     res = st.executeQuery("SELECT vd_addr FROM  vd_mstr where vd_addr = " + "'" + tbkey.getText() + "'" + ";");
-                    while (res.next()) {
-                        i++;
-                    }
-                    if (i == 0) {
-                    st.executeUpdate("insert into vd_mstr "
-                        + "(vd_addr, vd_name, vd_line1, vd_line2, "
-                        + "vd_line3, vd_city, vd_state, vd_zip, "
-                        + "vd_country, vd_dateadd, vd_datemod, vd_usermod, "
-                        + "vd_group, vd_market, vd_buyer, "
-                        + "vd_shipvia, vd_terms, vd_misc, vd_price_code, "
-                        + "vd_disc_code, vd_tax_code,  "
-                        + "vd_ap_acct, vd_ap_cc, vd_bank, vd_curr, vd_remarks, vd_phone, vd_email "
-                        + " ) "
-                        + " values ( " + "'" + tbkey.getText() + "'" + ","
-                        + "'" + tbname.getText().replace("'", "") + "'" + ","
-                        + "'" + tbline1.getText().replace("'", "") + "'" + ","
-                        + "'" + tbline2.getText().replace("'", "") + "'" + ","
-                        + "'" + tbline3.getText().replace("'", "") + "'" + ","
-                        + "'" + tbcity.getText() + "'" + ","
-                        + "'" + ddstate.getSelectedItem().toString() + "'" + ","
-                        + "'" + tbzip.getText() + "'" + ","
-                        + "'" + ddcountry.getSelectedItem().toString() + "'" + ","
-                        + "'" + tbdateadded.getText() + "'" + ","
-                        + "'" + tbdatemod.getText() + "'" + ","
-                            + "'" + bsmf.MainFrame.userid + "'" + ","
-                            + "'" + tbgroup.getText() + "'" + ","
-                            + "'" + tbmarket.getText() + "'" + ","
-                            + "'" + tbbuyer.getText() + "'" + ","
-                           + "'" + ddcarrier.getSelectedItem().toString() + "'" + ","
-                           + "'" + ddterms.getSelectedItem() + "'" + ","
-                           + "'" + tbmisc.getText() + "'" + ","
-                            + "'" + tbpricecode.getText() + "'" + ","
-                            + "'" + tbdisccode.getText() + "'" + ","
-                            + "'" + tbtaxcode.getText() + "'" + ","
-                            + "'" + ddaccount.getSelectedItem().toString() + "'" + ","
-                            + "'" + ddcc.getSelectedItem().toString() + "'" + ","
-                            + "'" + ddbank.getSelectedItem().toString() + "'" + ","
-                            + "'" + ddcurr.getSelectedItem().toString() + "'" + ","        
-                            + "'" + tbremarks.getText().replace("'", "") + "'"  + ","
-                            + "'" + tbmainphone.getText().replace("'", "") + "'" + ","
-                            + "'" + tbmainemail.getText().replace("'", "") + "'"        
-                        + ")"
-                        + ";");
-                        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
-                    } else {
-                       m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists}; 
-                    }
-
-                   initvars(null);
-              
-           } catch (SQLException s) {
-                MainFrame.bslog(s);
-                 m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};  
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-             m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1020, Thread.currentThread().getStackTrace()[1].getMethodName())};
-        }
-         return m;
+        m = addVendMstr(createRecord());
+        initvars(null);
+        return m;   
     }
     
     public String[] updateRecord(String[] key) {
         String[] m = new String[2];
-          try {
-             Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-              
-               st.executeUpdate("update vd_mstr set " + 
-                       " vd_name = " + "'" + tbname.getText().replace("'","") + "'" + "," +
-                       " vd_line1 = " + "'" + tbline1.getText().replace("'","") + "'" + "," +
-                       " vd_line2 = " + "'" + tbline2.getText().replace("'","") + "'" + "," +
-                       " vd_line3 = " + "'" + tbline3.getText().replace("'","") + "'" + "," +
-                       " vd_city = " + "'" + tbcity.getText().replace("'","") + "'" + "," +
-                       " vd_state = " + "'" + ddstate.getSelectedItem().toString() + "'" + "," +
-                       " vd_zip = " + "'" + tbzip.getText().replace("'","") + "'" + "," +
-                       " vd_country = " + "'" + ddcountry.getSelectedItem().toString() + "'" + "," +
-                       " vd_datemod = " + "'" + bsmf.MainFrame.dfdate.format(new java.util.Date()) + "'" + "," +
-                       " vd_usermod = " + "'" + bsmf.MainFrame.userid + "'" + "," +
-                       " vd_group = "  + "'" + tbgroup.getText() + "'" + "," +
-                       " vd_phone = "  + "'" + tbmainphone.getText().replace("'","") + "'" + "," +
-                       " vd_email = "  + "'" + tbmainemail.getText().replace("'","") + "'" + "," +        
-                       " vd_market = " + "'" + tbmarket.getText() + "'" + "," +
-                       " vd_buyer = " + "'" + tbbuyer.getText().replace("'","") + "'" + "," +
-                       " vd_shipvia = " + "'" + ddcarrier.getSelectedItem() + "'" + "," +
-                       " vd_terms = " + "'" + ddterms.getSelectedItem() + "'" + "," +
-                       " vd_misc = " + "'" + tbmisc.getText() + "'" + "," +
-                       " vd_price_code = " + "'" + tbpricecode.getText() + "'" + "," +
-                       " vd_disc_code = " + "'" + tbdisccode.getText() + "'" + "," +
-                       " vd_tax_code = " + "'" + tbtaxcode.getText() + "'" + "," +
-                       " vd_ap_acct = " + "'" + ddaccount.getSelectedItem().toString() + "'" + "," +
-                       " vd_ap_cc = " + "'" + ddcc.getSelectedItem().toString() + "'" + "," +
-                       " vd_bank = " + "'" + ddbank.getSelectedItem() + "'" + "," +
-                       " vd_curr = " + "'" + ddcurr.getSelectedItem() + "'" + "," +        
-                       " vd_remarks = " + "'" + tbremarks.getText().replace("'","") + "'" +                      
-                       " where " + 
-                        " vd_addr = " + "'" + tbkey.getText() + "'" +  ";");
-                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
-                    initvars(null);
-          
-         
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};  
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1020, Thread.currentThread().getStackTrace()[1].getMethodName())};
-        }
-         return m;
+        m = updateVendMstr(createRecord());
+        initvars(null);
+        return m;   
     }
     
     public String[] deleteRecord(String[] key) {
@@ -709,6 +592,42 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeer {
          return m;
     }
     
+    public vd_mstr createRecord() { 
+        vd_mstr x = new vd_mstr(null, 
+                tbkey.getText().toString(),
+                "", // site
+                tbname.getText(),
+                tbline1.getText(),
+                tbline2.getText(),
+                tbline3.getText(),
+                tbcity.getText(),
+                ddstate.getSelectedItem().toString(),
+                tbzip.getText(),
+                ddcountry.getSelectedItem().toString(),
+                tbdateadded.getText(),
+                tbdatemod.getText(),
+                bsmf.MainFrame.userid,
+                tbgroup.getText(),
+                tbmarket.getText(),
+                tbbuyer.getText(),
+                ddterms.getSelectedItem().toString(),
+                ddcarrier.getSelectedItem().toString(),
+                tbpricecode.getText(),
+                tbdisccode.getText(),
+                tbtaxcode.getText(),
+                ddaccount.getSelectedItem().toString(),
+                ddcc.getSelectedItem().toString(),
+                tbremarks.getText(),
+                "", // freighttype
+                ddbank.getSelectedItem().toString(),
+                ddcurr.getSelectedItem().toString(),
+                tbmisc.getText(), 
+                tbmainphone.getText(),
+                tbmainemail.getText()
+                );
+        return x;
+    }
+   
     public void lookUpFrame() {
         
         luinput.removeActionListener(lual);

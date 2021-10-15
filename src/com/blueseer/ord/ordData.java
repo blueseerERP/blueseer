@@ -357,7 +357,7 @@ public class ordData {
             bscon = DriverManager.getConnection(url + db, user, pass);
             bscon.setAutoCommit(false);
             for (String line : lines) {
-               _deleteOrderLines(x, line, bscon);  // discard unwanted lines
+               _deleteOrderLines(x, line, bscon, ps);  // discard unwanted lines
              }
             for (sod_det z : sod) {
                 if (z.sod_status.equals(getGlobalProgTag("closed"))) {
@@ -447,18 +447,35 @@ public class ordData {
             return new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordError};
         }
         Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet res = null;
         try { 
             con = DriverManager.getConnection(url + db, user, pass);
              for (String line : lines) {
-               _deleteOrderLines(x, line, con);  // add cms_det
+               _deleteOrderLines(x, line, con, ps);  // add cms_det
              }
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
         } catch (SQLException s) {
              MainFrame.bslog(s);
              m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordError};
         } finally {
+            if (res != null) {
+                try {
+                    res.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
             if (con != null) {
                 try {
+                    con.setAutoCommit(true);
                     con.close();
                 } catch (SQLException ex) {
                     MainFrame.bslog(ex);
@@ -468,14 +485,13 @@ public class ordData {
     return m;
     }
     
-    private static void _deleteOrderLines(String x, String line, Connection con) throws SQLException { 
-        PreparedStatement ps = null; 
+    private static void _deleteOrderLines(String x, String line, Connection con, PreparedStatement ps) throws SQLException { 
+        
         String sql = "delete from sod_det where sod_nbr = ? and sod_line = ?; ";
         ps = con.prepareStatement(sql);
         ps.setString(1, x);
         ps.setString(2, line);
         ps.executeUpdate();
-        ps.close();
     }
     
     
@@ -915,6 +931,16 @@ public class ordData {
             
         return rows;
     }
+    
+
+    private static void _deleteServiceOrderLines(String x, String line, Connection con, PreparedStatement ps) throws SQLException { 
+        
+        String sql = "delete from svd_det where svd_nbr = ? and svd_line = ?; ";
+        ps = con.prepareStatement(sql);
+        ps.setString(1, x);
+        ps.setString(2, line);
+        ps.executeUpdate();
+    }
         
      // update order master.... multiple table transaction function
     public static String[] updateServiceOrderTransaction(String x, ArrayList<String> lines, ArrayList<svd_det> svd, sv_mstr sv) {
@@ -926,7 +952,7 @@ public class ordData {
             bscon = DriverManager.getConnection(url + db, user, pass);
             bscon.setAutoCommit(false);
             for (String line : lines) {
-               _deleteOrderLines(x, line, bscon);  // discard unwanted lines
+               _deleteServiceOrderLines(x, line, bscon, ps);  // discard unwanted lines
              }
             for (svd_det z : svd) {
                 if (z.svd_status.equals(getGlobalProgTag("closed"))) {

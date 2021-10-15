@@ -19145,7 +19145,7 @@ MainFrame.bslog(e);
                             + "'" + voucherdet.getValueAt(j, 0).toString() + "'" + ","
                             + "'" + voucherdet.getValueAt(j, 1).toString() + "'" + ","
                             + "'" + voucherdet.getValueAt(j, 2).toString() + "'" + ","
-                            + "'" + voucherdet.getValueAt(j, 3).toString() + "'" + ","
+                            + "'" + bsFormatDouble(bsParseDouble(voucherdet.getValueAt(j, 3).toString())).replace(defaultDecimalSeparator, '.') + "'" + ","
                             + "'" + bsFormatDouble(bsParseDouble(voucherdet.getValueAt(j, 4).toString())).replace(defaultDecimalSeparator, '.') + "'" + ","
                             + "'" + dfdate.format(effdate) + "'" + ","
                             + "'" + invoice + "'" + ","
@@ -19177,15 +19177,15 @@ MainFrame.bslog(e);
                        
                            if (dbtype.equals("sqlite")) { 
                             st.executeUpdate("update recv_det  "
-                            + " set rvd_voqty =  " + "'" + rvdvoqty + "'" + ","
+                            + " set rvd_voqty =  " + "'" + bsFormatDouble(rvdvoqty).replace(defaultDecimalSeparator, '.') + "'" + ","
                             + " rvd_status = " + "'" + status + "'"
                             + " where rvd_id = " + "'" + voucherdet.getValueAt(j, 0).toString() + "'"
                             + " AND rvd_rline = " + "'" + voucherdet.getValueAt(j, 1).toString() + "'"
                             );
                            } else {
                             st.executeUpdate("update recv_det as r1 inner join recv_det as r2 "
-                            + " set r1.rvd_voqty = r2.rvd_voqty + " +  "'" + qty + "'" + ","
-                            + " r1.rvd_status = case when r1.rvd_qty <= ( r2.rvd_voqty + " + "'" + qty + "'" +  ") then '1' else '0' end " 
+                            + " set r1.rvd_voqty = r2.rvd_voqty + " +  "'" + bsFormatDouble(qty).replace(defaultDecimalSeparator, '.') + "'" + ","
+                            + " r1.rvd_status = case when r1.rvd_qty <= ( r2.rvd_voqty + " + "'" + bsFormatDouble(qty).replace(defaultDecimalSeparator, '.') + "'" +  ") then '1' else '0' end " 
                             + " where r1.rvd_id = " + "'" + voucherdet.getValueAt(j, 0).toString() + "'"
                             + " AND r1.rvd_rline = " + "'" + voucherdet.getValueAt(j, 1).toString() + "'"
                             + " AND r2.rvd_id = " + "'" + voucherdet.getValueAt(j, 0).toString() + "'"
@@ -19214,8 +19214,8 @@ MainFrame.bslog(e);
                         + " values ( " + "'" + vend + "'" + ","
                               + "'" + site + "'" + ","
                         + "'" + nbr + "'" + ","
-                        + "'" + currformatDoubleUS(amt) + "'" + ","
-                        + "'" + currformatDoubleUS(baseamt) + "'" + ","        
+                        + "'" + currformatDoubleUS(amt).replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "'" + currformatDoubleUS(baseamt).replace(defaultDecimalSeparator, '.') + "'" + ","        
                         + "'" + "V" + "'" + ","
                         + "'" + invoice + "'" + ","
                         + "'" + remarks + "'" + ","

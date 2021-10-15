@@ -363,10 +363,11 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
     
     public String[] addRecord(String[] x) {
         String[] m = new String[2];
+        ArrayList<String[]> contacts = tableToArrayList();
         if (cbshipto.isSelected()) {
-        m = addCustomerTransaction(createRecord(), contacttable, createCMSDet(true));
+        m = addCustomerTransaction(createRecord(), contacts, createCMSDet(true));
         } else { 
-        m = addCustomerTransaction(createRecord(), contacttable, null);    
+        m = addCustomerTransaction(createRecord(), contacts, null);    
         }   
         initvars(null);
         return m;   
@@ -467,8 +468,8 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
                 ddlabel.getSelectedItem().toString(),
                 tbshpformat.getText(),
                 tbinvformat.getText(),
-                tbphone.getText(),
-                tbemail.getText()
+                tbmainphone.getText(),
+                tbmainemail.getText()
                 );
         return x;
     }
@@ -885,6 +886,23 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
         ddcontacttype.setSelectedIndex(0);
     }
    
+    public ArrayList<String[]> tableToArrayList() {
+        ArrayList<String[]> list = new ArrayList<String[]>();
+         for (int j = 0; j < contacttable.getRowCount(); j++) {
+             String[] s = new String[]{
+                 contacttable.getValueAt(j, 0).toString(),
+                 contacttable.getValueAt(j, 1).toString(),
+                 contacttable.getValueAt(j, 2).toString(),
+                 contacttable.getValueAt(j, 3).toString(),
+                 contacttable.getValueAt(j, 4).toString(),
+                 contacttable.getValueAt(j, 5).toString()};
+             list.add(s);
+         }
+        
+        return list;
+    }
+   
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

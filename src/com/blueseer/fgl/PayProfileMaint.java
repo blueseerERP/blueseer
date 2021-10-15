@@ -29,6 +29,7 @@ import bsmf.MainFrame;
 import com.blueseer.utl.BlueSeerUtils;
 import static bsmf.MainFrame.backgroundcolor;
 import static bsmf.MainFrame.backgroundpanel;
+import static bsmf.MainFrame.defaultDecimalSeparator;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
@@ -109,7 +110,7 @@ public class PayProfileMaint extends javax.swing.JPanel {
                     res = st.executeQuery("SELECT * FROM  pay_profdet where " +
                             " paypd_parentcode = " + "'" + code + "'" + ";");
                     while (res.next()) {
-                     profilemodel.addRow(new Object[]{res.getString("paypd_desc"), res.getString("paypd_type"), res.getString("paypd_acct"), res.getString("paypd_cc"), res.getString("paypd_amt"), res.getString("paypd_amttype"), res.getBoolean("paypd_enabled")});   
+                     profilemodel.addRow(new Object[]{res.getString("paypd_desc"), res.getString("paypd_type"), res.getString("paypd_acct"), res.getString("paypd_cc"), res.getString("paypd_amt").replace('.',defaultDecimalSeparator), res.getString("paypd_amttype"), res.getBoolean("paypd_enabled")});   
                     }
            
                     if (i > 0) {
@@ -607,7 +608,7 @@ public class PayProfileMaint extends javax.swing.JPanel {
                         + "'" + tableelement.getValueAt(j, 1).toString() + "'" + ","
                         + "'" + tableelement.getValueAt(j, 2).toString() + "'" + ","
                         + "'" + tableelement.getValueAt(j, 3).toString() + "'" + ","    
-                        + "'" + tableelement.getValueAt(j, 4).toString() + "'" + ","
+                        + "'" + tableelement.getValueAt(j, 4).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
                         + "'" + tableelement.getValueAt(j, 5).toString() + "'" + ","            
                         + "'" + BlueSeerUtils.boolToInt(Boolean.valueOf(tableelement.getValueAt(j, 6).toString())) + "'" 
                         + " );" );
@@ -700,7 +701,7 @@ public class PayProfileMaint extends javax.swing.JPanel {
                             + "'" + tableelement.getValueAt(j, 1).toString() + "'" + ","
                             + "'" + tableelement.getValueAt(j, 2).toString() + "'" + ","
                             + "'" + tableelement.getValueAt(j, 3).toString() + "'" + ","    
-                            + "'" + tableelement.getValueAt(j, 4).toString() + "'" + ","
+                            + "'" + tableelement.getValueAt(j, 4).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
                             + "'" + tableelement.getValueAt(j, 5).toString() + "'" + ","              
                             + "'" + BlueSeerUtils.boolToInt(Boolean.valueOf(tableelement.getValueAt(j, 6).toString())) + "'" 
                             + " );" );

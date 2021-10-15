@@ -44,6 +44,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import static bsmf.MainFrame.con;
 import static bsmf.MainFrame.db;
+import static bsmf.MainFrame.defaultDecimalSeparator;
 import static bsmf.MainFrame.dfdate;
 import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.mydialog;
@@ -52,6 +53,7 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
@@ -615,7 +617,7 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeer {
                              + "'" + tbssn.getText().toString() + "'" + ","
                              + "'" + autoclock + "'" + ","
                              + "'" + isactive + "'" + ","        
-                             + "'" + tbrate.getText().toString() + "'" + ","
+                             + "'" + tbrate.getText().toString().replace(defaultDecimalSeparator,'.') + "'" + ","
                              + "'" + tbprofile.getText().toString() + "'" + ","  
                              + "'" + tbaccount.getText().toString() + "'" + ","  
                              + "'" + tbroute.getText().toString() + "'" + ","   
@@ -718,7 +720,7 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeer {
                                 + "emp_jobtitle = " + "'" + tbtitle.getText().toString() + "'" + ","
                                 + "emp_ssn = " + "'" + tbssn.getText().toString() + "'" + ","
                                 + "emp_autoclock = " + "'" + autoclock + "'" + ","
-                                + "emp_rate = " + "'" + tbrate.getText().toString() + "'" + ","
+                                + "emp_rate = " + "'" + tbrate.getText().toString().replace(defaultDecimalSeparator,'.') + "'" + ","
                                 + "emp_dob = " + dobdatestr 
                                 + " where emp_nbr = " + "'" + tbkey.getText().toString() + "'"
                                 + ";");
@@ -811,7 +813,7 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeer {
                         tbemercontact.setText(res.getString("emp_emer_contact"));
                         tbemernumber.setText(res.getString("emp_emer_phone"));
                         tbssn.setText(res.getString("emp_ssn"));
-                        tbrate.setText(res.getString("emp_rate"));
+                        tbrate.setText(res.getString("emp_rate").replace('.',defaultDecimalSeparator));
                         tbtitle.setText(res.getString("emp_jobtitle"));
                         tbefladays.setText(res.getString("emp_efla_days"));
                         tbprofile.setText(res.getString("emp_profile"));
@@ -836,7 +838,7 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeer {
                     if (i > 0) {
                      res = st.executeQuery("SELECT * FROM  emp_exception where empx_nbr = " + "'" + x[0] + "'" + ";");
                      while (res.next()) {
-                      excmodel.addRow(new Object[]{ res.getString("empx_type"), res.getString("empx_desc"), res.getString("empx_amttype"), res.getString("empx_amt")
+                      excmodel.addRow(new Object[]{ res.getString("empx_type"), res.getString("empx_desc"), res.getString("empx_amttype"), res.getString("empx_amt").replace('.',defaultDecimalSeparator)
                       });
                      }
                     }
@@ -1040,8 +1042,8 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeer {
                                             "deduction",
                                             "",
                                             res.getString("paypd_desc"),
-                                            res.getString("paypd_amt"),
-                                            df.format(amount * (res.getDouble("paypd_amt") / 100))
+                                            res.getString("paypd_amt").replace('.',defaultDecimalSeparator),
+                                            df.format(amount * (res.getDouble("paypd_amt") / 100)).replace('.',defaultDecimalSeparator)
                                             } );
                 
                 }
@@ -1065,8 +1067,8 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeer {
                                             "deduction",
                                             "",
                                             res.getString("empx_desc"),
-                                            res.getString("empx_amt"),
-                                            empexception
+                                            res.getString("empx_amt").replace('.',defaultDecimalSeparator),
+                                            bsFormatDouble(empexception).replace('.',defaultDecimalSeparator)
                                             } );
                 }
                 

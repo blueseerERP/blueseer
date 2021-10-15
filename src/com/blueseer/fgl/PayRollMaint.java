@@ -33,6 +33,7 @@ import com.blueseer.utl.BlueSeerUtils;
 import static bsmf.MainFrame.checkperms;
 import static bsmf.MainFrame.con;
 import static bsmf.MainFrame.db;
+import static bsmf.MainFrame.defaultDecimalSeparator;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.FileDialog;
@@ -323,11 +324,11 @@ public class PayRollMaint extends javax.swing.JPanel {
                             + "'" + tablereport.getValueAt(j, 9).toString() + "'" + ","
                             + "'" + tablereport.getValueAt(j, 10).toString() + "'" + ","
                             + "'" + tablereport.getValueAt(j, 11).toString() + "'" + "," 
-                            + "'" + tablereport.getValueAt(j, 12).toString() + "'" + ","  // rate    
+                            + "'" + tablereport.getValueAt(j, 12).toString().replace(defaultDecimalSeparator, '.') + "'" + ","  // rate    
                             + "'" + "paid" + "'" + ","    // status
                             + "'" + String.valueOf(checknbr) + "'" + ","  // checknumber   
-                            + "'" + tablereport.getValueAt(j, 13).toString() + "'" + ","  // tothours  
-                            + "'" + tablereport.getValueAt(j, 14).toString() + "'" + ","  // pay amount     
+                            + "'" + tablereport.getValueAt(j, 13).toString().replace(defaultDecimalSeparator, '.') + "'" + ","  // tothours  
+                            + "'" + tablereport.getValueAt(j, 14).toString().replace(defaultDecimalSeparator, '.') + "'" + ","  // pay amount     
                             + "'" + paydate + "'"   // paydate  
                             + ")"
                             + ";");
@@ -349,8 +350,8 @@ public class PayRollMaint extends javax.swing.JPanel {
                                 + "''" + ","  // profileline          
                                 + "'" + String.valueOf(checknbr) + "'" + ","  // checknumber  
                                 + "'" + modelearnings.getValueAt(e, 3).toString() + "'" + ","
-                                + "'" + modelearnings.getValueAt(e, 4).toString() + "'" + ","
-                                + "'" + modelearnings.getValueAt(e, 5).toString() + "'" 
+                                + "'" + modelearnings.getValueAt(e, 4).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + modelearnings.getValueAt(e, 5).toString().replace(defaultDecimalSeparator, '.') + "'" 
                                 + ")"
                                 + ";");
                               }
@@ -370,8 +371,8 @@ public class PayRollMaint extends javax.swing.JPanel {
                                 + "'" + modeldeduct.getValueAt(e, 4).toString() + "'" + ","        
                                 + "'" + String.valueOf(checknbr) + "'" + ","  // checknumber  
                                 + "'" + modeldeduct.getValueAt(e, 5).toString() + "'" + ","
-                                + "'" + modeldeduct.getValueAt(e, 6).toString() + "'" + ","
-                                + "'" + modeldeduct.getValueAt(e, 7).toString() + "'" 
+                                + "'" + modeldeduct.getValueAt(e, 6).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + modeldeduct.getValueAt(e, 7).toString().replace(defaultDecimalSeparator, '.') + "'" 
                                 + ")"
                                 + ";");
                                       netdeduction += Double.valueOf(modeldeduct.getValueAt(e, 7).toString());
@@ -479,8 +480,8 @@ public class PayRollMaint extends javax.swing.JPanel {
                                             "",
                                             "",
                                             res.getString("clc_desc"),
-                                            res.getString("e.emp_rate"),
-                                            df.format(res.getDouble("t.tothrs") * res.getDouble("e.emp_rate"))
+                                            res.getString("e.emp_rate").replace('.',defaultDecimalSeparator),
+                                            df.format(res.getDouble("t.tothrs") * res.getDouble("e.emp_rate")).replace('.',defaultDecimalSeparator)
                                             } );
                 
                 }
@@ -539,8 +540,8 @@ public class PayRollMaint extends javax.swing.JPanel {
                                             res.getString("paypd_parentcode"),
                                             res.getString("paypd_id"),
                                             res.getString("paypd_desc"),
-                                            res.getString("paypd_amt"),
-                                            df.format(amount * (res.getDouble("paypd_amt") / 100))
+                                            res.getString("paypd_amt").replace('.',defaultDecimalSeparator),
+                                            df.format(amount * (res.getDouble("paypd_amt") / 100)).replace('.',defaultDecimalSeparator)
                                             } );
                 
                 }
@@ -566,7 +567,7 @@ public class PayRollMaint extends javax.swing.JPanel {
                                             "",  // profile
                                             "",  // profile line
                                             res.getString("empx_desc"),
-                                            res.getString("empx_amt"),
+                                            res.getString("empx_amt").replace('.',defaultDecimalSeparator),
                                             empexception
                                             } );
                 }
@@ -636,7 +637,7 @@ public class PayRollMaint extends javax.swing.JPanel {
                                             res.getString("t.outdate"),
                                             res.getString("t.outtime"),
                                             res.getString("t.outtime_adj"),
-                                            res.getString("t.tothrs")
+                                            res.getString("t.tothrs").replace('.',defaultDecimalSeparator)
                                             } );
                     
                     
@@ -688,9 +689,9 @@ public class PayRollMaint extends javax.swing.JPanel {
                                             res.getString("pyd_emptype"),
                                             res.getString("pyd_payprofile"),
                                             res.getString("pyd_empjobtitle"),
-                                            res.getString("pyd_emprate"),
-                                            res.getString("pyd_tothours"),
-                                            res.getString("pyd_payamt"),
+                                            res.getString("pyd_emprate").replace('.',defaultDecimalSeparator),
+                                            res.getString("pyd_tothours").replace('.',defaultDecimalSeparator),
+                                            res.getString("pyd_payamt").replace('.',defaultDecimalSeparator),
                                             res.getString("pyd_paydate")
                                             } );
                     }
@@ -1563,9 +1564,9 @@ public class PayRollMaint extends javax.swing.JPanel {
                                             res.getString("e.emp_type"),
                                             res.getString("e.emp_profile"),
                                             res.getString("e.emp_jobtitle"),
-                                            res.getString("e.emp_rate"),
-                                            res.getString("t.tothrs"),
-                                            String.valueOf(amount),
+                                            res.getString("e.emp_rate").replace('.',defaultDecimalSeparator),
+                                            res.getString("t.tothrs").replace('.',defaultDecimalSeparator),
+                                            String.valueOf(amount).replace('.',defaultDecimalSeparator),
                                             dfdate.format(dcpay.getDate())
                                             } );
                     }
@@ -1623,8 +1624,8 @@ public class PayRollMaint extends javax.swing.JPanel {
                                             res.getString("emp_profile"),
                                             res.getString("emp_jobtitle"),
                                             res.getString("emp_rate"),
-                                            String.valueOf(hours),
-                                            String.valueOf(amount),
+                                            String.valueOf(hours).replace('.',defaultDecimalSeparator),
+                                            String.valueOf(amount).replace('.',defaultDecimalSeparator),
                                             dfdate.format(paydate)
                                             } );
                     } // while

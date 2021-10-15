@@ -38,6 +38,8 @@ import static com.blueseer.pur.purData.getPOLines;
 import com.blueseer.pur.purData.po_mstr;
 import com.blueseer.pur.purData.pod_mstr;
 import static com.blueseer.pur.purData.updatePOTransaction;
+import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
+import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsdate;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
@@ -60,7 +62,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DateFormat;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -114,7 +115,6 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeer {
      String blanket = "";
      String status = "";
       boolean venditemonly = true;  
-     DecimalFormat df = new DecimalFormat("#0.0000", new DecimalFormatSymbols(Locale.US));
      
    
      
@@ -353,11 +353,11 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeer {
         tbkey.setEditable(true);
         tbkey.setForeground(Color.black);
         
-        listprice.setText("0.00");
-        netprice.setText("0.00");
+        listprice.setText("0");
+        netprice.setText("0");
         netprice.setEditable(false);
         qtyshipped.setText("0");
-        discount.setText("0.00");
+        discount.setText("0");
         
         lbvend.setText("");
        
@@ -408,7 +408,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeer {
         for (String code : mylist) {
             ddcurr.addItem(code);
         }
-        
+        ddcurr.setSelectedItem(OVData.getDefaultCurrency());
         
          venditemonly = OVData.isVendItemOnly();
         if (! venditemonly) {
@@ -620,12 +620,12 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeer {
                       res.getString("it_desc"), 
                       res.getString("pod_vendpart"), 
                       res.getString("pod_nbr"), 
-                      res.getString("pod_ord_qty"), 
+                      res.getString("pod_ord_qty").replace('.', defaultDecimalSeparator), 
                       res.getString("pod_uom"), 
-                      res.getString("pod_listprice"),
-                      res.getDouble("pod_disc"), 
-                      res.getString("pod_netprice"), 
-                      res.getString("pod_rcvd_qty"), 
+                      res.getString("pod_listprice").replace('.', defaultDecimalSeparator),
+                      res.getString("pod_disc").replace('.', defaultDecimalSeparator), 
+                      res.getString("pod_netprice").replace('.', defaultDecimalSeparator), 
+                      res.getString("pod_rcvd_qty").replace('.', defaultDecimalSeparator), 
                       res.getString("pod_status")});
                 }
                
@@ -915,58 +915,25 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeer {
        
      // additional functions
     public void setPrice() {
-         DecimalFormat df = new DecimalFormat("#0.0000", new DecimalFormatSymbols(Locale.US));
          if (dduom.getItemCount() > 0 && ddpart.getItemCount() > 0 && ddvend.getItemCount() > 0 && ! ddcurr.getSelectedItem().toString().isEmpty()) {
                 String[] TypeAndPrice = invData.getItemPrice("v", ddvend.getSelectedItem().toString(), ddpart.getSelectedItem().toString(), 
                         dduom.getSelectedItem().toString(), ddcurr.getSelectedItem().toString());
                 String pricetype = TypeAndPrice[0].toString();
-                Double price = Double.valueOf(TypeAndPrice[1]);
+                double price = bsParseDouble(TypeAndPrice[1]);
              //   
-                listprice.setText(df.format(price));
+                listprice.setText(bsFormatDouble(price));
                 if (pricetype.equals("vend")) {
                     listprice.setBackground(Color.green);
                 }
                 if (pricetype.equals("item")) {
                     listprice.setBackground(Color.white);
                 }
-               // discount.setText(df.format(OVData.getPartDiscFromVend(ddvend.getSelectedItem().toString())));
-                setnetprice();
+                 setnetprice();
          }
      }
     
     public boolean validateDetail() {
         boolean canproceed = true;
-        Pattern p = Pattern.compile("^[0-9]\\d*(\\.\\d+)?$");
-        Matcher m = p.matcher(listprice.getText());
-        if (!m.find() || listprice.getText() == null) {
-            bsmf.MainFrame.show(getMessageTag(1028));
-            canproceed = false;
-        }
-        
-        p = Pattern.compile("^[0-9]\\d*(\\.\\d+)?$");
-        if (! discount.getText().isEmpty()) {
-            m = p.matcher(discount.getText());
-            if (!m.find()) {
-                bsmf.MainFrame.show(getMessageTag(1028));
-                canproceed = false;
-            }
-        }
-        
-        p = Pattern.compile("^[0-9]\\d*(\\.\\d+)?$");
-        m = p.matcher(netprice.getText());
-        if (!m.find() || netprice.getText() == null) {
-            bsmf.MainFrame.show(getMessageTag(1028));
-            canproceed = false;
-        }
-        
-        p = Pattern.compile("^[1-9]\\d*$");
-        m = p.matcher(qtyshipped.getText());
-        if (!m.find() || qtyshipped.getText() == null) {
-            bsmf.MainFrame.show(getMessageTag(1028));
-            canproceed = false;
-        }
-        
-         
         
         if (OVData.isValidItem(ddpart.getSelectedItem().toString()) && ! OVData.isValidUOMConversion(ddpart.getSelectedItem().toString(), ddsite.getSelectedItem().toString(), dduom.getSelectedItem().toString())) {
                 bsmf.MainFrame.show(getMessageTag(1026));
@@ -1022,20 +989,20 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeer {
                    // custnumber.setBorder(BorderFactory.createLineBorder(Color.red));
                     vendnumber.setEditable(true);
                     
-                    discount.setText("0.00");
-                    listprice.setText("0.00");
+                    discount.setText("0");
+                    listprice.setText("0");
                     listprice.setBackground(Color.white);
                     
-                    netprice.setText("0.00");
+                    netprice.setText("0");
                     qtyshipped.setText("0");
                 }
                 
                 }
                 
              if (k >= 0) {   
-            discount.setText("0.00");
-            listprice.setText("0.00");
-            netprice.setText("0.00");
+            discount.setText("0");
+            listprice.setText("0");
+            netprice.setText("0");
             qtyshipped.setText("0");
             tbdesc.setText(invData.getItemDesc(ddpart.getSelectedItem().toString()));
             vendnumber.setText(OVData.getVendPartFromPart(ddvend.getSelectedItem().toString(),ddpart.getSelectedItem().toString()));
@@ -1069,8 +1036,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeer {
         Double disc = 0.00;
         Double list = 0.00;
         Double net = 0.00;
-        DecimalFormat df = new DecimalFormat("#0.0000", new DecimalFormatSymbols(Locale.US));
-        
+         
         if (discount.getText().isEmpty() || Double.parseDouble(discount.getText().toString()) == 0) {
             netprice.setText(listprice.getText());
         } else {
@@ -1079,11 +1045,11 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeer {
              listprice.setText("0");
              netprice.setText("0");
            } else {               
-           disc = Double.parseDouble(discount.getText().toString());
-           list = Double.parseDouble(listprice.getText().toString());
+           disc = bsParseDouble(discount.getText().toString());
+           list = bsParseDouble(listprice.getText().toString());
             
            net = list - ((disc / 100) * list);
-           netprice.setText(df.format(net));
+           netprice.setText(bsFormatDouble(net));
            }
         }
     }
@@ -1113,12 +1079,11 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeer {
     }
     
     public void sumdollars() {
-        DecimalFormat df = new DecimalFormat("#.00", new DecimalFormatSymbols(Locale.US));
-        double dol = 0;
+       double dol = 0;
          for (int j = 0; j < orddet.getRowCount(); j++) {
-             dol = dol + ( Double.valueOf(orddet.getValueAt(j, 5).toString()) * Double.valueOf(orddet.getValueAt(j, 9).toString()) ); 
+             dol = dol + ( bsParseDouble(orddet.getValueAt(j, 5).toString()) * bsParseDouble(orddet.getValueAt(j, 9).toString()) ); 
          }
-         tbtotdollars.setText(df.format(dol));
+         tbtotdollars.setText(bsFormatDouble(dol));
          lblcurr.setText(ddcurr.getSelectedItem().toString());
     }
    
@@ -1171,7 +1136,6 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeer {
     
      public void retotal() {
         
-        DecimalFormat df = new DecimalFormat("#.00", new DecimalFormatSymbols(Locale.US));
         double dol = 0;
         double newdisc = 0;
         double newprice = 0;
@@ -1179,7 +1143,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeer {
         double listprice = 0;
         
          for (int j = 0; j < orddet.getRowCount(); j++) {
-             listprice = Double.valueOf(orddet.getValueAt(j, 7).toString());
+             listprice = bsParseDouble(orddet.getValueAt(j, 7).toString());
              orddet.setValueAt(String.valueOf(newdisc), j, 8);
              if (newdisc > 0) {
              newprice = listprice - (listprice * (newdisc / 100));
@@ -1965,7 +1929,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeer {
             discount.setBackground(Color.white);
         }
         if (discount.getText().isEmpty())
-            discount.setText("0.00");
+            discount.setText("0");
         setnetprice();
     }//GEN-LAST:event_discountFocusLost
 

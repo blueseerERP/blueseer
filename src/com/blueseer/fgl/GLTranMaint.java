@@ -35,7 +35,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DateFormat;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -46,6 +45,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import static bsmf.MainFrame.con;
 import static bsmf.MainFrame.db;
+import static bsmf.MainFrame.defaultDecimalSeparator;
 import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.mydialog;
 import static bsmf.MainFrame.pass;
@@ -53,7 +53,10 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
+import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.currformat;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -99,7 +102,7 @@ public class GLTranMaint extends javax.swing.JPanel {
      * Creates new form UserMaintPanel
      */
     
-    Double positiveamt = 0.00;
+    double positiveamt = 0;
     String type = "";
     
     public static javax.swing.table.DefaultTableModel lookUpModel = null;
@@ -123,16 +126,17 @@ public class GLTranMaint extends javax.swing.JPanel {
 };
     
     public void tallyamount() {
-         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
-        double amt = 0.00;
-        positiveamt = 0.00;
+        
+        double amt = 0;
+        positiveamt = 0;
         for (int i = 0; i < transtable.getRowCount(); i++) {
-             amt += Double.valueOf(transtable.getValueAt(i, 4).toString());
-             if (Double.valueOf(transtable.getValueAt(i, 4).toString()) > 0) {
-                 positiveamt += Double.valueOf(transtable.getValueAt(i, 4).toString());
+             amt += bsParseDouble(transtable.getValueAt(i, 4).toString());
+             if (bsParseDouble(transtable.getValueAt(i, 4).toString()) > 0) {
+                 positiveamt += bsParseDouble(transtable.getValueAt(i, 4).toString());
              }
           }
-        labeltotal.setText(df.format(amt));
+        
+        labeltotal.setText(bsFormatDouble(amt));
     }
     
     public void clearinput() {
@@ -214,11 +218,10 @@ public class GLTranMaint extends javax.swing.JPanel {
         ArrayList cur = OVData.getCurrlist();
         for (int i = 0; i < cur.size(); i++) {
             ddcurr.addItem(cur.get(i));
-        }
-            ddcurr.setSelectedIndex(0);    
-      
+        } 
+        ddcurr.setSelectedItem(OVData.getDefaultCurrency());
+        
        ddsite.setSelectedItem(OVData.getDefaultSite());
-       ddcurr.setSelectedItem(OVData.getDefaultCurrency());
        tbuserid.setText(bsmf.MainFrame.userid);
     }
     
@@ -269,7 +272,6 @@ public class GLTranMaint extends javax.swing.JPanel {
     
     public void getGLTran(String refid) {
         try {
-            DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
             Class.forName(bsmf.MainFrame.driver).newInstance();
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
             
@@ -290,7 +292,7 @@ public class GLTranMaint extends javax.swing.JPanel {
                     res.getString("glt_acct"),
                     res.getString("glt_cc"),
                     res.getString("glt_desc"),
-                    Double.valueOf(df.format(res.getDouble("glt_amt")))
+                    currformat(res.getString("glt_amt"))
                     });
                 }
                 
@@ -928,15 +930,15 @@ public class GLTranMaint extends javax.swing.JPanel {
                 boolean proceed = true;
                 String nextstartdate = "";
                 Double amt = 0.00;
-                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
                 
-                if (  Double.compare(Double.valueOf(tbcontrolamt.getText().toString()), positiveamt) != 0 ) {
+                if (  Double.compare(bsParseDouble(tbcontrolamt.getText()), positiveamt) != 0 ) {
                     proceed = false;
-                    bsmf.MainFrame.show(getMessageTag(1039, df.format(Double.valueOf(tbcontrolamt.getText())) + "/" + String.valueOf(df.format(positiveamt))));
+                    String s_positiveamt = bsFormatDouble(positiveamt);
+                    bsmf.MainFrame.show(getMessageTag(1039, currformat(tbcontrolamt.getText()) + "/" + s_positiveamt));
                     return;
                 }
                 
-                if (Double.valueOf(labeltotal.getText().toString()) != 0) {
+                if (bsParseDouble(labeltotal.getText().toString()) != 0) {
                     proceed = false;
                     bsmf.MainFrame.show(getMessageTag(1040));
                     return;
@@ -988,7 +990,7 @@ public class GLTranMaint extends javax.swing.JPanel {
                 
                 if (proceed) {
                     for (int i = 0; i < transtable.getRowCount(); i++) {
-                        amt = Double.valueOf(transtable.getValueAt(i, 4).toString());
+                        amt = bsParseDouble(transtable.getValueAt(i, 4).toString());
                         
                         st.executeUpdate("insert into gl_tran "
                         + "(glt_line, glt_acct, glt_cc, glt_effdate, glt_amt, glt_base_amt, glt_curr, glt_base_curr, glt_ref, glt_site, glt_type, glt_desc, glt_userid, glt_entdate )"
@@ -997,8 +999,8 @@ public class GLTranMaint extends javax.swing.JPanel {
                         + "'" + transtable.getValueAt(i, 1).toString() + "'" + ","
                         + "'" + transtable.getValueAt(i, 2).toString() + "'" + ","
                         + "'" + dfdate.format(effdate.getDate()) + "'" + ","
-                        + "'" + transtable.getValueAt(i, 4).toString() + "'" + ","
-                        + "'" + transtable.getValueAt(i, 4).toString() + "'" + ","
+                        + "'" + transtable.getValueAt(i, 4).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "'" + transtable.getValueAt(i, 4).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
                         + "'" + curr + "'" + ","
                         + "'" + basecurr + "'" + ","        
                         + "'" + tbref.getText().toString() + "'" + ","
@@ -1019,7 +1021,7 @@ public class GLTranMaint extends javax.swing.JPanel {
                         + "'" + transtable.getValueAt(i, 1).toString() + "'" + ","
                         + "'" + transtable.getValueAt(i, 2).toString() + "'" + ","
                         + "'" + nextstartdate + "'" + ","
-                        + "'" + String.valueOf(-1 * amt) + "'" + ","
+                        + "'" + String.valueOf(-1 * amt).replace(defaultDecimalSeparator, '.') + "'" + ","
                         + "'" + tbref.getText().toString() + "'" + ","
                         + "'" + ddsite.getSelectedItem().toString() + "'" + ","
                         + "'" + type + "'" + ","
@@ -1086,8 +1088,7 @@ public class GLTranMaint extends javax.swing.JPanel {
         String prodline = "";
         String status = "";
         String op = "";
-        DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
-        transtable.setModel(transmodel);
+       transtable.setModel(transmodel);
         
         if (tbdesc.getText().isEmpty()) {
              bsmf.MainFrame.show(getMessageTag(1024, "description"));
@@ -1125,7 +1126,7 @@ public class GLTranMaint extends javax.swing.JPanel {
                 ddacct.getSelectedItem().toString(),
                 ddcc.getSelectedItem().toString(),
                 tbdesc.getText(),
-                Double.valueOf(df.format(Double.valueOf(tbamt.getText())))
+                tbamt.getText()
             });
             tallyamount();
             clearinput();

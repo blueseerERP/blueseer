@@ -634,7 +634,7 @@ public class ShipperMaint extends javax.swing.JPanel {
                       res.getString("shd_desc"),
                       res.getString("shd_wh"),
                       res.getString("shd_loc"),
-                      res.getString("shd_disc"),
+                      res.getString("shd_disc").replace('.', defaultDecimalSeparator),
                       res.getString("shd_listprice").replace('.', defaultDecimalSeparator),
                       res.getString("shd_taxamt").replace('.', defaultDecimalSeparator),
                       res.getString("shd_serial"),

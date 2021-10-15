@@ -377,6 +377,7 @@ public class InvoiceMaint extends javax.swing.JPanel {
         for (int i = 0; i < curr.size(); i++) {
             ddcurr.addItem(curr.get(i));
         }
+        ddcurr.setSelectedItem(OVData.getDefaultCurrency());
         
         ddsite.removeAllItems();
         ArrayList<String> mylist = OVData.getSiteList();

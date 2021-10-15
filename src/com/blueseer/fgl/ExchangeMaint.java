@@ -27,6 +27,7 @@ SOFTWARE.
 package com.blueseer.fgl;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.defaultDecimalSeparator;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
@@ -80,7 +81,7 @@ public class ExchangeMaint extends javax.swing.JPanel {
                 int i = 0;
                 res = st.executeQuery("select * from exc_mstr ;");
                 while (res.next()) {
-                exchangemodel.addRow(new Object[]{res.getString("exc_base"), res.getString("exc_foreign"), res.getString("exc_rate")}); 
+                exchangemodel.addRow(new Object[]{res.getString("exc_base"), res.getString("exc_foreign"), res.getString("exc_rate").replace('.',defaultDecimalSeparator)}); 
                 }
                
                  if (i > 0) {
@@ -351,7 +352,7 @@ public class ExchangeMaint extends javax.swing.JPanel {
                             + "(exc_base, exc_foreign, exc_rate) "
                             + " values ( " + "'" + tbbasecode.getText().toString().toUpperCase() + "'" + ","
                             + "'" + ddforeign.getSelectedItem().toString() + "'" + ","
-                            + "'" + tbrate.getText() + "'" 
+                            + "'" + tbrate.getText().replace(defaultDecimalSeparator, '.') + "'" 
                             + ")"
                             + ";");
                         bsmf.MainFrame.show(getMessageTag(1007));

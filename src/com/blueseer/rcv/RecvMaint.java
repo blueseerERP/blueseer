@@ -26,10 +26,17 @@ SOFTWARE.
 package com.blueseer.rcv;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.defaultDecimalSeparator;
 import static bsmf.MainFrame.dfdate;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
+import static com.blueseer.rcv.rcvData.addReceiverTransaction;
+import static com.blueseer.rcv.rcvData.getReceiverLines;
+import static com.blueseer.rcv.rcvData.isReceived;
+import com.blueseer.rcv.rcvData.recv_det;
+import com.blueseer.rcv.rcvData.recv_mstr;
+import static com.blueseer.rcv.rcvData.updateReceiverTransaction;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
@@ -89,6 +96,7 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeer {
     // global datatablemodel declarations            
                 javax.swing.table.DefaultTableModel myrecvdetmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
+                getGlobalColumnTag("line"), 
                 getGlobalColumnTag("item"), 
                 getGlobalColumnTag("po"), 
                 getGlobalColumnTag("line"), 
@@ -484,11 +492,11 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeer {
                 
                 while (res.next()) {
                     
-                  //  "Part", "PO", "Line", "Qty", "uom", "listprice", "disc", "netprice", "loc", "WH", "serial", "lot", "cost"
-                  myrecvdetmodel.addRow(new Object[]{res.getString("rvd_part"), res.getString("rvd_po"), 
-                      res.getString("rvd_poline"), res.getString("rvd_qty"), res.getString("rvd_uom"), res.getString("rvd_listprice"),
-                   res.getString("rvd_disc"), res.getString("rvd_netprice"), res.getString("rvd_loc"), res.getString("rvd_wh"),
-                  res.getString("rvd_serial"), res.getString("rvd_lot"), res.getString("rvd_cost")});
+                  // "rline"  "Part", "PO", "Line", "Qty", "uom", "listprice", "disc", "netprice", "loc", "WH", "serial", "lot", "cost"
+                  myrecvdetmodel.addRow(new Object[]{res.getString("rvd_rline"), res.getString("rvd_part"), res.getString("rvd_po"), 
+                      res.getString("rvd_poline"), res.getString("rvd_qty").replace('.', defaultDecimalSeparator), res.getString("rvd_uom"), res.getString("rvd_listprice").replace('.', defaultDecimalSeparator),
+                   res.getString("rvd_disc").replace('.', defaultDecimalSeparator), res.getString("rvd_netprice").replace('.', defaultDecimalSeparator), res.getString("rvd_loc"), res.getString("rvd_wh"),
+                  res.getString("rvd_serial"), res.getString("rvd_lot"), res.getString("rvd_cost").replace('.', defaultDecimalSeparator)});
                 }
                 
                 // set Action if Record found (i > 0)
@@ -510,206 +518,59 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeer {
 
     public String[] addRecord(String[] x) {
      String[] m = new String[2];
-         try {
+     boolean error = false;
+     m = addReceiverTransaction(createDetRecord(), createRecord());
+     /* update PO from receiver */
+     OVData.updatePOFromReceiver(tbkey.getText());
 
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                boolean error = false;
-                String receiver = tbkey.getText().toString();
-                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+    /* create tran_mstr records */
+        if (! error)
+        error = OVData.TRHistRctPurch(tbkey.getText(), dcdate.getDate());
 
-                
-                javax.swing.table.DefaultTableModel tempmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                new String[]{
-                "RecvID", "RecvLine", "Part", "Qty", "Price"
-                });
-                JTable temptable = new JTable(tempmodel); 
-                
-                boolean proceed = validateInput("addRecord");
-                
-                if (proceed) {
-                    setvendorvariables(ddvend.getSelectedItem().toString());
-                    st.executeUpdate("insert into recv_mstr "
-                        + "(rv_id, rv_vend, "
-                        + " rv_recvdate, rv_packingslip, rv_userid, rv_site, rv_terms, rv_ap_acct, rv_ap_cc) "
-                        + " values ( " + "'" + tbkey.getText().toString() + "'" + ","
-                        + "'" + ddvend.getSelectedItem() + "'" + ","
-                        + "'" + dfdate.format(dcdate.getDate()) + "'" + ","
-                        + "'" + tbpackingslip.getText() + "'" + ","
-                        + "'" + bsmf.MainFrame.userid.toString() + "'" + ","
-                        + "'" + ddsite.getSelectedItem().toString() + "'" + ","
-                        + "'" + terms + "'" + ","
-                        + "'" + apacct + "'" + ","
-                        + "'" + apcc + "'"
-                        + ")"
-                        + ";");
-           
-           
-               
-           
-                 //  "Part", "PO", "Line", "Qty", "uom", "listprice", "disc", "netprice", "loc", "WH", "serial", "lot", "cost"
-                    for (int j = 0; j < rvdet.getRowCount(); j++) {
-                        st.executeUpdate("insert into recv_det "
-                            + "(rvd_id, rvd_rline, rvd_part, rvd_po, rvd_poline, rvd_qty, rvd_uom, "
-                            + "rvd_listprice, rvd_disc, rvd_netprice,  "
-                            + " rvd_loc, rvd_wh, rvd_serial, rvd_lot, rvd_cost, rvd_site, rvd_packingslip, rvd_date ) "
-                            + " values ( " + "'" + tbkey.getText() + "'" + ","
-                            + "'" + String.valueOf(j + 1) + "'" + ","
-                            + "'" + rvdet.getValueAt(j, 0).toString() + "'" + ","
-                            + "'" + rvdet.getValueAt(j, 1).toString() + "'" + ","
-                            + "'" + rvdet.getValueAt(j, 2).toString() + "'" + ","
-                            + "'" + rvdet.getValueAt(j, 3).toString() + "'" + ","
-                            + "'" + rvdet.getValueAt(j, 4).toString() + "'" + ","
-                            + "'" + rvdet.getValueAt(j, 5).toString() + "'" + ","        
-                            + "'" + rvdet.getValueAt(j, 6).toString() + "'" + ","
-                            + "'" + rvdet.getValueAt(j, 7).toString() + "'" + ","
-                            + "'" + rvdet.getValueAt(j, 8).toString() + "'" + ","
-                            + "'" + rvdet.getValueAt(j, 9).toString() + "'" + ","
-                            + "'" + rvdet.getValueAt(j, 10).toString() + "'" + ","
-                            + "'" + rvdet.getValueAt(j, 11).toString() + "'" + ","
-                            + "'" + rvdet.getValueAt(j, 12).toString() + "'" + ","
-                            + "'" + ddsite.getSelectedItem().toString() + "'" + ","
-                            + "'" + tbpackingslip.getText() + "'" + ","
-                            + "'" + dfdate.format(dcdate.getDate()) + "'" 
-                            + ")"
-                            + ";");
-                        
-                        tempmodel.addRow(new Object[] {tbkey.getText(), String.valueOf(j+ 1),
-                           rvdet.getValueAt(j, 0).toString(),
-                           rvdet.getValueAt(j, 3).toString(),
-                           rvdet.getValueAt(j, 7).toString()
-                        });
-                        
-                    } 
-                    
-                    
-                    /* update PO from receiver */
-                    OVData.updatePOFromReceiver(tbkey.getText());
-                    
-                    /* create tran_mstr records */
-                        if (! error)
-                        error = OVData.TRHistRctPurch(receiver, dcdate.getDate());
-                       
-                        /* adjust inventory */
-                        if (! error)
-                        error = OVData.UpdateInventoryFromReceiver(receiver);
-                        
-                        /* create gl_tran records */
-                        if (! error)
-                        error = OVData.glEntryFromReceiver(receiver, dcdate.getDate());
-                       
-                
-                  if (! error) {        
-                   m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
-                   
-                       /* create auto-voucher from temptable if autovoucher is on */
-                    if (cbautovoucher.isSelected()) {
-                    String messg = OVData.CreateVoucher(temptable, ddsite.getSelectedItem().toString(), ddvend.getSelectedItem().toString(), tbpackingslip.getText(), dcdate.getDate(), tbserial.getText()); 
-                     if (! messg.isEmpty()) {
-                         m = new String[] {"1","unable to add voucher"};
-                     } else {
-                         m = new String[] {"0","vouchering complete"};
-                     }
-                    }
-                  
-                  
-                  initvars(null);
-                  } else {
-                  m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordError};
-                  }
-                    
-               
-                } // if proceed
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordSQLError};  
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordConnError};
-        }
-     return m;
+        /* adjust inventory */
+        if (! error)
+        error = OVData.UpdateInventoryFromReceiver(tbkey.getText());
+
+        /* create gl_tran records */
+        if (! error)
+        error = OVData.glEntryFromReceiver(tbkey.getText(), dcdate.getDate());
+     
+    /* create auto-voucher from temptable if autovoucher is on */
+    if (cbautovoucher.isSelected()) {
+    String messg = OVData.CreateVoucher(createVoucherTable(), ddsite.getSelectedItem().toString(), ddvend.getSelectedItem().toString(), tbpackingslip.getText(), dcdate.getDate(), tbserial.getText()); 
+     if (! messg.isEmpty()) {
+         m = new String[] {"1",getMessageTag(1010,"CreateVoucher")};
+     } else {
+         m = new String[] {"0",getMessageTag(1125)};
+     }
+    }
+    initvars(null);
+    return m;
     }
     
     public String[] updateRecord(String[] x) {
      String[] m = new String[2];
-     
-      try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-                
-                // first validate input
-                boolean proceed = validateInput("updateRecord");
-                
-                // if this receiver has 'any' line items already vouchered then bale...cannot update
-                res = st.executeQuery("select rvd_id, rvd_rline, rvd_part from recv_det where rvd_id = " + "'" + x[0] + "'" + 
-                                      " and rvd_voqty > 0 " + ";");
-                int i = 0;
-                while (res.next()) {
-                    i++;
-                }
-                if (i > 0) {
-                   return m = new String[] {"1","cannot update receiver...some lines already vouchered"};
-                }
-                
-                
-                if (proceed) {
-                    st.executeUpdate("update recv_mstr set "
-                        + "rv_packingslip = " + "'" + tbpackingslip.getText() + "'" + ","
-                        + "rv_recvdate = " + "'" + dfdate.format(dcdate.getDate()) + "'"
-                        + " where rv_id = " + "'" + tbkey.getText().toString() + "'"
-                        + ";");
-                    // delete the recv_det records and add back.
-                    st.executeUpdate("delete from recv_det where rvd_id = " + "'" + tbkey.getText() + "'"  );
-                    
-                   // "Part", "PO", "Line", "Qty", "uom" "listprice", "disc", "netprice", "loc", "WH", "serial", "lot", "cost"
-                    for (int j = 0; j < rvdet.getRowCount(); j++) {
-                        st.executeUpdate("insert into recv_det "
-                            + "(rvd_id, rvd_rline, rvd_part, rvd_po, rvd_poline, rvd_qty,"
-                            + "rvd_listprice, rvd_disc, rvd_netprice,  "
-                            + " rvd_loc, rvd_wh, rvd_serial, rvd_lot, rvd_cost, rvd_site, rvd_packingslip, rvd_date ) "
-                            + " values ( " + "'" + tbkey.getText() + "'" + ","
-                            + "'" + String.valueOf(j + 1) + "'" + ","
-                            + "'" + rvdet.getValueAt(j, 0).toString() + "'" + ","
-                            + "'" + rvdet.getValueAt(j, 1).toString() + "'" + ","
-                            + "'" + rvdet.getValueAt(j, 2).toString() + "'" + ","
-                            + "'" + rvdet.getValueAt(j, 3).toString() + "'" + ","
-                            + "'" + rvdet.getValueAt(j, 4).toString() + "'" + ","
-                            + "'" + rvdet.getValueAt(j, 5).toString() + "'" + ","        
-                            + "'" + rvdet.getValueAt(j, 6).toString() + "'" + ","
-                            + "'" + rvdet.getValueAt(j, 7).toString() + "'" + ","
-                            + "'" + rvdet.getValueAt(j, 8).toString() + "'" + ","
-                            + "'" + rvdet.getValueAt(j, 9).toString() + "'" + ","
-                            + "'" + rvdet.getValueAt(j, 10).toString() + "'" + ","
-                            + "'" + rvdet.getValueAt(j, 11).toString() + "'" + ","
-                            + "'" + rvdet.getValueAt(j, 12).toString() + "'" + ","
-                            + "'" + ddsite.getSelectedItem().toString() + "'" + ","
-                            + "'" + tbpackingslip.getText() + "'" + ","
-                            + "'" + dfdate.format(dcdate.getDate()) + "'" 
-                            + ")"
-                            + ";");
-                    }
-                  m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
-                    initvars(null);
-                    // btQualProbAdd.setEnabled(false);
-                } // if proceed
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-               m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError}; 
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordConnError};
+     if (isReceived(tbkey.getText())) { 
+         return new String[] {"1",getMessageTag(1152)};
+     }
+     // first delete any sod_det line records that have been
+        // disposed from the current orddet table
+        ArrayList<String> lines = new ArrayList<String>();
+        ArrayList<String> badlines = new ArrayList<String>();
+        boolean goodLine = false;
+        lines = getReceiverLines(tbkey.getText());
+       for (String line : lines) {
+          goodLine = false;
+          for (int j = 0; j < rvdet.getRowCount(); j++) {
+             if (rvdet.getValueAt(j, 0).toString().equals(line)) {
+                 goodLine = true;
+             }
+          }
+          if (! goodLine) {
+              badlines.add(line);
+          }
         }
+        m = updateReceiverTransaction(tbkey.getText(), badlines, createDetRecord(), createRecord());
      
      return m;
     }
@@ -756,6 +617,61 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeer {
         }
      return m;
     }
+    
+    public recv_mstr createRecord() {
+        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+        recv_mstr x = new recv_mstr(null, 
+                tbkey.getText(),
+                ddvend.getSelectedItem().toString(),
+                dfdate.format(dcdate.getDate()),
+                "", // status
+                tbpackingslip.getText(),
+                bsmf.MainFrame.userid.toString(),
+                apacct,
+                apcc,
+                terms,
+                ddsite.getSelectedItem().toString(),
+                "", // confdate
+                "", // ref
+                "" // remarks
+                );
+                
+        return x;        
+    }
+    
+    public ArrayList<recv_det> createDetRecord() {
+        ArrayList<recv_det> list = new ArrayList<recv_det>();
+        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+        // line, item, po, poline, qty, uom, listprice, disc, netprice, loc, wh, serial, lot, cost
+        for (int j = 0; j < rvdet.getRowCount(); j++) { 
+            recv_det x = new recv_det(null, 
+                tbkey.getText(), // shipper
+                rvdet.getValueAt(j, 2).toString(), // po
+                rvdet.getValueAt(j, 3).toString(), // poline
+                tbpackingslip.getText(), // packingslip
+                rvdet.getValueAt(j, 1).toString(), // item
+                rvdet.getValueAt(j, 4).toString().replace(defaultDecimalSeparator, '.'),  // qty
+                dfdate.format(dcdate.getDate()),
+                rvdet.getValueAt(j, 6).toString().replace(defaultDecimalSeparator, '.'),
+                rvdet.getValueAt(j, 8).toString().replace(defaultDecimalSeparator, '.'),
+                rvdet.getValueAt(j, 7).toString().replace(defaultDecimalSeparator, '.'),  
+                rvdet.getValueAt(j, 12).toString(), // lot
+                rvdet.getValueAt(j, 10).toString(), // wh
+                rvdet.getValueAt(j, 11).toString(), // serial
+                rvdet.getValueAt(j, 9).toString(),  // loc
+                "", // jobnbr
+                ddsite.getSelectedItem().toString(),
+                "", // status
+                rvdet.getValueAt(j, 0).toString(), // rline
+                "", // voqty
+                rvdet.getValueAt(j, 13).toString().replace(defaultDecimalSeparator, '.'), // cost
+                rvdet.getValueAt(j, 5).toString() // uom    
+                );
+        list.add(x);
+        }      
+        return list;        
+    }
+    
     
     public boolean validateInput(String x) {
         boolean b = true;
@@ -846,7 +762,7 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeer {
         };
         luTable.addMouseListener(luml);
       
-        callDialog("ID", "Vendor", "PONbr", "PackingSlip"); 
+      
         callDialog(getClassLabelTag("lblid", this.getClass().getSimpleName()), 
                 getClassLabelTag("lblvend", this.getClass().getSimpleName()),
                 getClassLabelTag("lblpo", this.getClass().getSimpleName()),
@@ -887,6 +803,34 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeer {
         }
     }
       
+    public Integer getmaxline() {
+        int max = 0;
+        int current = 0;
+        for (int j = 0; j < rvdet.getRowCount(); j++) {
+            current = Integer.valueOf(rvdet.getValueAt(j, 0).toString()); 
+            if (current > max) {
+                max = current;
+            }
+         }
+        return max;
+    }
+   
+    public JTable createVoucherTable() {
+        javax.swing.table.DefaultTableModel tempmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                new String[]{
+                "RecvID", "RecvLine", "Part", "Qty", "Price"
+                });
+                JTable temptable = new JTable(tempmodel); 
+        for (int j = 0; j < rvdet.getRowCount(); j++) {
+            tempmodel.addRow(new Object[] {tbkey.getText(), 
+            rvdet.getValueAt(j, 0).toString(),
+            rvdet.getValueAt(j, 1).toString(),
+            rvdet.getValueAt(j, 4).toString(),
+            rvdet.getValueAt(j, 8).toString()
+                        });
+        }
+        return temptable;
+    }
    
     
  /**
@@ -1284,10 +1228,11 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeer {
                             .addComponent(tbqty, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel29)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel38)
-                            .addComponent(ddpo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel35))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel35)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel38)
+                                .addComponent(ddpo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(ddpart, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1358,10 +1303,12 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeer {
     private void btadditemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btadditemActionPerformed
           
           boolean proceed = validateInput("addItem"); 
-                
+          int line = 0;
+          line = getmaxline();
+          line++;      
        //   "Part", "PO", "line", "Qty", uom,  listprice, disc, netprice, loc, serial, lot, cost
             if (proceed)
-            myrecvdetmodel.addRow(new Object[]{ddpart.getSelectedItem(), ddpo.getSelectedItem(), 
+            myrecvdetmodel.addRow(new Object[]{line, ddpart.getSelectedItem(), ddpo.getSelectedItem(), 
                 tbline.getText(), tbqty.getText(), tbuom.getText(), tbprice.getText(), "0", 
                 tbprice.getText(), ddloc.getSelectedItem().toString(), ddwh.getSelectedItem().toString(), 
                 tbserial.getText(), tblot.getText(), tbcost.getText()});

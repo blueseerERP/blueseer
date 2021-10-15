@@ -26,6 +26,7 @@ SOFTWARE.
 package com.blueseer.far;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.defaultDecimalSeparator;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import com.blueseer.ctr.cusData;
@@ -396,7 +397,7 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
         for (int i = 0; i < curr.size(); i++) {
             ddcurr.addItem(curr.get(i));
         }
-        ddcurr.setSelectedItem(cusData.getCustCurrency(ddcust.getSelectedItem().toString()));
+        ddcurr.setSelectedItem(OVData.getDefaultCurrency());
         
         
        isLoad = false;
@@ -547,8 +548,8 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
                         + "ar_status, ar_bank, ar_site ) "
                         + " values ( " + "'" + ddcust.getSelectedItem() + "'" + ","
                         + "'" + tbkey.getText() + "'" + ","
-                        + "'" + df.format(actamt) + "'" + ","
-                        + "'" + df.format(baseamt) + "'" + ","
+                        + "'" + df.format(actamt).replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "'" + df.format(baseamt).replace(defaultDecimalSeparator, '.') + "'" + ","
                         + "'" + "P" + "'" + ","
                         + "'" + ddcurr.getSelectedItem().toString() + "'" + ","      
                         + "'" + basecurr + "'" + ","
@@ -588,10 +589,10 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
                             + "'" + ardet.getValueAt(j, 0).toString() + "'" + ","
                             + "'" + (j + 1) + "'" + ","
                             + "'" + dfdate.format(dcdate.getDate()) + "'" + ","
-                            + "'" + df.format(amt_d) + "'"  + ","
-                            + "'" + df.format(taxamt_d) + "'"  + ","
-                            + "'" + df.format(baseamt_d) + "'"  + ","                
-                            + "'" + df.format(basetaxamt_d) + "'" + "," 
+                            + "'" + df.format(amt_d).replace(defaultDecimalSeparator, '.') + "'"  + ","
+                            + "'" + df.format(taxamt_d).replace(defaultDecimalSeparator, '.') + "'"  + ","
+                            + "'" + df.format(baseamt_d).replace(defaultDecimalSeparator, '.') + "'"  + ","                
+                            + "'" + df.format(basetaxamt_d).replace(defaultDecimalSeparator, '.') + "'" + "," 
                             + "'" + ddcurr.getSelectedItem().toString() + "'"  + ","
                             + "'" + basecurr + "'" + ","
                             + "'" + aracct + "'" + ","

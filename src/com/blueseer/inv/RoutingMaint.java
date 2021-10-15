@@ -26,6 +26,7 @@ SOFTWARE.
 package com.blueseer.inv;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.defaultDecimalSeparator;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import static bsmf.MainFrame.reinitpanels;
@@ -413,8 +414,8 @@ public class RoutingMaint extends javax.swing.JPanel implements IBlueSeer {
                             + "'" + BlueSeerUtils.boolToInt(cbmilestone.isSelected()) + "'" + ","
                             + "'" + tbopdesc.getText() + "'" + ","
                             + "'" + ddwc.getSelectedItem().toString() + "'" + ","
-                            + "'" + tbsetuphours.getText() + "'" + ","
-                            + "'" + tbrunhours.getText() + "'" 
+                            + "'" + tbsetuphours.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
+                            + "'" + tbrunhours.getText().replace(defaultDecimalSeparator, '.') + "'" 
                             + ")"
                             + ";");
                         m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
@@ -459,8 +460,8 @@ public class RoutingMaint extends javax.swing.JPanel implements IBlueSeer {
                             + "wf_op_desc = " + "'" + tbopdesc.getText() + "'" + "," 
                             + "wf_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + "," 
                             + "wf_cell = " + "'" + ddwc.getSelectedItem().toString() + "'" + ","
-                            + "wf_setup_hours = " + "'" + tbsetuphours.getText() + "'" + ","
-                            + "wf_run_hours = " + "'" + tbrunhours.getText() + "'" + ","
+                            + "wf_setup_hours = " + "'" + tbsetuphours.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
+                            + "wf_run_hours = " + "'" + tbrunhours.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
                             + "wf_assert = " + "'" + BlueSeerUtils.boolToInt(cbmilestone.isSelected()) + "'"
                             + " where wf_id = " + "'" + x[0] + "'" + " AND "
                             + " wf_op = " + "'" + x[1] + "'"
@@ -567,9 +568,9 @@ public class RoutingMaint extends javax.swing.JPanel implements IBlueSeer {
                     tbopdesc.setText(res.getString("wf_desc"));
                     ddsite.setSelectedItem(res.getString("wf_site"));
                     ddop.setSelectedItem(res.getString("wf_op"));
-                    tbrunhours.setText(res.getString("wf_run_hours"));
-                    tbsetuphours.setText(res.getString("wf_setup_hours"));
-                    tbrunhoursinverted.setText(String.valueOf(df.format(runhours)));
+                    tbrunhours.setText(res.getString("wf_run_hours").replace('.',defaultDecimalSeparator));
+                    tbsetuphours.setText(res.getString("wf_setup_hours").replace('.',defaultDecimalSeparator));
+                    tbrunhoursinverted.setText(String.valueOf(df.format(runhours)).replace('.',defaultDecimalSeparator));
                     cbmilestone.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("wf_assert")));
                 }
                

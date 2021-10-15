@@ -29,6 +29,7 @@ import bsmf.MainFrame;
 import com.blueseer.utl.BlueSeerUtils;
 import static bsmf.MainFrame.backgroundcolor;
 import static bsmf.MainFrame.backgroundpanel;
+import static bsmf.MainFrame.defaultDecimalSeparator;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
@@ -393,7 +394,7 @@ public class TaxMaint extends javax.swing.JPanel implements IBlueSeer {
                 st.executeUpdate("insert into taxd_mstr (taxd_parentcode, taxd_desc, taxd_percent, taxd_type, taxd_enabled ) values ( " 
                         + "'" + tbkey.getText() + "'" + ","
                         + "'" + tabletax.getValueAt(j, 0).toString() + "'" + ","
-                        + "'" + tabletax.getValueAt(j, 1).toString() + "'" + ","
+                        + "'" + tabletax.getValueAt(j, 1).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
                         + "'" + tabletax.getValueAt(j, 2).toString() + "'" + ","
                         + "'" + BlueSeerUtils.boolToInt(Boolean.valueOf(tabletax.getValueAt(j, 3).toString())) + "'" 
                         + " );" );
@@ -444,7 +445,7 @@ public class TaxMaint extends javax.swing.JPanel implements IBlueSeer {
                         st.executeUpdate("insert into taxd_mstr (taxd_parentcode, taxd_desc, taxd_percent, taxd_type, taxd_enabled ) values ( " 
                                 + "'" + tbkey.getText() + "'" + ","
                                 + "'" + tabletax.getValueAt(j, 0).toString() + "'" + ","
-                                + "'" + tabletax.getValueAt(j, 1).toString() + "'" + ","
+                                + "'" + tabletax.getValueAt(j, 1).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
                                 + "'" + tabletax.getValueAt(j, 2).toString() + "'" + ","
                                 + "'" + BlueSeerUtils.boolToInt(Boolean.valueOf(tabletax.getValueAt(j, 3).toString())) + "'" 
                                 + " );" );

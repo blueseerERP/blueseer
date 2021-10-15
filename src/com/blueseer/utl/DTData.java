@@ -5829,7 +5829,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
            
 public static DefaultTableModel getUnPostedGLTrans() {
               javax.swing.table.DefaultTableModel mymodel =  new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("id"), getGlobalColumnTag("account"), getGlobalColumnTag("description"), getGlobalColumnTag("cc"), getGlobalColumnTag("type"), getGlobalColumnTag("ref"), getGlobalColumnTag("description"), getGlobalColumnTag("effectivedate"), getGlobalColumnTag("enterdate"), getGlobalColumnTag("amount")}); 
+                      new String[]{getGlobalColumnTag("id"), getGlobalColumnTag("account"), getGlobalColumnTag("description"), getGlobalColumnTag("costcenter"), getGlobalColumnTag("type"), getGlobalColumnTag("reference"), getGlobalColumnTag("description"), getGlobalColumnTag("effectivedate"), getGlobalColumnTag("date"), getGlobalColumnTag("amount")}); 
            
        try{
             

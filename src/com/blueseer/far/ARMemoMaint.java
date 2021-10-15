@@ -46,6 +46,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import static bsmf.MainFrame.con;
 import static bsmf.MainFrame.db;
+import static bsmf.MainFrame.defaultDecimalSeparator;
 import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.tags;
 import com.blueseer.ctr.cusData;
@@ -754,8 +755,8 @@ public class ARMemoMaint extends javax.swing.JPanel {
                         + "ar_status, ar_bank, ar_site ) "
                         + " values ( " + "'" + ddcust.getSelectedItem() + "'" + ","
                         + "'" + tbref.getText() + "'" + ","
-                        + "'" + df.format(actamt) + "'" + ","
-                        + "'" + df.format(actamt) + "'" + ","
+                        + "'" + df.format(actamt).replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "'" + df.format(actamt).replace(defaultDecimalSeparator, '.') + "'" + ","
                         + "'" + "M" + "'" + ","
                         + "'" + tbref.getText() + "'" + ","
                         + "'" + tbrmks.getText() + "'" + ","
@@ -782,7 +783,7 @@ public class ARMemoMaint extends javax.swing.JPanel {
                             + "'" + transtable.getValueAt(j, 3).toString() + "'" + ","
                             + "'" + (j + 1) + "'" + ","
                             + "'" + dfdate.format(dceffdate.getDate()) + "'" + ","
-                            + "'" + df.format(amt) + "'" + ","
+                            + "'" + df.format(amt).replace(defaultDecimalSeparator, '.') + "'" + ","
                             + "'" + transtable.getValueAt(j, 1).toString() + "'" + "," 
                             + "'" + transtable.getValueAt(j, 2).toString() + "'"
                             + ")"

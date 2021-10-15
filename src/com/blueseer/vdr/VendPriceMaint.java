@@ -27,10 +27,12 @@ SOFTWARE.
 package com.blueseer.vdr;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.defaultDecimalSeparator;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import com.blueseer.inv.invData;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.bsformat;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -439,7 +441,7 @@ public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeer {
                         + "'" + ddpart.getSelectedItem().toString() + "'" + ","
                         + "'" + dduom.getSelectedItem().toString() + "'" + ","
                         + "'" + ddcurr.getSelectedItem().toString() + "'" + ","        
-                        + "'" + price.getText() + "'"
+                        + "'" + price.getText().replace(defaultDecimalSeparator, '.') + "'"
                         + ")"
                         + ";");
                         m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
@@ -477,7 +479,7 @@ public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeer {
                 
                 if (proceed) {
                     st.executeUpdate("update vpr_mstr "
-                        + " set vpr_price = " + "'" + price.getText() + "'"
+                        + " set vpr_price = " + "'" + price.getText().replace(defaultDecimalSeparator, '.') + "'"
                         + " where vpr_vend = " + "'" + tbkey.getText() + "'"
                         + " and vpr_type = 'LIST' "
                         + " and vpr_item = " + "'" + ddpart.getSelectedItem().toString() + "'"
@@ -581,7 +583,7 @@ public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeer {
                      ddpart.setSelectedItem(res.getString("vpr_item"));
                      dduom.setSelectedItem(res.getString("vpr_uom"));
                      ddcurr.setSelectedItem(res.getString("vpr_curr"));
-                     price.setText(BlueSeerUtils.bsformat("", String.valueOf(res.getDouble("vpr_price")), "4"));
+                     price.setText(bsformat("s", (res.getString("vpr_price").replace('.',defaultDecimalSeparator)), "4"));
                 }
                 
                
@@ -648,7 +650,6 @@ public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeer {
         initvars(null);
         try {
 
-            DecimalFormat df = new DecimalFormat("#0.0000", new DecimalFormatSymbols(Locale.US));
             Class.forName(bsmf.MainFrame.driver).newInstance();
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
             try {
@@ -669,7 +670,7 @@ public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeer {
                      ddpart.setSelectedItem(res.getString("vpr_item"));
                      dduom.setSelectedItem(res.getString("vpr_uom"));
                      ddcurr.setSelectedItem(res.getString("vpr_curr"));
-                     price.setText(df.format(res.getDouble("vpr_price")));
+                     price.setText(bsformat("s", (res.getString("vpr_price").replace('.',defaultDecimalSeparator)), "4"));
                      btupdate.setEnabled(true);
                      btdelete.setEnabled(true);
                      btadd.setEnabled(false);
@@ -993,8 +994,7 @@ public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeer {
             try {
                 Statement st = bsmf.MainFrame.con.createStatement();
                 ResultSet res = null;
-                DecimalFormat df = new DecimalFormat("#0.0000", new DecimalFormatSymbols(Locale.US));
-                res = st.executeQuery("select vpr_price, vpr_item, vpr_uom, vpr_curr from vpr_mstr where vpr_vend = " + "'" +
+                 res = st.executeQuery("select vpr_price, vpr_item, vpr_uom, vpr_curr from vpr_mstr where vpr_vend = " + "'" +
                     tbkey.getText() + "'" +
                     " and vpr_type = " + "'LIST'" +
                     " and vpr_item = " + "'" + str[0] + "'" +
@@ -1005,7 +1005,7 @@ public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeer {
                     dduom.setSelectedItem(res.getString("vpr_uom"));
                     ddcurr.setSelectedItem(res.getString("vpr_curr"));
                     ddpart.setSelectedItem(res.getString("vpr_item"));
-                    price.setText(df.format(res.getDouble("vpr_price")));
+                    price.setText(bsformat("s", (res.getString("vpr_price").replace('.',defaultDecimalSeparator)), "4"));
                     
                 }
                 btadd.setEnabled(false);

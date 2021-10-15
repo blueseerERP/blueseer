@@ -34,7 +34,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DateFormat;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -42,8 +41,11 @@ import java.util.regex.Pattern;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import bsmf.MainFrame; 
+import static bsmf.MainFrame.defaultDecimalSeparator;
 import static bsmf.MainFrame.tags;
 import com.blueseer.inv.invData;
+import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
+import static com.blueseer.utl.BlueSeerUtils.bsformat;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.awt.Component;
 import java.text.DecimalFormatSymbols;
@@ -123,8 +125,7 @@ public class CustPriceMaint extends javax.swing.JPanel {
         initvars(null);
         try {
 
-            DecimalFormat df = new DecimalFormat("#0.0000", new DecimalFormatSymbols(Locale.US));
-            Class.forName(bsmf.MainFrame.driver).newInstance();
+             Class.forName(bsmf.MainFrame.driver).newInstance();
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
             try {
                 Statement st = bsmf.MainFrame.con.createStatement();
@@ -145,14 +146,14 @@ public class CustPriceMaint extends javax.swing.JPanel {
                     ddpart.setSelectedItem(res.getString("cpr_item"));
                     dduom.setSelectedItem(res.getString("cpr_uom"));
                     ddcurr.setSelectedItem(res.getString("cpr_curr"));
-                     price.setText(df.format(res.getDouble("cpr_price")));
+                     tbprice.setText(bsformat("s",res.getString("cpr_price").replace('.',defaultDecimalSeparator),"4")); 
                      btUpdate.setEnabled(true);
                      btDelete.setEnabled(true);
                      btAdd.setEnabled(false);
                    } else {
                       ddcustcode_disc.setSelectedItem(res.getString("cpr_cust"));
                      tbdisckey.setText(res.getString("cpr_item"));
-                     tbdisc.setText(df.format(res.getDouble("cpr_disc"))); 
+                     tbdisc.setText(bsformat("s",res.getString("cpr_disc").replace('.',defaultDecimalSeparator),"4")); 
                       btupdatedisc.setEnabled(true);
                      btdeletedisc.setEnabled(true);
                      btadddisc.setEnabled(false);
@@ -191,8 +192,8 @@ public class CustPriceMaint extends javax.swing.JPanel {
          btDelete.setEnabled(false);
          btAdd.setEnabled(false);
          
-         price.setText("");
-         price.setBackground(Color.WHITE);
+         tbprice.setText("");
+         tbprice.setBackground(Color.WHITE);
          
         ArrayList mycusts = cusData.getcustmstrlist();
         ArrayList pricegroups = OVData.getPriceGroupList();
@@ -223,7 +224,7 @@ public class CustPriceMaint extends javax.swing.JPanel {
         for (String code : mycurr) {
             ddcurr.addItem(code);
         }
-        
+        ddcurr.setSelectedItem(OVData.getDefaultCurrency());
         
         ArrayList mypart = invData.getItemMasterAlllist();
         ddpart.removeAllItems();
@@ -313,24 +314,23 @@ public class CustPriceMaint extends javax.swing.JPanel {
     }
     
     public void setData() {
-         DecimalFormat df = new DecimalFormat("#0.0000", new DecimalFormatSymbols(Locale.US));
          
         if (ddpart.getItemCount() > 0 && ddcustcode.getItemCount() > 0 && dduom.getItemCount() > 0 && ddcurr.getItemCount() > 0) {
         double myprice = invData.getItemPriceFromCust(ddcustcode.getSelectedItem().toString(), ddpart.getSelectedItem().toString(), dduom.getSelectedItem().toString(), ddcurr.getSelectedItem().toString());
         lbitem.setText(invData.getItemDesc(ddpart.getSelectedItem().toString()));
         if (myprice == 0.00) {
-            price.setText("0.0000");
+            tbprice.setText("0");
             btAdd.setEnabled(true);
             btUpdate.setEnabled(false);
             btDelete.setEnabled(false);
-            price.setBackground(Color.YELLOW);
+            tbprice.setBackground(Color.YELLOW);
         } else {
         //    bsmf.MainFrame.show(ddcustcode.getSelectedItem().toString() + ":" + ddpart.getSelectedItem().toString() + ":" + dduom.getSelectedItem().toString() + ":" + df.format(myprice));
-            price.setText(df.format(myprice));
+            tbprice.setText(bsFormatDouble(myprice,"4"));
             btAdd.setEnabled(false);
             btUpdate.setEnabled(false);
             btDelete.setEnabled(false); 
-            price.setBackground(Color.GREEN);
+            tbprice.setBackground(Color.GREEN);
         }
         }
     }
@@ -393,7 +393,7 @@ public class CustPriceMaint extends javax.swing.JPanel {
         jPanel3 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
-        price = new javax.swing.JTextField();
+        tbprice = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         btAdd = new javax.swing.JButton();
         ddcustcode = new javax.swing.JComboBox();
@@ -440,12 +440,12 @@ public class CustPriceMaint extends javax.swing.JPanel {
         jLabel5.setText("Price");
         jLabel5.setName("lblprice"); // NOI18N
 
-        price.addFocusListener(new java.awt.event.FocusAdapter() {
+        tbprice.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
-                priceFocusGained(evt);
+                tbpriceFocusGained(evt);
             }
             public void focusLost(java.awt.event.FocusEvent evt) {
-                priceFocusLost(evt);
+                tbpriceFocusLost(evt);
             }
         });
 
@@ -553,7 +553,7 @@ public class CustPriceMaint extends javax.swing.JPanel {
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(dduom, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(price, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(tbprice, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(0, 0, Short.MAX_VALUE)))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -591,7 +591,7 @@ public class CustPriceMaint extends javax.swing.JPanel {
                     .addComponent(jLabel11))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(price, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tbprice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -746,17 +746,7 @@ public class CustPriceMaint extends javax.swing.JPanel {
                 ResultSet res = null;
                 boolean proceed = true;
                 int i = 0;
-                
-                         
-                
-             Pattern p = Pattern.compile("^\\d+\\.\\d+$");
-             Matcher m = p.matcher(price.getText());
-             if (!m.find() || price.getText() == null) {
-             bsmf.MainFrame.show(getMessageTag(1023));
-             proceed = false;
-             }
-
-            
+              
              
               res = st.executeQuery("select cpr_item from cpr_mstr where cpr_item = " + "'" + 
                       ddpart.getSelectedItem().toString() + "'" +
@@ -782,7 +772,7 @@ public class CustPriceMaint extends javax.swing.JPanel {
                         + "'" + ddpart.getSelectedItem().toString() + "'" + ","
                         + "'" + dduom.getSelectedItem().toString() + "'" + ","
                         + "'" + ddcurr.getSelectedItem().toString() + "'" + ","        
-                        + "'" + price.getText() + "'" 
+                        + "'" + tbprice.getText().replace(defaultDecimalSeparator, '.') + "'" 
                         + ")"
                         + ";");
 
@@ -887,22 +877,7 @@ public class CustPriceMaint extends javax.swing.JPanel {
                 boolean proceed = true;
                 int i = 0;
                 
-                         
-                
-             Pattern p = Pattern.compile("^\\d+\\.\\d{2}$");
-             Matcher m = p.matcher(tbdisc.getText());
-             if (!m.find() || tbdisc.getText() == null) {
-             bsmf.MainFrame.show(getMessageTag(1023, "2"));
-             proceed = false;
-             }
-
-             p = Pattern.compile(",");
-             m = p.matcher(tbdisckey.getText());
-             if (m.find()) {
-             bsmf.MainFrame.show(getMessageTag(1082));
-             tbdisckey.requestFocus();
-             return;
-             }
+            
             
              
               res = st.executeQuery("select cpr_item from cpr_mstr where cpr_item = " + "'" + 
@@ -926,7 +901,7 @@ public class CustPriceMaint extends javax.swing.JPanel {
                         + "'" + tbdisckey.getText().toString() + "'" + ","
                         + "'DISCOUNT'" + ","
                         + "'" + tbdisckey.getText().toString() + "'" + ","
-                        + "'" + tbdisc.getText() + "'" 
+                        + "'" + tbdisc.getText().replace(defaultDecimalSeparator, '.') + "'" 
                         + ")"
                         + ";");
 
@@ -994,23 +969,11 @@ public class CustPriceMaint extends javax.swing.JPanel {
                 
                          
                 
-             Pattern p = Pattern.compile("^\\d+\\.\\d{2}$");
-             Matcher m = p.matcher(tbdisc.getText());
-             if (!m.find() || tbdisc.getText() == null) {
-             bsmf.MainFrame.show(getMessageTag(1023,"2"));
-             proceed = false;
-             }
-
-             p = Pattern.compile(",");
-             m = p.matcher(tbdisckey.getText());
-             if (m.find()) {
-             bsmf.MainFrame.show(getMessageTag(1082));
-             proceed = false;
-             }
+            
              
                 if (proceed) {
                     st.executeUpdate("update cpr_mstr "
-                        + " set cpr_disc = " + "'" + tbdisc.getText() + "'"
+                        + " set cpr_disc = " + "'" + tbdisc.getText().replace(defaultDecimalSeparator, '.') + "'"
                         + " where cpr_cust = " + "'" + ddcustcode_disc.getSelectedItem() + "'" 
                         + " and cpr_type = 'DISCOUNT' "        
                         + " and cpr_item = " + "'" + disclist.getSelectedValue().toString() + "'"  
@@ -1039,14 +1002,13 @@ public class CustPriceMaint extends javax.swing.JPanel {
             try {
                 Statement st = bsmf.MainFrame.con.createStatement();
                 ResultSet res = null;
-                DecimalFormat df = new DecimalFormat("#0.0000", new DecimalFormatSymbols(Locale.US));
-              res = st.executeQuery("select cpr_disc, cpr_item from cpr_mstr where cpr_cust = " + "'" + 
+                  res = st.executeQuery("select cpr_disc, cpr_item from cpr_mstr where cpr_cust = " + "'" + 
                       ddcustcode_disc.getSelectedItem().toString() + "'" +
                       " and cpr_type = " + "'DISCOUNT'" +
                       " and cpr_item = " + "'" + disclist.getSelectedValue().toString() + "'" +
                       ";");
                while (res.next()) {
-                      tbdisc.setText(df.format(res.getDouble("cpr_disc")));
+                      tbdisc.setText(bsformat("s",res.getString("cpr_disc").replace('.', defaultDecimalSeparator),"4"));
                       tbdisckey.setText(res.getString("cpr_item"));
                }
             } catch (SQLException s) {
@@ -1071,21 +1033,12 @@ public class CustPriceMaint extends javax.swing.JPanel {
                 boolean proceed = true;
                 int i = 0;
                 
-                         
-                
-             Pattern p = Pattern.compile("^\\d+\\.\\d+$");
-             Matcher m = p.matcher(price.getText());
-             if (!m.find() || price.getText() == null) {
-             bsmf.MainFrame.show(getMessageTag(1033));
-             price.requestFocus();
-             return;
-             }
-
+           
              
              
                 if (proceed) {
                     st.executeUpdate("update cpr_mstr "
-                        + " set cpr_price = " + "'" + price.getText() + "'"
+                        + " set cpr_price = " + "'" + tbprice.getText().replace(defaultDecimalSeparator, '.') + "'"
                         + " where cpr_cust = " + "'" + ddcustcode.getSelectedItem() + "'" 
                         + " and cpr_type = 'LIST' "        
                         + " and cpr_uom = " + "'" + dduom.getSelectedItem().toString() + "'"
@@ -1117,8 +1070,7 @@ public class CustPriceMaint extends javax.swing.JPanel {
                 Statement st = bsmf.MainFrame.con.createStatement();
                 ResultSet res = null;
                 String[] str = pricelist.getSelectedValue().toString().split(":", -1);
-                DecimalFormat df = new DecimalFormat("#0.0000", new DecimalFormatSymbols(Locale.US));
-              res = st.executeQuery("select cpr_price, cpr_item, cpr_uom, cpr_curr from cpr_mstr where cpr_cust = " + "'" + 
+               res = st.executeQuery("select cpr_price, cpr_item, cpr_uom, cpr_curr from cpr_mstr where cpr_cust = " + "'" + 
                       ddcustcode.getSelectedItem().toString() + "'" +
                       " and cpr_type = " + "'LIST'" +
                       " and cpr_item = " + "'" + str[0] + "'" +
@@ -1129,7 +1081,7 @@ public class CustPriceMaint extends javax.swing.JPanel {
                       dduom.setSelectedItem(res.getString("cpr_uom"));
                       ddcurr.setSelectedItem(res.getString("cpr_curr"));
                       ddpart.setSelectedItem(res.getString("cpr_item"));
-                      price.setText(df.format(res.getDouble("cpr_price")));
+                      tbprice.setText(bsformat("s",res.getString("cpr_price").replace('.',defaultDecimalSeparator),"4"));
                       
                }
                btAdd.setEnabled(false);
@@ -1157,24 +1109,24 @@ public class CustPriceMaint extends javax.swing.JPanel {
         setData();
     }//GEN-LAST:event_ddcurrActionPerformed
 
-    private void priceFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_priceFocusLost
-            String x = BlueSeerUtils.bsformat("", price.getText(), "4");
+    private void tbpriceFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbpriceFocusLost
+            String x = BlueSeerUtils.bsformat("", tbprice.getText(), "4");
         if (x.equals("error")) {
-            price.setText("");
-            price.setBackground(Color.yellow);
+            tbprice.setText("");
+            tbprice.setBackground(Color.yellow);
             bsmf.MainFrame.show(getMessageTag(1000));
-            price.requestFocus();
+            tbprice.requestFocus();
         } else {
-            price.setText(x);
-            price.setBackground(Color.white);
+            tbprice.setText(x);
+            tbprice.setBackground(Color.white);
         }
-    }//GEN-LAST:event_priceFocusLost
+    }//GEN-LAST:event_tbpriceFocusLost
 
-    private void priceFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_priceFocusGained
-        if (price.getText().equals("0.0000")) {
-            price.setText("");
+    private void tbpriceFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbpriceFocusGained
+        if (tbprice.getText().equals("0")) {
+            tbprice.setText("");
         }
-    }//GEN-LAST:event_priceFocusGained
+    }//GEN-LAST:event_tbpriceFocusGained
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -1211,9 +1163,9 @@ public class CustPriceMaint extends javax.swing.JPanel {
     private javax.swing.JLabel lbldisccode;
     private javax.swing.JLabel lblpricecode;
     private javax.swing.JLabel lbltype;
-    private javax.swing.JTextField price;
     private javax.swing.JList pricelist;
     private javax.swing.JTextField tbdisc;
     private javax.swing.JTextField tbdisckey;
+    private javax.swing.JTextField tbprice;
     // End of variables declaration//GEN-END:variables
 }

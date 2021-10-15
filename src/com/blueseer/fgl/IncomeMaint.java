@@ -26,6 +26,7 @@ SOFTWARE.
 package com.blueseer.fgl;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.defaultDecimalSeparator;
 import static bsmf.MainFrame.dfdate;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
@@ -495,8 +496,8 @@ public class IncomeMaint extends javax.swing.JPanel implements IBlueSeer {
                         + "'" + ddacct.getSelectedItem().toString() + "'" + ","
                         + "'" + ddcc.getSelectedItem().toString() + "'" + ","
                         + "'" + dfdate.format(dcdate.getDate()) + "'" + ","
-                        + "'" + df.format(actamt * -1) + "'" + ","
-                        + "'" + df.format(actamt * -1) + "'" + ","
+                        + "'" + df.format(actamt * -1).replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "'" + df.format(actamt * -1).replace(defaultDecimalSeparator, '.') + "'" + ","
                         + "'" + curr + "'" + ","
                         + "'" + basecurr + "'" + ","        
                         + "'" + tbkey.getText().toString() + "'" + ","
@@ -516,8 +517,8 @@ public class IncomeMaint extends javax.swing.JPanel implements IBlueSeer {
                         + "'" + cashacct + "'" + ","
                         + "'" + ddcc.getSelectedItem().toString() + "'" + ","
                         + "'" + dfdate.format(dcdate.getDate()) + "'" + ","
-                        + "'" + df.format(actamt) + "'" + ","
-                        + "'" + df.format(actamt) + "'" + ","
+                        + "'" + df.format(actamt).replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "'" + df.format(actamt).replace(defaultDecimalSeparator, '.') + "'" + ","
                         + "'" + curr + "'" + ","
                         + "'" + basecurr + "'" + ","
                         + "'" + tbkey.getText().toString() + "'" + ","
@@ -584,7 +585,7 @@ public class IncomeMaint extends javax.swing.JPanel implements IBlueSeer {
                      
                      ddcc.setSelectedItem(res.getString("glt_cc"));
                      if (res.getDouble("glt_amt") > 0) {
-                       tbamt.setText(res.getString("glt_amt"));
+                       tbamt.setText(res.getString("glt_amt").replace('.',defaultDecimalSeparator));
                      }
                 }
                

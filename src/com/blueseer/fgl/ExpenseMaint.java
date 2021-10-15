@@ -26,6 +26,7 @@ SOFTWARE.
 package com.blueseer.fgl;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.defaultDecimalSeparator;
 import static bsmf.MainFrame.dfdate;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
@@ -539,7 +540,7 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeer {
                         + " values ( " + "'" + ddvend.getSelectedItem() + "'" + ","
                               + "'" + ddsite.getSelectedItem().toString() + "'" + ","
                         + "'" + tbkey.getText() + "'" + ","
-                        + "'" + df.format(actamt) + "'" + ","
+                        + "'" + df.format(actamt).replace(defaultDecimalSeparator, '.') + "'" + ","
                         + "'" + "V" + "'" + ","
                         + "'" + tbcheck.getText().replace("'", "''") + "'" + ","        
                         + "'" + tbrmks.getText().replace("'", "''") + "'" + ","
@@ -563,8 +564,8 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeer {
                             + "'" + expensedet.getValueAt(j, 5).toString() + "'" + ","
                             + "'" + expensedet.getValueAt(j, 6).toString() + "'" + ","
                             + "'" + expensedet.getValueAt(j, 2).toString().replace("'", "''") + "'" + ","
-                            + "'" + expensedet.getValueAt(j, 3).toString() + "'" + ","
-                            + "'" + expensedet.getValueAt(j, 4).toString() + "'" + ","
+                            + "'" + expensedet.getValueAt(j, 3).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
+                            + "'" + expensedet.getValueAt(j, 4).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
                             + "'" + dfdate.format(dcdate.getDate()) + "'" + ","
                             + "'" + tbcheck.getText() + "'" + ","        
                             + "'" + expensedet.getValueAt(j, 7).toString() + "'" + ","
@@ -646,8 +647,8 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeer {
                      expensemodel.addRow(new Object[] { res.getString("vod_id"),
                                               res.getString("vod_rvdline"),
                                               res.getString("vod_part"),
-                                              res.getString("vod_qty"),
-                                              res.getString("vod_voprice"),
+                                              res.getString("vod_qty").replace('.',defaultDecimalSeparator),
+                                              res.getString("vod_voprice").replace('.',defaultDecimalSeparator),
                                               res.getString("vod_rvdid"),
                                               res.getString("vod_rvdline"),
                                               res.getString("vod_expense_acct"),

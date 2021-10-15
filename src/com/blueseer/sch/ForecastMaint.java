@@ -26,6 +26,7 @@ SOFTWARE.
 package com.blueseer.sch;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.defaultDecimalSeparator;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import com.blueseer.utl.BlueSeerUtils;
@@ -479,58 +480,58 @@ public class ForecastMaint extends javax.swing.JPanel implements IBlueSeer {
                             + " values ( " + "'" + tbkey.getText().toString() + "'" + ","
                             + "'" + ddsite.getSelectedItem().toString() + "'" + ","
                             + "'" + ddyear.getSelectedItem().toString() + "'" + ","
-                                + "'" + tbqty1.getText() + "'" + ","
-                                + "'" + tbqty2.getText() + "'" + ","
-                                + "'" + tbqty3.getText() + "'" + ","
-                                + "'" + tbqty4.getText() + "'" + ","
-                                + "'" + tbqty5.getText() + "'" + ","
-                                + "'" + tbqty6.getText() + "'" + ","
-                                + "'" + tbqty7.getText() + "'" + ","
-                                + "'" + tbqty8.getText() + "'" + ","
-                                + "'" + tbqty9.getText() + "'" + ","
-                                + "'" + tbqty10.getText() + "'" + ","
-                                + "'" + tbqty11.getText() + "'" + ","
-                                + "'" + tbqty12.getText() + "'" + ","
-                                + "'" + tbqty13.getText() + "'" + ","
-                                + "'" + tbqty14.getText() + "'" + ","
-                                + "'" + tbqty15.getText() + "'" + ","
-                                + "'" + tbqty16.getText() + "'" + ","
-                                + "'" + tbqty17.getText() + "'" + ","
-                                + "'" + tbqty18.getText() + "'" + ","
-                                + "'" + tbqty19.getText() + "'" + ","
-                                + "'" + tbqty20.getText() + "'" + ","
-                                + "'" + tbqty21.getText() + "'" + ","
-                                + "'" + tbqty22.getText() + "'" + ","
-                                + "'" + tbqty23.getText() + "'" + ","
-                                + "'" + tbqty24.getText() + "'" + ","
-                                + "'" + tbqty25.getText() + "'" + ","
-                                + "'" + tbqty26.getText() + "'" + ","
-                                + "'" + tbqty27.getText() + "'" + ","
-                                + "'" + tbqty28.getText() + "'" + ","
-                                + "'" + tbqty29.getText() + "'" + ","
-                                + "'" + tbqty30.getText() + "'" + ","
-                                + "'" + tbqty31.getText() + "'" + ","
-                                + "'" + tbqty32.getText() + "'" + ","
-                                + "'" + tbqty33.getText() + "'" + ","
-                                + "'" + tbqty34.getText() + "'" + ","
-                                + "'" + tbqty35.getText() + "'" + ","
-                                + "'" + tbqty36.getText() + "'" + ","
-                                + "'" + tbqty37.getText() + "'" + ","
-                                + "'" + tbqty38.getText() + "'" + ","
-                                + "'" + tbqty39.getText() + "'" + ","
-                                + "'" + tbqty40.getText() + "'" + ","
-                                + "'" + tbqty41.getText() + "'" + ","
-                                + "'" + tbqty42.getText() + "'" + ","
-                                + "'" + tbqty43.getText() + "'" + ","
-                                + "'" + tbqty44.getText() + "'" + ","
-                                + "'" + tbqty45.getText() + "'" + ","
-                                + "'" + tbqty46.getText() + "'" + ","
-                                + "'" + tbqty47.getText() + "'" + ","
-                                + "'" + tbqty48.getText() + "'" + ","
-                                + "'" + tbqty49.getText() + "'" + ","
-                                + "'" + tbqty50.getText() + "'" + ","
-                                + "'" + tbqty51.getText() + "'" + ","
-                                + "'" + tbqty52.getText() + "'" + ","
+                                + "'" + tbqty1.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + tbqty2.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + tbqty3.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + tbqty4.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + tbqty5.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + tbqty6.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + tbqty7.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + tbqty8.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + tbqty9.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + tbqty10.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + tbqty11.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + tbqty12.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + tbqty13.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + tbqty14.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + tbqty15.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + tbqty16.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + tbqty17.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + tbqty18.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + tbqty19.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + tbqty20.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + tbqty21.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + tbqty22.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + tbqty23.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + tbqty24.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + tbqty25.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + tbqty26.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + tbqty27.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + tbqty28.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + tbqty29.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + tbqty30.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + tbqty31.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + tbqty32.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + tbqty33.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + tbqty34.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + tbqty35.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + tbqty36.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + tbqty37.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + tbqty38.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + tbqty39.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + tbqty40.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + tbqty41.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + tbqty42.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + tbqty43.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + tbqty44.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + tbqty45.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + tbqty46.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + tbqty47.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + tbqty48.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + tbqty49.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + tbqty50.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + tbqty51.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + tbqty52.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
                                 + "'" + bsmf.MainFrame.userid + "'" + ","
                                 + "'" + bsmf.MainFrame.userid + "'" + ","
                                 + "'" + dfdate.format(now) + "'" + ","
@@ -572,58 +573,58 @@ public class ForecastMaint extends javax.swing.JPanel implements IBlueSeer {
                      st.executeUpdate("update fct_mstr "
                             + "set " + "fct_chg_userid = " + "'" + bsmf.MainFrame.userid + "'" + "," +
                                 " fct_chg_date = " + "'" + dfdate.format(now) + "'" + "," +
-                                " fct_wkqty1 = " + "'" + tbqty1.getText() + "'" + "," +
-                                " fct_wkqty2 = " + "'" + tbqty2.getText() + "'" + "," +
-                                " fct_wkqty3 = " + "'" + tbqty3.getText() + "'" + "," +
-                                " fct_wkqty4 = " + "'" + tbqty4.getText() + "'" + "," +
-                                " fct_wkqty5 = " + "'" + tbqty5.getText() + "'" + "," +
-                                " fct_wkqty6 = " + "'" + tbqty6.getText() + "'" + "," +
-                                " fct_wkqty7 = " + "'" + tbqty7.getText() + "'" + "," +
-                                " fct_wkqty8 = " + "'" + tbqty8.getText() + "'" + "," +
-                                " fct_wkqty9 = " + "'" + tbqty9.getText() + "'" + "," +
-                                " fct_wkqty10 = " + "'" + tbqty10.getText() + "'" + "," +
-                                " fct_wkqty11 = " + "'" + tbqty11.getText() + "'" + "," +
-                                " fct_wkqty12 = " + "'" + tbqty12.getText() + "'" + "," +
-                                " fct_wkqty13 = " + "'" + tbqty13.getText() + "'" + "," +
-                                " fct_wkqty14 = " + "'" + tbqty14.getText() + "'" + "," +
-                                " fct_wkqty15 = " + "'" + tbqty15.getText() + "'" + "," +
-                                " fct_wkqty16 = " + "'" + tbqty16.getText() + "'" + "," +
-                                " fct_wkqty17 = " + "'" + tbqty17.getText() + "'" + "," +
-                                " fct_wkqty18 = " + "'" + tbqty18.getText() + "'" + "," +
-                                " fct_wkqty19 = " + "'" + tbqty19.getText() + "'" + "," +
-                                " fct_wkqty20 = " + "'" + tbqty20.getText() + "'" + "," +
-                                " fct_wkqty21 = " + "'" + tbqty21.getText() + "'" + "," +
-                                " fct_wkqty22 = " + "'" + tbqty22.getText() + "'" + "," +
-                                " fct_wkqty23 = " + "'" + tbqty23.getText() + "'" + "," +
-                                " fct_wkqty24 = " + "'" + tbqty24.getText() + "'" + "," +
-                                " fct_wkqty25 = " + "'" + tbqty25.getText() + "'" + "," +
-                                " fct_wkqty26 = " + "'" + tbqty26.getText() + "'" + "," +
-                                " fct_wkqty27 = " + "'" + tbqty27.getText() + "'" + "," +
-                                " fct_wkqty28 = " + "'" + tbqty28.getText() + "'" + "," +
-                                " fct_wkqty29 = " + "'" + tbqty29.getText() + "'" + "," +
-                                " fct_wkqty30 = " + "'" + tbqty30.getText() + "'" + "," +
-                                " fct_wkqty31 = " + "'" + tbqty31.getText() + "'" + "," +
-                                " fct_wkqty32 = " + "'" + tbqty32.getText() + "'" + "," +
-                                " fct_wkqty33 = " + "'" + tbqty33.getText() + "'" + "," +
-                                " fct_wkqty34 = " + "'" + tbqty34.getText() + "'" + "," +
-                                " fct_wkqty35 = " + "'" + tbqty35.getText() + "'" + "," +
-                                " fct_wkqty36 = " + "'" + tbqty36.getText() + "'" + "," +
-                                " fct_wkqty37 = " + "'" + tbqty37.getText() + "'" + "," +
-                                " fct_wkqty38 = " + "'" + tbqty38.getText() + "'" + "," +
-                                " fct_wkqty39 = " + "'" + tbqty39.getText() + "'" + "," +
-                                " fct_wkqty40 = " + "'" + tbqty40.getText() + "'" + "," +
-                                " fct_wkqty41 = " + "'" + tbqty41.getText() + "'" + "," +
-                                " fct_wkqty42 = " + "'" + tbqty42.getText() + "'" + "," +
-                                " fct_wkqty43 = " + "'" + tbqty43.getText() + "'" + "," +
-                                " fct_wkqty44 = " + "'" + tbqty44.getText() + "'" + "," +
-                                " fct_wkqty45 = " + "'" + tbqty45.getText() + "'" + "," +
-                                " fct_wkqty46 = " + "'" + tbqty46.getText() + "'" + "," +
-                                " fct_wkqty47 = " + "'" + tbqty47.getText() + "'" + "," +
-                                " fct_wkqty48 = " + "'" + tbqty48.getText() + "'" + "," +
-                                " fct_wkqty49 = " + "'" + tbqty49.getText() + "'" + "," +
-                                " fct_wkqty50 = " + "'" + tbqty50.getText() + "'" + "," +
-                                " fct_wkqty51 = " + "'" + tbqty51.getText() + "'" + "," +
-                                " fct_wkqty52 = " + "'" + tbqty52.getText() + "'" + 
+                                " fct_wkqty1 = " + "'" + tbqty1.getText().replace(defaultDecimalSeparator, '.') + "'" + "," +
+                                " fct_wkqty2 = " + "'" + tbqty2.getText().replace(defaultDecimalSeparator, '.') + "'" + "," +
+                                " fct_wkqty3 = " + "'" + tbqty3.getText().replace(defaultDecimalSeparator, '.') + "'" + "," +
+                                " fct_wkqty4 = " + "'" + tbqty4.getText().replace(defaultDecimalSeparator, '.') + "'" + "," +
+                                " fct_wkqty5 = " + "'" + tbqty5.getText().replace(defaultDecimalSeparator, '.') + "'" + "," +
+                                " fct_wkqty6 = " + "'" + tbqty6.getText().replace(defaultDecimalSeparator, '.') + "'" + "," +
+                                " fct_wkqty7 = " + "'" + tbqty7.getText().replace(defaultDecimalSeparator, '.') + "'" + "," +
+                                " fct_wkqty8 = " + "'" + tbqty8.getText().replace(defaultDecimalSeparator, '.') + "'" + "," +
+                                " fct_wkqty9 = " + "'" + tbqty9.getText().replace(defaultDecimalSeparator, '.') + "'" + "," +
+                                " fct_wkqty10 = " + "'" + tbqty10.getText().replace(defaultDecimalSeparator, '.') + "'" + "," +
+                                " fct_wkqty11 = " + "'" + tbqty11.getText().replace(defaultDecimalSeparator, '.') + "'" + "," +
+                                " fct_wkqty12 = " + "'" + tbqty12.getText().replace(defaultDecimalSeparator, '.') + "'" + "," +
+                                " fct_wkqty13 = " + "'" + tbqty13.getText().replace(defaultDecimalSeparator, '.') + "'" + "," +
+                                " fct_wkqty14 = " + "'" + tbqty14.getText().replace(defaultDecimalSeparator, '.') + "'" + "," +
+                                " fct_wkqty15 = " + "'" + tbqty15.getText().replace(defaultDecimalSeparator, '.') + "'" + "," +
+                                " fct_wkqty16 = " + "'" + tbqty16.getText().replace(defaultDecimalSeparator, '.') + "'" + "," +
+                                " fct_wkqty17 = " + "'" + tbqty17.getText().replace(defaultDecimalSeparator, '.') + "'" + "," +
+                                " fct_wkqty18 = " + "'" + tbqty18.getText().replace(defaultDecimalSeparator, '.') + "'" + "," +
+                                " fct_wkqty19 = " + "'" + tbqty19.getText().replace(defaultDecimalSeparator, '.') + "'" + "," +
+                                " fct_wkqty20 = " + "'" + tbqty20.getText().replace(defaultDecimalSeparator, '.') + "'" + "," +
+                                " fct_wkqty21 = " + "'" + tbqty21.getText().replace(defaultDecimalSeparator, '.') + "'" + "," +
+                                " fct_wkqty22 = " + "'" + tbqty22.getText().replace(defaultDecimalSeparator, '.') + "'" + "," +
+                                " fct_wkqty23 = " + "'" + tbqty23.getText().replace(defaultDecimalSeparator, '.') + "'" + "," +
+                                " fct_wkqty24 = " + "'" + tbqty24.getText().replace(defaultDecimalSeparator, '.') + "'" + "," +
+                                " fct_wkqty25 = " + "'" + tbqty25.getText().replace(defaultDecimalSeparator, '.') + "'" + "," +
+                                " fct_wkqty26 = " + "'" + tbqty26.getText().replace(defaultDecimalSeparator, '.') + "'" + "," +
+                                " fct_wkqty27 = " + "'" + tbqty27.getText().replace(defaultDecimalSeparator, '.') + "'" + "," +
+                                " fct_wkqty28 = " + "'" + tbqty28.getText().replace(defaultDecimalSeparator, '.') + "'" + "," +
+                                " fct_wkqty29 = " + "'" + tbqty29.getText().replace(defaultDecimalSeparator, '.') + "'" + "," +
+                                " fct_wkqty30 = " + "'" + tbqty30.getText().replace(defaultDecimalSeparator, '.') + "'" + "," +
+                                " fct_wkqty31 = " + "'" + tbqty31.getText().replace(defaultDecimalSeparator, '.') + "'" + "," +
+                                " fct_wkqty32 = " + "'" + tbqty32.getText().replace(defaultDecimalSeparator, '.') + "'" + "," +
+                                " fct_wkqty33 = " + "'" + tbqty33.getText().replace(defaultDecimalSeparator, '.') + "'" + "," +
+                                " fct_wkqty34 = " + "'" + tbqty34.getText().replace(defaultDecimalSeparator, '.') + "'" + "," +
+                                " fct_wkqty35 = " + "'" + tbqty35.getText().replace(defaultDecimalSeparator, '.') + "'" + "," +
+                                " fct_wkqty36 = " + "'" + tbqty36.getText().replace(defaultDecimalSeparator, '.') + "'" + "," +
+                                " fct_wkqty37 = " + "'" + tbqty37.getText().replace(defaultDecimalSeparator, '.') + "'" + "," +
+                                " fct_wkqty38 = " + "'" + tbqty38.getText().replace(defaultDecimalSeparator, '.') + "'" + "," +
+                                " fct_wkqty39 = " + "'" + tbqty39.getText().replace(defaultDecimalSeparator, '.') + "'" + "," +
+                                " fct_wkqty40 = " + "'" + tbqty40.getText().replace(defaultDecimalSeparator, '.') + "'" + "," +
+                                " fct_wkqty41 = " + "'" + tbqty41.getText().replace(defaultDecimalSeparator, '.') + "'" + "," +
+                                " fct_wkqty42 = " + "'" + tbqty42.getText().replace(defaultDecimalSeparator, '.') + "'" + "," +
+                                " fct_wkqty43 = " + "'" + tbqty43.getText().replace(defaultDecimalSeparator, '.') + "'" + "," +
+                                " fct_wkqty44 = " + "'" + tbqty44.getText().replace(defaultDecimalSeparator, '.') + "'" + "," +
+                                " fct_wkqty45 = " + "'" + tbqty45.getText().replace(defaultDecimalSeparator, '.') + "'" + "," +
+                                " fct_wkqty46 = " + "'" + tbqty46.getText().replace(defaultDecimalSeparator, '.') + "'" + "," +
+                                " fct_wkqty47 = " + "'" + tbqty47.getText().replace(defaultDecimalSeparator, '.') + "'" + "," +
+                                " fct_wkqty48 = " + "'" + tbqty48.getText().replace(defaultDecimalSeparator, '.') + "'" + "," +
+                                " fct_wkqty49 = " + "'" + tbqty49.getText().replace(defaultDecimalSeparator, '.') + "'" + "," +
+                                " fct_wkqty50 = " + "'" + tbqty50.getText().replace(defaultDecimalSeparator, '.') + "'" + "," +
+                                " fct_wkqty51 = " + "'" + tbqty51.getText().replace(defaultDecimalSeparator, '.') + "'" + "," +
+                                " fct_wkqty52 = " + "'" + tbqty52.getText().replace(defaultDecimalSeparator, '.') + "'" + 
                              " where fct_part = " + "'" + tbkey.getText() + "'" +
                               " AND fct_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +
                               " AND fct_year = " + "'" + ddyear.getSelectedItem().toString() + "'"
@@ -722,58 +723,58 @@ public class ForecastMaint extends javax.swing.JPanel implements IBlueSeer {
                     tbkey.setText(x[0]);
                     ddsite.setSelectedItem(res.getString("fct_site"));
                     ddyear.setSelectedItem(res.getString("fct_year"));
-                     tbqty1.setText(res.getString("fct_wkqty1"));
-        tbqty2.setText(res.getString("fct_wkqty2"));
-        tbqty3.setText(res.getString("fct_wkqty3"));
-        tbqty4.setText(res.getString("fct_wkqty4"));
-        tbqty5.setText(res.getString("fct_wkqty5"));
-        tbqty6.setText(res.getString("fct_wkqty6"));
-        tbqty7.setText(res.getString("fct_wkqty7"));
-        tbqty8.setText(res.getString("fct_wkqty8"));
-        tbqty9.setText(res.getString("fct_wkqty9"));
-        tbqty10.setText(res.getString("fct_wkqty10"));
-        tbqty11.setText(res.getString("fct_wkqty11"));
-        tbqty12.setText(res.getString("fct_wkqty12"));
-        tbqty13.setText(res.getString("fct_wkqty13"));
-        tbqty14.setText(res.getString("fct_wkqty14"));
-        tbqty15.setText(res.getString("fct_wkqty15"));
-        tbqty16.setText(res.getString("fct_wkqty16"));
-        tbqty17.setText(res.getString("fct_wkqty17"));
-        tbqty18.setText(res.getString("fct_wkqty18"));
-        tbqty19.setText(res.getString("fct_wkqty19"));
-        tbqty20.setText(res.getString("fct_wkqty20"));
-        tbqty21.setText(res.getString("fct_wkqty21"));
-        tbqty22.setText(res.getString("fct_wkqty22"));
-        tbqty23.setText(res.getString("fct_wkqty23"));
-        tbqty24.setText(res.getString("fct_wkqty24"));
-        tbqty25.setText(res.getString("fct_wkqty25"));
-        tbqty26.setText(res.getString("fct_wkqty26"));
-        tbqty27.setText(res.getString("fct_wkqty27"));
-        tbqty28.setText(res.getString("fct_wkqty28"));
-        tbqty29.setText(res.getString("fct_wkqty29"));
-        tbqty30.setText(res.getString("fct_wkqty30"));
-        tbqty31.setText(res.getString("fct_wkqty31"));
-        tbqty32.setText(res.getString("fct_wkqty32"));
-        tbqty33.setText(res.getString("fct_wkqty33"));
-        tbqty34.setText(res.getString("fct_wkqty34"));
-        tbqty35.setText(res.getString("fct_wkqty35"));
-        tbqty36.setText(res.getString("fct_wkqty36"));
-        tbqty37.setText(res.getString("fct_wkqty37"));
-        tbqty38.setText(res.getString("fct_wkqty38"));
-        tbqty39.setText(res.getString("fct_wkqty39"));
-        tbqty40.setText(res.getString("fct_wkqty40"));
-        tbqty41.setText(res.getString("fct_wkqty41"));
-        tbqty42.setText(res.getString("fct_wkqty42"));
-        tbqty43.setText(res.getString("fct_wkqty43"));
-        tbqty44.setText(res.getString("fct_wkqty44"));
-        tbqty45.setText(res.getString("fct_wkqty45"));
-        tbqty46.setText(res.getString("fct_wkqty46"));
-        tbqty47.setText(res.getString("fct_wkqty47"));
-        tbqty48.setText(res.getString("fct_wkqty48"));
-        tbqty49.setText(res.getString("fct_wkqty49"));
-        tbqty50.setText(res.getString("fct_wkqty50"));
-        tbqty51.setText(res.getString("fct_wkqty51"));
-        tbqty52.setText(res.getString("fct_wkqty52"));
+                     tbqty1.setText(res.getString("fct_wkqty1").replace('.',defaultDecimalSeparator));
+        tbqty2.setText(res.getString("fct_wkqty2").replace('.',defaultDecimalSeparator));
+        tbqty3.setText(res.getString("fct_wkqty3").replace('.',defaultDecimalSeparator));
+        tbqty4.setText(res.getString("fct_wkqty4").replace('.',defaultDecimalSeparator));
+        tbqty5.setText(res.getString("fct_wkqty5").replace('.',defaultDecimalSeparator));
+        tbqty6.setText(res.getString("fct_wkqty6").replace('.',defaultDecimalSeparator));
+        tbqty7.setText(res.getString("fct_wkqty7").replace('.',defaultDecimalSeparator));
+        tbqty8.setText(res.getString("fct_wkqty8").replace('.',defaultDecimalSeparator));
+        tbqty9.setText(res.getString("fct_wkqty9").replace('.',defaultDecimalSeparator));
+        tbqty10.setText(res.getString("fct_wkqty10").replace('.',defaultDecimalSeparator));
+        tbqty11.setText(res.getString("fct_wkqty11").replace('.',defaultDecimalSeparator));
+        tbqty12.setText(res.getString("fct_wkqty12").replace('.',defaultDecimalSeparator));
+        tbqty13.setText(res.getString("fct_wkqty13").replace('.',defaultDecimalSeparator));
+        tbqty14.setText(res.getString("fct_wkqty14").replace('.',defaultDecimalSeparator));
+        tbqty15.setText(res.getString("fct_wkqty15").replace('.',defaultDecimalSeparator));
+        tbqty16.setText(res.getString("fct_wkqty16").replace('.',defaultDecimalSeparator));
+        tbqty17.setText(res.getString("fct_wkqty17").replace('.',defaultDecimalSeparator));
+        tbqty18.setText(res.getString("fct_wkqty18").replace('.',defaultDecimalSeparator));
+        tbqty19.setText(res.getString("fct_wkqty19").replace('.',defaultDecimalSeparator));
+        tbqty20.setText(res.getString("fct_wkqty20").replace('.',defaultDecimalSeparator));
+        tbqty21.setText(res.getString("fct_wkqty21").replace('.',defaultDecimalSeparator));
+        tbqty22.setText(res.getString("fct_wkqty22").replace('.',defaultDecimalSeparator));
+        tbqty23.setText(res.getString("fct_wkqty23").replace('.',defaultDecimalSeparator));
+        tbqty24.setText(res.getString("fct_wkqty24").replace('.',defaultDecimalSeparator));
+        tbqty25.setText(res.getString("fct_wkqty25").replace('.',defaultDecimalSeparator));
+        tbqty26.setText(res.getString("fct_wkqty26").replace('.',defaultDecimalSeparator));
+        tbqty27.setText(res.getString("fct_wkqty27").replace('.',defaultDecimalSeparator));
+        tbqty28.setText(res.getString("fct_wkqty28").replace('.',defaultDecimalSeparator));
+        tbqty29.setText(res.getString("fct_wkqty29").replace('.',defaultDecimalSeparator));
+        tbqty30.setText(res.getString("fct_wkqty30").replace('.',defaultDecimalSeparator));
+        tbqty31.setText(res.getString("fct_wkqty31").replace('.',defaultDecimalSeparator));
+        tbqty32.setText(res.getString("fct_wkqty32").replace('.',defaultDecimalSeparator));
+        tbqty33.setText(res.getString("fct_wkqty33").replace('.',defaultDecimalSeparator));
+        tbqty34.setText(res.getString("fct_wkqty34").replace('.',defaultDecimalSeparator));
+        tbqty35.setText(res.getString("fct_wkqty35").replace('.',defaultDecimalSeparator));
+        tbqty36.setText(res.getString("fct_wkqty36").replace('.',defaultDecimalSeparator));
+        tbqty37.setText(res.getString("fct_wkqty37").replace('.',defaultDecimalSeparator));
+        tbqty38.setText(res.getString("fct_wkqty38").replace('.',defaultDecimalSeparator));
+        tbqty39.setText(res.getString("fct_wkqty39").replace('.',defaultDecimalSeparator));
+        tbqty40.setText(res.getString("fct_wkqty40").replace('.',defaultDecimalSeparator));
+        tbqty41.setText(res.getString("fct_wkqty41").replace('.',defaultDecimalSeparator));
+        tbqty42.setText(res.getString("fct_wkqty42").replace('.',defaultDecimalSeparator));
+        tbqty43.setText(res.getString("fct_wkqty43").replace('.',defaultDecimalSeparator));
+        tbqty44.setText(res.getString("fct_wkqty44").replace('.',defaultDecimalSeparator));
+        tbqty45.setText(res.getString("fct_wkqty45").replace('.',defaultDecimalSeparator));
+        tbqty46.setText(res.getString("fct_wkqty46").replace('.',defaultDecimalSeparator));
+        tbqty47.setText(res.getString("fct_wkqty47").replace('.',defaultDecimalSeparator));
+        tbqty48.setText(res.getString("fct_wkqty48").replace('.',defaultDecimalSeparator));
+        tbqty49.setText(res.getString("fct_wkqty49").replace('.',defaultDecimalSeparator));
+        tbqty50.setText(res.getString("fct_wkqty50").replace('.',defaultDecimalSeparator));
+        tbqty51.setText(res.getString("fct_wkqty51").replace('.',defaultDecimalSeparator));
+        tbqty52.setText(res.getString("fct_wkqty52").replace('.',defaultDecimalSeparator));
         
                 }
                

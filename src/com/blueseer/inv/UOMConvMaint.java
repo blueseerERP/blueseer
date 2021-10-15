@@ -28,6 +28,7 @@ package com.blueseer.inv;
 import com.blueseer.fgl.*;
 import com.blueseer.adm.*;
 import bsmf.MainFrame;
+import static bsmf.MainFrame.defaultDecimalSeparator;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import com.blueseer.utl.BlueSeerUtils;
@@ -338,8 +339,8 @@ public class UOMConvMaint extends javax.swing.JPanel    {
                             + "'" + "uom" + "'" + ","        
                             + "'" + x[0] + "'" + ","
                             + "'" + x[1] + "'" + ","
-                            + "'" + key1value.getText().toString() + "'" + ","
-                            + "'" + key2value.getText().toString() + "'"        
+                            + "'" + key1value.getText().toString().replace(defaultDecimalSeparator, '.') + "'" + ","
+                            + "'" + key2value.getText().toString().replace(defaultDecimalSeparator, '.') + "'"        
                             + ")"
                             + ";");
                          m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
@@ -391,8 +392,8 @@ public class UOMConvMaint extends javax.swing.JPanel    {
                 
                 if (proceed) {
                     st.executeUpdate("update conv_mstr set " +
-                            " conv_fromamt = " + "'" + key1value.getText() + "'" + ","
-                            + " conv_toamt = " + "'" + key2value.getText() + "'" + ","
+                            " conv_fromamt = " + "'" + key1value.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
+                            + " conv_toamt = " + "'" + key2value.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
                             + " conv_notes = " + "'" + tanotes.getText().replace("'", "''") + "'"
                             + " where conv_tocode = " + "'" + x[1] + "'"
                             + " AND conv_fromcode = " + "'" + x[0] + "'"           
@@ -482,8 +483,8 @@ public class UOMConvMaint extends javax.swing.JPanel    {
                     i++;
                     tbkey.setText(x[0]);
                     tbkey2.setText(res.getString("conv_tocode"));
-                    key1value.setText(res.getString("conv_fromamt"));
-                    key2value.setText(res.getString("conv_toamt"));
+                    key1value.setText(res.getString("conv_fromamt").replace('.',defaultDecimalSeparator));
+                    key2value.setText(res.getString("conv_toamt").replace('.',defaultDecimalSeparator));
                     tanotes.setText(res.getString("conv_notes"));
                     
                 }
