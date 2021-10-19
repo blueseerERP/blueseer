@@ -3170,7 +3170,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
                 bsmf.MainFrame.show(getMessageTag(1088));
                 return;
             } else {
-            bsmf.MainFrame.show(getMessageTag(1088, String.valueOf(i)));
+            bsmf.MainFrame.show(getMessageTag(1031, String.valueOf(i)));
             linetax.remove(orddet.getValueAt(i, 0));
             ((javax.swing.table.DefaultTableModel) orddet.getModel()).removeRow(i);
             }

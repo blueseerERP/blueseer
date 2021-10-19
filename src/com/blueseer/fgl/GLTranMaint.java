@@ -1155,10 +1155,10 @@ public class GLTranMaint extends javax.swing.JPanel {
         
        if (ddtype.getSelectedItem().toString().equals("standard")) {
        type = "JL";
-       tbref.setText(OVData.setGLRecNbr("JL"));
+       tbref.setText(fglData.setGLRecNbr("JL"));
        } else {
        type = "RV";
-       tbref.setText(OVData.setGLRecNbr("RV"));    
+       tbref.setText(fglData.setGLRecNbr("RV"));    
        }
        
        tbref.setEnabled(false);

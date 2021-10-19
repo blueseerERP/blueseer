@@ -577,7 +577,7 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeer {
                       
                      /* create gl_tran records */
                         if (! error)
-                        error = OVData.glEntryFromVoucherExpense(tbkey.getText(), dcdate.getDate());
+                        error = fglData.glEntryFromVoucherExpense(tbkey.getText(), dcdate.getDate());
                          
                         if (! error)
                         error = OVData.APExpense(dcdate.getDate(), OVData.getNextNbr("expensenumber"), tbkey.getText(), tbrmks.getText(), ddvend.getSelectedItem().toString(), actamt, "AP-Expense");

@@ -970,7 +970,7 @@ public class BlueSeerUtils {
      public static String getMessageTag(int key, String thisclass) {
          String tag = "";
           if (tags.containsKey("global.message." + key)) {
-              tag = MessageFormat.format(tags.getString("global.message." + key), thisclass);
+              tag = MessageFormat.format(tags.getString("global.message." + key).replace("'", "''"), thisclass);
           }
          return tag;
      }

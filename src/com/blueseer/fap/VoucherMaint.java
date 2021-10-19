@@ -30,6 +30,7 @@ import bsmf.MainFrame;
 import static bsmf.MainFrame.defaultDecimalSeparator;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
+import com.blueseer.fgl.fglData;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
@@ -1146,9 +1147,9 @@ public class VoucherMaint extends javax.swing.JPanel {
                     /* create gl_tran records */
                         if (! error)
                              if (ddtype.getSelectedItem().toString().equals("Receipt")) {
-                                 error = OVData.glEntryFromVoucher(vouchernbr.getText(), dcdate.getDate());
+                                 error = fglData.glEntryFromVoucher(vouchernbr.getText(), dcdate.getDate());
                              } else {
-                                 error = OVData.glEntryFromVoucherExpense(vouchernbr.getText(), dcdate.getDate());
+                                 error = fglData.glEntryFromVoucherExpense(vouchernbr.getText(), dcdate.getDate());
                              }
                         
                     if (error) {

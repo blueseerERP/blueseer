@@ -382,7 +382,7 @@ public class IncomeMaint extends javax.swing.JPanel implements IBlueSeer {
         tbkey.setEditable(true);
         tbkey.setForeground(Color.blue);
         // this is a deviation from other 'newAction' of the interface...due to GL nature of key
-        tbkey.setText(OVData.setGLRecNbr("JL"));  
+        tbkey.setText(fglData.setGLRecNbr("JL"));  
         tbkey.setEditable(false);
         tbkey.requestFocus();
     }

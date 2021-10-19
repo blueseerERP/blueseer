@@ -1249,9 +1249,7 @@ public class cusData {
                 if (st != null) {
                     st.close();
                 }
-                if (con != null) {
                     con.close();
-                }
             }
         } catch (Exception e) {
             MainFrame.bslog(e);

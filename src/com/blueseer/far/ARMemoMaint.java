@@ -50,6 +50,7 @@ import static bsmf.MainFrame.defaultDecimalSeparator;
 import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.tags;
 import com.blueseer.ctr.cusData;
+import com.blueseer.fgl.fglData;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.text.DecimalFormatSymbols;
@@ -794,7 +795,7 @@ public class ARMemoMaint extends javax.swing.JPanel {
                     
                     /* create gl_tran records */
                         if (! error)
-                        error = OVData.glEntryFromARMemo(tbref.getText(), dceffdate.getDate());
+                        error = fglData.glEntryFromARMemo(tbref.getText(), dceffdate.getDate());
                     if (error) {
                         bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
                     } else {

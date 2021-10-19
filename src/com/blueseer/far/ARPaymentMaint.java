@@ -30,6 +30,7 @@ import static bsmf.MainFrame.defaultDecimalSeparator;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import com.blueseer.ctr.cusData;
+import com.blueseer.fgl.fglData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
@@ -606,7 +607,7 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
                     
                     /* create gl_tran records */
                         if (! error)
-                        error = OVData.glEntryFromARPayment(tbkey.getText(), dcdate.getDate());
+                        error = fglData.glEntryFromARPayment(tbkey.getText(), dcdate.getDate());
                     /* done */
                     
                      m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};

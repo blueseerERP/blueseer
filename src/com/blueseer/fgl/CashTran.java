@@ -672,7 +672,7 @@ public class CashTran extends javax.swing.JPanel {
                     
                     /* create gl_tran records */
                         if (! error)
-                        error = OVData.glEntryFromCashTranBuy(expensenbr.getText(), dcdate.getDate());
+                        error = fglData.glEntryFromCashTranBuy(expensenbr.getText(), dcdate.getDate());
                     
                     /* emulate cash payment */    
                         if (! error)
@@ -869,7 +869,7 @@ public class CashTran extends javax.swing.JPanel {
                          // update AR entry for original invoices with status and open amt  
                         error = OVData.ARUpdate(batchnbr);
                         if (! error) {
-                        error = OVData.glEntryFromARPayment(batchnbr, dcdate1.getDate());
+                        error = fglData.glEntryFromARPayment(batchnbr, dcdate1.getDate());
                         }
                      }
                     // end of emulate AR Payment
@@ -1019,7 +1019,7 @@ public class CashTran extends javax.swing.JPanel {
                     key = String.valueOf(exp);
                     /* create gl_tran records */
                         if (! error)
-                        error = OVData.glEntryFromVoucherExpense(tbKeyExpense.getText(), dcdateExpense.getDate());
+                        error = fglData.glEntryFromVoucherExpense(tbKeyExpense.getText(), dcdateExpense.getDate());
                          
                         if (! error)
                         error = OVData.APExpense(dcdateExpense.getDate(), exp, tbKeyExpense.getText(), tbexpensePO.getText(), ddentityExpense.getSelectedItem().toString(), total, "AP-Cash");
@@ -1304,7 +1304,7 @@ public class CashTran extends javax.swing.JPanel {
                     
                     /* create gl_tran records */
                         if (! error)
-                        error = OVData.glEntryFromVoucherExpense(key, now);
+                        error = fglData.glEntryFromVoucherExpense(key, now);
                          
                         if (! error)
                         error = OVData.APExpense(now, exp, key, recurexpensetable.getValueAt(z, 1).toString(), recurexpensetable.getValueAt(z, 3).toString(), Double.valueOf(recurexpensetable.getValueAt(z, 9).toString()), "AP-Cash");

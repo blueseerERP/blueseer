@@ -31,6 +31,7 @@ import static bsmf.MainFrame.dfdate;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
+import com.blueseer.fgl.fglData;
 import static com.blueseer.rcv.rcvData.addReceiverTransaction;
 import static com.blueseer.rcv.rcvData.getReceiverLines;
 import static com.blueseer.rcv.rcvData.isReceived;
@@ -533,7 +534,7 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeer {
 
         /* create gl_tran records */
         if (! error)
-        error = OVData.glEntryFromReceiver(tbkey.getText(), dcdate.getDate());
+        error = fglData.glEntryFromReceiver(tbkey.getText(), dcdate.getDate());
      
     /* create auto-voucher from temptable if autovoucher is on */
     if (cbautovoucher.isSelected()) {
@@ -825,8 +826,8 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeer {
             tempmodel.addRow(new Object[] {tbkey.getText(), 
             rvdet.getValueAt(j, 0).toString(),
             rvdet.getValueAt(j, 1).toString(),
-            rvdet.getValueAt(j, 4).toString(),
-            rvdet.getValueAt(j, 8).toString()
+            rvdet.getValueAt(j, 4).toString().replace(defaultDecimalSeparator, '.'),
+            rvdet.getValueAt(j, 8).toString().replace(defaultDecimalSeparator, '.')
                         });
         }
         return temptable;

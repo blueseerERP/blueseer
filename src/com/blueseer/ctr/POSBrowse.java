@@ -66,6 +66,7 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import com.blueseer.fgl.fglData;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.text.DecimalFormatSymbols;
@@ -228,7 +229,7 @@ public class POSBrowse extends javax.swing.JPanel {
         try { 
             bscon = DriverManager.getConnection(url + db, user, pass);
             bscon.setAutoCommit(false);
-            OVData.voidGLEntryFromPOS(nbr, now, bscon);
+            fglData.voidGLEntryFromPOS(nbr, now, bscon);
             OVData.TRHistIssSalesPOS(nbr, now, true, bscon); 
             OVData.UpdateInventoryFromPOS(nbr, true, bscon);
             OVData.voidPOSStatus(nbr, bscon);

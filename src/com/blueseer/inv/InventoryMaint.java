@@ -27,6 +27,7 @@ package com.blueseer.inv;
 
 import bsmf.MainFrame;
 import static bsmf.MainFrame.tags;
+import com.blueseer.fgl.fglData;
 
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -752,10 +753,10 @@ public class InventoryMaint extends javax.swing.JPanel {
        
         if (! isError) {
             if (ddtype.getSelectedItem().toString().equals("issue")) {
-                OVData.glEntry(invacct, prodline, acct, cc,  
+                fglData.glEntry(invacct, prodline, acct, cc,  
                         dfdate.format(dcdate.getDate()), (cost * Double.valueOf(tbqty.getText())), (cost * Double.valueOf(tbqty.getText())), basecurr, basecurr, tbref.getText() , site, type, tbrmks.getText());
             } else {
-                OVData.glEntry(ddacct.getSelectedItem().toString(), ddcc.getSelectedItem().toString(), invacct, prodline, 
+                fglData.glEntry(ddacct.getSelectedItem().toString(), ddcc.getSelectedItem().toString(), invacct, prodline, 
                         dfdate.format(dcdate.getDate()), (cost * Double.valueOf(tbqty.getText())), (cost * Double.valueOf(tbqty.getText())), basecurr, basecurr, tbref.getText() , site, type, tbrmks.getText());
             }
         } else {
