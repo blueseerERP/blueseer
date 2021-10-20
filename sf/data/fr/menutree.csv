@@ -59,9 +59,9 @@ RequisitionMenu,ReqChartsMenu,7,JMenu,Menu Graphique,,,,1,1
 ReqChartsMenu,ReqAmtByDeptChart,1,JMenuItem,Dollars par département,,1,,1,1
 ReqChartsMenu,ReqFreqByUserChart,2,JMenuItem,Demandes par utilisateur,,1,,1,1
 ReqChartsMenu,ReqAmtByAcctChart,3,JMenuItem,Dollars par compte,,1,,1,1
-Ordre,OrderMaint,1,JMenuItem,Maintenance des commandes,,,,1,1
+Ordre,OrderMaint,1,JMenuItem,Maintenance des ordres,,,,1,1
 Ordre,OrderBrowse,2,JMenuItem,Parcourir la commande,,1,,1,1
-Ordre,ServiceOrderMaint,3,JMenuItem,Maintenance des commandes de service,,,,1,1
+Ordre,ServiceOrderMaint,3,JMenuItem,Maintenance des ordres de service,,,,1,1
 Ordre,ServiceOrderBrowse,4,JMenuItem,Parcourir la commande de service,,,,1,1
 Ordre,OrderSourceBrowse,5,JMenuItem,Parcourir la source de la commande,,1,,1,1
 Ordre,OrdLineBrowse,6,JMenuItem,Parcourir la ligne de commande,,1,,1,1
@@ -71,8 +71,8 @@ Ordre,OrdRptPicker,9,JMenuItem,Sélecteur de rapport de commande,,,,1,1
 Ordre,OrderReports,10,JMenu,Autres rapports,,,,1,1
 Ordre,POSMenu,11,JMenu,Menu PDV,,,,1,1
 Ordre,DOMenu,12,JMenu,Menu de diffusion,,,,1,1
-Ordre,OrderSource,13,JMenuItem,Origine de la commande,,,,1,1
-Ordre,OrderControl,14,JMenuItem,Contrôle des commandes,,,,1,1
+Ordre,OrderSource,13,JMenuItem,Origine de la ordre,,,,1,1
+Ordre,OrderControl,14,JMenuItem,Contrôle des ordres,,,,1,1
 OrderReports,pcOpenOrdersByCust,1,JMenuItem,Ordres ouverts par client par date d'échéance (graphique circulaire),,1,,1,1
 OrderReports,DiscreteOrderPerWeekUnits,2,JMenuItem,Unités de commande par semaine (Bar Chart),,1,,1,1
 OrderReports,DiscreteOrderPerWeekDollars,3,JMenuItem,Ordre des ventes par semaine (BarChart),,1,,1,1
@@ -277,10 +277,10 @@ root,Aider,12,JMenu,Aider,,,,1,1
 POSMenu,POSMaint,1,JMenuItem,Saisie au point de vente,,,,1,1
 POSMenu,POSControlMaint,3,JMenuItem,Contrôle de point de vente,,,,1,1
 POSMenu,POSBrowse,2,JMenuItem,Parcourir les points de vente,,1,,1,1
-DOMenu,DOMaint,1,JMenuItem,Maintenance des commandes de distance,,,,1,1
+DOMenu,DOMaint,1,JMenuItem,Maintenance des ordres de distance,,,,1,1
 DOMenu,DOBrowse,2,JMenuItem,Dist Order Parcourir,,,,1,1
-TransportationMenu,FOMaint,1,JMenuItem,Maintenance des commandes de fret,,,,1,1
-TransportationMenu,FOBrowse,2,JMenuItem,Parcourir les commandes de fret,,,,1,1
+TransportationMenu,FOMaint,1,JMenuItem,Maintenance des ordres de fret,,,,1,1
+TransportationMenu,FOBrowse,2,JMenuItem,Parcourir les ordres de fret,,,,1,1
 RequisitionMenu,ReqControl,8,JMenuItem,Contrôle de la demande,,,,1,1
 Ingénierie,ECNMaint,1,JMenuItem,Maintenance ECN,,,,1,1
 Ingénierie,ECNBrowse,2,JMenuItem,Parcourir ECN,,1,,1,1

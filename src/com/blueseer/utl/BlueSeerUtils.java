@@ -27,6 +27,7 @@ package com.blueseer.utl;
 import bsmf.MainFrame;
 import static bsmf.MainFrame.bslog;
 import static bsmf.MainFrame.tags;
+import com.blueseer.adm.admData;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -49,6 +50,7 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Currency;
 import java.util.Date;
 import java.util.Locale;
@@ -152,6 +154,56 @@ public class BlueSeerUtils {
         public static JRadioButton lurb5 = null;
         public static JTextField luinput = new JTextField(20);
     
+    public static void callCurrencySet() {
+        
+        JDialog currdialog = new JDialog();
+        currdialog.setTitle(getMessageTag(1153));
+        currdialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        javax.swing.JComboBox ddcurr = new javax.swing.JComboBox<>();
+        javax.swing.JButton btcommit = new javax.swing.JButton();
+        ddcurr.removeAllItems();
+        ArrayList<String> curr = OVData.getCurrlist();
+        Collections.sort(curr);
+        for (int i = 0; i < curr.size(); i++) {
+            if (curr.get(i).equals("ALL"))
+                continue;
+            ddcurr.addItem(curr.get(i));
+        }
+        
+        btcommit.setText(getGlobalProgTag("commit"));
+        btcommit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+              admData.updateDefaultCurrency(ddcurr.getSelectedItem().toString());
+              currdialog.dispose();
+            }
+        });
+        
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridBagLayout());
+      
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(2,2,2,2);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        panel.add(ddcurr, gbc);
+        
+        
+        gbc.gridwidth = 1;
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        panel.add(btcommit, gbc);
+       
+        
+        currdialog.add(panel);
+        currdialog.setPreferredSize(new Dimension(300, 200));
+        currdialog.pack();
+        currdialog.setLocationRelativeTo( null );
+        currdialog.setResizable(false);
+        currdialog.setVisible(true);
+        ddcurr.requestFocus();
+    } 
+            
     public static void callDialog(String rb1) {
         
          if (ludialog != null) {
@@ -209,8 +261,7 @@ public class BlueSeerUtils {
         ludialog.setVisible(true);
         luinput.requestFocus();
     } 
-        
-        
+            
     public static void callDialog(String rb1, String rb2) {
         
          if (ludialog != null) {

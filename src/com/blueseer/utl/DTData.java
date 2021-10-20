@@ -138,7 +138,7 @@ public class DTData {
         
          }
     
-     public static DefaultTableModel getForecast4weeksAndSec(int wk) {
+    public static DefaultTableModel getForecast4weeksAndSec(int wk) {
          Calendar cal = Calendar.getInstance();
         cal.getTime();
        
@@ -246,8 +246,7 @@ public class DTData {
         return mymodel;
         
          }
-    
-    
+        
     public static DefaultTableModel getClockCodesAll() {
         
         
@@ -295,7 +294,7 @@ public class DTData {
         
          }
     
-         public static DefaultTableModel getClockRecords66All() {
+    public static DefaultTableModel getClockRecords66All() {
         
         
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
@@ -350,7 +349,7 @@ public class DTData {
         
          }
     
-           public static DefaultTableModel getQOHvsSSAll() {
+    public static DefaultTableModel getQOHvsSSAll() {
         
         
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
@@ -404,8 +403,6 @@ public class DTData {
         
          } 
          
-           
-           
     public static DefaultTableModel getItemInfoAll() {
         
         
@@ -462,8 +459,6 @@ public class DTData {
         
          } 
      
-   
-    
     public static DefaultTableModel getGLTranBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("ref"), getGlobalColumnTag("account"), getGlobalColumnTag("cc"), getGlobalColumnTag("site"), getGlobalColumnTag("effectivedate"), getGlobalColumnTag("enterdate"), getGlobalColumnTag("description"), getGlobalColumnTag("amount"), getGlobalColumnTag("userid")})
@@ -526,8 +521,6 @@ public class DTData {
         return mymodel;
         
          } 
-    
-        
     
     public static DefaultTableModel getItemBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
@@ -656,7 +649,6 @@ public class DTData {
         
          } 
     
-    
     public static DefaultTableModel getVendBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("code"), getGlobalColumnTag("name"), getGlobalColumnTag("addr1"), getGlobalColumnTag("city"), getGlobalColumnTag("state"), getGlobalColumnTag("zip"), getGlobalColumnTag("country")})
@@ -717,7 +709,7 @@ public class DTData {
         
          } 
         
-         public static DefaultTableModel getAcctBrowseUtil( String str, int state, String myfield) {
+    public static DefaultTableModel getAcctBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("code"), getGlobalColumnTag("description"), getGlobalColumnTag("type"), getGlobalColumnTag("currency")})
                 {
@@ -774,7 +766,7 @@ public class DTData {
         
          } 
          
-         public static DefaultTableModel getPanelBrowseUtil( String str, int state, String myfield) {
+    public static DefaultTableModel getPanelBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("class"), getGlobalColumnTag("description"), getGlobalColumnTag("system")})
                 {
@@ -830,7 +822,7 @@ public class DTData {
         
          } 
          
-          public static DefaultTableModel getKeyBrowseUtil( String str, int state, String myfield) {
+    public static DefaultTableModel getKeyBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("key"), getGlobalColumnTag("description"), getGlobalColumnTag("from"), getGlobalColumnTag("to"), getGlobalColumnTag("number")})
                 {
@@ -888,9 +880,8 @@ public class DTData {
         return mymodel;
         
          } 
-         
-         
-         public static DefaultTableModel getSiteBrowseUtil( String str, int state, String myfield) {
+                
+    public static DefaultTableModel getSiteBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("site"), getGlobalColumnTag("description"), getGlobalColumnTag("addr1"), getGlobalColumnTag("city"), getGlobalColumnTag("state"), getGlobalColumnTag("zip"), getGlobalColumnTag("image")})
                 {
@@ -950,7 +941,7 @@ public class DTData {
         
          } 
          
-        public static DefaultTableModel getCustBrowseUtil( String str, int state, String myfield) {
+    public static DefaultTableModel getCustBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("code"), getGlobalColumnTag("name"), getGlobalColumnTag("addr1"), getGlobalColumnTag("city"), getGlobalColumnTag("state"), getGlobalColumnTag("zip"), getGlobalColumnTag("country")}){
                       @Override  
@@ -1010,7 +1001,7 @@ public class DTData {
         
          } 
         
-        public static DefaultTableModel getShipToBrowseUtil( String str, int state, String myfield, String cust) {
+    public static DefaultTableModel getShipToBrowseUtil( String str, int state, String myfield, String cust) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("shipcode"), getGlobalColumnTag("customer"), getGlobalColumnTag("name"), getGlobalColumnTag("addr1"), getGlobalColumnTag("city"), getGlobalColumnTag("state"), getGlobalColumnTag("zip"), getGlobalColumnTag("country")})
                 {
@@ -1072,7 +1063,7 @@ public class DTData {
         
          } 
         
-        public static DefaultTableModel getShipToBrowseUtil( String str, int state, String myfield) {
+    public static DefaultTableModel getShipToBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("shipcode"), getGlobalColumnTag("customer"), getGlobalColumnTag("name"), getGlobalColumnTag("addr1"), getGlobalColumnTag("city"), getGlobalColumnTag("state"), getGlobalColumnTag("zip"), getGlobalColumnTag("country")})
                 {
@@ -1134,7 +1125,7 @@ public class DTData {
         
          } 
         
-         public static DefaultTableModel getRoutingBrowseUtil( String str, int state, String myfield) {
+    public static DefaultTableModel getRoutingBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("code"), getGlobalColumnTag("operation"), getGlobalColumnTag("cell"), getGlobalColumnTag("description"), getGlobalColumnTag("runhours"), getGlobalColumnTag("setuphours"), getGlobalColumnTag("enabled")})
                 {
@@ -1194,7 +1185,7 @@ public class DTData {
         
          } 
         
-          public static DefaultTableModel getWorkCenterBrowseUtil( String str, int state, String myfield) {
+    public static DefaultTableModel getWorkCenterBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("cell"),  getGlobalColumnTag("description"), getGlobalColumnTag("dept"), getGlobalColumnTag("runrate"), getGlobalColumnTag("setuprate"), getGlobalColumnTag("burdenrate")})
                 {
@@ -1253,7 +1244,7 @@ public class DTData {
         
          } 
          
-           public static DefaultTableModel getShiftBrowseUtil( String str, int state, String myfield) {
+    public static DefaultTableModel getShiftBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), "ShiftID", "ShiftDesc"})
                 {
@@ -1307,9 +1298,8 @@ public class DTData {
         return mymodel;
         
          } 
-        
-           
-       public static DefaultTableModel getUOMBrowseUtil( String str, int state, String myfield) {
+          
+    public static DefaultTableModel getUOMBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), getGlobalColumnTag(getGlobalColumnTag("uom")), getGlobalColumnTag("description")})
                 {
@@ -1364,7 +1354,7 @@ public class DTData {
         
          }     
         
-        public static DefaultTableModel getQPRBrowseUtil( String str, int state, String myfield) {
+    public static DefaultTableModel getQPRBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("item"),  getGlobalColumnTag("description"), getGlobalColumnTag("vendor"), getGlobalColumnTag("userid"), getGlobalColumnTag("createdate"), getGlobalColumnTag("closedate")})
                 {
@@ -1424,9 +1414,8 @@ public class DTData {
         return mymodel;
         
          }     
-        
-       
-         public static DefaultTableModel getPrinterBrowseUtil( String str, int state, String myfield) {
+     
+    public static DefaultTableModel getPrinterBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("description"), getGlobalColumnTag("type"), getGlobalColumnTag("ip"), getGlobalColumnTag("port")})
                 {
@@ -1485,9 +1474,7 @@ public class DTData {
         
          }     
       
-       
-       
-        public static DefaultTableModel getCurrencyBrowseUtil( String str, int state, String myfield) {
+    public static DefaultTableModel getCurrencyBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("description")})
                 {
@@ -1542,7 +1529,7 @@ public class DTData {
         
          }     
            
-        public static DefaultTableModel getUOMConvBrowseUtil( String str, int state, String myfield) {
+    public static DefaultTableModel getUOMConvBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), 
                           getGlobalColumnTag("key") + getGlobalColumnTag("1"), 
@@ -1608,9 +1595,7 @@ public class DTData {
         
          }     
        
-        
-        
-        public static DefaultTableModel getECNBrowseUtil( String str, int state, String myfield) {
+    public static DefaultTableModel getECNBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("number"), getGlobalColumnTag("id"), getGlobalColumnTag("description"), getGlobalColumnTag("user"), getGlobalColumnTag("status")})
                 {
@@ -1668,7 +1653,7 @@ public class DTData {
         
          } 
         
-         public static DefaultTableModel getTaskBrowseUtil( String str, int state, String myfield) {
+    public static DefaultTableModel getTaskBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("description"), getGlobalColumnTag("class"), getGlobalColumnTag("user"), getGlobalColumnTag("status")})
                 {
@@ -1726,7 +1711,7 @@ public class DTData {
         
          } 
         
-        public static DefaultTableModel getFreightBrowseUtil(String str, int state, String myfield) {
+    public static DefaultTableModel getFreightBrowseUtil(String str, int state, String myfield) {
               javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("code"), getGlobalColumnTag("description"), getGlobalColumnTag("enabled")})
                       {
@@ -1783,7 +1768,7 @@ public class DTData {
         
          }
          
-        public static DefaultTableModel getTaxBrowseUtil( String str, int state, String myfield) {
+    public static DefaultTableModel getTaxBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("code"), getGlobalColumnTag("description"), getGlobalColumnTag("userid")})
                 {
@@ -1839,7 +1824,7 @@ public class DTData {
         
          } 
           
-        public static DefaultTableModel getDocRulesBrowseUtil( String str, int state, String myfield) {
+    public static DefaultTableModel getDocRulesBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("description")})
                 {
@@ -1894,8 +1879,7 @@ public class DTData {
         
          } 
         
-        
-        public static DefaultTableModel getEDIPartnerBrowseUtil( String str, int state, String myfield) {
+    public static DefaultTableModel getEDIPartnerBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("description")})
                 {
@@ -1950,7 +1934,7 @@ public class DTData {
         
          } 
                 
-        public static DefaultTableModel getGenCodeBrowseUtil( String str, int state, String myfield) {
+    public static DefaultTableModel getGenCodeBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("code"), getGlobalColumnTag("key"), getGlobalColumnTag("value")})
                 {
@@ -2006,7 +1990,7 @@ public class DTData {
         
          } 
         
-        public static DefaultTableModel getJaspRptBrowseUtil( String str, int state, String myfield) {
+    public static DefaultTableModel getJaspRptBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("group"), getGlobalColumnTag("sequence"), getGlobalColumnTag("title"), getGlobalColumnTag("code")})
                 {
@@ -2063,8 +2047,7 @@ public class DTData {
         
          } 
         
-        
-        public static DefaultTableModel getFctMstrBrowseUtil( String str, int state, String myfield) {
+    public static DefaultTableModel getFctMstrBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("item"), getGlobalColumnTag("site"), getGlobalColumnTag("year")})
                 {
@@ -2120,9 +2103,7 @@ public class DTData {
         
          } 
         
-        
-        
-        public static DefaultTableModel getCustXrefBrowseUtil( String str, int state, String myfield) {
+    public static DefaultTableModel getCustXrefBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("customer"), getGlobalColumnTag("custitem"), getGlobalColumnTag("item")})
                 {
@@ -2178,7 +2159,7 @@ public class DTData {
         
          } 
         
-        public static DefaultTableModel getCustXrefBrowseUtil( String str, int state, String myfield, String cust) {
+    public static DefaultTableModel getCustXrefBrowseUtil( String str, int state, String myfield, String cust) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("customer"), getGlobalColumnTag("custitem"), getGlobalColumnTag("item")})
                 {
@@ -2237,8 +2218,7 @@ public class DTData {
         
          } 
         
-        
-        public static DefaultTableModel getVendXrefBrowseUtil( String str, int state, String myfield) {
+    public static DefaultTableModel getVendXrefBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("vendor"), getGlobalColumnTag("venditem"), getGlobalColumnTag("item")})
                 {
@@ -2294,7 +2274,7 @@ public class DTData {
         
          } 
         
-        public static DefaultTableModel getVendXrefBrowseUtil( String str, int state, String myfield, String vend) {
+    public static DefaultTableModel getVendXrefBrowseUtil( String str, int state, String myfield, String vend) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("vendor"), getGlobalColumnTag("venditem"), getGlobalColumnTag("item")})
                 {
@@ -2353,8 +2333,7 @@ public class DTData {
         
          } 
         
-        
-        public static DefaultTableModel getVendPriceBrowseUtil( String str, int state, String myfield) {
+    public static DefaultTableModel getVendPriceBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("vendor"), getGlobalColumnTag("item"), getGlobalColumnTag("uom"), getGlobalColumnTag("currency"), getGlobalColumnTag("price")})
                 {
@@ -2412,7 +2391,7 @@ public class DTData {
         
          } 
          
-         public static DefaultTableModel getCustPriceBrowseUtil( String str, int state, String myfield) {
+    public static DefaultTableModel getCustPriceBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("customer"), getGlobalColumnTag("item"), getGlobalColumnTag("uom"), getGlobalColumnTag("currency"), getGlobalColumnTag("price")})
                 {
@@ -2469,9 +2448,8 @@ public class DTData {
         return mymodel;
         
          } 
-           
           
-        public static DefaultTableModel getPayProfileBrowseUtil( String str, int state, String myfield) {
+    public static DefaultTableModel getPayProfileBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("code"), getGlobalColumnTag("description"), getGlobalColumnTag("userid")})
                 {
@@ -2527,7 +2505,7 @@ public class DTData {
         
          } 
          
-             public static DefaultTableModel getPayRollBrowseUtil( String str, int state, String myfield) {
+    public static DefaultTableModel getPayRollBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("site"), getGlobalColumnTag("description"), getGlobalColumnTag("startdate"), getGlobalColumnTag("enddate"), getGlobalColumnTag("date"), getGlobalColumnTag("userid")})
                 {
@@ -2586,9 +2564,8 @@ public class DTData {
         return mymodel;
         
          } 
-           
-          
-          public static DefaultTableModel getEDITPBrowseUtil( String str, int state, String myfield) {
+         
+    public static DefaultTableModel getEDITPBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("description"), getGlobalColumnTag("user"), getGlobalColumnTag("web"), getGlobalColumnTag("phone")})
                 {
@@ -2646,7 +2623,7 @@ public class DTData {
         
          } 
         
-          public static DefaultTableModel getEDITPDOCBrowseUtil( String str, int state, String myfield) {
+    public static DefaultTableModel getEDITPDOCBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("doc"), getGlobalColumnTag("map")})
                 {
@@ -2702,7 +2679,7 @@ public class DTData {
         
          }  
           
-           public static DefaultTableModel getEDICustBrowseUtil( String str, int state, String myfield) {
+    public static DefaultTableModel getEDICustBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("code"), getGlobalColumnTag("doc"), "SndISA", "SndGS", "RcvISA", "RcvGS", getGlobalColumnTag("map")})
                 {
@@ -2762,7 +2739,7 @@ public class DTData {
         
          }  
           
-          public static DefaultTableModel getTermBrowseUtil( String str, int state, String myfield) {
+    public static DefaultTableModel getTermBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("code"), getGlobalColumnTag("description"), getGlobalColumnTag("days"), getGlobalColumnTag("discount") + " " + getGlobalColumnTag("days"), getGlobalColumnTag("percent"), getGlobalColumnTag("discount") + " " + getGlobalColumnTag("start"), getGlobalColumnTag("due") + " " + getGlobalColumnTag("start")})
                 {
@@ -2997,7 +2974,7 @@ public class DTData {
         
          } 
            
-        public static DefaultTableModel getDOBrowseUtil( String str, int state, String myfield) {
+    public static DefaultTableModel getDOBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), 
                           getGlobalColumnTag("number"), 
@@ -3061,7 +3038,7 @@ public class DTData {
         
          } 
            
-        public static DefaultTableModel getSVBrowseUtil( String str, int state, String myfield) {
+    public static DefaultTableModel getSVBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("number"), getGlobalColumnTag("customer"), getGlobalColumnTag("po"), getGlobalColumnTag("scheddate"), getGlobalColumnTag("type"), getGlobalColumnTag("status")})
                 {
@@ -3119,9 +3096,8 @@ public class DTData {
         return mymodel;
         
          } 
-           
         
-        public static DefaultTableModel getFOBrowseUtil( String str, int state, String myfield) {
+    public static DefaultTableModel getFOBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("number"), getGlobalColumnTag("carrier"), getGlobalColumnTag("status")})
                 {
@@ -3177,7 +3153,7 @@ public class DTData {
         
          } 
            
-        public static DefaultTableModel getShipperBrowseUtil( String str, int state, String myfield) {
+    public static DefaultTableModel getShipperBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("shipper"), getGlobalColumnTag("customer"), getGlobalColumnTag("shipcode"), getGlobalColumnTag("order"), getGlobalColumnTag("po"), getGlobalColumnTag("shipdate"), getGlobalColumnTag("status")})
                 {
@@ -3254,10 +3230,8 @@ public class DTData {
         return mymodel;
         
          } 
-        
-           
-           
-        public static DefaultTableModel getInvoiceBrowseUtil( String str, int state, String myfield) {
+          
+    public static DefaultTableModel getInvoiceBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("invoice"), getGlobalColumnTag("customer"), getGlobalColumnTag("shipcode"), getGlobalColumnTag("order"), getGlobalColumnTag("po"), getGlobalColumnTag("shipdate"), getGlobalColumnTag("status")})
                 {
@@ -3334,9 +3308,8 @@ public class DTData {
         return mymodel;
         
          } 
-          
            
-          public static DefaultTableModel getCarrierBrowseUtil( String str, int state, String myfield) {
+    public static DefaultTableModel getCarrierBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("description"), getGlobalColumnTag("code"), getGlobalColumnTag("phone"), getGlobalColumnTag("email"), getGlobalColumnTag("name"), getGlobalColumnTag("account")})
                 {
@@ -3396,7 +3369,7 @@ public class DTData {
         
          } 
         
-           public static DefaultTableModel getProdCodeBrowseUtil( String str, int state, String myfield) {
+    public static DefaultTableModel getProdCodeBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("code"), getGlobalColumnTag("description"), "InventoryAcct", "SalesAccount", "POReceiptAccount", "ScrapAccount"})
                 {
@@ -3455,7 +3428,7 @@ public class DTData {
         
          } 
           
-           public static DefaultTableModel getLocationBrowseUtil( String str, int state, String myfield) {
+    public static DefaultTableModel getLocationBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("code"), getGlobalColumnTag("description"), getGlobalColumnTag("site"), getGlobalColumnTag("active")})
                 {
@@ -3512,7 +3485,7 @@ public class DTData {
         
          } 
           
-           public static DefaultTableModel getFTPBrowseUtil( String str, int state, String myfield) {
+    public static DefaultTableModel getFTPBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("description"), getGlobalColumnTag("ip"), "Login", "Passwd", "CDDir", "InDir", "OutDir", "Delete?"})
                 {
@@ -3574,7 +3547,7 @@ public class DTData {
         
          } 
            
-            public static DefaultTableModel getWareHouseBrowseUtil( String str, int state, String myfield) {
+    public static DefaultTableModel getWareHouseBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("code"), getGlobalColumnTag("site"), getGlobalColumnTag("name"), getGlobalColumnTag("addr1"), getGlobalColumnTag("city"), getGlobalColumnTag("state"), getGlobalColumnTag("zip")})
                 {
@@ -3633,10 +3606,8 @@ public class DTData {
         return mymodel;
         
          } 
-           
-           
-           
-            public static DefaultTableModel getBankBrowseUtil( String str, int state, String myfield) {
+          
+    public static DefaultTableModel getBankBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("code"), getGlobalColumnTag("description"), getGlobalColumnTag("account"), getGlobalColumnTag("currency"), getGlobalColumnTag("active")})
                 {
@@ -3693,9 +3664,8 @@ public class DTData {
         return mymodel;
         
          } 
-             
             
-             public static DefaultTableModel getVoucherBrowseUtil( String str, int state, String myfield) {
+    public static DefaultTableModel getVoucherBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("vendor"), getGlobalColumnTag("recvid"), getGlobalColumnTag("invoice"), getGlobalColumnTag("amount"), getGlobalColumnTag("price"), getGlobalColumnTag("quantity")})
                 {
@@ -3755,7 +3725,7 @@ public class DTData {
         
          } 
             
-            public static DefaultTableModel getARPaymentBrowseUtil( String str, int state, String myfield) {
+    public static DefaultTableModel getARPaymentBrowseUtil( String str, int state, String myfield) {
              javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("customer"), getGlobalColumnTag("date"), getGlobalColumnTag("amount")})
                 {
@@ -3812,7 +3782,7 @@ public class DTData {
         
          } 
             
-        public static DefaultTableModel getExpenseBrowseUtil( String str, int state, String myfield) {
+    public static DefaultTableModel getExpenseBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("vendor"), getGlobalColumnTag("date"), getGlobalColumnTag("amount")})
                 {
@@ -3868,9 +3838,8 @@ public class DTData {
         return mymodel;
         
          } 
-         
            
-        public static DefaultTableModel getReceiverBrowseUtil( String str, int state, String myfield) {
+    public static DefaultTableModel getReceiverBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("vendor"), getGlobalColumnTag("po"), getGlobalColumnTag("packingslip"), getGlobalColumnTag("item"), getGlobalColumnTag("recvdate"), getGlobalColumnTag("quantity")})
                 {
@@ -3930,7 +3899,7 @@ public class DTData {
         
          } 
             
-            public static DefaultTableModel getDeptCCBrowseUtil( String str, int state, String myfield) {
+    public static DefaultTableModel getDeptCCBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("dept"), getGlobalColumnTag("description"), "LaborAcct", "BurdenAccount", "COPAccount"})
                 {
@@ -3988,7 +3957,7 @@ public class DTData {
         
          } 
             
-             public static DefaultTableModel getCalendarBrowseUtil( String str, int state, String myfield) {
+    public static DefaultTableModel getCalendarBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("year"), getGlobalColumnTag("period"), getGlobalColumnTag("startdate"), getGlobalColumnTag("enddate"), getGlobalColumnTag("status")})
                 {
@@ -4046,7 +4015,7 @@ public class DTData {
         
          } 
            
-          public static DefaultTableModel getEmpBrowseUtil( String str, int state, String myfield) {
+    public static DefaultTableModel getEmpBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("empid"), getGlobalColumnTag("lastname"), getGlobalColumnTag("firstname"), getGlobalColumnTag("status"), getGlobalColumnTag("startdate"), getGlobalColumnTag("type"), getGlobalColumnTag("phone")})
                 {
@@ -4106,7 +4075,7 @@ public class DTData {
         
          } 
           
-           public static DefaultTableModel getClockRecBrowseUtil( String str, int state, String myfield) {
+    public static DefaultTableModel getClockRecBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
               //  "RecID", "EmpID", "LastName", "FirstName", "Dept", getGlobalColumnTag("code"), "InDate", "InTime", "InTmAdj", "OutDate", "OutTime", "OutTmAdj", "tothrs"
                       new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("empid"), getGlobalColumnTag("lastname"), getGlobalColumnTag("firstname"), getGlobalColumnTag("department"), getGlobalColumnTag("code"), getGlobalColumnTag("indate"), getGlobalColumnTag("intime"), getGlobalColumnTag("intimeadj"), getGlobalColumnTag("outdate"), getGlobalColumnTag("outtime"), getGlobalColumnTag("outtimeadj"), getGlobalColumnTag("hours")})
@@ -4179,8 +4148,7 @@ public class DTData {
         
          } 
          
-          
-             public static DefaultTableModel getUserBrowseUtil( String str, int state, String myfield) {
+    public static DefaultTableModel getUserBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("userid"), getGlobalColumnTag("lastname"), getGlobalColumnTag("firstname")})
                 {
@@ -4236,7 +4204,7 @@ public class DTData {
         
          } 
         
-            public static DefaultTableModel getMenuBrowseUtil( String str, int state, String myfield) {
+    public static DefaultTableModel getMenuBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("description"), getGlobalColumnTag("class"), getGlobalColumnTag("type")})
                 {
@@ -4341,7 +4309,7 @@ public class DTData {
         
          }
     
-     public static DefaultTableModel getEDIPartnerDocAll() {
+    public static DefaultTableModel getEDIPartnerDocAll() {
         
         
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
@@ -4398,7 +4366,7 @@ public class DTData {
         
          }
      
-      public static DefaultTableModel getLabelFileAll() {
+    public static DefaultTableModel getLabelFileAll() {
         
         
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
@@ -4444,8 +4412,7 @@ public class DTData {
         
          }
       
-      
-       public static DefaultTableModel getForecastAll() {
+    public static DefaultTableModel getForecastAll() {
         
         
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
@@ -4493,7 +4460,6 @@ public class DTData {
         return mymodel;
         
          }
-      
       
     public static DefaultTableModel getForecast13weeksByPart(String frompart, String topart, int wk) {
          Calendar cal = Calendar.getInstance();
@@ -4593,9 +4559,7 @@ public class DTData {
         
          }
       
-     
-        
-        public static DefaultTableModel getPlantDirectory() {
+    public static DefaultTableModel getPlantDirectory() {
            
            javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                          new String[]{getGlobalColumnTag("lastname"), getGlobalColumnTag("firstname"), getGlobalColumnTag("phone"), getGlobalColumnTag("cell"), getGlobalColumnTag("email")});
@@ -4638,7 +4602,7 @@ public class DTData {
            return mymodel;
        }   
          
-          public static DefaultTableModel getNavCodeList() {
+    public static DefaultTableModel getNavCodeList() {
            
            javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                          new String[]{getGlobalColumnTag("id"), getGlobalColumnTag("description"), getGlobalColumnTag("code"), getGlobalColumnTag("type"), getGlobalColumnTag("class")});
@@ -4680,9 +4644,8 @@ public class DTData {
            
            return mymodel;
        }   
-       
         
-       public static DefaultTableModel getReqByApprover(String arg) {
+    public static DefaultTableModel getReqByApprover(String arg) {
            
            
            javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
@@ -4741,7 +4704,7 @@ public class DTData {
            return mymodel;
        }  
        
-       public static DefaultTableModel getReqAll() {
+    public static DefaultTableModel getReqAll() {
            
            javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                         new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("requestor"), getGlobalColumnTag("date"), getGlobalColumnTag("po"), getGlobalColumnTag("vendor"), getGlobalColumnTag("amount"), getGlobalColumnTag("status")}) 
@@ -4794,8 +4757,7 @@ public class DTData {
            return mymodel;
        } 
         
-       
-        public static DefaultTableModel getReqBrowseUtil(String str, int state, String myfield) {
+    public static DefaultTableModel getReqBrowseUtil(String str, int state, String myfield) {
            
            javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                         new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("requestor"), getGlobalColumnTag("date"), getGlobalColumnTag("po"), getGlobalColumnTag("vendor"), getGlobalColumnTag("amount"), getGlobalColumnTag("status")}) 
@@ -4857,7 +4819,7 @@ public class DTData {
            return mymodel;
        } 
         
-        public static DefaultTableModel getGLAcctAll() {
+    public static DefaultTableModel getGLAcctAll() {
            
            javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                         new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("account"), getGlobalColumnTag("description"), getGlobalColumnTag("type"), getGlobalColumnTag("currency")})
@@ -4907,942 +4869,938 @@ public class DTData {
            return mymodel;
        } 
         
-        public static DefaultTableModel getItemRoutingAll() {
-           
-           javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{getGlobalColumnTag("item"), getGlobalColumnTag("routing"), getGlobalColumnTag("operation"), getGlobalColumnTag("component")});
-           
-         try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try{
-              res = st.executeQuery("SELECT it_item, it_wf, ps_op, ps_child FROM item_mstr " +
-                        " inner join pbm_mstr on ps_parent = it_item " +
-                        " where it_code = 'M' order by it_item ;");
+    public static DefaultTableModel getItemRoutingAll() {
 
-                while (res.next()) {
-                    
-                    mymodel.addRow(new Object[]{res.getString("it_item"),
-                                res.getString("it_wf"),
-                                res.getString("ps_op"),
-                                res.getString("ps_child")
-                                });
-                }
+       javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                    new String[]{getGlobalColumnTag("item"), getGlobalColumnTag("routing"), getGlobalColumnTag("operation"), getGlobalColumnTag("component")});
 
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-           
-           
-           
-           return mymodel;
-       } 
-        
-        public static DefaultTableModel getItemBrowse() {
-           
-           javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("item"), getGlobalColumnTag("description"), getGlobalColumnTag("code"), getGlobalColumnTag("prodline"), 
-                            getGlobalColumnTag("group"), 
-                            getGlobalColumnTag("location"), 
-                            getGlobalColumnTag("warehouse"), 
-                            getGlobalColumnTag("createdate"), 
-                            getGlobalColumnTag("sellprice"), 
-                            getGlobalColumnTag("purchaseprice"), 
-                            getGlobalColumnTag("revision")})
-                   {
-                      @Override  
-                      public Class getColumnClass(int col) {  
-                        if (col == 0)       
-                            return ImageIcon.class;  
-                        else if (col == 9 || col == 10) {
-                            return Double.class;
-                        }
-                        else return String.class;  //other columns accept String values  
-                      }  
-                        };
-           
-           try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try{
+     try{
 
-              res = st.executeQuery("SELECT it_item, it_desc, it_code, it_prodline, it_group, it_loc, it_wh, " +
-                        " it_createdate, it_sell_price, it_pur_price, it_rev from item_mstr order by it_item; ") ;
-                while (res.next()) {
-                    mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, res.getString("it_item"),
-                                res.getString("it_desc"),
-                                res.getString("it_code"),
-                                res.getString("it_prodline"),
-                                res.getString("it_group"),
-                                res.getString("it_loc"),
-                                res.getString("it_wh"),
-                                res.getString("it_createdate"),
-                                res.getDouble("it_sell_price"),
-                                res.getDouble("it_pur_price"),
-                                res.getString("it_rev")
-                                });
-                }
-
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-           
-           
-           
-           return mymodel;
-       } 
-        
-        public static DefaultTableModel getItemDescBrowse(String str, String myfield) {
-           
-           javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("item"), getGlobalColumnTag("description"), getGlobalColumnTag("class"), getGlobalColumnTag("type")})
-                   {
-                      @Override  
-                      public Class getColumnClass(int col) {  
-                        if (col == 0)       
-                            return ImageIcon.class;  
-                        else return String.class;  //other columns accept String values  
-                      }  
-                        };
-           
-           try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try{
-
-              res = st.executeQuery(" select it_item, it_desc, it_code, it_type  " +
-                        " FROM  item_mstr where " + myfield + " like " + "'%" + str + "%'" +
-                        " order by it_item limit 300;");  
-                
-                while (res.next()) {
-                    mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, res.getString("it_item"),
-                                res.getString("it_desc"),
-                                res.getString("it_code"),
-                                res.getString("it_type")
-                                });
-                }
-
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-           
-           
-           
-           return mymodel;
-       } 
-        
-        
-         public static DefaultTableModel getEmployeeAll() {
-           
-           javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("empid"), getGlobalColumnTag("lastname"), getGlobalColumnTag("firstname"), getGlobalColumnTag("department"), getGlobalColumnTag("status"), getGlobalColumnTag("shift"), getGlobalColumnTag("type"), getGlobalColumnTag("startdate"), getGlobalColumnTag("termdate")})
-                   {
-                      @Override  
-                      public Class getColumnClass(int col) {  
-                        if (col == 0)       
-                            return ImageIcon.class;  
-                        else return String.class;  //other columns accept String values  
-                      }  
-                        }; 
-           
-           try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try{
-
-                res = st.executeQuery("SELECT * FROM emp_mstr order by emp_nbr;");
-
-                while (res.next()) {
-                   
-
-                    mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, res.getInt("emp_nbr"),
-                                res.getString("emp_lname"),
-                                res.getString("emp_fname"),
-                                res.getString("emp_dept"),
-                                res.getString("emp_status"),
-                                res.getString("emp_shift"),
-                                res.getString("emp_type"),
-                                res.getString("emp_startdate"),
-                                res.getString("emp_termdate")
-                                });
-                }
-
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-           
-           
-           
-           return mymodel;
-       } 
-         
-         public static DefaultTableModel getGenCodeAll() {
-           
-           javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-           new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("code"), getGlobalColumnTag("key"), getGlobalColumnTag("description")})
-                   {
-                      @Override  
-                      public Class getColumnClass(int col) {  
-                        if (col == 0)       
-                            return ImageIcon.class;  
-                        else return String.class;  //other columns accept String values  
-                      }  
-                        };
-           
-          try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try{
-
-                res = st.executeQuery("SELECT code_code, code_key, code_value " +
-                        "from code_mstr order by code_code ;");
-
-                while (res.next()) {
-                    
-                    mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, 
-                        res.getString("code_code"),
-                        res.getString("code_key"),
-                        res.getString("code_value")
-                            });
-                }
-
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-           
-           
-           
-           return mymodel;
-       } 
-         
-          public static DefaultTableModel getWorkCellAll() {
-           
-           javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-           new String[]{getGlobalColumnTag("select"),getGlobalColumnTag("cell"), getGlobalColumnTag("description"), getGlobalColumnTag("site"), getGlobalColumnTag("dept"), "SetupRate$", "LaborRate$", "BurdenRate$", "RunCrewSize", "SetupCrewSize", "Remarks"})
-                   {
-                      @Override  
-                      public Class getColumnClass(int col) {  
-                        if (col == 0)       
-                            return ImageIcon.class;  
-                        else return String.class;  //other columns accept String values  
-                      }  
-                        }; 
-           
-           try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try{
-
-                  res = st.executeQuery("select * from wc_mstr;");
-                    while (res.next()) {
-                        
-                        mymodel.addRow(new Object[]{BlueSeerUtils.clickflag,
-                            res.getString("wc_cell"),
-                                res.getString("wc_desc").replace(",", ""),
-                                res.getString("wc_site"),
-                                res.getString("wc_cc"),
-                                res.getString("wc_setup_rate"),
-                                res.getString("wc_run_rate"),
-                                res.getString("wc_bdn_rate"),
-                                res.getString("wc_run_crew"),
-                                res.getString("wc_setup"),
-                                res.getString("wc_remarks").replace(",", "") });
-                    }
-
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-           
-           
-           
-           return mymodel;
-       } 
-        
-         public static DefaultTableModel getReqPending() {
-           
-           javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("requestor"), getGlobalColumnTag("date"), getGlobalColumnTag("vendor"), getGlobalColumnTag("amount"), getGlobalColumnTag("status"), getGlobalColumnTag("approver"), getGlobalColumnTag("description")})
-                   {
-                      @Override  
-                      public Class getColumnClass(int col) {  
-                        if (col == 5 )       
-                            return Double.class;  
-                        else if (col == 0)
-                            return ImageIcon.class;
-                        else return String.class;  //other columns accept String values  
-                      }  
-                        };
-           
-         try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try{
-
-              res = st.executeQuery("SELECT * FROM  req_mstr inner join req_task on reqt_id = req_id where req_status = 'pending' and reqt_status = 'pending' order by req_id desc;");
-
-                while (res.next()) {
-                 
-                    mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, res.getString("req_id"),
-                                res.getString("req_name"),
-                                res.getString("req_date"),
-                                res.getString("req_vend"),
-                                res.getDouble("req_amt"),
-                                res.getString("req_status"),
-                                res.getString("reqt_owner"),
-                                res.getString("req_desc")
-                            });
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-           
-           
-           
-           return mymodel;
-       } 
-         
-          public static DefaultTableModel getReqApproved() {
-           
-           javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("requestor"), getGlobalColumnTag("date"), getGlobalColumnTag("po"), getGlobalColumnTag("vendor"), getGlobalColumnTag("amount"), getGlobalColumnTag("status")})
-                   {
-                      @Override  
-                      public Class getColumnClass(int col) {  
-                        if (col == 6 )       
-                            return Double.class;  
-                        else if (col == 0)
-                            return ImageIcon.class;
-                        else return String.class;  //other columns accept String values  
-                      }  
-                        };
-           
-          try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try{
-
-              res = st.executeQuery("SELECT * FROM req_mstr where req_status = 'approved' order by req_id desc;");
-
-                while (res.next()) {
-                   
-                    mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, res.getString("req_id"),
-                                res.getString("req_name"),
-                                res.getString("req_date"),
-                                res.getString("req_po"),
-                                res.getString("req_vend"),
-                                res.getDouble("req_amt"),
-                                res.getString("req_status")
-                                });
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-           
-           
-           
-           return mymodel;
-       } 
-         
-         public static DefaultTableModel getUserAll() {
-           
-           javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                       new String[]{getGlobalColumnTag("userid"), getGlobalColumnTag("lastname"), getGlobalColumnTag("firstname"), getGlobalColumnTag("phone"), getGlobalColumnTag("cell"), getGlobalColumnTag("email")});
-           
-          try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try{
-
-               res = st.executeQuery("SELECT * FROM  user_mstr order by user_lname desc;");
-
-                while (res.next()) {
-                    
-                    mymodel.addRow(new Object[]{
-                        res.getString("user_id"),
-                        res.getString("user_lname"),
-                        res.getString("user_fname"),
-                        res.getString("user_phone"),
-                        res.getString("user_cell"),
-                        res.getString("user_email")
-                            });
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-           
-           
-           
-           return mymodel;
-       } 
-         
-         public static DefaultTableModel getProdCodeAll() {
-           
-           javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("code"), getGlobalColumnTag("description")})
-                   {
-                      @Override  
-                      public Class getColumnClass(int col) {  
-                        if (col == 0)       
-                            return ImageIcon.class;  
-                        else return String.class;  //other columns accept String values  
-                      }  
-                        };
-           
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
         try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try{
+          res = st.executeQuery("SELECT it_item, it_wf, ps_op, ps_child FROM item_mstr " +
+                    " inner join pbm_mstr on ps_parent = it_item " +
+                    " where it_code = 'M' order by it_item ;");
 
-              res = st.executeQuery("SELECT * FROM  pl_mstr order by pl_line;");
+            while (res.next()) {
 
-                while (res.next()) {
-                    mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, res.getString("pl_line"),
-                                res.getString("pl_desc")
+                mymodel.addRow(new Object[]{res.getString("it_item"),
+                            res.getString("it_wf"),
+                            res.getString("ps_op"),
+                            res.getString("ps_child")
                             });
+            }
+
+
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+           if (res != null) res.close();
+           if (st != null) st.close();
+           if (con != null) con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+
+
+
+       return mymodel;
+   } 
+
+    public static DefaultTableModel getItemBrowse() {
+
+       javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                    new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("item"), getGlobalColumnTag("description"), getGlobalColumnTag("code"), getGlobalColumnTag("prodline"), 
+                        getGlobalColumnTag("group"), 
+                        getGlobalColumnTag("location"), 
+                        getGlobalColumnTag("warehouse"), 
+                        getGlobalColumnTag("createdate"), 
+                        getGlobalColumnTag("sellprice"), 
+                        getGlobalColumnTag("purchaseprice"), 
+                        getGlobalColumnTag("revision")})
+               {
+                  @Override  
+                  public Class getColumnClass(int col) {  
+                    if (col == 0)       
+                        return ImageIcon.class;  
+                    else if (col == 9 || col == 10) {
+                        return Double.class;
+                    }
+                    else return String.class;  //other columns accept String values  
+                  }  
+                    };
+
+       try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try{
+
+          res = st.executeQuery("SELECT it_item, it_desc, it_code, it_prodline, it_group, it_loc, it_wh, " +
+                    " it_createdate, it_sell_price, it_pur_price, it_rev from item_mstr order by it_item; ") ;
+            while (res.next()) {
+                mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, res.getString("it_item"),
+                            res.getString("it_desc"),
+                            res.getString("it_code"),
+                            res.getString("it_prodline"),
+                            res.getString("it_group"),
+                            res.getString("it_loc"),
+                            res.getString("it_wh"),
+                            res.getString("it_createdate"),
+                            res.getDouble("it_sell_price"),
+                            res.getDouble("it_pur_price"),
+                            res.getString("it_rev")
+                            });
+            }
+
+
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+           if (res != null) res.close();
+           if (st != null) st.close();
+           if (con != null) con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+
+
+
+       return mymodel;
+   } 
+
+    public static DefaultTableModel getItemDescBrowse(String str, String myfield) {
+
+       javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                    new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("item"), getGlobalColumnTag("description"), getGlobalColumnTag("class"), getGlobalColumnTag("type")})
+               {
+                  @Override  
+                  public Class getColumnClass(int col) {  
+                    if (col == 0)       
+                        return ImageIcon.class;  
+                    else return String.class;  //other columns accept String values  
+                  }  
+                    };
+
+       try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try{
+
+          res = st.executeQuery(" select it_item, it_desc, it_code, it_type  " +
+                    " FROM  item_mstr where " + myfield + " like " + "'%" + str + "%'" +
+                    " order by it_item limit 300;");  
+
+            while (res.next()) {
+                mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, res.getString("it_item"),
+                            res.getString("it_desc"),
+                            res.getString("it_code"),
+                            res.getString("it_type")
+                            });
+            }
+
+
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+           if (res != null) res.close();
+           if (st != null) st.close();
+           if (con != null) con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+
+
+
+       return mymodel;
+   } 
+  
+    public static DefaultTableModel getEmployeeAll() {
+
+       javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                    new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("empid"), getGlobalColumnTag("lastname"), getGlobalColumnTag("firstname"), getGlobalColumnTag("department"), getGlobalColumnTag("status"), getGlobalColumnTag("shift"), getGlobalColumnTag("type"), getGlobalColumnTag("startdate"), getGlobalColumnTag("termdate")})
+               {
+                  @Override  
+                  public Class getColumnClass(int col) {  
+                    if (col == 0)       
+                        return ImageIcon.class;  
+                    else return String.class;  //other columns accept String values  
+                  }  
+                    }; 
+
+       try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try{
+
+            res = st.executeQuery("SELECT * FROM emp_mstr order by emp_nbr;");
+
+            while (res.next()) {
+
+
+                mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, res.getInt("emp_nbr"),
+                            res.getString("emp_lname"),
+                            res.getString("emp_fname"),
+                            res.getString("emp_dept"),
+                            res.getString("emp_status"),
+                            res.getString("emp_shift"),
+                            res.getString("emp_type"),
+                            res.getString("emp_startdate"),
+                            res.getString("emp_termdate")
+                            });
+            }
+
+
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+           if (res != null) res.close();
+           if (st != null) st.close();
+           if (con != null) con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+
+
+
+       return mymodel;
+   } 
+
+    public static DefaultTableModel getGenCodeAll() {
+
+       javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+       new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("code"), getGlobalColumnTag("key"), getGlobalColumnTag("description")})
+               {
+                  @Override  
+                  public Class getColumnClass(int col) {  
+                    if (col == 0)       
+                        return ImageIcon.class;  
+                    else return String.class;  //other columns accept String values  
+                  }  
+                    };
+
+      try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try{
+
+            res = st.executeQuery("SELECT code_code, code_key, code_value " +
+                    "from code_mstr order by code_code ;");
+
+            while (res.next()) {
+
+                mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, 
+                    res.getString("code_code"),
+                    res.getString("code_key"),
+                    res.getString("code_value")
+                        });
+            }
+
+
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+           if (res != null) res.close();
+           if (st != null) st.close();
+           if (con != null) con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+
+
+
+       return mymodel;
+   } 
+
+    public static DefaultTableModel getWorkCellAll() {
+
+       javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+       new String[]{getGlobalColumnTag("select"),getGlobalColumnTag("cell"), getGlobalColumnTag("description"), getGlobalColumnTag("site"), getGlobalColumnTag("dept"), "SetupRate$", "LaborRate$", "BurdenRate$", "RunCrewSize", "SetupCrewSize", "Remarks"})
+               {
+                  @Override  
+                  public Class getColumnClass(int col) {  
+                    if (col == 0)       
+                        return ImageIcon.class;  
+                    else return String.class;  //other columns accept String values  
+                  }  
+                    }; 
+
+       try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try{
+
+              res = st.executeQuery("select * from wc_mstr;");
+                while (res.next()) {
+
+                    mymodel.addRow(new Object[]{BlueSeerUtils.clickflag,
+                        res.getString("wc_cell"),
+                            res.getString("wc_desc").replace(",", ""),
+                            res.getString("wc_site"),
+                            res.getString("wc_cc"),
+                            res.getString("wc_setup_rate"),
+                            res.getString("wc_run_rate"),
+                            res.getString("wc_bdn_rate"),
+                            res.getString("wc_run_crew"),
+                            res.getString("wc_setup"),
+                            res.getString("wc_remarks").replace(",", "") });
                 }
 
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
+
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+           if (res != null) res.close();
+           if (st != null) st.close();
+           if (con != null) con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+
+
+
+       return mymodel;
+   } 
+
+    public static DefaultTableModel getReqPending() {
+
+       javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                    new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("requestor"), getGlobalColumnTag("date"), getGlobalColumnTag("vendor"), getGlobalColumnTag("amount"), getGlobalColumnTag("status"), getGlobalColumnTag("approver"), getGlobalColumnTag("description")})
+               {
+                  @Override  
+                  public Class getColumnClass(int col) {  
+                    if (col == 5 )       
+                        return Double.class;  
+                    else if (col == 0)
+                        return ImageIcon.class;
+                    else return String.class;  //other columns accept String values  
+                  }  
+                    };
+
+     try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try{
+
+          res = st.executeQuery("SELECT * FROM  req_mstr inner join req_task on reqt_id = req_id where req_status = 'pending' and reqt_status = 'pending' order by req_id desc;");
+
+            while (res.next()) {
+
+                mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, res.getString("req_id"),
+                            res.getString("req_name"),
+                            res.getString("req_date"),
+                            res.getString("req_vend"),
+                            res.getDouble("req_amt"),
+                            res.getString("req_status"),
+                            res.getString("reqt_owner"),
+                            res.getString("req_desc")
+                        });
             }
+
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
         }
-        catch (Exception e){
-            MainFrame.bslog(e);
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+
+
+
+       return mymodel;
+   } 
+
+    public static DefaultTableModel getReqApproved() {
+
+       javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                    new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("requestor"), getGlobalColumnTag("date"), getGlobalColumnTag("po"), getGlobalColumnTag("vendor"), getGlobalColumnTag("amount"), getGlobalColumnTag("status")})
+               {
+                  @Override  
+                  public Class getColumnClass(int col) {  
+                    if (col == 6 )       
+                        return Double.class;  
+                    else if (col == 0)
+                        return ImageIcon.class;
+                    else return String.class;  //other columns accept String values  
+                  }  
+                    };
+
+      try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try{
+
+          res = st.executeQuery("SELECT * FROM req_mstr where req_status = 'approved' order by req_id desc;");
+
+            while (res.next()) {
+
+                mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, res.getString("req_id"),
+                            res.getString("req_name"),
+                            res.getString("req_date"),
+                            res.getString("req_po"),
+                            res.getString("req_vend"),
+                            res.getDouble("req_amt"),
+                            res.getString("req_status")
+                            });
+            }
+
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+           if (res != null) res.close();
+           if (st != null) st.close();
+           if (con != null) con.close();
         }
-           
-           
-           
-           return mymodel;
-       } 
-        
-          public static DefaultTableModel getQPRAll() {
-           
-           javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                         new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("number"), getGlobalColumnTag("user"), getGlobalColumnTag("item"), getGlobalColumnTag("description"), getGlobalColumnTag("vendor"), getGlobalColumnTag("createdate"), getGlobalColumnTag("date")})
-                   {
-                      @Override  
-                      public Class getColumnClass(int col) {  
-                        if (col == 0)       
-                            return ImageIcon.class;  
-                        else return String.class;  //other columns accept String values  
-                      }  
-                        };
-           
-         try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try{
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+
+
+
+       return mymodel;
+   } 
+
+    public static DefaultTableModel getUserAll() {
+
+       javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                   new String[]{getGlobalColumnTag("userid"), getGlobalColumnTag("lastname"), getGlobalColumnTag("firstname"), getGlobalColumnTag("phone"), getGlobalColumnTag("cell"), getGlobalColumnTag("email")});
+
+      try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try{
+
+           res = st.executeQuery("SELECT * FROM  user_mstr order by user_lname desc;");
+
+            while (res.next()) {
+
+                mymodel.addRow(new Object[]{
+                    res.getString("user_id"),
+                    res.getString("user_lname"),
+                    res.getString("user_fname"),
+                    res.getString("user_phone"),
+                    res.getString("user_cell"),
+                    res.getString("user_email")
+                        });
+            }
+
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+           if (res != null) res.close();
+           if (st != null) st.close();
+           if (con != null) con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+
+
+
+       return mymodel;
+   } 
+
+    public static DefaultTableModel getProdCodeAll() {
+
+       javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                    new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("code"), getGlobalColumnTag("description")})
+               {
+                  @Override  
+                  public Class getColumnClass(int col) {  
+                    if (col == 0)       
+                        return ImageIcon.class;  
+                    else return String.class;  //other columns accept String values  
+                  }  
+                    };
+
+    try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try{
+
+          res = st.executeQuery("SELECT * FROM  pl_mstr order by pl_line;");
+
+            while (res.next()) {
+                mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, res.getString("pl_line"),
+                            res.getString("pl_desc")
+                        });
+            }
+
+
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+           if (res != null) res.close();
+           if (st != null) st.close();
+           if (con != null) con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+
+
+
+       return mymodel;
+   } 
+
+    public static DefaultTableModel getQPRAll() {
+
+       javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                     new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("number"), getGlobalColumnTag("user"), getGlobalColumnTag("item"), getGlobalColumnTag("description"), getGlobalColumnTag("vendor"), getGlobalColumnTag("createdate"), getGlobalColumnTag("date")})
+               {
+                  @Override  
+                  public Class getColumnClass(int col) {  
+                    if (col == 0)       
+                        return ImageIcon.class;  
+                    else return String.class;  //other columns accept String values  
+                  }  
+                    };
+
+     try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try{
 res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
 
-                while (res.next()) {
-                    
-                    mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, res.getString("qual_id"), res.getString("qual_originator"), res.getString("qual_part"),
-                                res.getString("qual_part_desc"),
-                                res.getString("qual_vend"),
-                                res.getString("qual_date_crt"),
-                                res.getString("qual_date_upd"),});
-                }
+            while (res.next()) {
 
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
+                mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, res.getString("qual_id"), res.getString("qual_originator"), res.getString("qual_part"),
+                            res.getString("qual_part_desc"),
+                            res.getString("qual_vend"),
+                            res.getString("qual_date_crt"),
+                            res.getString("qual_date_upd"),});
             }
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-           
-           
-           
-           return mymodel;
-       } 
-      
-         public static DefaultTableModel getShipperAll() {
-           DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
-                df.setMinimumFractionDigits(2);
-                df.setMaximumFractionDigits(2);
-           javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{getGlobalColumnTag("shipper"), getGlobalColumnTag("customer"), getGlobalColumnTag("item"), getGlobalColumnTag("po"), getGlobalColumnTag("quantity"), getGlobalColumnTag("price"), getGlobalColumnTag("shipdate")});
-           
-          try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try{
-                res = st.executeQuery("SELECT * FROM  ship_mstr inner join ship_det on shdet_id = ship_id order by ship_id;");
 
-                while (res.next()) {
-                 
-                    mymodel.addRow(new Object[]{res.getString("shdet_id"), res.getString("ship_cust"), res.getString("shdet_part"),
-                                res.getString("shdet_po"),
-                                res.getDouble("shdet_ship_qty"),
-                                df.format(res.getDouble("shdet_ship_price")),
-                                res.getString("shdet_shdet_date"),});
-                }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
+
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+           if (res != null) res.close();
+           if (st != null) st.close();
+           if (con != null) con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+
+
+
+       return mymodel;
+   } 
+
+    public static DefaultTableModel getShipperAll() {
+       DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
+            df.setMinimumFractionDigits(2);
+            df.setMaximumFractionDigits(2);
+       javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                    new String[]{getGlobalColumnTag("shipper"), getGlobalColumnTag("customer"), getGlobalColumnTag("item"), getGlobalColumnTag("po"), getGlobalColumnTag("quantity"), getGlobalColumnTag("price"), getGlobalColumnTag("shipdate")});
+
+      try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try{
+            res = st.executeQuery("SELECT * FROM  ship_mstr inner join ship_det on shdet_id = ship_id order by ship_id;");
+
+            while (res.next()) {
+
+                mymodel.addRow(new Object[]{res.getString("shdet_id"), res.getString("ship_cust"), res.getString("shdet_part"),
+                            res.getString("shdet_po"),
+                            res.getDouble("shdet_ship_qty"),
+                            df.format(res.getDouble("shdet_ship_price")),
+                            res.getString("shdet_shdet_date"),});
             }
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+           if (res != null) res.close();
+           if (st != null) st.close();
+           if (con != null) con.close();
         }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-           
-           
-           
-           return mymodel;
-       }   
-          
-            public static DefaultTableModel getOrderOpen() {
-           
-           javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                         new String[]{getGlobalColumnTag("order"), getGlobalColumnTag("customer"), getGlobalColumnTag("item"), getGlobalColumnTag("description"), getGlobalColumnTag("po"), getGlobalColumnTag("orderqty"), getGlobalColumnTag("shipqty")});
-           
-          try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try{
-            
-                res = st.executeQuery("SELECT sod_nbr, so_cust, sod_part, ifnull(it_desc,'') as 'description', sod_po, sod_ord_qty, sod_shipped_qty FROM  so_mstr inner join sod_det on sod_nbr = so_nbr " +
-                        " left outer join item_mstr on it_item = sod_part " +
-                        " where (so_status = 'open' or so_status = 'backorder') and (sod_status <> 'Shipped' or sod_status is null) order by so_nbr;");
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
 
-                while (res.next()) {
-                  
-                    mymodel.addRow(new Object[]{res.getString("sod_nbr"), res.getString("so_cust"), res.getString("sod_part"),
-                                res.getString("description"),
-                                res.getString("sod_po"),
-                                res.getString("sod_ord_qty"),
-                                res.getString("sod_shipped_qty")
-                                });
-                }
 
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-           
-           
-           
-           return mymodel;
-       } 
-          
-             public static DefaultTableModel getDBSchema() {
-           
-           javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                       new String[]{"TableName", "ColumnName", "ColumnType"});
-           
-          try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try{
-               if (dbtype.equals("sqlite")) {
-                  res = st.executeQuery("select m.name as tablename, p.name as columnname, p.type as columntype from sqlite_master m left outer join pragma_table_info((m.name)) p on m.name <> p.name order by tablename, columnname;"); 
-                   while (res.next()) {
-                    // String[] sql = res.getString("sql").split(",", -1);
-                    mymodel.addRow(new Object[]{
-                        res.getString("tablename"),
-                        res.getString("columnname"),
-                        res.getString("columntype")});
-                  }
-               } else {
-                 res = st.executeQuery("SELECT table_name, column_name, column_type from information_schema.columns where table_schema = 'bsdb' ;");  
-                  while (res.next()) {
-                    mymodel.addRow(new Object[]{
-                        res.getString("table_name"),
-                        res.getString("column_name"),
-                        res.getString("column_type")
+
+       return mymodel;
+   }   
+
+    public static DefaultTableModel getOrderOpen() {
+
+       javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                     new String[]{getGlobalColumnTag("order"), getGlobalColumnTag("customer"), getGlobalColumnTag("item"), getGlobalColumnTag("description"), getGlobalColumnTag("po"), getGlobalColumnTag("orderqty"), getGlobalColumnTag("shipqty")});
+
+      try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try{
+
+            res = st.executeQuery("SELECT sod_nbr, so_cust, sod_part, ifnull(it_desc,'') as 'description', sod_po, sod_ord_qty, sod_shipped_qty FROM  so_mstr inner join sod_det on sod_nbr = so_nbr " +
+                    " left outer join item_mstr on it_item = sod_part " +
+                    " where (so_status = 'open' or so_status = 'backorder') and (sod_status <> 'Shipped' or sod_status is null) order by so_nbr;");
+
+            while (res.next()) {
+
+                mymodel.addRow(new Object[]{res.getString("sod_nbr"), res.getString("so_cust"), res.getString("sod_part"),
+                            res.getString("description"),
+                            res.getString("sod_po"),
+                            res.getString("sod_ord_qty"),
+                            res.getString("sod_shipped_qty")
                             });
-                }
-               }
-               
+            }
 
-               
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
+
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+           if (res != null) res.close();
+           if (st != null) st.close();
+           if (con != null) con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+
+
+
+       return mymodel;
+   } 
+
+    public static DefaultTableModel getDBSchema() {
+
+   javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+               new String[]{"TableName", "ColumnName", "ColumnType"});
+
+  try{
+
+    Connection con = DriverManager.getConnection(url + db, user, pass);
+    Statement st = con.createStatement();
+    ResultSet res = null;
+    try{
+       if (dbtype.equals("sqlite")) {
+          res = st.executeQuery("select m.name as tablename, p.name as columnname, p.type as columntype from sqlite_master m left outer join pragma_table_info((m.name)) p on m.name <> p.name order by tablename, columnname;"); 
+           while (res.next()) {
+            // String[] sql = res.getString("sql").split(",", -1);
+            mymodel.addRow(new Object[]{
+                res.getString("tablename"),
+                res.getString("columnname"),
+                res.getString("columntype")});
+          }
+       } else {
+         res = st.executeQuery("SELECT table_name, column_name, column_type from information_schema.columns where table_schema = 'bsdb' ;");  
+          while (res.next()) {
+            mymodel.addRow(new Object[]{
+                res.getString("table_name"),
+                res.getString("column_name"),
+                res.getString("column_type")
+                    });
+        }
+       }
+
+
+
+
+   }
+    catch (SQLException s){
+         MainFrame.bslog(s);
+    }
+    con.close();
+}
+catch (Exception e){
+    MainFrame.bslog(e);
+}
+
+
+
+   return mymodel;
+} 
+
+    public static DefaultTableModel getRoutingsAll() {
+
+      javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+              new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("code"),getGlobalColumnTag("operation"), getGlobalColumnTag("description"), getGlobalColumnTag("site"), "Reportable", getGlobalColumnTag("cell"), getGlobalColumnTag("setuphours"), getGlobalColumnTag("runhours")})
+              {
+              @Override  
+              public Class getColumnClass(int col) {  
+                if (col == 0)       
+                    return ImageIcon.class;  
+                else return String.class;  //other columns accept String values  
+              }  
+                }; 
+
+try{
+
+    Connection con = DriverManager.getConnection(url + db, user, pass);
+    Statement st = con.createStatement();
+    ResultSet res = null;
+    try{
+
+              res = st.executeQuery("select * from wf_mstr;");
+            while (res.next()) {
+                mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("wf_id"),
+                           res.getString("wf_op"),
+                        res.getString("wf_desc").replace(",", ""),
+                        res.getString("wf_site"),
+                        res.getString("wf_assert"),
+                        res.getString("wf_cell"),
+                        res.getString("wf_setup_hours"),
+                        res.getString("wf_run_hours")
+                });
             }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-           
-           
-           
-           return mymodel;
-       } 
-        
-             
-             
-         
-          public static DefaultTableModel getRoutingsAll() {
-              
-              javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("code"),getGlobalColumnTag("operation"), getGlobalColumnTag("description"), getGlobalColumnTag("site"), "Reportable", getGlobalColumnTag("cell"), getGlobalColumnTag("setuphours"), getGlobalColumnTag("runhours")})
-                      {
-                      @Override  
-                      public Class getColumnClass(int col) {  
-                        if (col == 0)       
-                            return ImageIcon.class;  
-                        else return String.class;  //other columns accept String values  
-                      }  
-                        }; 
-             
-      try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try{
-                   
-                      res = st.executeQuery("select * from wf_mstr;");
-                    while (res.next()) {
-                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("wf_id"),
-                                   res.getString("wf_op"),
-                                res.getString("wf_desc").replace(",", ""),
-                                res.getString("wf_site"),
-                                res.getString("wf_assert"),
-                                res.getString("wf_cell"),
-                                res.getString("wf_setup_hours"),
-                                res.getString("wf_run_hours")
-                        });
-                    }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-             } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
+   }
+    catch (SQLException s){
+         MainFrame.bslog(s);
+     } finally {
+       if (res != null) res.close();
+       if (st != null) st.close();
+       if (con != null) con.close();
+    }
+}
+catch (Exception e){
+    MainFrame.bslog(e);
+
+}
+return mymodel;
+
+ }
+
+    public static DefaultTableModel getLocationsAll() {
+javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+              new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("description"), getGlobalColumnTag("site"), getGlobalColumnTag("active")})
+        {
+              @Override  
+              public Class getColumnClass(int col) {  
+                if (col == 0)       
+                    return ImageIcon.class;  
+                else return String.class;  //other columns accept String values  
+              }  
+                }; 
+
+try{
+
+    Connection con = DriverManager.getConnection(url + db, user, pass);
+    Statement st = con.createStatement();
+    ResultSet res = null;
+    try{
+
+              res = st.executeQuery("select * from loc_mstr;");
+            while (res.next()) {
+                mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("loc_loc"),
+                           res.getString("loc_desc").replace(",", ""),
+                           res.getString("loc_site"),
+                        res.getString("loc_active") 
+                } );
             }
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-            
-        }
-        return mymodel;
-        
-         }
-          
-           public static DefaultTableModel getLocationsAll() {
-        javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("description"), getGlobalColumnTag("site"), getGlobalColumnTag("active")})
-                {
-                      @Override  
-                      public Class getColumnClass(int col) {  
-                        if (col == 0)       
-                            return ImageIcon.class;  
-                        else return String.class;  //other columns accept String values  
-                      }  
-                        }; 
-             
-      try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try{
-                   
-                      res = st.executeQuery("select * from loc_mstr;");
-                    while (res.next()) {
-                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("loc_loc"),
-                                   res.getString("loc_desc").replace(",", ""),
-                                   res.getString("loc_site"),
-                                res.getString("loc_active") 
-                        } );
-                    }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-              } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
+   }
+    catch (SQLException s){
+         MainFrame.bslog(s);
+      } finally {
+       if (res != null) res.close();
+       if (st != null) st.close();
+       if (con != null) con.close();
+    }
+}
+catch (Exception e){
+    MainFrame.bslog(e);
+
+}
+return mymodel;
+
+ }
+
+    public static DefaultTableModel getWareHousesAll() {
+javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+              new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("site"), getGlobalColumnTag("name"), getGlobalColumnTag("city"), getGlobalColumnTag("state"), getGlobalColumnTag("zip")})
+        {
+              @Override  
+              public Class getColumnClass(int col) {  
+                if (col == 0)       
+                    return ImageIcon.class;  
+                else return String.class;  //other columns accept String values  
+              }  
+                }; 
+
+try{
+
+    Connection con = DriverManager.getConnection(url + db, user, pass);
+    Statement st = con.createStatement();
+    ResultSet res = null;
+    try{
+
+              res = st.executeQuery("select * from wh_mstr;");
+            while (res.next()) {
+                mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("wh_id"),
+                           res.getString("wh_site"),
+                           res.getString("wh_name"),
+                           res.getString("wh_city"),
+                           res.getString("wh_state"),
+                           res.getString("wh_zip")
+                } );
             }
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-            
-        }
-        return mymodel;
-        
-         }
-           
-           public static DefaultTableModel getWareHousesAll() {
-        javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("site"), getGlobalColumnTag("name"), getGlobalColumnTag("city"), getGlobalColumnTag("state"), getGlobalColumnTag("zip")})
-                {
-                      @Override  
-                      public Class getColumnClass(int col) {  
-                        if (col == 0)       
-                            return ImageIcon.class;  
-                        else return String.class;  //other columns accept String values  
-                      }  
-                        }; 
-             
-      try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try{
-                   
-                      res = st.executeQuery("select * from wh_mstr;");
-                    while (res.next()) {
-                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("wh_id"),
-                                   res.getString("wh_site"),
-                                   res.getString("wh_name"),
-                                   res.getString("wh_city"),
-                                   res.getString("wh_state"),
-                                   res.getString("wh_zip")
-                        } );
-                    }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-             } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
+   }
+    catch (SQLException s){
+         MainFrame.bslog(s);
+     } finally {
+       if (res != null) res.close();
+       if (st != null) st.close();
+       if (con != null) con.close();
+    }
+}
+catch (Exception e){
+    MainFrame.bslog(e);
+
+}
+return mymodel;
+
+ }
+
+    public static DefaultTableModel getDeptsAll() {
+      javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+              new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("description"), "COPAcct", "LBRAcct", "BDNAcct"})
+              {
+              @Override  
+              public Class getColumnClass(int col) {  
+                if (col == 0)       
+                    return ImageIcon.class;  
+                else return String.class;  //other columns accept String values  
+              }  
+                }; 
+
+try{
+
+    Connection con = DriverManager.getConnection(url + db, user, pass);
+    Statement st = con.createStatement();
+    ResultSet res = null;
+    try{
+
+              res = st.executeQuery("select * from dept_mstr;");
+            while (res.next()) {
+                mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("dept_id"),
+                           res.getString("dept_desc").replace(",", ""),
+                           res.getString("dept_cop_acct"),
+                        res.getString("dept_lbr_acct"),
+                        res.getString("dept_bdn_acct")
+                });
             }
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-            
-        }
-        return mymodel;
-        
-         }
-           
-            public static DefaultTableModel getDeptsAll() {
-              javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("description"), "COPAcct", "LBRAcct", "BDNAcct"})
-                      {
-                      @Override  
-                      public Class getColumnClass(int col) {  
-                        if (col == 0)       
-                            return ImageIcon.class;  
-                        else return String.class;  //other columns accept String values  
-                      }  
-                        }; 
-             
-      try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try{
-                   
-                      res = st.executeQuery("select * from dept_mstr;");
-                    while (res.next()) {
-                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("dept_id"),
-                                   res.getString("dept_desc").replace(",", ""),
-                                   res.getString("dept_cop_acct"),
-                                res.getString("dept_lbr_acct"),
-                                res.getString("dept_bdn_acct")
-                        });
-                    }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-             } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
+   }
+    catch (SQLException s){
+         MainFrame.bslog(s);
+     } finally {
+       if (res != null) res.close();
+       if (st != null) st.close();
+       if (con != null) con.close();
+    }
+}
+catch (Exception e){
+    MainFrame.bslog(e);
+
+}
+return mymodel;
+
+ }
+
+    public static DefaultTableModel getBankAll() {
+      javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+              new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("description"), getGlobalColumnTag("account"), getGlobalColumnTag("currency"), getGlobalColumnTag("active")})
+              {
+              @Override  
+              public Class getColumnClass(int col) {  
+                if (col == 0)       
+                    return ImageIcon.class;  
+                else return String.class;  //other columns accept String values  
+              }  
+                }; 
+
+try{
+
+    Connection con = DriverManager.getConnection(url + db, user, pass);
+    Statement st = con.createStatement();
+    ResultSet res = null;
+    try{
+              res = st.executeQuery("select * from bk_mstr;");
+            while (res.next()) {
+                mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("bk_id"),
+                           res.getString("bk_desc").replace(",", ""),
+                           res.getString("bk_acct"),
+                        res.getString("bk_cur"),
+                        res.getString("bk_active")
+                });
             }
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-            
-        }
-        return mymodel;
-        
-         }
-            
-            public static DefaultTableModel getBankAll() {
-              javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("description"), getGlobalColumnTag("account"), getGlobalColumnTag("currency"), getGlobalColumnTag("active")})
-                      {
-                      @Override  
-                      public Class getColumnClass(int col) {  
-                        if (col == 0)       
-                            return ImageIcon.class;  
-                        else return String.class;  //other columns accept String values  
-                      }  
-                        }; 
-             
-       try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try{
-                      res = st.executeQuery("select * from bk_mstr;");
-                    while (res.next()) {
-                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("bk_id"),
-                                   res.getString("bk_desc").replace(",", ""),
-                                   res.getString("bk_acct"),
-                                res.getString("bk_cur"),
-                                res.getString("bk_active")
-                        });
-                    }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-             } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-            
-        }
-        return mymodel;
-        
-         }
-           
-public static DefaultTableModel getUnPostedGLTrans() {
+   }
+    catch (SQLException s){
+         MainFrame.bslog(s);
+     } finally {
+       if (res != null) res.close();
+       if (st != null) st.close();
+       if (con != null) con.close();
+    }
+}
+catch (Exception e){
+    MainFrame.bslog(e);
+
+}
+return mymodel;
+
+ }
+
+    public static DefaultTableModel getUnPostedGLTrans() {
               javax.swing.table.DefaultTableModel mymodel =  new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("id"), getGlobalColumnTag("account"), getGlobalColumnTag("description"), getGlobalColumnTag("costcenter"), getGlobalColumnTag("type"), getGlobalColumnTag("reference"), getGlobalColumnTag("description"), getGlobalColumnTag("effectivedate"), getGlobalColumnTag("date"), getGlobalColumnTag("amount")}); 
            
@@ -5886,7 +5844,7 @@ public static DefaultTableModel getUnPostedGLTrans() {
         
          }
  
-public static DefaultTableModel getGLHistBrowseUtil( String str, int state, String myfield) {
+    public static DefaultTableModel getGLHistBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("ref"), getGlobalColumnTag("account"), getGlobalColumnTag("cc"), getGlobalColumnTag("site"), getGlobalColumnTag("effectivedate"), getGlobalColumnTag("enterdate"), getGlobalColumnTag("description"), getGlobalColumnTag("amount"), getGlobalColumnTag("userid")})
                 {
@@ -5948,9 +5906,8 @@ public static DefaultTableModel getGLHistBrowseUtil( String str, int state, Stri
         return mymodel;
         
          } 
-    
-            
-public static DefaultTableModel getPayRollHours(String fromdate, String todate) {
+          
+    public static DefaultTableModel getPayRollHours(String fromdate, String todate) {
            
                  javax.swing.table.DefaultTableModel mymodel =  new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("empid"), getGlobalColumnTag("lastname"), getGlobalColumnTag("firstname"), getGlobalColumnTag("middlename"), getGlobalColumnTag("department"), getGlobalColumnTag("shift"), getGlobalColumnTag("supervisor"), getGlobalColumnTag("type"), getGlobalColumnTag("profile"), getGlobalColumnTag("jobtitle"), getGlobalColumnTag("rate"), getGlobalColumnTag("hours"), getGlobalColumnTag("amount")})
@@ -6016,8 +5973,7 @@ public static DefaultTableModel getPayRollHours(String fromdate, String todate) 
         return mymodel;
         
          }
-            
-            
+           
     public static DefaultTableModel getARPaymentBrowse() {
               javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("number"), getGlobalColumnTag("customer"), getGlobalColumnTag("invoice"), getGlobalColumnTag("checknbr"), getGlobalColumnTag("applieddate"), getGlobalColumnTag("amount")}); 
@@ -6056,757 +6012,751 @@ public static DefaultTableModel getPayRollHours(String fromdate, String todate) 
         
          }
             
-            public static DefaultTableModel getMenusAll() {
-              javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("description"), getGlobalColumnTag("class")})
-                      {
-                      @Override  
-                      public Class getColumnClass(int col) {  
-                        if (col == 0)       
-                            return ImageIcon.class;  
-                        else return String.class;  //other columns accept String values  
-                      }  
-                        }; 
-             
-       try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try{
-                      res = st.executeQuery("select * from menu_mstr order by menu_id;");
-                    while (res.next()) {
-                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("menu_id"),
-                                   res.getString("menu_desc"),
-                                   res.getString("menu_panel")
-                        });
-                    }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-            
-        }
-        return mymodel;
-        
-         }
-            
-            public static DefaultTableModel getPanelsAll() {
-              javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("class"), getGlobalColumnTag("description")})
-                      {
-                      @Override  
-                      public Class getColumnClass(int col) {  
-                        if (col == 0)       
-                            return ImageIcon.class;  
-                        else return String.class;  //other columns accept String values  
-                      }  
-                        }; 
-             
-       try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try{
-                   
-                      res = st.executeQuery("select * from panel_mstr order by panel_id;");
-                    while (res.next()) {
-                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("panel_id"),
-                                   res.getString("panel_desc")
-                        });
-                    }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-           } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-            
-        }
-        return mymodel;
-        
-         }
-            
-            public static DefaultTableModel getTermsAll() {
-              javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("code"), getGlobalColumnTag("description")})
-                      {
-                      @Override  
-                      public Class getColumnClass(int col) {  
-                        if (col == 0)       
-                            return ImageIcon.class;  
-                        else return String.class;  //other columns accept String values  
-                      }  
-                        }; 
-             
-       try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try{
-                      res = st.executeQuery("select * from cust_term;");
-                    while (res.next()) {
-                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("cut_code"),
-                                   res.getString("cut_desc")
-                        });
-                    }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-           } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-            
-        }
-        return mymodel;
-        
-         }
-            
-        public static DefaultTableModel getFreightAll() {
-              javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("code"), getGlobalColumnTag("description"), getGlobalColumnTag("enabled")})
-                      {
-                      @Override  
-                      public Class getColumnClass(int col) {  
-                        if (col == 0)       
-                            return ImageIcon.class;  
-                        else return String.class;  //other columns accept String values  
-                      }  
-                        }; 
-             
-       try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try{
-                   
-                      res = st.executeQuery("select * from frt_mstr;");
-                    while (res.next()) {
-                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("frt_code"),
-                                   res.getString("frt_desc"),
-                                   res.getString("frt_apply")
-                        });
-                    }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-            
-        }
-        return mymodel;
-        
-         }
-             
-        public static DefaultTableModel getCarrierAll() {
-              javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("code"), getGlobalColumnTag("description"), "SCAC", getGlobalColumnTag("phone"), getGlobalColumnTag("email"), getGlobalColumnTag("user"), getGlobalColumnTag("account")})
-                      {
-                      @Override  
-                      public Class getColumnClass(int col) {  
-                        if (col == 0)       
-                            return ImageIcon.class;  
-                        else return String.class;  //other columns accept String values  
-                      }  
-                        }; 
-             
-       try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try{
-                      res = st.executeQuery("select * from car_mstr;");
-                    while (res.next()) {
-                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("car_code"),
-                                   res.getString("car_desc"),
-                                   res.getString("car_scac"),
-                                   res.getString("car_phone"),
-                                   res.getString("car_email"),
-                                   res.getString("car_contact"),
-                                   res.getString("car_acct")
-                        });
-                    }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-           } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-            
-        }
-        return mymodel;
-        
-         }
-        
-         public static DefaultTableModel getTaxAll() {
-              javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("code"), getGlobalColumnTag("description"), getGlobalColumnTag("element"), getGlobalColumnTag("percent"), getGlobalColumnTag("userid")})
-                      {
-                      @Override  
-                      public Class getColumnClass(int col) {  
-                        if (col == 0)       
-                            return ImageIcon.class;  
-                        else return String.class;  //other columns accept String values  
-                      }  
-                        }; 
-             
-       try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try{
-                      res = st.executeQuery("select * from tax_mstr inner join taxd_mstr on taxd_parentcode = tax_code ;");
-                    while (res.next()) {
-                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("tax_code"),
-                                   res.getString("tax_desc"),
-                                   res.getString("taxd_desc"),
-                                   res.getString("taxd_percent"),
-                                   res.getString("tax_userid")
-                        });
-                    }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-           } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-            
-        }
-        return mymodel;
-        
-         }
-        
-           public static DefaultTableModel getPayProfileAll() {
-              javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("code"), getGlobalColumnTag("description"), getGlobalColumnTag("element"), getGlobalColumnTag("type"), getGlobalColumnTag("amount"), getGlobalColumnTag("amounttype"), getGlobalColumnTag("userid")})
-                      {
-                      @Override  
-                      public Class getColumnClass(int col) {  
-                        if (col == 0)       
-                            return ImageIcon.class;  
-                        else return String.class;  //other columns accept String values  
-                      }  
-                        }; 
-             
-       try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try{
-                   
-                      res = st.executeQuery("select * from pay_profile inner join pay_profdet on paypd_parentcode = payp_code ;");
-                    while (res.next()) {
-                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("payp_code"),
-                                   res.getString("payp_desc"),
-                                   res.getString("paypd_desc"),
-                                   res.getString("paypd_type"),
-                                   res.getString("paypd_amt"),
-                                   res.getString("paypd_amttype"),
-                                   res.getString("payp_userid")
-                        });
-                    }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-            
-        }
-        return mymodel;
-        
-         }
-        
-        
-         public static DefaultTableModel getSitesAll() {
-              javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("site"), getGlobalColumnTag("description"), getGlobalColumnTag("image"), getGlobalColumnTag("formatinvoice"), getGlobalColumnTag("formatpackingslip")})
-                      {
-                      @Override  
-                      public Class getColumnClass(int col) {  
-                        if (col == 0)       
-                            return ImageIcon.class;  
-                        else return String.class;  //other columns accept String values  
-                      }  
-                        }; 
-             
-       try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try{  
-                  res = st.executeQuery("select * from site_mstr;" );
-                    while (res.next()) {
-                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("site_site"),
-                                   res.getString("site_desc"),
-                                   res.getString("site_logo"),
-                                   res.getString("site_iv_jasper"),
-                                   res.getString("site_sh_jasper")
-                        });
-                    }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-           } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-            
-        }
-        return mymodel;
-        
-         }
-         
-       
-             public static DefaultTableModel getGLCalendar() {
-              javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("year"), getGlobalColumnTag("period"), getGlobalColumnTag("startdate"), getGlobalColumnTag("enddate"), getGlobalColumnTag("active")})
-                      {
-                      @Override  
-                      public Class getColumnClass(int col) {  
-                        if (col == 0)       
-                            return ImageIcon.class;  
-                        else return String.class;  //other columns accept String values  
-                      }  
-                        }; 
-             
-      try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try{
-                      res = st.executeQuery("select * from gl_cal;");
-                    while (res.next()) {
-                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("glc_year"),
-                                   res.getString("glc_per"),
-                                   res.getString("glc_start"),
-                                   res.getString("glc_end"),
-                                   res.getString("glc_status")
-                        });
-                    }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-            
-        }
-        return mymodel;
-        
-         }
-        
-        public static DefaultTableModel getNoStdCostItems() {
-              javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("item"), getGlobalColumnTag("description"), getGlobalColumnTag("type")}); 
-             
-       try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try{     
-                      res = st.executeQuery("select it_item, it_desc, it_code from item_mstr where it_item not in (select itc_item from item_cost where itc_item = it_item) order by it_item;");
-                    while (res.next()) {
-                        mymodel.addRow(new Object[] {res.getString("it_item"),
-                                   res.getString("it_desc"),
-                                   res.getString("it_code")
-                        });
-                    }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-               } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-            
-        }
-        return mymodel;
-        
-         }
-        
-             
-        public static DefaultTableModel getEDITPAll() {
-              javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), "TP ID", "Name", "Contact", "Web", "HelpDesk"})
-                      {
-                      @Override  
-                      public Class getColumnClass(int col) {  
-                        if (col == 0)       
-                            return ImageIcon.class;  
-                        else return String.class;  //other columns accept String values  
-                      }  
-                        }; 
-             
-      try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try{
-                   
-                      res = st.executeQuery("select * from editp_mstr order by editp_id;");
-                    while (res.next()) {
-                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("editp_id"),
-                                   res.getString("editp_name"),
-                                   res.getString("editp_contact"),
-                                   res.getString("editp_web"),
-                                   res.getString("editp_helpdesk")
-                        });
-                    }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-             } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-            
-        }
-        return mymodel;
-        
-         }
-        
-        
-          public static DefaultTableModel getEDITPDOCAll() {
-              javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), "TP ID", "Name", "Contact", "Web", "HelpDesk"})
-                      {
-                      @Override  
-                      public Class getColumnClass(int col) {  
-                        if (col == 0)       
-                            return ImageIcon.class;  
-                        else return String.class;  //other columns accept String values  
-                      }  
-                        }; 
-             
-        try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try{
-                      res = st.executeQuery("select * from edi_mstr order by edi_id;");
-                    while (res.next()) {
-                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("edi_id"),
-                                   res.getString("edi_doc"),
-                                   res.getString("edi_map"),
-                                   res.getString("edi_fa_required"),
-                                   res.getString("edi_desc")
-                        });
-                    }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-             } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-            
-        }
-        return mymodel;
-        
-         }
-       
-            public static DefaultTableModel getCustAddrInfoAll() {
-              javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("code"), getGlobalColumnTag("market"), getGlobalColumnTag("name"), getGlobalColumnTag("addr1"), getGlobalColumnTag("city"), getGlobalColumnTag("state"), getGlobalColumnTag("zip")})
-                      {
-                      @Override  
-                      public Class getColumnClass(int col) {  
-                        if (col == 0)       
-                            return ImageIcon.class;  
-                        else return String.class;  //other columns accept String values  
-                      }  
-                        }; 
-            
-      try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try{     
-                    res = st.executeQuery("SELECT cm_code, cm_market, cm_name, cm_line1, cm_city, cm_state, cm_zip " +
-                        "from cm_mstr order by cm_code ;");
+    public static DefaultTableModel getMenusAll() {
+      javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+              new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("description"), getGlobalColumnTag("class")})
+              {
+              @Override  
+              public Class getColumnClass(int col) {  
+                if (col == 0)       
+                    return ImageIcon.class;  
+                else return String.class;  //other columns accept String values  
+              }  
+                }; 
 
+try{
+
+    Connection con = DriverManager.getConnection(url + db, user, pass);
+    Statement st = con.createStatement();
+    ResultSet res = null;
+    try{
+              res = st.executeQuery("select * from menu_mstr order by menu_id;");
+            while (res.next()) {
+                mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("menu_id"),
+                           res.getString("menu_desc"),
+                           res.getString("menu_panel")
+                });
+            }
+   }
+    catch (SQLException s){
+         MainFrame.bslog(s);
+    } finally {
+       if (res != null) res.close();
+       if (st != null) st.close();
+       if (con != null) con.close();
+    }
+}
+catch (Exception e){
+    MainFrame.bslog(e);
+
+}
+return mymodel;
+
+ }
+
+    public static DefaultTableModel getPanelsAll() {
+      javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+              new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("class"), getGlobalColumnTag("description")})
+              {
+              @Override  
+              public Class getColumnClass(int col) {  
+                if (col == 0)       
+                    return ImageIcon.class;  
+                else return String.class;  //other columns accept String values  
+              }  
+                }; 
+
+try{
+
+    Connection con = DriverManager.getConnection(url + db, user, pass);
+    Statement st = con.createStatement();
+    ResultSet res = null;
+    try{
+
+              res = st.executeQuery("select * from panel_mstr order by panel_id;");
+            while (res.next()) {
+                mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("panel_id"),
+                           res.getString("panel_desc")
+                });
+            }
+   }
+    catch (SQLException s){
+         MainFrame.bslog(s);
+   } finally {
+       if (res != null) res.close();
+       if (st != null) st.close();
+       if (con != null) con.close();
+    }
+}
+catch (Exception e){
+    MainFrame.bslog(e);
+
+}
+return mymodel;
+
+ }
+
+    public static DefaultTableModel getTermsAll() {
+      javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+              new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("code"), getGlobalColumnTag("description")})
+              {
+              @Override  
+              public Class getColumnClass(int col) {  
+                if (col == 0)       
+                    return ImageIcon.class;  
+                else return String.class;  //other columns accept String values  
+              }  
+                }; 
+
+try{
+
+    Connection con = DriverManager.getConnection(url + db, user, pass);
+    Statement st = con.createStatement();
+    ResultSet res = null;
+    try{
+              res = st.executeQuery("select * from cust_term;");
+            while (res.next()) {
+                mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("cut_code"),
+                           res.getString("cut_desc")
+                });
+            }
+   }
+    catch (SQLException s){
+         MainFrame.bslog(s);
+   } finally {
+       if (res != null) res.close();
+       if (st != null) st.close();
+       if (con != null) con.close();
+    }
+}
+catch (Exception e){
+    MainFrame.bslog(e);
+
+}
+return mymodel;
+
+ }
+
+    public static DefaultTableModel getFreightAll() {
+          javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                  new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("code"), getGlobalColumnTag("description"), getGlobalColumnTag("enabled")})
+                  {
+                  @Override  
+                  public Class getColumnClass(int col) {  
+                    if (col == 0)       
+                        return ImageIcon.class;  
+                    else return String.class;  //other columns accept String values  
+                  }  
+                    }; 
+
+   try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try{
+
+                  res = st.executeQuery("select * from frt_mstr;");
                 while (res.next()) {
-                   
-                    mymodel.addRow(new Object[]{ BlueSeerUtils.clickflag,
-                        res.getString("cm_code"),
-                        res.getString("cm_market"),
-                        res.getString("cm_name"),
-                         res.getString("cm_line1"),
-                          res.getString("cm_city"),
-                           res.getString("cm_state"),
-                            res.getString("cm_zip")
-                            });
+                    mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("frt_code"),
+                               res.getString("frt_desc"),
+                               res.getString("frt_apply")
+                    });
                 }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-              } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+           if (res != null) res.close();
+           if (st != null) st.close();
+           if (con != null) con.close();
         }
-        catch (Exception e){
-            MainFrame.bslog(e);
-            
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+
+    }
+    return mymodel;
+
+     }
+
+    public static DefaultTableModel getCarrierAll() {
+          javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                  new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("code"), getGlobalColumnTag("description"), "SCAC", getGlobalColumnTag("phone"), getGlobalColumnTag("email"), getGlobalColumnTag("user"), getGlobalColumnTag("account")})
+                  {
+                  @Override  
+                  public Class getColumnClass(int col) {  
+                    if (col == 0)       
+                        return ImageIcon.class;  
+                    else return String.class;  //other columns accept String values  
+                  }  
+                    }; 
+
+   try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try{
+                  res = st.executeQuery("select * from car_mstr;");
+                while (res.next()) {
+                    mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("car_code"),
+                               res.getString("car_desc"),
+                               res.getString("car_scac"),
+                               res.getString("car_phone"),
+                               res.getString("car_email"),
+                               res.getString("car_contact"),
+                               res.getString("car_acct")
+                    });
+                }
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+       } finally {
+           if (res != null) res.close();
+           if (st != null) st.close();
+           if (con != null) con.close();
         }
-        return mymodel;
-        
-         }
-       
-     
-           public static DefaultTableModel getFreightOrderQuotesTable(String order) {
-              javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("number"), getGlobalColumnTag("id"), "Carrier", "DocType", "DocFile", "Dir", "Date"})
-                      {
-                      @Override  
-                      public Class getColumnClass(int col) {  
-                        if (col == 0)       
-                            return ImageIcon.class;  
-                        else return String.class;  //other columns accept String values  
-                      }  
-                        }; 
-              
-       try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try{
-                
-               java.util.Date now = new java.util.Date();
-                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-                DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
-                String mydate = dfdate.format(now);
-                   
-                    
-                    
-                    res = st.executeQuery("select fot_nbr, fot_uniqueid, fot_partnerid, fot_doctype, fot_docfile, fot_dir, fot_date " +
-                            " from fot_det " +
-                            "  where fot_nbr = " + "'" + order + "'" + 
-                            " AND ( fot_doctype = '219' OR fot_doctype = '220') " +
-                            ";");
-                    while (res.next()) {
-                         mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("fot_nbr"),
-                                   res.getString("fot_uniqueid"),
-                                   res.getString("fot_partnerid"),
-                                   res.getString("fot_doctype"),
-                                   res.getString("fot_docfile"),
-                                   res.getString("fot_dir"),
-                                   res.getString("fot_date")
-                        });
-                    }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+
+    }
+    return mymodel;
+
+     }
+
+    public static DefaultTableModel getTaxAll() {
+          javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                  new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("code"), getGlobalColumnTag("description"), getGlobalColumnTag("element"), getGlobalColumnTag("percent"), getGlobalColumnTag("userid")})
+                  {
+                  @Override  
+                  public Class getColumnClass(int col) {  
+                    if (col == 0)       
+                        return ImageIcon.class;  
+                    else return String.class;  //other columns accept String values  
+                  }  
+                    }; 
+
+   try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try{
+                  res = st.executeQuery("select * from tax_mstr inner join taxd_mstr on taxd_parentcode = tax_code ;");
+                while (res.next()) {
+                    mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("tax_code"),
+                               res.getString("tax_desc"),
+                               res.getString("taxd_desc"),
+                               res.getString("taxd_percent"),
+                               res.getString("tax_userid")
+                    });
+                }
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+       } finally {
+           if (res != null) res.close();
+           if (st != null) st.close();
+           if (con != null) con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+
+    }
+    return mymodel;
+
+     }
+
+    public static DefaultTableModel getPayProfileAll() {
+          javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                  new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("code"), getGlobalColumnTag("description"), getGlobalColumnTag("element"), getGlobalColumnTag("type"), getGlobalColumnTag("amount"), getGlobalColumnTag("amounttype"), getGlobalColumnTag("userid")})
+                  {
+                  @Override  
+                  public Class getColumnClass(int col) {  
+                    if (col == 0)       
+                        return ImageIcon.class;  
+                    else return String.class;  //other columns accept String values  
+                  }  
+                    }; 
+
+   try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try{
+
+                  res = st.executeQuery("select * from pay_profile inner join pay_profdet on paypd_parentcode = payp_code ;");
+                while (res.next()) {
+                    mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("payp_code"),
+                               res.getString("payp_desc"),
+                               res.getString("paypd_desc"),
+                               res.getString("paypd_type"),
+                               res.getString("paypd_amt"),
+                               res.getString("paypd_amttype"),
+                               res.getString("payp_userid")
+                    });
+                }
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+           if (res != null) res.close();
+           if (st != null) st.close();
+           if (con != null) con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+
+    }
+    return mymodel;
+
+     }
+
+    public static DefaultTableModel getSitesAll() {
+          javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                  new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("site"), getGlobalColumnTag("description"), getGlobalColumnTag("image"), getGlobalColumnTag("formatinvoice"), getGlobalColumnTag("formatpackingslip")})
+                  {
+                  @Override  
+                  public Class getColumnClass(int col) {  
+                    if (col == 0)       
+                        return ImageIcon.class;  
+                    else return String.class;  //other columns accept String values  
+                  }  
+                    }; 
+
+   try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try{  
+              res = st.executeQuery("select * from site_mstr;" );
+                while (res.next()) {
+                    mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("site_site"),
+                               res.getString("site_desc"),
+                               res.getString("site_logo"),
+                               res.getString("site_iv_jasper"),
+                               res.getString("site_sh_jasper")
+                    });
+                }
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+       } finally {
+           if (res != null) res.close();
+           if (st != null) st.close();
+           if (con != null) con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+
+    }
+    return mymodel;
+
+     }
+
+    public static DefaultTableModel getGLCalendar() {
+          javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                  new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("year"), getGlobalColumnTag("period"), getGlobalColumnTag("startdate"), getGlobalColumnTag("enddate"), getGlobalColumnTag("active")})
+                  {
+                  @Override  
+                  public Class getColumnClass(int col) {  
+                    if (col == 0)       
+                        return ImageIcon.class;  
+                    else return String.class;  //other columns accept String values  
+                  }  
+                    }; 
+
+  try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try{
+                  res = st.executeQuery("select * from gl_cal;");
+                while (res.next()) {
+                    mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("glc_year"),
+                               res.getString("glc_per"),
+                               res.getString("glc_start"),
+                               res.getString("glc_end"),
+                               res.getString("glc_status")
+                    });
+                }
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+           if (res != null) res.close();
+           if (st != null) st.close();
+           if (con != null) con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+
+    }
+    return mymodel;
+
+     }
+
+    public static DefaultTableModel getNoStdCostItems() {
+          javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                  new String[]{getGlobalColumnTag("item"), getGlobalColumnTag("description"), getGlobalColumnTag("type")}); 
+
+   try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try{     
+                  res = st.executeQuery("select it_item, it_desc, it_code from item_mstr where it_item not in (select itc_item from item_cost where itc_item = it_item) order by it_item;");
+                while (res.next()) {
+                    mymodel.addRow(new Object[] {res.getString("it_item"),
+                               res.getString("it_desc"),
+                               res.getString("it_code")
+                    });
+                }
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
+           if (res != null) res.close();
+           if (st != null) st.close();
+           if (con != null) con.close();
         }
-        catch (Exception e){
-            MainFrame.bslog(e);
-            
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+
+    }
+    return mymodel;
+
+     }
+
+    public static DefaultTableModel getEDITPAll() {
+          javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                  new String[]{getGlobalColumnTag("select"), "TP ID", "Name", "Contact", "Web", "HelpDesk"})
+                  {
+                  @Override  
+                  public Class getColumnClass(int col) {  
+                    if (col == 0)       
+                        return ImageIcon.class;  
+                    else return String.class;  //other columns accept String values  
+                  }  
+                    }; 
+
+  try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try{
+
+                  res = st.executeQuery("select * from editp_mstr order by editp_id;");
+                while (res.next()) {
+                    mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("editp_id"),
+                               res.getString("editp_name"),
+                               res.getString("editp_contact"),
+                               res.getString("editp_web"),
+                               res.getString("editp_helpdesk")
+                    });
+                }
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+         } finally {
+           if (res != null) res.close();
+           if (st != null) st.close();
+           if (con != null) con.close();
         }
-        return mymodel;
-        
-         }
-          
-           
-            public static DefaultTableModel getFreightOrderTendersTable(String order) {
-              javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), "OrdNbr", "UniqueID", "Carrier", "DocType", "DocFile", "Dir", "Date"})
-                      {
-                      @Override  
-                      public Class getColumnClass(int col) {  
-                        if (col == 0)       
-                            return ImageIcon.class;  
-                        else return String.class;  //other columns accept String values  
-                      }  
-                        }; 
-              
-       try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try{
-                
-               java.util.Date now = new java.util.Date();
-                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-                DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
-                String mydate = dfdate.format(now);
-                   
-                    
-                    
-                    res = st.executeQuery("select fot_nbr, fot_uniqueid, fot_partnerid, fot_doctype, fot_docfile, fot_dir, fot_date " +
-                            " from fot_det " +
-                            "  where fot_nbr = " + "'" + order + "'" + 
-                            " AND ( fot_doctype = '204' OR fot_doctype = '990') " +
-                            ";");
-                    while (res.next()) {
-                         mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("fot_nbr"),
-                                   res.getString("fot_uniqueid"),
-                                   res.getString("fot_partnerid"),
-                                   res.getString("fot_doctype"),
-                                   res.getString("fot_docfile"),
-                                   res.getString("fot_dir"),
-                                   res.getString("fot_date")
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+
+    }
+    return mymodel;
+
+     }
+
+    public static DefaultTableModel getEDITPDOCAll() {
+          javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                  new String[]{getGlobalColumnTag("select"), "TP ID", "Name", "Contact", "Web", "HelpDesk"})
+                  {
+                  @Override  
+                  public Class getColumnClass(int col) {  
+                    if (col == 0)       
+                        return ImageIcon.class;  
+                    else return String.class;  //other columns accept String values  
+                  }  
+                    }; 
+
+    try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try{
+                  res = st.executeQuery("select * from edi_mstr order by edi_id;");
+                while (res.next()) {
+                    mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("edi_id"),
+                               res.getString("edi_doc"),
+                               res.getString("edi_map"),
+                               res.getString("edi_fa_required"),
+                               res.getString("edi_desc")
+                    });
+                }
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+         } finally {
+           if (res != null) res.close();
+           if (st != null) st.close();
+           if (con != null) con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+
+    }
+    return mymodel;
+
+     }
+
+    public static DefaultTableModel getCustAddrInfoAll() {
+          javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                  new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("code"), getGlobalColumnTag("market"), getGlobalColumnTag("name"), getGlobalColumnTag("addr1"), getGlobalColumnTag("city"), getGlobalColumnTag("state"), getGlobalColumnTag("zip")})
+                  {
+                  @Override  
+                  public Class getColumnClass(int col) {  
+                    if (col == 0)       
+                        return ImageIcon.class;  
+                    else return String.class;  //other columns accept String values  
+                  }  
+                    }; 
+
+  try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try{     
+                res = st.executeQuery("SELECT cm_code, cm_market, cm_name, cm_line1, cm_city, cm_state, cm_zip " +
+                    "from cm_mstr order by cm_code ;");
+
+            while (res.next()) {
+
+                mymodel.addRow(new Object[]{ BlueSeerUtils.clickflag,
+                    res.getString("cm_code"),
+                    res.getString("cm_market"),
+                    res.getString("cm_name"),
+                     res.getString("cm_line1"),
+                      res.getString("cm_city"),
+                       res.getString("cm_state"),
+                        res.getString("cm_zip")
                         });
-                    }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-           } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
             }
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+          } finally {
+           if (res != null) res.close();
+           if (st != null) st.close();
+           if (con != null) con.close();
         }
-        catch (Exception e){
-            MainFrame.bslog(e);
-            
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+
+    }
+    return mymodel;
+
+     }
+
+    public static DefaultTableModel getFreightOrderQuotesTable(String order) {
+          javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                  new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("number"), getGlobalColumnTag("id"), "Carrier", "DocType", "DocFile", "Dir", "Date"})
+                  {
+                  @Override  
+                  public Class getColumnClass(int col) {  
+                    if (col == 0)       
+                        return ImageIcon.class;  
+                    else return String.class;  //other columns accept String values  
+                  }  
+                    }; 
+
+   try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try{
+
+           java.util.Date now = new java.util.Date();
+            DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+            DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
+            String mydate = dfdate.format(now);
+
+
+
+                res = st.executeQuery("select fot_nbr, fot_uniqueid, fot_partnerid, fot_doctype, fot_docfile, fot_dir, fot_date " +
+                        " from fot_det " +
+                        "  where fot_nbr = " + "'" + order + "'" + 
+                        " AND ( fot_doctype = '219' OR fot_doctype = '220') " +
+                        ";");
+                while (res.next()) {
+                     mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("fot_nbr"),
+                               res.getString("fot_uniqueid"),
+                               res.getString("fot_partnerid"),
+                               res.getString("fot_doctype"),
+                               res.getString("fot_docfile"),
+                               res.getString("fot_dir"),
+                               res.getString("fot_date")
+                    });
+                }
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+       } finally {
+           if (res != null) res.close();
+           if (st != null) st.close();
+           if (con != null) con.close();
         }
-        return mymodel;
-        
-         }
-           
-             public static DefaultTableModel getFreightOrderStatusTable(String order) {
-              javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), "OrdNbr", "UniqueID", "Carrier", "DocType", "DocFile", getGlobalColumnTag("status"), "Remarks", "Lat", "Lon", "Dir", "Date"})
-                      {
-                      @Override  
-                      public Class getColumnClass(int col) {  
-                        if (col == 0)       
-                            return ImageIcon.class;  
-                        else return String.class;  //other columns accept String values  
-                      }  
-                        }; 
-              
-       try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try{
-                
-               java.util.Date now = new java.util.Date();
-                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-                DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
-                String mydate = dfdate.format(now);
-                   
-                    
-                    
-                    res = st.executeQuery("select fot_nbr, fot_uniqueid, fot_partnerid, fot_doctype, fot_docfile, fot_status, fot_remarks, fot_lat, fot_lon, fot_dir, fot_date " +
-                            " from fot_det " +
-                            "  where fot_nbr = " + "'" + order + "'" + 
-                            " AND fot_doctype = '214' " +
-                            ";");
-                    while (res.next()) {
-                         mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("fot_nbr"),
-                                   res.getString("fot_uniqueid"),
-                                   res.getString("fot_partnerid"),
-                                   res.getString("fot_doctype"),
-                                   res.getString("fot_docfile"),
-                                   res.getString("fot_status"),
-                                   res.getString("fot_remarks"),
-                                   res.getString("fot_lat"),
-                                   res.getString("fot_lon"),
-                                   res.getString("fot_dir"),
-                                   res.getString("fot_date")
-                        });
-                    }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-           } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+
+    }
+    return mymodel;
+
+     }
+
+    public static DefaultTableModel getFreightOrderTendersTable(String order) {
+          javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                  new String[]{getGlobalColumnTag("select"), "OrdNbr", "UniqueID", "Carrier", "DocType", "DocFile", "Dir", "Date"})
+                  {
+                  @Override  
+                  public Class getColumnClass(int col) {  
+                    if (col == 0)       
+                        return ImageIcon.class;  
+                    else return String.class;  //other columns accept String values  
+                  }  
+                    }; 
+
+   try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try{
+
+           java.util.Date now = new java.util.Date();
+            DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+            DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
+            String mydate = dfdate.format(now);
+
+
+
+                res = st.executeQuery("select fot_nbr, fot_uniqueid, fot_partnerid, fot_doctype, fot_docfile, fot_dir, fot_date " +
+                        " from fot_det " +
+                        "  where fot_nbr = " + "'" + order + "'" + 
+                        " AND ( fot_doctype = '204' OR fot_doctype = '990') " +
+                        ";");
+                while (res.next()) {
+                     mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("fot_nbr"),
+                               res.getString("fot_uniqueid"),
+                               res.getString("fot_partnerid"),
+                               res.getString("fot_doctype"),
+                               res.getString("fot_docfile"),
+                               res.getString("fot_dir"),
+                               res.getString("fot_date")
+                    });
+                }
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+       } finally {
+           if (res != null) res.close();
+           if (st != null) st.close();
+           if (con != null) con.close();
         }
-        catch (Exception e){
-            MainFrame.bslog(e);
-            
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+
+    }
+    return mymodel;
+
+     }
+
+    public static DefaultTableModel getFreightOrderStatusTable(String order) {
+          javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                  new String[]{getGlobalColumnTag("select"), "OrdNbr", "UniqueID", "Carrier", "DocType", "DocFile", getGlobalColumnTag("status"), "Remarks", "Lat", "Lon", "Dir", "Date"})
+                  {
+                  @Override  
+                  public Class getColumnClass(int col) {  
+                    if (col == 0)       
+                        return ImageIcon.class;  
+                    else return String.class;  //other columns accept String values  
+                  }  
+                    }; 
+
+   try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try{
+
+           java.util.Date now = new java.util.Date();
+            DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+            DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
+            String mydate = dfdate.format(now);
+
+
+
+                res = st.executeQuery("select fot_nbr, fot_uniqueid, fot_partnerid, fot_doctype, fot_docfile, fot_status, fot_remarks, fot_lat, fot_lon, fot_dir, fot_date " +
+                        " from fot_det " +
+                        "  where fot_nbr = " + "'" + order + "'" + 
+                        " AND fot_doctype = '214' " +
+                        ";");
+                while (res.next()) {
+                     mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("fot_nbr"),
+                               res.getString("fot_uniqueid"),
+                               res.getString("fot_partnerid"),
+                               res.getString("fot_doctype"),
+                               res.getString("fot_docfile"),
+                               res.getString("fot_status"),
+                               res.getString("fot_remarks"),
+                               res.getString("fot_lat"),
+                               res.getString("fot_lon"),
+                               res.getString("fot_dir"),
+                               res.getString("fot_date")
+                    });
+                }
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+       } finally {
+           if (res != null) res.close();
+           if (st != null) st.close();
+           if (con != null) con.close();
         }
-        return mymodel;
-        
-         }
-            
-            
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+
+    }
+    return mymodel;
+
+     }
+
+
     
     
 }

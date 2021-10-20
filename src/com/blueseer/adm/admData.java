@@ -37,6 +37,9 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 /**
  *
@@ -187,7 +190,31 @@ public class admData {
         return m;
     }
     
-   
+    // misc
+    public static void updateDefaultCurrency(String x) {
+         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd"); 
+       try{
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        try{
+            st.executeUpdate("update ov_mstr set ov_currency = " + "'" + x + "'" + ";" );
+            st.executeUpdate("update cm_mstr set cm_curr = " + "'" + x + "'" + ";" );
+            st.executeUpdate("update vd_mstr set vd_curr = " + "'" + x + "'" + ";" );
+        }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+            if (st != null) {
+                st.close();
+            }
+            con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+
+    }
     
     public record site_mstr(String[] m, String site_site, String site_desc, 
     String site_line1, String site_line2, String site_line3, String site_city,
