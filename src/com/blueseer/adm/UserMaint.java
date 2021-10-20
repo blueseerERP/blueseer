@@ -27,6 +27,9 @@ package com.blueseer.adm;
 
 import bsmf.MainFrame;
 import static bsmf.MainFrame.tags;
+import static com.blueseer.adm.admData.addUserMstr;
+import static com.blueseer.adm.admData.updateUserMstr;
+import com.blueseer.adm.admData.user_mstr;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
@@ -361,103 +364,15 @@ public class UserMaint extends javax.swing.JPanel implements IBlueSeer {
     
     public String[] addRecord(String[] x) {
      String[] m = new String[2];
-     
-     try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                boolean proceed = true;
-                int i = 0;
-                
-                proceed = validateInput("addRecord");
-                
-                if (proceed) {
-
-                    res = st.executeQuery("SELECT user_id FROM  user_mstr where user_id = " + "'" + x[0] + "'" + ";");
-                    while (res.next()) {
-                        i++;
-                    }
-                    if (i == 0) {
-                    String passwd = bsmf.MainFrame.PassWord("0", tbpassword.getPassword());
-                    st.executeUpdate("insert into user_mstr "
-                        + "(user_id, user_site, user_lname, user_fname,"
-                        + "user_mname, user_email, user_phone, user_cell, user_rmks, user_passwd) "
-                        + "values ( " + "'" + tbkey.getText().toString() + "'" + ","
-                        + "'" + ddsite.getSelectedItem().toString() + "'" + ","
-                        + "'" + tbUMLastName.getText() + "'" + ","        
-                        + "'" + tbUMFirstName.getText() + "'" + ","
-                        + null + ","
-                        + "'" + tbemail.getText() + "'" + ","
-                            + "'" + tbphone.getText() + "'" + ","
-                            + "'" + tbcell.getText() + "'" + ","
-                            + "'" + tarmks.getText() + "'" + ","
-                        + "'" + passwd + "'"
-                        + ")"
-                        + ";");
-                        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
-                    } else {
-                       m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists}; 
-                    }
-
-                   initvars(null);
-                   
-                } // if proceed
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordSQLError};  
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordConnError};
-        }
-     
+     m = addUserMstr(createRecord());
+     initvars(null);
      return m;
      }
      
     public String[] updateRecord(String[] x) {
      String[] m = new String[2];
-     
-     try {
-            boolean proceed = true;
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                   
-               proceed = validateInput("updateRecord");
-                
-                if (proceed) {
-                    String passwd = bsmf.MainFrame.PassWord("0", tbpassword.getPassword());
-                        st.executeUpdate("update user_mstr set "
-                                + "user_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + ","
-                                + "user_lname = " + "'" + tbUMLastName.getText().toString().replace("'", "''") + "'" + ","        
-                                + "user_fname = " + "'" + tbUMFirstName.getText().toString() + "'" + ","
-                                + "user_email = " + "'" + tbemail.getText().toString() + "'" + ","
-                                + "user_phone = " + "'" + tbphone.getText().toString() + "'" + ","
-                                + "user_cell = " + "'" + tbcell.getText().toString() + "'" + ","
-                                + "user_passwd = " + "'" + passwd + "'" + ","
-                                + "user_rmks = " + "'" + tarmks.getText().toString().replace("'", "''")  + "'"
-                                + " where user_id = " + "'" + tbkey.getText().toString() + "'"
-                                + ";");
-                        
-                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
-                    initvars(null);
-                } 
-         
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError};  
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordConnError};
-        }
-     
+     m = updateUserMstr(createRecord());
+     initvars(null);
      return m;
      }
      
@@ -531,6 +446,23 @@ public class UserMaint extends javax.swing.JPanel implements IBlueSeer {
             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};  
         }
       return m;
+    }
+    
+    public user_mstr createRecord() {
+        String passwd = bsmf.MainFrame.PassWord("0", tbpassword.getPassword());
+        user_mstr x = new user_mstr(null, 
+                tbkey.getText().toString(),
+                ddsite.getSelectedItem().toString(),
+                tbUMLastName.getText(),  
+                tbUMFirstName.getText(),
+                "", // middlename
+                tbemail.getText(),
+                tbphone.getText(),
+                tbcell.getText(),
+                tarmks.getText(),
+                passwd + "'"
+        );
+        return x;
     }
     
     public void lookUpFrame() {

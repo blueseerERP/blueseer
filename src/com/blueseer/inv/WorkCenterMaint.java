@@ -30,6 +30,9 @@ import static bsmf.MainFrame.defaultDecimalSeparator;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
+import static com.blueseer.inv.invData.addWorkCenterMstr;
+import static com.blueseer.inv.invData.updateWorkCenterMstr;
+import com.blueseer.inv.invData.wc_mstr;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
@@ -372,99 +375,16 @@ public class WorkCenterMaint extends javax.swing.JPanel implements IBlueSeer {
     }
     
     public String[] addRecord(String[] x) {
-     String[] m = new String[2];
-     
-     try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                boolean proceed = true;
-                int i = 0;
-                
-                proceed = validateInput("addRecord");
-                
-                if (proceed) {
-
-                    res = st.executeQuery("SELECT * FROM  wc_mstr where wc_cell = " + "'" + x[0] + "'" + ";");
-                    while (res.next()) {
-                        i++;
-                    }
-                    if (i == 0) {
-                       st.executeUpdate("insert into wc_mstr "
-                            + " values ( " + "'" + tbkey.getText() + "'" + ","
-                                + "'" + tbdesc.getText() + "'" + ","
-                                + "'" + ddsite.getSelectedItem().toString() + "'" + ","
-                                + "'" + ddcc.getSelectedItem().toString() + "'" + ","
-                                + "'" + tbrunrate.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
-                                + "'" + tbruncrewsize.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
-                                + "'" + tbsetuprate.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
-                                + "'" + tbsetupcrewsize.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
-                                + "'" + tbbdnrate.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
-                                + "'" + tarmks.getText() + "'" 
-                            + ")"
-                            + ";");
-                        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
-                    } else {
-                       m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists}; 
-                    }
-
-                   initvars(null);
-                   
-                } // if proceed
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                 m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};  
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-             m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1020, Thread.currentThread().getStackTrace()[1].getMethodName())};
-        }
-     
+    String[] m = new String[2];
+     m = addWorkCenterMstr(createRecord());
+     initvars(null);
      return m;
      }
      
     public String[] updateRecord(String[] x) {
-     String[] m = new String[2];
-     
-     try {
-            boolean proceed = true;
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                   
-               proceed = validateInput("updateRecord");
-                
-                if (proceed) {
-                    st.executeUpdate("update wc_mstr set wc_desc = " + "'" + tbdesc.getText() + "'" + ","
-                            + "wc_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + "," 
-                            + "wc_cc = " + "'" + ddcc.getSelectedItem().toString() + "'" + ","
-                            + "wc_run_rate = " + "'" + tbrunrate.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
-                            + "wc_setup_rate = " + "'" + tbsetuprate.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
-                            + "wc_bdn_rate = " + "'" + tbbdnrate.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
-                            + "wc_run_crew = " + "'" + tbruncrewsize.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
-                            + "wc_setup = " + "'" + tbsetupcrewsize.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
-                            + "wc_remarks = " + "'" + tarmks.getText() + "'"
-                            + " where wc_cell = " + "'" + x[0] + "'" 
-                            + ";");
-                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
-                    initvars(null);
-                } 
-         
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};  
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1020, Thread.currentThread().getStackTrace()[1].getMethodName())};
-        }
-     
+    String[] m = new String[2];
+     m = updateWorkCenterMstr(createRecord());
+     initvars(null);
      return m;
      }
      
@@ -539,6 +459,22 @@ public class WorkCenterMaint extends javax.swing.JPanel implements IBlueSeer {
             m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1020, Thread.currentThread().getStackTrace()[1].getMethodName())};  
         }
       return m;
+    }
+    
+    public wc_mstr createRecord() {
+        wc_mstr x = new wc_mstr(null, 
+           tbkey.getText(),
+           tbdesc.getText(),
+            ddsite.getSelectedItem().toString(),
+            ddcc.getSelectedItem().toString(),
+            tbrunrate.getText().replace(defaultDecimalSeparator, '.'),
+            tbsetuprate.getText().replace(defaultDecimalSeparator, '.'),
+            tbbdnrate.getText().replace(defaultDecimalSeparator, '.'),    
+            tbruncrewsize.getText().replace(defaultDecimalSeparator, '.'),
+            tbsetupcrewsize.getText().replace(defaultDecimalSeparator, '.'),
+            tarmks.getText() + "'"      
+        );
+        return x;
     }
     
     public void lookUpFrame() {

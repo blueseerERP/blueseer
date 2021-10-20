@@ -28,6 +28,9 @@ package com.blueseer.adm;
 
 import bsmf.MainFrame;
 import static bsmf.MainFrame.tags;
+import static com.blueseer.adm.admData.addSiteMstr;
+import com.blueseer.adm.admData.site_mstr;
+import static com.blueseer.adm.admData.updateSiteMstr;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
@@ -429,118 +432,21 @@ public class SiteMaint extends javax.swing.JPanel implements IBlueSeer {
     
     public String[] addRecord(String[] x) {
      String[] m = new String[2];
-     try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            Statement st = bsmf.MainFrame.con.createStatement();
-            ResultSet res = null;
-            try {
-                
-               
-                int i = 0;
-             
-                boolean proceed = validateInput("addRecord");
-                
-                if (proceed) {
-
-                    res = st.executeQuery("SELECT site_site FROM  site_mstr where site_site = " + "'" + tbkey.getText() + "'" + ";");
-                    while (res.next()) {
-                        i++;
-                    }
-                    if (i == 0) {
-                        st.executeUpdate("insert into site_mstr "
-                            + "(site_site, site_desc, site_line1, site_line2, site_line3, site_city, site_state, site_country, site_zip, site_logo, site_iv_jasper, site_sh_jasper, site_po_jasper, site_or_jasper, site_pos_jasper   ) "
-                            + " values ( " + "'" + tbkey.getText().toString() + "'" + ","
-                            + "'" + tbdesc.getText().toString().replace("'","''") + "'" + ","
-                            + "'" + tbline1.getText().toString().replace("'","''") + "'" + ","
-                            + "'" + tbline2.getText().toString().replace("'","''") + "'" + ","
-                            + "'" + tbline3.getText().toString().replace("'","''") + "'" + ","    
-                            + "'" + tbcity.getText().toString().replace("'","''") + "'" + ","
-                            + "'" + ddstate.getSelectedItem().toString() + "'" + ","
-                            + "'" + ddcountry.getSelectedItem().toString() + "'" + ","        
-                            + "'" + tbzip.getText().toString() + "'" + ","
-                                + "'" + tblogo.getText().toString() + "'" + ","
-                                + "'" + tb_iv_generic.getText().toString() + "'" + ","
-                                + "'" + tb_sh_generic.getText().toString() + "'" + ","
-                                + "'" + tb_po_generic.getText().toString() + "'" + ","
-                                + "'" + tb_or_generic.getText().toString() + "'" + ","
-                                 + "'" + tb_pos_generic.getText().toString() + "'"
-                            + ")"
-                            + ";");
-                        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
-                    } else {
-                       m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists}; 
-                    }
-
-                   initvars(null);
-                   
-                } // if proceed
-          } catch (SQLException s) {
-                MainFrame.bslog(s);
-                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordSQLError};  
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordConnError};
-        }
-    return m;
+     m = addSiteMstr(createRecord());
+     initvars(null);
+     return m;
     }
     
     public String[] updateRecord(String[] x) {
      String[] m = new String[2];
-      try {
-            boolean proceed = true;
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            Statement st = bsmf.MainFrame.con.createStatement();
-            ResultSet res = null;
-            try {
-                
-                if (proceed) {
-                    st.executeUpdate("update site_mstr set site_line1 = " + "'" + tbline1.getText() + "'" + ","
-                            + "site_line2 = " + "'" + tbline2.getText().replace("'","''") + "'" + ","
-                            + "site_line3 = " + "'" + tbline3.getText().replace("'","''") + "'" + ","
-                            + "site_city = " + "'" + tbcity.getText().replace("'","''") + "'" + ","
-                            + "site_zip = " + "'" + tbzip.getText() + "'" + ","
-                            + "site_desc = " + "'" + tbdesc.getText().replace("'","''") + "'" + ","
-                            + "site_logo = " + "'" + tblogo.getText() + "'" + ","
-                            + "site_iv_jasper = " + "'" + tb_iv_generic.getText() + "'" + ","
-                            + "site_sh_jasper = " + "'" + tb_sh_generic.getText() + "'" + ","
-                            + "site_po_jasper = " + "'" + tb_po_generic.getText() + "'" + ","
-                            + "site_or_jasper = " + "'" + tb_or_generic.getText() + "'" + ","        
-                            + "site_pos_jasper = " + "'" + tb_pos_generic.getText() + "'" + ","
-                            + "site_state = " + "'" + ddstate.getSelectedItem().toString() + "'" + ","
-                            + "site_country = " + "'" + ddcountry.getSelectedItem().toString() + "'"    
-                            + " where site_site = " + "'" + tbkey.getText() + "'"                             
-                            + ";");
-                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
-                    initvars(null);
-                  
-                } 
-         
-           } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError};  
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordConnError};
-        }
-    return m;
+     m = updateSiteMstr(createRecord());
+     initvars(null);
+     return m;
     }
     
     public String[] deleteRecord(String[] x) {
     String[] m = new String[2];
-        boolean proceed = bsmf.MainFrame.warn("Are you sure?");
+        boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
         if (proceed) {
         try {
 
@@ -573,6 +479,31 @@ public class SiteMaint extends javax.swing.JPanel implements IBlueSeer {
      return m;
     }
    
+    public site_mstr createRecord() {
+        site_mstr x = new site_mstr(null, tbkey.getText().toString(),
+                        tbdesc.getText(),
+                tbline1.getText(),
+                tbline2.getText(),
+                tbline3.getText(),
+                tbcity.getText(),
+                ddstate.getSelectedItem().toString(),
+                tbzip.getText(),
+                ddcountry.getSelectedItem().toString(),
+                "", // phone
+                "", // web
+                tblogo.getText(),
+                tb_iv_generic.getText(),  
+                tb_sh_generic.getText(),
+                "",
+                "",
+                "",
+                "",
+                tb_po_generic.getText(),
+                tb_or_generic.getText(),
+                tb_pos_generic.getText());
+        return x;  
+    }
+    
     public void lookUpFrame() {
         
         luinput.removeActionListener(lual);

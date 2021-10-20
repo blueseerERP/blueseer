@@ -32,6 +32,7 @@ import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -834,9 +835,7 @@ public class RPData {
        } 
     
     public static DefaultTableModel getShipperBrowse(String from, String to) {
-           DecimalFormat df = new DecimalFormat("#.00", new DecimalFormatSymbols(Locale.US));
-               // df.setMinimumFractionDigits(2);
-               // df.setMaximumFractionDigits(2);
+           
            javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                         new String[]{getGlobalColumnTag("shipper"), 
                   getGlobalColumnTag("code"), 
@@ -885,7 +884,7 @@ public class RPData {
                         res.getString("sh_po"),
                         res.getString("sh_so"),
                         res.getString("sh_curr"),
-                        df.format(res.getDouble("amt")),
+                        bsFormatDouble(res.getDouble("amt")),
                         res.getString("sh_status")
                         });
                 }

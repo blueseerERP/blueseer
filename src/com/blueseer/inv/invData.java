@@ -461,6 +461,72 @@ public class invData {
     }
     
 
+    public static String[] addWorkCenterMstr(wc_mstr x) {
+        String[] m = new String[2];
+        String sqlSelect = "SELECT * FROM  wc_mstr where wc_cell = ?";
+        String sqlInsert = "insert into wc_mstr (wc_cell, wc_desc, wc_site, "
+                        + " wc_cc, wc_run_rate, wc_setup_rate, " 
+                        + " wc_bdn_rate, wc_run_crew, wc_setup, wc_remarks ) " 
+                        + " values (?,?,?,?,?,?,?,?,?,?); "; 
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+             PreparedStatement ps = con.prepareStatement(sqlSelect);) {
+             ps.setString(1, x.wc_cell);
+          try (ResultSet res = ps.executeQuery();
+               PreparedStatement psi = con.prepareStatement(sqlInsert);) {  
+            if (! res.isBeforeFirst()) {
+            psi.setString(1, x.wc_cell);
+            psi.setString(2, x.wc_desc);
+            psi.setString(3, x.wc_site);
+            psi.setString(4, x.wc_cc);
+            psi.setString(5, x.wc_run_rate);
+            psi.setString(6, x.wc_setup_rate);
+            psi.setString(7, x.wc_bdn_rate);
+            psi.setString(8, x.wc_run_crew);
+            psi.setString(9, x.wc_setup);
+            psi.setString(10, x.wc_remarks);
+            int rows = psi.executeUpdate();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+            } else {
+            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists};    
+            }
+          } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+          }
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+
+    public static String[] updateWorkCenterMstr(wc_mstr x) {
+        String[] m = new String[2];
+        String sql = "update wc_mstr set wc_desc = ?, wc_site = ?, "
+                        + " wc_cc = ?, wc_run_rate = ?, wc_setup_rate = ?, " 
+                        + " wc_bdn_rate = ?, wc_run_crew = ?, wc_setup = ?, wc_remarks = ? " 
+                        + " where wc_cell = ? ;"; 
+         try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(10, x.wc_cell);
+            ps.setString(1, x.wc_desc);
+            ps.setString(2, x.wc_site);
+            ps.setString(3, x.wc_cc);
+            ps.setString(4, x.wc_run_rate);
+            ps.setString(5, x.wc_setup_rate);
+            ps.setString(6, x.wc_bdn_rate);
+            ps.setString(7, x.wc_run_crew);
+            ps.setString(8, x.wc_setup);
+            ps.setString(9, x.wc_remarks);
+            int rows = ps.executeUpdate();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+
 
     public static ArrayList getItemListFromCustCode(String cust) {
         ArrayList myarray = new ArrayList();   
@@ -2492,6 +2558,13 @@ public class invData {
     }
      
      
-    
+     public record wc_mstr(String[] m, String wc_cell, String wc_desc,
+        String wc_site, String wc_cc, String wc_run_rate, String wc_setup_rate,
+        String wc_bdn_rate, String wc_run_crew, String wc_setup, String wc_remarks) {
+        public wc_mstr(String[] m) {
+            this(m, "", "", "", "", "", "", "", "", "", "");
+        }
+    }
+     
     
 }

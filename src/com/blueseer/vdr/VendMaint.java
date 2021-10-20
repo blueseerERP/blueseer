@@ -32,6 +32,7 @@ import com.blueseer.ctr.cusData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
 import static com.blueseer.utl.BlueSeerUtils.luTable;
@@ -84,7 +85,12 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeer {
    // global datatablemodel declarations  
     javax.swing.table.DefaultTableModel contactmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
-                "ID", "Type", "Name", "Phone", "Fax", "Email"
+                getGlobalColumnTag("id"), 
+                getGlobalColumnTag("type"), 
+                getGlobalColumnTag("name"), 
+                getGlobalColumnTag("phone"), 
+                getGlobalColumnTag("fax"), 
+                getGlobalColumnTag("email")
             });
     
     
