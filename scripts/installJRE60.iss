@@ -40,6 +40,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Name: "english"; Description: "English"; Flags: exclusive
 Name: "french"; Description: "French"; Flags: exclusive
 Name: "spanish"; Description: "Spanish"; Flags: exclusive
+Name: "turkish"; Description: "Turkish"; Flags: exclusive
 
 [Files]
 Source: "C:\bs\blueseer\scripts\login.bat"; DestDir: "{app}"; Flags: ignoreversion
@@ -51,6 +52,7 @@ Source: "C:\bs\blueseer\sf\data\*"; DestDir: "{app}\data"; Flags: ignoreversion 
 Source: "C:\bs\blueseer\sf\data\fr\bsdb.db"; components: french; DestDir: "{app}\data"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "C:\bs\blueseer\sf\data\es\bsdb.db"; components: spanish; DestDir: "{app}\data"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "C:\bs\blueseer\sf\data\en\bsdb.db"; components: english; DestDir: "{app}\data"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "C:\bs\blueseer\sf\data\tr\bsdb.db"; components: turkish; DestDir: "{app}\data"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "C:\bs\blueseer\dist\*"; DestDir: "{app}\dist"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "C:\bs\blueseer\sf\temp\*"; DestDir: "{app}\temp"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "C:\bs\blueseer\sf\patches\*"; DestDir: "{app}\patches"; Flags: ignoreversion recursesubdirs createallsubdirs
@@ -74,6 +76,11 @@ Name: "{commondesktop}\{#MyAppName}";  components: french; Filename: "{app}\jre1
 ;spanish
 Name: "{commonprograms}\{#MyAppName}"; components: spanish; Filename: "{app}\jre17\bin\javaw.exe"; WorkingDir: "{app}"; Parameters: "-Djava.util.logging.config.file=bslogging.properties -Duser.language=es -Duser.country=ES -cp dist/* bsmf.MainFrame" ; Tasks: desktopicon ; IconFilename: "{app}\images\bs.ico"
 Name: "{commondesktop}\{#MyAppName}";  components: spanish; Filename: "{app}\jre17\bin\javaw.exe"; WorkingDir: "{app}"; Parameters: "-Djava.util.logging.config.file=bslogging.properties -Duser.language=es -Duser.country=ES -cp dist/* bsmf.MainFrame" ; Tasks: desktopicon ; IconFilename: "{app}\images\bs.ico"
+
+;turkish
+Name: "{commonprograms}\{#MyAppName}"; components: turkish; Filename: "{app}\jre17\bin\javaw.exe"; WorkingDir: "{app}"; Parameters: "-Djava.util.logging.config.file=bslogging.properties -Duser.language=tr -Duser.country=TR -cp dist/* bsmf.MainFrame" ; Tasks: desktopicon ; IconFilename: "{app}\images\bs.ico"
+Name: "{commondesktop}\{#MyAppName}";  components: turkish; Filename: "{app}\jre17\bin\javaw.exe"; WorkingDir: "{app}"; Parameters: "-Djava.util.logging.config.file=bslogging.properties -Duser.language=tr -Duser.country=TR -cp dist/* bsmf.MainFrame" ; Tasks: desktopicon ; IconFilename: "{app}\images\bs.ico"
+
 
 [Run]
 ;Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: shellexec postinstall skipifsilent

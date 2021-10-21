@@ -232,28 +232,28 @@ TCReportsMenu,ClockChartByDept,3,JMenuItem,Departmana Göre Saatler (Grafik),,1,
 TCReportsMenu,ClockChartByCode,4,JMenuItem,Kodlara Göre Saatler (Grafik),,1,,1,1
 TCReportsMenu,ClockChartByEmp,5,JMenuItem,Çalışan Saati (Grafik),,1,,1,1
 TCReportsMenu,ClockChartByWeek,6,JMenuItem,Haftaya Göre Toplam Saat (Grafik),,1,,1,1
-Admin,DefaultMaint,1,JMenuItem,Varsayılan Bakım,,,,1,1
-Admin,SiteMaint,2,JMenuItem,Site Bakımı,,,,1,1
-Admin,SiteBrowse,3,JMenuItem,Siteye Gözat,,1,,1,1
-Admin,UserMaint,4,JMenuItem,Kullanıcı Bakımı,,,,1,1
-Admin,UserPermsMaint,5,JMenuItem,Kullanıcı İzinleri Bakımı,,,,1,1
-Admin,UserBrowse,6,JMenuItem,Kullanıcı Gözat,,1,,1,1
-Admin,PanelMaint,7,JMenuItem,Sınıf Kaydı,,,,1,1
-Admin,PanelBrowse,8,JMenuItem,Sınıf Tarama,,1,,1,1
-Admin,MenuMaint,9,JMenuItem,Menü Bakımı,,,,1,1
-Admin,MenuBrowse,10,JMenuItem,Menüye Gözat,,1,,1,1
-Admin,GenericCodeMaint,11,JMenuItem,Genel Kod Bakımı,,,,1,1
-Admin,GenCodeBrowse,12,JMenuItem,Genel Kod Gözat,,1,,1,1
-Admin,KeyMaint,13,JMenuItem,Anahtar Bakım,,,,1,1
-Admin,PrinterMaint,14,JMenuItem,Yazıcı Bakımı,,,,1,1
-Admin,PrinterBrowse,15,JMenuItem,Yazıcıya Gözat,,1,,1,1
-Admin,ChangeUserid,16,JMenuItem,Kullanıcı Kimliğini Değiştir,,,changeUserID,1,1
-Admin,changeDB,17,JMenuItem,IP'yi değiştir:DB,,,changeIPandDB,1,1
-Admin,SystemControl,18,JMenuItem,Sistem kontrolü,,,,1,1
-Admin,TreeMaint,19,JMenuItem,Menü Ağacı Bakımı,,,,1,1
-Admin,FTPMaint,20,JMenuItem,FTP Bakımı,,,,1,1
-Admin,MassLoad,21,JMenuItem,Ana Verileri İçe Aktarma,,,,1,1
-Admin,JasperRptMaint,22,JMenuItem,Jasper Rapor Bakımı,,,,1,1
+yönetici,DefaultMaint,1,JMenuItem,Varsayılan Bakım,,,,1,1
+yönetici,SiteMaint,2,JMenuItem,Site Bakımı,,,,1,1
+yönetici,SiteBrowse,3,JMenuItem,Siteye Gözat,,1,,1,1
+yönetici,UserMaint,4,JMenuItem,Kullanıcı Bakımı,,,,1,1
+yönetici,UserPermsMaint,5,JMenuItem,Kullanıcı İzinleri Bakımı,,,,1,1
+yönetici,UserBrowse,6,JMenuItem,Kullanıcı Gözat,,1,,1,1
+yönetici,PanelMaint,7,JMenuItem,Sınıf Kaydı,,,,1,1
+yönetici,PanelBrowse,8,JMenuItem,Sınıf Tarama,,1,,1,1
+yönetici,MenuMaint,9,JMenuItem,Menü Bakımı,,,,1,1
+yönetici,MenuBrowse,10,JMenuItem,Menüye Gözat,,1,,1,1
+yönetici,GenericCodeMaint,11,JMenuItem,Genel Kod Bakımı,,,,1,1
+yönetici,GenCodeBrowse,12,JMenuItem,Genel Kod Gözat,,1,,1,1
+yönetici,KeyMaint,13,JMenuItem,Anahtar Bakım,,,,1,1
+yönetici,PrinterMaint,14,JMenuItem,Yazıcı Bakımı,,,,1,1
+yönetici,PrinterBrowse,15,JMenuItem,Yazıcıya Gözat,,1,,1,1
+yönetici,ChangeUserid,16,JMenuItem,Kullanıcı Kimliğini Değiştir,,,changeUserID,1,1
+yönetici,changeDB,17,JMenuItem,IP'yi değiştir:DB,,,changeIPandDB,1,1
+yönetici,SystemControl,18,JMenuItem,Sistem kontrolü,,,,1,1
+yönetici,TreeMaint,19,JMenuItem,Menü Ağacı Bakımı,,,,1,1
+yönetici,FTPMaint,20,JMenuItem,FTP Bakımı,,,,1,1
+yönetici,MassLoad,21,JMenuItem,Ana Verileri İçe Aktarma,,,,1,1
+yönetici,JasperRptMaint,22,JMenuItem,Jasper Rapor Bakımı,,,,1,1
 Yardım,About,1,JMenuItem,Hakkında,,,,1,1
 Yardım,Update,2,JMenuItem,Güncelleme,,,,1,1
 Yardım,PlantDirectoryMenu,3,JMenuItem,Tesis Rehberi,,1,,1,1

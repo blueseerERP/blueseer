@@ -464,34 +464,35 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
         boolean b = true;
                 if (ddsite.getSelectedItem() == null || ddsite.getSelectedItem().toString().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("must choose a site");
+                    bsmf.MainFrame.show(getMessageTag(1026));
+                    ddsite.requestFocus();
                     return b;
                 }
                
                 if (ddcode.getSelectedItem() == null || ddcode.getSelectedItem().toString().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("must choose an item code");
+                    bsmf.MainFrame.show(getMessageTag(1026));
                     ddcode.requestFocus();
                     return b;
                 }
                 
                 if (ddprodcode.getSelectedItem() == null || ddprodcode.getSelectedItem().toString().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("must choose a product code");
+                    bsmf.MainFrame.show(getMessageTag(1026));
                     ddprodcode.requestFocus();
                     return b;
                 }
                 
                 if (tbdesc.getText().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a description");
+                    bsmf.MainFrame.show(getMessageTag(1024));
                     tbdesc.requestFocus();
                     return b;
                 }
                 
                 if (tbkey.getText().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a code");
+                    bsmf.MainFrame.show(getMessageTag(1024));
                     tbkey.requestFocus();
                     return b;
                 }
@@ -758,7 +759,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("unable to get tran_mstr info");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -806,7 +807,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 }
                 tbqtyoh.setText(String.valueOf(tot));
             } catch (SQLException s) {
-                bsmf.MainFrame.show("unable to get location qty");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
                 MainFrame.bslog(s);
             }
             bsmf.MainFrame.con.close();
@@ -2210,13 +2211,11 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
                     if (i > 0) {
                         String ImageDir = OVData.getSystemImageDirectory();
                         java.nio.file.Files.deleteIfExists(new File(ImageDir + ddimage.getSelectedItem().toString()).toPath());
-                    bsmf.MainFrame.show("deleted image file " + ddimage.getSelectedItem().toString());
-                   
-                    getItemImages(tbkey.getText());
+                        getItemImages(tbkey.getText());
                     }
                 } catch (SQLException s) {
                     MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to Delete Image File");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -2245,7 +2244,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
                   
                 } catch (SQLException s) {
                     MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to update default Image File");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -2272,7 +2271,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
             if (x.equals("error")) {
                 tbsellprice.setText("");
                 tbsellprice.setBackground(Color.yellow);
-                bsmf.MainFrame.show("Non-Numeric character in textbox");
+                bsmf.MainFrame.show(getMessageTag(1000));
                 tbsellprice.requestFocus();
             } else {
                 tbsellprice.setText(x);
@@ -2295,7 +2294,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
             if (x.equals("error")) {
                 tbpurchprice.setText("");
                 tbpurchprice.setBackground(Color.yellow);
-                bsmf.MainFrame.show("Non-Numeric character in textbox");
+                bsmf.MainFrame.show(getMessageTag(1000));
                 tbpurchprice.requestFocus();
             } else {
                 tbpurchprice.setText(x);
@@ -2319,7 +2318,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
             if (x.equals("error")) {
                 tbmtlcost.setText("");
                 tbmtlcost.setBackground(Color.yellow);
-                bsmf.MainFrame.show("Non-Numeric character in textbox");
+                bsmf.MainFrame.show(getMessageTag(1000));
                 tbmtlcost.requestFocus();
             } else {
                 tbmtlcost.setText(x);
@@ -2336,7 +2335,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
         if (x.equals("error")) {
             tboutcost.setText("");
             tboutcost.setBackground(Color.yellow);
-            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            bsmf.MainFrame.show(getMessageTag(1000));
             tboutcost.requestFocus();
         } else {
             tboutcost.setText(x);
@@ -2351,7 +2350,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
             if (x.equals("error")) {
                 tbovhcost.setText("");
                 tbovhcost.setBackground(Color.yellow);
-                bsmf.MainFrame.show("Non-Numeric character in textbox");
+                bsmf.MainFrame.show(getMessageTag(1000));
                 tbovhcost.requestFocus();
             } else {
                 tbovhcost.setText(x);
@@ -2368,7 +2367,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
             if (x.equals("error")) {
                 tbnetwt.setText("");
                 tbnetwt.setBackground(Color.yellow);
-                bsmf.MainFrame.show("Non-Numeric character in textbox");
+                bsmf.MainFrame.show(getMessageTag(1000));
                 tbnetwt.requestFocus();
             } else {
                 tbnetwt.setText(x);
@@ -2385,7 +2384,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
             if (x.equals("error")) {
                 tbshipwt.setText("");
                 tbshipwt.setBackground(Color.yellow);
-                bsmf.MainFrame.show("Non-Numeric character in textbox");
+                bsmf.MainFrame.show(getMessageTag(1000));
                 tbshipwt.requestFocus();
             } else {
                 tbshipwt.setText(x);
@@ -2402,7 +2401,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
             if (x.equals("error")) {
                 tbleadtime.setText("");
                 tbleadtime.setBackground(Color.yellow);
-                bsmf.MainFrame.show("Non-Numeric character in textbox");
+                bsmf.MainFrame.show(getMessageTag(1000));
                 tbleadtime.requestFocus();
             } else {
                 tbleadtime.setText(x);
@@ -2419,7 +2418,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
             if (x.equals("error")) {
                 tbsafestock.setText("");
                 tbsafestock.setBackground(Color.yellow);
-                bsmf.MainFrame.show("Non-Numeric character in textbox");
+                bsmf.MainFrame.show(getMessageTag(1000));
                 tbsafestock.requestFocus();
             } else {
                 tbsafestock.setText(x);
@@ -2436,7 +2435,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
             if (x.equals("error")) {
                 tbminordqty.setText("");
                 tbminordqty.setBackground(Color.yellow);
-                bsmf.MainFrame.show("Non-Numeric character in textbox");
+                bsmf.MainFrame.show(getMessageTag(1000));
                 tbminordqty.requestFocus();
             } else {
                 tbminordqty.setText(x);
@@ -2458,7 +2457,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 ex.printStackTrace();
             } 
         } else {
-            bsmf.MainFrame.show("no default label printer defined");
+            bsmf.MainFrame.show(getMessageTag(1139));
         }
     }//GEN-LAST:event_btprintlabelActionPerformed
 
