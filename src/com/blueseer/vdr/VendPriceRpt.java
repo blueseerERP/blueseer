@@ -305,11 +305,7 @@ public class VendPriceRpt extends javax.swing.JPanel {
             try {
                 Statement st = bsmf.MainFrame.con.createStatement();
                 ResultSet res = null;
-                DecimalFormat df = new DecimalFormat("#0.0000", new DecimalFormatSymbols(Locale.US));
                 int i = 0;
-
-              
-             
                 if (rbpart.isSelected()) {
                 res = st.executeQuery("SELECT vpr_vend, vd_name, vpr_item, it_desc, vpr_uom, vpr_curr, vpr_price FROM  vpr_mstr inner join vd_mstr on vd_addr = vpr_vend inner join item_mstr on it_item = vpr_item where " +
                     " vpr_item like " + "'" + "%" + tbtext.getText().toString() + "%' ;") ;
@@ -327,7 +323,7 @@ public class VendPriceRpt extends javax.swing.JPanel {
                         res.getString("it_desc"),
                         res.getString("vpr_uom"),
                         res.getString("vpr_curr"),
-                        Double.valueOf(df.format(res.getDouble("vpr_price")))
+                        res.getDouble("vpr_price")
                     });
                 }
 

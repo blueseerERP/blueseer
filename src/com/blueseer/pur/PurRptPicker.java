@@ -374,7 +374,7 @@ public class PurRptPicker extends javax.swing.JPanel {
              javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
               new String[]{
                   getGlobalColumnTag("select"),
-                  getGlobalColumnTag("purchaseorder"), 
+                  getGlobalColumnTag("po"), 
                   getGlobalColumnTag("code"), 
                   getGlobalColumnTag("name"), 
                   getGlobalColumnTag("remarks"),
@@ -476,7 +476,7 @@ public class PurRptPicker extends javax.swing.JPanel {
             // the remaining columns are whatever you require
              javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
               new String[]{getGlobalColumnTag("select"),
-                  getGlobalColumnTag("purchaseorder"), 
+                  getGlobalColumnTag("po"), 
                   getGlobalColumnTag("code"), 
                   getGlobalColumnTag("name"), 
                   getGlobalColumnTag("remarks"),
@@ -591,7 +591,7 @@ public class PurRptPicker extends javax.swing.JPanel {
             // the remaining columns are whatever you require
              javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
               new String[]{getGlobalColumnTag("select"),
-                  getGlobalColumnTag("purchaseorder"), 
+                  getGlobalColumnTag("po"), 
                   getGlobalColumnTag("code"), 
                   getGlobalColumnTag("name"), 
                   getGlobalColumnTag("remarks"),
@@ -695,7 +695,7 @@ public class PurRptPicker extends javax.swing.JPanel {
             // the remaining columns are whatever you require
              javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
               new String[]{getGlobalColumnTag("select"),
-                  getGlobalColumnTag("purchaseorder"), 
+                  getGlobalColumnTag("po"), 
                   getGlobalColumnTag("code"), 
                   getGlobalColumnTag("name"), 
                   getGlobalColumnTag("item"), 

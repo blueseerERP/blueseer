@@ -1059,9 +1059,9 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeer {
     }
     
     public void sumqty() {
-        int qty = 0;
+        double qty = 0;
          for (int j = 0; j < orddet.getRowCount(); j++) {
-             qty = qty + Integer.valueOf(orddet.getValueAt(j, 5).toString()); 
+             qty = qty + bsParseDouble(orddet.getValueAt(j, 5).toString()); 
          }
          tbtotqty.setText(String.valueOf(qty));
     }
@@ -1944,7 +1944,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeer {
     }//GEN-LAST:event_qtyshippedFocusGained
 
     private void qtyshippedFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_qtyshippedFocusLost
-              String x = BlueSeerUtils.bsformat("", qtyshipped.getText(), "0");
+              String x = BlueSeerUtils.bsformat("", qtyshipped.getText(), "2");
         if (x.equals("error")) {
             qtyshipped.setText("");
             qtyshipped.setBackground(Color.yellow);

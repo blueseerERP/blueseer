@@ -26,6 +26,7 @@ SOFTWARE.
 package com.blueseer.utl;
 import bsmf.MainFrame;
 import static bsmf.MainFrame.bslog;
+import static bsmf.MainFrame.defaultDecimalSeparator;
 import static bsmf.MainFrame.tags;
 import com.blueseer.adm.admData;
 
@@ -621,6 +622,9 @@ public class BlueSeerUtils {
         if (invalue.isEmpty() && type.equals("i")) {
            return "0";
         }
+        if (defaultDecimalSeparator == ',' && invalue.contains(".")) {
+            return "error";
+        }
         if (invalue.isEmpty() && type.equals("d")) {
            invalue = "0"; // for use down below
         }
@@ -1030,6 +1034,14 @@ public class BlueSeerUtils {
          String tag = "";
           if (tags.containsKey("global.message." + key)) {
             tag = tags.getString("global.message." + key);
+          }
+         return tag;
+     }
+    
+     public static String getTitleTag(int key) {
+         String tag = "";
+          if (tags.containsKey("global.title." + key)) {
+            tag = tags.getString("global.title." + key);
           }
          return tag;
      }

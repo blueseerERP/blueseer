@@ -50,6 +50,7 @@ import bsmf.MainFrame;
 import static bsmf.MainFrame.tags;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import static com.blueseer.utl.BlueSeerUtils.priceformat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 import javax.swing.BorderFactory;
@@ -340,12 +341,7 @@ public class CustPriceRpt extends javax.swing.JPanel {
             try {
                 Statement st = bsmf.MainFrame.con.createStatement();
                 ResultSet res = null;
-                DecimalFormat df = new DecimalFormat("#0.0000", new DecimalFormatSymbols(Locale.US));
                 int i = 0;
-
-               
-              
-
                 if (rbpart.isSelected()) {
                 res = st.executeQuery("SELECT * FROM  cpr_mstr where " +
                     " cpr_item like " + "'" + "%" + tbtext.getText().toString() + "%' order by cpr_cust, cpr_item;") ;
@@ -368,7 +364,7 @@ public class CustPriceRpt extends javax.swing.JPanel {
                         res.getString("cpr_item"),
                         res.getString("cpr_uom"),
                         res.getString("cpr_curr"),
-                        Double.valueOf(df.format(res.getDouble("cpr_price"))),
+                        res.getDouble("cpr_price"),
                         res.getString("cpr_disc")
                     });
                 }

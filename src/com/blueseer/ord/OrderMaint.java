@@ -953,8 +953,8 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
 
                  qohunall = invqty - allqty; 
 
-                 if (Integer.valueOf(orddet.getValueAt(j,5).toString()) <= qohunall) {
-                     allocationvalue = Integer.valueOf(orddet.getValueAt(j,5).toString());
+                 if (bsParseDouble(orddet.getValueAt(j,5).toString()) <= qohunall) {
+                     allocationvalue = bsParseDouble(orddet.getValueAt(j,5).toString());
                  } else {
                      allocationvalue = qohunall;
                      completeAllocation = false;
@@ -1624,9 +1624,9 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
     }
             
     public void sumqty() {
-        int qty = 0;
+        double qty = 0;
          for (int j = 0; j < orddet.getRowCount(); j++) {
-             qty = qty + Integer.valueOf(orddet.getValueAt(j, 5).toString()); 
+             qty = qty + bsParseDouble(orddet.getValueAt(j, 5).toString()); 
          }
          tbtotqty.setText(String.valueOf(qty));
     }
@@ -1676,11 +1676,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
          // add tax to total
          dol += totaltax;
          
-         /*
-         if (! tbtottax.getText().isEmpty()) {
-         dol += Double.valueOf(tbtottax.getText()); // add total tax from summation of matl tax + customer specific order tax
-         }
-         */
+        
          tbtottax.setText(nf.format(totaltax));
          tbtotdollars.setText(nf.format(dol));
          lblcurr.setText(ddcurr.getSelectedItem().toString());
@@ -1770,7 +1766,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
          
         
         // check unallocated qty
-        if (! OVData.isOrderExceedQOHU() && Integer.valueOf(qtyshipped.getText()) > invData.getItemQOHUnallocated(ddpart.getSelectedItem().toString(),ddsite.getSelectedItem().toString(),tbkey.getText())) {
+        if (! OVData.isOrderExceedQOHU() && bsParseDouble(qtyshipped.getText()) > invData.getItemQOHUnallocated(ddpart.getSelectedItem().toString(),ddsite.getSelectedItem().toString(),tbkey.getText())) {
              bsmf.MainFrame.show(getMessageTag(1092));
              qtyshipped.requestFocus();
              return false;
@@ -3263,7 +3259,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
 
     private void qtyshippedFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_qtyshippedFocusLost
        
-        String x = BlueSeerUtils.bsformat("", qtyshipped.getText(), "0");
+        String x = BlueSeerUtils.bsformat("", qtyshipped.getText(), "2");
         if (x.equals("error")) {
             qtyshipped.setText("");
             qtyshipped.setBackground(Color.yellow);

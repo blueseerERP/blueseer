@@ -372,7 +372,7 @@ public class InvRptPicker extends javax.swing.JPanel {
              // create and fill tablemodel
             // column 1 is always 'select' and always type ImageIcon
             // the remaining columns are whatever you require
-               javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+               javax.swing.table.DefaultTableModel mymodel  = new javax.swing.table.DefaultTableModel(new Object[][]{},
                         new String[]{getGlobalColumnTag("select"),
                              getGlobalColumnTag("item"), 
                              getGlobalColumnTag("description"), 
@@ -390,10 +390,14 @@ public class InvRptPicker extends javax.swing.JPanel {
                       public Class getColumnClass(int col) {  
                         if (col == 0)       
                             return ImageIcon.class;  
+                        else if (col == 9 || col == 10) 
+                            return Double.class;
                         else return String.class;  //other columns accept String values  
                       }  
                         };
-           
+             
+            
+               
            try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
@@ -415,8 +419,8 @@ public class InvRptPicker extends javax.swing.JPanel {
                                 res.getString("it_group"),
                                 res.getString("it_loc"),
                                 res.getString("it_wh"),
-                                BlueSeerUtils.currformat(res.getString("it_sell_price")),
-                                BlueSeerUtils.currformat(res.getString("it_pur_price")),
+                                res.getDouble("it_sell_price"),
+                                res.getDouble("it_pur_price"),
                                 res.getString("it_rev")
                                 });
                 }
@@ -434,16 +438,11 @@ public class InvRptPicker extends javax.swing.JPanel {
         }
       
       // now assign tablemodel to table
-            tablereport.setModel(mymodel);
-            tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
-            Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
-              while (en.hasMoreElements()) {
-                 TableColumn tc = en.nextElement();
-                 if (mymodel.getColumnClass(tc.getModelIndex()).getSimpleName().equals("ImageIcon")) { // select column
-                     continue;
-                 }
-                 tc.setCellRenderer(new InvRptPicker.renderer1());
-             }
+        tablereport.setModel(mymodel);
+        tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
+        tablereport.getColumnModel().getColumn(9).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+        tablereport.getColumnModel().getColumn(10).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+
         } // else run report
                
     }
@@ -492,9 +491,11 @@ public class InvRptPicker extends javax.swing.JPanel {
                    {
                       @Override  
                       public Class getColumnClass(int col) {  
-                        if (col == 0)       
+                       if (col == 0)       
                             return ImageIcon.class;  
-                        else return String.class;  //other columns accept String values  
+                        else if (col == 9 || col == 10) 
+                            return Double.class;
+                        else return String.class;
                       }  
                         };
            
@@ -519,8 +520,8 @@ public class InvRptPicker extends javax.swing.JPanel {
                                 res.getString("it_group"),
                                 res.getString("it_loc"),
                                 res.getString("it_wh"),
-                                BlueSeerUtils.currformat(res.getString("it_sell_price")),
-                                BlueSeerUtils.currformat(res.getString("it_pur_price")),
+                                res.getDouble("it_sell_price"),
+                                res.getDouble("it_pur_price"),
                                 res.getString("it_rev")
                                 });
                 }
@@ -538,16 +539,11 @@ public class InvRptPicker extends javax.swing.JPanel {
         }
       
       // now assign tablemodel to table
-            tablereport.setModel(mymodel);
-            tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
-            Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
-              while (en.hasMoreElements()) {
-                 TableColumn tc = en.nextElement();
-                 if (mymodel.getColumnClass(tc.getModelIndex()).getSimpleName().equals("ImageIcon")) { // select column
-                     continue;
-                 }
-                 tc.setCellRenderer(new InvRptPicker.renderer1());
-             }
+        tablereport.setModel(mymodel);
+        tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
+        tablereport.getColumnModel().getColumn(9).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+        tablereport.getColumnModel().getColumn(10).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+
         } // else run report
                
     }
@@ -596,7 +592,9 @@ public class InvRptPicker extends javax.swing.JPanel {
                       public Class getColumnClass(int col) {  
                         if (col == 0)       
                             return ImageIcon.class;  
-                        else return String.class;  //other columns accept String values  
+                        else if (col == 3 || col == 4 || col == 5 || col == 6 || col == 7 || col == 8) 
+                            return Double.class;
+                        else return String.class;
                       }  
                         };
            
@@ -617,13 +615,12 @@ public class InvRptPicker extends javax.swing.JPanel {
                     mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, 
                         res.getString("it_item"),
                         res.getString("it_desc"),
-                        BlueSeerUtils.currformat(String.valueOf(res.getDouble("itc_mtl_low") + res.getDouble("itc_mtl_top"))),
-                        BlueSeerUtils.currformat(String.valueOf(res.getDouble("itc_lbr_low") + res.getDouble("itc_lbr_top") )),
-                        BlueSeerUtils.currformat(String.valueOf(res.getDouble("itc_bdn_low") + res.getDouble("itc_bdn_top") )),
-                        BlueSeerUtils.currformat(String.valueOf(res.getDouble("itc_ovh_low") + res.getDouble("itc_ovh_top") )),
-                        BlueSeerUtils.currformat(String.valueOf(res.getDouble("itc_out_low") + res.getDouble("itc_out_top") )),
-                        BlueSeerUtils.currformat(String.valueOf(res.getDouble("itc_total")))
-                                
+                        res.getDouble("itc_mtl_low") + res.getDouble("itc_mtl_top"),
+                        res.getDouble("itc_lbr_low") + res.getDouble("itc_lbr_top"),
+                        res.getDouble("itc_bdn_low") + res.getDouble("itc_bdn_top"),
+                        res.getDouble("itc_ovh_low") + res.getDouble("itc_ovh_top"),
+                        res.getDouble("itc_out_low") + res.getDouble("itc_out_top"),
+                        res.getDouble("itc_total")
                                 });
                 }
            }
@@ -640,16 +637,15 @@ public class InvRptPicker extends javax.swing.JPanel {
         }
       
       // now assign tablemodel to table
-            tablereport.setModel(mymodel);
-            tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
-            Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
-              while (en.hasMoreElements()) {
-                 TableColumn tc = en.nextElement();
-                 if (mymodel.getColumnClass(tc.getModelIndex()).getSimpleName().equals("ImageIcon")) { // select column
-                     continue;
-                 }
-                 tc.setCellRenderer(new InvRptPicker.renderer1());
-             }
+           tablereport.setModel(mymodel);
+        tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
+        tablereport.getColumnModel().getColumn(3).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+        tablereport.getColumnModel().getColumn(4).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+        tablereport.getColumnModel().getColumn(5).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+        tablereport.getColumnModel().getColumn(6).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+        tablereport.getColumnModel().getColumn(7).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+        tablereport.getColumnModel().getColumn(8).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+
         } // else run report
                
     }
@@ -694,8 +690,10 @@ public class InvRptPicker extends javax.swing.JPanel {
                    {
                       @Override  
                       public Class getColumnClass(int col) {  
-                        if (col == 0)       
+                        if (col == 0)  
                             return ImageIcon.class;  
+                        else if (col == 7 || col == 8)
+                            return Double.class;
                         else return String.class;  //other columns accept String values  
                       }  
                         };
@@ -725,9 +723,8 @@ public class InvRptPicker extends javax.swing.JPanel {
                         res.getString("cm_name"),
                         res.getString("cpr_curr"),
                         res.getString("cpr_uom"),
-                        BlueSeerUtils.currformat(res.getString("it_sell_price")),
-                        BlueSeerUtils.currformat(res.getString("cpr_price"))
-                                
+                        res.getDouble("it_sell_price"),
+                        res.getDouble("cpr_price")
                                 });
                 }
            }
@@ -744,16 +741,11 @@ public class InvRptPicker extends javax.swing.JPanel {
         }
       
       // now assign tablemodel to table
-            tablereport.setModel(mymodel);
-            tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
-            Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
-              while (en.hasMoreElements()) {
-                 TableColumn tc = en.nextElement();
-                 if (mymodel.getColumnClass(tc.getModelIndex()).getSimpleName().equals("ImageIcon")) { // select column
-                     continue;
-                 }
-                 tc.setCellRenderer(new InvRptPicker.renderer1());
-             }
+        tablereport.setModel(mymodel);
+        tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
+        tablereport.getColumnModel().getColumn(7).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+        tablereport.getColumnModel().getColumn(8).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+        
         } // else run report
                
     }

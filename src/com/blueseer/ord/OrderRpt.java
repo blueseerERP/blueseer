@@ -103,7 +103,7 @@ public class OrderRpt extends javax.swing.JPanel {
                             getGlobalColumnTag("customer"), 
                             getGlobalColumnTag("po"), 
                             getGlobalColumnTag("remarks"), 
-                            getGlobalColumnTag("orddate"), 
+                            getGlobalColumnTag("orderdate"), 
                             getGlobalColumnTag("duedate"), 
                             getGlobalColumnTag("qty"), 
                             getGlobalColumnTag("amount"), 

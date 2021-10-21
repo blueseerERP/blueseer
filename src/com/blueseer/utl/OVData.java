@@ -15687,11 +15687,11 @@ public class OVData {
                res.close();
                               // res = st.executeQuery("select shd_part from ship_mstr where sh_id = " + "'" + shipper + "'" +";");
           if (dbtype.equals("sqlite")) {
-              int total = 0;
+              double total = 0;
               String status = "";
               for (int j = 0; j < line.size(); j++) {
-                  total = Integer.valueOf(qty.get(j).toString()) + Integer.valueOf(shippedqty.get(j).toString());
-                  if (total >= Integer.valueOf(ordqty.get(j).toString())) {
+                  total = bsParseDouble(qty.get(j).toString()) + bsParseDouble(shippedqty.get(j).toString());
+                  if (total >= bsParseDouble(ordqty.get(j).toString())) {
                       status = getGlobalProgTag("closed");
                   } else {
                       status = linestatus.get(j).toString();
@@ -15925,11 +15925,11 @@ public class OVData {
                res.close();
 
             if (dbtype.equals("sqlite")) {
-              int total = 0;
+              double total = 0;
               String status = "";
               for (int j = 0; j < line.size(); j++) {
-                  total = Integer.valueOf(qty.get(j).toString()) + Integer.valueOf(recvdqty.get(j).toString());
-                  if (total >= Integer.valueOf(ordqty.get(j).toString())) {
+                  total = bsParseDouble(qty.get(j).toString()) + bsParseDouble(recvdqty.get(j).toString());
+                  if (total >= bsParseDouble(ordqty.get(j).toString())) {
                       status = getGlobalProgTag("closed");
                   } else {
                       status = linestatus.get(j).toString();
@@ -17384,7 +17384,7 @@ MainFrame.bslog(e);
                 
                 Double amt = 0.00;
                 Double baseamt = 0.00;
-                int qty = 0;
+                double qty = 0;
                 
                 
                 // get billto specific data
@@ -17422,7 +17422,7 @@ MainFrame.bslog(e);
                  // "PO", "Line", "Part", "Qty", "Price", "RecvID", "RecvLine"
                   //  "Part", "PO", "Line", "Qty", "listprice", "disc", "netprice", "loc", "WH", "serial", "lot", "cost"
                   for (int j = 0; j < voucherdet.getRowCount(); j++) {
-                        qty = Integer.valueOf(voucherdet.getValueAt(j,3).toString());
+                        qty = bsParseDouble(voucherdet.getValueAt(j,3).toString());
                         amt += bsParseDoubleUS(voucherdet.getValueAt(j, 3).toString()) * bsParseDoubleUS(voucherdet.getValueAt(j, 4).toString());
                         st.executeUpdate("insert into vod_mstr "
                             + "(vod_id, vod_vend, vod_rvdid, vod_rvdline, vod_part, vod_qty, "
@@ -18664,7 +18664,7 @@ MainFrame.bslog(e);
                 String _part = "";
                 String _parent = "";
                 String _op = "";
-                int _qty = 0;
+                double _qty = 0;
                 
                 
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
@@ -18672,7 +18672,7 @@ MainFrame.bslog(e);
                   for (int i = 0; i < mytable.getRowCount(); i++) {
                       _parent = mytable.getValueAt(i, 6).toString();
                       _part = mytable.getValueAt(i, 0).toString();
-                      _qty = Integer.valueOf(mytable.getValueAt(i,3).toString());
+                      _qty = bsParseDouble(mytable.getValueAt(i,3).toString());
                       _op = mytable.getValueAt(i, 2).toString();
                       planid = OVData.getNextNbr("pland");
                         st.executeUpdate("insert into pland_mstr "

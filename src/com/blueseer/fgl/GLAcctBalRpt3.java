@@ -66,7 +66,9 @@ import static bsmf.MainFrame.user;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import static com.blueseer.utl.BlueSeerUtils.getTitleTag;
 import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
@@ -159,7 +161,7 @@ public class GLAcctBalRpt3 extends javax.swing.JPanel {
                         dataset.setValue(doublevalue, acct, String.valueOf(i));
                         i++;
                     }  
-               JFreeChart chart = ChartFactory.createBarChart(acctdesc, "Period", "Dollars", dataset, PlotOrientation.VERTICAL, true, true, false);
+               JFreeChart chart = ChartFactory.createBarChart(acctdesc, getGlobalColumnTag("period"), getGlobalColumnTag("amount"), dataset, PlotOrientation.VERTICAL, true, true, false);
                   //  CategoryItemRenderer renderer = new ScrapChartView.CustomRenderer();
                     
                     Font font = new Font("Dialog", Font.PLAIN, 30);
@@ -189,8 +191,7 @@ public class GLAcctBalRpt3 extends javax.swing.JPanel {
                     this.repaint();
     }
     
-    
-     public void chartExpAndInc() {
+    public void chartExpAndInc() {
          try {
           
             Class.forName(driver).newInstance();
@@ -225,7 +226,7 @@ public class GLAcctBalRpt3 extends javax.swing.JPanel {
                     if (amt < 0) {amt = amt * -1;}
                   dataset.setValue(acct, amt);
                 }
-        JFreeChart chart = ChartFactory.createPieChart("Income / Expense Year To Date", dataset, true, true, false);
+        JFreeChart chart = ChartFactory.createPieChart(getTitleTag(5026), dataset, true, true, false);
         PiePlot plot = (PiePlot) chart.getPlot();
       //  plot.setSectionPaint(KEY1, Color.green);
       //  plot.setSectionPaint(KEY2, Color.red);
@@ -233,7 +234,7 @@ public class GLAcctBalRpt3 extends javax.swing.JPanel {
         //plot.setSimpleLabels(true);
 
         PieSectionLabelGenerator gen = new StandardPieSectionLabelGenerator(
-            "{0}: {1} ({2})", new DecimalFormat("$ #,##0.00", new DecimalFormatSymbols(Locale.US)), new DecimalFormat("0%", new DecimalFormatSymbols(Locale.US)));
+            "{0}: {1} ({2})", NumberFormat.getCurrencyInstance(), new DecimalFormat("0.00%"));
         plot.setLabelGenerator(gen);
 
         try {

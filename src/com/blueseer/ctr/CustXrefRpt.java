@@ -35,15 +35,18 @@ import static bsmf.MainFrame.menumap;
 import static bsmf.MainFrame.panelmap;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
+import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.awt.Color;
 import java.awt.Component;
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
@@ -69,6 +72,21 @@ public class CustXrefRpt extends javax.swing.JPanel {
         setLanguageTags(this);
     }
 
+     javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                    new String[]{getGlobalColumnTag("select"), 
+                        getGlobalColumnTag("code"), 
+                        getGlobalColumnTag("name"), 
+                        getGlobalColumnTag("item"), 
+                        getGlobalColumnTag("custitem"), 
+                        getGlobalColumnTag("alternate")})
+                        {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        };
     
       class ButtonRenderer extends JButton implements TableCellRenderer {
 
@@ -140,6 +158,8 @@ public class CustXrefRpt extends javax.swing.JPanel {
        rbcustpart.setSelected(false);
        buttonGroup1.add(rbpart);
        buttonGroup1.add(rbcustpart);
+       tablereport.setModel(mymodel);
+       tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -278,29 +298,14 @@ public class CustXrefRpt extends javax.swing.JPanel {
 
     private void btviewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btviewActionPerformed
 
-       
+       mymodel.setRowCount(0);
         try {
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            
+          Connection con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-
                 int i = 0;
-
-                javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                    new String[]{getGlobalColumnTag("select"), 
-                        getGlobalColumnTag("code"), 
-                        getGlobalColumnTag("name"), 
-                        getGlobalColumnTag("item"), 
-                        getGlobalColumnTag("custitem"), 
-                        getGlobalColumnTag("alternate")});
-               
-                tablereport.setModel(mymodel);
-                tablereport.getColumn("Select").setCellRenderer(new CustXrefRpt.ButtonRenderer());
-                tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
-               
-
                 if (rbpart.isSelected()) {
                 res = st.executeQuery("SELECT * FROM  cup_mstr  left outer join cm_mstr on cm_code = cup_cust where " +
                     " cup_item like " + "'%" + tbtext.getText().toString() + "%' ;") ;
@@ -311,8 +316,7 @@ public class CustXrefRpt extends javax.swing.JPanel {
 
                 while (res.next()) {
                     i++;
-
-                    mymodel.addRow(new Object[]{"select", res.getString("cup_cust"),
+                    mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, res.getString("cup_cust"),
                         res.getString("cm_name"),
                         res.getString("cup_item"),
                         res.getString("cup_citem"),
@@ -323,8 +327,24 @@ public class CustXrefRpt extends javax.swing.JPanel {
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+            if (res != null) {
+                try {
+                    res.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
             }
-            bsmf.MainFrame.con.close();
+            if (st != null) {
+                try {
+                    st.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            con.close();
+               
+        }
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
