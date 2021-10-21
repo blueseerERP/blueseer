@@ -106,7 +106,9 @@ public class ARAgingView extends javax.swing.JPanel {
                       @Override  
                       public Class getColumnClass(int col) {  
                         if (col == 0  )       
-                            return ImageIcon.class;  
+                            return ImageIcon.class;
+                        else if (col == 3 || col == 4 || col == 5 || col == 6 || col == 7)
+                            return Double.class;
                         else return String.class;  //other columns accept String values  
                       }  
                         };
@@ -128,6 +130,8 @@ public class ARAgingView extends javax.swing.JPanel {
                       public Class getColumnClass(int col) {  
                         if (col == 0)       
                             return ImageIcon.class;  
+                        else if (col == 6 || col == 7 || col == 8 || col == 9 || col == 10)
+                            return Double.class;
                         else return String.class;  //other columns accept String values  
                       }  
                         };
@@ -365,11 +369,11 @@ public class ARAgingView extends javax.swing.JPanel {
                             res.getString("ar_type"),
                             res.getString("ar_effdate"),
                             res.getString("ar_duedate"),
-                            res.getString("0").replace('.', defaultDecimalSeparator),
-                            res.getString("30").replace('.', defaultDecimalSeparator),
-                            res.getString("60").replace('.', defaultDecimalSeparator),
-                            res.getString("90").replace('.', defaultDecimalSeparator),
-                            res.getString("90p").replace('.', defaultDecimalSeparator)
+                            res.getDouble("0"),
+                            res.getDouble("30"),
+                            res.getDouble("60"),
+                            res.getDouble("90"),
+                            res.getDouble("90p")
                             });
                    }
                
@@ -1132,13 +1136,8 @@ try {
     private void btpdfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btpdfActionPerformed
            if (tabledetail != null && modeldetail.getRowCount() > 0) {
         try {
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 HashMap hm = new HashMap();
+                hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
                 //hm.put("imagepath", "images/avmlogo.png");
                // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_part, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
@@ -1150,15 +1149,9 @@ try {
          
             JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
             jasperViewer.setVisible(true);
-                
-                
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
+            bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
         }
         }
     }//GEN-LAST:event_btpdfActionPerformed
