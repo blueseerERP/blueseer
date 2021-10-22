@@ -50,6 +50,7 @@ import com.blueseer.shp.shpData.ship_mstr;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
@@ -180,11 +181,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
                     @Override
                     public void tableChanged(TableModelEvent tme) {
                         if (tme.getType() == TableModelEvent.UPDATE && (tme.getColumn() == 5 || tme.getColumn() == 7 )) {
-                            try {
-                                retotal();
-                            } catch (ParseException ex) {
-                                bslog(ex);
-                            }
+                            retotal();
                             refreshDisplayTotals();
                         }
                         // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -1515,23 +1512,14 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
     }
     
     public void setNetPrice() {
-        Double disc = 0.00;
-        Double list = 0.00;
-        Double net = 0.00;
-        NumberFormat nf = NumberFormat.getInstance(Locale.getDefault());
-        if (! discount.getText().isEmpty()) {
-            try {
-                disc = nf.parse(discount.getText()).doubleValue();
-            } catch (ParseException ex) {
-                bsmf.MainFrame.show(getMessageTag(1033));
-            }
+        double disc = 0;
+        double list = 0;
+        double net = 0;
+         if (! discount.getText().isEmpty()) {
+            disc = bsParseDouble(discount.getText());
         }
         if (! listprice.getText().isEmpty()) {
-            try {
-                list = nf.parse(listprice.getText()).doubleValue();
-            } catch (ParseException ex) {
-                bsmf.MainFrame.show(getMessageTag(1033));
-            }
+            list = bsParseDouble(listprice.getText());
         }
         
         if (disc == 0) {
@@ -1643,8 +1631,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
         return max;
     }
     
-    public void sumdollars() throws ParseException {
-        NumberFormat nf = NumberFormat.getInstance(Locale.getDefault());
+    public void sumdollars() {
         double dol = 0;
         double summaryTaxPercent = 0;
         double headertax = 0;
@@ -1652,18 +1639,18 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
         double totaltax = 0;
         
          for (int j = 0; j < orddet.getRowCount(); j++) {
-             dol = dol + ( nf.parse(orddet.getValueAt(j, 5).toString()).doubleValue() * nf.parse(orddet.getValueAt(j, 9).toString()).doubleValue() );  
-             matltax += nf.parse(orddet.getValueAt(j, 15).toString()).doubleValue(); // now get material tax at the line level
+             dol = dol + ( bsParseDouble(orddet.getValueAt(j, 5).toString()) * bsParseDouble(orddet.getValueAt(j, 9).toString()) );  
+             matltax += bsParseDouble(orddet.getValueAt(j, 15).toString()); // now get material tax at the line level
          }
          
          // now lets get summary tax
          // now add trailer/summary charges if any
          for (int j = 0; j < sactable.getRowCount(); j++) {
             if (sactable.getValueAt(j,0).toString().equals("charge")) {
-            dol += nf.parse(sactable.getValueAt(j,3).toString()).doubleValue();  // add charges to total net charge
+            dol += bsParseDouble(sactable.getValueAt(j,3).toString());  // add charges to total net charge
             }
             if (sactable.getValueAt(j,0).toString().equals("tax")) {
-            summaryTaxPercent += nf.parse(sactable.getValueAt(j,3).toString()).doubleValue();
+            summaryTaxPercent += bsParseDouble(sactable.getValueAt(j,3).toString());
             }
         }
          
@@ -1677,34 +1664,28 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
          dol += totaltax;
          
         
-         tbtottax.setText(nf.format(totaltax));
-         tbtotdollars.setText(nf.format(dol));
+         tbtottax.setText(currformatDouble(totaltax));
+         tbtotdollars.setText(currformatDouble(dol));
          lblcurr.setText(ddcurr.getSelectedItem().toString());
     }
       
     public void refreshDisplayTotals() {
         sumqty();
-        try {
-            sumdollars();
-        } catch (ParseException ex) {
-            bslog(ex);
-        }
+        sumdollars();
         sumlinecount();
     }
     
-    public void retotal() throws ParseException {
-        NumberFormat nf = NumberFormat.getInstance(Locale.getDefault());
+    public void retotal() {
+        
         double dol = 0;
         double newdisc = 0;
         double newprice = 0;
         double newtax = 0;
         double listprice = 0;
-        
-        
          //"Line", "Part", "CustPart", "SO", "PO", "Qty", "ListPrice", "Discount", "NetPrice", "QtyShip", "Status", "WH", "LOC", "Desc"
         for (int j = 0; j < sactable.getRowCount(); j++) {
             if (sactable.getValueAt(j,0).toString().equals("discount")) {
-            newdisc += nf.parse(sactable.getValueAt(j,3).toString()).doubleValue();
+            newdisc += bsParseDouble(sactable.getValueAt(j,3).toString());
             
             }
         }
@@ -1712,14 +1693,14 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
        
         
          for (int j = 0; j < orddet.getRowCount(); j++) {
-             listprice = nf.parse(orddet.getValueAt(j, 7).toString()).doubleValue();
-             orddet.setValueAt(BlueSeerUtils.priceformat(String.valueOf(newdisc)), j, 8);
+             listprice = bsParseDouble(orddet.getValueAt(j, 7).toString());
+             orddet.setValueAt(currformatDouble(newdisc), j, 8);
              if (newdisc > 0) {
              newprice = listprice - (listprice * (newdisc / 100));
              } else {
              newprice = listprice;    
              }
-             orddet.setValueAt(BlueSeerUtils.priceformat(String.valueOf(newprice)), j, 9);
+             orddet.setValueAt(currformatDouble(newprice), j, 9);
               
              
          }
@@ -3093,19 +3074,10 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
     }//GEN-LAST:event_btnewActionPerformed
 
     private void btadditemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btadditemActionPerformed
-        NumberFormat nf = NumberFormat.getInstance(Locale.getDefault());
         double np = 0;
         double qty = 0;
-            try {
-                np = nf.parse(netprice.getText()).doubleValue();
-            } catch (ParseException ex) {
-                bslog(ex);
-            }
-            try {
-                qty = nf.parse(qtyshipped.getText()).doubleValue();
-            } catch (ParseException ex) {
-                bslog(ex);
-            }
+        np = bsParseDouble(netprice.getText());
+        qty = bsParseDouble(qtyshipped.getText());
         int line = 0;
         line = getmaxline();
         line++;
@@ -3427,12 +3399,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
             bsmf.MainFrame.show(getMessageTag(1031,String.valueOf(i)));
             ((javax.swing.table.DefaultTableModel) sactable.getModel()).removeRow(i);
         }
-       
-                    try {
-                        retotal();
-                    } catch (ParseException ex) {
-                        bslog(ex);
-                    }
+        retotal(); 
         refreshDisplayTotals();
          
     }//GEN-LAST:event_btsacdeleteActionPerformed
@@ -3457,11 +3424,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
         
         if (proceed)
         sacmodel.addRow(new Object[]{ ddsactype.getSelectedItem().toString(), tbsacdesc.getText(), percentlabel.getText(), tbsacamt.getText()});
-                    try {
-                        retotal();
-                    } catch (ParseException ex) {
-                        bslog(ex);
-                    }
+        retotal();
         refreshDisplayTotals();
     }//GEN-LAST:event_btsacaddActionPerformed
 

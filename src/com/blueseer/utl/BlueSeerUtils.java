@@ -546,25 +546,29 @@ public class BlueSeerUtils {
     public static double bsParseDouble(String x) {
         // always returns . decimal based double
         double z = 0;
+        if (! x.isEmpty()) {
         NumberFormat nf = NumberFormat.getInstance(Locale.getDefault());
                     try {
                         z = nf.parse(x).doubleValue();
                     } catch (ParseException ex) {
-                        bsmf.MainFrame.show("Problem parsing double");
+                        bsmf.MainFrame.show(getMessageTag(1017));
                     }
+        }
         return z;
     }
     
     public static double bsParseDoubleUS(String x) {
         double z = 0;
+        if (! x.isEmpty()) {
         NumberFormat format = NumberFormat.getInstance(Locale.US);
         Number number = 0;
                     try {
                         number = format.parse(x);
                     } catch (ParseException ex) {
-                        bsmf.MainFrame.show("Problem parsing double");
+                        bsmf.MainFrame.show(getMessageTag(1017));
                     }
         z = number.doubleValue();
+        }
         return z;
     }
     
@@ -659,8 +663,9 @@ public class BlueSeerUtils {
         // currformat("3.56")
         // currformat("3,56") 
          
-        String x = "";
+        String x = "0";
         String pattern = "#0.00###";
+        if (! invalue.isEmpty()) {
         String adjvalue = invalue.replace('.', defaultDecimalSeparator);
        // DecimalFormat df = new DecimalFormat("#0.00###", new DecimalFormatSymbols(Locale.getDefault())); 
      //  NumberFormat nf = NumberFormat.getInstance(Locale.getDefault()); 
@@ -670,6 +675,7 @@ public class BlueSeerUtils {
             x = df.format(df.parse(adjvalue));
         } catch (ParseException ex) {
             bslog(ex);
+        }
         }
         return x;
     }
@@ -687,14 +693,16 @@ public class BlueSeerUtils {
     
     public static String currformatUS(String invalue) {
         // invalue will come over as a . decimal regardless of Locale
-        String x = "";
-        String pattern = "#0.00###";       
+        String x = "0";
+        String pattern = "#0.00###";
+        if (! invalue.isEmpty()) {
         DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.US);
         df.applyPattern(pattern);
         try {   
             x = df.format(df.parse(invalue));
         } catch (ParseException ex) {
             bslog(ex);
+        }
         }
         return x;
     }
@@ -711,15 +719,18 @@ public class BlueSeerUtils {
     
     
     public static String priceformat(String invalue) {
-        String x = "";
+        String x = "0";
         String pattern = "#0.0000#";
+        String adjvalue = invalue.replace('.', defaultDecimalSeparator);
+        if (! invalue.isEmpty()) {
        // DecimalFormat df = new DecimalFormat("#0.0000#", new DecimalFormatSymbols(Locale.US)); 
        DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.getDefault());
         df.applyPattern(pattern);
         try {   
-            x = df.format(df.parse(invalue));
+            x = df.format(df.parse(adjvalue));
         } catch (ParseException ex) {
             bslog(ex);
+        }
         }
         return x;
     }

@@ -42,6 +42,7 @@ import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsdate;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
@@ -1033,15 +1034,15 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeer {
     }
     
     public void setnetprice() {
-        Double disc = 0.00;
-        Double list = 0.00;
-        Double net = 0.00;
+        double disc = 0;
+        double list = 0;
+        double net = 0;
          
-        if (discount.getText().isEmpty() || Double.parseDouble(discount.getText().toString()) == 0) {
+        if (discount.getText().isEmpty() || bsParseDouble(discount.getText().toString()) == 0) {
             netprice.setText(listprice.getText());
         } else {
            
-           if (listprice.getText().isEmpty() || Double.parseDouble(listprice.getText().toString()) == 0) {
+           if (listprice.getText().isEmpty() || bsParseDouble(listprice.getText().toString()) == 0) {
              listprice.setText("0");
              netprice.setText("0");
            } else {               
@@ -1049,7 +1050,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeer {
            list = bsParseDouble(listprice.getText().toString());
             
            net = list - ((disc / 100) * list);
-           netprice.setText(bsFormatDouble(net));
+           netprice.setText(currformatDouble(net));
            }
         }
     }
@@ -1083,7 +1084,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeer {
          for (int j = 0; j < orddet.getRowCount(); j++) {
              dol = dol + ( bsParseDouble(orddet.getValueAt(j, 5).toString()) * bsParseDouble(orddet.getValueAt(j, 9).toString()) ); 
          }
-         tbtotdollars.setText(bsFormatDouble(dol));
+         tbtotdollars.setText(currformatDouble(dol));
          lblcurr.setText(ddcurr.getSelectedItem().toString());
     }
    
@@ -1144,13 +1145,13 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeer {
         
          for (int j = 0; j < orddet.getRowCount(); j++) {
              listprice = bsParseDouble(orddet.getValueAt(j, 7).toString());
-             orddet.setValueAt(String.valueOf(newdisc), j, 8);
+             orddet.setValueAt(currformatDouble(newdisc), j, 8);
              if (newdisc > 0) {
              newprice = listprice - (listprice * (newdisc / 100));
              } else {
              newprice = listprice;    
              }
-             orddet.setValueAt(String.valueOf(newprice), j, 9);
+             orddet.setValueAt(currformatDouble(newprice), j, 9);
               
              
          }
@@ -1904,7 +1905,8 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeer {
     }//GEN-LAST:event_netpriceActionPerformed
 
     private void listpriceFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_listpriceFocusLost
-         String x = BlueSeerUtils.bsformat("", listprice.getText(), "4");
+        if (! listprice.getText().isEmpty()) {
+        String x = BlueSeerUtils.bsformat("", listprice.getText(), "4");
         if (x.equals("error")) {
             listprice.setText("");
             listprice.setBackground(Color.yellow);
@@ -1915,10 +1917,12 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeer {
             listprice.setBackground(Color.white);
         }
         setnetprice();
+        }
     }//GEN-LAST:event_listpriceFocusLost
 
     private void discountFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_discountFocusLost
-            String x = BlueSeerUtils.bsformat("", discount.getText(), "4");
+        if (! discount.getText().isEmpty()) {
+        String x = BlueSeerUtils.bsformat("", discount.getText(), "4");
         if (x.equals("error")) {
             discount.setText("");
             discount.setBackground(Color.yellow);
@@ -1931,6 +1935,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeer {
         if (discount.getText().isEmpty())
             discount.setText("0");
         setnetprice();
+        }
     }//GEN-LAST:event_discountFocusLost
 
     private void dduomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dduomActionPerformed
@@ -1944,7 +1949,8 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeer {
     }//GEN-LAST:event_qtyshippedFocusGained
 
     private void qtyshippedFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_qtyshippedFocusLost
-              String x = BlueSeerUtils.bsformat("", qtyshipped.getText(), "2");
+        if (! qtyshipped.getText().isEmpty()) {
+        String x = BlueSeerUtils.bsformat("", qtyshipped.getText(), "2");
         if (x.equals("error")) {
             qtyshipped.setText("");
             qtyshipped.setBackground(Color.yellow);
@@ -1953,6 +1959,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeer {
         } else {
             qtyshipped.setText(x);
             qtyshipped.setBackground(Color.white);
+        }
         }
         
     }//GEN-LAST:event_qtyshippedFocusLost
