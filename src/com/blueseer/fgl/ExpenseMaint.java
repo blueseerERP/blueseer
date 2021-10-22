@@ -31,7 +31,9 @@ import static bsmf.MainFrame.dfdate;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -1116,10 +1118,8 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeer {
       //  Matcher m = p.matcher(tbprice.getText());
        // receiverdet  "Part", "PO", "line", "Qty",  listprice, disc, netprice, loc, serial, lot, recvID, recvLine
        // voucherdet   "PO", "Line", "Part", "Qty", "Price", "RecvID", "RecvLine", "Acct", "CC"
-      DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));   
             voucherline++;
-            actamt += Double.valueOf(tbqty.getText()) * 
-                          Double.valueOf(tbprice.getText());
+            actamt += bsParseDouble(tbqty.getText()) * bsParseDouble(tbprice.getText());
             expensemodel.addRow(new Object[] { "", voucherline,
                                                   tbitemservice.getText(),
                                                   tbqty.getText(),
@@ -1134,7 +1134,7 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeer {
         tbqty.setText("");
         tbprice.setText("");
         tbitemservice.requestFocus();
-        tbactualamt.setText(df.format(actamt));
+        tbactualamt.setText(currformatDouble(actamt));
         
         
         
@@ -1158,11 +1158,11 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeer {
         int[] rows = expensedet.getSelectedRows();
         for (int i : rows) {
             bsmf.MainFrame.show(getMessageTag(1031, String.valueOf(i)));
-             actamt -= Double.valueOf(expensedet.getModel().getValueAt(i,3).toString()) * Double.valueOf(expensedet.getModel().getValueAt(i,4).toString());
+             actamt -= bsParseDouble(expensedet.getModel().getValueAt(i,3).toString()) * bsParseDouble(expensedet.getModel().getValueAt(i,4).toString());
             ((javax.swing.table.DefaultTableModel) expensedet.getModel()).removeRow(i);
            voucherline--;
         }
-        tbactualamt.setText(String.valueOf(actamt));
+        tbactualamt.setText(currformatDouble(actamt));
     }//GEN-LAST:event_btdeleteitemActionPerformed
 
     private void ddsiteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddsiteActionPerformed

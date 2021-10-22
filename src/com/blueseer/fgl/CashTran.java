@@ -26,11 +26,16 @@ SOFTWARE.
 package com.blueseer.fgl;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.bslog;
+import static bsmf.MainFrame.defaultDecimalSeparator;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import com.blueseer.ctr.cusData;
 import com.blueseer.inv.invData;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
+import static com.blueseer.utl.BlueSeerUtils.currformat;
+import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.DTData;
@@ -94,7 +99,11 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
@@ -362,10 +371,10 @@ public class CashTran extends javax.swing.JPanel {
         
         
         if (! tbrexpincome.getText().isEmpty()) {
-            totincome = Double.valueOf(tbrexpincome.getText());
+            totincome = bsParseDouble(tbrexpincome.getText());
         }
         if (! tbrexptotamt.getText().isEmpty()) {
-            totexpense = Double.valueOf(tbrexptotamt.getText());
+            totexpense = bsParseDouble(tbrexptotamt.getText());
         }
         diff = totincome - totexpense;
         tbrexpdiff.setText(df.format(diff));
@@ -403,7 +412,7 @@ public class CashTran extends javax.swing.JPanel {
                         " and exp_entity = '' " +
                         " and exp_site = " + "'" + ddrexpsite.getSelectedItem().toString() + "'" + ";");
                 while (res.next()) {
-                totincome += Double.valueOf(res.getString("exp_amt"));
+                totincome += bsParseDouble(res.getString("exp_amt"));
                 }
                 
                 if (showall) {                
@@ -420,7 +429,7 @@ public class CashTran extends javax.swing.JPanel {
                 }
                 while (res.next()) {
                     i++;
-                    totexpense += Double.valueOf(res.getString("exp_amt"));
+                    totexpense += bsParseDouble(res.getString("exp_amt"));
                     paidamt = res.getDouble("pos_totamt");
                     if (paidamt > 0) {
                         haspaid = BlueSeerUtils.clickcheck;
@@ -617,7 +626,7 @@ public class CashTran extends javax.swing.JPanel {
                        // }
                         // lets add each item to inventory
                         OVData.UpdateInventoryDiscrete(detailtable.getValueAt(j, 1).toString(), site,
-                                "", "", "", "", Double.valueOf("1"));
+                                "", "", "", "", bsParseDouble("1"));
                         // now lets add detail voucher
                         //amt = Integer.valueOf(detailtable.getValueAt(j, 3).toString());
                         
@@ -957,7 +966,7 @@ public class CashTran extends javax.swing.JPanel {
                 boolean error = false;
                 String key = "";
                 
-                double total = Double.valueOf(tbexpensetotal.getText());
+                double total = bsParseDouble(tbexpensetotal.getText());
               
                 int i = 0;
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
@@ -1119,8 +1128,8 @@ public class CashTran extends javax.swing.JPanel {
                         + "'" + incomeTable.getValueAt(j, 5).toString() + "'" + ","
                         + "'" + cc + "'" + ","
                         + "'" + dfdate.format(dcdateIncome.getDate()) + "'" + ","
-                        + "'" + df.format(Double.valueOf(incomeTable.getValueAt(j, 3).toString()) * -1) + "'" + ","
-                        + "'" + df.format(Double.valueOf(incomeTable.getValueAt(j, 3).toString()) * -1) + "'" + ","
+                        + "'" + currformatDouble(bsParseDouble(incomeTable.getValueAt(j, 3).toString()) * -1).replace(defaultDecimalSeparator,'.') + "'" + ","
+                        + "'" + currformatDouble(bsParseDouble(incomeTable.getValueAt(j, 3).toString()) * -1).replace(defaultDecimalSeparator,'.') + "'" + ","
                         + "'" + curr + "'" + ","
                         + "'" + basecurr + "'" + ","        
                         + "'" + tbKeyIncome.getText().toString() + "'" + ","
@@ -1140,8 +1149,8 @@ public class CashTran extends javax.swing.JPanel {
                         + "'" + cashacct + "'" + ","
                         + "'" + cc + "'" + ","
                         + "'" + dfdate.format(dcdateIncome.getDate()) + "'" + ","
-                        + "'" + df.format(Double.valueOf(incomeTable.getValueAt(j, 3).toString())) + "'" + ","
-                        + "'" + df.format(Double.valueOf(incomeTable.getValueAt(j, 3).toString())) + "'" + ","
+                        + "'" + currformatDouble(bsParseDouble(incomeTable.getValueAt(j, 3).toString())).replace(defaultDecimalSeparator,'.') + "'" + ","
+                        + "'" + currformatDouble(bsParseDouble(incomeTable.getValueAt(j, 3).toString())).replace(defaultDecimalSeparator,'.') + "'" + ","
                         + "'" + curr + "'" + ","
                         + "'" + basecurr + "'" + ","    
                         + "'" + tbKeyIncome.getText().toString() + "'" + ","
@@ -1174,7 +1183,7 @@ public class CashTran extends javax.swing.JPanel {
                         + "'" + "income" + "'" + ","       
                         + "'" + tbKeyIncome.getText().toString() + "'" + ","         
                         + "'" + "1" + "'" + ","
-                        + "'" + df.format(Double.valueOf(tbincometotal.getText())) + "'" 
+                        + "'" + currformatDouble(bsParseDouble(tbincometotal.getText())).replace(defaultDecimalSeparator,'.') + "'" 
                         + ")"
                         + ";");
                      
@@ -1307,7 +1316,7 @@ public class CashTran extends javax.swing.JPanel {
                         error = fglData.glEntryFromVoucherExpense(key, now);
                          
                         if (! error)
-                        error = OVData.APExpense(now, exp, key, recurexpensetable.getValueAt(z, 1).toString(), recurexpensetable.getValueAt(z, 3).toString(), Double.valueOf(recurexpensetable.getValueAt(z, 9).toString()), "AP-Cash");
+                        error = OVData.APExpense(now, exp, key, recurexpensetable.getValueAt(z, 1).toString(), recurexpensetable.getValueAt(z, 3).toString(), bsParseDouble(recurexpensetable.getValueAt(z, 9).toString()), "AP-Cash");
                         
                     if (error) {
                         message = new String[]{"1", "An Error Occurred in Expense"};
@@ -2042,20 +2051,20 @@ public class CashTran extends javax.swing.JPanel {
         } 
     }   
      
-    public void sumExpenseTotal() {
-         double total = 0.00;
+    public void sumExpenseTotal() throws ParseException {
+         double total = 0;
          for (int j = 0; j < expenseTable.getRowCount(); j++) {
-             total += ( Double.valueOf(expenseTable.getValueAt(j, 2).toString()) * Double.valueOf(expenseTable.getValueAt(j, 3).toString()));
+              total += ( bsParseDouble(expenseTable.getValueAt(j, 2).toString()) * bsParseDouble(expenseTable.getValueAt(j, 3).toString()));
          } 
-         tbexpensetotal.setText(BlueSeerUtils.bsformat("",String.valueOf(total),"2"));
+         tbexpensetotal.setText(currformatDouble(total));
     }
     
      public void sumIncomeTotal() {
          double total = 0.00;
          for (int j = 0; j < incomeTable.getRowCount(); j++) {
-             total += ( Double.valueOf(incomeTable.getValueAt(j, 2).toString()) * Double.valueOf(incomeTable.getValueAt(j, 3).toString()));
+             total += ( bsParseDouble(incomeTable.getValueAt(j, 2).toString()) * bsParseDouble(incomeTable.getValueAt(j, 3).toString()));
          } 
-         tbincometotal.setText(BlueSeerUtils.bsformat("",String.valueOf(total),"2"));
+         tbincometotal.setText(currformatDouble(total));
     }
     
     
@@ -3907,19 +3916,19 @@ public class CashTran extends javax.swing.JPanel {
     private void btadditemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btadditemActionPerformed
        
        if (tbprice.getText().isEmpty()) {
-           bsmf.MainFrame.show(getMessageTag(1010));
+           bsmf.MainFrame.show(getMessageTag(1024));
            tbprice.requestFocus();
            return;
        }
        
        if (tbitemservice.getText().isEmpty()) {
-           bsmf.MainFrame.show(getMessageTag(1010));
+           bsmf.MainFrame.show(getMessageTag(1024));
            tbitemservice.requestFocus();
            return;
        }
        
        if (tbqty.getText().isEmpty()) {
-           bsmf.MainFrame.show(getMessageTag(1010));
+           bsmf.MainFrame.show(getMessageTag(1024));
            tbqty.requestFocus();
            return;
        }
@@ -3935,9 +3944,9 @@ public class CashTran extends javax.swing.JPanel {
        // shipperdet   "Line", "Part", "CustPart", "SO", "PO", "Qty", "ListPrice", "Discount", "NetPrice", "shippedqty", "status", "WH", "LOC", "Desc"
             DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US)); 
             voucherline++;
-            actqty += Double.valueOf(tbqty.getText()); 
-            actamt += Double.valueOf(tbqty.getText()) * 
-                          Double.valueOf(tbprice.getText());
+            actqty += bsParseDouble(tbqty.getText()); 
+            actamt += bsParseDouble(tbqty.getText()) * 
+                          bsParseDouble(tbprice.getText());
             
             buymodel.addRow(new Object[] { voucherline,
                                                   partnumber,
@@ -3991,8 +4000,8 @@ public class CashTran extends javax.swing.JPanel {
         int[] rows = detailtable.getSelectedRows();
         for (int i : rows) {
             bsmf.MainFrame.show(getMessageTag(1031, String.valueOf(i)));
-             actamt -= Double.valueOf(detailtable.getModel().getValueAt(i,2).toString()) * Double.valueOf(detailtable.getModel().getValueAt(i,3).toString());
-             actqty -= Double.valueOf(detailtable.getModel().getValueAt(i,2).toString());
+             actamt -= bsParseDouble(detailtable.getModel().getValueAt(i,2).toString()) * bsParseDouble(detailtable.getModel().getValueAt(i,3).toString());
+             actqty -= bsParseDouble(detailtable.getModel().getValueAt(i,2).toString());
             ((javax.swing.table.DefaultTableModel) detailtable.getModel()).removeRow(i);
            voucherline--;
         }
@@ -4133,12 +4142,12 @@ public class CashTran extends javax.swing.JPanel {
 
     private void btadditem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btadditem1ActionPerformed
          if (tbprice1.getText().isEmpty()) {
-           bsmf.MainFrame.show(getMessageTag(1010));
+           bsmf.MainFrame.show(getMessageTag(1024));
            tbprice1.requestFocus();
            return;
        }
            if (tbqty1.getText().isEmpty()) {
-           bsmf.MainFrame.show(getMessageTag(1010));
+           bsmf.MainFrame.show(getMessageTag(1024));
            tbqty1.requestFocus();
            return;
        }
@@ -4156,9 +4165,9 @@ public class CashTran extends javax.swing.JPanel {
        // shipperdet   "Line", "Part", "CustPart", "SO", "PO", "Qty", "ListPrice", "Discount", "NetPrice", "shippedqty", "status", "WH", "LOC", "Desc"
             DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US)); 
             voucherline++;
-            actqty += Double.valueOf(tbqty1.getText()); 
-            actamt += Double.valueOf(tbqty1.getText()) * 
-                          Double.valueOf(tbprice1.getText());
+            actqty += bsParseDouble(tbqty1.getText()); 
+            actamt += bsParseDouble(tbqty1.getText()) * 
+                          bsParseDouble(tbprice1.getText());
            
             sellmodel.addRow(new Object[] { voucherline, 
                                             dditem1.getSelectedItem().toString(),
@@ -4291,24 +4300,28 @@ public class CashTran extends javax.swing.JPanel {
                 btaddexpense.setEnabled(true);
             }
          
-         sumExpenseTotal();
+                    try {
+                        sumExpenseTotal();
+                    } catch (ParseException ex) {
+                        bslog(ex);
+                    }
     }//GEN-LAST:event_btdeleteItemExpenseActionPerformed
 
     private void btaddItemExpenseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddItemExpenseActionPerformed
         if (tbexpensePrice.getText().isEmpty()) {
-           bsmf.MainFrame.show(getMessageTag(1010));
+           bsmf.MainFrame.show(getMessageTag(1024));
            tbexpensePrice.requestFocus();
            return;
        }
        
         if (tbexpenseQty.getText().isEmpty()) {
-           bsmf.MainFrame.show(getMessageTag(1010));
+           bsmf.MainFrame.show(getMessageTag(1024));
            tbexpenseQty.requestFocus();
            return;
        }
         
        if (tbexpenseDesc.getText().isEmpty()) {
-           bsmf.MainFrame.show(getMessageTag(1010));
+           bsmf.MainFrame.show(getMessageTag(1024));
            tbexpenseDesc.requestFocus();
            return;
        }
@@ -4337,7 +4350,11 @@ public class CashTran extends javax.swing.JPanel {
         
         ddaccountexpense.setSelectedIndex(0);
         
-        sumExpenseTotal();
+                    try {
+                        sumExpenseTotal();
+                    } catch (ParseException ex) {
+                        bslog(ex);
+                    }
         
         tbexpenseDesc.requestFocus();
     }//GEN-LAST:event_btaddItemExpenseActionPerformed
@@ -4434,13 +4451,13 @@ public class CashTran extends javax.swing.JPanel {
 
     private void btrexpadditemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btrexpadditemActionPerformed
         if (tbrexprice.getText().isEmpty()) {
-           bsmf.MainFrame.show(getMessageTag(1010));
+           bsmf.MainFrame.show(getMessageTag(1024));
            tbrexprice.requestFocus();
            return;
        }
        
        if (tbrexpensedesc.getText().isEmpty()) {
-           bsmf.MainFrame.show(getMessageTag(1010));
+           bsmf.MainFrame.show(getMessageTag(1024));
            tbrexpensedesc.requestFocus();
            return;
        }
@@ -4695,13 +4712,13 @@ public class CashTran extends javax.swing.JPanel {
 
     private void btaddItemIncomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddItemIncomeActionPerformed
          if (tbincomeAmount.getText().isEmpty()) {
-           bsmf.MainFrame.show(getMessageTag(1010));
+           bsmf.MainFrame.show(getMessageTag(1024));
            tbincomeAmount.requestFocus();
            return;
        }
                
        if (tbincomeDesc.getText().isEmpty()) {
-           bsmf.MainFrame.show(getMessageTag(1010));
+           bsmf.MainFrame.show(getMessageTag(1024));
            tbincomeDesc.requestFocus();
            return;
        }

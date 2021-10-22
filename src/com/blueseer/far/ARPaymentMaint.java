@@ -32,7 +32,9 @@ import static bsmf.MainFrame.tags;
 import com.blueseer.ctr.cusData;
 import com.blueseer.fgl.fglData;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -53,60 +55,19 @@ import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import javax.swing.JOptionPane;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Phrase;
-import com.itextpdf.text.pdf.BaseFont;
-import com.itextpdf.text.pdf.PdfContentByte;
-import com.itextpdf.text.pdf.PdfWriter;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.text.DecimalFormat;
-import java.util.Date;
-import javax.print.Doc;
-import javax.print.DocFlavor;
-import javax.print.DocPrintJob;
-import javax.print.PrintService;
-import javax.print.PrintServiceLookup;
-import javax.print.SimpleDoc;
-import javax.print.attribute.HashPrintRequestAttributeSet;
-import javax.print.attribute.PrintRequestAttributeSet;
-import javax.swing.JFileChooser;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
-import javax.swing.JScrollPane;
-import javax.swing.JTree;
-import javax.swing.ToolTipManager;
-import javax.swing.event.PopupMenuEvent;
-import javax.swing.event.PopupMenuListener;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreeNode;
-import javax.swing.tree.TreePath;
-import static com.blueseer.utl.OVData.getDueDateFromTerms;
 import java.awt.Color;
 import java.awt.Component;
-import java.text.DecimalFormatSymbols;
-import java.util.Locale;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JViewport;
@@ -360,10 +321,10 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
         lbmessage.setForeground(Color.blue);
                 
         tbrmks.setText("");
-        tbcontrolamt.setText("0.00");
+        tbcontrolamt.setText("0");
         tbcontrolamt.setBackground(Color.white);
         tbcheck.setText("");
-        tbactualamt.setText("0.00");
+        tbactualamt.setText("0");
         tbactualamt.setBackground(Color.white);
         tbactualamt.setEditable(false);
         tbrefamt.setText("0");
@@ -429,9 +390,8 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
                    tbkey.setEditable(false);
                    tbkey.setForeground(Color.blue);
                    
-                   DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
-                   tbactualamt.setText(df.format(actamt));
-                   tbcontrolamt.setText(df.format(actamt));
+                   tbactualamt.setText(currformatDouble(actamt));
+                   tbcontrolamt.setText(currformatDouble(actamt));
         } else {
            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
                    tbkey.setForeground(Color.red); 
@@ -527,9 +487,7 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
                 int i = 0;
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 java.util.Date now = new java.util.Date();
-                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));   
                
-                
                 String basecurr = OVData.getDefaultCurrency();
                 
                 if (basecurr.toUpperCase().equals(ddcurr.getSelectedItem().toString().toUpperCase())) {
@@ -549,8 +507,8 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
                         + "ar_status, ar_bank, ar_site ) "
                         + " values ( " + "'" + ddcust.getSelectedItem() + "'" + ","
                         + "'" + tbkey.getText() + "'" + ","
-                        + "'" + df.format(actamt).replace(defaultDecimalSeparator, '.') + "'" + ","
-                        + "'" + df.format(baseamt).replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "'" + currformatDouble(actamt).replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "'" + currformatDouble(baseamt).replace(defaultDecimalSeparator, '.') + "'" + ","
                         + "'" + "P" + "'" + ","
                         + "'" + ddcurr.getSelectedItem().toString() + "'" + ","      
                         + "'" + basecurr + "'" + ","
@@ -574,8 +532,8 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
                         double basetaxamt_d = 0;
                // "Reference", "Type", "Date", "Amount"
                     for (int j = 0; j < ardet.getRowCount(); j++) {
-                        amt_d = Double.valueOf(ardet.getValueAt(j, 1).toString());
-                        taxamt_d = Double.valueOf(ardet.getValueAt(j, 2).toString());
+                        amt_d = bsParseDouble(ardet.getValueAt(j, 1).toString());
+                        taxamt_d = bsParseDouble(ardet.getValueAt(j, 2).toString());
                          if (basecurr.toUpperCase().equals(ddcurr.getSelectedItem().toString().toUpperCase())) {
                          baseamt_d = amt_d;
                          basetaxamt_d = taxamt_d;
@@ -590,10 +548,10 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
                             + "'" + ardet.getValueAt(j, 0).toString() + "'" + ","
                             + "'" + (j + 1) + "'" + ","
                             + "'" + dfdate.format(dcdate.getDate()) + "'" + ","
-                            + "'" + df.format(amt_d).replace(defaultDecimalSeparator, '.') + "'"  + ","
-                            + "'" + df.format(taxamt_d).replace(defaultDecimalSeparator, '.') + "'"  + ","
-                            + "'" + df.format(baseamt_d).replace(defaultDecimalSeparator, '.') + "'"  + ","                
-                            + "'" + df.format(basetaxamt_d).replace(defaultDecimalSeparator, '.') + "'" + "," 
+                            + "'" + currformatDouble(amt_d).replace(defaultDecimalSeparator, '.') + "'"  + ","
+                            + "'" + currformatDouble(taxamt_d).replace(defaultDecimalSeparator, '.') + "'"  + ","
+                            + "'" + currformatDouble(baseamt_d).replace(defaultDecimalSeparator, '.') + "'"  + ","                
+                            + "'" + currformatDouble(basetaxamt_d).replace(defaultDecimalSeparator, '.') + "'" + "," 
                             + "'" + ddcurr.getSelectedItem().toString() + "'"  + ","
                             + "'" + basecurr + "'" + ","
                             + "'" + aracct + "'" + ","
@@ -852,8 +810,7 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
     public void getreferences(String cust) {
         referencemodel.setRowCount(0);
         try {
-            DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));  
-            Class.forName(bsmf.MainFrame.driver).newInstance();
+             Class.forName(bsmf.MainFrame.driver).newInstance();
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
             Statement st = bsmf.MainFrame.con.createStatement();
             ResultSet res = null;
@@ -874,14 +831,14 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
                       res.getString("ar_duedate"), 
                       res.getDouble("ar_amt"), 
                       res.getDouble("ar_applied"), 
-                      df.format(res.getDouble("ar_open_amt")),
-                      df.format(res.getDouble("ar_amt_tax")),
+                      currformatDouble(res.getDouble("ar_open_amt")),
+                      currformatDouble(res.getDouble("ar_amt_tax")),
                       res.getString("ar_curr")});
                   
                   rcvamt += res.getDouble("ar_open_amt");
                 d++;
                 }
-                tbrefamt.setText(df.format(rcvamt));
+                tbrefamt.setText(currformatDouble(rcvamt));
                 referencedet.setModel(referencemodel);
 
             } catch (SQLException s) {
@@ -968,7 +925,6 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
     }
     
      public void sumdollars() {
-        DecimalFormat df = new DecimalFormat("#.00", new DecimalFormatSymbols(Locale.US));
         double dol = 0;
         double summaryTaxPercent = 0;
         double headertax = 0;
@@ -977,7 +933,7 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
         
         actamt = 0;
          for (int j = 0; j < ardet.getRowCount(); j++) {
-             actamt += Double.valueOf(ardet.getModel().getValueAt(j,1).toString());
+             actamt += bsParseDouble(ardet.getModel().getValueAt(j,1).toString());
          }
          
           if (ardet.getRowCount() >= 1) {
@@ -990,7 +946,7 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
             tbcontrolamt.setBackground(Color.white); 
             tbactualamt.setBackground(Color.white);
          }
-        tbactualamt.setText(df.format(actamt));
+        tbactualamt.setText(currformatDouble(actamt));
         
     }
     
@@ -1369,7 +1325,6 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
 
     private void btadditemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btadditemActionPerformed
         boolean canproceed = true;
-        DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US)); 
               
        // Pattern p = Pattern.compile("\\d\\.\\d\\d");
       //  Matcher m = p.matcher(tbprice.getText());
@@ -1415,7 +1370,7 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
         int[] rows = ardet.getSelectedRows();
         for (int i : rows) {
             bsmf.MainFrame.show(getMessageTag(1031,String.valueOf(i)));
-             actamt -= Double.valueOf(ardet.getModel().getValueAt(i,1).toString());
+             actamt -= bsParseDouble(ardet.getModel().getValueAt(i,1).toString());
             ((javax.swing.table.DefaultTableModel) ardet.getModel()).removeRow(i);
         }
         tbactualamt.setText(String.valueOf(actamt));
@@ -1430,9 +1385,8 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
     }//GEN-LAST:event_btupdateActionPerformed
 
     private void btaddallActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddallActionPerformed
-          DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));  
-        for (int i = 0; i < referencedet.getRowCount(); i++) {
-            actamt += Double.valueOf(referencedet.getModel().getValueAt(i,5).toString());
+          for (int i = 0; i < referencedet.getRowCount(); i++) {
+            actamt += bsParseDouble(referencedet.getModel().getValueAt(i,5).toString());
             
            armodel.addRow(new Object[] { referencedet.getModel().getValueAt(i, 0),
                                               referencedet.getModel().getValueAt(i, 5)
@@ -1446,7 +1400,7 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
             tbcontrolamt.setBackground(Color.white); 
             tbactualamt.setBackground(Color.white);
          }
-        tbactualamt.setText(df.format(actamt));
+        tbactualamt.setText(currformatDouble(actamt));
     }//GEN-LAST:event_btaddallActionPerformed
 
     private void ddsiteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddsiteActionPerformed
@@ -1479,7 +1433,7 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
         }
         
         if (! tbcontrolamt.getText().isEmpty()) {
-            control = Double.valueOf(tbcontrolamt.getText());
+            control = bsParseDouble(tbcontrolamt.getText());
         } else {
             tbcontrolamt.setText("0.00");
             control = 0.00;

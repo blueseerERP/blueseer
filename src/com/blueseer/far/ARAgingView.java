@@ -439,8 +439,8 @@ public class ARAgingView extends javax.swing.JPanel {
                             res.getString("b.ar_duedate"),
                             res.getString("ar_type"),
                             res.getString("ar_ref"),
-                            res.getString("ard_amt").replace('.', defaultDecimalSeparator),
-                            res.getString("ar_amt").replace('.', defaultDecimalSeparator)
+                            res.getDouble("ard_amt"),
+                            res.getDouble("ar_amt")
                             });
                    }
                
@@ -937,11 +937,11 @@ try {
                                 BlueSeerUtils.clickbasket,
                                 res.getString("ar_cust"),
                                 res.getString("cm_name"),
-                                res.getString("0").replace('.', defaultDecimalSeparator),
-                            res.getString("30").replace('.', defaultDecimalSeparator),
-                            res.getString("60").replace('.', defaultDecimalSeparator),
-                            res.getString("90").replace('.', defaultDecimalSeparator),
-                            res.getString("90p").replace('.', defaultDecimalSeparator)
+                                res.getDouble("0"),
+                            res.getDouble("30"),
+                            res.getDouble("60"),
+                            res.getDouble("90"),
+                            res.getDouble("90p")
                             });
                 }
                  

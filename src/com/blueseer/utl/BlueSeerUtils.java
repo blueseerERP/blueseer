@@ -544,15 +544,14 @@ public class BlueSeerUtils {
     } 
     
     public static double bsParseDouble(String x) {
+        // always returns . decimal based double
         double z = 0;
-        NumberFormat format = NumberFormat.getInstance(Locale.getDefault());
-        Number number = 0;
+        NumberFormat nf = NumberFormat.getInstance(Locale.getDefault());
                     try {
-                        number = format.parse(x);
+                        z = nf.parse(x).doubleValue();
                     } catch (ParseException ex) {
                         bsmf.MainFrame.show("Problem parsing double");
                     }
-        z = number.doubleValue();
         return z;
     }
     
@@ -654,13 +653,21 @@ public class BlueSeerUtils {
     }
     
     public static String currformat(String invalue) {
+        // invalue will come over as a . decimal regardless of Locale
+        // currformat will return 3,56 for the following scenarios if
+        // default separator is ','   
+        // currformat("3.56")
+        // currformat("3,56") 
+         
         String x = "";
         String pattern = "#0.00###";
+        String adjvalue = invalue.replace('.', defaultDecimalSeparator);
        // DecimalFormat df = new DecimalFormat("#0.00###", new DecimalFormatSymbols(Locale.getDefault())); 
-        DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.getDefault());
+     //  NumberFormat nf = NumberFormat.getInstance(Locale.getDefault()); 
+       DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.getDefault());
         df.applyPattern(pattern);
-        try {   
-            x = df.format(df.parse(invalue));
+        try { 
+            x = df.format(df.parse(adjvalue));
         } catch (ParseException ex) {
             bslog(ex);
         }
@@ -679,9 +686,9 @@ public class BlueSeerUtils {
     
     
     public static String currformatUS(String invalue) {
+        // invalue will come over as a . decimal regardless of Locale
         String x = "";
-        String pattern = "#0.00###";
-       // DecimalFormat df = new DecimalFormat("#0.00###", new DecimalFormatSymbols(Locale.getDefault())); 
+        String pattern = "#0.00###";       
         DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.US);
         df.applyPattern(pattern);
         try {   

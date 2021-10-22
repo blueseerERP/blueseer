@@ -3281,6 +3281,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
     }//GEN-LAST:event_qtyshippedFocusLost
 
     private void listpriceFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_listpriceFocusLost
+        if (! listprice.getText().isEmpty()) {
         String x = BlueSeerUtils.bsformat("", listprice.getText(), "4");
         if (x.equals("error")) {
             listprice.setText("");
@@ -3292,10 +3293,12 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
             listprice.setBackground(Color.white);
         }
         setNetPrice();
+        }
     }//GEN-LAST:event_listpriceFocusLost
 
     private void discountFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_discountFocusLost
-           String x = BlueSeerUtils.bsformat("", discount.getText(), "4");
+        if (! discount.getText().isEmpty()) {
+        String x = BlueSeerUtils.bsformat("", discount.getText(), "4");
         if (x.equals("error")) {
             discount.setText("");
             discount.setBackground(Color.yellow);
@@ -3308,6 +3311,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
         if (discount.getText().isEmpty())
             discount.setText("0.00");
         setNetPrice();
+        }
     }//GEN-LAST:event_discountFocusLost
 
     private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
