@@ -1,5 +1,5 @@
 DBTYPE=sqlite
-DB=data/bsdb.db
+DB=data/en/bsdb.db
 USER=bs_user
 PASS=bspasswd
 IP=localhost

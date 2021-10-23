@@ -650,7 +650,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 ddtax.getSelectedItem().toString(),
                 bsmf.MainFrame.dfdate.format(new Date()),
                 expire,
-                tbexpiredays.getText()
+                bsformat("d", tbexpiredays.getText(), "0").replace(defaultDecimalSeparator, '.')
                 );
         return x;
     }

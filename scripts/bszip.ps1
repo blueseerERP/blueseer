@@ -46,6 +46,6 @@ compress-archive -update -path mysql_install.bat -destinationpath $wip\$myzip
 compress-archive -update -path login.bat -destinationpath $wip\$myzip
 compress-archive -update -path bslogging.properties -destinationpath $wip\$myzip
 compress-archive -update -path ..\.patch -destinationpath $wip\$myzip
-compress-archive -update -path ..\jre11 -destinationpath $wip\$myzip
+compress-archive -update -path ..\jre17 -destinationpath $wip\$myzip
 
 

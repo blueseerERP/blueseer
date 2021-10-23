@@ -4,5 +4,6 @@ dist
 jre8
 jre11
 jre16
+jre17
 nbproject/private
 !scripts/build.xml
