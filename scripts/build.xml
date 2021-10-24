@@ -21,6 +21,9 @@
             <include name="**/*.jar" />
         </fileset>
     </path>
+    <path id="run.classpath">
+	<fileset dir="../dist" includes="*.jar"/>
+    </path>
 
     <!-- Deletes the existing build, docs and dist directory-->
     <target name="clean">
@@ -108,34 +111,25 @@
 	    <jvmarg value="-Djava.util.logging.config.file=bslogging.properties"/>
         </java>
 </target>
-<target name="run_fr">
-    <path id="runtime.path">
-	    <fileset dir="../dist" includes="*.jar"/>
-	    <!--  <fileset dir="../lib" includes="*.jar"/> -->
-	    <fileset dir="${test.dir}/edi/maps" includes="*.jar"/>
-    </path>
-    <echo>running in ....${test.dir}</echo>
-    <java classname="bsmf.MainFrame" fork="true" classpathref="runtime.path" dir="${test.dir}">
-	    <arg value="-debug"/> 
-	    <jvmarg value="-Duser.language=fr"/>
-	    <jvmarg value="-Duser.country=FR"/>
-	    <jvmarg value="-Djava.util.logging.config.file=bslogging.properties"/>
-        </java>
-</target>
 <target name="run17">
     <path id="runtime.path">
+	    <fileset dir="." includes="*.properties"/>
 	    <fileset dir="../dist" includes="*.jar"/>
 	    <!--  <fileset dir="../lib" includes="*.jar"/> -->
 	    <fileset dir="${test.dir}/edi/maps" includes="*.jar"/>
     </path>
     <echo>running in ....${test.dir}</echo>
-    <java classname="bsmf.MainFrame" jvm="${java17}" fork="true" classpathref="runtime.path" dir="${test.dir}">
+    <java classname="bsmf.MainFrame" jvm="${java17}" fork="true" classpathref="run.classpath" dir="${test.dir}">
 	    <arg value="-debug"/> 
 	    <jvmarg value="-Duser.language=${l}"/>
 	    <jvmarg value="-Duser.country=${c}"/>
 	    <jvmarg value="-Djava.util.logging.config.file=bslogging.properties"/>
         </java>
 </target>
+ <target name="print-classpath">
+	<pathconvert property="classpathInName" refid="run.classpath" />
+	<echo>Classpath is ${classpathInName}</echo>
+ </target>
 
 
     <target name="main" depends="compile, jar">

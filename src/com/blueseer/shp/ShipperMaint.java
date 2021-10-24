@@ -40,6 +40,7 @@ import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
 import static com.blueseer.utl.BlueSeerUtils.luTable;
@@ -899,7 +900,7 @@ public class ShipperMaint extends javax.swing.JPanel {
                         " inner join item_mstr on it_item = sod_part "  +
                         " where sod_nbr = " + "'" + nbr + "'" +
                         " AND sod_line = " + "'" + line + "'" +  
-                        " AND sod_status <> 'closed' " + 
+                        " AND sod_status <> " + "'" + getGlobalProgTag("closed") + "'" + 
                         " order by sod_line ;");
                 while (res.next()) {
                 tbitem.setText(res.getString("sod_part"));
@@ -945,7 +946,7 @@ public class ShipperMaint extends javax.swing.JPanel {
                     status = res.getString("so_status");
                     curr = res.getString("so_curr");
                     
-                    if (ordercount == 0 && ! status.equals("closed")) {
+                    if (ordercount == 0 && ! status.equals(getGlobalProgTag("closed"))) {
                     ddbillto.setSelectedItem(res.getString("so_cust"));
                     ddshipto.setSelectedItem(res.getString("so_ship"));
                     ddshipvia.setSelectedItem(res.getString("so_shipvia"));
@@ -981,7 +982,7 @@ public class ShipperMaint extends javax.swing.JPanel {
                     return;
                     } 
                     
-                    if (i > 0 && status.equals("closed")) {
+                    if (i > 0 && status.equals(getGlobalProgTag("closed"))) {
                     bsmf.MainFrame.show(getMessageTag(1097));
                     proceed = false;
                     ddshipto.setSelectedIndex(0);

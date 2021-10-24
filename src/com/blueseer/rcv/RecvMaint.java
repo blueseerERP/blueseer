@@ -42,6 +42,7 @@ import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
 import static com.blueseer.utl.BlueSeerUtils.luTable;
@@ -1421,7 +1422,7 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeer {
                     lbvendor.setText(res.getString("vd_name"));
                 }
                 res = st.executeQuery("select po_nbr from po_mstr where po_vend = " + "'" + ddvend.getSelectedItem().toString() + "'" + 
-                        " AND po_status <> 'closed' " + 
+                        " AND po_status <> " + "'" + getGlobalProgTag("closed") + "'" + 
                         ";");
                 while (res.next()) {
                     ddpo.addItem(res.getString("po_nbr"));

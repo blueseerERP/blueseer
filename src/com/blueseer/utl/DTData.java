@@ -34,6 +34,7 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -2883,7 +2884,7 @@ public class DTData {
                         " where " + 
                         " so_cust = " + "'" + cust + "'" +
                         " AND so_ship = " + "'" + ship + "'" +
-                        " AND so_status <> 'closed' " +
+                        " AND so_status <> " + "'" + getGlobalProgTag("closed") + "'" +
                         " AND " + myfield + " like " + "'%" + str + "%'" +
                         " order by sod_line asc ;");
                 
@@ -3173,33 +3174,33 @@ public class DTData {
             try{
                 if (state == 1) { // begins
                    if (dbtype.equals("sqlite"))  {
-                    res = st.executeQuery(" select sh_id, sh_cust, sh_ship, sh_so, sh_po, sh_shipdate, case sh_status when '1' then 'closed' else 'open' end sh_status " +
+                    res = st.executeQuery(" select sh_id, sh_cust, sh_ship, sh_so, sh_po, sh_shipdate, case sh_status when '1' then " + "'" + getGlobalProgTag("closed") + "'" + " else " + "'" + getGlobalProgTag("open") + "'" + " end sh_status " +
                         " FROM  ship_mstr where " + myfield + " like " + "'" + str + "%'" +
                         " order by sh_id desc ;");
                    } else {
-                     res = st.executeQuery(" select sh_id, sh_cust, sh_ship, sh_so, sh_po, sh_shipdate, case when sh_status = '1' then 'closed' else 'open' end as 'sh_status' " +
+                     res = st.executeQuery(" select sh_id, sh_cust, sh_ship, sh_so, sh_po, sh_shipdate, case when sh_status = '1' then " + "'" + getGlobalProgTag("closed") + "'" + " else " + "'" + getGlobalProgTag("open") + "'" + " end as 'sh_status' " +
                         " FROM  ship_mstr where " + myfield + " like " + "'" + str + "%'" +
                         " order by sh_id desc ;");  
                    }
                 }
                 if (state == 2) { // ends
                     if (dbtype.equals("sqlite"))  {
-                    res = st.executeQuery(" select sh_id, sh_cust, sh_ship, sh_so, sh_po, sh_shipdate, case sh_status when '1' then 'closed' else 'open' end sh_status " +
+                    res = st.executeQuery(" select sh_id, sh_cust, sh_ship, sh_so, sh_po, sh_shipdate, case sh_status when '1' then " + "'" + getGlobalProgTag("closed") + "'" + " else " + "'" + getGlobalProgTag("open") + "'" + " end sh_status " +
                         " FROM  ship_mstr where " + myfield + " like " + "'%" + str + "'" +
                         " order by sh_id desc ;");
                    } else {
-                     res = st.executeQuery(" select sh_id, sh_cust, sh_ship, sh_so, sh_po, sh_shipdate, case when sh_status = '1' then 'closed' else 'open' end as 'sh_status' " +
+                     res = st.executeQuery(" select sh_id, sh_cust, sh_ship, sh_so, sh_po, sh_shipdate, case when sh_status = '1' then " + "'" + getGlobalProgTag("closed") + "'" + " else " + "'" + getGlobalProgTag("open") + "'" + " end as 'sh_status' " +
                         " FROM  ship_mstr where " + myfield + " like " + "'%" + str + "'" +
                         " order by sh_id desc ;");  
                    }
                 }
                  if (state == 0) { // match
                  if (dbtype.equals("sqlite"))  {
-                    res = st.executeQuery(" select sh_id, sh_cust, sh_ship, sh_so, sh_po, sh_shipdate, case sh_status when '1' then 'closed' else 'open' end sh_status " +
+                    res = st.executeQuery(" select sh_id, sh_cust, sh_ship, sh_so, sh_po, sh_shipdate, case sh_status when '1' then " + "'" + getGlobalProgTag("closed") + "'" + " else " + "'" + getGlobalProgTag("open") + "'" + " end sh_status " +
                         " FROM  ship_mstr where " + myfield + " like " + "'%" + str + "%'" +
                         " order by sh_id desc ;");
                    } else {
-                     res = st.executeQuery(" select sh_id, sh_cust, sh_ship, sh_so, sh_po, sh_shipdate, case when sh_status = '1' then 'closed' else 'open' end as 'sh_status' " +
+                     res = st.executeQuery(" select sh_id, sh_cust, sh_ship, sh_so, sh_po, sh_shipdate, case when sh_status = '1' then " + "'" + getGlobalProgTag("closed") + "'" + " else " + "'" + getGlobalProgTag("open") + "'" + " end as 'sh_status' " +
                         " FROM  ship_mstr where " + myfield + " like " + "'%" + str + "%'" +
                         " order by sh_id desc ;");  
                    }
@@ -3251,33 +3252,33 @@ public class DTData {
             try{
                 if (state == 1) { // begins
                    if (dbtype.equals("sqlite"))  {
-                    res = st.executeQuery(" select sh_id, sh_cust, sh_ship, sh_so, sh_po, sh_shipdate, case sh_status when '1' then 'closed' else 'open' end sh_status " +
+                    res = st.executeQuery(" select sh_id, sh_cust, sh_ship, sh_so, sh_po, sh_shipdate, case sh_status when '1' then " + "'" + getGlobalProgTag("closed") + "'" + " else " + "'" + getGlobalProgTag("open") + "'" + " end sh_status " +
                         " FROM  ship_mstr where " + myfield + " like " + "'" + str + "%'" +
                         " order by sh_id desc ;");
                    } else {
-                     res = st.executeQuery(" select sh_id, sh_cust, sh_ship, sh_so, sh_po, sh_shipdate, case when sh_status = '1' then 'closed' else 'open' end as 'sh_status' " +
+                     res = st.executeQuery(" select sh_id, sh_cust, sh_ship, sh_so, sh_po, sh_shipdate, case when sh_status = '1' then " + "'" + getGlobalProgTag("closed") + "'" + " else " + "'" + getGlobalProgTag("open") + "'" + " end as 'sh_status' " +
                         " FROM  ship_mstr where " + myfield + " like " + "'" + str + "%'" +
                         " order by sh_id desc ;");  
                    }
                 }
                 if (state == 2) { // ends
                     if (dbtype.equals("sqlite"))  {
-                    res = st.executeQuery(" select sh_id, sh_cust, sh_ship, sh_so, sh_po, sh_shipdate, case sh_status when '1' then 'closed' else 'open' end sh_status " +
+                    res = st.executeQuery(" select sh_id, sh_cust, sh_ship, sh_so, sh_po, sh_shipdate, case sh_status when '1' then " + "'" + getGlobalProgTag("closed") + "'" + " else " + "'" + getGlobalProgTag("open") + "'" + " end sh_status " +
                         " FROM  ship_mstr where " + myfield + " like " + "'%" + str + "'" +
                         " order by sh_id desc ;");
                    } else {
-                     res = st.executeQuery(" select sh_id, sh_cust, sh_ship, sh_so, sh_po, sh_shipdate, case when sh_status = '1' then 'closed' else 'open' end as 'sh_status' " +
+                     res = st.executeQuery(" select sh_id, sh_cust, sh_ship, sh_so, sh_po, sh_shipdate, case when sh_status = '1' then " + "'" + getGlobalProgTag("closed") + "'" + " else " + "'" + getGlobalProgTag("open") + "'" + " end as 'sh_status' " +
                         " FROM  ship_mstr where " + myfield + " like " + "'%" + str + "'" +
                         " order by sh_id desc ;");  
                    }
                 }
                  if (state == 0) { // match
                  if (dbtype.equals("sqlite"))  {
-                    res = st.executeQuery(" select sh_id, sh_cust, sh_ship, sh_so, sh_po, sh_shipdate, case sh_status when '1' then 'closed' else 'open' end sh_status " +
+                    res = st.executeQuery(" select sh_id, sh_cust, sh_ship, sh_so, sh_po, sh_shipdate, case sh_status when '1' then " + "'" + getGlobalProgTag("closed") + "'" + " else " + "'" + getGlobalProgTag("open") + "'" + " end sh_status " +
                         " FROM  ship_mstr where " + myfield + " like " + "'%" + str + "%'" +
                         " order by sh_id desc ;");
                    } else {
-                     res = st.executeQuery(" select sh_id, sh_cust, sh_ship, sh_so, sh_po, sh_shipdate, case when sh_status = '1' then 'closed' else 'open' end as 'sh_status' " +
+                     res = st.executeQuery(" select sh_id, sh_cust, sh_ship, sh_so, sh_po, sh_shipdate, case when sh_status = '1' then " + "'" + getGlobalProgTag("closed") + "'" + " else " + "'" + getGlobalProgTag("open") + "'" + " end as 'sh_status' " +
                         " FROM  ship_mstr where " + myfield + " like " + "'%" + str + "%'" +
                         " order by sh_id desc ;");  
                    }

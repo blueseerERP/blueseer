@@ -36,6 +36,7 @@ import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
 import static com.blueseer.utl.BlueSeerUtils.luTable;
@@ -421,13 +422,13 @@ public class InvoiceMaint extends javax.swing.JPanel {
                    
                    // custom set
                    if (status.equals("c")) {
-                       lbmessage.setText("this invoice is closed");
+                       lbmessage.setText(getGlobalProgTag("closed"));
                        lbmessage.setForeground(Color.red);
                        btvoid.setEnabled(false);
                        btupdate.setEnabled(false);
                        cbispaid.setSelected(true);
                    } else {
-                       lbmessage.setText("this invoice is open");
+                       lbmessage.setText(getGlobalProgTag("open"));
                        lbmessage.setForeground(Color.blue);
                        btvoid.setEnabled(true);
                        btupdate.setEnabled(false);

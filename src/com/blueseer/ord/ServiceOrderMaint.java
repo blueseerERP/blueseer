@@ -42,6 +42,7 @@ import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
 import static com.blueseer.utl.BlueSeerUtils.luTable;
@@ -370,6 +371,15 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
          }
           dditem.insertItemAt("", 0);
          dditem.setSelectedIndex(0);
+         
+         
+        ddstatus.removeAllItems();
+        ArrayList<String> mylist = OVData.getCodeMstr("orderstatus");
+        for (int i = 0; i < mylist.size(); i++) {
+            ddstatus.addItem(mylist.get(i));
+        }
+        ddstatus.setSelectedItem(getGlobalProgTag("open"));
+         
        isLoad = false;
     }
     
@@ -420,13 +430,13 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
                 setTotalHours();
                 setTotalPrice();
                 sumlinecount();
-                        if (ddstatus.getSelectedItem().toString().compareTo("closed") == 0 || ddstatus.getSelectedItem().toString().compareTo("void") == 0) {
+                        if (ddstatus.getSelectedItem().toString().compareTo(getGlobalProgTag("closed")) == 0 || ddstatus.getSelectedItem().toString().compareTo("void") == 0) {
                              setPanelComponentState(this, false);
                              btnew.setEnabled(true);
                              btlookup.setEnabled(true);
                              btclear.setEnabled(true);
                              btprint.setEnabled(true);
-                             m = new String[]{BlueSeerUtils.SuccessBit, "Order is closed"};  
+                             m = new String[]{BlueSeerUtils.SuccessBit, getMessageTag(1097)};  
                          } else {
                              setPanelComponentState(this, true);
                               btadd.setEnabled(false);
@@ -1330,8 +1340,6 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
                 btnewsiteActionPerformed(evt);
             }
         });
-
-        ddstatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "open", "processing", "closed", "void" }));
 
         jLabel6.setText("Status");
         jLabel6.setName("lblstatus"); // NOI18N
