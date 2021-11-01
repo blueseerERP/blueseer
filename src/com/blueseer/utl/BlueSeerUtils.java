@@ -551,7 +551,7 @@ public class BlueSeerUtils {
                     try {
                         z = nf.parse(x).doubleValue();
                     } catch (ParseException ex) {
-                        bsmf.MainFrame.show(getMessageTag(1017));
+                        bsmf.MainFrame.show(getMessageTag(1017) + "/" + x);
                     }
         }
         return z;
@@ -619,6 +619,9 @@ public class BlueSeerUtils {
         String pattern = "";
         String outvalue = "";
         
+        if (invalue.isEmpty() && type.equals("")) {
+           return "0";
+        }
         if (invalue.isEmpty() && type.equals("s")) {
            return "";
         }

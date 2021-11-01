@@ -434,7 +434,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeer {
         
         
         ddvend.removeAllItems();
-          ArrayList myvends = OVData.getvendmstrlist();
+          ArrayList myvends = OVData.getVendMstrList();
           for (int i = 0; i < myvends.size(); i++) {
             ddvend.addItem(myvends.get(i));
           }

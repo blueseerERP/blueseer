@@ -375,16 +375,12 @@ public class WorkCenterMaint extends javax.swing.JPanel implements IBlueSeer {
     }
     
     public String[] addRecord(String[] x) {
-    String[] m = new String[2];
-     m = addWorkCenterMstr(createRecord());
-     initvars(null);
+     String[] m = addWorkCenterMstr(createRecord());
      return m;
-     }
+    }
      
     public String[] updateRecord(String[] x) {
-    String[] m = new String[2];
-     m = updateWorkCenterMstr(createRecord());
-     initvars(null);
+    String[] m = updateWorkCenterMstr(createRecord());
      return m;
      }
      

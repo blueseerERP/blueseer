@@ -369,7 +369,7 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
         ddsite.setSelectedItem(OVData.getDefaultSite());
         
         ddvend.removeAllItems();
-        ArrayList myvends = OVData.getvendnamelist();
+        ArrayList myvends = OVData.getVendNameList();
         for (int i = 0; i < myvends.size(); i++) {
          ddvend.addItem(myvends.get(i));
         }

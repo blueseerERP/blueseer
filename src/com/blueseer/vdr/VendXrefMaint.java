@@ -265,7 +265,7 @@ public class VendXrefMaint extends javax.swing.JPanel implements IBlueSeer {
     
     public void setComponentDefaultValues() {
        isLoad = true;
-         ArrayList myvend = OVData.getvendmstrlist();
+         ArrayList myvend = OVData.getVendMstrList();
         ddvend.removeAllItems();
         for (int i = 0; i < myvend.size(); i++) {
             ddvend.addItem(myvend.get(i));

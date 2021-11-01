@@ -1310,8 +1310,7 @@ public class OVData {
         return myarray;
 
     }
-
-    /* vendor related functions */
+    
     public static ArrayList getbanklist() {
         ArrayList myarray = new ArrayList();
         try {
@@ -1347,7 +1346,9 @@ public class OVData {
 
     }
 
-    public static ArrayList getvendmstrlist() {
+    /* vendor related functions */
+   
+    public static ArrayList getVendMstrList() {
         ArrayList myarray = new ArrayList();
         try {
             
@@ -1363,7 +1364,7 @@ public class OVData {
                 }
 
             } catch (SQLException s) {
-                JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Vend list");
+                MainFrame.bslog(s);
             } finally {
                 if (res != null) {
                     res.close();
@@ -1371,9 +1372,7 @@ public class OVData {
                 if (st != null) {
                     st.close();
                 }
-                if (con != null) {
                     con.close();
-                }
             }
         } catch (Exception e) {
             MainFrame.bslog(e);
@@ -1382,7 +1381,7 @@ public class OVData {
 
     }
 
-    public static ArrayList getvendmstrlistBetween(String from, String to) {
+    public static ArrayList getVendMstrListBetween(String from, String to) {
         ArrayList myarray = new ArrayList();
         try {
             
@@ -1409,9 +1408,7 @@ public class OVData {
                 if (st != null) {
                     st.close();
                 }
-                if (con != null) {
                     con.close();
-                }
             }
         } catch (Exception e) {
             MainFrame.bslog(e);
@@ -1420,7 +1417,7 @@ public class OVData {
 
     }
 
-    public static ArrayList getvendtermslist() {
+    public static ArrayList getVendTermsList() {
         ArrayList myarray = new ArrayList();
         try {
             
@@ -1436,7 +1433,7 @@ public class OVData {
                 }
 
             } catch (SQLException s) {
-                bsmf.MainFrame.show("SQL cannot get Terms Master");
+                MainFrame.bslog(s);
             } finally {
                 if (res != null) {
                     res.close();
@@ -1454,6 +1451,249 @@ public class OVData {
         return myarray;
 
     }
+        
+    public static ArrayList getVendNameList() {
+        ArrayList myarray = new ArrayList();
+        try {
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+                res = st.executeQuery("select vd_name from vd_mstr order by vd_name;");
+                while (res.next()) {
+                    myarray.add(res.getString("vd_name").replace("'", ""));
+
+                }
+
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                    con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return myarray;
+
+    }
+
+    public static String getVendTerms(String vend) {
+           String myitem = null;
+         try{
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+                ResultSet res = null;
+            try{
+                
+
+                res = st.executeQuery("select vd_terms from vd_mstr where vd_addr = " + "'" + vend + "'" + ";" );
+               while (res.next()) {
+                myitem = res.getString("vd_terms");                    
+                }
+               
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                    con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return myitem;
+        
+    }
+           
+    public static String getVendName(String vend) {
+           String myitem = null;
+         try{
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+                ResultSet res = null;
+            try{
+                res = st.executeQuery("select vd_name from vd_mstr where vd_addr = " + "'" + vend + "'" + ";" );
+               while (res.next()) {
+                myitem = res.getString("vd_name");                    
+                }
+               
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                    con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return myitem;
+        
+    }       
+         
+    public static String getVendAPAcct(String vend) {
+   String myitem = null;
+ try{
+
+    Connection con = DriverManager.getConnection(url + db, user, pass);
+    Statement st = con.createStatement();
+        ResultSet res = null;
+    try{
+        
+
+        res = st.executeQuery("select vd_ap_acct from vd_mstr where vd_addr = " + "'" + vend + "'" + ";" );
+       while (res.next()) {
+        myitem = res.getString("vd_ap_acct");                    
+        }
+
+   }
+    catch (SQLException s){
+         MainFrame.bslog(s);
+    } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                    con.close();
+            }
+}
+catch (Exception e){
+    MainFrame.bslog(e);
+}
+return myitem;
+
+}
+
+    public static String getVendAPCC(String vend) {
+   String myitem = null;
+ try{
+
+    Connection con = DriverManager.getConnection(url + db, user, pass);
+    Statement st = con.createStatement();
+        ResultSet res = null;
+    try{
+        
+
+        res = st.executeQuery("select vd_ap_cc from vd_mstr where vd_addr = " + "'" + vend + "'" + ";" );
+       while (res.next()) {
+        myitem = res.getString("vd_ap_cc");                    
+        }
+
+   }
+    catch (SQLException s){
+         MainFrame.bslog(s);
+    } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                    con.close();
+            }
+}
+catch (Exception e){
+    MainFrame.bslog(e);
+}
+return myitem;
+
+}
+
+    public static String getVendPartFromPart(String vend, String part) {
+   String mystring = "";
+    try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+            ResultSet res = null;
+
+        try{
+            
+            res = st.executeQuery("select vdp_vitem from vdp_mstr where vdp_vend = " + "'" + vend + "'" + 
+                                  " AND vdp_item = " + "'" + part + "'" + ";");
+           while (res.next()) {
+               mystring = res.getString("vdp_vitem");
+
+            }
+
+       }
+        catch (SQLException s){
+              MainFrame.bslog(s);
+        } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                    con.close();
+            }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return mystring;
+
+}        
+
+    public static String getVendCurrency(String vend) {
+           String myitem = "";
+         try{
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+                ResultSet res = null;
+            try{
+                
+
+                res = st.executeQuery("select vd_curr from vd_mstr where vd_addr = " + "'" + vend + "'" + ";" );
+               while (res.next()) {
+                myitem = res.getString("vd_curr");                    
+                }
+               
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                    con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return myitem;
+        
+    } 
 
     
     /* Customer Related functions */
@@ -1533,7 +1773,6 @@ public class OVData {
             } // if proceed
             catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Error while inserting...check printStackTrace");
                 myreturn = true;
             } finally {
                 if (res != null) {
@@ -2540,157 +2779,8 @@ public class OVData {
 
     }
 
-    public static String getDefaultTaxAcctByType(String type) {
-        String acct = "";
-        String other = "";
-
-        try {
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-
-                // function will try to assign appropriate tax account.  If fed,state,local are undefined, it will attempt to assign
-                // to 'other'
-                // if 'other' is undefined....it will return a blank.
-                res = st.executeQuery("select * from ar_ctrl;");
-                while (res.next()) {
-                    other = res.getString("arc_othertax_acct");
-
-                    if (type.toUpperCase().equals("FEDERAL") && !res.getString("arc_fedtax_acct").isEmpty()) {
-                        acct = res.getString("arc_fedtax_acct");
-                    }
-                    if (type.toUpperCase().equals("STATE") && !res.getString("arc_statetax_acct").isEmpty()) {
-                        acct = res.getString("arc_statetax_acct");
-                    }
-                    if (type.toUpperCase().equals("LOCAL") && !res.getString("arc_localtax_acct").isEmpty()) {
-                        acct = res.getString("arc_localtax_acct");
-                    }
-                    if (type.toUpperCase().equals("OTHER") && !res.getString("arc_othertax_acct").isEmpty()) {
-                        acct = res.getString("arc_othertax_acct");
-                    }
-                }
-
-                // default to 'other' if no account is defined
-                if (acct.isEmpty()) {
-                    acct = other;
-                }
-
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("SQL cannot get Tax default account info");
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                if (con != null) {
-                    con.close();
-                }
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-        return acct;
-
-    }
-
-    public static String getDefaultTaxCCByType(String type) {
-        String cc = "";
-        String other = "";
-
-        try {
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-
-                // function will try to assign appropriate tax account.  If fed,state,local are undefined, it will attempt to assign
-                // to 'other'
-                // if 'other' is undefined....it will return a blank.
-                res = st.executeQuery("select * from ar_ctrl;");
-                while (res.next()) {
-                    other = res.getString("arc_othertax_cc");
-
-                    if (type.toUpperCase().equals("FEDERAL") && !res.getString("arc_fedtax_cc").isEmpty()) {
-                        cc = res.getString("arc_fedtax_cc");
-                    }
-                    if (type.toUpperCase().equals("STATE") && !res.getString("arc_statetax_cc").isEmpty()) {
-                        cc = res.getString("arc_statetax_cc");
-                    }
-                    if (type.toUpperCase().equals("LOCAL") && !res.getString("arc_localtax_cc").isEmpty()) {
-                        cc = res.getString("arc_localtax_cc");
-                    }
-                    if (type.toUpperCase().equals("OTHER") && !res.getString("arc_othertax_cc").isEmpty()) {
-                        cc = res.getString("arc_othertax_cc");
-                    }
-                }
-
-                // default to 'other' if no account is defined
-                if (cc.isEmpty()) {
-                    cc = other;
-                }
-
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("SQL cannot get Tax default CC info");
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                if (con != null) {
-                    con.close();
-                }
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-        return cc;
-
-    }
-
-    public static ArrayList getvendnamelist() {
-        ArrayList myarray = new ArrayList();
-        try {
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-
-                res = st.executeQuery("select vd_name from vd_mstr order by vd_name;");
-                while (res.next()) {
-                    myarray.add(res.getString("vd_name").replace("'", ""));
-
-                }
-
-            } catch (SQLException s) {
-                JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Cust list");
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                if (con != null) {
-                    con.close();
-                }
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-        return myarray;
-
-    }
-
+  
+   
     public static ArrayList getempmstrlist() {
         ArrayList myarray = new ArrayList();
         try {
@@ -4696,583 +4786,591 @@ public class OVData {
     
     
         
-               /* stop here */
-               
-       public static void wip_to_fg(String part, String site, Double cost, String date, String ref, String type, String desc) {
-            try{
-                   
-            
-                    String acct_dr = "";
-                    String cc_dr = "";
-                    String acct_cr = "";
-                    String cc_cr = "";
-                  
-                    //inventory transactions....base currency only
-                    String curr = OVData.getDefaultCurrency();
-                    String basecurr = curr;
-            
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-               
-                /* lets get the 'wip' and 'inventory' acct and cc from product line info for the item */
-                res = st.executeQuery("select pl_wip, pl_line, pl_inventory " +
-                       " from item_mstr " +
-                       " inner join pl_mstr on pl_line = it_prodline " +
-                       " where it_item = " + "'" + part.toString() + "'" + ";");
-                 while (res.next()) {
-                     acct_dr = res.getString("pl_inventory");
-                     cc_dr = res.getString("pl_line");
-                     acct_cr = res.getString("pl_wip");
-                     cc_cr = res.getString("pl_line");
-                 }
-                   
-                    // process GL transactions
-                   fglData.glEntry(acct_cr, cc_cr, acct_dr, cc_dr, date, cost, cost, curr, basecurr, ref, site, type, desc); // post bdn entry
-                  
-                
-               
-           }
-            catch (SQLException s){
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Cannot process " + "wip_to_fg");
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-       }        
-               
-       public static void wip_iss_mtl_gl(String part, String op, String csite, Double qty, String date, String cref, String ctype, String cdesc, String serial, String userid, String program) {
-       
-        try{
-            
-             // added SQLITE adjustment here...create arraylist of entries for glentry instead of inline
-                    ArrayList acct_cr = new ArrayList();
-                    ArrayList ref =  new ArrayList();
-                    ArrayList desc =   new ArrayList();
-                    ArrayList type =   new ArrayList();
-                    ArrayList cc_cr =   new ArrayList();
-                    ArrayList acct_dr =   new ArrayList();
-                    ArrayList cc_dr =   new ArrayList();
-                    ArrayList site =   new ArrayList();
-                    ArrayList cost =  new ArrayList();   
-                   
-                   
-                    ArrayList child = new ArrayList();
-                    ArrayList loc = new ArrayList();
-                    ArrayList wh = new ArrayList();
-                    ArrayList qtyper = new ArrayList();
-                    
-                    String thistype = ctype;
-                    String thisdesc = cdesc;  
-                    String thissite = csite;
-                    String thisref = cref;
-            
-                    String par_acct_dr = "";
-                    String par_cc_dr = "";
-            
-                    //inventory transactions....base currency only
-                    String curr = OVData.getDefaultCurrency();
-                    String basecurr = curr;
-                    
-          
-            String pmcode = "";
-            String tranhisttype = "";
-            String expire = ""; // should be blank for component issues
-            
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-               
-                /* lets get the 'wip' acct and cc from product line info for the item */
-                res = st.executeQuery("select pl_wip, pl_line, it_code " +
-                       " from item_mstr " +
-                       " inner join pl_mstr on pl_line = it_prodline " +
-                       " where it_item = " + "'" + part.toString() + "'" + ";");
-                 while (res.next()) {
-                   par_acct_dr = res.getString("pl_wip");
-                   par_cc_dr = res.getString("pl_line"); 
-                   pmcode = res.getString("it_code");
-                 }
-                /*  NOTE:  we will be debiting the backflushed part WIP account and
-                crediting the component Inventory account  */
-            
-               
-               if (pmcode.equalsIgnoreCase("P")) {
-                    res = st.executeQuery("select  itc_total, pl_scrap, pl_line, pl_inventory " +
-                       " from item_mstr  " + 
-                       " inner join pl_mstr on pl_line = it_prodline " +
-                       " inner join item_cost on itc_item = it_item and itc_set = 'standard' where it_item = " + "'" + part.toString() + "'" + ";"
-                        );
-                    while (res.next()) {
-                    acct_cr.add(res.getString("pl_inventory"));
-                    acct_dr.add(res.getString("pl_scrap"));
-                    cc_cr.add(res.getString("pl_line"));
-                    cc_dr.add(res.getString("pl_line"));
-                    cost.add((res.getDouble("itc_total") * qty));
-                    site.add(thissite);
-                    ref.add(thisref);
-                    type.add(thistype);
-                    desc.add(thisdesc);
-                    }
-                    res.close();
-                    // now process into GL
-                      for (int j = 0; j < acct_cr.size(); j++) {
-                      fglData.glEntry(acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), date, bsParseDouble(cost.get(j).toString()), bsParseDouble(cost.get(j).toString()), curr, basecurr, ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString());  
-                    }
-               } else {
-               res = st.executeQuery("select ps_child, ps_qty_per, it_loc, it_wh, itc_total, pl_inventory, pl_line " +
-                       " from pbm_mstr inner join item_mstr on it_item = ps_child " + 
-                       " inner join pl_mstr on pl_line = it_prodline " +
-                       " inner join item_cost on itc_item = ps_child and itc_set = 'standard' where ps_parent = " + "'" + part.toString() + "'" +
-                       " AND ps_op = " + "'" + op + "'" );
-               while (res.next()) {
-                   acct_cr.add(res.getString("pl_inventory"));
-                    acct_dr.add(par_acct_dr);
-                    cc_cr.add(res.getString("pl_line"));
-                    cc_dr.add(par_cc_dr);
-                    cost.add((res.getDouble("ps_qty_per") * res.getDouble("itc_total") * qty));
-                    site.add(thissite);
-                    ref.add(thisref);
-                    type.add("ISS-SUB");
-                    desc.add(thisdesc);
-                    child.add(res.getString("ps_child"));
-                    loc.add(res.getString("it_loc"));
-                    wh.add(res.getString("it_wh"));
-                    qtyper.add(res.getDouble("ps_qty_per"));
-                   
-            //       Date effdate, String part, int qty, String type, double price, double cost, String site, 
-           //   String loc, String cust, String nbr, String order, int line, String po, String terms, String lot, String rmks, 
-          //    String ref, String acct, String cc, String jobnbr, String serial, String program, String userid
-                
-               }
-               res.close();
-               
-               for (int j = 0; j < acct_cr.size(); j++) {
-                   
-                   // now process to GL
-                   fglData.glEntry(acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), date, bsParseDouble(cost.get(j).toString()), bsParseDouble(cost.get(j).toString()), curr, basecurr, ref.get(j).toString(), site.get(j).toString(), "ISS-WIP", desc.get(j).toString());  
-                  
-                   // process tran_hist
-                   if (ctype.equals("ISS-SCRAP")) {
-                       tranhisttype = "ISS-WIP";
-                   } else {
-                       tranhisttype = ctype;
-                   }
-                   OVData.TRHistIssDiscrete(BlueSeerUtils.mysqlDateFormat.parse(date), child.get(j).toString(), (-1 * qty), op, tranhisttype, 0, 0, csite, 
-                           loc.get(j).toString(), wh.get(j).toString(), expire, "", "", part + ":" + op, 0, "", "", "", cref, "", "", "", "", serial, program, userid);
-                   
-                   // update inventory
-                   OVData.UpdateInventoryDiscrete(child.get(j).toString(), csite, loc.get(j).toString(), wh.get(j).toString(), "", "", bsParseDouble(qtyper.get(j).toString()) * qty * -1);    
               
                
-               
-               }
-               
-                /* now lets go get all the unreport operations back to the last reported op 
-                  exclusive of the last reported op */
-                
-                ArrayList<String> myops = new ArrayList<String>();
-        
-                
-               res = st.executeQuery("select wf_op " +
-                       " from wf_mstr inner join item_mstr on wf_id = it_wf " + 
-                       " where it_item = " + "'" + part.toString() + "'" +
-                       " AND wf_op < " + "'" + op + "'" + " AND " +
-                       " wf_assert = 0 order by wf_op desc ");
+    public static void wip_to_fg(String part, String site, Double cost, String date, String ref, String type, String desc) {
+        try{
+
+
+                String acct_dr = "";
+                String cc_dr = "";
+                String acct_cr = "";
+                String cc_cr = "";
+
+                //inventory transactions....base currency only
+                String curr = OVData.getDefaultCurrency();
+                String basecurr = curr;
+
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try{
+            
+
+            /* lets get the 'wip' and 'inventory' acct and cc from product line info for the item */
+            res = st.executeQuery("select pl_wip, pl_line, pl_inventory " +
+                   " from item_mstr " +
+                   " inner join pl_mstr on pl_line = it_prodline " +
+                   " where it_item = " + "'" + part.toString() + "'" + ";");
+             while (res.next()) {
+                 acct_dr = res.getString("pl_inventory");
+                 cc_dr = res.getString("pl_line");
+                 acct_cr = res.getString("pl_wip");
+                 cc_cr = res.getString("pl_line");
+             }
+
+                // process GL transactions
+               fglData.glEntry(acct_cr, cc_cr, acct_dr, cc_dr, date, cost, cost, curr, basecurr, ref, site, type, desc); // post bdn entry
+
+       }
+        catch (SQLException s){
+            MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    }        
+
+    public static void wip_iss_mtl_gl(String part, String op, String csite, Double qty, String date, String cref, String ctype, String cdesc, String serial, String userid, String program) {
+
+    try{
+
+         // added SQLITE adjustment here...create arraylist of entries for glentry instead of inline
+                ArrayList acct_cr = new ArrayList();
+                ArrayList ref =  new ArrayList();
+                ArrayList desc =   new ArrayList();
+                ArrayList type =   new ArrayList();
+                ArrayList cc_cr =   new ArrayList();
+                ArrayList acct_dr =   new ArrayList();
+                ArrayList cc_dr =   new ArrayList();
+                ArrayList site =   new ArrayList();
+                ArrayList cost =  new ArrayList();   
+
+
+                ArrayList child = new ArrayList();
+                ArrayList loc = new ArrayList();
+                ArrayList wh = new ArrayList();
+                ArrayList qtyper = new ArrayList();
+
+                String thistype = ctype;
+                String thisdesc = cdesc;  
+                String thissite = csite;
+                String thisref = cref;
+
+                String par_acct_dr = "";
+                String par_cc_dr = "";
+
+                //inventory transactions....base currency only
+                String curr = OVData.getDefaultCurrency();
+                String basecurr = curr;
+
+
+        String pmcode = "";
+        String tranhisttype = "";
+        String expire = ""; // should be blank for component issues
+
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try{
+
+            /* lets get the 'wip' acct and cc from product line info for the item */
+            res = st.executeQuery("select pl_wip, pl_line, it_code " +
+                   " from item_mstr " +
+                   " inner join pl_mstr on pl_line = it_prodline " +
+                   " where it_item = " + "'" + part.toString() + "'" + ";");
+             while (res.next()) {
+               par_acct_dr = res.getString("pl_wip");
+               par_cc_dr = res.getString("pl_line"); 
+               pmcode = res.getString("it_code");
+             }
+            /*  NOTE:  we will be debiting the backflushed part WIP account and
+            crediting the component Inventory account  */
+
+
+           if (pmcode.equalsIgnoreCase("P")) {
+                res = st.executeQuery("select  itc_total, pl_scrap, pl_line, pl_inventory " +
+                   " from item_mstr  " + 
+                   " inner join pl_mstr on pl_line = it_prodline " +
+                   " inner join item_cost on itc_item = it_item and itc_set = 'standard' where it_item = " + "'" + part.toString() + "'" + ";"
+                    );
                 while (res.next()) {
-                   myops.add(res.getString("wf_op"));
+                acct_cr.add(res.getString("pl_inventory"));
+                acct_dr.add(res.getString("pl_scrap"));
+                cc_cr.add(res.getString("pl_line"));
+                cc_dr.add(res.getString("pl_line"));
+                cost.add((res.getDouble("itc_total") * qty));
+                site.add(thissite);
+                ref.add(thisref);
+                type.add(thistype);
+                desc.add(thisdesc);
                 }
                 res.close();
-                
-                for ( String myvalue : myops) {
-                    wip_iss_mtl_gl_unreported(part, myvalue, csite, qty, date, cref, ctype, cdesc, serial, userid, program);
+                // now process into GL
+                  for (int j = 0; j < acct_cr.size(); j++) {
+                  fglData.glEntry(acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), date, bsParseDouble(cost.get(j).toString()), bsParseDouble(cost.get(j).toString()), curr, basecurr, ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString());  
                 }
-                
-               } // if pmcode "M"
+           } else {
+           res = st.executeQuery("select ps_child, ps_qty_per, it_loc, it_wh, itc_total, pl_inventory, pl_line " +
+                   " from pbm_mstr inner join item_mstr on it_item = ps_child " + 
+                   " inner join pl_mstr on pl_line = it_prodline " +
+                   " inner join item_cost on itc_item = ps_child and itc_set = 'standard' where ps_parent = " + "'" + part.toString() + "'" +
+                   " AND ps_op = " + "'" + op + "'" );
+           while (res.next()) {
+               acct_cr.add(res.getString("pl_inventory"));
+                acct_dr.add(par_acct_dr);
+                cc_cr.add(res.getString("pl_line"));
+                cc_dr.add(par_cc_dr);
+                cost.add((res.getDouble("ps_qty_per") * res.getDouble("itc_total") * qty));
+                site.add(thissite);
+                ref.add(thisref);
+                type.add("ISS-SUB");
+                desc.add(thisdesc);
+                child.add(res.getString("ps_child"));
+                loc.add(res.getString("it_loc"));
+                wh.add(res.getString("it_wh"));
+                qtyper.add(res.getDouble("ps_qty_per"));
+
+        //       Date effdate, String part, int qty, String type, double price, double cost, String site, 
+       //   String loc, String cust, String nbr, String order, int line, String po, String terms, String lot, String rmks, 
+      //    String ref, String acct, String cc, String jobnbr, String serial, String program, String userid
+
            }
-            catch (SQLException s){
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Cannot process wip_iss_mtl_gl");
+           res.close();
+
+           for (int j = 0; j < acct_cr.size(); j++) {
+
+               // now process to GL
+               fglData.glEntry(acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), date, bsParseDouble(cost.get(j).toString()), bsParseDouble(cost.get(j).toString()), curr, basecurr, ref.get(j).toString(), site.get(j).toString(), "ISS-WIP", desc.get(j).toString());  
+
+               // process tran_hist
+               if (ctype.equals("ISS-SCRAP")) {
+                   tranhisttype = "ISS-WIP";
+               } else {
+                   tranhisttype = ctype;
+               }
+               OVData.TRHistIssDiscrete(BlueSeerUtils.mysqlDateFormat.parse(date), child.get(j).toString(), (-1 * qty), op, tranhisttype, 0, 0, csite, 
+                       loc.get(j).toString(), wh.get(j).toString(), expire, "", "", part + ":" + op, 0, "", "", "", cref, "", "", "", "", serial, program, userid);
+
+               // update inventory
+               OVData.UpdateInventoryDiscrete(child.get(j).toString(), csite, loc.get(j).toString(), wh.get(j).toString(), "", "", bsParseDouble(qtyper.get(j).toString()) * qty * -1);    
+
+
+
+           }
+
+            /* now lets go get all the unreport operations back to the last reported op 
+              exclusive of the last reported op */
+
+            ArrayList<String> myops = new ArrayList<String>();
+
+
+           res = st.executeQuery("select wf_op " +
+                   " from wf_mstr inner join item_mstr on wf_id = it_wf " + 
+                   " where it_item = " + "'" + part.toString() + "'" +
+                   " AND wf_op < " + "'" + op + "'" + " AND " +
+                   " wf_assert = 0 order by wf_op desc ");
+            while (res.next()) {
+               myops.add(res.getString("wf_op"));
             }
-            con.close();
+            res.close();
+
+            for ( String myvalue : myops) {
+                wip_iss_mtl_gl_unreported(part, myvalue, csite, qty, date, cref, ctype, cdesc, serial, userid, program);
+            }
+
+           } // if pmcode "M"
+       }
+        catch (SQLException s){
+            MainFrame.bslog(s);
+            bsmf.MainFrame.show("Cannot process wip_iss_mtl_gl");
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
         }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        
-        
     }
-                    
-       public static void wip_iss_mtl_gl_unreported(String part, String op, String csite, Double qty, String date, String cref, String ctype, String cdesc, String serial, String userid, String program) {
-       
-       
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+
+
+    }
+
+    public static void wip_iss_mtl_gl_unreported(String part, String op, String csite, Double qty, String date, String cref, String ctype, String cdesc, String serial, String userid, String program) {
+
+
+    try{
+
+
+
+                ArrayList acct_cr = new ArrayList();
+                ArrayList ref =  new ArrayList();
+                ArrayList desc =   new ArrayList();
+                ArrayList type =   new ArrayList();
+                ArrayList cc_cr =   new ArrayList();
+                ArrayList acct_dr =   new ArrayList();
+                ArrayList cc_dr =   new ArrayList();
+                ArrayList site =   new ArrayList();
+                ArrayList cost =  new ArrayList();   
+                ArrayList child = new ArrayList();
+                ArrayList loc = new ArrayList();
+                ArrayList wh = new ArrayList();
+                ArrayList qtyper = new ArrayList();
+
+                String thistype = ctype;
+                String thisdesc = cdesc;  
+                String thissite = csite;
+                String thisref = cref;
+
+                String par_acct_dr = "";
+                String par_cc_dr = "";
+
+                //inventory transactions....base currency only
+                String curr = OVData.getDefaultCurrency();
+                String basecurr = curr;
+
+        String expire = "";  //should be "" for components
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
         try{
-            
-            
-            
-                    ArrayList acct_cr = new ArrayList();
-                    ArrayList ref =  new ArrayList();
-                    ArrayList desc =   new ArrayList();
-                    ArrayList type =   new ArrayList();
-                    ArrayList cc_cr =   new ArrayList();
-                    ArrayList acct_dr =   new ArrayList();
-                    ArrayList cc_dr =   new ArrayList();
-                    ArrayList site =   new ArrayList();
-                    ArrayList cost =  new ArrayList();   
-                    ArrayList child = new ArrayList();
-                    ArrayList loc = new ArrayList();
-                    ArrayList wh = new ArrayList();
-                    ArrayList qtyper = new ArrayList();
-                   
-                    String thistype = ctype;
-                    String thisdesc = cdesc;  
-                    String thissite = csite;
-                    String thisref = cref;
-            
-                    String par_acct_dr = "";
-                    String par_cc_dr = "";
-                    
-                    //inventory transactions....base currency only
-                    String curr = OVData.getDefaultCurrency();
-                    String basecurr = curr;
-            
-            String expire = "";  //should be "" for components
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-               
-                /* lets get the 'wip' acct and cc from product line info for the item */
-                res = st.executeQuery("select pl_wip, pl_line " +
-                       " from item_mstr " +
-                       " inner join pl_mstr on pl_line = it_prodline " +
-                       " where it_item = " + "'" + part.toString() + "'" + ";");
-                 while (res.next()) {
-                     par_acct_dr = res.getString("pl_wip");
-                     par_cc_dr = res.getString("pl_line");
-                 }
-                /*  NOTE:  we will be debiting the backflushed part WIP account and
-                crediting the component Inventory account  */
-            
-               /* now lets get the components of this item and write cost to GL */
-               res = st.executeQuery("select ps_child, it_loc, it_wh, ps_qty_per, itc_total, pl_inventory, pl_line " +
-                       " from pbm_mstr inner join item_mstr on it_item = ps_child " + 
-                       " inner join pl_mstr on pl_line = it_prodline " +
-                       " inner join item_cost on itc_item = ps_child and itc_set = 'standard' where ps_parent = " + "'" + part.toString() + "'" +
-                       " AND ps_op = " + "'" + op + "'" );
-               while (res.next()) {
-                   acct_cr.add(res.getString("pl_inventory"));
-                   cc_cr.add(res.getString("pl_line"));
-                    acct_dr.add(par_acct_dr);
-                    cc_dr.add(par_cc_dr);
-                   cost.add((res.getDouble("ps_qty_per") * res.getDouble("itc_total") * qty));
-                   site.add(thissite);
-                    ref.add(thisref);
-                    type.add(thistype);
-                    desc.add(thisdesc);
-                    child.add(res.getString("ps_child"));
-                    loc.add(res.getString("it_loc"));
-                    wh.add(res.getString("it_wh"));
-                    qtyper.add(res.getDouble("ps_qty_per"));
-                }
-               
-              
-                for (int j = 0; j < acct_cr.size(); j++) {
-                   
-                    // process GL transactions
-                    fglData.glEntry(acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), date, bsParseDouble(cost.get(j).toString()), bsParseDouble(cost.get(j).toString()), curr, basecurr, ref.get(j).toString(), site.get(j).toString(), "ISS-WIP", desc.get(j).toString());  
-                   
-                   // process tran_hist
-                   OVData.TRHistIssDiscrete(BlueSeerUtils.mysqlDateFormat.parse(date), child.get(j).toString(), (-1 * qty), op, "ISS-WIP", 0, 0, csite, 
-                           loc.get(j).toString(), wh.get(j).toString(), expire, "", "", part + ":" + op, 0, "", "", "", cref, "", "", "", "", serial, program, userid);
-                   
-                   // update inventory
-                   OVData.UpdateInventoryDiscrete(child.get(j).toString(), csite, loc.get(j).toString(), wh.get(j).toString(), "", "", bsParseDouble(qtyper.get(j).toString()) * qty * -1);    
-                }
-                
-                
-               
-           }
-            catch (SQLException s){
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("Cannot process " + "wip_iss_mtl_gl_unreported");
+
+            /* lets get the 'wip' acct and cc from product line info for the item */
+            res = st.executeQuery("select pl_wip, pl_line " +
+                   " from item_mstr " +
+                   " inner join pl_mstr on pl_line = it_prodline " +
+                   " where it_item = " + "'" + part.toString() + "'" + ";");
+             while (res.next()) {
+                 par_acct_dr = res.getString("pl_wip");
+                 par_cc_dr = res.getString("pl_line");
+             }
+            /*  NOTE:  we will be debiting the backflushed part WIP account and
+            crediting the component Inventory account  */
+
+           /* now lets get the components of this item and write cost to GL */
+           res = st.executeQuery("select ps_child, it_loc, it_wh, ps_qty_per, itc_total, pl_inventory, pl_line " +
+                   " from pbm_mstr inner join item_mstr on it_item = ps_child " + 
+                   " inner join pl_mstr on pl_line = it_prodline " +
+                   " inner join item_cost on itc_item = ps_child and itc_set = 'standard' where ps_parent = " + "'" + part.toString() + "'" +
+                   " AND ps_op = " + "'" + op + "'" );
+           while (res.next()) {
+               acct_cr.add(res.getString("pl_inventory"));
+               cc_cr.add(res.getString("pl_line"));
+                acct_dr.add(par_acct_dr);
+                cc_dr.add(par_cc_dr);
+               cost.add((res.getDouble("ps_qty_per") * res.getDouble("itc_total") * qty));
+               site.add(thissite);
+                ref.add(thisref);
+                type.add(thistype);
+                desc.add(thisdesc);
+                child.add(res.getString("ps_child"));
+                loc.add(res.getString("it_loc"));
+                wh.add(res.getString("it_wh"));
+                qtyper.add(res.getDouble("ps_qty_per"));
             }
-            con.close();
+
+
+            for (int j = 0; j < acct_cr.size(); j++) {
+
+                // process GL transactions
+                fglData.glEntry(acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), date, bsParseDouble(cost.get(j).toString()), bsParseDouble(cost.get(j).toString()), curr, basecurr, ref.get(j).toString(), site.get(j).toString(), "ISS-WIP", desc.get(j).toString());  
+
+               // process tran_hist
+               OVData.TRHistIssDiscrete(BlueSeerUtils.mysqlDateFormat.parse(date), child.get(j).toString(), (-1 * qty), op, "ISS-WIP", 0, 0, csite, 
+                       loc.get(j).toString(), wh.get(j).toString(), expire, "", "", part + ":" + op, 0, "", "", "", cref, "", "", "", "", serial, program, userid);
+
+               // update inventory
+               OVData.UpdateInventoryDiscrete(child.get(j).toString(), csite, loc.get(j).toString(), wh.get(j).toString(), "", "", bsParseDouble(qtyper.get(j).toString()) * qty * -1);    
+            }
+
+
+
+       }
+        catch (SQLException s){
+            MainFrame.bslog(s);
+            bsmf.MainFrame.show("Cannot process " + "wip_iss_mtl_gl_unreported");
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
         }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        
-        
     }
-        
-       public static void wip_iss_op_cost_gl(String part, String cop, String site, Double qty, String date, String ref, String type, String desc) {
-       
-       ArrayList myarray = new ArrayList();
-       double cost = 0.00;
-       double actcost = 0.00;
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+
+
+    }
+
+    public static void wip_iss_op_cost_gl(String part, String cop, String site, Double qty, String date, String ref, String type, String desc) {
+
+    ArrayList myarray = new ArrayList();
+    double cost = 0.00;
+    double actcost = 0.00;
+    try{
+        String acct_cr = "";
+        String cc_cr = "";
+        String acct_dr = "";
+        String cc_dr = "";
+
+        String lbracct = "";
+        String bdnacct = "";
+        String lbrvaracct = "";
+        String bdnvaracct = "";
+        String cc = "";
+
+        //inventory transactions....base currency only
+                String curr = OVData.getDefaultCurrency();
+                String basecurr = curr;
+
+
+        boolean isReportable = false;
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
         try{
-            String acct_cr = "";
-            String cc_cr = "";
-            String acct_dr = "";
-            String cc_dr = "";
-            
-            String lbracct = "";
-            String bdnacct = "";
-            String lbrvaracct = "";
-            String bdnvaracct = "";
-            String cc = "";
-            
-            //inventory transactions....base currency only
-                    String curr = OVData.getDefaultCurrency();
-                    String basecurr = curr;
-            
-            
-            boolean isReportable = false;
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-               
-                /* lets check if this is a reportable operation */
-                 /* lets get the 'wip' acct and cc from product line info for the item */
-                
-                res = st.executeQuery("select wf_assert " +
-                       " from wf_mstr " +
-                       " inner join item_mstr on it_wf = wf_id " +
-                       " where it_item = " + "'" + part.toString() + "'" + ";");
-                 while (res.next()) {
-                   if (res.getBoolean("wf_assert")) {
-                       isReportable = true;
-                   }
-                 }
-                
-                /* lets get the 'wip' acct and cc from product line info for the item */
-                res = st.executeQuery("select pl_wip, pl_line " +
-                       " from item_mstr " +
-                       " inner join pl_mstr on pl_line = it_prodline " +
-                       " where it_item = " + "'" + part.toString() + "'" + ";");
-                 while (res.next()) {
-                   acct_dr = res.getString("pl_wip");
-                   cc_dr = res.getString("pl_line"); 
-                 }
-                /*  NOTE:  we will be debiting the backflushed part WIP account and
-                crediting the lbr and bdn accounts of the dept where the operation at hand occured */
-              
-               res = st.executeQuery("select wc_cc, dept_lbr_acct, dept_bdn_acct, dept_lbr_usg_acct, dept_bdn_usg_acct " +
-                       " from item_mstr inner join wf_mstr on it_wf = wf_id " + 
-                       " inner join wc_mstr on wc_cell = wf_cell " +
-                       " inner join dept_mstr on dept_id = wc_cc " +
-                       " where it_item = " + "'" + part.toString() + "'" +
-                       " AND wf_op = " + "'" + cop + "'" );
-               while (res.next()) {
-                   lbracct = res.getString("dept_lbr_acct");
-                   bdnacct = res.getString("dept_bdn_acct");
-                   lbrvaracct = res.getString("dept_lbr_usg_acct");
-                   bdnvaracct = res.getString("dept_bdn_usg_acct");
-                   cc = res.getString("wc_cc");
-                }
-               res.close();
-               /* Lets do Labor */
-              actcost = (getLaborWithOutSetup(part, cop) * qty);  // used to use actual cost
-              cost = invData.getItemLbrCost(part, cop, site, "standard") * qty;  // let's use standard cost to hit the GL
-                                         
-               acct_cr = lbracct;
-               cc_cr = cc;
-               desc = part + " - lbr op " + cop;
-             //  bsmf.MainFrame.show(desc + "/" + String.valueOf(cost) + "/" + String.valueOf(actcost));
-               fglData.glEntry(acct_cr, cc_cr, acct_dr, cc_dr, date, cost, cost, curr, basecurr, ref, site, type, desc);  // post lbr entry
-               fglData.glEntry(lbrvaracct, cc_cr, acct_dr, cc_dr, date, (cost - actcost), (cost - actcost), curr, basecurr, ref, site, type, desc);  // post lbr variance entry
-               /* Lets do Burden */
-               actcost = (getBurdenWithOutSetup(part, cop) * qty);
-               cost = invData.getItemBdnCost(part, cop, site, "standard") * qty;  // let's use standard cost to hit the GL
-               acct_cr = bdnacct;
-               cc_cr = cc;
-               desc = part + " - bdn op " + cop;
-               fglData.glEntry(acct_cr, cc_cr, acct_dr, cc_dr, date, cost, cost, curr, basecurr, ref, site, type, desc); // post bdn entry
-               fglData.glEntry(bdnvaracct, cc_cr, acct_dr, cc_dr, date, (cost - actcost), (cost - actcost), curr, basecurr, ref, site, type, desc); // post bdn variance entry
-               
-           
-               
-               
-               
-               /* now lets go get all the unreport operations back to the last reported op 
-                  exclusive of the last reported op */
-                ArrayList op = new ArrayList();
-               
-               res = st.executeQuery("select wf_op " +
-                       " from wf_mstr inner join item_mstr on wf_id = it_wf " + 
-                       " where it_item = " + "'" + part.toString() + "'" +
-                       " AND wf_op < " + "'" + cop + "'" + " AND " +
-                       " wf_assert = 0 order by wf_op desc ");
-                while (res.next()) {
-                    op.add(res.getString("wf_op"));
-                }
-               
-                 for (int j = 0; j < op.size(); j++) {
-                     wip_iss_op_cost_gl_unreported(part, op.get(j).toString(), site, qty, date, ref, type, desc);
-                 }
-                
-                
-           }
-            catch (SQLException s){
-                MainFrame.bslog(s);
-                 bsmf.MainFrame.show("Cannot process wip_iss_op_cost_gl");
+
+            /* lets check if this is a reportable operation */
+             /* lets get the 'wip' acct and cc from product line info for the item */
+
+            res = st.executeQuery("select wf_assert " +
+                   " from wf_mstr " +
+                   " inner join item_mstr on it_wf = wf_id " +
+                   " where it_item = " + "'" + part.toString() + "'" + ";");
+             while (res.next()) {
+               if (res.getBoolean("wf_assert")) {
+                   isReportable = true;
+               }
+             }
+
+            /* lets get the 'wip' acct and cc from product line info for the item */
+            res = st.executeQuery("select pl_wip, pl_line " +
+                   " from item_mstr " +
+                   " inner join pl_mstr on pl_line = it_prodline " +
+                   " where it_item = " + "'" + part.toString() + "'" + ";");
+             while (res.next()) {
+               acct_dr = res.getString("pl_wip");
+               cc_dr = res.getString("pl_line"); 
+             }
+            /*  NOTE:  we will be debiting the backflushed part WIP account and
+            crediting the lbr and bdn accounts of the dept where the operation at hand occured */
+
+           res = st.executeQuery("select wc_cc, dept_lbr_acct, dept_bdn_acct, dept_lbr_usg_acct, dept_bdn_usg_acct " +
+                   " from item_mstr inner join wf_mstr on it_wf = wf_id " + 
+                   " inner join wc_mstr on wc_cell = wf_cell " +
+                   " inner join dept_mstr on dept_id = wc_cc " +
+                   " where it_item = " + "'" + part.toString() + "'" +
+                   " AND wf_op = " + "'" + cop + "'" );
+           while (res.next()) {
+               lbracct = res.getString("dept_lbr_acct");
+               bdnacct = res.getString("dept_bdn_acct");
+               lbrvaracct = res.getString("dept_lbr_usg_acct");
+               bdnvaracct = res.getString("dept_bdn_usg_acct");
+               cc = res.getString("wc_cc");
             }
-            con.close();
+           res.close();
+           /* Lets do Labor */
+          actcost = (getLaborWithOutSetup(part, cop) * qty);  // used to use actual cost
+          cost = invData.getItemLbrCost(part, cop, site, "standard") * qty;  // let's use standard cost to hit the GL
+
+           acct_cr = lbracct;
+           cc_cr = cc;
+           desc = part + " - lbr op " + cop;
+         //  bsmf.MainFrame.show(desc + "/" + String.valueOf(cost) + "/" + String.valueOf(actcost));
+           fglData.glEntry(acct_cr, cc_cr, acct_dr, cc_dr, date, cost, cost, curr, basecurr, ref, site, type, desc);  // post lbr entry
+           fglData.glEntry(lbrvaracct, cc_cr, acct_dr, cc_dr, date, (cost - actcost), (cost - actcost), curr, basecurr, ref, site, type, desc);  // post lbr variance entry
+           /* Lets do Burden */
+           actcost = (getBurdenWithOutSetup(part, cop) * qty);
+           cost = invData.getItemBdnCost(part, cop, site, "standard") * qty;  // let's use standard cost to hit the GL
+           acct_cr = bdnacct;
+           cc_cr = cc;
+           desc = part + " - bdn op " + cop;
+           fglData.glEntry(acct_cr, cc_cr, acct_dr, cc_dr, date, cost, cost, curr, basecurr, ref, site, type, desc); // post bdn entry
+           fglData.glEntry(bdnvaracct, cc_cr, acct_dr, cc_dr, date, (cost - actcost), (cost - actcost), curr, basecurr, ref, site, type, desc); // post bdn variance entry
+
+
+
+
+
+           /* now lets go get all the unreport operations back to the last reported op 
+              exclusive of the last reported op */
+            ArrayList op = new ArrayList();
+
+           res = st.executeQuery("select wf_op " +
+                   " from wf_mstr inner join item_mstr on wf_id = it_wf " + 
+                   " where it_item = " + "'" + part.toString() + "'" +
+                   " AND wf_op < " + "'" + cop + "'" + " AND " +
+                   " wf_assert = 0 order by wf_op desc ");
+            while (res.next()) {
+                op.add(res.getString("wf_op"));
+            }
+
+             for (int j = 0; j < op.size(); j++) {
+                 wip_iss_op_cost_gl_unreported(part, op.get(j).toString(), site, qty, date, ref, type, desc);
+             }
+
+
+       }
+        catch (SQLException s){
+            MainFrame.bslog(s);
+             bsmf.MainFrame.show("Cannot process wip_iss_op_cost_gl");
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
         }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        
-        
     }
-       
-       public static void wip_iss_op_cost_gl_unreported(String part, String op, String csite, Double qty, String date, String cref, String ctype, String cdesc) {
-       
-       
-       
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+
+
+    }
+
+    public static void wip_iss_op_cost_gl_unreported(String part, String op, String csite, Double qty, String date, String cref, String ctype, String cdesc) {
+    try{
+                ArrayList acct_cr_lbr = new ArrayList();
+                ArrayList acct_cr_lbrvar = new ArrayList();
+                ArrayList acct_cr_bdn = new ArrayList();
+                ArrayList acct_cr_bdnvar = new ArrayList();
+                ArrayList ref =  new ArrayList();
+                ArrayList desc_lbr =   new ArrayList();
+                ArrayList desc_bdn =   new ArrayList();
+                ArrayList type =   new ArrayList();
+                ArrayList cc_cr =   new ArrayList();
+                ArrayList acct_dr =   new ArrayList();
+                ArrayList cc_dr =   new ArrayList();
+                ArrayList site =   new ArrayList();
+                ArrayList cost_lbr =  new ArrayList(); 
+                ArrayList cost_bdn =  new ArrayList();
+                ArrayList actcost_lbr =  new ArrayList(); 
+                ArrayList actcost_bdn =  new ArrayList();
+                ArrayList child = new ArrayList();
+                ArrayList loc = new ArrayList();
+                ArrayList qtyper = new ArrayList();
+
+                String thistype = ctype;
+                String thisdesc = cdesc;  
+                String thissite = csite;
+                String thisref = cref;
+
+                String par_acct_dr = "";
+                String par_cc_dr = "";
+
+
+                 //inventory transactions....base currency only
+                String curr = OVData.getDefaultCurrency();
+                String basecurr = curr;
+
+
+        boolean isReportable = false;
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
         try{
-            
-                    
-                    ArrayList acct_cr_lbr = new ArrayList();
-                    ArrayList acct_cr_lbrvar = new ArrayList();
-                    ArrayList acct_cr_bdn = new ArrayList();
-                    ArrayList acct_cr_bdnvar = new ArrayList();
-                    ArrayList ref =  new ArrayList();
-                    ArrayList desc_lbr =   new ArrayList();
-                    ArrayList desc_bdn =   new ArrayList();
-                    ArrayList type =   new ArrayList();
-                    ArrayList cc_cr =   new ArrayList();
-                    ArrayList acct_dr =   new ArrayList();
-                    ArrayList cc_dr =   new ArrayList();
-                    ArrayList site =   new ArrayList();
-                    ArrayList cost_lbr =  new ArrayList(); 
-                    ArrayList cost_bdn =  new ArrayList();
-                    ArrayList actcost_lbr =  new ArrayList(); 
-                    ArrayList actcost_bdn =  new ArrayList();
-                    ArrayList child = new ArrayList();
-                    ArrayList loc = new ArrayList();
-                    ArrayList qtyper = new ArrayList();
-                   
-                    String thistype = ctype;
-                    String thisdesc = cdesc;  
-                    String thissite = csite;
-                    String thisref = cref;
-            
-                    String par_acct_dr = "";
-                    String par_cc_dr = "";
-            
-                    
-                     //inventory transactions....base currency only
-                    String curr = OVData.getDefaultCurrency();
-                    String basecurr = curr;
-            
-            
-            boolean isReportable = false;
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-               
-                /* lets check if this is a reportable operation */
-                 /* lets get the 'wip' acct and cc from product line info for the item */
-                
-                res = st.executeQuery("select wf_assert " +
-                       " from wf_mstr " +
-                       " inner join item_mstr on it_wf = wf_id " +
-                       " where it_item = " + "'" + part.toString() + "'" + ";");
-                 while (res.next()) {
-                   if (res.getBoolean("wf_assert")) {
-                       isReportable = true;
-                   }
-                 }
-                
-                /* lets get the 'wip' acct and cc from product line info for the item */
-                res = st.executeQuery("select pl_wip, pl_line " +
-                       " from item_mstr " +
-                       " inner join pl_mstr on pl_line = it_prodline " +
-                       " where it_item = " + "'" + part.toString() + "'" + ";");
-                 while (res.next()) {
-                   par_acct_dr = res.getString("pl_wip");
-                   par_cc_dr = res.getString("pl_line"); 
-                 }
-                /*  NOTE:  we will be debiting the backflushed part WIP account and
-                crediting the lbr and bdn accounts of the dept where the operation at hand occured */
-               /* Lets do Labor */
-               res = st.executeQuery("select wc_cc, dept_lbr_acct, dept_bdn_acct, dept_lbr_usg_acct, dept_bdn_usg_acct " +
-                       " from item_mstr inner join wf_mstr on it_wf = wf_id " + 
-                       " inner join wc_mstr on wc_cell = wf_cell " +
-                       " inner join dept_mstr on dept_id = wc_cc " +
-                       " where it_item = " + "'" + part.toString() + "'" +
-                       " AND wf_op = " + "'" + op + "'" );
-               while (res.next()) {
-                    
-                    acct_cr_lbr.add(res.getString("dept_lbr_acct"));
-                    acct_cr_bdn.add(res.getString("dept_bdn_acct"));
-                    acct_cr_lbrvar.add(res.getString("dept_lbr_usg_acct"));
-                    acct_cr_bdnvar.add(res.getString("dept_bdn_usg_acct"));
-                   cc_cr.add(res.getString("wc_cc"));
-                    acct_dr.add(par_acct_dr);
-                    cc_dr.add(par_cc_dr);
-                  actcost_lbr.add(getLaborWithOutSetup(part, op) * qty);
-                  cost_lbr.add(invData.getItemLbrCost(part, op, thissite, "standard") * qty);
-                  actcost_bdn.add(getBurdenWithOutSetup(part, op) * qty);
-                  cost_bdn.add(invData.getItemBdnCost(part, op, thissite, "standard") * qty); 
-                 site.add(thissite);
-                    ref.add(thisref);
-                    type.add(thistype);
-                    desc_lbr.add(part + " - lbr op " + op);
-                    desc_bdn.add(part + " - bdn op " + op);
-                   // child.add(res.getString("ps_child"));
-                  //  loc.add(res.getString("it_loc"));
-                //   qtyper.add(res.getDouble("ps_qty_per"));
-                   
-                }
-              
-                for (int j = 0; j < acct_cr_lbr.size(); j++) {
-                   
-                    /* Lets do Labor */
-                    fglData.glEntry(acct_cr_lbr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), date, bsParseDouble(cost_lbr.get(j).toString()), bsParseDouble(cost_lbr.get(j).toString()), curr, basecurr, ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc_lbr.get(j).toString());  
-                    fglData.glEntry(acct_cr_lbrvar.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), date, (bsParseDouble(cost_lbr.get(j).toString()) - bsParseDouble(actcost_lbr.get(j).toString())), (bsParseDouble(cost_lbr.get(j).toString()) - bsParseDouble(actcost_lbr.get(j).toString())), curr, basecurr, ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc_lbr.get(j).toString());  
-                
-                    /* Lets do Burden */
-                    fglData.glEntry(acct_cr_bdn.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), date, bsParseDouble(cost_bdn.get(j).toString()), bsParseDouble(cost_bdn.get(j).toString()), curr, basecurr, ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc_bdn.get(j).toString());  
-                    fglData.glEntry(acct_cr_bdnvar.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), date, (bsParseDouble(cost_bdn.get(j).toString()) - bsParseDouble(actcost_bdn.get(j).toString())), (bsParseDouble(cost_bdn.get(j).toString()) - bsParseDouble(actcost_bdn.get(j).toString())), curr, basecurr, ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc_bdn.get(j).toString());  
-                
-                
-                }
-               
-               
-               
-               
-           }
-            catch (SQLException s){
-                MainFrame.bslog(s);
-                 bsmf.MainFrame.show("cannot process wip_iss_op_cost_gl_unreported");
+
+            /* lets check if this is a reportable operation */
+             /* lets get the 'wip' acct and cc from product line info for the item */
+
+            res = st.executeQuery("select wf_assert " +
+                   " from wf_mstr " +
+                   " inner join item_mstr on it_wf = wf_id " +
+                   " where it_item = " + "'" + part.toString() + "'" + ";");
+             while (res.next()) {
+               if (res.getBoolean("wf_assert")) {
+                   isReportable = true;
+               }
+             }
+
+            /* lets get the 'wip' acct and cc from product line info for the item */
+            res = st.executeQuery("select pl_wip, pl_line " +
+                   " from item_mstr " +
+                   " inner join pl_mstr on pl_line = it_prodline " +
+                   " where it_item = " + "'" + part.toString() + "'" + ";");
+             while (res.next()) {
+               par_acct_dr = res.getString("pl_wip");
+               par_cc_dr = res.getString("pl_line"); 
+             }
+            /*  NOTE:  we will be debiting the backflushed part WIP account and
+            crediting the lbr and bdn accounts of the dept where the operation at hand occured */
+           /* Lets do Labor */
+           res = st.executeQuery("select wc_cc, dept_lbr_acct, dept_bdn_acct, dept_lbr_usg_acct, dept_bdn_usg_acct " +
+                   " from item_mstr inner join wf_mstr on it_wf = wf_id " + 
+                   " inner join wc_mstr on wc_cell = wf_cell " +
+                   " inner join dept_mstr on dept_id = wc_cc " +
+                   " where it_item = " + "'" + part.toString() + "'" +
+                   " AND wf_op = " + "'" + op + "'" );
+           while (res.next()) {
+
+                acct_cr_lbr.add(res.getString("dept_lbr_acct"));
+                acct_cr_bdn.add(res.getString("dept_bdn_acct"));
+                acct_cr_lbrvar.add(res.getString("dept_lbr_usg_acct"));
+                acct_cr_bdnvar.add(res.getString("dept_bdn_usg_acct"));
+               cc_cr.add(res.getString("wc_cc"));
+                acct_dr.add(par_acct_dr);
+                cc_dr.add(par_cc_dr);
+              actcost_lbr.add(getLaborWithOutSetup(part, op) * qty);
+              cost_lbr.add(invData.getItemLbrCost(part, op, thissite, "standard") * qty);
+              actcost_bdn.add(getBurdenWithOutSetup(part, op) * qty);
+              cost_bdn.add(invData.getItemBdnCost(part, op, thissite, "standard") * qty); 
+             site.add(thissite);
+                ref.add(thisref);
+                type.add(thistype);
+                desc_lbr.add(part + " - lbr op " + op);
+                desc_bdn.add(part + " - bdn op " + op);
+               // child.add(res.getString("ps_child"));
+              //  loc.add(res.getString("it_loc"));
+            //   qtyper.add(res.getDouble("ps_qty_per"));
+
             }
-            con.close();
+
+            for (int j = 0; j < acct_cr_lbr.size(); j++) {
+
+                /* Lets do Labor */
+                fglData.glEntry(acct_cr_lbr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), date, bsParseDouble(cost_lbr.get(j).toString()), bsParseDouble(cost_lbr.get(j).toString()), curr, basecurr, ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc_lbr.get(j).toString());  
+                fglData.glEntry(acct_cr_lbrvar.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), date, (bsParseDouble(cost_lbr.get(j).toString()) - bsParseDouble(actcost_lbr.get(j).toString())), (bsParseDouble(cost_lbr.get(j).toString()) - bsParseDouble(actcost_lbr.get(j).toString())), curr, basecurr, ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc_lbr.get(j).toString());  
+
+                /* Lets do Burden */
+                fglData.glEntry(acct_cr_bdn.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), date, bsParseDouble(cost_bdn.get(j).toString()), bsParseDouble(cost_bdn.get(j).toString()), curr, basecurr, ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc_bdn.get(j).toString());  
+                fglData.glEntry(acct_cr_bdnvar.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), date, (bsParseDouble(cost_bdn.get(j).toString()) - bsParseDouble(actcost_bdn.get(j).toString())), (bsParseDouble(cost_bdn.get(j).toString()) - bsParseDouble(actcost_bdn.get(j).toString())), curr, basecurr, ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc_bdn.get(j).toString());  
+
+
+            }
+
+
+
+
+       }
+        catch (SQLException s){
+            MainFrame.bslog(s);
+             bsmf.MainFrame.show("cannot process wip_iss_op_cost_gl_unreported");
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
         }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        
-        
     }
-       
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    }
+
+
     
+     /* stop here */
     
-      public static ArrayList getCodeMstr(String type) {
+    public static ArrayList getCodeMstr(String type) {
        ArrayList myarray = new ArrayList();
         try{
             
@@ -5300,7 +5398,7 @@ public class OVData {
         
     }
      
-      public static ArrayList getCodeMstrKeyList(String code) {
+    public static ArrayList getCodeMstrKeyList(String code) {
        ArrayList myarray = new ArrayList();
         try{
             
@@ -5329,10 +5427,10 @@ public class OVData {
         
     }
       
-      public static ArrayList getPriceGroupList() {
+    public static ArrayList getPriceGroupList() {
        ArrayList myarray = new ArrayList();
         try{
-            
+
             Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
@@ -5341,9 +5439,9 @@ public class OVData {
                 res = st.executeQuery("select code_key from code_mstr where code_code = " + "'PRICEGROUP'" + " order by code_key ;");
                while (res.next()) {
                     myarray.add(res.getString("code_key"));
-                    
+
                 }
-               
+
            }
             catch (SQLException s){
                  JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get PriceGroupList from Code Mstr");
@@ -5354,13 +5452,13 @@ public class OVData {
             MainFrame.bslog(e);
         }
         return myarray;
-        
+
     }
-      
-      public static String getPriceGroupCodeFromCust(String custcode) {
+
+    public static String getPriceGroupCodeFromCust(String custcode) {
        String myreturn = "";
         try{
-            
+
             Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
@@ -5370,7 +5468,7 @@ public class OVData {
                while (res.next()) {
                     myreturn = res.getString("cm_price_code");
                 }
-               
+
            }
             catch (SQLException s){
                  bsmf.MainFrame.show("SQL cannot get Price Code from Cust Mstr");
@@ -5381,13 +5479,13 @@ public class OVData {
             MainFrame.bslog(e);
         }
         return myreturn;
-        
+
     }
-      
-      public static String getPriceGroupCodeFromVend(String vend) {
+
+    public static String getPriceGroupCodeFromVend(String vend) {
        String myreturn = "";
         try{
-            
+
             Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
@@ -5397,7 +5495,7 @@ public class OVData {
                while (res.next()) {
                     myreturn = res.getString("vd_price_code");
                 }
-               
+
            }
             catch (SQLException s){
                  bsmf.MainFrame.show("SQL cannot get Price Code from Vend Mstr");
@@ -5408,9 +5506,9 @@ public class OVData {
             MainFrame.bslog(e);
         }
         return myreturn;
-        
+
     }
-       
+
     public static ArrayList<String[]> getCodeAndValueMstr(String code) {
        ArrayList<String[]> myarray = new ArrayList<String[]>();
         try{
@@ -5507,72 +5605,37 @@ public class OVData {
         
     }
     
-    
-        public static ArrayList getCodeAndDescMstrOrderByDesc(String type) {
-       ArrayList<String[]> myarray = new ArrayList();
-       
-        try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+    public static ArrayList getCodeAndDescMstrOrderByDesc(String type) {
+   ArrayList<String[]> myarray = new ArrayList();
 
-                res = st.executeQuery("select code_key, code_value from code_mstr " +
-                        " where code_code = " + "'" + type + "'" + 
-                        " order by cast(code_key as decimal) ;");
-               while (res.next()) {
-                    myarray.add(new String[]{res.getString("code_key"), res.getString("code_value")});
-                    
-                }
-               
-           }
-            catch (SQLException s){
-                 JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Code Mstr");
+    try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select code_key, code_value from code_mstr " +
+                    " where code_code = " + "'" + type + "'" + 
+                    " order by cast(code_key as decimal) ;");
+           while (res.next()) {
+                myarray.add(new String[]{res.getString("code_key"), res.getString("code_value")});
+
             }
-            con.close();
+
+       }
+        catch (SQLException s){
+             JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Code Mstr");
         }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myarray;
-        
+        con.close();
     }
-      
-      
-       public static String getVendPartFromPart(String vend, String part) {
-       String mystring = "";
-        try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myarray;
 
-                res = st.executeQuery("select vdp_vitem from vdp_mstr where vdp_vend = " + "'" + vend + "'" + 
-                                      " AND vdp_item = " + "'" + part + "'" + ";");
-               while (res.next()) {
-                   mystring = res.getString("vdp_vitem");
-                    
-                }
-               
-           }
-            catch (SQLException s){
-                  MainFrame.bslog(s);
-                bsmf.MainFrame.show("Cannot retrieve vdp_mstr");
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return mystring;
-        
-    }        
-        
-         
-    
-         
+}
+
     
     public static Boolean isValidCustPriceRecordExists(String entity, String part, String uom, String curr) {
        
@@ -5622,8 +5685,7 @@ public class OVData {
         
     }
     
-    
-     public static Boolean isValidVendPriceRecordExists(String entity, String part, String uom, String curr) {
+    public static Boolean isValidVendPriceRecordExists(String entity, String part, String uom, String curr) {
        
        // type is either 'c' for customer price or 'v' for vendor price      
              
@@ -5671,10 +5733,7 @@ public class OVData {
         
     }
     
-    
-    
-      
-           public static Double getNetPriceFromListAndDisc(Double listprice, Double discount) {
+    public static Double getNetPriceFromListAndDisc(Double listprice, Double discount) {
                Double netprice = 0.00;
                
                 if (discount != 0)
@@ -5740,7 +5799,6 @@ public class OVData {
         return mystring;
         
     }
-         
     
     public static String getCodeValueByCodeKey(String code, String key) {
        String mystring = "";
@@ -5772,175 +5830,169 @@ public class OVData {
         return mystring;
         
     }
-        
-          
-         
-            public static String getSystemImageDirectory() {
-         String myreturn = "";
-         try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+     
+    public static String getSystemImageDirectory() {
+ String myreturn = "";
+ try{
 
-                res = st.executeQuery("select ov_image_directory from ov_ctrl;" );
-               while (res.next()) {
-                myreturn = res.getString("ov_image_directory");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
+    Connection con = DriverManager.getConnection(url + db, user, pass);
+    try{
+        Statement st = con.createStatement();
+        ResultSet res = null;
+
+        res = st.executeQuery("select ov_image_directory from ov_ctrl;" );
+       while (res.next()) {
+        myreturn = res.getString("ov_image_directory");                    
         }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myreturn;
-        
+
+   }
+    catch (SQLException s){
+         MainFrame.bslog(s);
     }
-           
-             public static String getSystemTempDirectory() {
-         String myreturn = "";
-         try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+    con.close();
+}
+catch (Exception e){
+    MainFrame.bslog(e);
+}
+return myreturn;
 
-                res = st.executeQuery("select ov_temp_directory from ov_ctrl;" );
-               while (res.next()) {
-                myreturn = res.getString("ov_temp_directory");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
+}
+
+    public static String getSystemTempDirectory() {
+ String myreturn = "";
+ try{
+
+    Connection con = DriverManager.getConnection(url + db, user, pass);
+    try{
+        Statement st = con.createStatement();
+        ResultSet res = null;
+
+        res = st.executeQuery("select ov_temp_directory from ov_ctrl;" );
+       while (res.next()) {
+        myreturn = res.getString("ov_temp_directory");                    
         }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myreturn;
-        
+
+   }
+    catch (SQLException s){
+         MainFrame.bslog(s);
     }
-             public static String getSystemLabelDirectory() {
-         String myreturn = "";
-         try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+    con.close();
+}
+catch (Exception e){
+    MainFrame.bslog(e);
+}
+return myreturn;
 
-                res = st.executeQuery("select ov_label_directory from ov_ctrl;" );
-               while (res.next()) {
-                myreturn = res.getString("ov_label_directory");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
+}
+    
+    public static String getSystemLabelDirectory() {
+ String myreturn = "";
+ try{
+
+    Connection con = DriverManager.getConnection(url + db, user, pass);
+    try{
+        Statement st = con.createStatement();
+        ResultSet res = null;
+
+        res = st.executeQuery("select ov_label_directory from ov_ctrl;" );
+       while (res.next()) {
+        myreturn = res.getString("ov_label_directory");                    
         }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myreturn;
-        
+
+   }
+    catch (SQLException s){
+         MainFrame.bslog(s);
     }
-             public static String getSystemJasperDirectory() {
-         String myreturn = "";
-         try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+    con.close();
+}
+catch (Exception e){
+    MainFrame.bslog(e);
+}
+return myreturn;
 
-                res = st.executeQuery("select ov_jasper_directory from ov_ctrl;" );
-               while (res.next()) {
-                myreturn = res.getString("ov_jasper_directory");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
+}
+    
+    public static String getSystemJasperDirectory() {
+ String myreturn = "";
+ try{
+
+    Connection con = DriverManager.getConnection(url + db, user, pass);
+    try{
+        Statement st = con.createStatement();
+        ResultSet res = null;
+
+        res = st.executeQuery("select ov_jasper_directory from ov_ctrl;" );
+       while (res.next()) {
+        myreturn = res.getString("ov_jasper_directory");                    
         }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myreturn;
-        
+
+   }
+    catch (SQLException s){
+         MainFrame.bslog(s);
     }
-             public static String getSystemEDIDirectory() {
-         String myreturn = "";
-         try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+    con.close();
+}
+catch (Exception e){
+    MainFrame.bslog(e);
+}
+return myreturn;
 
-                res = st.executeQuery("select ov_edi_directory from ov_ctrl;" );
-               while (res.next()) {
-                myreturn = res.getString("ov_edi_directory");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
+}
+    
+    public static String getSystemEDIDirectory() {
+ String myreturn = "";
+ try{
+
+    Connection con = DriverManager.getConnection(url + db, user, pass);
+    try{
+        Statement st = con.createStatement();
+        ResultSet res = null;
+
+        res = st.executeQuery("select ov_edi_directory from ov_ctrl;" );
+       while (res.next()) {
+        myreturn = res.getString("ov_edi_directory");                    
         }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myreturn;
-        
+
+   }
+    catch (SQLException s){
+         MainFrame.bslog(s);
     }
-             public static String getSystemFileServerType() {
-         String myreturn = "";
-         try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+    con.close();
+}
+catch (Exception e){
+    MainFrame.bslog(e);
+}
+return myreturn;
 
-                res = st.executeQuery("select ov_fileservertype from ov_ctrl;" );
-               while (res.next()) {
-                myreturn = res.getString("ov_fileservertype");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
+}
+    
+    public static String getSystemFileServerType() {
+ String myreturn = "";
+ try{
+
+    Connection con = DriverManager.getConnection(url + db, user, pass);
+    try{
+        Statement st = con.createStatement();
+        ResultSet res = null;
+
+        res = st.executeQuery("select ov_fileservertype from ov_ctrl;" );
+       while (res.next()) {
+        myreturn = res.getString("ov_fileservertype");                    
         }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myreturn;
-        
-    }   
-                
-                
-           
-           
-           
-            
-         
-            
-           
+
+   }
+    catch (SQLException s){
+         MainFrame.bslog(s);
+    }
+    con.close();
+}
+catch (Exception e){
+    MainFrame.bslog(e);
+}
+return myreturn;
+
+}   
+  
     public static String getDefaultSite() {
            String myitem = null;
          try{
@@ -6021,10 +6073,7 @@ public class OVData {
         return myitem;
         
     }    
-           
-           
-              
-              
+            
     public static String getDefaultSiteName() {
            String myitem = null;
          try{
@@ -6105,8 +6154,7 @@ public class OVData {
         return myitem;
         
     }
-              
-              
+         
     public static String getDefaultARBank() {
            String myitem = null;
          try{
@@ -6187,7 +6235,6 @@ public class OVData {
         return myitem;
         
     }
-    
     
     public static String getDefaultPayLaborAcct() {
            String myitem = null;
@@ -6324,90 +6371,6 @@ public class OVData {
         
     }
       
-    public static String getPayProfileDetAcct(String profile, String line) {
-           String myitem = null;
-         try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select paypd_acct from pay_profdet where paypd_id = " + "'" + line + "'" +
-                        " and paypd_parentcode = " + "'" + profile + "'" + ";" );
-               while (res.next()) {
-                myitem = res.getString("paypd_acct");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myitem;
-        
-    }  
-      
-    public static String getPayProfileDetCC(String profile, String line) {
-           String myitem = null;
-         try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select paypd_cc from pay_profdet where paypd_id = " + "'" + line + "'" +
-                        " and paypd_parentcode = " + "'" + profile + "'" + ";" );
-               while (res.next()) {
-                myitem = res.getString("paypd_cc");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myitem;
-        
-    }  
-          
-      
-    public static String getPayProfileAcctPayTaxCC() {
-           String myitem = null;
-         try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select payc_payrolltax_cc from pay_ctrl;" );
-               while (res.next()) {
-                myitem = res.getString("payc_payrolltax_cc");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myitem;
-        
-    }
-         
     public static String getDefaultSalesAcct() {
            String myitem = null;
          try{
@@ -6515,10 +6478,172 @@ public class OVData {
         return myitem;
         
     }
+         
+    public static String getDefaultARCC() {
+       String myitem = "";
+     try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select arc_default_cc from ar_ctrl;" );
+           while (res.next()) {
+            myitem = res.getString("arc_default_cc");                    
+            }
+
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myitem;
+
+}
+
+    public static String getDefaultSalesCC() {
+       String myitem = "";
+     try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select arc_sales_cc from ar_ctrl;" );
+           while (res.next()) {
+            myitem = res.getString("arc_sales_cc");                    
+            }
+
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myitem;
+
+}
+
+    public static String getDefaultAPBank() {
+       String myitem = "";
+     try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select apc_bank from ap_ctrl;" );
+           while (res.next()) {
+            myitem = res.getString("apc_bank");                    
+            }
+
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myitem;
+
+}
+
+    public static String getDefaultBankAcct(String bank) {
+       String myitem = "";
+     try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select bk_acct from bk_mstr where bk_id = " + "'" + bank + "'" + ";" );
+           while (res.next()) {
+            myitem = res.getString("bk_acct");                    
+            }
+
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myitem;
+
+}     
+
+    public static String getDefaultAPAcct() {
+       String myitem = "";
+     try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select apc_apacct from ap_ctrl;" );
+           while (res.next()) {
+            myitem = res.getString("apc_apacct");                    
+            }
+
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myitem;
+
+}
+
+    public static String getDefaultSiteForUserid(String myuser) {
+       String myitem = null;
+     try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select siteu_site from siteu_mstr where siteu_userid = " + "'" + myuser.toString() + "';" );
+           while (res.next()) {
+            myitem = res.getString("siteu_site");                    
+            }
+
+       }
+        catch (SQLException s){
+             bsmf.MainFrame.show("SQL cannot get site from siteu_mstr");
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myitem;
+
+}
+
+    public static String getDefaultItemImageFile(String item) {
           
-         
-           public static String getVendTerms(String vend) {
-           String myitem = null;
+           String myimage = "";
          try{
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
@@ -6526,402 +6651,10 @@ public class OVData {
                 Statement st = con.createStatement();
                 ResultSet res = null;
 
-                res = st.executeQuery("select vd_terms from vd_mstr where vd_addr = " + "'" + vend + "'" + ";" );
+                res = st.executeQuery("select iti_file from item_image where iti_default = '1' and iti_item = " + "'" + item + "'" + "  ;" );
                while (res.next()) {
-                myitem = res.getString("vd_terms");                    
+                myimage = res.getString("iti_file");                    
                 }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myitem;
-        
-    }
-           
-    public static String getVendName(String vend) {
-           String myitem = null;
-         try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select vd_name from vd_mstr where vd_addr = " + "'" + vend + "'" + ";" );
-               while (res.next()) {
-                myitem = res.getString("vd_name");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myitem;
-        
-    }       
-           
-         
-           public static String getVendAPAcct(String vend) {
-           String myitem = null;
-         try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select vd_ap_acct from vd_mstr where vd_addr = " + "'" + vend + "'" + ";" );
-               while (res.next()) {
-                myitem = res.getString("vd_ap_acct");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myitem;
-        
-    }
-         
-             public static String getVendAPCC(String vend) {
-           String myitem = null;
-         try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select vd_ap_cc from vd_mstr where vd_addr = " + "'" + vend + "'" + ";" );
-               while (res.next()) {
-                myitem = res.getString("vd_ap_cc");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myitem;
-        
-    }
-         
-           
-         
-         
-           public static String getExchangeRate(String base, String foreign) {
-           String myitem = "";
-         try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select exc_rate from exc_mstr where exc_base = " + "'" + base + "'" + 
-                        " and exc_foreign = " + "'" + foreign + "'" + 
-                        ";" );
-               while (res.next()) {
-                myitem = res.getString("exc_rate");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myitem;
-        
-    }
-          
-           public static Double getExchangeBaseValue(String base, String foreign, Double invalue) {
-           Double outvalue = invalue;
-         try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select exc_rate from exc_mstr where exc_base = " + "'" + base + "'" + 
-                        " and exc_foreign = " + "'" + foreign + "'" + 
-                        ";" );
-               while (res.next()) {
-                   if (invalue > 0) {
-                   outvalue = invalue / res.getDouble("exc_rate");            
-                   } 
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return outvalue;
-        
-    }
-           
-                
-         public static String getDefaultARCC() {
-           String myitem = "";
-         try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select arc_default_cc from ar_ctrl;" );
-               while (res.next()) {
-                myitem = res.getString("arc_default_cc");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myitem;
-        
-    }
-         
-          public static String getDefaultSalesCC() {
-           String myitem = "";
-         try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select arc_sales_cc from ar_ctrl;" );
-               while (res.next()) {
-                myitem = res.getString("arc_sales_cc");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myitem;
-        
-    }
-         
-           public static String getVendCurrency(String vend) {
-           String myitem = "";
-         try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select vd_curr from vd_mstr where vd_addr = " + "'" + vend + "'" + ";" );
-               while (res.next()) {
-                myitem = res.getString("vd_curr");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myitem;
-        
-    } 
-          
-         public static String getDefaultAPBank() {
-           String myitem = "";
-         try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select apc_bank from ap_ctrl;" );
-               while (res.next()) {
-                myitem = res.getString("apc_bank");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myitem;
-        
-    }
-        
-         
-        public static String getDefaultBankAcct(String bank) {
-           String myitem = "";
-         try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select bk_acct from bk_mstr where bk_id = " + "'" + bank + "'" + ";" );
-               while (res.next()) {
-                myitem = res.getString("bk_acct");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myitem;
-        
-    }     
-         
-                 public static String getDefaultAPAcct() {
-           String myitem = "";
-         try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select apc_apacct from ap_ctrl;" );
-               while (res.next()) {
-                myitem = res.getString("apc_apacct");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myitem;
-        
-    }
-           
-         public static String getDefaultSiteForUserid(String myuser) {
-           String myitem = null;
-         try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select siteu_site from siteu_mstr where siteu_userid = " + "'" + myuser.toString() + "';" );
-               while (res.next()) {
-                myitem = res.getString("siteu_site");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 bsmf.MainFrame.show("SQL cannot get site from siteu_mstr");
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myitem;
-        
-    }
-         
-        public static String getProdLineFromItem(String mypart) {
-           String myitem = null;
-         try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select it_prodline from item_mstr inner join pl_mstr on pl_line = it_prodline where it_item = " + "'" + mypart.toString() + "';" );
-               while (res.next()) {
-                myitem = res.getString("it_prodline");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 bsmf.MainFrame.show("SQL cannot get prodline from item");
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myitem;
-        
-    }  
-        
-        public static String getUOMFromItemSite(String mypart, String mysite) {
-           String myitem = null;
-         try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select it_uom from item_mstr where it_item = " + "'" + mypart.toString() + "'" +
-                                      " AND it_site = " + "'" + mysite + "'" + ";" ); 
-               while (res.next()) {
-                myitem = res.getString("it_uom");                    
-                }
-               
            }
             catch (SQLException s){
                 MainFrame.bslog(s);
@@ -6931,92 +6664,602 @@ public class OVData {
         catch (Exception e){
             MainFrame.bslog(e);
         }
-        return myitem;
+        return myimage;
         
-    }  
-        
-       public static Boolean isBaseUOMOfItem(String mypart, String mysite, String uom) {
-           boolean isBase = false;
-         try{
+    }
+     
+    public static String getDefaultShipperJasper(String site) {
+       String myitem = "";
+     try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select site_sh_jasper from site_mstr where site_site = " + "'" + site + "';" );
+           while (res.next()) {
+            myitem = res.getString("site_sh_jasper");                    
+            }
+
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myitem;
+
+}    
+
+    public static String getDefaultPOPrintJasper(String site) {
+       String myitem = "";
+     try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select site_po_jasper from site_mstr where site_site = " + "'" + site + "';" );
+           while (res.next()) {
+            myitem = res.getString("site_po_jasper");                    
+            }
+
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myitem; 
+
+}   
+
+    public static String getDefaultInvoiceJasper(String site) {
+       String myitem = "";
+     try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select site_iv_jasper from site_mstr where site_site = " + "'" + site + "';" );
+           while (res.next()) {
+            myitem = res.getString("site_iv_jasper");                    
+            }
+
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myitem;
+
+}      
+
+    public static String getDefaultOrderJasper(String site) {
+       String myitem = "";
+     try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select site_or_jasper from site_mstr where site_site = " + "'" + site + "';" );
+           while (res.next()) {
+            myitem = res.getString("site_or_jasper");                    
+            }
+
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myitem;
+
+}      
+    
+    public static String getDefaultPOSJasper(String site) {
+       String myitem = "";
+     try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select site_pos_jasper from site_mstr where site_site = " + "'" + site + "';" );
+           while (res.next()) {
+            myitem = res.getString("site_pos_jasper");                    
+            }
+
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myitem;
+
+}      
+
+    public static String getDefaultRetainedEarningsAcct() {
+              // function returns a 2 items from the gl_cal record where a period matches
+              // first element = startdate
+              // second element = enddate
+              
+      String account = "";
+        try{
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
 
-                res = st.executeQuery("select it_uom from item_mstr where it_item = " + "'" + mypart.toString() + "'" +
-                                      " AND it_site = " + "'" + mysite + "'" + ";" ); 
+                res = st.executeQuery("select gl_earnings from gl_ctrl;"); 
                while (res.next()) {
-                   if (res.getString("it_uom").toUpperCase().equals(uom.toUpperCase())) {
-                       isBase = true;
-                   }                
-                }
+                       account = res.getString("gl_earnings");
+               }
                
            }
             catch (SQLException s){
-                MainFrame.bslog(s);
+                 MainFrame.bslog(s);
             }
             con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
         }
-        return isBase; 
+        return account;
         
-    }      
-        
-        
-          public static Double getUOMBaseQty(String item, String site, String order_uom, Double order_qty) {
-           Double baseqty = order_qty;  // initialize with inbound qty
-           String baseuom = "";
-         try{
+    }
+      
+    public static String getDefaultForeignCurrRealAcct() {
+              // function returns a 2 items from the gl_cal record where a period matches
+              // first element = startdate
+              // second element = enddate
+              
+      String account = "";
+        try{
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
-                // if order_uom is base qty...then return same...else convert qty to order_uom..assuming a legitimate conversion table entry for both uoms
-                // lets first make sure there's a conversion table entry for the order_uom...if not bail...and return inbound qty
-               
-                res = st.executeQuery("select it_uom from item_mstr where it_item = " + "'" + item + "'" +
-                                      " AND it_site = " + "'" + site + "'" + ";" ); 
+
+                res = st.executeQuery("select gl_foreignreal from gl_ctrl;"); 
                while (res.next()) {
-                baseuom = res.getString("it_uom");                    
-                }
-                int z = 0;
-                if (! baseuom.equals(order_uom)) {
-                    res = st.executeQuery("select conv_id, conv_fromamt, conv_toamt from conv_mstr where " +
-                            " conv_fromcode = " + "'" + baseuom + "'" +
-                            " AND conv_tocode = " + "'" + order_uom + "'" + ";" ); 
-                    while (res.next()) {
-                        z++;
-                        baseqty = order_qty * ( res.getDouble("conv_fromamt") / res.getDouble("conv_toamt"));                    
+                       account = res.getString("gl_foreignreal");
+               }
+               
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            }
+            con.close();
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return account;
+        
+    }
+    
+    public static String getDefaultTaxAcctByType(String type) {
+        String acct = "";
+        String other = "";
+
+        try {
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+                // function will try to assign appropriate tax account.  If fed,state,local are undefined, it will attempt to assign
+                // to 'other'
+                // if 'other' is undefined....it will return a blank.
+                res = st.executeQuery("select * from ar_ctrl;");
+                while (res.next()) {
+                    other = res.getString("arc_othertax_acct");
+
+                    if (type.toUpperCase().equals("FEDERAL") && !res.getString("arc_fedtax_acct").isEmpty()) {
+                        acct = res.getString("arc_fedtax_acct");
                     }
-                        if (z == 0) {
-                            // try reverse
-                            res = st.executeQuery("select conv_id, conv_fromamt, conv_toamt from conv_mstr where " +
-                                " conv_fromcode = " + "'" + order_uom + "'" +
-                                " AND conv_tocode = " + "'" + baseuom + "'" + ";" ); 
-                            while (res.next()) {
-                            baseqty = order_qty * ( res.getDouble("conv_toamt") / res.getDouble("conv_fromamt"));                    
-                            }
-                        }
+                    if (type.toUpperCase().equals("STATE") && !res.getString("arc_statetax_acct").isEmpty()) {
+                        acct = res.getString("arc_statetax_acct");
+                    }
+                    if (type.toUpperCase().equals("LOCAL") && !res.getString("arc_localtax_acct").isEmpty()) {
+                        acct = res.getString("arc_localtax_acct");
+                    }
+                    if (type.toUpperCase().equals("OTHER") && !res.getString("arc_othertax_acct").isEmpty()) {
+                        acct = res.getString("arc_othertax_acct");
+                    }
+                }
+
+                // default to 'other' if no account is defined
+                if (acct.isEmpty()) {
+                    acct = other;
+                }
+
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("SQL cannot get Tax default account info");
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return acct;
+
+    }
+
+    public static String getDefaultTaxCCByType(String type) {
+        String cc = "";
+        String other = "";
+
+        try {
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+                // function will try to assign appropriate tax account.  If fed,state,local are undefined, it will attempt to assign
+                // to 'other'
+                // if 'other' is undefined....it will return a blank.
+                res = st.executeQuery("select * from ar_ctrl;");
+                while (res.next()) {
+                    other = res.getString("arc_othertax_cc");
+
+                    if (type.toUpperCase().equals("FEDERAL") && !res.getString("arc_fedtax_cc").isEmpty()) {
+                        cc = res.getString("arc_fedtax_cc");
+                    }
+                    if (type.toUpperCase().equals("STATE") && !res.getString("arc_statetax_cc").isEmpty()) {
+                        cc = res.getString("arc_statetax_cc");
+                    }
+                    if (type.toUpperCase().equals("LOCAL") && !res.getString("arc_localtax_cc").isEmpty()) {
+                        cc = res.getString("arc_localtax_cc");
+                    }
+                    if (type.toUpperCase().equals("OTHER") && !res.getString("arc_othertax_cc").isEmpty()) {
+                        cc = res.getString("arc_othertax_cc");
+                    }
+                }
+
+                // default to 'other' if no account is defined
+                if (cc.isEmpty()) {
+                    cc = other;
+                }
+
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show("SQL cannot get Tax default CC info");
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return cc;
+
+    }
+ 
+    public static String getPayProfileDetAcct(String profile, String line) {
+           String myitem = null;
+         try{
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+                res = st.executeQuery("select paypd_acct from pay_profdet where paypd_id = " + "'" + line + "'" +
+                        " and paypd_parentcode = " + "'" + profile + "'" + ";" );
+               while (res.next()) {
+                myitem = res.getString("paypd_acct");                    
                 }
                
            }
             catch (SQLException s){
-                MainFrame.bslog(s);
+                 MainFrame.bslog(s);
             }
             con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
         }
-        return baseqty;
+        return myitem;
         
     }  
+      
+    public static String getPayProfileDetCC(String profile, String line) {
+           String myitem = null;
+         try{
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+                res = st.executeQuery("select paypd_cc from pay_profdet where paypd_id = " + "'" + line + "'" +
+                        " and paypd_parentcode = " + "'" + profile + "'" + ";" );
+               while (res.next()) {
+                myitem = res.getString("paypd_cc");                    
+                }
+               
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            }
+            con.close();
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return myitem;
         
-          
+    }  
+    
+    public static String getPayProfileAcctPayTaxCC() {
+           String myitem = null;
+         try{
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+                res = st.executeQuery("select payc_payrolltax_cc from pay_ctrl;" );
+               while (res.next()) {
+                myitem = res.getString("payc_payrolltax_cc");                    
+                }
+               
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            }
+            con.close();
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return myitem;
+        
+    }
+    
+    
+    public static String getExchangeRate(String base, String foreign) {
+   String myitem = "";
+ try{
+
+    Connection con = DriverManager.getConnection(url + db, user, pass);
+    try{
+        Statement st = con.createStatement();
+        ResultSet res = null;
+
+        res = st.executeQuery("select exc_rate from exc_mstr where exc_base = " + "'" + base + "'" + 
+                " and exc_foreign = " + "'" + foreign + "'" + 
+                ";" );
+       while (res.next()) {
+        myitem = res.getString("exc_rate");                    
+        }
+
+   }
+    catch (SQLException s){
+         MainFrame.bslog(s);
+    }
+    con.close();
+}
+catch (Exception e){
+    MainFrame.bslog(e);
+}
+return myitem;
+
+}
+
+    public static Double getExchangeBaseValue(String base, String foreign, Double invalue) {
+   Double outvalue = invalue;
+ try{
+
+    Connection con = DriverManager.getConnection(url + db, user, pass);
+    try{
+        Statement st = con.createStatement();
+        ResultSet res = null;
+
+        res = st.executeQuery("select exc_rate from exc_mstr where exc_base = " + "'" + base + "'" + 
+                " and exc_foreign = " + "'" + foreign + "'" + 
+                ";" );
+       while (res.next()) {
+           if (invalue > 0) {
+           outvalue = invalue / res.getDouble("exc_rate");            
+           } 
+        }
+
+   }
+    catch (SQLException s){
+         MainFrame.bslog(s);
+    }
+    con.close();
+}
+catch (Exception e){
+    MainFrame.bslog(e);
+}
+return outvalue;
+
+}
+
+    public static String getProdLineFromItem(String mypart) {
+       String myitem = null;
+     try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select it_prodline from item_mstr inner join pl_mstr on pl_line = it_prodline where it_item = " + "'" + mypart.toString() + "';" );
+           while (res.next()) {
+            myitem = res.getString("it_prodline");                    
+            }
+
+       }
+        catch (SQLException s){
+             bsmf.MainFrame.show("SQL cannot get prodline from item");
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myitem;
+
+}  
+
+    public static String getUOMFromItemSite(String mypart, String mysite) {
+       String myitem = null;
+     try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select it_uom from item_mstr where it_item = " + "'" + mypart.toString() + "'" +
+                                  " AND it_site = " + "'" + mysite + "'" + ";" ); 
+           while (res.next()) {
+            myitem = res.getString("it_uom");                    
+            }
+
+       }
+        catch (SQLException s){
+            MainFrame.bslog(s);
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myitem;
+
+}  
+
+    public static Boolean isBaseUOMOfItem(String mypart, String mysite, String uom) {
+       boolean isBase = false;
+     try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select it_uom from item_mstr where it_item = " + "'" + mypart.toString() + "'" +
+                                  " AND it_site = " + "'" + mysite + "'" + ";" ); 
+           while (res.next()) {
+               if (res.getString("it_uom").toUpperCase().equals(uom.toUpperCase())) {
+                   isBase = true;
+               }                
+            }
+
+       }
+        catch (SQLException s){
+            MainFrame.bslog(s);
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return isBase; 
+
+}      
+
+    public static Double getUOMBaseQty(String item, String site, String order_uom, Double order_qty) {
+       Double baseqty = order_qty;  // initialize with inbound qty
+       String baseuom = "";
+     try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            // if order_uom is base qty...then return same...else convert qty to order_uom..assuming a legitimate conversion table entry for both uoms
+            // lets first make sure there's a conversion table entry for the order_uom...if not bail...and return inbound qty
+
+            res = st.executeQuery("select it_uom from item_mstr where it_item = " + "'" + item + "'" +
+                                  " AND it_site = " + "'" + site + "'" + ";" ); 
+           while (res.next()) {
+            baseuom = res.getString("it_uom");                    
+            }
+            int z = 0;
+            if (! baseuom.equals(order_uom)) {
+                res = st.executeQuery("select conv_id, conv_fromamt, conv_toamt from conv_mstr where " +
+                        " conv_fromcode = " + "'" + baseuom + "'" +
+                        " AND conv_tocode = " + "'" + order_uom + "'" + ";" ); 
+                while (res.next()) {
+                    z++;
+                    baseqty = order_qty * ( res.getDouble("conv_fromamt") / res.getDouble("conv_toamt"));                    
+                }
+                    if (z == 0) {
+                        // try reverse
+                        res = st.executeQuery("select conv_id, conv_fromamt, conv_toamt from conv_mstr where " +
+                            " conv_fromcode = " + "'" + order_uom + "'" +
+                            " AND conv_tocode = " + "'" + baseuom + "'" + ";" ); 
+                        while (res.next()) {
+                        baseqty = order_qty * ( res.getDouble("conv_toamt") / res.getDouble("conv_fromamt"));                    
+                        }
+                    }
+            }
+
+       }
+        catch (SQLException s){
+            MainFrame.bslog(s);
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return baseqty;
+
+}  
+      
     public static Boolean isValidUOMConversion(String item, String site, String order_uom) {
            boolean isValid = false;
            String baseuom = "";
@@ -7068,7 +7311,6 @@ public class OVData {
         return isValid;
         
     }        
-          
         
     public static String getProdLineInvAcct(String prodline) {
            String myitem = null;
@@ -7220,7 +7462,6 @@ public class OVData {
         
     }
     
-    
     public static ArrayList getWorkCellList() {
            ArrayList myarray = new ArrayList();
          try{
@@ -7276,8 +7517,7 @@ public class OVData {
         return myarray;
         
     }
-    
-            
+          
     public static ArrayList getSiteList() {
            ArrayList myarray = new ArrayList();
          try{
@@ -7361,215 +7601,213 @@ public class OVData {
         
     }
            
-           
-       public static String getLocationByPart(String part) {
-          String myloc = "";
-         try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+    public static String getLocationByPart(String part) {
+      String myloc = "";
+     try{
 
-                res = st.executeQuery("select it_loc from item_mstr where it_item = " + "'" + part + "'" + ";" );
-               while (res.next()) {
-                myloc = res.getString("it_loc");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myloc;
-        
-    }
-       
-         public static String[] getTopLocationAndWHByQTY(String part, String site) {
-          String[] myloc = new String[2];
-         try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
 
-                // first get the default wh and loc for this item and site in case below optimum item and site return nothing.
-                 res = st.executeQuery("select it_loc, it_wh from item_mstr where it_item = " + "'" + part + "'" + 
-                        " AND it_site = " + "'" + site + "'" +
-                        " ;" );
-               while (res.next()) {
-                myloc[0] = res.getString("it_wh");  
-                myloc[1] = res.getString("it_loc");
-                }
-                
-                // now overwrite with optimum wh and loc with highest qoh
-                res = st.executeQuery("select in_loc, in_wh from in_mstr where in_part = " + "'" + part + "'" + 
-                        " AND in_site = " + "'" + site + "'" +
-                        " order by in_qoh desc limit 1;" );
-               while (res.next()) {
-                myloc[0] = res.getString("in_wh");  
-                myloc[1] = res.getString("in_loc");
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
+            res = st.executeQuery("select it_loc from item_mstr where it_item = " + "'" + part + "'" + ";" );
+           while (res.next()) {
+            myloc = res.getString("it_loc");                    
             }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myloc;
-        
-    }
-       
-        public static Double getTopQtyLocationByPart(String part, String site) {
-          Double qty = 0.00;
-         try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
 
-                res = st.executeQuery("select in_qoh from in_mstr where in_part = " + "'" + part + "'" + 
-                        " AND in_site = " + "'" + site + "'" +
-                        " order by in_qoh desc limit 1;" );
-               while (res.next()) {
-                qty = res.getDouble("in_qoh");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
         }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return qty;
+        con.close();
     }
-       
-       
-        public static String getUOMByPart(String part) {
-          String myuom = "";
-         try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myloc;
 
-                res = st.executeQuery("select it_uom from item_mstr where it_item = " + "'" + part + "'" + ";" );
-               while (res.next()) {
-                myuom = res.getString("it_uom");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myuom;
-        
-    }
-          
-       public static String getWarehouseByPart(String part) {
-          String myloc = "";
-         try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+}
 
-                res = st.executeQuery("select it_wh from item_mstr where it_item = " + "'" + part + "'" + ";" );
-               while (res.next()) {
-                myloc = res.getString("it_wh");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myloc;
-        
-    }
-       
-       public static ArrayList getLocationList() {
-           ArrayList myarray = new ArrayList();
-         try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+    public static String[] getTopLocationAndWHByQTY(String part, String site) {
+      String[] myloc = new String[2];
+     try{
 
-                res = st.executeQuery("select loc_loc from loc_mstr order by loc_loc;" );
-               while (res.next()) {
-                myarray.add(res.getString("loc_loc"));                    
-                }
-               
-           }
-            catch (SQLException s){
-                MainFrame.bslog(s);
-                 bsmf.MainFrame.show("SQL cannot get location list");
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myarray;
-        
-    }
-       
-        public static ArrayList getLocationListByWarehouse(String wh) {
-           ArrayList myarray = new ArrayList();
-         try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
 
-                res = st.executeQuery("select loc_loc from loc_mstr  " + 
-                        "where loc_wh = " + "'" + wh + "'" +
-                        " order by loc_loc ;" );
-               while (res.next()) {
-                myarray.add(res.getString("loc_loc"));                    
-                }
-               
-           }
-            catch (SQLException s){
-                MainFrame.bslog(s);
-                 bsmf.MainFrame.show("SQL cannot get location list by warehouse");
+            // first get the default wh and loc for this item and site in case below optimum item and site return nothing.
+             res = st.executeQuery("select it_loc, it_wh from item_mstr where it_item = " + "'" + part + "'" + 
+                    " AND it_site = " + "'" + site + "'" +
+                    " ;" );
+           while (res.next()) {
+            myloc[0] = res.getString("it_wh");  
+            myloc[1] = res.getString("it_loc");
             }
-            con.close();
+
+            // now overwrite with optimum wh and loc with highest qoh
+            res = st.executeQuery("select in_loc, in_wh from in_mstr where in_part = " + "'" + part + "'" + 
+                    " AND in_site = " + "'" + site + "'" +
+                    " order by in_qoh desc limit 1;" );
+           while (res.next()) {
+            myloc[0] = res.getString("in_wh");  
+            myloc[1] = res.getString("in_loc");
+            }
+
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
         }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myarray;
-        
+        con.close();
     }
-       
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myloc;
+
+}
+
+    public static Double getTopQtyLocationByPart(String part, String site) {
+      Double qty = 0.00;
+     try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select in_qoh from in_mstr where in_part = " + "'" + part + "'" + 
+                    " AND in_site = " + "'" + site + "'" +
+                    " order by in_qoh desc limit 1;" );
+           while (res.next()) {
+            qty = res.getDouble("in_qoh");                    
+            }
+
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return qty;
+}
+
+    public static String getUOMByPart(String part) {
+      String myuom = "";
+     try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select it_uom from item_mstr where it_item = " + "'" + part + "'" + ";" );
+           while (res.next()) {
+            myuom = res.getString("it_uom");                    
+            }
+
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myuom;
+
+}
+
+    public static String getWarehouseByPart(String part) {
+      String myloc = "";
+     try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select it_wh from item_mstr where it_item = " + "'" + part + "'" + ";" );
+           while (res.next()) {
+            myloc = res.getString("it_wh");                    
+            }
+
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myloc;
+
+}
+
+    public static ArrayList getLocationList() {
+       ArrayList myarray = new ArrayList();
+     try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select loc_loc from loc_mstr order by loc_loc;" );
+           while (res.next()) {
+            myarray.add(res.getString("loc_loc"));                    
+            }
+
+       }
+        catch (SQLException s){
+            MainFrame.bslog(s);
+             bsmf.MainFrame.show("SQL cannot get location list");
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myarray;
+
+}
+
+    public static ArrayList getLocationListByWarehouse(String wh) {
+       ArrayList myarray = new ArrayList();
+     try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select loc_loc from loc_mstr  " + 
+                    "where loc_wh = " + "'" + wh + "'" +
+                    " order by loc_loc ;" );
+           while (res.next()) {
+            myarray.add(res.getString("loc_loc"));                    
+            }
+
+       }
+        catch (SQLException s){
+            MainFrame.bslog(s);
+             bsmf.MainFrame.show("SQL cannot get location list by warehouse");
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myarray;
+
+}
+
     public static ArrayList getWareHouseList() {
            ArrayList myarray = new ArrayList();
          try{
@@ -7636,8 +7874,6 @@ public class OVData {
         
          }    
     
-    
-    
     public static ArrayList getProdCodeList() {
            ArrayList myarray = new ArrayList();
          try{
@@ -7664,458 +7900,285 @@ public class OVData {
         return myarray;
         
     }
-       
-       
-       
-       
-         public static String getDefaultItemImageFile(String item) {
-          
-           String myimage = "";
-         try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+      
+    public static String getPMCodeByPart(String mypart) {
+       String myitem = "";
+     try{
 
-                res = st.executeQuery("select iti_file from item_image where iti_default = '1' and iti_item = " + "'" + item + "'" + "  ;" );
-               while (res.next()) {
-                myimage = res.getString("iti_file");                    
-                }
-           }
-            catch (SQLException s){
-                MainFrame.bslog(s);
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select it_code from item_mstr where it_item = " + "'" + mypart.toString() + "';" );
+           while (res.next()) {
+            myitem = (res.getString("it_code"));                    
             }
-            con.close();
+
+       }
+        catch (SQLException s){
+             bsmf.MainFrame.show("SQL cannot get pm code from item");
         }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myimage;
-        
+        con.close();
     }
-        
-        
-        public static String getPMCodeByPart(String mypart) {
-           String myitem = "";
-         try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select it_code from item_mstr where it_item = " + "'" + mypart.toString() + "';" );
-               while (res.next()) {
-                myitem = (res.getString("it_code"));                    
-                }
-               
-           }
-            catch (SQLException s){
-                 bsmf.MainFrame.show("SQL cannot get pm code from item");
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myitem;
-        
+    catch (Exception e){
+        MainFrame.bslog(e);
     }
-        
-            public static String getBankCodeOfCust(String cust) {
-           String myitem = "";
-         try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+    return myitem;
 
-                res = st.executeQuery("select cm_bank from cm_mstr where cm_code = " + "'" + cust + "';" );
-               while (res.next()) {
-                myitem = res.getString("cm_bank");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
+}
+
+    public static String getBankCodeOfCust(String cust) {
+   String myitem = "";
+ try{
+
+    Connection con = DriverManager.getConnection(url + db, user, pass);
+    try{
+        Statement st = con.createStatement();
+        ResultSet res = null;
+
+        res = st.executeQuery("select cm_bank from cm_mstr where cm_code = " + "'" + cust + "';" );
+       while (res.next()) {
+        myitem = res.getString("cm_bank");                    
         }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myitem;
-        
+
+   }
+    catch (SQLException s){
+         MainFrame.bslog(s);
     }
-        
-            public static String getPOSBank() {
-                String bank = "";
-                 try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+    con.close();
+}
+catch (Exception e){
+    MainFrame.bslog(e);
+}
+return myitem;
 
-                res = st.executeQuery("select posc_bank from pos_ctrl;" );
-               while (res.next()) {
-                bank = res.getString("posc_bank");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-                return bank;
-            }
-            
-           
-             
-              public static Integer getGLTranCount() {
-           int mycount = 0;
+}
+
+    public static String getPOSBank() {
+        String bank = "";
          try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
 
-                res = st.executeQuery("select count(*) as mycount from gl_tran;" );
-               while (res.next()) {
-                mycount = res.getInt("mycount");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
+    Connection con = DriverManager.getConnection(url + db, user, pass);
+    try{
+        Statement st = con.createStatement();
+        ResultSet res = null;
+
+        res = st.executeQuery("select posc_bank from pos_ctrl;" );
+       while (res.next()) {
+        bank = res.getString("posc_bank");                    
         }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return mycount;
-        
+
+   }
+    catch (SQLException s){
+         MainFrame.bslog(s);
     }
-              
-              
-               
-        public static String[] getBillToAddressArray(String cust) {
-            String[] address = new String[9];
-             try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+    con.close();
+}
+catch (Exception e){
+    MainFrame.bslog(e);
+}
+        return bank;
+    }
 
-                res = st.executeQuery("select cm_aliascode, cm_name, cm_line1, cm_line2, cm_line3, cm_city, cm_state, cm_zip, cm_country from cm_mstr where cm_code = " + "'" + cust + "';" );
-               while (res.next()) {
-                address[0] = res.getString("cm_aliascode"); 
-                address[1] = res.getString("cm_name");
-                address[2] = res.getString("cm_line1"); 
-                address[3] = res.getString("cm_line2");
-                address[4] = res.getString("cm_line3");
-                address[5] = res.getString("cm_city"); 
-                address[6] = res.getString("cm_state"); 
-                address[7] = res.getString("cm_zip"); 
-                address[8] = res.getString("cm_country"); 
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-          con.close();  
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-            return address;
-        }       
-          
-         public static String[] getShipToAddressArray(String cust, String ship) {
-            String[] address = new String[9];
-             try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+    public static Integer getGLTranCount() {
+   int mycount = 0;
+ try{
 
-                res = st.executeQuery("select cms_plantcode, cms_name, cms_line1, cms_line2, cms_line3, cms_city, cms_state, cms_zip, cms_country from cms_det where cms_code = " + "'" + cust + "'" +
-                                     " AND cms_shipto = " + "'" + ship + "'" +
-                                     ";" );
-               while (res.next()) {
-                address[0] = res.getString("cms_plantcode"); 
-                address[1] = res.getString("cms_name");
-                address[2] = res.getString("cms_line1"); 
-                address[3] = res.getString("cms_line2");
-                address[4] = res.getString("cms_line3");
-                address[5] = res.getString("cms_city"); 
-                address[6] = res.getString("cms_state"); 
-                address[7] = res.getString("cms_zip"); 
-                address[8] = res.getString("cms_country"); 
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-          con.close();  
+    Connection con = DriverManager.getConnection(url + db, user, pass);
+    try{
+        Statement st = con.createStatement();
+        ResultSet res = null;
+
+        res = st.executeQuery("select count(*) as mycount from gl_tran;" );
+       while (res.next()) {
+        mycount = res.getInt("mycount");                    
         }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-            
-            return address;
-        }  
+
+   }
+    catch (SQLException s){
+         MainFrame.bslog(s);
+    }
+    con.close();
+}
+catch (Exception e){
+    MainFrame.bslog(e);
+}
+return mycount;
+
+}
          
-          public static String[] getWarehouseAddressArray(String site, String wh) {
-            String[] address = new String[9];
-             try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select wh_id, wh_name, wh_line1, wh_line2, wh_line3, wh_city, wh_state, wh_zip, wh_country from wh_mstr where wh_site = " + "'" + site + 
-                                     " AND wh_id = " + "'" + wh + "'" +
-                                     "';" );
-               while (res.next()) {
-                address[0] = res.getString("wh_id"); 
-                address[1] = res.getString("wh_name");
-                address[2] = res.getString("wh_line1"); 
-                address[3] = res.getString("wh_line2");
-                address[4] = res.getString("wh_line3");
-                address[5] = res.getString("wh_city"); 
-                address[6] = res.getString("wh_state"); 
-                address[7] = res.getString("wh_zip"); 
-                address[8] = res.getString("wh_country"); 
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-          con.close();  
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-            
-            return address;
-        }  
-         
-           public static String[] getSiteAddressArray(String site) {
-           String[] address = new String[9];
-             try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select site_site, site_desc, site_line1, site_line2, site_line3, site_city, site_state, site_zip, site_country from site_mstr where site_site = " + "'" + site + 
-                                      "';" );
-               while (res.next()) {
-                address[0] = res.getString("site_site"); 
-                address[1] = res.getString("site_desc");
-                address[2] = res.getString("site_line1"); 
-                address[3] = res.getString("site_line2");
-                address[4] = res.getString("site_line3");
-                address[5] = res.getString("site_city"); 
-                address[6] = res.getString("site_state"); 
-                address[7] = res.getString("site_zip"); 
-                address[8] = res.getString("site_country"); 
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-          con.close();  
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-            
-            return address;
-        }  
-        
-         public static String getDefaultShipperJasper(String site) {
-           String myitem = "";
+    public static String[] getBillToAddressArray(String cust) {
+        String[] address = new String[9];
          try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
 
-                res = st.executeQuery("select site_sh_jasper from site_mstr where site_site = " + "'" + site + "';" );
-               while (res.next()) {
-                myitem = res.getString("site_sh_jasper");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myitem;
-        
-    }    
-         
-           public static String getDefaultPOPrintJasper(String site) {
-           String myitem = "";
-         try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
 
-                res = st.executeQuery("select site_po_jasper from site_mstr where site_site = " + "'" + site + "';" );
-               while (res.next()) {
-                myitem = res.getString("site_po_jasper");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
+            res = st.executeQuery("select cm_aliascode, cm_name, cm_line1, cm_line2, cm_line3, cm_city, cm_state, cm_zip, cm_country from cm_mstr where cm_code = " + "'" + cust + "';" );
+           while (res.next()) {
+            address[0] = res.getString("cm_aliascode"); 
+            address[1] = res.getString("cm_name");
+            address[2] = res.getString("cm_line1"); 
+            address[3] = res.getString("cm_line2");
+            address[4] = res.getString("cm_line3");
+            address[5] = res.getString("cm_city"); 
+            address[6] = res.getString("cm_state"); 
+            address[7] = res.getString("cm_zip"); 
+            address[8] = res.getString("cm_country"); 
             }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myitem; 
-        
-    }   
-         
-          public static String getDefaultInvoiceJasper(String site) {
-           String myitem = "";
-         try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
 
-                res = st.executeQuery("select site_iv_jasper from site_mstr where site_site = " + "'" + site + "';" );
-               while (res.next()) {
-                myitem = res.getString("site_iv_jasper");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
         }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myitem;
-        
-    }      
-          
-           public static String getDefaultOrderJasper(String site) {
-           String myitem = "";
-         try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select site_or_jasper from site_mstr where site_site = " + "'" + site + "';" );
-               while (res.next()) {
-                myitem = res.getString("site_or_jasper");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myitem;
-        
-    }      
-          
-          
-             public static String getDefaultPOSJasper(String site) {
-           String myitem = "";
-         try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select site_pos_jasper from site_mstr where site_site = " + "'" + site + "';" );
-               while (res.next()) {
-                myitem = res.getString("site_pos_jasper");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myitem;
-        
-    }      
-          
-         public static String getSiteLogo(String site) {
-           String myitem = "";
-         try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select site_logo from site_mstr where site_site = " + "'" + site + "';" );
-               while (res.next()) {
-                myitem = res.getString("site_logo");                    
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-           con.close(); 
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myitem;
-        
+      con.close();  
     }
-       
- 
-              
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+        return address;
+    }       
+
+    public static String[] getShipToAddressArray(String cust, String ship) {
+        String[] address = new String[9];
+         try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select cms_plantcode, cms_name, cms_line1, cms_line2, cms_line3, cms_city, cms_state, cms_zip, cms_country from cms_det where cms_code = " + "'" + cust + "'" +
+                                 " AND cms_shipto = " + "'" + ship + "'" +
+                                 ";" );
+           while (res.next()) {
+            address[0] = res.getString("cms_plantcode"); 
+            address[1] = res.getString("cms_name");
+            address[2] = res.getString("cms_line1"); 
+            address[3] = res.getString("cms_line2");
+            address[4] = res.getString("cms_line3");
+            address[5] = res.getString("cms_city"); 
+            address[6] = res.getString("cms_state"); 
+            address[7] = res.getString("cms_zip"); 
+            address[8] = res.getString("cms_country"); 
+            }
+
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        }
+      con.close();  
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+
+        return address;
+    }  
+
+    public static String[] getWarehouseAddressArray(String site, String wh) {
+        String[] address = new String[9];
+         try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select wh_id, wh_name, wh_line1, wh_line2, wh_line3, wh_city, wh_state, wh_zip, wh_country from wh_mstr where wh_site = " + "'" + site + 
+                                 " AND wh_id = " + "'" + wh + "'" +
+                                 "';" );
+           while (res.next()) {
+            address[0] = res.getString("wh_id"); 
+            address[1] = res.getString("wh_name");
+            address[2] = res.getString("wh_line1"); 
+            address[3] = res.getString("wh_line2");
+            address[4] = res.getString("wh_line3");
+            address[5] = res.getString("wh_city"); 
+            address[6] = res.getString("wh_state"); 
+            address[7] = res.getString("wh_zip"); 
+            address[8] = res.getString("wh_country"); 
+            }
+
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        }
+      con.close();  
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+
+        return address;
+    }  
+
+    public static String[] getSiteAddressArray(String site) {
+       String[] address = new String[9];
+         try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select site_site, site_desc, site_line1, site_line2, site_line3, site_city, site_state, site_zip, site_country from site_mstr where site_site = " + "'" + site + 
+                                  "';" );
+           while (res.next()) {
+            address[0] = res.getString("site_site"); 
+            address[1] = res.getString("site_desc");
+            address[2] = res.getString("site_line1"); 
+            address[3] = res.getString("site_line2");
+            address[4] = res.getString("site_line3");
+            address[5] = res.getString("site_city"); 
+            address[6] = res.getString("site_state"); 
+            address[7] = res.getString("site_zip"); 
+            address[8] = res.getString("site_country"); 
+            }
+
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        }
+      con.close();  
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+
+        return address;
+    }  
+
+    public static String getSiteLogo(String site) {
+       String myitem = "";
+     try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select site_logo from site_mstr where site_site = " + "'" + site + "';" );
+           while (res.next()) {
+            myitem = res.getString("site_logo");                    
+            }
+
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        }
+       con.close(); 
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myitem;
+
+}
+
     public static boolean isLastOperation(String item, String op) {
        boolean isLast = false;
        String lastopcheck = "";
@@ -8191,179 +8254,174 @@ public class OVData {
         
     }    
         
-          
-            public static boolean isVendItemOnly() {
-             
-           boolean venditemonly = false;
-            try{
-               
-                Connection con = DriverManager.getConnection(url + db, user, pass);
-                try{
-                    Statement st = con.createStatement();
-                    ResultSet res = null;
+    public static boolean isVendItemOnly() {
 
-                    res = st.executeQuery("select poc_venditem from po_ctrl;");
-                   while (res.next()) {
-                        venditemonly = res.getBoolean("poc_venditem");
-                    }
+   boolean venditemonly = false;
+    try{
 
-               }
-                catch (SQLException s){
-                    MainFrame.bslog(s);
-                }
-                con.close();
-            }
-            catch (Exception e){
-                MainFrame.bslog(e);
-            }
-            return venditemonly;
-        
-    }   
-          
-          
-          
-          public static boolean isCustItemOnly() {
-             
-           boolean custitemonly = false;
-            try{
-               
-                Connection con = DriverManager.getConnection(url + db, user, pass);
-                try{
-                    Statement st = con.createStatement();
-                    ResultSet res = null;
-
-                    res = st.executeQuery("select orc_custitem from order_ctrl;");
-                   while (res.next()) {
-                        custitemonly = res.getBoolean("orc_custitem");
-                    }
-
-               }
-                catch (SQLException s){
-                    MainFrame.bslog(s);
-                }
-                con.close();
-            }
-            catch (Exception e){
-                MainFrame.bslog(e);
-            }
-            return custitemonly;
-        
-    }   
-          
-           public static boolean isSRVMQuoteType() {
-             
-           boolean srvmtype = false;
-            try{
-               
-                Connection con = DriverManager.getConnection(url + db, user, pass);
-                try{
-                    Statement st = con.createStatement();
-                    ResultSet res = null;
-
-                    res = st.executeQuery("select orc_srvm_type from order_ctrl;");
-                   while (res.next()) {
-                        srvmtype = res.getBoolean("orc_srvm_type");
-                    }
-
-               }
-                catch (SQLException s){
-                    MainFrame.bslog(s);
-                }
-                con.close();
-            }
-            catch (Exception e){
-                MainFrame.bslog(e);
-            }
-            return srvmtype;
-        
-    }   
-        
-            public static boolean isSRVMItemType() {
-             
-           boolean srvmtype = false;
-            try{
-               
-                Connection con = DriverManager.getConnection(url + db, user, pass);
-                try{
-                    Statement st = con.createStatement();
-                    ResultSet res = null;
-
-                    res = st.executeQuery("select orc_srvm_item_default from order_ctrl;");
-                   while (res.next()) {
-                        srvmtype = res.getBoolean("orc_srvm_item_default");
-                    }
-
-               }
-                catch (SQLException s){
-                    MainFrame.bslog(s);
-                }
-                con.close();
-            }
-            catch (Exception e){
-                MainFrame.bslog(e);
-            }
-            return srvmtype;
-        
-    }   
-        
-          
-           public static boolean isCustItemOnlySHIP() {
-             
-           boolean custitemonly = false;
-            try{
-               
-                Connection con = DriverManager.getConnection(url + db, user, pass);
-                try{
-                    Statement st = con.createStatement();
-                    ResultSet res = null;
-
-                    res = st.executeQuery("select shc_custitemonly from ship_ctrl;");
-                   while (res.next()) {
-                        custitemonly = res.getBoolean("shc_custitemonly");
-                    }
-
-               }
-                catch (SQLException s){
-                    MainFrame.bslog(s);
-                }
-                con.close();
-            }
-            catch (Exception e){
-                MainFrame.bslog(e);
-            }
-            return custitemonly;
-        
-    }   
-          
-          
-         public static boolean isAutoSource() {
-             
-       boolean autosource = false;
+        Connection con = DriverManager.getConnection(url + db, user, pass);
         try{
-           
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+            Statement st = con.createStatement();
+            ResultSet res = null;
 
-                res = st.executeQuery("select orc_autosource from order_ctrl;");
-               while (res.next()) {
-                    autosource = res.getBoolean("orc_autosource");
-                }
-               
-           }
-            catch (SQLException s){
-                MainFrame.bslog(s);
+            res = st.executeQuery("select poc_venditem from po_ctrl;");
+           while (res.next()) {
+                venditemonly = res.getBoolean("poc_venditem");
             }
-            con.close();
+
+       }
+        catch (SQLException s){
+            MainFrame.bslog(s);
         }
-        catch (Exception e){
-            MainFrame.bslog(e);
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return venditemonly;
+
+}   
+
+    public static boolean isCustItemOnly() {
+
+   boolean custitemonly = false;
+    try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select orc_custitem from order_ctrl;");
+           while (res.next()) {
+                custitemonly = res.getBoolean("orc_custitem");
+            }
+
+       }
+        catch (SQLException s){
+            MainFrame.bslog(s);
         }
-        return autosource;
-        
-    }   
-         
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return custitemonly;
+
+}   
+
+    public static boolean isSRVMQuoteType() {
+
+   boolean srvmtype = false;
+    try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select orc_srvm_type from order_ctrl;");
+           while (res.next()) {
+                srvmtype = res.getBoolean("orc_srvm_type");
+            }
+
+       }
+        catch (SQLException s){
+            MainFrame.bslog(s);
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return srvmtype;
+
+}   
+
+    public static boolean isSRVMItemType() {
+
+   boolean srvmtype = false;
+    try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select orc_srvm_item_default from order_ctrl;");
+           while (res.next()) {
+                srvmtype = res.getBoolean("orc_srvm_item_default");
+            }
+
+       }
+        catch (SQLException s){
+            MainFrame.bslog(s);
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return srvmtype;
+
+}   
+
+    public static boolean isCustItemOnlySHIP() {
+
+   boolean custitemonly = false;
+    try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select shc_custitemonly from ship_ctrl;");
+           while (res.next()) {
+                custitemonly = res.getBoolean("shc_custitemonly");
+            }
+
+       }
+        catch (SQLException s){
+            MainFrame.bslog(s);
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return custitemonly;
+
+}   
+
+    public static boolean isAutoSource() {
+
+boolean autosource = false;
+try{
+
+    Connection con = DriverManager.getConnection(url + db, user, pass);
+    try{
+        Statement st = con.createStatement();
+        ResultSet res = null;
+
+        res = st.executeQuery("select orc_autosource from order_ctrl;");
+       while (res.next()) {
+            autosource = res.getBoolean("orc_autosource");
+        }
+
+   }
+    catch (SQLException s){
+        MainFrame.bslog(s);
+    }
+    con.close();
+}
+catch (Exception e){
+    MainFrame.bslog(e);
+}
+return autosource;
+
+}   
+
     public static boolean isAutoItem() {
              
        boolean autoitem = false;
@@ -8560,9 +8618,7 @@ public class OVData {
         
     }  
        
-         
-         
-         public static boolean isAutoVoucher() {
+    public static boolean isAutoVoucher() {
              
        boolean autovoucher = false;
         try{
@@ -8589,10 +8645,8 @@ public class OVData {
         return autovoucher;
         
     }  
-         
-         
-          
-         public static boolean isValidItem(String myitem) {
+        
+    public static boolean isValidItem(String myitem) {
              
        boolean isgood = false;
         try{
@@ -8620,7 +8674,7 @@ public class OVData {
         
     }
          
-      public static boolean isValidShipperByCustAndBOL(String bol, String cust) {
+    public static boolean isValidShipperByCustAndBOL(String bol, String cust) {
              
        boolean isgood = false;
         try{
@@ -8650,7 +8704,7 @@ public class OVData {
         
     }
          
-       public static boolean isValidFreightOrderNbr(String nbr) {
+    public static boolean isValidFreightOrderNbr(String nbr) {
              
        boolean isgood = false;
         try{
@@ -8679,263 +8733,262 @@ public class OVData {
         
     }  
       
-         public static boolean isValidSite(String key) {
-             
-       boolean isgood = false;
-        try{
-           
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+    public static boolean isValidSite(String key) {
 
-                res = st.executeQuery("select site_site from site_mstr where site_site = " + "'" + key + "'" + ";");
-               while (res.next()) {
-                    isgood = true;
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
+   boolean isgood = false;
+    try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select site_site from site_mstr where site_site = " + "'" + key + "'" + ";");
+           while (res.next()) {
+                isgood = true;
             }
-            con.close();
+
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
         }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return isgood;
-        
+        con.close();
     }
-         
-           public static boolean isValidCustomer(String key) {
-             
-       boolean isgood = false;
-        try{
-           
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select cm_code from cm_mstr where cm_code = " + "'" + key + "'" + ";");
-               while (res.next()) {
-                    isgood = true;
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return isgood;
-        
+    catch (Exception e){
+        MainFrame.bslog(e);
     }
-         
-             public static boolean isValidCustShipTo(String cust, String ship) {
-             
-       boolean isgood = false;
-        try{
-           
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+    return isgood;
 
-                res = st.executeQuery("select cms_shipto from cms_det where cms_code = " + "'" + cust + "'" 
-                        + " and cms_shipto = " + "'" + ship + "'" 
-                        + ";");
-               while (res.next()) {
-                    isgood = true;
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
+}
+
+    public static boolean isValidCustomer(String key) {
+
+   boolean isgood = false;
+    try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select cm_code from cm_mstr where cm_code = " + "'" + key + "'" + ";");
+           while (res.next()) {
+                isgood = true;
             }
-            con.close();
+
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
         }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return isgood;
-        
+        con.close();
     }
-           
-              public static boolean isValidVendor(String key) {
-             
-       boolean isgood = false;
-        try{
-           
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select vd_addr from vd_mstr where vd_addr = " + "'" + key + "'" + ";");
-               while (res.next()) {
-                    isgood = true;
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return isgood;
-        
+    catch (Exception e){
+        MainFrame.bslog(e);
     }
-           
-         public static boolean isValidLocation(String key) {
-             
-       boolean isgood = false;
-        try{
-           
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+    return isgood;
 
-                res = st.executeQuery("select loc_loc from loc_mstr where loc_loc = " + "'" + key + "'" + ";");
-               while (res.next()) {
-                    isgood = true;
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
+}
+
+    public static boolean isValidCustShipTo(String cust, String ship) {
+
+   boolean isgood = false;
+    try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select cms_shipto from cms_det where cms_code = " + "'" + cust + "'" 
+                    + " and cms_shipto = " + "'" + ship + "'" 
+                    + ";");
+           while (res.next()) {
+                isgood = true;
             }
-            con.close();
+
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
         }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return isgood;
-        
+        con.close();
     }
-     
-            public static boolean isValidWarehouse(String key) {
-             
-       boolean isgood = false;
-        try{
-           
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select wh_id from wh_mstr where wh_id = " + "'" + key + "'" + ";");
-               while (res.next()) {
-                    isgood = true;
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return isgood;
-        
+    catch (Exception e){
+        MainFrame.bslog(e);
     }
-     
-         
-         public static boolean isValidProdLine(String key) {
-             
-       boolean isgood = false;
-        try{
-           
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+    return isgood;
 
-                res = st.executeQuery("select pl_line from pl_mstr where pl_line = " + "'" + key + "'" + ";");
-               while (res.next()) {
-                    isgood = true;
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
+}
+
+    public static boolean isValidVendor(String key) {
+
+   boolean isgood = false;
+    try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select vd_addr from vd_mstr where vd_addr = " + "'" + key + "'" + ";");
+           while (res.next()) {
+                isgood = true;
             }
-            con.close();
+
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
         }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return isgood;
-        
+        con.close();
     }
-         
-          public static boolean isValidPanel(String panel) {
-             
-       boolean isgood = false;
-        try{
-           
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select panel_id from panel_mstr where panel_id = " + "'" + panel + "'" + ";");
-               while (res.next()) {
-                    isgood = true;
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return isgood;
-        
+    catch (Exception e){
+        MainFrame.bslog(e);
     }
-    
-           public static boolean isValidRouting(String key) {
-       boolean isGood = false;
-        try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+    return isgood;
 
-                  res = st.executeQuery("select wf_id from wf_mstr where wf_id = " + "'" + key + "'" + ";" ); 
-                int i = 0;
-                while (res.next()) {
-                    i++;
-                }
-                if (i > 0)
-                    isGood = true;
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
+}
+
+    public static boolean isValidLocation(String key) {
+
+   boolean isgood = false;
+    try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select loc_loc from loc_mstr where loc_loc = " + "'" + key + "'" + ";");
+           while (res.next()) {
+                isgood = true;
             }
-            con.close();
+
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
         }
-        catch (Exception e){
-            MainFrame.bslog(e);
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return isgood;
+
+}
+
+    public static boolean isValidWarehouse(String key) {
+
+   boolean isgood = false;
+    try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select wh_id from wh_mstr where wh_id = " + "'" + key + "'" + ";");
+           while (res.next()) {
+                isgood = true;
+            }
+
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
         }
-        return isGood;
-        
-    }  
-          
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return isgood;
+
+}
+
+    public static boolean isValidProdLine(String key) {
+
+   boolean isgood = false;
+    try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select pl_line from pl_mstr where pl_line = " + "'" + key + "'" + ";");
+           while (res.next()) {
+                isgood = true;
+            }
+
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return isgood;
+
+}
+
+    public static boolean isValidPanel(String panel) {
+
+   boolean isgood = false;
+    try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select panel_id from panel_mstr where panel_id = " + "'" + panel + "'" + ";");
+           while (res.next()) {
+                isgood = true;
+            }
+
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return isgood;
+
+}
+
+    public static boolean isValidRouting(String key) {
+   boolean isGood = false;
+    try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+              res = st.executeQuery("select wf_id from wf_mstr where wf_id = " + "'" + key + "'" + ";" ); 
+            int i = 0;
+            while (res.next()) {
+                i++;
+            }
+            if (i > 0)
+                isGood = true;
+
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return isGood;
+
+}  
+
     public static boolean isValidWorkCenter(String key) {
        boolean isGood = false;
         try{
@@ -8965,1995 +9018,1979 @@ public class OVData {
         return isGood;
         
     }  
-           
-           
-           public static boolean isValidShift(String code) {
-             
-       boolean isgood = false;
-        try{
-           
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select shf_id from shift_mstr where shf_id = " + "'" + code + "'" + ";");
-               while (res.next()) {
-                    isgood = true;
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return isgood;
-        
-    }
           
-           public static ArrayList getShiftCodes() {
-       ArrayList myarray = new ArrayList();
-        try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+    public static boolean isValidShift(String code) {
 
-                res = st.executeQuery("select shf_id from shift_mstr;");
-               while (res.next()) {
-                    myarray.add(res.getString("shf_id"));
-                }
-               
-           }
-            catch (SQLException s){
-                 bsmf.MainFrame.show("SQL cannot get WorkFlow Op");
-            }
-            con.close();
+boolean isgood = false;
+try{
+
+    Connection con = DriverManager.getConnection(url + db, user, pass);
+    try{
+        Statement st = con.createStatement();
+        ResultSet res = null;
+
+        res = st.executeQuery("select shf_id from shift_mstr where shf_id = " + "'" + code + "'" + ";");
+       while (res.next()) {
+            isgood = true;
         }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myarray;
-        
+
+   }
+    catch (SQLException s){
+         MainFrame.bslog(s);
     }
-           
-        public static String getShiftSpecific(String a, String b, String c) throws ParseException {
-         // a, b, c = specific time as string...example "06:00", "14:00", "22:00"
-         String myshift = "";
-         Calendar now = Calendar.getInstance();
+    con.close();
+}
+catch (Exception e){
+    MainFrame.bslog(e);
+}
+return isgood;
 
-         int hour = now.get(Calendar.HOUR_OF_DAY); // Get hour in 24 hour format
-         int minute = now.get(Calendar.MINUTE);
-         Date currenttime = new SimpleDateFormat("HH:mm").parse(hour + ":" + minute);
-         Date firstshift = new SimpleDateFormat("HH:mm").parse(a);  // a = "06:00"
-         Date secondshift = new SimpleDateFormat("HH:mm").parse(b);
-         Date thirdshift = new SimpleDateFormat("HH:mm").parse(c);
+}
 
+    public static ArrayList getShiftCodes() {
+ArrayList myarray = new ArrayList();
+try{
 
-         if (firstshift.before( currenttime ) && secondshift.after(currenttime)) {
-            myshift = "1";
-         }
-         if (secondshift.before( currenttime ) && thirdshift.after(currenttime)) {
-            myshift = "2";
-         }
-         if (thirdshift.before( currenttime ) || currenttime.before(firstshift)) {
-            myshift = "3";
-         }
-         if (firstshift.equals(currenttime))
-             myshift = "1";
-         if (secondshift.equals(currenttime))
-             myshift = "2";
-         if (thirdshift.equals(currenttime))
-             myshift = "3";
-          return myshift;
-      }
-                    
-        public static ArrayList getOperationsByPart(String mypart) {
-       ArrayList myarray = new ArrayList();
-        try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+    Connection con = DriverManager.getConnection(url + db, user, pass);
+    try{
+        Statement st = con.createStatement();
+        ResultSet res = null;
 
-                res = st.executeQuery("select wf_op from wf_mstr inner join item_mstr on it_wf = wf_id where it_item = " + "'" + mypart + "'" + " order by wf_op ;");
-               while (res.next()) {
-                    myarray.add(res.getString("wf_op"));
-                }
-               
-           }
-            catch (SQLException s){
-                 JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get WorkFlow Op");
-            }
-            con.close();
+        res = st.executeQuery("select shf_id from shift_mstr;");
+       while (res.next()) {
+            myarray.add(res.getString("shf_id"));
         }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myarray;
-        
+
+   }
+    catch (SQLException s){
+         bsmf.MainFrame.show("SQL cannot get WorkFlow Op");
     }
-         
-        public static int getFirstOpByPart(String mypart) {
-           int myreturn = -1;
+    con.close();
+}
+catch (Exception e){
+    MainFrame.bslog(e);
+}
+return myarray;
+
+}
+
+    public static String getShiftSpecific(String a, String b, String c) throws ParseException {
+     // a, b, c = specific time as string...example "06:00", "14:00", "22:00"
+     String myshift = "";
+     Calendar now = Calendar.getInstance();
+
+     int hour = now.get(Calendar.HOUR_OF_DAY); // Get hour in 24 hour format
+     int minute = now.get(Calendar.MINUTE);
+     Date currenttime = new SimpleDateFormat("HH:mm").parse(hour + ":" + minute);
+     Date firstshift = new SimpleDateFormat("HH:mm").parse(a);  // a = "06:00"
+     Date secondshift = new SimpleDateFormat("HH:mm").parse(b);
+     Date thirdshift = new SimpleDateFormat("HH:mm").parse(c);
+
+
+     if (firstshift.before( currenttime ) && secondshift.after(currenttime)) {
+        myshift = "1";
+     }
+     if (secondshift.before( currenttime ) && thirdshift.after(currenttime)) {
+        myshift = "2";
+     }
+     if (thirdshift.before( currenttime ) || currenttime.before(firstshift)) {
+        myshift = "3";
+     }
+     if (firstshift.equals(currenttime))
+         myshift = "1";
+     if (secondshift.equals(currenttime))
+         myshift = "2";
+     if (thirdshift.equals(currenttime))
+         myshift = "3";
+      return myshift;
+  }
+
+    public static ArrayList getOperationsByPart(String mypart) {
+   ArrayList myarray = new ArrayList();
+    try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
         try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+            Statement st = con.createStatement();
+            ResultSet res = null;
 
-                res = st.executeQuery("select min(wf_op) as op from wf_mstr inner join item_mstr on it_wf = wf_id where it_item = " + "'" + mypart + "'" + 
-                        " and wf_assert = '1' group by wf_assert order by wf_op desc;");
-                     
-               while (res.next()) {
-                    myreturn = res.getInt("op");
-                }
-              
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
+            res = st.executeQuery("select wf_op from wf_mstr inner join item_mstr on it_wf = wf_id where it_item = " + "'" + mypart + "'" + " order by wf_op ;");
+           while (res.next()) {
+                myarray.add(res.getString("wf_op"));
             }
-            con.close();
+
+       }
+        catch (SQLException s){
+             JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get WorkFlow Op");
         }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myreturn;
-        
+        con.close();
     }
-          
-        public static int getLastOpByPart(String mypart) {
-           int myreturn = -1;
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myarray;
+
+}
+
+    public static int getFirstOpByPart(String mypart) {
+       int myreturn = -1;
+    try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
         try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+            Statement st = con.createStatement();
+            ResultSet res = null;
 
-                res = st.executeQuery("select max(wf_op) from wf_mstr inner join item_mstr on it_wf = wf_id where it_item = " + "'" + mypart + "'" + 
-                        " and wf_assert = '1' group by wf_assert order by wf_op desc;");
-                        
-               while (res.next()) {
-                    myreturn = res.getInt("wf_op");
-                }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
+            res = st.executeQuery("select min(wf_op) as op from wf_mstr inner join item_mstr on it_wf = wf_id where it_item = " + "'" + mypart + "'" + 
+                    " and wf_assert = '1' group by wf_assert order by wf_op desc;");
+
+           while (res.next()) {
+                myreturn = res.getInt("op");
             }
-            con.close();
+
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
         }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myreturn;
-        
+        con.close();
     }
-        
-        
-        public static Double getLaborWithOutSetup(String part, String op) {
-        
-             Double labor = 0.0;
-                        
-             try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myreturn;
 
-                res = st.executeQuery("select it_lotsize, wc_run_crew, wf_run_hours, wf_setup_hours, wc_run_rate, wc_setup_rate, wc_bdn_rate from wf_mstr " + 
-                        " inner join item_mstr on it_wf = wf_id " + 
-                        " inner join wc_mstr on wc_cell = wf_cell " +
-                        " where it_item = " + "'" + part + "'" +
-                        " AND wf_op = " + "'" + op + "'" + ";");
-               while (res.next()) {
-                    labor += (res.getDouble("wc_run_rate") * res.getDouble("wf_run_hours") * res.getDouble("wc_run_crew"));
-                }
-               
-           }
-            catch (SQLException s){
-                MainFrame.bslog(s);
-                 bsmf.MainFrame.show("SQL cannot get Labor Cost");
+}
+
+    public static int getLastOpByPart(String mypart) {
+       int myreturn = -1;
+    try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select max(wf_op) from wf_mstr inner join item_mstr on it_wf = wf_id where it_item = " + "'" + mypart + "'" + 
+                    " and wf_assert = '1' group by wf_assert order by wf_op desc;");
+
+           while (res.next()) {
+                myreturn = res.getInt("wf_op");
             }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-             return labor;
-            
-         }
-         
-        public static Double getLaborAllOps(String part) {
-        
-             Double labor = 0.0;
-             try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
 
-                res = st.executeQuery("select it_lotsize, wf_run_hours, wc_setup_rate, wf_setup_hours, wc_run_rate, wc_run_crew from wf_mstr " + 
-                        " inner join item_mstr on it_wf = wf_id " + 
-                        " inner join wc_mstr on wc_cell = wf_cell  " +
-                        " where it_item = " + "'" + part + "'" + ";");
-               while (res.next()) {
-               
-                if (res.getDouble("it_lotsize") == 0) {
-                    labor += ( ((res.getDouble("wc_setup_rate") * res.getDouble("wf_setup_hours")) ) +
-                            (res.getDouble("wc_run_rate") * res.getDouble("wf_run_hours") * res.getDouble("wc_run_crew")));
-                   } else {
-                     labor += ( ((res.getDouble("wc_setup_rate") * res.getDouble("wf_setup_hours")) / res.getDouble("it_lotsize") ) +
-                            (res.getDouble("wc_run_rate") * res.getDouble("wf_run_hours") * res.getDouble("wc_run_crew")));
-                   }
-               
-               
-               
-               
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myreturn;
+
+}
+
+
+    public static Double getLaborWithOutSetup(String part, String op) {
+
+         Double labor = 0.0;
+
+         try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select it_lotsize, wc_run_crew, wf_run_hours, wf_setup_hours, wc_run_rate, wc_setup_rate, wc_bdn_rate from wf_mstr " + 
+                    " inner join item_mstr on it_wf = wf_id " + 
+                    " inner join wc_mstr on wc_cell = wf_cell " +
+                    " where it_item = " + "'" + part + "'" +
+                    " AND wf_op = " + "'" + op + "'" + ";");
+           while (res.next()) {
+                labor += (res.getDouble("wc_run_rate") * res.getDouble("wf_run_hours") * res.getDouble("wc_run_crew"));
+            }
+
+       }
+        catch (SQLException s){
+            MainFrame.bslog(s);
+             bsmf.MainFrame.show("SQL cannot get Labor Cost");
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+         return labor;
+
+     }
+
+    public static Double getLaborAllOps(String part) {
+
+         Double labor = 0.0;
+         try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select it_lotsize, wf_run_hours, wc_setup_rate, wf_setup_hours, wc_run_rate, wc_run_crew from wf_mstr " + 
+                    " inner join item_mstr on it_wf = wf_id " + 
+                    " inner join wc_mstr on wc_cell = wf_cell  " +
+                    " where it_item = " + "'" + part + "'" + ";");
+           while (res.next()) {
+
+            if (res.getDouble("it_lotsize") == 0) {
+                labor += ( ((res.getDouble("wc_setup_rate") * res.getDouble("wf_setup_hours")) ) +
+                        (res.getDouble("wc_run_rate") * res.getDouble("wf_run_hours") * res.getDouble("wc_run_crew")));
+               } else {
+                 labor += ( ((res.getDouble("wc_setup_rate") * res.getDouble("wf_setup_hours")) / res.getDouble("it_lotsize") ) +
+                        (res.getDouble("wc_run_rate") * res.getDouble("wf_run_hours") * res.getDouble("wc_run_crew")));
                }
-               
-           }
-            catch (SQLException s){
-                 bsmf.MainFrame.show("SQL cannot get Labor Cost All Ops");
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-             return labor;
-            
-         }
-          
-        public static Double getBurdenAllOps(String part) {
-        
-             Double burden = 0.0;
-              
-             try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
 
-                res = st.executeQuery("select it_lotsize, wf_run_hours, wc_setup_rate, wf_setup_hours, wc_bdn_rate, wc_run_crew from wf_mstr " + 
-                        " inner join item_mstr on it_wf = wf_id " + 
-                        " inner join wc_mstr on wc_cell = wf_cell  " +
-                        " where it_item = " + "'" + part + "'" + ";");
-               while (res.next()) {
-                if (res.getDouble("it_lotsize") == 0) {
-                    burden += ( ((res.getDouble("wc_bdn_rate") * res.getDouble("wf_setup_hours"))  ) +
-                            (res.getDouble("wc_bdn_rate") * res.getDouble("wf_run_hours")  )  );
-                   } else {
-                    burden += ( ((res.getDouble("wc_bdn_rate") * res.getDouble("wf_setup_hours"))) / res.getDouble("it_lotsize") ) +
-                            (res.getDouble("wc_bdn_rate") * res.getDouble("wf_run_hours") ) ;  
-                   }
-               
+
+
+
+           }
+
+       }
+        catch (SQLException s){
+             bsmf.MainFrame.show("SQL cannot get Labor Cost All Ops");
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+         return labor;
+
+     }
+
+    public static Double getBurdenAllOps(String part) {
+
+         Double burden = 0.0;
+
+         try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select it_lotsize, wf_run_hours, wc_setup_rate, wf_setup_hours, wc_bdn_rate, wc_run_crew from wf_mstr " + 
+                    " inner join item_mstr on it_wf = wf_id " + 
+                    " inner join wc_mstr on wc_cell = wf_cell  " +
+                    " where it_item = " + "'" + part + "'" + ";");
+           while (res.next()) {
+            if (res.getDouble("it_lotsize") == 0) {
+                burden += ( ((res.getDouble("wc_bdn_rate") * res.getDouble("wf_setup_hours"))  ) +
+                        (res.getDouble("wc_bdn_rate") * res.getDouble("wf_run_hours")  )  );
+               } else {
+                burden += ( ((res.getDouble("wc_bdn_rate") * res.getDouble("wf_setup_hours"))) / res.getDouble("it_lotsize") ) +
+                        (res.getDouble("wc_bdn_rate") * res.getDouble("wf_run_hours") ) ;  
                }
-               
+
            }
-            catch (SQLException s){
-                 bsmf.MainFrame.show("SQL cannot get Burden Cost All Ops");
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-             return burden;
-            
-         }
-         
-        public static Double getBurdenWithOutSetup(String part, String op) {
-        
-             Double burden = 0.0;
-              try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
 
-                res = st.executeQuery("select it_lotsize, wc_run_crew, wf_run_hours, wf_setup_hours, wc_run_rate, wc_setup_rate, wc_bdn_rate from wf_mstr " + 
-                        " inner join item_mstr on it_wf = wf_id " + 
-                        " inner join wc_mstr on wc_cell = wf_cell " +
-                        " where it_item = " + "'" + part + "'" +
-                        " AND wf_op = " + "'" + op + "'" + ";");
-               while (res.next()) {
-                     burden += (res.getDouble("wc_bdn_rate") * res.getDouble("wf_run_hours") );
-                }
-               
-           }
-            catch (SQLException s){
-                 JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Labor Cost");
-            }
-            con.close();
+       }
+        catch (SQLException s){
+             bsmf.MainFrame.show("SQL cannot get Burden Cost All Ops");
         }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-             return burden;
-            
-         }
-           
-        public static void setStandardCosts(String site, String item) {
-            calcCost cur = new calcCost();
-             ArrayList<Double> costcur = new ArrayList<Double>();
-            costcur = cur.getTotalCostElements(item);
-            Double totalcost = 0.00;
-            for (Double d : costcur) {
-               totalcost += d;
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+         return burden;
+
+     }
+
+    public static Double getBurdenWithOutSetup(String part, String op) {
+
+         Double burden = 0.0;
+          try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select it_lotsize, wc_run_crew, wf_run_hours, wf_setup_hours, wc_run_rate, wc_setup_rate, wc_bdn_rate from wf_mstr " + 
+                    " inner join item_mstr on it_wf = wf_id " + 
+                    " inner join wc_mstr on wc_cell = wf_cell " +
+                    " where it_item = " + "'" + part + "'" +
+                    " AND wf_op = " + "'" + op + "'" + ";");
+           while (res.next()) {
+                 burden += (res.getDouble("wc_bdn_rate") * res.getDouble("wf_run_hours") );
             }
-            try {
 
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
-                boolean proceed = true;
-                
-                int i = 0;
-                String perms = "";
-                double itrcost = 0.00;
-                String routing = invData.getItemRouting(item);
-                ArrayList<String> ops = OVData.getOperationsByPart(item);
-                // lets do item_cost first 
-                res = st.executeQuery("SELECT itc_item FROM  item_cost where itc_item = " + "'" + item + "'" + ";");
-                    while (res.next()) {
-                        i++;
-                    }
+       }
+        catch (SQLException s){
+             JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Labor Cost");
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+         return burden;
 
-                    if (i > 0) {
-                        st.executeUpdate("update item_cost set "
-                                + "itc_mtl_low = " + "'" + costcur.get(0).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
-                                + "itc_mtl_top = " + "'" + costcur.get(5).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
-                                + "itc_lbr_low = " + "'" + costcur.get(1).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
-                                + "itc_lbr_top = " + "'" + costcur.get(6).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
-                                + "itc_bdn_low = " + "'" + costcur.get(2).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
-                                + "itc_bdn_top = " + "'" + costcur.get(7).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
-                                + "itc_ovh_low = " + "'" + costcur.get(3).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
-                                + "itc_ovh_top = " + "'" + costcur.get(8).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
-                                + "itc_out_low = " + "'" + costcur.get(4).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
-                                + "itc_out_top = " + "'" + costcur.get(9).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
-                                + "itc_total = " + "'" +  totalcost.toString().replace(defaultDecimalSeparator, '.') + "'" 
-                                + " where itc_item = " + "'" + item + "'"
-                                + " AND itc_set = 'standard' "
-                                + " AND itc_site = " + "'" + site + "'"
-                                + ";");
-                       
-                    } else {
-                        proceed = false;
-                    }
-                    // ok now lets do itemr_cost ...routing based costing
-                   if (proceed) { 
-                    i = -1;
-                    for (String op : ops) {
-                    // bsmf.MainFrame.show(op);
+     }
+
+    public static void setStandardCosts(String site, String item) {
+        calcCost cur = new calcCost();
+         ArrayList<Double> costcur = new ArrayList<Double>();
+        costcur = cur.getTotalCostElements(item);
+        Double totalcost = 0.00;
+        for (Double d : costcur) {
+           totalcost += d;
+        }
+        try {
+
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try {
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            boolean proceed = true;
+
+            int i = 0;
+            String perms = "";
+            double itrcost = 0.00;
+            String routing = invData.getItemRouting(item);
+            ArrayList<String> ops = OVData.getOperationsByPart(item);
+            // lets do item_cost first 
+            res = st.executeQuery("SELECT itc_item FROM  item_cost where itc_item = " + "'" + item + "'" + ";");
+                while (res.next()) {
                     i++;
-                    // delete original itemr_cost records for this item, op, routing, standard
-                    st.executeUpdate(" delete FROM  itemr_cost where itr_item = " + "'" + item + "'" 
-                                         +  " AND itr_op = " + "'" + op + "'"
-                                         + " AND itr_set = 'standard' "
-                                         + " AND itr_site = " + "'" + site + "'"
-                                         + " AND itr_routing = " + "'" + routing + "'" + ";");
-                        
-                    }
-                     ArrayList<String> costs = new ArrayList<String>();
-                     costs = OVData.rollCost(item);
-                     
-                    for (String cost : costs) {
-                     String[] elements = cost.split(",", -1);
-                         
-                            st.executeUpdate("insert into itemr_cost (itr_item, itr_site, itr_set, itr_routing, itr_op, " +
-                                 " itr_total, itr_lbr_top, itr_bdn_top, itr_mtl_top,  itr_ovh_top, itr_out_top, " +
-                                 " itr_mtl_low, itr_lbr_low, itr_bdn_low, itr_ovh_low, itr_out_low ) values ( "
-                                + "'" + item + "'" + ","
-                                + "'" + site + "'" + ","
-                                + "'" + "standard" + "'" + ","
-                                + "'" + routing + "'" + ","
-                                + "'" + elements[1].toString() + "'" + ","
-                                + "'" + bsformat("",elements[17].toString(),"5").replace(defaultDecimalSeparator, '.') + "'" + "," 
-                                + "'" + bsformat("",elements[6].toString(),"5").replace(defaultDecimalSeparator, '.') + "'" + ","   
-                                + "'" + bsformat("",elements[7].toString(),"5").replace(defaultDecimalSeparator, '.') + "'" + ","
-                                + "'" + bsformat("",elements[8].toString(),"5").replace(defaultDecimalSeparator, '.') + "'" + ","
-                                + "'" + bsformat("",elements[9].toString(),"5").replace(defaultDecimalSeparator, '.') + "'" + ","
-                                + "'" + bsformat("",elements[10].toString(),"5").replace(defaultDecimalSeparator, '.') + "'" + ","
-                                + "'" + "0" + "'" + ","
-                                + "'" + "0" + "'" + ","
-                                + "'" + "0" + "'" + ","
-                                + "'" + "0" + "'" + ","
-                                + "'" + "0" + "'" + " ) ;");
-                    }  
-                   
-                   }
-            } // if proceed
-            catch (SQLException s) {
-                MainFrame.bslog(s);
-            }
-            con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }  
+                }
+
+                if (i > 0) {
+                    st.executeUpdate("update item_cost set "
+                            + "itc_mtl_low = " + "'" + costcur.get(0).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
+                            + "itc_mtl_top = " + "'" + costcur.get(5).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
+                            + "itc_lbr_low = " + "'" + costcur.get(1).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
+                            + "itc_lbr_top = " + "'" + costcur.get(6).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
+                            + "itc_bdn_low = " + "'" + costcur.get(2).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
+                            + "itc_bdn_top = " + "'" + costcur.get(7).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
+                            + "itc_ovh_low = " + "'" + costcur.get(3).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
+                            + "itc_ovh_top = " + "'" + costcur.get(8).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
+                            + "itc_out_low = " + "'" + costcur.get(4).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
+                            + "itc_out_top = " + "'" + costcur.get(9).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
+                            + "itc_total = " + "'" +  totalcost.toString().replace(defaultDecimalSeparator, '.') + "'" 
+                            + " where itc_item = " + "'" + item + "'"
+                            + " AND itc_set = 'standard' "
+                            + " AND itc_site = " + "'" + site + "'"
+                            + ";");
+
+                } else {
+                    proceed = false;
+                }
+                // ok now lets do itemr_cost ...routing based costing
+               if (proceed) { 
+                i = -1;
+                for (String op : ops) {
+                // bsmf.MainFrame.show(op);
+                i++;
+                // delete original itemr_cost records for this item, op, routing, standard
+                st.executeUpdate(" delete FROM  itemr_cost where itr_item = " + "'" + item + "'" 
+                                     +  " AND itr_op = " + "'" + op + "'"
+                                     + " AND itr_set = 'standard' "
+                                     + " AND itr_site = " + "'" + site + "'"
+                                     + " AND itr_routing = " + "'" + routing + "'" + ";");
+
+                }
+                 ArrayList<String> costs = new ArrayList<String>();
+                 costs = OVData.rollCost(item);
+
+                for (String cost : costs) {
+                 String[] elements = cost.split(",", -1);
+
+                        st.executeUpdate("insert into itemr_cost (itr_item, itr_site, itr_set, itr_routing, itr_op, " +
+                             " itr_total, itr_lbr_top, itr_bdn_top, itr_mtl_top,  itr_ovh_top, itr_out_top, " +
+                             " itr_mtl_low, itr_lbr_low, itr_bdn_low, itr_ovh_low, itr_out_low ) values ( "
+                            + "'" + item + "'" + ","
+                            + "'" + site + "'" + ","
+                            + "'" + "standard" + "'" + ","
+                            + "'" + routing + "'" + ","
+                            + "'" + elements[1].toString() + "'" + ","
+                            + "'" + bsformat("",elements[17].toString(),"5").replace(defaultDecimalSeparator, '.') + "'" + "," 
+                            + "'" + bsformat("",elements[6].toString(),"5").replace(defaultDecimalSeparator, '.') + "'" + ","   
+                            + "'" + bsformat("",elements[7].toString(),"5").replace(defaultDecimalSeparator, '.') + "'" + ","
+                            + "'" + bsformat("",elements[8].toString(),"5").replace(defaultDecimalSeparator, '.') + "'" + ","
+                            + "'" + bsformat("",elements[9].toString(),"5").replace(defaultDecimalSeparator, '.') + "'" + ","
+                            + "'" + bsformat("",elements[10].toString(),"5").replace(defaultDecimalSeparator, '.') + "'" + ","
+                            + "'" + "0" + "'" + ","
+                            + "'" + "0" + "'" + ","
+                            + "'" + "0" + "'" + ","
+                            + "'" + "0" + "'" + ","
+                            + "'" + "0" + "'" + " ) ;");
+                }  
+
+               }
+        } // if proceed
+        catch (SQLException s) {
+            MainFrame.bslog(s);
         }
-       
-        public static ArrayList rollCost(String part) {
-             ArrayList<String> myarray = new ArrayList<String>();
-             String mystring = "";
-             Double labor = 0.0;
-             Double burden = 0.0;
-             Double material = 0.0;
-             Double ovh = 0.0;
-             Double outside = 0.0;
-             Double total = 0.0;
-             Double prevcost = 0.0;
-             Double stdopcost = 0.0;
-             String op = "";
-             String cell = "";
-             String cc = "";
-             String desc = "";
-             String stdcost = "";
-              
-             
-           
-             try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                Statement st2 = con.createStatement();
-                ResultSet res = null;
-                ResultSet res2 = null;
-                
-                // lets first get standard cost of this item for comparison
-                res = st.executeQuery("select itc_total from item_cost where itc_set = 'standard' and itc_item = " + "'" + part + "';" );
-                 while (res.next()) {
-                 stdcost = res.getString("itc_total");
-                 }
-                 
-                 // now lets get all operational costs for this parent item and affiliated variables ...and grab matl cost for each operation
-                res = st.executeQuery("select it_lotsize, itr_total, wf_cell, wf_op, wc_run_crew, wf_run_hours, wf_setup_hours, " +
-                        " wc_desc, wc_cc, wc_run_rate, wc_setup_rate, wc_bdn_rate " +
-                        " from wf_mstr inner join item_mstr on it_wf = wf_id " + 
-                        " inner join wc_mstr on wc_cell = wf_cell  " + 
-                        " left outer join itemr_cost on itr_item = it_item and itr_routing = item_mstr.it_wf and itr_op = wf_op " +
-                        " where it_item = " + "'" + part + "'" + 
-                        " order by wf_op; " );
-               int i = 0;         
-               while (res.next()) {
-                   i++;
-                   
-                   if (i == 1) {
-                       stdopcost = res.getDouble("itr_total");
+        con.close();
+    } catch (Exception e) {
+        MainFrame.bslog(e);
+    }  
+    }
+
+    public static ArrayList rollCost(String part) {
+         ArrayList<String> myarray = new ArrayList<String>();
+         String mystring = "";
+         Double labor = 0.0;
+         Double burden = 0.0;
+         Double material = 0.0;
+         Double ovh = 0.0;
+         Double outside = 0.0;
+         Double total = 0.0;
+         Double prevcost = 0.0;
+         Double stdopcost = 0.0;
+         String op = "";
+         String cell = "";
+         String cc = "";
+         String desc = "";
+         String stdcost = "";
+
+
+
+         try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            Statement st2 = con.createStatement();
+            ResultSet res = null;
+            ResultSet res2 = null;
+
+            // lets first get standard cost of this item for comparison
+            res = st.executeQuery("select itc_total from item_cost where itc_set = 'standard' and itc_item = " + "'" + part + "';" );
+             while (res.next()) {
+             stdcost = res.getString("itc_total");
+             }
+
+             // now lets get all operational costs for this parent item and affiliated variables ...and grab matl cost for each operation
+            res = st.executeQuery("select it_lotsize, itr_total, wf_cell, wf_op, wc_run_crew, wf_run_hours, wf_setup_hours, " +
+                    " wc_desc, wc_cc, wc_run_rate, wc_setup_rate, wc_bdn_rate " +
+                    " from wf_mstr inner join item_mstr on it_wf = wf_id " + 
+                    " inner join wc_mstr on wc_cell = wf_cell  " + 
+                    " left outer join itemr_cost on itr_item = it_item and itr_routing = item_mstr.it_wf and itr_op = wf_op " +
+                    " where it_item = " + "'" + part + "'" + 
+                    " order by wf_op; " );
+           int i = 0;         
+           while (res.next()) {
+               i++;
+
+               if (i == 1) {
+                   stdopcost = res.getDouble("itr_total");
+               } else {
+                   stdopcost = res.getDouble("itr_total") - prevcost;
+               }
+               prevcost = res.getDouble("itr_total");
+
+               op = res.getString("wf_op");
+               cell = res.getString("wf_cell");
+               desc = res.getString("wc_desc");
+               cc = res.getString("wc_cc");
+
+
+               material = 0.0;
+               labor = 0.0;
+               burden = 0.0;
+               if (res.getDouble("it_lotsize") == 0) {
+                labor += ( ((res.getDouble("wc_setup_rate") * res.getDouble("wf_setup_hours")) ) +
+                        (res.getDouble("wc_run_rate")) * res.getDouble("wf_run_hours") * res.getDouble("wc_run_crew"));
+                burden += ( ((res.getDouble("wc_bdn_rate") * res.getDouble("wf_setup_hours"))  ) +
+                        (res.getDouble("wc_bdn_rate") * res.getDouble("wf_run_hours") )  );
+               } else {
+                 labor += ( ((res.getDouble("wc_setup_rate") * res.getDouble("wf_setup_hours")) / res.getDouble("it_lotsize") ) +
+                         (res.getDouble("wc_run_rate") * res.getDouble("wf_run_hours") * res.getDouble("wc_run_crew") )  );
+                burden += ( ((res.getDouble("wc_bdn_rate") * res.getDouble("wf_setup_hours")) / res.getDouble("it_lotsize") ) +
+                        (res.getDouble("wc_bdn_rate") * res.getDouble("wf_run_hours") )  );  
+               }
+
+               // now do the matl for this operation
+                       res2 = st2.executeQuery("select ps_qty_per, itc_total from pbm_mstr " + 
+                            " inner join item_cost on ps_child = itc_item and itc_set = 'standard' " +
+                            " where ps_parent = " + "'" + part + "'" +
+                            " AND ps_op = " + "'" + op + "'" + ";");
+                        while (res2.next()) {
+                        material += ( res2.getDouble("itc_total") * res2.getDouble("ps_qty_per") );
+                        //ovh += ( res2.getDouble("itc_total") * res2.getDouble("ps_qty_per") );
+                        //outside += ( res2.getDouble("itc_total") * res2.getDouble("ps_qty_per") );
+                       }
+                        total = labor + burden + material + ovh + outside;
+           mystring = 
+                   part + "," +
+                   op + "," +
+                   cell + "," +
+                   "" + "," +   // used to be machine
+                   desc + "," +
+                   cc + "," +
+                   String.valueOf(labor) + "," + 
+                   String.valueOf(burden) + "," + 
+                   String.valueOf(material) + "," + 
+                   String.valueOf(ovh) + "," + 
+                   String.valueOf(outside) + "," +
+                   res.getString("wc_setup_rate") + "," +
+                   res.getString("wc_run_rate") + "," +
+                   res.getString("wc_bdn_rate") + "," +
+                   res.getString("wf_setup_hours") + "," +
+                   res.getString("wf_run_hours") + "," +
+                   res.getString("it_lotsize") + "," +
+                   String.valueOf(total) + "," +
+                   String.valueOf(stdopcost) + "," +
+                   stdcost
+                   ;
+           myarray.add(mystring);
+
+           } 
+
+       }
+        catch (SQLException s){
+            MainFrame.bslog(s);
+             bsmf.MainFrame.show("Cannot roll cost");
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+         return myarray;
+     }
+
+    public static Double simulateCost(String site, String item, String opvar, 
+                                      double runratevar,
+                                      double setupratevar,
+                                      double burdenratevar,
+                                      double runhoursvar,
+                                      double setuphoursvar,
+                                      double runcrewvar,
+                                      double setupcrewvar,
+                                      double lotsizevar,
+                                      boolean doMatl) {
+        double x = 0.00;
+        Double labor = 0.0;
+         Double burden = 0.0;
+         Double material = 0.0;
+         Double ovh = 0.0;
+         Double outside = 0.0;
+         Double total = 0.0;
+         String op = "";
+              try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            Statement st2 = con.createStatement();
+            ResultSet res = null;
+            ResultSet res2 = null;
+
+
+             // now lets get all operational costs for this parent item and affiliated variables ...and grab matl cost for each operation
+            res = st.executeQuery("select it_lotsize, itr_total, wf_cell, wf_op, wc_run_crew, wf_run_hours, wf_setup_hours, " +
+                    " wc_desc, wc_cc, wc_run_rate, wc_setup_rate, wc_bdn_rate " +
+                    " from wf_mstr inner join item_mstr on it_wf = wf_id " + 
+                    " inner join wc_mstr on wc_cell = wf_cell  " + 
+                    " left outer join itemr_cost on itr_item = it_item and itr_routing = item_mstr.it_wf and itr_op = wf_op " +
+                    " where it_item = " + "'" + item + "'" + 
+                    " order by wf_op; " );
+           int i = 0;         
+           while (res.next()) {
+               i++;
+
+               op = res.getString("wf_op");
+
+
+               material = 0.0;
+               labor = 0.0;
+               burden = 0.0;
+
+               if (op.equals(opvar)) {
+                   // simulation
+                   if (lotsizevar == 0) {
+                    labor += ( ((setupratevar * setuphoursvar) ) +
+                            (runratevar * runhoursvar * runcrewvar )  );
+                    burden += ( ((burdenratevar * setuphoursvar)  ) +
+                            (burdenratevar * runhoursvar )  );
                    } else {
-                       stdopcost = res.getDouble("itr_total") - prevcost;
+                     labor += ( ((setupratevar * setuphoursvar) / lotsizevar ) +
+                             (runratevar * runhoursvar * runcrewvar )  );
+                    burden += ( ((burdenratevar * setuphoursvar) / lotsizevar ) +
+                            (burdenratevar * runhoursvar )  );  
                    }
-                   prevcost = res.getDouble("itr_total");
-                   
-                   op = res.getString("wf_op");
-                   cell = res.getString("wf_cell");
-                   desc = res.getString("wc_desc");
-                   cc = res.getString("wc_cc");
-                  
-                   
-                   material = 0.0;
-                   labor = 0.0;
-                   burden = 0.0;
+
+
+               } else {
                    if (res.getDouble("it_lotsize") == 0) {
                     labor += ( ((res.getDouble("wc_setup_rate") * res.getDouble("wf_setup_hours")) ) +
-                            (res.getDouble("wc_run_rate")) * res.getDouble("wf_run_hours") * res.getDouble("wc_run_crew"));
+                            (res.getDouble("wc_run_rate") * res.getDouble("wf_run_hours") * res.getDouble("wc_run_crew"))   );
                     burden += ( ((res.getDouble("wc_bdn_rate") * res.getDouble("wf_setup_hours"))  ) +
                             (res.getDouble("wc_bdn_rate") * res.getDouble("wf_run_hours") )  );
                    } else {
                      labor += ( ((res.getDouble("wc_setup_rate") * res.getDouble("wf_setup_hours")) / res.getDouble("it_lotsize") ) +
-                             (res.getDouble("wc_run_rate") * res.getDouble("wf_run_hours") * res.getDouble("wc_run_crew") )  );
+                             (res.getDouble("wc_run_rate") * res.getDouble("wf_run_hours") * res.getDouble("wc_run_crew"))   );
                     burden += ( ((res.getDouble("wc_bdn_rate") * res.getDouble("wf_setup_hours")) / res.getDouble("it_lotsize") ) +
                             (res.getDouble("wc_bdn_rate") * res.getDouble("wf_run_hours") )  );  
                    }
-               
-                   // now do the matl for this operation
-                           res2 = st2.executeQuery("select ps_qty_per, itc_total from pbm_mstr " + 
-                                " inner join item_cost on ps_child = itc_item and itc_set = 'standard' " +
-                                " where ps_parent = " + "'" + part + "'" +
-                                " AND ps_op = " + "'" + op + "'" + ";");
-                            while (res2.next()) {
-                            material += ( res2.getDouble("itc_total") * res2.getDouble("ps_qty_per") );
-                            //ovh += ( res2.getDouble("itc_total") * res2.getDouble("ps_qty_per") );
-                            //outside += ( res2.getDouble("itc_total") * res2.getDouble("ps_qty_per") );
-                           }
-                            total = labor + burden + material + ovh + outside;
-               mystring = 
-                       part + "," +
-                       op + "," +
-                       cell + "," +
-                       "" + "," +   // used to be machine
-                       desc + "," +
-                       cc + "," +
-                       String.valueOf(labor) + "," + 
-                       String.valueOf(burden) + "," + 
-                       String.valueOf(material) + "," + 
-                       String.valueOf(ovh) + "," + 
-                       String.valueOf(outside) + "," +
-                       res.getString("wc_setup_rate") + "," +
-                       res.getString("wc_run_rate") + "," +
-                       res.getString("wc_bdn_rate") + "," +
-                       res.getString("wf_setup_hours") + "," +
-                       res.getString("wf_run_hours") + "," +
-                       res.getString("it_lotsize") + "," +
-                       String.valueOf(total) + "," +
-                       String.valueOf(stdopcost) + "," +
-                       stdcost
-                       ;
-               myarray.add(mystring);
-               
-               } 
-                
-           }
-            catch (SQLException s){
-                MainFrame.bslog(s);
-                 bsmf.MainFrame.show("Cannot roll cost");
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-             return myarray;
-         }
-    
-        public static Double simulateCost(String site, String item, String opvar, 
-                                          double runratevar,
-                                          double setupratevar,
-                                          double burdenratevar,
-                                          double runhoursvar,
-                                          double setuphoursvar,
-                                          double runcrewvar,
-                                          double setupcrewvar,
-                                          double lotsizevar,
-                                          boolean doMatl) {
-            double x = 0.00;
-            Double labor = 0.0;
-             Double burden = 0.0;
-             Double material = 0.0;
-             Double ovh = 0.0;
-             Double outside = 0.0;
-             Double total = 0.0;
-             String op = "";
-                  try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                Statement st2 = con.createStatement();
-                ResultSet res = null;
-                ResultSet res2 = null;
-                
-               
-                 // now lets get all operational costs for this parent item and affiliated variables ...and grab matl cost for each operation
-                res = st.executeQuery("select it_lotsize, itr_total, wf_cell, wf_op, wc_run_crew, wf_run_hours, wf_setup_hours, " +
-                        " wc_desc, wc_cc, wc_run_rate, wc_setup_rate, wc_bdn_rate " +
-                        " from wf_mstr inner join item_mstr on it_wf = wf_id " + 
-                        " inner join wc_mstr on wc_cell = wf_cell  " + 
-                        " left outer join itemr_cost on itr_item = it_item and itr_routing = item_mstr.it_wf and itr_op = wf_op " +
-                        " where it_item = " + "'" + item + "'" + 
-                        " order by wf_op; " );
-               int i = 0;         
-               while (res.next()) {
-                   i++;
-                   
-                   op = res.getString("wf_op");
-                  
-                   
-                   material = 0.0;
-                   labor = 0.0;
-                   burden = 0.0;
-                   
-                   if (op.equals(opvar)) {
-                       // simulation
-                       if (lotsizevar == 0) {
-                        labor += ( ((setupratevar * setuphoursvar) ) +
-                                (runratevar * runhoursvar * runcrewvar )  );
-                        burden += ( ((burdenratevar * setuphoursvar)  ) +
-                                (burdenratevar * runhoursvar )  );
-                       } else {
-                         labor += ( ((setupratevar * setuphoursvar) / lotsizevar ) +
-                                 (runratevar * runhoursvar * runcrewvar )  );
-                        burden += ( ((burdenratevar * setuphoursvar) / lotsizevar ) +
-                                (burdenratevar * runhoursvar )  );  
-                       }
-                       
-                       
-                   } else {
-                       if (res.getDouble("it_lotsize") == 0) {
-                        labor += ( ((res.getDouble("wc_setup_rate") * res.getDouble("wf_setup_hours")) ) +
-                                (res.getDouble("wc_run_rate") * res.getDouble("wf_run_hours") * res.getDouble("wc_run_crew"))   );
-                        burden += ( ((res.getDouble("wc_bdn_rate") * res.getDouble("wf_setup_hours"))  ) +
-                                (res.getDouble("wc_bdn_rate") * res.getDouble("wf_run_hours") )  );
-                       } else {
-                         labor += ( ((res.getDouble("wc_setup_rate") * res.getDouble("wf_setup_hours")) / res.getDouble("it_lotsize") ) +
-                                 (res.getDouble("wc_run_rate") * res.getDouble("wf_run_hours") * res.getDouble("wc_run_crew"))   );
-                        burden += ( ((res.getDouble("wc_bdn_rate") * res.getDouble("wf_setup_hours")) / res.getDouble("it_lotsize") ) +
-                                (res.getDouble("wc_bdn_rate") * res.getDouble("wf_run_hours") )  );  
-                       }
-                   }
-                   
-                   if (doMatl) {
-                   // now do the matl for this operation
-                   res2 = st2.executeQuery("select ps_qty_per, itc_total from pbm_mstr " + 
-                        " inner join item_cost on ps_child = itc_item and itc_set = 'standard' " +
-                        " where ps_parent = " + "'" + item + "'" +
-                        " AND ps_op = " + "'" + op + "'" + ";");
-                    while (res2.next()) {
-                    material += ( res2.getDouble("itc_total") * res2.getDouble("ps_qty_per") );
-                    //ovh += ( res2.getDouble("itc_total") * res2.getDouble("ps_qty_per") );
-                    //outside += ( res2.getDouble("itc_total") * res2.getDouble("ps_qty_per") );
-                   }
-                   } // if calling program wants this routine to include material
-                total = labor + burden + material + ovh + outside;
-               } 
-                
-           }
-            catch (SQLException s){
-                MainFrame.bslog(s);
-                 bsmf.MainFrame.show("Cannot simulate cost");
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-            return total;
-        }
-        
-        public static String getShipperBillto(String shipper) {
-             String billto = "";
-              try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-               java.util.Date now = new java.util.Date();
-                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-                DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
-                String mydate = dfdate.format(now);
-                
-                   
-                   
-                      res = st.executeQuery("select sh_cust from ship_mstr where sh_id = " + "'" + shipper + "'" +";");
-                    while (res.next()) {
-                        billto = res.getString("sh_cust");
-                    }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-                 
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-            
-        }
-             return billto;
-         }
-         
-         public static String getOrderBillto(String order) {
-             String billto = "";
-              try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-               java.util.Date now = new java.util.Date();
-                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-                DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
-                String mydate = dfdate.format(now);
-                
-                   
-                   
-                      res = st.executeQuery("select so_cust from so_mstr where so_nbr = " + "'" + order + "'" +";");
-                    while (res.next()) {
-                        billto = res.getString("so_cust");
-                    }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-                 
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-            
-        }
-             return billto;
-         }
-         
-         
-         
-         public static ArrayList getOrderWHSource(String order) {
-             ArrayList<String> wh = new ArrayList<String>();
-              try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-                      // select statement will return all 'unique' warehouses assigned to source the order
-                      res = st.executeQuery("select sod_wh from sod_det where sod_nbr = " + "'" + order + "'" +" group by sod_wh ;");
-                    while (res.next()) {
-                        wh.add(res.getString("sod_wh"));
-                    }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-                 
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-            
-        }
-             return wh;
-         }
-         
-         
-         
-         
-         
-          public static String getFreightOrderCarrierAssigned(String order) {
-            String carrier = "";
-              try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-               
-                      // select statement will return all 'unique' warehouses assigned to source the order
-                      res = st.executeQuery("select fo_carrier_assigned from fo_mstr where fo_nbr = " + "'" + order + "'" +";");
-                      while (res.next()) {
-                          carrier = res.getString("fo_carrier_assigned"); 
-                      }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-                 
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-            
-        }
-             return carrier;
-       }
-         
-      
-          public static String getFreightOrderNbrFromCustFO(String custfo) {
-            String fo = "";
-              try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-               
-                      res = st.executeQuery("select fo_nbr from fo_mstr where fo_custfo = " + "'" + custfo + "'" +";");
-                      while (res.next()) {
-                          fo = res.getString("fo_nbr"); 
-                      }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-                 
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-            
-        }
-             return fo;
-       }   
-          public static ArrayList getFreightOrderCarrierList(String order) {
-             ArrayList<String> carriers = new ArrayList<String>();
-              try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-                String cartype = "";
-                String carrier = "";
-                      // select statement will return all 'unique' warehouses assigned to source the order
-                      res = st.executeQuery("select fo_carrier, car_type from fo_mstr inner join car_mstr on car_code = fo_carrier where fo_nbr = " + "'" + order + "'" +";");
-                      while (res.next()) {
-                          cartype = res.getString("car_type");
-                          carrier = res.getString("fo_carrier"); 
-                      }
-                      
-                      if (cartype.equals("group")) {
-                          res = st.executeQuery("select card_carrier from car_det where card_code = " + "'" + carrier + "'" +";");
-                          while (res.next()) {
-                          carriers.add(res.getString("card_carrier"));
-                          }
-                      } else {
-                          carriers.add(carrier);
-                      }
-                      
-                    
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-                 
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-            
-        }
-             return carriers;
-         }
-         
-         
-         
-            
-         public static String[] getShipperHeader(String shipper) {
-             
-              String[] H = new String[13];
-        try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-               java.util.Date now = new java.util.Date();
-                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-                DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
-                String mydate = dfdate.format(now);
-                   
-                    
-                    res = st.executeQuery("select * from ship_mstr where sh_id = " + "'" + shipper + "'" +";");
-                    while (res.next()) {
-                        H[0] = res.getString("sh_cust");
-                        H[1] = res.getString("sh_ship");
-                        H[2] = res.getString("sh_so");
-                        H[3] = res.getString("sh_po");
-                        H[4] = res.getString("sh_po_date");
-                        H[5] = res.getString("sh_shipdate");
-                        H[6] = res.getString("sh_rmks");
-                        H[7] = res.getString("sh_ref");
-                        H[8] = res.getString("sh_shipvia");
-                        H[9] = res.getString("sh_gross_wt");
-                        H[10] = res.getString("sh_net_wt");
-                        H[11] = res.getString("sh_trailer");
-                        H[12] = res.getString("sh_site");
-                      
-                    }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-                 
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-            
-        }
-        return H;
-        
-         }
-         
-         
-          public static String[] getFreightOrderHeaderArray(String order) {
-              String header[] = new String[11];
-        try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-               java.util.Date now = new java.util.Date();
-                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-                DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
-                String mydate = dfdate.format(now);
-                   
-                    
-                    res = st.executeQuery("select * from fo_mstr where fo_nbr = " + "'" + order + "'" +";");
-                    while (res.next()) {
-                        header[0] = res.getString("fo_nbr").toUpperCase();
-                        header[1] = res.getString("fo_ref").toUpperCase();
-                        header[2] = res.getString("fo_site").toUpperCase();
-                        header[3] = res.getString("fo_wh").toUpperCase();
-                        header[4] = res.getString("fo_date").toUpperCase();
-                        header[5] = res.getString("fo_rmks").toUpperCase();
-                        header[6] = res.getString("fo_carrier").toUpperCase();
-                        header[7] = res.getString("fo_carrier_assigned").toUpperCase();
-                        header[8] = res.getString("fo_reasoncode").toUpperCase();
-                        header[9] = res.getString("fo_custfo").toUpperCase();
-                        header[10] = res.getString("fo_type").toUpperCase();
-                    }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-                 
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-            
-        }
-        return header;
-        
-         }
-         
-          
-       
-           public static ArrayList getFreightOrderDetailArray(String order) {
-              ArrayList<String[]> detail = new ArrayList<String[]>();
-        try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-               java.util.Date now = new java.util.Date();
-                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-                DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
-                String mydate = dfdate.format(now);
-                   
-                    
-                    
-                    res = st.executeQuery("select fod_line, fod_type, fod_shipper, fod_ref, fod_shipdate, fod_shiptime, fod_delvdate, fod_delvtime, fod_code, fod_name, fod_addr1, fod_addr2, fod_city, fod_state, fod_zip, " +
-                            " fod_phone, fod_contact, fod_remarks, fod_units, fod_boxes, fod_weight, fod_wt_uom from fod_det " +
-                            "  where fod_nbr = " + "'" + order + "'" +";");
-                    while (res.next()) {
-                        detail.add(new String[]{res.getString("fod_line").toUpperCase(), 
-                            res.getString("fod_type").toUpperCase(), 
-                            res.getString("fod_shipper").toUpperCase(), 
-                            res.getString("fod_ref").toUpperCase(), 
-                            res.getString("fod_shipdate").toUpperCase(), 
-                            res.getString("fod_shiptime").toUpperCase(), 
-                            res.getString("fod_delvdate").toUpperCase(), 
-                            res.getString("fod_delvtime").toUpperCase(), 
-                            res.getString("fod_code").toUpperCase(), 
-                            res.getString("fod_name").toUpperCase(), 
-                            res.getString("fod_addr1").toUpperCase(), 
-                            res.getString("fod_addr2").toUpperCase(), 
-                            res.getString("fod_city").toUpperCase(),
-                            res.getString("fod_state").toUpperCase(),
-                            res.getString("fod_zip").toUpperCase(),
-                            res.getString("fod_phone").toUpperCase(),
-                            res.getString("fod_contact").toUpperCase(),
-                            res.getString("fod_remarks").toUpperCase(),
-                            res.getString("fod_units").toUpperCase(),
-                            res.getString("fod_boxes").toUpperCase(),
-                            res.getString("fod_weight").toUpperCase(),
-                            res.getString("fod_wt_uom").toUpperCase()
-                        });
-                    }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-                 
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-            
-        }
-        return detail;
-        
-         }
-          
-            public static String[] getOrderHeaderArray(String order) {
-              String header[] = new String[7];
-        try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-               java.util.Date now = new java.util.Date();
-                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-                DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
-                String mydate = dfdate.format(now);
-                   
-                    // so_nbr, so_po, so_cust, so_ship, so_due_date, so_shipvia
-                    res = st.executeQuery("select * from so_mstr where so_nbr = " + "'" + order + "'" +";");
-                    while (res.next()) {
-                        header[0] = res.getString("so_nbr").toUpperCase();
-                        header[1] = res.getString("so_po").toUpperCase();
-                        header[2] = res.getString("so_cust").toUpperCase();
-                        header[3] = res.getString("so_ship").toUpperCase();
-                        header[4] = res.getString("so_due_date").toUpperCase();
-                        header[5] = res.getString("so_shipvia");
-                        header[6] = res.getString("so_rmks").toUpperCase();
-                    }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-                 
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-            
-        }
-        return header;
-        
-         }
-         
-            public static ArrayList getOrderDetailArray(String order) {
-              ArrayList<String[]> detail = new ArrayList<String[]>();
-        try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-               java.util.Date now = new java.util.Date();
-                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-                DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
-                String mydate = dfdate.format(now);
-                   
-                    
-                    // sod_line, sod_part, sod_custpart, sod_ord_qty, sod_uom, sod_desc, it_net_wt, sod_listprice, sod_disc, sod_netprice, sod_site, sod_wh, sod_loc
-                    res = st.executeQuery("select sod_line, sod_part, sod_custpart, sod_ord_qty, sod_uom, sod_desc, it_net_wt, sod_listprice, sod_disc, sod_netprice, sod_site, sod_wh, sod_loc from sod_det " +
-                            " left outer join item_mstr on it_item = sod_part where sod_nbr = " + "'" + order + "'" +";");
-                    while (res.next()) {
-                        detail.add(new String[]{res.getString("sod_line").toUpperCase(), 
-                            res.getString("sod_part").toUpperCase(), 
-                            res.getString("sod_custpart").toUpperCase(), 
-                            res.getString("sod_ord_qty").toUpperCase(), 
-                            res.getString("sod_uom").toUpperCase(), 
-                            res.getString("sod_desc").toUpperCase(), 
-                            res.getString("it_net_wt").toUpperCase(),
-                            res.getString("sod_listprice").toUpperCase(),
-                            res.getString("sod_disc").toUpperCase(),
-                            res.getString("sod_netprice").toUpperCase(),
-                            res.getString("sod_site").toUpperCase(),
-                            res.getString("sod_wh").toUpperCase(),
-                            res.getString("sod_loc").toUpperCase()
-                        });
-                    }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-                 
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-            
-        }
-        return detail;
-        
-         }
-            
-             public static String getOrderHeader(String order) {
-              String mystring = "";
-        try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-               java.util.Date now = new java.util.Date();
-                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-                DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
-                String mydate = dfdate.format(now);
-                   
-                    
-                    res = st.executeQuery("select * from so_mstr where so_nbr = " + "'" + order + "'" +";");
-                    while (res.next()) {
-                        mystring = res.getString("so_cust") + "," +
-                                   res.getString("so_ship") + "," +
-                                res.getString("so_nbr") + "," +
-                                res.getString("so_po") + "," +
-                                res.getString("so_ord_date") + "," +
-                                res.getString("so_due_date") + "," +
-                                res.getString("so_rmks") + "," +
-                                res.getString("so_char1") + "," +
-                                res.getString("so_char2") + "," +
-                                res.getString("so_char3") + "," +
-                                res.getString("so_shipvia") ;
-                    }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-                 
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-            
-        }
-        return mystring;
-        
-         }
-        
-             
-             
-             
-        public static ArrayList<String[]> getShipperLines(String shipper) {
-              ArrayList<String[]> mylist = new ArrayList();  
-              
-        try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-               java.util.Date now = new java.util.Date();
-                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-                DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
-                String mydate = dfdate.format(now);
-                
-                   
-                   String[] d = new String[9];
-                      res = st.executeQuery("select * from ship_det where shd_id = " + "'" + shipper + "'" +";");
-                    while (res.next()) {
-                        for (int z = 0; z < 9; z++) {
-                            d[z] = "";
-                        }
-                        d[0] = res.getString("shd_part");
-                        d[1] = res.getString("shd_custpart");
-                        d[2] = res.getString("shd_qty");
-                        d[3] = res.getString("shd_po");
-                        d[4] = res.getString("shd_cumqty");
-                        d[5] = res.getString("shd_listprice");
-                        d[6] = res.getString("shd_netprice");
-                        d[7] = res.getString("shd_ref");
-                        d[8] = res.getString("shd_sku");
-                        mylist.add(d);
-                    }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-                 
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-            
-        }
-        return mylist;
-        
-         }
+               }
 
-         public static ArrayList getShippersOpenListForFreight() {
-              ArrayList mylist = new ArrayList();  
+               if (doMatl) {
+               // now do the matl for this operation
+               res2 = st2.executeQuery("select ps_qty_per, itc_total from pbm_mstr " + 
+                    " inner join item_cost on ps_child = itc_item and itc_set = 'standard' " +
+                    " where ps_parent = " + "'" + item + "'" +
+                    " AND ps_op = " + "'" + op + "'" + ";");
+                while (res2.next()) {
+                material += ( res2.getDouble("itc_total") * res2.getDouble("ps_qty_per") );
+                //ovh += ( res2.getDouble("itc_total") * res2.getDouble("ps_qty_per") );
+                //outside += ( res2.getDouble("itc_total") * res2.getDouble("ps_qty_per") );
+               }
+               } // if calling program wants this routine to include material
+            total = labor + burden + material + ovh + outside;
+           } 
+
+       }
+        catch (SQLException s){
+            MainFrame.bslog(s);
+             bsmf.MainFrame.show("Cannot simulate cost");
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+        return total;
+    }
+
+    public static String getShipperBillto(String shipper) {
+         String billto = "";
+          try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
         try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-               java.util.Date now = new java.util.Date();
-                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-                DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
-                String mydate = dfdate.format(now);
-                
-                   // if shipper has been assigned to a freight order...the sh_freight field will be occupied with the freight order number...otherwise 
-                   // it will be blank and available for freight.                  
-                      res = st.executeQuery("select sh_id from ship_mstr where sh_status = '0' AND sh_freight = '' " + " order by sh_id desc ;");
-                    while (res.next()) {
-                        mylist.add(res.getString("sh_id"));
-                    }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-                 
+            Statement st = con.createStatement();
+            ResultSet res = null;
+           java.util.Date now = new java.util.Date();
+            DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+            DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
+            String mydate = dfdate.format(now);
+
+
+
+                  res = st.executeQuery("select sh_cust from ship_mstr where sh_id = " + "'" + shipper + "'" +";");
+                while (res.next()) {
+                    billto = res.getString("sh_cust");
+                }
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+
+    }
+         return billto;
+     }
+
+    public static String getOrderBillto(String order) {
+         String billto = "";
+          try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+           java.util.Date now = new java.util.Date();
+            DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+            DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
+            String mydate = dfdate.format(now);
+
+
+
+                  res = st.executeQuery("select so_cust from so_mstr where so_nbr = " + "'" + order + "'" +";");
+                while (res.next()) {
+                    billto = res.getString("so_cust");
+                }
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+
+    }
+         return billto;
+     }
+
+    public static ArrayList getOrderWHSource(String order) {
+         ArrayList<String> wh = new ArrayList<String>();
+          try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+                  // select statement will return all 'unique' warehouses assigned to source the order
+                  res = st.executeQuery("select sod_wh from sod_det where sod_nbr = " + "'" + order + "'" +" group by sod_wh ;");
+                while (res.next()) {
+                    wh.add(res.getString("sod_wh"));
+                }
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+
+    }
+         return wh;
+     }
+
+    public static String getFreightOrderCarrierAssigned(String order) {
+        String carrier = "";
+          try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+                  // select statement will return all 'unique' warehouses assigned to source the order
+                  res = st.executeQuery("select fo_carrier_assigned from fo_mstr where fo_nbr = " + "'" + order + "'" +";");
+                  while (res.next()) {
+                      carrier = res.getString("fo_carrier_assigned"); 
+                  }
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+
+    }
+         return carrier;
+   }
+
+    public static String getFreightOrderNbrFromCustFO(String custfo) {
+        String fo = "";
+          try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+                  res = st.executeQuery("select fo_nbr from fo_mstr where fo_custfo = " + "'" + custfo + "'" +";");
+                  while (res.next()) {
+                      fo = res.getString("fo_nbr"); 
+                  }
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+
+    }
+         return fo;
+   }   
+    
+    public static ArrayList getFreightOrderCarrierList(String order) {
+         ArrayList<String> carriers = new ArrayList<String>();
+          try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            String cartype = "";
+            String carrier = "";
+                  // select statement will return all 'unique' warehouses assigned to source the order
+                  res = st.executeQuery("select fo_carrier, car_type from fo_mstr inner join car_mstr on car_code = fo_carrier where fo_nbr = " + "'" + order + "'" +";");
+                  while (res.next()) {
+                      cartype = res.getString("car_type");
+                      carrier = res.getString("fo_carrier"); 
+                  }
+
+                  if (cartype.equals("group")) {
+                      res = st.executeQuery("select card_carrier from car_det where card_code = " + "'" + carrier + "'" +";");
+                      while (res.next()) {
+                      carriers.add(res.getString("card_carrier"));
+                      }
+                  } else {
+                      carriers.add(carrier);
+                  }
+
+
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+
+    }
+         return carriers;
+     }
+
+    public static String[] getShipperHeader(String shipper) {
+
+          String[] H = new String[13];
+    try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+           java.util.Date now = new java.util.Date();
+            DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+            DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
+            String mydate = dfdate.format(now);
+
+
+                res = st.executeQuery("select * from ship_mstr where sh_id = " + "'" + shipper + "'" +";");
+                while (res.next()) {
+                    H[0] = res.getString("sh_cust");
+                    H[1] = res.getString("sh_ship");
+                    H[2] = res.getString("sh_so");
+                    H[3] = res.getString("sh_po");
+                    H[4] = res.getString("sh_po_date");
+                    H[5] = res.getString("sh_shipdate");
+                    H[6] = res.getString("sh_rmks");
+                    H[7] = res.getString("sh_ref");
+                    H[8] = res.getString("sh_shipvia");
+                    H[9] = res.getString("sh_gross_wt");
+                    H[10] = res.getString("sh_net_wt");
+                    H[11] = res.getString("sh_trailer");
+                    H[12] = res.getString("sh_site");
+
+                }
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+
+    }
+    return H;
+
+     }
+
+    public static String[] getFreightOrderHeaderArray(String order) {
+          String header[] = new String[11];
+    try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+           java.util.Date now = new java.util.Date();
+            DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+            DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
+            String mydate = dfdate.format(now);
+
+
+                res = st.executeQuery("select * from fo_mstr where fo_nbr = " + "'" + order + "'" +";");
+                while (res.next()) {
+                    header[0] = res.getString("fo_nbr").toUpperCase();
+                    header[1] = res.getString("fo_ref").toUpperCase();
+                    header[2] = res.getString("fo_site").toUpperCase();
+                    header[3] = res.getString("fo_wh").toUpperCase();
+                    header[4] = res.getString("fo_date").toUpperCase();
+                    header[5] = res.getString("fo_rmks").toUpperCase();
+                    header[6] = res.getString("fo_carrier").toUpperCase();
+                    header[7] = res.getString("fo_carrier_assigned").toUpperCase();
+                    header[8] = res.getString("fo_reasoncode").toUpperCase();
+                    header[9] = res.getString("fo_custfo").toUpperCase();
+                    header[10] = res.getString("fo_type").toUpperCase();
+                }
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+
+    }
+    return header;
+
+     }
+
+    public static ArrayList getFreightOrderDetailArray(String order) {
+          ArrayList<String[]> detail = new ArrayList<String[]>();
+    try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+           java.util.Date now = new java.util.Date();
+            DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+            DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
+            String mydate = dfdate.format(now);
+
+
+
+                res = st.executeQuery("select fod_line, fod_type, fod_shipper, fod_ref, fod_shipdate, fod_shiptime, fod_delvdate, fod_delvtime, fod_code, fod_name, fod_addr1, fod_addr2, fod_city, fod_state, fod_zip, " +
+                        " fod_phone, fod_contact, fod_remarks, fod_units, fod_boxes, fod_weight, fod_wt_uom from fod_det " +
+                        "  where fod_nbr = " + "'" + order + "'" +";");
+                while (res.next()) {
+                    detail.add(new String[]{res.getString("fod_line").toUpperCase(), 
+                        res.getString("fod_type").toUpperCase(), 
+                        res.getString("fod_shipper").toUpperCase(), 
+                        res.getString("fod_ref").toUpperCase(), 
+                        res.getString("fod_shipdate").toUpperCase(), 
+                        res.getString("fod_shiptime").toUpperCase(), 
+                        res.getString("fod_delvdate").toUpperCase(), 
+                        res.getString("fod_delvtime").toUpperCase(), 
+                        res.getString("fod_code").toUpperCase(), 
+                        res.getString("fod_name").toUpperCase(), 
+                        res.getString("fod_addr1").toUpperCase(), 
+                        res.getString("fod_addr2").toUpperCase(), 
+                        res.getString("fod_city").toUpperCase(),
+                        res.getString("fod_state").toUpperCase(),
+                        res.getString("fod_zip").toUpperCase(),
+                        res.getString("fod_phone").toUpperCase(),
+                        res.getString("fod_contact").toUpperCase(),
+                        res.getString("fod_remarks").toUpperCase(),
+                        res.getString("fod_units").toUpperCase(),
+                        res.getString("fod_boxes").toUpperCase(),
+                        res.getString("fod_weight").toUpperCase(),
+                        res.getString("fod_wt_uom").toUpperCase()
+                    });
+                }
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+
+    }
+    return detail;
+
+     }
+
+    public static String[] getOrderHeaderArray(String order) {
+          String header[] = new String[7];
+    try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+           java.util.Date now = new java.util.Date();
+            DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+            DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
+            String mydate = dfdate.format(now);
+
+                // so_nbr, so_po, so_cust, so_ship, so_due_date, so_shipvia
+                res = st.executeQuery("select * from so_mstr where so_nbr = " + "'" + order + "'" +";");
+                while (res.next()) {
+                    header[0] = res.getString("so_nbr").toUpperCase();
+                    header[1] = res.getString("so_po").toUpperCase();
+                    header[2] = res.getString("so_cust").toUpperCase();
+                    header[3] = res.getString("so_ship").toUpperCase();
+                    header[4] = res.getString("so_due_date").toUpperCase();
+                    header[5] = res.getString("so_shipvia");
+                    header[6] = res.getString("so_rmks").toUpperCase();
+                }
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+
+    }
+    return header;
+
+     }
+
+    public static ArrayList getOrderDetailArray(String order) {
+      ArrayList<String[]> detail = new ArrayList<String[]>();
+try{
+
+    Connection con = DriverManager.getConnection(url + db, user, pass);
+    try{
+        Statement st = con.createStatement();
+        ResultSet res = null;
+       java.util.Date now = new java.util.Date();
+        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+        DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
+        String mydate = dfdate.format(now);
+
+
+            // sod_line, sod_part, sod_custpart, sod_ord_qty, sod_uom, sod_desc, it_net_wt, sod_listprice, sod_disc, sod_netprice, sod_site, sod_wh, sod_loc
+            res = st.executeQuery("select sod_line, sod_part, sod_custpart, sod_ord_qty, sod_uom, sod_desc, it_net_wt, sod_listprice, sod_disc, sod_netprice, sod_site, sod_wh, sod_loc from sod_det " +
+                    " left outer join item_mstr on it_item = sod_part where sod_nbr = " + "'" + order + "'" +";");
+            while (res.next()) {
+                detail.add(new String[]{res.getString("sod_line").toUpperCase(), 
+                    res.getString("sod_part").toUpperCase(), 
+                    res.getString("sod_custpart").toUpperCase(), 
+                    res.getString("sod_ord_qty").toUpperCase(), 
+                    res.getString("sod_uom").toUpperCase(), 
+                    res.getString("sod_desc").toUpperCase(), 
+                    res.getString("it_net_wt").toUpperCase(),
+                    res.getString("sod_listprice").toUpperCase(),
+                    res.getString("sod_disc").toUpperCase(),
+                    res.getString("sod_netprice").toUpperCase(),
+                    res.getString("sod_site").toUpperCase(),
+                    res.getString("sod_wh").toUpperCase(),
+                    res.getString("sod_loc").toUpperCase()
+                });
             }
-            con.close();
+   }
+    catch (SQLException s){
+         MainFrame.bslog(s);
+
+    }
+    con.close();
+}
+catch (Exception e){
+    MainFrame.bslog(e);
+
+}
+return detail;
+
+ }
+
+    public static String getOrderHeader(String order) {
+      String mystring = "";
+try{
+
+    Connection con = DriverManager.getConnection(url + db, user, pass);
+    try{
+        Statement st = con.createStatement();
+        ResultSet res = null;
+       java.util.Date now = new java.util.Date();
+        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+        DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
+        String mydate = dfdate.format(now);
+
+
+            res = st.executeQuery("select * from so_mstr where so_nbr = " + "'" + order + "'" +";");
+            while (res.next()) {
+                mystring = res.getString("so_cust") + "," +
+                           res.getString("so_ship") + "," +
+                        res.getString("so_nbr") + "," +
+                        res.getString("so_po") + "," +
+                        res.getString("so_ord_date") + "," +
+                        res.getString("so_due_date") + "," +
+                        res.getString("so_rmks") + "," +
+                        res.getString("so_char1") + "," +
+                        res.getString("so_char2") + "," +
+                        res.getString("so_char3") + "," +
+                        res.getString("so_shipvia") ;
+            }
+   }
+    catch (SQLException s){
+         MainFrame.bslog(s);
+
+    }
+    con.close();
+}
+catch (Exception e){
+    MainFrame.bslog(e);
+
+}
+return mystring;
+
+ }
+
+    public static ArrayList<String[]> getShipperLines(String shipper) {
+          ArrayList<String[]> mylist = new ArrayList();  
+
+    try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+           java.util.Date now = new java.util.Date();
+            DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+            DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
+            String mydate = dfdate.format(now);
+
+
+               String[] d = new String[9];
+                  res = st.executeQuery("select * from ship_det where shd_id = " + "'" + shipper + "'" +";");
+                while (res.next()) {
+                    for (int z = 0; z < 9; z++) {
+                        d[z] = "";
+                    }
+                    d[0] = res.getString("shd_part");
+                    d[1] = res.getString("shd_custpart");
+                    d[2] = res.getString("shd_qty");
+                    d[3] = res.getString("shd_po");
+                    d[4] = res.getString("shd_cumqty");
+                    d[5] = res.getString("shd_listprice");
+                    d[6] = res.getString("shd_netprice");
+                    d[7] = res.getString("shd_ref");
+                    d[8] = res.getString("shd_sku");
+                    mylist.add(d);
+                }
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+
         }
-        catch (Exception e){
-            MainFrame.bslog(e);
-            
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+
+    }
+    return mylist;
+
+     }
+
+    public static ArrayList getShippersOpenListForFreight() {
+          ArrayList mylist = new ArrayList();  
+    try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+           java.util.Date now = new java.util.Date();
+            DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+            DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
+            String mydate = dfdate.format(now);
+
+               // if shipper has been assigned to a freight order...the sh_freight field will be occupied with the freight order number...otherwise 
+               // it will be blank and available for freight.                  
+                  res = st.executeQuery("select sh_id from ship_mstr where sh_status = '0' AND sh_freight = '' " + " order by sh_id desc ;");
+                while (res.next()) {
+                    mylist.add(res.getString("sh_id"));
+                }
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+
         }
-        return mylist;
-        
-         }
-        
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+
+    }
+    return mylist;
+
+     }
+
     /* start of inventory related functions */
                 
-        public static boolean UpdateInventoryDiscrete(String part, String site, String loc, String wh, String serial, String expire, Double qty) {
-              boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
-        try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                Statement st2 = con.createStatement();
-                Statement st3 = con.createStatement();
-                ResultSet res = null;
-                ResultSet nres = null;
-                
-                java.util.Date now = new java.util.Date();
-                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-                DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
-                String mydate = dfdate.format(now);
-                
-                // Skip item code "S" when adjusting inventory -- service item
-                String itemcode = invData.getItemCode(part);
-                if (itemcode.equals("S")) {  
-                    return false;
-                }
-                
-                
-                 double sum = 0.00;
-                     
-                        // check if in_mstr record exists for this part, loc, wh, site, serial, expire combo
-                        // if not add it
-                        nres = st2.executeQuery("select in_qoh from in_mstr where "
-                                + " in_part = " + "'" + part + "'" 
-                                + " and in_loc = " + "'" + loc + "'"
-                                + " and in_wh = " + "'" + wh + "'"
-                                + " and in_site = " + "'" + site + "'"
-                                + " and in_serial = " + "'" + serial + "'"      
-                                + ";");
-                        int z = 0;
-                         double qoh = 0.00;
-                          while (nres.next()) {
-                            z++;
-                            qoh = bsParseDouble(nres.getString("in_qoh"));
-                        }
-                        nres.close();
-                        
-                        
-                        if (z == 0) {
-                         sum = qty;
-                         st3.executeUpdate("insert into in_mstr "
-                                + "(in_site, in_part, in_loc, in_wh, in_serial, in_expire, in_qoh, in_date ) "
-                                + " values ( " 
-                                + "'" + site + "'" + ","
-                                + "'" + part + "'" + ","
-                                + "'" + loc + "'" + ","
-                                + "'" + wh + "'" + ","
-                                + "'" + serial + "'" + ","
-                                + "'" + expire + "'" + ","        
-                                + "'" + sum + "'" + ","
-                                + "'" + mydate + "'"
-                                + ")"
-                                + ";");
-                     
-                        }  else {
-                           // nres.first();
-                            sum = qoh + qty;
-                             st3.executeUpdate("update in_mstr "
-                                + " set in_qoh = " + "'" + sum + "'" + "," +
-                                  " in_date = " + "'" + mydate + "'"
-                                + " where in_part = " + "'" + part + "'" 
-                                + " and in_loc = " + "'" + loc + "'"
-                                + " and in_wh = " + "'" + wh + "'"
-                                + " and in_site = " + "'" + site + "'"
-                                + " and in_serial = " + "'" + serial + "'"       
-                                + ";");
-                        }
-                        
-                          
-                
-                    
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-                 myerror = true;
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-            myerror = true;
-        }
-        return myerror;
-        
-         }
-                  
-        public static void UpdateInventoryFromPOS(String nbr, boolean isVoid, Connection bscon) throws SQLException {
-        
+    public static boolean UpdateInventoryDiscrete(String part, String site, String loc, String wh, String serial, String expire, Double qty) {
+          boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
+    try{
+
         Connection con = DriverManager.getConnection(url + db, user, pass);
-        Statement st = con.createStatement();
-        Statement st2 = con.createStatement();
-        Statement st3 = con.createStatement();
-        Statement st4 = con.createStatement();
-        ResultSet res = null;
-        ResultSet res2 = null;
-        ResultSet nres = null;
-                
-               java.util.Date now = new java.util.Date();
-                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-                DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
-                String mydate = dfdate.format(now);
-                
-                   
-                    String part = "";
-                    double qty = 0;
-                    String loc = "";
-                    String wh = "";
-                    String site = OVData.getDefaultSite();
-                    double sum = 0;
-                    int i = 0;
-                  
-                    
-                   
-                      res = st.executeQuery("select posd_item, posd_qty from pos_det " +
-                              " where posd_nbr = " + "'" + nbr + "'" +";");
-                      
-                      
-                    while (res.next()) {
-                      
-                        i = 0;
-                        part = res.getString("posd_item");
-                        
-                        if (isVoid) {
-                        qty = (-1 * res.getDouble("posd_qty"));
-                        } else {
-                         qty = res.getDouble("posd_qty");   
-                        }
-                        
-                        
-                        // lets determine if this is a legitimate item or a misc item...do not inventory misc items
-                        res2 = st4.executeQuery("select it_item, it_loc, it_code " +
-                              " from  item_mstr  " +
-                              " where it_item = " + "'" + part + "'" +";");
-                        
-                        while (res2.next()) {
-                            // continue if service item
-                            if (res2.getString("it_code").equals("S")) {
-                            continue;
-                            }
-                            i++;
-                            // if no loc in shipper then grab the item default loc
-                            if (loc.isEmpty())
-                               loc = res2.getString("it_loc");
-                        }
-                        // if no item_mstr then continue loop...must be miscellaneous item
-                        if (i == 0) {
-                            continue;
-                        }
-                        
-                        
-                        
-                        // check if in_mstr record exists for this part,loc,site combo
-                        // if not add it
-                        nres = st2.executeQuery("select in_qoh from in_mstr where "
-                                + " in_part = " + "'" + part + "'" 
-                                + " and in_loc = " + "'" + loc + "'"
-                                + " and in_wh = " + "'" + wh + "'"
-                                + " and in_site = " + "'" + site + "'"
-                                + ";");
-                        
-                          int z = 0;
-                         double qoh = 0.00;
-                          while (nres.next()) {
-                            z++;
-                            qoh = bsParseDouble(nres.getString("in_qoh"));
-                        }
-                        nres.close();
-                        
-                        
-                        if (z == 0) {
-                         sum = (-1 * qty);
-                         st3.executeUpdate("insert into in_mstr "
-                                + "(in_site, in_part, in_loc, in_wh, in_qoh, in_date ) "
-                                + " values ( " 
-                                + "'" + site + "'" + ","
-                                + "'" + part + "'" + ","
-                                + "'" + loc + "'" + ","
-                                + "'" + wh + "'" + ","
-                                + "'" + sum + "'" + ","
-                                + "'" + mydate + "'"
-                                + ")"
-                                + ";");
-                     
-                        }  else {
-                           // nres.first();
-                            sum = qoh - qty;
-                             st3.executeUpdate("update in_mstr "
-                                + " set in_qoh = " + "'" + sum + "'" + "," +
-                                  " in_date = " + "'" + mydate + "'"
-                                + " where in_part = " + "'" + part + "'" 
-                                + " and in_loc = " + "'" + loc + "'"
-                                + " and in_wh = " + "'" + wh + "'"
-                                + " and in_site = " + "'" + site + "'"
-                                + ";");
-                        }
-                        
-                
-                    }
-           if (st != null) {st.close();}
-           if (st2 != null) {st2.close();}
-           if (st3 != null) {st3.close();}
-           if (st4 != null) {st4.close();}
-           if (res != null) {res.close();}
-           if (res2 != null) {res2.close();}
-           if (nres != null) {nres.close();}
-           if (con != null) {con.close();}
-        
-         }
-         
-        public static boolean UpdateInventoryFromShipper(String shipper) {
-              boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
         try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                Statement st2 = con.createStatement();
-                Statement st3 = con.createStatement();
-                Statement st4 = con.createStatement();
-                ResultSet res = null;
-                ResultSet res2 = null;
-                ResultSet nres = null;
-                
-               java.util.Date now = new java.util.Date();
-                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-                DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
-                String mydate = dfdate.format(now);
-                
-                   
-                    String part = "";
-                    double qty = 0;
-                    String uom = "";
-                    double baseqty = 0;
-                    String loc = "";
-                    String wh = "";
-                    String site = "";
-                    String serial = "";
-                    String expire = "";
-                    double sum = 0;
-                    int i = 0;
-                  
-                    
-                   
-                      res = st.executeQuery("select sh_site, shd_part, shd_qty, shd_uom, shd_loc, shd_wh, shd_site, shd_serial " +
-                              " from ship_det inner join ship_mstr on sh_id = shd_id  " +
-                              " where shd_id = " + "'" + shipper + "'" +";");
-                      
-                      
-                    while (res.next()) {
-                      
-                        i = 0;
-                        part = res.getString("shd_part");
-                        qty = res.getDouble("shd_qty");
-                        uom = res.getString("shd_uom");
-                        loc = res.getString("shd_loc");
-                        wh = res.getString("shd_wh");
-                        site = res.getString("sh_site");
-                        serial = res.getString("shd_serial");
-                        baseqty = OVData.getUOMBaseQty(part, site, uom, qty);
-                      //  bsmf.MainFrame.show(baseqty + "/" + uom + "/" + qty);
-                        
-                        // lets determine if this is a legitimate item or a misc item...do not inventory misc items
-                        res2 = st4.executeQuery("select it_item, it_loc, it_wh, it_code " +
-                              " from  item_mstr  " +
-                              " where it_item = " + "'" + part + "'" + ";");
-                        
-                        while (res2.next()) {
-                            // if item type 'S' service....then continue
-                            if (res2.getString("it_code").equals("S")) {
-                              continue;
-                            }
-                            
-                            i++;
-                            // if no loc in shipper then grab the item default loc
-                            if (loc.isEmpty())
-                               loc = res2.getString("it_loc");
-                             // if no loc in shipper then grab the item default loc
-                            if (wh.isEmpty())
-                               wh = res2.getString("it_wh");
-                        }
-                        // if no item_mstr then continue loop...must be miscellaneous item
-                        if (i == 0) {
-                            continue;
-                        }
-                        
-                        
-                        
-                        // check if in_mstr record exists for this part,loc,site combo
-                        // if not add it
-                        int z = 0;
-                        double qoh = 0.00;
-                        nres = st2.executeQuery("select in_qoh from in_mstr where "
-                                + " in_part = " + "'" + part + "'" 
-                                + " and in_loc = " + "'" + loc + "'"
-                                + " and in_wh = " + "'" + wh + "'"
-                                + " and in_site = " + "'" + site + "'"
-                                + " and in_serial = " + "'" + serial + "'"      
-                                + ";");
-                        
-                        while (nres.next()) {
-                            z++;
-                            qoh = bsParseDouble(nres.getString("in_qoh"));
-                        }
-                        nres.close();
-                        
-                        
-                        if (z == 0) {
-                         sum = (-1 * baseqty);
-                         st3.executeUpdate("insert into in_mstr "
-                                + "(in_site, in_part, in_loc, in_wh, in_serial, in_expire, in_qoh, in_date ) "
-                                + " values ( " 
-                                + "'" + site + "'" + ","
-                                + "'" + part + "'" + ","
-                                + "'" + loc + "'" + ","
-                                + "'" + wh + "'" + ","
-                                + "'" + serial + "'" + ","
-                                + "'" + expire + "'" + ","   
-                                + "'" + sum + "'" + ","
-                                + "'" + mydate + "'"
-                                + ")"
-                                + ";");
-                     
-                        }  else {
-                           // nres.first();
-                            sum = qoh - baseqty;
-                             st3.executeUpdate("update in_mstr "
-                                + " set in_qoh = " + "'" + sum + "'" + "," +
-                                  " in_date = " + "'" + mydate + "'"
-                                + " where in_part = " + "'" + part + "'" 
-                                + " and in_loc = " + "'" + loc + "'"
-                                + " and in_wh = " + "'" + wh + "'"
-                                + " and in_site = " + "'" + site + "'"
-                                + " and in_serial = " + "'" + serial + "'"             
-                                + ";");
-                        }
-                        
-                        
-                          
-                
-                    }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-                 myerror = true;
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-            myerror = true;
-        }
-        return myerror;
-        
-         }
-         
-        public static boolean UpdateInventoryFromShipperRV(String shipper) {
-              boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
-        try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                Statement st2 = con.createStatement();
-                Statement st3 = con.createStatement();
-                Statement st4 = con.createStatement();
-                ResultSet res = null;
-                ResultSet res2 = null;
-                ResultSet nres = null;
-                
-               java.util.Date now = new java.util.Date();
-                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-                DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
-                String mydate = dfdate.format(now);
-                
-                   
-                    String part = "";
-                    double qty = 0;
-                    double baseqty = 0;
-                    String uom = "";
-                    String loc = "";
-                    String wh = "";
-                    String site = "";
-                    String serial = "";
-                    String expire = "";
-                    double sum = 0;
-                    int i = 0;
-                  
-                    
-                   
-                      res = st.executeQuery("select sh_site, shd_part, shd_qty, shd_loc, shd_wh, shd_uom, shd_serial " +
-                              " from ship_det inner join ship_mstr on sh_id = shd_id  " +
-                              " where shd_id = " + "'" + shipper + "'" +";");
-                      
-                      
-                    while (res.next()) {
-                      
-                        i = 0;
-                        part = res.getString("shd_part");
-                        qty = res.getDouble("shd_qty");
-                        loc = res.getString("shd_loc");
-                        wh = res.getString("shd_wh");
-                        site = res.getString("sh_site");
-                        uom = res.getString("shd_uom");
-                        serial = res.getString("shd_serial");
-                        baseqty = OVData.getUOMBaseQty(part, site, uom, qty);
-                        
-                        // reverse quantity
-                        baseqty = -1 * baseqty;
-                        
-                        // lets determine if this is a legitimate item or a misc item...do not inventory misc items
-                        res2 = st4.executeQuery("select it_item, it_loc, it_wh " +
-                              " from  item_mstr  " +
-                              " where it_item = " + "'" + part + "'" +";");
-                        
-                        while (res2.next()) {
-                            i++;
-                            // if no loc in shipper then grab the item default loc
-                            if (loc.isEmpty())
-                               loc = res2.getString("it_loc");
-                            // if no loc in shipper then grab the item default loc
-                            if (wh.isEmpty())
-                               wh = res2.getString("it_wh");
-                        }
-                        // if no item_mstr then continue loop...must be miscellaneous item
-                        if (i == 0) {
-                            continue;
-                        }
-                        
-                        
-                        // check if in_mstr record exists for this part,loc,site combo
-                        // if not add it
-                        nres = st2.executeQuery("select in_qoh from in_mstr where "
-                                + " in_part = " + "'" + part + "'" 
-                                + " and in_loc = " + "'" + loc + "'"
-                                + " and in_wh = " + "'" + wh + "'"
-                                + " and in_site = " + "'" + site + "'"
-                                + " and in_serial = " + "'" + serial + "'"     
-                                + ";");
-                        
-                         int z = 0;
-                         double qoh = 0.00;
-                          while (nres.next()) {
-                            z++;
-                            qoh = bsParseDouble(nres.getString("in_qoh"));
-                        }
-                        nres.close();
-                        
-                        
-                        if (z == 0) {
-                         sum = (-1 * baseqty);
-                         st3.executeUpdate("insert into in_mstr "
-                                + "(in_site, in_part, in_loc, in_wh, in_serial, in_expire, in_qoh, in_date ) "
-                                + " values ( " 
-                                + "'" + site + "'" + ","
-                                + "'" + part + "'" + ","
-                                + "'" + loc + "'" + ","
-                                + "'" + wh + "'" + ","
-                                + "'" + serial + "'" + ","
-                                + "'" + expire + "'" + ","        
-                                + "'" + sum + "'" + ","
-                                + "'" + mydate + "'"
-                                + ")"
-                                + ";");
-                     
-                        }  else {
-                           // nres.first();
-                            sum = qoh - baseqty;
-                             st3.executeUpdate("update in_mstr "
-                                + " set in_qoh = " + "'" + sum + "'" + "," +
-                                  " in_date = " + "'" + mydate + "'"
-                                + " where in_part = " + "'" + part + "'" 
-                                + " and in_loc = " + "'" + loc + "'"
-                                + " and in_wh = " + "'" + wh + "'"
-                                + " and in_site = " + "'" + site + "'"
-                                + " and in_serial = " + "'" + serial + "'"    
-                                + ";");
-                        }
-                
-                    }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-                 myerror = true;
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-            myerror = true;
-        }
-        return myerror;
-        
-         }
-                  
-        public static boolean UpdateInventoryFromReceiver(String receiver) {
-              boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
-        try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                Statement st2 = con.createStatement();
-                Statement st3 = con.createStatement();
-                ResultSet res = null;
-                ResultSet nres = null;
-                
-               java.util.Date now = new java.util.Date();
-                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-                DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
-                String mydate = dfdate.format(now);
-                
-                   
-                    String part = "";
-                    double qty = 0.00;
-                    double baseqty = 0.00;
-                    String loc = "";
-                    String wh = "";
-                    String site = "";
-                    String serial = "";
-                    String expire = "";
-                    double sum = 0.00;
-                    String uom = "";
-                  
-                    
-                   
-                      res = st.executeQuery("select * from recv_det where rvd_id = " + "'" + receiver + "'" +";");
-                    while (res.next()) {
-                        part = res.getString("rvd_part");
-                        qty = res.getDouble("rvd_qty");
-                        loc = res.getString("rvd_loc");
-                        wh = res.getString("rvd_wh");
-                        site = res.getString("rvd_site");
-                        uom = res.getString("rvd_uom"); 
-                        serial = res.getString("rvd_serial");
-                        baseqty = OVData.getUOMBaseQty(part, site, uom, qty);
-                        
-                        // check if in_mstr record exists for this part,loc,site combo
-                        // if not add it
-                        nres = st2.executeQuery("select in_qoh from in_mstr where "
-                                + " in_part = " + "'" + part + "'" 
-                                + " and in_loc = " + "'" + loc + "'"
-                                + " and in_wh = " + "'" + wh + "'"
-                                + " and in_site = " + "'" + site + "'"
-                                + " and in_serial = " + "'" + serial + "'"      
-                                + ";");
-                         int z = 0;
-                         double qoh = 0.00;
-                          while (nres.next()) {
-                            z++;
-                            qoh = bsParseDouble(nres.getString("in_qoh"));
-                        }
-                        nres.close();
-                        
-                        
-                        if (z == 0) {
-                         sum = baseqty;
-                         st3.executeUpdate("insert into in_mstr "
-                                + "(in_site, in_part, in_loc, in_wh, in_serial, in_expire, in_qoh, in_date ) "
-                                + " values ( " 
-                                + "'" + site + "'" + ","
-                                + "'" + part + "'" + ","
-                                + "'" + loc + "'" + ","
-                                + "'" + wh + "'" + ","
-                                + "'" + serial + "'" + ","
-                                + "'" + expire + "'" + ","        
-                                + "'" + sum + "'" + ","
-                                + "'" + mydate + "'"
-                                + ")"
-                                + ";");
-                     
-                        }  else {
-                           // nres.first();
-                            sum = qoh + baseqty;
-                             st3.executeUpdate("update in_mstr "
-                                + " set in_qoh = " + "'" + sum + "'" + "," +
-                                  " in_date = " + "'" + mydate + "'"
-                                + " where in_part = " + "'" + part + "'" 
-                                + " and in_loc = " + "'" + loc + "'"
-                                + " and in_wh = " + "'" + wh + "'"
-                                + " and in_site = " + "'" + site + "'"
-                                + " and in_serial = " + "'" + serial + "'"      
-                                + ";");
-                        }
-                        
-                
-                    }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-                 myerror = true;
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-            myerror = true;
-        }
-        return myerror;
-        
-         }
-    /* end of inventory related functions */
-         
-         
-         /* start of production scheduling */
-         
-          public static int CommitSchedules(JTable mytable, String datesched) {
-            int count = 0;
-            DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+            Statement st = con.createStatement();
+            Statement st2 = con.createStatement();
+            Statement st3 = con.createStatement();
+            ResultSet res = null;
+            ResultSet nres = null;
+
             java.util.Date now = new java.util.Date();
-          
-            
-            
-            try {
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try {
-                Statement st = con.createStatement();
-                  
-                for (int i = 0 ; i < mytable.getRowCount(); i++) {
-                    count++;
-                    
-                    String status = mytable.getValueAt(i,12).toString();
-                     if (status.equals(getGlobalProgTag("open"))) { status = "0"; }
-                     if (status.equals(getGlobalProgTag("closed"))) { status = "1"; }
-                     if (status.equals(getGlobalProgTag("void"))) { status = "-1"; }
-                     
-                st.executeUpdate(" update plan_mstr " +
-                       " set plan_cell = "  + "'" + mytable.getValueAt(i,5).toString() + "'" + ","
-                       + " plan_qty_sched = " + "'" + mytable.getValueAt(i,6).toString() + "'" + ","
-                        + " plan_status = " + "'" + status + "'" + ","
-                        + " plan_is_sched = '1' " + ","
-                        + " plan_date_sched = " + "'" + datesched + "'" 
-                        + " where plan_nbr = " + "'" + mytable.getValueAt(i,0) + "'" + ";" );
-           }      
-              } catch (SQLException s) {
-               MainFrame.bslog(s);
-               count = 0;
+            DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+            DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
+            String mydate = dfdate.format(now);
+
+            // Skip item code "S" when adjusting inventory -- service item
+            String itemcode = invData.getItemCode(part);
+            if (itemcode.equals("S")) {  
+                return false;
             }
-            con.close();
-        } catch (Exception e) {
-               MainFrame.bslog(e);
-               count = 0;
-        }
-          return count;
-       }
-         
-         /* end of production scheduling */
-         
-         /* start tran_mstr related functions */
-          
-          public static boolean TRHistRctPurch(String receiver, Date effdate) {
-        boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
-        try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                Statement st2 = con.createStatement();
-                ResultSet res = null;
-                
-                
-               java.util.Date now = new java.util.Date();
-                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-                DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
-                String mydate = dfdate.format(now);
-                
-                    String vend = "";
-                    String ref = "";
-                    String rmks = "";
-                    String acct = "";
-                    String cc = "";
-                    String type = "";
-                    String jobnbr = "";
-                    String serial = "";
-                    String part = "";
-                    String uom = "";
-                    double qty = 0.00;
-                    double baseqty = 0.00;
-                    double price = 0.00;
-                    double cost = 0.00;
-                    String loc = "";
-                    int line = 0;
-                    String order = "";
-                    String po = "";
-                    String site = "";
-                    String lot = "";
-                    String terms = "";
-                    
-                    
-                    res = st.executeQuery("select * from recv_mstr where rv_id = " + "'" + receiver + "'" +";");
-                    while (res.next()) {
-                     vend = res.getString("rv_vend");
-                     ref = res.getString("rv_ref");
-                     rmks = res.getString("rv_rmks");
-                     acct = res.getString("rv_ap_acct");
-                     cc = res.getString("rv_ap_cc");
-                     site = res.getString("rv_site");
-                     terms = res.getString("rv_terms");
-                     type = "RCT-PURCH";
+
+
+             double sum = 0.00;
+
+                    // check if in_mstr record exists for this part, loc, wh, site, serial, expire combo
+                    // if not add it
+                    nres = st2.executeQuery("select in_qoh from in_mstr where "
+                            + " in_part = " + "'" + part + "'" 
+                            + " and in_loc = " + "'" + loc + "'"
+                            + " and in_wh = " + "'" + wh + "'"
+                            + " and in_site = " + "'" + site + "'"
+                            + " and in_serial = " + "'" + serial + "'"      
+                            + ";");
+                    int z = 0;
+                     double qoh = 0.00;
+                      while (nres.next()) {
+                        z++;
+                        qoh = bsParseDouble(nres.getString("in_qoh"));
                     }
-                   
-                    res = st.executeQuery("select * from recv_det left outer join item_cost on itc_set = 'standard' and itc_item = rvd_part where rvd_id = " + "'" + receiver + "'" +";");
-                    while (res.next()) {
-                        part = res.getString("rvd_part");
-                        qty = res.getDouble("rvd_qty");
-                        order = res.getString("rvd_po");
-                        po = res.getString("rvd_po");
-                        line = res.getInt("rvd_poline");
-                        lot = res.getString("rvd_lot");
-                        loc = res.getString("rvd_loc");
-                        jobnbr = res.getString("rvd_jobnbr");
-                        serial = res.getString("rvd_serial");
-                        price = res.getDouble("rvd_netprice");
-                        cost = res.getDouble("itc_total");
-                        uom = res.getString("rvd_uom");
-                        baseqty = OVData.getUOMBaseQty(part, site, uom, qty);
-                        
-                st2.executeUpdate("insert into tran_mstr "
-                                + "(tr_site, tr_part, tr_qty, tr_base_qty, tr_uom, tr_ent_date, tr_eff_date, "
-                                + " tr_userid, tr_ref, tr_addrcode, tr_type, tr_rmks, tr_nbr, "
-                                + " tr_acct, tr_cc, tr_lot, tr_serial, tr_program, tr_loc, "
-                                + " tr_order, tr_line, tr_po, tr_price, tr_cost, tr_terms ) "
-                                + " values ( " 
-                                + "'" + site + "'" + ","
-                                + "'" + part + "'" + ","
-                                + "'" + qty + "'" + ","
-                                + "'" + baseqty + "'" + ","
-                                + "'" + uom + "'" + ","        
-                                + "'" + mydate + "'" + ","
-                                + "'" + dfdate.format(effdate) + "'" + ","
-                                + "'" + "" + "'" + ","
-                                + "'" + ref + "'" + ","
-                                + "'" + vend + "'" + ","
-                                + "'" + type + "'" + ","
-                                + "'" + rmks + "'" + ","
-                                + "'" + receiver + "'" + ","
-                                + "'" + acct + "'" + ","
-                                + "'" + cc + "'" + ","
-                                + "'" + lot + "'" + ","
-                                + "'" + serial + "'" + ","
-                                + "'" + "RecvMstr" + "'" + ","
-                                + "'" + loc + "'" + ","
-                                + "'" + order + "'" + ","
-                                + "'" + line + "'" + ","
-                                + "'" + po + "'" + ","
-                                + "'" + price + "'" + ","
-                                + "'" + cost + "'" + ","
-                                + "'" + terms + "'"
-                                + ")"
-                                + ";");
-                
-               }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-                 myerror = true;
-            }
-            con.close();
+                    nres.close();
+
+
+                    if (z == 0) {
+                     sum = qty;
+                     st3.executeUpdate("insert into in_mstr "
+                            + "(in_site, in_part, in_loc, in_wh, in_serial, in_expire, in_qoh, in_date ) "
+                            + " values ( " 
+                            + "'" + site + "'" + ","
+                            + "'" + part + "'" + ","
+                            + "'" + loc + "'" + ","
+                            + "'" + wh + "'" + ","
+                            + "'" + serial + "'" + ","
+                            + "'" + expire + "'" + ","        
+                            + "'" + sum + "'" + ","
+                            + "'" + mydate + "'"
+                            + ")"
+                            + ";");
+
+                    }  else {
+                       // nres.first();
+                        sum = qoh + qty;
+                         st3.executeUpdate("update in_mstr "
+                            + " set in_qoh = " + "'" + sum + "'" + "," +
+                              " in_date = " + "'" + mydate + "'"
+                            + " where in_part = " + "'" + part + "'" 
+                            + " and in_loc = " + "'" + loc + "'"
+                            + " and in_wh = " + "'" + wh + "'"
+                            + " and in_site = " + "'" + site + "'"
+                            + " and in_serial = " + "'" + serial + "'"       
+                            + ";");
+                    }
+
+
+
+
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+             myerror = true;
         }
-        catch (Exception e){
-            MainFrame.bslog(e);
-            myerror = true;
-        }
-        return myerror;
-        
+        con.close();
     }
-         
-      public static boolean TRHistIssSales(String shipper, Date effdate) {
+    catch (Exception e){
+        MainFrame.bslog(e);
+        myerror = true;
+    }
+    return myerror;
+
+     }
+
+    public static void UpdateInventoryFromPOS(String nbr, boolean isVoid, Connection bscon) throws SQLException {
+
+    Connection con = DriverManager.getConnection(url + db, user, pass);
+    Statement st = con.createStatement();
+    Statement st2 = con.createStatement();
+    Statement st3 = con.createStatement();
+    Statement st4 = con.createStatement();
+    ResultSet res = null;
+    ResultSet res2 = null;
+    ResultSet nres = null;
+
+           java.util.Date now = new java.util.Date();
+            DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+            DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
+            String mydate = dfdate.format(now);
+
+
+                String part = "";
+                double qty = 0;
+                String loc = "";
+                String wh = "";
+                String site = OVData.getDefaultSite();
+                double sum = 0;
+                int i = 0;
+
+
+
+                  res = st.executeQuery("select posd_item, posd_qty from pos_det " +
+                          " where posd_nbr = " + "'" + nbr + "'" +";");
+
+
+                while (res.next()) {
+
+                    i = 0;
+                    part = res.getString("posd_item");
+
+                    if (isVoid) {
+                    qty = (-1 * res.getDouble("posd_qty"));
+                    } else {
+                     qty = res.getDouble("posd_qty");   
+                    }
+
+
+                    // lets determine if this is a legitimate item or a misc item...do not inventory misc items
+                    res2 = st4.executeQuery("select it_item, it_loc, it_code " +
+                          " from  item_mstr  " +
+                          " where it_item = " + "'" + part + "'" +";");
+
+                    while (res2.next()) {
+                        // continue if service item
+                        if (res2.getString("it_code").equals("S")) {
+                        continue;
+                        }
+                        i++;
+                        // if no loc in shipper then grab the item default loc
+                        if (loc.isEmpty())
+                           loc = res2.getString("it_loc");
+                    }
+                    // if no item_mstr then continue loop...must be miscellaneous item
+                    if (i == 0) {
+                        continue;
+                    }
+
+
+
+                    // check if in_mstr record exists for this part,loc,site combo
+                    // if not add it
+                    nres = st2.executeQuery("select in_qoh from in_mstr where "
+                            + " in_part = " + "'" + part + "'" 
+                            + " and in_loc = " + "'" + loc + "'"
+                            + " and in_wh = " + "'" + wh + "'"
+                            + " and in_site = " + "'" + site + "'"
+                            + ";");
+
+                      int z = 0;
+                     double qoh = 0.00;
+                      while (nres.next()) {
+                        z++;
+                        qoh = bsParseDouble(nres.getString("in_qoh"));
+                    }
+                    nres.close();
+
+
+                    if (z == 0) {
+                     sum = (-1 * qty);
+                     st3.executeUpdate("insert into in_mstr "
+                            + "(in_site, in_part, in_loc, in_wh, in_qoh, in_date ) "
+                            + " values ( " 
+                            + "'" + site + "'" + ","
+                            + "'" + part + "'" + ","
+                            + "'" + loc + "'" + ","
+                            + "'" + wh + "'" + ","
+                            + "'" + sum + "'" + ","
+                            + "'" + mydate + "'"
+                            + ")"
+                            + ";");
+
+                    }  else {
+                       // nres.first();
+                        sum = qoh - qty;
+                         st3.executeUpdate("update in_mstr "
+                            + " set in_qoh = " + "'" + sum + "'" + "," +
+                              " in_date = " + "'" + mydate + "'"
+                            + " where in_part = " + "'" + part + "'" 
+                            + " and in_loc = " + "'" + loc + "'"
+                            + " and in_wh = " + "'" + wh + "'"
+                            + " and in_site = " + "'" + site + "'"
+                            + ";");
+                    }
+
+
+                }
+       if (st != null) {st.close();}
+       if (st2 != null) {st2.close();}
+       if (st3 != null) {st3.close();}
+       if (st4 != null) {st4.close();}
+       if (res != null) {res.close();}
+       if (res2 != null) {res2.close();}
+       if (nres != null) {nres.close();}
+       if (con != null) {con.close();}
+
+     }
+
+    public static boolean UpdateInventoryFromShipper(String shipper) {
+          boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
+    try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            Statement st2 = con.createStatement();
+            Statement st3 = con.createStatement();
+            Statement st4 = con.createStatement();
+            ResultSet res = null;
+            ResultSet res2 = null;
+            ResultSet nres = null;
+
+           java.util.Date now = new java.util.Date();
+            DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+            DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
+            String mydate = dfdate.format(now);
+
+
+                String part = "";
+                double qty = 0;
+                String uom = "";
+                double baseqty = 0;
+                String loc = "";
+                String wh = "";
+                String site = "";
+                String serial = "";
+                String expire = "";
+                double sum = 0;
+                int i = 0;
+
+
+
+                  res = st.executeQuery("select sh_site, shd_part, shd_qty, shd_uom, shd_loc, shd_wh, shd_site, shd_serial " +
+                          " from ship_det inner join ship_mstr on sh_id = shd_id  " +
+                          " where shd_id = " + "'" + shipper + "'" +";");
+
+
+                while (res.next()) {
+
+                    i = 0;
+                    part = res.getString("shd_part");
+                    qty = res.getDouble("shd_qty");
+                    uom = res.getString("shd_uom");
+                    loc = res.getString("shd_loc");
+                    wh = res.getString("shd_wh");
+                    site = res.getString("sh_site");
+                    serial = res.getString("shd_serial");
+                    baseqty = OVData.getUOMBaseQty(part, site, uom, qty);
+                  //  bsmf.MainFrame.show(baseqty + "/" + uom + "/" + qty);
+
+                    // lets determine if this is a legitimate item or a misc item...do not inventory misc items
+                    res2 = st4.executeQuery("select it_item, it_loc, it_wh, it_code " +
+                          " from  item_mstr  " +
+                          " where it_item = " + "'" + part + "'" + ";");
+
+                    while (res2.next()) {
+                        // if item type 'S' service....then continue
+                        if (res2.getString("it_code").equals("S")) {
+                          continue;
+                        }
+
+                        i++;
+                        // if no loc in shipper then grab the item default loc
+                        if (loc.isEmpty())
+                           loc = res2.getString("it_loc");
+                         // if no loc in shipper then grab the item default loc
+                        if (wh.isEmpty())
+                           wh = res2.getString("it_wh");
+                    }
+                    // if no item_mstr then continue loop...must be miscellaneous item
+                    if (i == 0) {
+                        continue;
+                    }
+
+
+
+                    // check if in_mstr record exists for this part,loc,site combo
+                    // if not add it
+                    int z = 0;
+                    double qoh = 0.00;
+                    nres = st2.executeQuery("select in_qoh from in_mstr where "
+                            + " in_part = " + "'" + part + "'" 
+                            + " and in_loc = " + "'" + loc + "'"
+                            + " and in_wh = " + "'" + wh + "'"
+                            + " and in_site = " + "'" + site + "'"
+                            + " and in_serial = " + "'" + serial + "'"      
+                            + ";");
+
+                    while (nres.next()) {
+                        z++;
+                        qoh = bsParseDouble(nres.getString("in_qoh"));
+                    }
+                    nres.close();
+
+
+                    if (z == 0) {
+                     sum = (-1 * baseqty);
+                     st3.executeUpdate("insert into in_mstr "
+                            + "(in_site, in_part, in_loc, in_wh, in_serial, in_expire, in_qoh, in_date ) "
+                            + " values ( " 
+                            + "'" + site + "'" + ","
+                            + "'" + part + "'" + ","
+                            + "'" + loc + "'" + ","
+                            + "'" + wh + "'" + ","
+                            + "'" + serial + "'" + ","
+                            + "'" + expire + "'" + ","   
+                            + "'" + sum + "'" + ","
+                            + "'" + mydate + "'"
+                            + ")"
+                            + ";");
+
+                    }  else {
+                       // nres.first();
+                        sum = qoh - baseqty;
+                         st3.executeUpdate("update in_mstr "
+                            + " set in_qoh = " + "'" + sum + "'" + "," +
+                              " in_date = " + "'" + mydate + "'"
+                            + " where in_part = " + "'" + part + "'" 
+                            + " and in_loc = " + "'" + loc + "'"
+                            + " and in_wh = " + "'" + wh + "'"
+                            + " and in_site = " + "'" + site + "'"
+                            + " and in_serial = " + "'" + serial + "'"             
+                            + ";");
+                    }
+
+
+
+
+                }
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+             myerror = true;
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+        myerror = true;
+    }
+    return myerror;
+
+     }
+
+    public static boolean UpdateInventoryFromShipperRV(String shipper) {
+          boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
+    try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            Statement st2 = con.createStatement();
+            Statement st3 = con.createStatement();
+            Statement st4 = con.createStatement();
+            ResultSet res = null;
+            ResultSet res2 = null;
+            ResultSet nres = null;
+
+           java.util.Date now = new java.util.Date();
+            DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+            DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
+            String mydate = dfdate.format(now);
+
+
+                String part = "";
+                double qty = 0;
+                double baseqty = 0;
+                String uom = "";
+                String loc = "";
+                String wh = "";
+                String site = "";
+                String serial = "";
+                String expire = "";
+                double sum = 0;
+                int i = 0;
+
+
+
+                  res = st.executeQuery("select sh_site, shd_part, shd_qty, shd_loc, shd_wh, shd_uom, shd_serial " +
+                          " from ship_det inner join ship_mstr on sh_id = shd_id  " +
+                          " where shd_id = " + "'" + shipper + "'" +";");
+
+
+                while (res.next()) {
+
+                    i = 0;
+                    part = res.getString("shd_part");
+                    qty = res.getDouble("shd_qty");
+                    loc = res.getString("shd_loc");
+                    wh = res.getString("shd_wh");
+                    site = res.getString("sh_site");
+                    uom = res.getString("shd_uom");
+                    serial = res.getString("shd_serial");
+                    baseqty = OVData.getUOMBaseQty(part, site, uom, qty);
+
+                    // reverse quantity
+                    baseqty = -1 * baseqty;
+
+                    // lets determine if this is a legitimate item or a misc item...do not inventory misc items
+                    res2 = st4.executeQuery("select it_item, it_loc, it_wh " +
+                          " from  item_mstr  " +
+                          " where it_item = " + "'" + part + "'" +";");
+
+                    while (res2.next()) {
+                        i++;
+                        // if no loc in shipper then grab the item default loc
+                        if (loc.isEmpty())
+                           loc = res2.getString("it_loc");
+                        // if no loc in shipper then grab the item default loc
+                        if (wh.isEmpty())
+                           wh = res2.getString("it_wh");
+                    }
+                    // if no item_mstr then continue loop...must be miscellaneous item
+                    if (i == 0) {
+                        continue;
+                    }
+
+
+                    // check if in_mstr record exists for this part,loc,site combo
+                    // if not add it
+                    nres = st2.executeQuery("select in_qoh from in_mstr where "
+                            + " in_part = " + "'" + part + "'" 
+                            + " and in_loc = " + "'" + loc + "'"
+                            + " and in_wh = " + "'" + wh + "'"
+                            + " and in_site = " + "'" + site + "'"
+                            + " and in_serial = " + "'" + serial + "'"     
+                            + ";");
+
+                     int z = 0;
+                     double qoh = 0.00;
+                      while (nres.next()) {
+                        z++;
+                        qoh = bsParseDouble(nres.getString("in_qoh"));
+                    }
+                    nres.close();
+
+
+                    if (z == 0) {
+                     sum = (-1 * baseqty);
+                     st3.executeUpdate("insert into in_mstr "
+                            + "(in_site, in_part, in_loc, in_wh, in_serial, in_expire, in_qoh, in_date ) "
+                            + " values ( " 
+                            + "'" + site + "'" + ","
+                            + "'" + part + "'" + ","
+                            + "'" + loc + "'" + ","
+                            + "'" + wh + "'" + ","
+                            + "'" + serial + "'" + ","
+                            + "'" + expire + "'" + ","        
+                            + "'" + sum + "'" + ","
+                            + "'" + mydate + "'"
+                            + ")"
+                            + ";");
+
+                    }  else {
+                       // nres.first();
+                        sum = qoh - baseqty;
+                         st3.executeUpdate("update in_mstr "
+                            + " set in_qoh = " + "'" + sum + "'" + "," +
+                              " in_date = " + "'" + mydate + "'"
+                            + " where in_part = " + "'" + part + "'" 
+                            + " and in_loc = " + "'" + loc + "'"
+                            + " and in_wh = " + "'" + wh + "'"
+                            + " and in_site = " + "'" + site + "'"
+                            + " and in_serial = " + "'" + serial + "'"    
+                            + ";");
+                    }
+
+                }
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+             myerror = true;
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+        myerror = true;
+    }
+    return myerror;
+
+     }
+
+    public static boolean UpdateInventoryFromReceiver(String receiver) {
+          boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
+    try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            Statement st2 = con.createStatement();
+            Statement st3 = con.createStatement();
+            ResultSet res = null;
+            ResultSet nres = null;
+
+           java.util.Date now = new java.util.Date();
+            DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+            DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
+            String mydate = dfdate.format(now);
+
+
+                String part = "";
+                double qty = 0.00;
+                double baseqty = 0.00;
+                String loc = "";
+                String wh = "";
+                String site = "";
+                String serial = "";
+                String expire = "";
+                double sum = 0.00;
+                String uom = "";
+
+
+
+                  res = st.executeQuery("select * from recv_det where rvd_id = " + "'" + receiver + "'" +";");
+                while (res.next()) {
+                    part = res.getString("rvd_part");
+                    qty = res.getDouble("rvd_qty");
+                    loc = res.getString("rvd_loc");
+                    wh = res.getString("rvd_wh");
+                    site = res.getString("rvd_site");
+                    uom = res.getString("rvd_uom"); 
+                    serial = res.getString("rvd_serial");
+                    baseqty = OVData.getUOMBaseQty(part, site, uom, qty);
+
+                    // check if in_mstr record exists for this part,loc,site combo
+                    // if not add it
+                    nres = st2.executeQuery("select in_qoh from in_mstr where "
+                            + " in_part = " + "'" + part + "'" 
+                            + " and in_loc = " + "'" + loc + "'"
+                            + " and in_wh = " + "'" + wh + "'"
+                            + " and in_site = " + "'" + site + "'"
+                            + " and in_serial = " + "'" + serial + "'"      
+                            + ";");
+                     int z = 0;
+                     double qoh = 0.00;
+                      while (nres.next()) {
+                        z++;
+                        qoh = bsParseDouble(nres.getString("in_qoh"));
+                    }
+                    nres.close();
+
+
+                    if (z == 0) {
+                     sum = baseqty;
+                     st3.executeUpdate("insert into in_mstr "
+                            + "(in_site, in_part, in_loc, in_wh, in_serial, in_expire, in_qoh, in_date ) "
+                            + " values ( " 
+                            + "'" + site + "'" + ","
+                            + "'" + part + "'" + ","
+                            + "'" + loc + "'" + ","
+                            + "'" + wh + "'" + ","
+                            + "'" + serial + "'" + ","
+                            + "'" + expire + "'" + ","        
+                            + "'" + sum + "'" + ","
+                            + "'" + mydate + "'"
+                            + ")"
+                            + ";");
+
+                    }  else {
+                       // nres.first();
+                        sum = qoh + baseqty;
+                         st3.executeUpdate("update in_mstr "
+                            + " set in_qoh = " + "'" + sum + "'" + "," +
+                              " in_date = " + "'" + mydate + "'"
+                            + " where in_part = " + "'" + part + "'" 
+                            + " and in_loc = " + "'" + loc + "'"
+                            + " and in_wh = " + "'" + wh + "'"
+                            + " and in_site = " + "'" + site + "'"
+                            + " and in_serial = " + "'" + serial + "'"      
+                            + ";");
+                    }
+
+
+                }
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+             myerror = true;
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+        myerror = true;
+    }
+    return myerror;
+
+     }
+    /* end of inventory related functions */
+
+
+    /* start of production scheduling */
+
+    public static int CommitSchedules(JTable mytable, String datesched) {
+        int count = 0;
+        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+        java.util.Date now = new java.util.Date();
+
+
+
+        try {
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try {
+            Statement st = con.createStatement();
+
+            for (int i = 0 ; i < mytable.getRowCount(); i++) {
+                count++;
+
+                String status = mytable.getValueAt(i,12).toString();
+                 if (status.equals(getGlobalProgTag("open"))) { status = "0"; }
+                 if (status.equals(getGlobalProgTag("closed"))) { status = "1"; }
+                 if (status.equals(getGlobalProgTag("void"))) { status = "-1"; }
+
+            st.executeUpdate(" update plan_mstr " +
+                   " set plan_cell = "  + "'" + mytable.getValueAt(i,5).toString() + "'" + ","
+                   + " plan_qty_sched = " + "'" + mytable.getValueAt(i,6).toString() + "'" + ","
+                    + " plan_status = " + "'" + status + "'" + ","
+                    + " plan_is_sched = '1' " + ","
+                    + " plan_date_sched = " + "'" + datesched + "'" 
+                    + " where plan_nbr = " + "'" + mytable.getValueAt(i,0) + "'" + ";" );
+       }      
+          } catch (SQLException s) {
+           MainFrame.bslog(s);
+           count = 0;
+        }
+        con.close();
+    } catch (Exception e) {
+           MainFrame.bslog(e);
+           count = 0;
+    }
+      return count;
+   }
+
+    /* end of production scheduling */
+
+    /* start tran_mstr related functions */
+
+    public static boolean TRHistRctPurch(String receiver, Date effdate) {
+    boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
+    try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            Statement st2 = con.createStatement();
+            ResultSet res = null;
+
+
+           java.util.Date now = new java.util.Date();
+            DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+            DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
+            String mydate = dfdate.format(now);
+
+                String vend = "";
+                String ref = "";
+                String rmks = "";
+                String acct = "";
+                String cc = "";
+                String type = "";
+                String jobnbr = "";
+                String serial = "";
+                String part = "";
+                String uom = "";
+                double qty = 0.00;
+                double baseqty = 0.00;
+                double price = 0.00;
+                double cost = 0.00;
+                String loc = "";
+                int line = 0;
+                String order = "";
+                String po = "";
+                String site = "";
+                String lot = "";
+                String terms = "";
+
+
+                res = st.executeQuery("select * from recv_mstr where rv_id = " + "'" + receiver + "'" +";");
+                while (res.next()) {
+                 vend = res.getString("rv_vend");
+                 ref = res.getString("rv_ref");
+                 rmks = res.getString("rv_rmks");
+                 acct = res.getString("rv_ap_acct");
+                 cc = res.getString("rv_ap_cc");
+                 site = res.getString("rv_site");
+                 terms = res.getString("rv_terms");
+                 type = "RCT-PURCH";
+                }
+
+                res = st.executeQuery("select * from recv_det left outer join item_cost on itc_set = 'standard' and itc_item = rvd_part where rvd_id = " + "'" + receiver + "'" +";");
+                while (res.next()) {
+                    part = res.getString("rvd_part");
+                    qty = res.getDouble("rvd_qty");
+                    order = res.getString("rvd_po");
+                    po = res.getString("rvd_po");
+                    line = res.getInt("rvd_poline");
+                    lot = res.getString("rvd_lot");
+                    loc = res.getString("rvd_loc");
+                    jobnbr = res.getString("rvd_jobnbr");
+                    serial = res.getString("rvd_serial");
+                    price = res.getDouble("rvd_netprice");
+                    cost = res.getDouble("itc_total");
+                    uom = res.getString("rvd_uom");
+                    baseqty = OVData.getUOMBaseQty(part, site, uom, qty);
+
+            st2.executeUpdate("insert into tran_mstr "
+                            + "(tr_site, tr_part, tr_qty, tr_base_qty, tr_uom, tr_ent_date, tr_eff_date, "
+                            + " tr_userid, tr_ref, tr_addrcode, tr_type, tr_rmks, tr_nbr, "
+                            + " tr_acct, tr_cc, tr_lot, tr_serial, tr_program, tr_loc, "
+                            + " tr_order, tr_line, tr_po, tr_price, tr_cost, tr_terms ) "
+                            + " values ( " 
+                            + "'" + site + "'" + ","
+                            + "'" + part + "'" + ","
+                            + "'" + qty + "'" + ","
+                            + "'" + baseqty + "'" + ","
+                            + "'" + uom + "'" + ","        
+                            + "'" + mydate + "'" + ","
+                            + "'" + dfdate.format(effdate) + "'" + ","
+                            + "'" + "" + "'" + ","
+                            + "'" + ref + "'" + ","
+                            + "'" + vend + "'" + ","
+                            + "'" + type + "'" + ","
+                            + "'" + rmks + "'" + ","
+                            + "'" + receiver + "'" + ","
+                            + "'" + acct + "'" + ","
+                            + "'" + cc + "'" + ","
+                            + "'" + lot + "'" + ","
+                            + "'" + serial + "'" + ","
+                            + "'" + "RecvMstr" + "'" + ","
+                            + "'" + loc + "'" + ","
+                            + "'" + order + "'" + ","
+                            + "'" + line + "'" + ","
+                            + "'" + po + "'" + ","
+                            + "'" + price + "'" + ","
+                            + "'" + cost + "'" + ","
+                            + "'" + terms + "'"
+                            + ")"
+                            + ";");
+
+           }
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+             myerror = true;
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+        myerror = true;
+    }
+    return myerror;
+
+}
+
+    public static boolean TRHistIssSales(String shipper, Date effdate) {
         boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
         try{
             
@@ -11068,7 +11105,7 @@ public class OVData {
         
     }
       
-       public static void TRHistIssSalesPOS(String nbr, Date effdate, boolean isVoid, Connection bscon) throws SQLException {
+    public static void TRHistIssSalesPOS(String nbr, Date effdate, boolean isVoid, Connection bscon) throws SQLException {
         
                 
                 Statement st = bscon.createStatement();
@@ -11165,7 +11202,7 @@ public class OVData {
                     
     }
     
-        public static boolean TRHistIssSalesRV(String shipper, Date effdate) {
+    public static boolean TRHistIssSalesRV(String shipper, Date effdate) {
         boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
         try{
             
@@ -11284,7 +11321,7 @@ public class OVData {
     }
       
       
-      public static boolean loadTranHistByTable(JTable mytable) {
+    public static boolean loadTranHistByTable(JTable mytable) {
           
           /*
           Field count must be 17 fields...and must be in this exact order:
@@ -11635,7 +11672,7 @@ public class OVData {
           return didLoad;
       }
       
-      public static boolean TRHistIssDiscrete(Date effdate, String part, double qty, String op, String type, double price, double cost, String site, 
+    public static boolean TRHistIssDiscrete(Date effdate, String part, double qty, String op, String type, double price, double cost, String site, 
               String loc, String wh, String expire, String cust, String nbr, String order, int line, String po, String terms, String lot, String rmks, 
               String ref, String acct, String cc, String jobnbr, String serial, String program, String userid) {
         boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
@@ -11715,7 +11752,7 @@ public class OVData {
    
         
         
-       public static ArrayList getGLAcctList() {
+    public static ArrayList getGLAcctList() {
        ArrayList myarray = new ArrayList();
         try{
            
@@ -11743,7 +11780,7 @@ public class OVData {
         
     }
           
-       public static ArrayList getGLAcctListByType(String type) {
+    public static ArrayList getGLAcctListByType(String type) {
        ArrayList myarray = new ArrayList();
         try{
            
@@ -11771,65 +11808,63 @@ public class OVData {
         
     }
        
-        public static ArrayList getGLAcctExpenseDisplayOnly() {
-       ArrayList myarray = new ArrayList();
-        try{
-           
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+    public static ArrayList getGLAcctExpenseDisplayOnly() {
+   ArrayList myarray = new ArrayList();
+    try{
 
-                res = st.executeQuery("select ac_id from ac_mstr where ac_display = '1' and ac_type = " + "'" + 'e' + "'" + " order by ac_id ;");
-               while (res.next()) {
-                    myarray.add(res.getString("ac_id"));
-                    
-                }
-               
-           }
-            catch (SQLException s){
-                 bsmf.MainFrame.show("SQL cannot get AcctMstr List");
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myarray;
-        
-    }
-       
-        
-          public static ArrayList getGLAcctIncomeDisplayOnly() {
-       ArrayList myarray = new ArrayList();
+        Connection con = DriverManager.getConnection(url + db, user, pass);
         try{
-           
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+            Statement st = con.createStatement();
+            ResultSet res = null;
 
-                res = st.executeQuery("select ac_id from ac_mstr where ac_display = '1' and ac_type = " + "'" + 'I' + "'" + " order by ac_id ;");
-               while (res.next()) {
-                    myarray.add(res.getString("ac_id"));
-                    
-                }
-               
-           }
-            catch (SQLException s){
-                 bsmf.MainFrame.show("SQL cannot get AcctMstr List");
+            res = st.executeQuery("select ac_id from ac_mstr where ac_display = '1' and ac_type = " + "'" + 'e' + "'" + " order by ac_id ;");
+           while (res.next()) {
+                myarray.add(res.getString("ac_id"));
+
             }
-            con.close();
+
+       }
+        catch (SQLException s){
+             bsmf.MainFrame.show("SQL cannot get AcctMstr List");
         }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myarray;
-        
+        con.close();
     }
-       
-       
-       public static boolean isValidTerms(String code) {
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myarray;
+
+}
+
+    public static ArrayList getGLAcctIncomeDisplayOnly() {
+   ArrayList myarray = new ArrayList();
+    try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select ac_id from ac_mstr where ac_display = '1' and ac_type = " + "'" + 'I' + "'" + " order by ac_id ;");
+           while (res.next()) {
+                myarray.add(res.getString("ac_id"));
+
+            }
+
+       }
+        catch (SQLException s){
+             bsmf.MainFrame.show("SQL cannot get AcctMstr List");
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myarray;
+
+}
+
+    public static boolean isValidTerms(String code) {
        boolean myreturn = false;
         try{
            
@@ -11855,530 +11890,528 @@ public class OVData {
         
     }
        
-       
-        public static boolean isDuplicateNavCode(String code, String callingmenu) {
-       boolean myreturn = false;
-        try{
-           
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
- 
-                res = st.executeQuery("select menu_navcode from menu_mstr where menu_id <> " + "'" + callingmenu + "'" +
-                        " and menu_navcode = " + "'" + code + "'" + ";");
-               while (res.next()) {
-                   myreturn = true;
-               }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myreturn;
-        
-    }
-       
-       
-        public static boolean isValidProfile(String code) {
-       boolean myreturn = false;
-        try{
-           
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
- 
-                res = st.executeQuery("select payp_code from pay_profile where payp_code = " + "'" + code + "'" + ";");
-               while (res.next()) {
-                   myreturn = true;
-               }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myreturn;
-        
-    }   
-       
-         public static boolean isCurrSameAsDefault(String curr) {
-       boolean myreturn = false;
-        try{
-           
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
- 
-                res = st.executeQuery("select ov_currency from ov_mstr;");
-               while (res.next()) {
-                   if (res.getString("ov_currency").toUpperCase().equals(curr.toUpperCase())) {
-                    myreturn = true;
-                   }
-               }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myreturn;
-        
-    }
-         
-         public static boolean isValidBank(String code) {
-       boolean myreturn = false;
-        try{
-           
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
- 
-                res = st.executeQuery("select bk_id from bk_mstr where bk_id = " + "'" + code + "'" + ";");
-               while (res.next()) {
-                   myreturn = true;
-               }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myreturn;
-        
-    }
-         
-          public static boolean isValidCurrency(String code) {
-       boolean myreturn = false;
-        try{
-           
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
- 
-                res = st.executeQuery("select cur_id from cur_mstr where cur_id = " + "'" + code + "'" + ";");
-               while (res.next()) {
-                   myreturn = true;
-               }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myreturn;
-        
-    }
-         
-          public static boolean isValidGLAcct(String acct) {
-       boolean myreturn = false;
-        try{
-           
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
- 
-                res = st.executeQuery("select ac_id from ac_mstr where ac_id = " + "'" + acct + "'" + ";");
-               while (res.next()) {
-                   myreturn = true;
-               }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myreturn;
-        
-    }
-       
-       public static boolean isValidGLcc(String cc) {
-       boolean myreturn = false;
-        try{
-           
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
- 
-                res = st.executeQuery("select dept_id from dept_mstr where dept_id = " + "'" + cc + "'" + ";");
-               while (res.next()) {
-                   myreturn = true;
-               }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myreturn;
-        
-    }
-         
-          public static ArrayList getGLAcctListRange(String fromacct, String toacct) {
-       ArrayList myarray = new ArrayList();
-        try{
-           
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+    public static boolean isDuplicateNavCode(String code, String callingmenu) {
+   boolean myreturn = false;
+    try{
 
-                res = st.executeQuery("select ac_id from ac_mstr where " +
-                         " ac_id >= " + "'" + fromacct + "'" + " AND " +
-                         " ac_id <= " + "'" +  toacct + "'" + "order by ac_id ;");
-               while (res.next()) {
-                    myarray.add(res.getString("ac_id"));
-                }
-               
-           }
-            catch (SQLException s){
-                 bsmf.MainFrame.show("SQL cannot get AcctMstr List");
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myarray;
-        
-    }
-          
-           public static ArrayList getGLAcctListRangeWTypeDesc(String fromacct, String toacct) {
-       ArrayList myarray = new ArrayList();
+        Connection con = DriverManager.getConnection(url + db, user, pass);
         try{
-           
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+            Statement st = con.createStatement();
+            ResultSet res = null;
 
-                res = st.executeQuery("select ac_id, ac_type, ac_desc from ac_mstr where " +
-                         " ac_id >= " + "'" + fromacct + "'" + " AND " +
-                         " ac_id <= " + "'" +  toacct + "'" + "order by ac_id ;");
-               while (res.next()) {
-                    myarray.add(res.getString("ac_id") + "," + res.getString("ac_type") + "," + res.getString("ac_desc"));
-                }
-               
+            res = st.executeQuery("select menu_navcode from menu_mstr where menu_id <> " + "'" + callingmenu + "'" +
+                    " and menu_navcode = " + "'" + code + "'" + ";");
+           while (res.next()) {
+               myreturn = true;
            }
-            catch (SQLException s){
-                 bsmf.MainFrame.show("SQL cannot get AcctMstr List");
-            }
-            con.close();
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
         }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myarray;
-        
+        con.close();
     }
-          
-       public static ArrayList<String[]> getGLAcctListRangeWCurrTypeDesc(String fromacct, String toacct) {
-       ArrayList<String[]> myarray = new ArrayList();
-       
-        try{
-           
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-                if (fromacct.isEmpty() && toacct.isEmpty()) {
-                    res = st.executeQuery("select ac_id, ac_cur, ac_type, ac_desc from ac_mstr order by ac_id ;");
-                } else {
-                res = st.executeQuery("select ac_id, ac_cur, ac_type, ac_desc from ac_mstr where " +
-                         " ac_id >= " + "'" + fromacct + "'" + " AND " +
-                         " ac_id <= " + "'" +  toacct + "'" + "order by ac_id ;");
-                }
-               while (res.next()) {
-                   String[] x = new String[4];
-                   x[0] = res.getString("ac_id");
-                   x[1] = res.getString("ac_cur");
-                   x[2] = res.getString("ac_type");
-                   x[3] = res.getString("ac_desc");
-                    myarray.add(x);
-                }
-               
-           }
-            catch (SQLException s){
-                 bsmf.MainFrame.show("SQL cannot get AcctMstr List");
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myarray;
-        
+    catch (Exception e){
+        MainFrame.bslog(e);
     }
-           
-           public static String getGLAcctType(String acct) {
-      String myreturn = "";
-        try{
-           
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+    return myreturn;
 
-                res = st.executeQuery("select ac_type from ac_mstr where " +
-                         " ac_id = " + "'" + acct + "'" + ";");
-               while (res.next()) {
-                    myreturn = res.getString("ac_type");
-                }
-               
-           }
-            catch (SQLException s){
-                 bsmf.MainFrame.show("SQL cannot get AcctMstr Type");
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myreturn;
-        
-    }
-           
-            public static String getGLAcctDesc(String acct) {
-      String myreturn = "";
-        try{
-           
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+}
 
-                res = st.executeQuery("select ac_desc from ac_mstr where " +
-                         " ac_id = " + "'" + acct + "'" + ";");
-               while (res.next()) {
-                    myreturn = res.getString("ac_desc");
-                }
-               
-           }
-            catch (SQLException s){
-                 bsmf.MainFrame.show("SQL cannot get AcctMstr Desc");
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myreturn;
-        
-    }
-          
-         public static ArrayList getGLCCList() {
-      ArrayList myarray = new ArrayList();
-        try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+    public static boolean isValidProfile(String code) {
+   boolean myreturn = false;
+    try{
 
-                res = st.executeQuery("select dept_id from dept_mstr ;");
-               while (res.next()) {
-                    myarray.add(res.getString("dept_id"));
-                    
-                }
-               
-           }
-            catch (SQLException s){
-                 bsmf.MainFrame.show("SQL cannot get Dept/CC List");
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myarray;
-        
-    }
-       
-         public static String[] getGLCalForDate(String EffDate) {
-              // function returns a String array
-              // first element = year  
-              // second element = period 
-              // third element = startdate 
-              // fourth element = enddate 
-              // fifth element = status 
-      String[] x = new String[]{"","","","",""};        
-      
+        Connection con = DriverManager.getConnection(url + db, user, pass);
         try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+            Statement st = con.createStatement();
+            ResultSet res = null;
 
-                res = st.executeQuery("select * from gl_cal where glc_start <= " +
-                        "'" + EffDate.toString() + "'" + 
-                        " AND glc_end >= " +
-                        "'" + EffDate.toString() + "'" + ";");
-               while (res.next()) {
-                    x[0] = res.getString("glc_year");
-                    x[1] = res.getString("glc_per");
-                    x[2] = res.getString("glc_start");
-                    x[3] = res.getString("glc_end");
-                    x[4] = res.getString("glc_status");
+            res = st.executeQuery("select payp_code from pay_profile where payp_code = " + "'" + code + "'" + ";");
+           while (res.next()) {
+               myreturn = true;
+           }
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myreturn;
+
+}   
+
+    public static boolean isCurrSameAsDefault(String curr) {
+   boolean myreturn = false;
+    try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select ov_currency from ov_mstr;");
+           while (res.next()) {
+               if (res.getString("ov_currency").toUpperCase().equals(curr.toUpperCase())) {
+                myreturn = true;
                }
-               
            }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
         }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return x;
-        
+        con.close();
     }
-         
-         public static boolean isGLPeriodClosed(String EffDate) {
-              // function returns a 5 items from the gl_cal record where a date matches
-              // first element = year  as int
-              // second element = period as int
-              // third element = startdate as string
-              // fourth element = enddate as string
-              // fifth element = status as string
-              
-         boolean isclosed = false;
-        try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myreturn;
 
-                res = st.executeQuery("select * from gl_cal where glc_start <= " +
-                        "'" + EffDate.toString() + "'" + 
-                        " AND glc_end >= " +
-                        "'" + EffDate.toString() + "'" + ";");
-               while (res.next()) {
-                   if (res.getString("glc_status").equals(getGlobalProgTag("closed"))) {
-                       isclosed = true;
-                   }
-               }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return isclosed;
-        
-    }
-         
-         public static ArrayList getGLCalByYearAndPeriod(String year, String per) {
-              // function returns a 5 items from the gl_cal record where a date matches
-              // 0 element = year  as int
-              // 1 element = period as int
-              // 2 element = startdate as string
-              // 3 element = enddate as string
-              // 4 element = status as string
-              
-      ArrayList myarray = new ArrayList();
-        try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+}
 
-                 res = st.executeQuery("select * from gl_cal where glc_per = " +
-                        "'" + per.toString() + "'" + 
-                        " AND glc_year = " +
-                        "'" + year.toString() + "'" + ";");
-               while (res.next()) {
-                    myarray.add(res.getString("glc_year"));
-                     myarray.add(res.getString("glc_per"));
-                      myarray.add(res.getString("glc_start"));
-                       myarray.add(res.getString("glc_end"));
-                        myarray.add(res.getString("glc_status"));
-               }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myarray;
-        
-    }
-         
-         public static ArrayList getGLCalForPeriod(String year, String per) {
-              // function returns a 2 items from the gl_cal record where a period matches
-              // first element = startdate
-              // second element = enddate
-              
-      ArrayList myarray = new ArrayList();
-        try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+    public static boolean isValidBank(String code) {
+   boolean myreturn = false;
+    try{
 
-                res = st.executeQuery("select * from gl_cal where glc_per = " +
-                        "'" + per.toString() + "'" + 
-                        " AND glc_year = " +
-                        "'" + year.toString() + "'" + ";");
-               while (res.next()) {
-                      myarray.add(res.getString("glc_start"));
-                       myarray.add(res.getString("glc_end"));
-               }
-               
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select bk_id from bk_mstr where bk_id = " + "'" + code + "'" + ";");
+           while (res.next()) {
+               myreturn = true;
            }
-            catch (SQLException s){
-                 bsmf.MainFrame.show("Cannot retrieve gl_cal info");
-            }
-            con.close();
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
         }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myarray;
-        
+        con.close();
     }
-         
-      public static ArrayList getGLControl() {
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myreturn;
+
+}
+
+    public static boolean isValidCurrency(String code) {
+   boolean myreturn = false;
+    try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select cur_id from cur_mstr where cur_id = " + "'" + code + "'" + ";");
+           while (res.next()) {
+               myreturn = true;
+           }
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myreturn;
+
+}
+
+    public static boolean isValidGLAcct(String acct) {
+   boolean myreturn = false;
+    try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select ac_id from ac_mstr where ac_id = " + "'" + acct + "'" + ";");
+           while (res.next()) {
+               myreturn = true;
+           }
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myreturn;
+
+}
+
+    public static boolean isValidGLcc(String cc) {
+   boolean myreturn = false;
+    try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select dept_id from dept_mstr where dept_id = " + "'" + cc + "'" + ";");
+           while (res.next()) {
+               myreturn = true;
+           }
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myreturn;
+
+}
+
+    public static ArrayList getGLAcctListRange(String fromacct, String toacct) {
+   ArrayList myarray = new ArrayList();
+    try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select ac_id from ac_mstr where " +
+                     " ac_id >= " + "'" + fromacct + "'" + " AND " +
+                     " ac_id <= " + "'" +  toacct + "'" + "order by ac_id ;");
+           while (res.next()) {
+                myarray.add(res.getString("ac_id"));
+            }
+
+       }
+        catch (SQLException s){
+             bsmf.MainFrame.show("SQL cannot get AcctMstr List");
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myarray;
+
+}
+
+    public static ArrayList getGLAcctListRangeWTypeDesc(String fromacct, String toacct) {
+   ArrayList myarray = new ArrayList();
+    try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select ac_id, ac_type, ac_desc from ac_mstr where " +
+                     " ac_id >= " + "'" + fromacct + "'" + " AND " +
+                     " ac_id <= " + "'" +  toacct + "'" + "order by ac_id ;");
+           while (res.next()) {
+                myarray.add(res.getString("ac_id") + "," + res.getString("ac_type") + "," + res.getString("ac_desc"));
+            }
+
+       }
+        catch (SQLException s){
+             bsmf.MainFrame.show("SQL cannot get AcctMstr List");
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myarray;
+
+}
+
+    public static ArrayList<String[]> getGLAcctListRangeWCurrTypeDesc(String fromacct, String toacct) {
+   ArrayList<String[]> myarray = new ArrayList();
+
+    try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            if (fromacct.isEmpty() && toacct.isEmpty()) {
+                res = st.executeQuery("select ac_id, ac_cur, ac_type, ac_desc from ac_mstr order by ac_id ;");
+            } else {
+            res = st.executeQuery("select ac_id, ac_cur, ac_type, ac_desc from ac_mstr where " +
+                     " ac_id >= " + "'" + fromacct + "'" + " AND " +
+                     " ac_id <= " + "'" +  toacct + "'" + "order by ac_id ;");
+            }
+           while (res.next()) {
+               String[] x = new String[4];
+               x[0] = res.getString("ac_id");
+               x[1] = res.getString("ac_cur");
+               x[2] = res.getString("ac_type");
+               x[3] = res.getString("ac_desc");
+                myarray.add(x);
+            }
+
+       }
+        catch (SQLException s){
+             bsmf.MainFrame.show("SQL cannot get AcctMstr List");
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myarray;
+
+}
+
+    public static String getGLAcctType(String acct) {
+  String myreturn = "";
+    try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select ac_type from ac_mstr where " +
+                     " ac_id = " + "'" + acct + "'" + ";");
+           while (res.next()) {
+                myreturn = res.getString("ac_type");
+            }
+
+       }
+        catch (SQLException s){
+             bsmf.MainFrame.show("SQL cannot get AcctMstr Type");
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myreturn;
+
+}
+
+    public static String getGLAcctDesc(String acct) {
+  String myreturn = "";
+    try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select ac_desc from ac_mstr where " +
+                     " ac_id = " + "'" + acct + "'" + ";");
+           while (res.next()) {
+                myreturn = res.getString("ac_desc");
+            }
+
+       }
+        catch (SQLException s){
+             bsmf.MainFrame.show("SQL cannot get AcctMstr Desc");
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myreturn;
+
+}
+
+    public static ArrayList getGLCCList() {
+  ArrayList myarray = new ArrayList();
+    try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select dept_id from dept_mstr ;");
+           while (res.next()) {
+                myarray.add(res.getString("dept_id"));
+
+            }
+
+       }
+        catch (SQLException s){
+             bsmf.MainFrame.show("SQL cannot get Dept/CC List");
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myarray;
+
+}
+
+    public static String[] getGLCalForDate(String EffDate) {
+          // function returns a String array
+          // first element = year  
+          // second element = period 
+          // third element = startdate 
+          // fourth element = enddate 
+          // fifth element = status 
+  String[] x = new String[]{"","","","",""};        
+
+    try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select * from gl_cal where glc_start <= " +
+                    "'" + EffDate.toString() + "'" + 
+                    " AND glc_end >= " +
+                    "'" + EffDate.toString() + "'" + ";");
+           while (res.next()) {
+                x[0] = res.getString("glc_year");
+                x[1] = res.getString("glc_per");
+                x[2] = res.getString("glc_start");
+                x[3] = res.getString("glc_end");
+                x[4] = res.getString("glc_status");
+           }
+
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return x;
+
+}
+
+    public static boolean isGLPeriodClosed(String EffDate) {
+          // function returns a 5 items from the gl_cal record where a date matches
+          // first element = year  as int
+          // second element = period as int
+          // third element = startdate as string
+          // fourth element = enddate as string
+          // fifth element = status as string
+
+     boolean isclosed = false;
+    try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select * from gl_cal where glc_start <= " +
+                    "'" + EffDate.toString() + "'" + 
+                    " AND glc_end >= " +
+                    "'" + EffDate.toString() + "'" + ";");
+           while (res.next()) {
+               if (res.getString("glc_status").equals(getGlobalProgTag("closed"))) {
+                   isclosed = true;
+               }
+           }
+
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return isclosed;
+
+}
+
+    public static ArrayList getGLCalByYearAndPeriod(String year, String per) {
+          // function returns a 5 items from the gl_cal record where a date matches
+          // 0 element = year  as int
+          // 1 element = period as int
+          // 2 element = startdate as string
+          // 3 element = enddate as string
+          // 4 element = status as string
+
+  ArrayList myarray = new ArrayList();
+    try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+             res = st.executeQuery("select * from gl_cal where glc_per = " +
+                    "'" + per.toString() + "'" + 
+                    " AND glc_year = " +
+                    "'" + year.toString() + "'" + ";");
+           while (res.next()) {
+                myarray.add(res.getString("glc_year"));
+                 myarray.add(res.getString("glc_per"));
+                  myarray.add(res.getString("glc_start"));
+                   myarray.add(res.getString("glc_end"));
+                    myarray.add(res.getString("glc_status"));
+           }
+
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myarray;
+
+}
+
+    public static ArrayList getGLCalForPeriod(String year, String per) {
+          // function returns a 2 items from the gl_cal record where a period matches
+          // first element = startdate
+          // second element = enddate
+
+  ArrayList myarray = new ArrayList();
+    try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select * from gl_cal where glc_per = " +
+                    "'" + per.toString() + "'" + 
+                    " AND glc_year = " +
+                    "'" + year.toString() + "'" + ";");
+           while (res.next()) {
+                  myarray.add(res.getString("glc_start"));
+                   myarray.add(res.getString("glc_end"));
+           }
+
+       }
+        catch (SQLException s){
+             bsmf.MainFrame.show("Cannot retrieve gl_cal info");
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myarray;
+
+}
+
+    public static ArrayList getGLControl() {
               // function returns a 2 items from the gl_cal record where a period matches
               // first element = startdate
               // second element = enddate
@@ -12411,70 +12444,8 @@ public class OVData {
         return myarray;
         
     }
-      
-       public static String getDefaultRetainedEarningsAcct() {
-              // function returns a 2 items from the gl_cal record where a period matches
-              // first element = startdate
-              // second element = enddate
-              
-      String account = "";
-        try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select gl_earnings from gl_ctrl;"); 
-               while (res.next()) {
-                       account = res.getString("gl_earnings");
-               }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return account;
-        
-    }
-      
-        public static String getDefaultForeignCurrRealAcct() {
-              // function returns a 2 items from the gl_cal record where a period matches
-              // first element = startdate
-              // second element = enddate
-              
-      String account = "";
-        try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                res = st.executeQuery("select gl_foreignreal from gl_ctrl;"); 
-               while (res.next()) {
-                       account = res.getString("gl_foreignreal");
-               }
-               
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return account;
-        
-    }
-       
-      public static String getGLIncomeStatementFromAcct() {
+     
+    public static String getGLIncomeStatementFromAcct() {
               // function returns a 2 items from the gl_cal record where a period matches
               // first element = startdate
               // second element = enddate
@@ -12505,7 +12476,7 @@ public class OVData {
         
     }
       
-      public static String getGLIncomeStatementToAcct() {
+    public static String getGLIncomeStatementToAcct() {
               // function returns a 2 items from the gl_cal record where a period matches
               // first element = startdate
               // second element = enddate
@@ -12536,7 +12507,7 @@ public class OVData {
         
     }
       
-      public static String getGLBalanceSheetFromAcct() {
+    public static String getGLBalanceSheetFromAcct() {
               // function returns a 2 items from the gl_cal record where a period matches
               // first element = startdate
               // second element = enddate
@@ -12567,7 +12538,7 @@ public class OVData {
         
     }
       
-       public static String getGLBalanceSheetToAcct() {
+    public static String getGLBalanceSheetToAcct() {
               // function returns a 2 items from the gl_cal record where a period matches
               // first element = startdate
               // second element = enddate
@@ -12598,7 +12569,7 @@ public class OVData {
         
     }
          
-         public static double getGLAcctBal(String site, String acct, String cc, String year, String per) {
+    public static double getGLAcctBal(String site, String acct, String cc, String year, String per) {
               
               
        double amt = 0.00;
@@ -12638,1075 +12609,1074 @@ public class OVData {
         
     }
          
-         public static double getGLAcctBalYTD(String site, String acct) {
-       double amt = 0.00;
+    public static double getGLAcctBalYTD(String site, String acct) {
+   double amt = 0.00;
+    try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
         try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-               
-                res = st.executeQuery("select sum(acb_amt) as sum from acb_mstr where  " +
-                        " acb_acct = " + "'" + acct + "'" +
-                        " AND acb_site = " + "'" + site + "'" +
-                        ";");
-                
-                       while (res.next()) {
-                          amt = res.getDouble(("sum"));
-                       }
-               
-           }
-            catch (SQLException s){
-                MainFrame.bslog(s);
-            }
-            con.close();
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select sum(acb_amt) as sum from acb_mstr where  " +
+                    " acb_acct = " + "'" + acct + "'" +
+                    " AND acb_site = " + "'" + site + "'" +
+                    ";");
+
+                   while (res.next()) {
+                      amt = res.getDouble(("sum"));
+                   }
+
+       }
+        catch (SQLException s){
+            MainFrame.bslog(s);
         }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return amt;
-        
+        con.close();
     }
-         
-      public static double getGLAcctBalAsOfDate(String site, String acct, String indate) { 
-       double amt = 0.00;
-       
-        DateFormat dfdate = new SimpleDateFormat("yyyy");
-        java.util.Date now = new java.util.Date();
-        String currentyear = dfdate.format(now);
-        
-        int year = Integer.valueOf(indate.substring(0,4));
-        int period = Integer.valueOf(indate.substring(5,7));
-        int prioryear = year - 1;
-        
-        ArrayList<java.sql.Date> actdatearray = OVData.getGLCalForPeriod(String.valueOf(year), String.valueOf(period));  
-                String datestart = String.valueOf(actdatearray.get(0));
-                String dateend = String.valueOf(actdatearray.get(1));
-                
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return amt;
+
+}
+
+    public static double getGLAcctBalAsOfDate(String site, String acct, String indate) { 
+   double amt = 0.00;
+
+    DateFormat dfdate = new SimpleDateFormat("yyyy");
+    java.util.Date now = new java.util.Date();
+    String currentyear = dfdate.format(now);
+
+    int year = Integer.valueOf(indate.substring(0,4));
+    int period = Integer.valueOf(indate.substring(5,7));
+    int prioryear = year - 1;
+
+    ArrayList<java.sql.Date> actdatearray = OVData.getGLCalForPeriod(String.valueOf(year), String.valueOf(period));  
+            String datestart = String.valueOf(actdatearray.get(0));
+            String dateend = String.valueOf(actdatearray.get(1));
+
+    try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
         try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-                String accttype = "";
-                  res = st.executeQuery("select ac_type from ac_mstr where ac_id = " + "'" + acct + "'" +  ";");
-                  while (res.next()) {
-                          accttype = res.getString("ac_type");
-                  }
-                
-                  
-                  // get all acb_mstr records associated with this account PRIOR to this date's period
-                  if (accttype.equals("L") || accttype.equals("A") || accttype.equals("O")) {
-                      //must be type balance sheet
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            String accttype = "";
+              res = st.executeQuery("select ac_type from ac_mstr where ac_id = " + "'" + acct + "'" +  ";");
+              while (res.next()) {
+                      accttype = res.getString("ac_type");
+              }
+
+
+              // get all acb_mstr records associated with this account PRIOR to this date's period
+              if (accttype.equals("L") || accttype.equals("A") || accttype.equals("O")) {
+                  //must be type balance sheet
+              res = st.executeQuery("select sum(acb_amt) as sum from acb_mstr where " +
+                    " acb_acct = " + "'" + acct + "'" + " AND " +
+                    " acb_site = " + "'" + site + "'" + " AND " +
+                    " (( acb_year = " + "'" + year + "'" + " AND acb_per < " + "'" + period + "'" + " ) OR " +
+                    "  ( acb_year <= " + "'" + prioryear + "'" + " )) " +
+                    ";");
+
+                   while (res.next()) {
+                      amt += res.getDouble("sum");
+                   }
+              } else {
+                 // must be income statement
                   res = st.executeQuery("select sum(acb_amt) as sum from acb_mstr where " +
-                        " acb_acct = " + "'" + acct + "'" + " AND " +
-                        " acb_site = " + "'" + site + "'" + " AND " +
-                        " (( acb_year = " + "'" + year + "'" + " AND acb_per < " + "'" + period + "'" + " ) OR " +
-                        "  ( acb_year <= " + "'" + prioryear + "'" + " )) " +
-                        ";");
-                
-                       while (res.next()) {
-                          amt += res.getDouble("sum");
-                       }
-                  } else {
-                     // must be income statement
-                      res = st.executeQuery("select sum(acb_amt) as sum from acb_mstr where " +
-                        " acb_acct = " + "'" + acct + "'" + " AND " +
-                        " acb_site = " + "'" + site + "'" + " AND " +
-                        " ( acb_year = " + "'" + year + "'" + " AND acb_per < " + "'" + period + "'" + ")" +
-                        ";");
-                
-                       while (res.next()) {
-                          amt += res.getDouble("sum");
-                       }
-                  }
-                  
-             //  bsmf.MainFrame.show("1: " + datestart + "/" + dateend + "/" + amt);      
-                  // now get all transactions in gl_hist that equate to current period transactions of inbound date
-                  res = st.executeQuery("select sum(glh_base_amt) as sum from gl_hist " +
-                        " where glh_acct = " + "'" + acct + "'" + " AND " + 
-                        " glh_site = " + "'" + site + "'" + " AND " +
-                        " glh_effdate >= " + "'" + datestart + "'" + " AND " +
-                        " glh_effdate <= " + "'" + indate + "'" + 
-                        " group by glh_acct ;");
-                
-                       while (res.next()) {
-                          amt += res.getDouble("sum"); 
-                       }
-            
-             // bsmf.MainFrame.show("2: " + datestart + "/" + indate + "/" + amt);         
-           }
-            catch (SQLException s){
-                MainFrame.bslog(s);
-            }
-            con.close();
+                    " acb_acct = " + "'" + acct + "'" + " AND " +
+                    " acb_site = " + "'" + site + "'" + " AND " +
+                    " ( acb_year = " + "'" + year + "'" + " AND acb_per < " + "'" + period + "'" + ")" +
+                    ";");
+
+                   while (res.next()) {
+                      amt += res.getDouble("sum");
+                   }
+              }
+
+         //  bsmf.MainFrame.show("1: " + datestart + "/" + dateend + "/" + amt);      
+              // now get all transactions in gl_hist that equate to current period transactions of inbound date
+              res = st.executeQuery("select sum(glh_base_amt) as sum from gl_hist " +
+                    " where glh_acct = " + "'" + acct + "'" + " AND " + 
+                    " glh_site = " + "'" + site + "'" + " AND " +
+                    " glh_effdate >= " + "'" + datestart + "'" + " AND " +
+                    " glh_effdate <= " + "'" + indate + "'" + 
+                    " group by glh_acct ;");
+
+                   while (res.next()) {
+                      amt += res.getDouble("sum"); 
+                   }
+
+         // bsmf.MainFrame.show("2: " + datestart + "/" + indate + "/" + amt);         
+       }
+        catch (SQLException s){
+            MainFrame.bslog(s);
         }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return amt;
-        
-    }     
-         
-         
-         public static double getGLAcctBalSummCC(String site, String acct, String year, String per) {
-              
-              
-       double amt = 0.00;
-        try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-               
-                res = st.executeQuery("select sum(acb_amt) as sum from acb_mstr where acb_year = " +
-                        "'" + year + "'" + 
-                        " AND acb_per = " +
-                        "'" + per + "'" +
-                        " AND acb_acct = " +
-                        "'" + acct + "'" +
-                        " AND acb_site = " +
-                        "'" + site + "'" +
-                        ";");
-                
-                       while (res.next()) {
-                          amt = res.getDouble(("sum"));
-                       }
-               
-           }
-            catch (SQLException s){
-                 bsmf.MainFrame.show("Cannot retrieve acb_mstr info");
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return amt;
-        
+        con.close();
     }
-         
-         public static double getSummaryGLHist(String acct, String cc, String fromdate, String todate) {
-             double myamt = 0.00;
-             DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-             try {
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
-                res = st.executeQuery("SELECT sum(glh_base_amt) as sum from gl_hist where " +
-                        " glh_effdate >= " + "'" + fromdate + "'" + " AND " +
-                        " glh_effdate <= " + "'" + todate + "'" + " AND " +
-                        " glh_acct = " + "'" + acct + "'" + " AND " +
-                        " glh_cc = " + "'" + cc + "'" + ";" );
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return amt;
 
-                while (res.next()) {
-                   myamt = res.getDouble("sum");
-                }
+}     
 
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-            }
-            con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
+    public static double getGLAcctBalSummCC(String site, String acct, String year, String per) {
+
+
+   double amt = 0.00;
+    try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select sum(acb_amt) as sum from acb_mstr where acb_year = " +
+                    "'" + year + "'" + 
+                    " AND acb_per = " +
+                    "'" + per + "'" +
+                    " AND acb_acct = " +
+                    "'" + acct + "'" +
+                    " AND acb_site = " +
+                    "'" + site + "'" +
+                    ";");
+
+                   while (res.next()) {
+                      amt = res.getDouble(("sum"));
+                   }
+
+       }
+        catch (SQLException s){
+             bsmf.MainFrame.show("Cannot retrieve acb_mstr info");
         }
-             return myamt;
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return amt;
+
+}
+
+    public static double getSummaryGLHist(String acct, String cc, String fromdate, String todate) {
+         double myamt = 0.00;
+         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+         try {
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try {
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            res = st.executeQuery("SELECT sum(glh_base_amt) as sum from gl_hist where " +
+                    " glh_effdate >= " + "'" + fromdate + "'" + " AND " +
+                    " glh_effdate <= " + "'" + todate + "'" + " AND " +
+                    " glh_acct = " + "'" + acct + "'" + " AND " +
+                    " glh_cc = " + "'" + cc + "'" + ";" );
+
+            while (res.next()) {
+               myamt = res.getDouble("sum");
+            }
+
+        } catch (SQLException s) {
+            MainFrame.bslog(s);
+        }
+        con.close();
+    } catch (Exception e) {
+        MainFrame.bslog(e);
+    }
+         return myamt;
+     }
+
+    public static double getSummaryGLHistSumCC(String acct, String fromdate, String todate) {
+         double myamt = 0.00;
+         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+         try {
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try {
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            res = st.executeQuery("SELECT sum(glh_base_amt) as sum from gl_hist where " +
+                    " glh_effdate >= " + "'" + fromdate + "'" + " AND " +
+                    " glh_effdate <= " + "'" + todate + "'" + " AND " +
+                    " glh_acct = " + "'" + acct + "'" +  
+                    " group by glh_acct " + ";" );
+            while (res.next()) {
+               myamt = res.getDouble("sum");
+            }
+
+        } catch (SQLException s) {
+            MainFrame.bslog(s);
+        }
+        con.close();
+    } catch (Exception e) {
+        MainFrame.bslog(e);
+    }
+         return myamt;
+     }
+
+    public static ArrayList getOpenOrdersList() {
+   ArrayList mylist = new ArrayList() ;
+
+    try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select so_nbr from so_mstr where so_status = " + "'" + getGlobalProgTag("open") + "'" + " or so_status = " + "'" + getGlobalProgTag("commit") + "'" + " or so_status = " + "'" + getGlobalProgTag("backorder") + "'" + " ;");
+                   while (res.next()) {
+                      mylist.add(res.getString(("so_nbr")));
+                   }
+
+       }
+        catch (SQLException s){
+             bsmf.MainFrame.show("Cannot retrieve open order list");
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return mylist;
+
+}
+
+    public static ArrayList getGLICDefsList() {
+   ArrayList mylist = new ArrayList() ;
+
+    try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select glic_name from glic_def;");
+                   while (res.next()) {
+                      mylist.add(res.getString(("glic_name")));
+                   }
+
+       }
+        catch (SQLException s){
+            MainFrame.bslog(s);
+             bsmf.MainFrame.show("Cannot retrieve glic_def info");
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return mylist;
+
+}
+
+    public static String getGLICDefsStart(String name) {
+   String mystring = "";
+
+    try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select glic_start from glic_def where glic_name = " + "'" + name + "'" + ";");
+                   while (res.next()) {
+                     mystring = res.getString("glic_start");
+                   }
+
+       }
+        catch (SQLException s){
+             bsmf.MainFrame.show("Cannot retrieve glic_def info");
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return mystring;
+
+}
+
+    public static String getGLICDefsEnd(String name) {
+   String mystring = "";
+
+    try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select glic_end from glic_def where glic_name = " + "'" + name + "'" + ";");
+                   while (res.next()) {
+                     mystring = res.getString("glic_end");
+                   }
+
+       }
+        catch (SQLException s){
+             bsmf.MainFrame.show("Cannot retrieve glic_def info");
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return mystring;
+
+}
+
+    public static double getGLICElementSeq(String name) {
+   double myreturn = 0;
+
+    try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select glic_seq from glic_def where glic_name = " + "'" + name + "'"  + ";");
+                   while (res.next()) {
+                      myreturn = res.getDouble("glic_seq"); 
+                   }
+
+       }
+        catch (SQLException s){
+             bsmf.MainFrame.show("Cannot retrieve glic_def info");
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myreturn;
+
+}
+
+    public static ArrayList getGLICAccts(String name, String type) {
+   ArrayList mylist = new ArrayList() ;
+
+    try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select glicd_acct from glic_accts where glicd_name = " + "'" + name + "'" +
+                    " AND glicd_type = " + "'" + type + "'" + ";");
+                   while (res.next()) {
+                      mylist.add(res.getString(("glicd_acct")));
+                   }
+
+       }
+        catch (SQLException s){
+             bsmf.MainFrame.show("Cannot retrieve glic_accts info");
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return mylist;
+
+}
+
+    public static Double getGLICBackOut(String acct, String site, String year, String per, Double begamt) {
+          double myamt = 0.00;
+
+           try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select sum(acb_amt) as sum from acb_mstr where " +
+                   " acb_acct = " + "'" + acct + "'" + 
+                    "AND acb_site = " + "'" + site + "'" +
+                    " AND acb_year = " + "'" + year + "'" + 
+                    " AND acb_per = " + "'" + per + "'" +
+                    ";");
+                   while (res.next()) {
+                      myamt = begamt - res.getDouble("sum");
+                   }
+
+       }
+        catch (SQLException s){
+             bsmf.MainFrame.show("Cannot retrieve glic_accts info");
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+
+          return myamt;
+
+      }
+
+    public static Double getGLICAddIn(String acct, String site, String year, String per, Double begamt) {
+          double myamt = 0.00;
+
+           try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select sum(acb_amt) as sum from acb_mstr where " +
+                   " acb_acct = " + "'" + acct + "'" + 
+                    "AND acb_site = " + "'" + site + "'" +
+                    " AND acb_year = " + "'" + year + "'" + 
+                    " AND acb_per = " + "'" + per + "'" +
+                    ";");
+                   while (res.next()) {
+                      myamt = begamt + res.getDouble("sum");
+                   }
+
+       }
+        catch (SQLException s){
+             bsmf.MainFrame.show("Cannot retrieve glic_accts info");
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+
+          return myamt;
+
+      }
+
+    public static ArrayList getGLBalanceRange(int fromyear, int toyear, String site) {
+          java.util.Date now = new java.util.Date();
+          DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+          ArrayList<String> mylist = new ArrayList<String>();   
+          String[] fromdatearray = OVData.getGLCalForDate(dfdate.format(now));
+
+          int current_year = Integer.valueOf(fromdatearray[0].toString());
+          int current_period = Integer.valueOf(fromdatearray[1].toString());
+          try {
+
+
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try {
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            int qty = 0;
+            double dol = 0;
+            int i = 0;
+
+             int prioryear = 0;
+             double begbal = 0.00;
+             double activity = 0.00;
+             double endbal = 0.00;
+            String acctid = "";
+            String accttype = "";
+            String acctdesc = "";
+            String[] ac = null;
+
+
+             ArrayList<String> accounts = OVData.getGLAcctListRangeWTypeDesc("00000000", "9999999999");
+
+            for (int year = fromyear; year <= toyear ; year++) {
+                  prioryear = year - 1;
+                  if (year > current_year)
+                      break;
+
+                for (int period = 1; period <= 12; period++ ) {
+                     if (period > current_period && year == current_year)
+                      break;
+
+             ACCTS:    for (String account : accounts) {
+              ac = account.split(",", -1);
+              acctid = ac[0];
+              accttype = ac[1];
+              acctdesc = ac[2];
+
+
+              begbal = 0.00;
+              activity = 0.00;
+              endbal = 0.00;
+
+
+
+
+             // calculate all acb_mstr records for whole periods < fromdateperiod
+                // begbal += OVData.getGLAcctBalSummCC(account.toString(), String.valueOf(fromdateyear), String.valueOf(p));
+              if (accttype.equals("L") || accttype.equals("A")) {
+                  //must be type balance sheet
+              res = st.executeQuery("select sum(acb_amt) as sum from acb_mstr where " +
+                    " acb_acct = " + "'" + acctid + "'" + " AND " +
+                    " acb_site = " + "'" + site + "'" + " AND " +
+                    " (( acb_year = " + "'" + year + "'" + " AND acb_per < " + "'" + period + "'" + " ) OR " +
+                    "  ( acb_year <= " + "'" + prioryear + "'" + " )) " +
+                    ";");
+
+                   while (res.next()) {
+                      begbal += res.getDouble("sum");
+                   }
+              } else {
+                 // must be income statement
+                  res = st.executeQuery("select sum(acb_amt) as sum from acb_mstr where " +
+                    " acb_acct = " + "'" + acctid + "'" + " AND " +
+                    " acb_site = " + "'" + site + "'" + " AND " +
+                    " ( acb_year = " + "'" + year + "'" + " AND acb_per < " + "'" + period + "'" + ")" +
+                    ";");
+
+                   while (res.next()) {
+                      begbal += res.getDouble("sum");
+                   }
+              }
+
+
+               // calculate period(s) activity defined by date range 
+              // activity += OVData.getGLAcctBalSummCC(account.toString(), String.valueOf(fromdateyear), String.valueOf(p));
+
+              res = st.executeQuery("select sum(acb_amt) as sum from acb_mstr where acb_year = " +
+                    "'" + String.valueOf(year) + "'" + 
+                    " AND acb_per = " +
+                    "'" + String.valueOf(period) + "'" +
+                    " AND acb_acct = " +
+                    "'" + acctid + "'" +
+                    " AND acb_site = " + "'" + site + "'" +
+                    ";");
+
+                   while (res.next()) {
+                      activity += res.getDouble(("sum"));
+                   }
+
+             endbal = begbal + activity;
+
+             if ( endbal == 0 ) {
+                 continue ACCTS;
+             }
+
+           //  if (begbal == 0 && endbal == 0 && activity == 0)
+           //      bsmf.MainFrame.show(account);
+
+             mylist.add(acctid + "," + acctdesc + "," + year + "," + period + "," + currformatDoubleUS(endbal) + ",");
+
+
+                    } // account
+                } // period
+            } // year
+
+
+        } catch (SQLException s) {
+            MainFrame.bslog(s);
+        }
+        con.close();
+    } catch (Exception e) {
+        MainFrame.bslog(e);
+    }
+          return mylist;
+      }
+
+    public static ArrayList getGLBalanceRangeXXX(int fromyear, int toyear, String site) {
+          java.util.Date now = new java.util.Date();
+          DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+          ArrayList<String> mylist = new ArrayList<String>();   
+          String[] fromdatearray = OVData.getGLCalForDate(dfdate.format(now));
+          int current_year = Integer.valueOf(fromdatearray[0].toString());
+          int current_period = Integer.valueOf(fromdatearray[1].toString());
+          try {
+
+
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try {
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            int qty = 0;
+            double dol = 0;
+            int i = 0;
+
+             int prioryear = 0;
+             double begbal = 0.00;
+             double activity = 0.00;
+             double endbal = 0.00;
+            String acctid = "";
+            String accttype = "";
+            String acctdesc = "";
+            String[] ac = null;
+
+
+             ArrayList<String> accounts = OVData.getGLAcctListRangeWTypeDesc("00000000", "9999999999");
+
+            for (int year = fromyear; year <= toyear ; year++) {
+                  prioryear = year - 1;
+                  if (year > current_year)
+                      break;
+
+                for (int period = 1; period <= 12; period++ ) {
+                     if (period > current_period && year == current_year)
+                      break;
+
+             ACCTS:    for (String account : accounts) {
+              ac = account.split(",", -1);
+              acctid = ac[0];
+              accttype = ac[1];
+              acctdesc = ac[2];
+
+
+              begbal = 0.00;
+              activity = 0.00;
+              endbal = 0.00;
+
+
+
+
+             // calculate all acb_mstr records for whole periods < fromdateperiod
+                // begbal += OVData.getGLAcctBalSummCC(account.toString(), String.valueOf(fromdateyear), String.valueOf(p));
+              if (accttype.equals("L") || accttype.equals("A")) {
+                  //must be type balance sheet
+              res = st.executeQuery("select sum(acb_amt) as sum from acb_mstr where " +
+                    " acb_acct = " + "'" + acctid + "'" + " AND " +
+                    " acb_site = " + "'" + site + "'" + " AND " +
+                    " (( acb_year = " + "'" + year + "'" + " AND acb_per < " + "'" + period + "'" + " ) OR " +
+                    "  ( acb_year <= " + "'" + prioryear + "'" + " )) " +
+                    ";");
+
+                   while (res.next()) {
+                      begbal += res.getDouble("sum");
+                   }
+              } else {
+                 // must be income statement
+                  res = st.executeQuery("select sum(acb_amt) as sum from acb_mstr where " +
+                    " acb_acct = " + "'" + acctid + "'" + " AND " +
+                    " acb_site = " + "'" + site + "'" + " AND " +
+                    " ( acb_year = " + "'" + year + "'" + " AND acb_per < " + "'" + period + "'" + ")" +
+                    ";");
+
+                   while (res.next()) {
+                      begbal += res.getDouble("sum");
+                   }
+              }
+
+
+               // calculate period(s) activity defined by date range 
+              // activity += OVData.getGLAcctBalSummCC(account.toString(), String.valueOf(fromdateyear), String.valueOf(p));
+
+              res = st.executeQuery("select sum(acb_amt) as sum from acb_mstr where acb_year = " +
+                    "'" + String.valueOf(year) + "'" + 
+                    " AND acb_per = " +
+                    "'" + String.valueOf(period) + "'" +
+                    " AND acb_acct = " +
+                    "'" + acctid + "'" +
+                    " AND acb_site = " + "'" + site + "'" +
+                    ";");
+
+                   while (res.next()) {
+                      activity += res.getDouble("sum");
+                   }
+
+             endbal = begbal + activity;
+
+             if ( endbal == 0 ) {
+                 continue ACCTS;
+             }
+
+           //  if (begbal == 0 && endbal == 0 && activity == 0)
+           //      bsmf.MainFrame.show(account);
+             if (accttype.equals("L") || accttype.equals("A")) {
+             mylist.add(acctid + "," + acctdesc + "," + year + "," + period + "," + currformatDoubleUS(endbal) + ",");
+             } else {
+             mylist.add(acctid + "," + acctdesc + "," + year + "," + period + "," + currformatDoubleUS(activity) + ",");    
+             }       
+
+
+                    } // account
+                } // period
+            } // year
+
+
+        } catch (SQLException s) {
+            MainFrame.bslog(s);
+        }
+        con.close();
+    } catch (Exception e) {
+        MainFrame.bslog(e);
+    }
+          return mylist;
+      }
+
+    public static ArrayList getGLBalanceRangeXXXByCC(int fromyear, int toyear, String site) {
+          java.util.Date now = new java.util.Date();
+          DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+          ArrayList<String> mylist = new ArrayList<String>();   
+          String[] fromdatearray = OVData.getGLCalForDate(dfdate.format(now));
+          int current_year = Integer.valueOf(fromdatearray[0].toString());
+          int current_period = Integer.valueOf(fromdatearray[1].toString());
+          try {
+
+
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try {
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            int qty = 0;
+            double dol = 0;
+             int i = 0;
+
+             int prioryear = 0;
+             double begbal = 0.00;
+             double activity = 0.00;
+             double endbal = 0.00;
+             Map<String,Double> map = new HashMap<String,Double>();
+
+            String acctid = "";
+            String accttype = "";
+            String acctdesc = "";
+            String cc = "";
+            String[] ac = null;
+
+            ArrayList<String> glcontrol = OVData.getGLControl(); 
+            String balfrom = glcontrol.get(0);
+            String balto = glcontrol.get(1);
+            String isfrom = glcontrol.get(2);
+            String isto = glcontrol.get(3);
+
+             ArrayList<String> accounts = OVData.getGLAcctListRangeWTypeDesc(balfrom, isto);
+             ArrayList<String> cclist = OVData.getGLCCList();
+
+            for (int year = fromyear; year <= toyear ; year++) {
+                  prioryear = year - 1;
+                  if (year > current_year)
+                      break;
+
+                for (int period = 1; period <= 12; period++ ) {
+                     if (period > current_period && year == current_year)
+                      break;
+
+              begbal = 0.00;
+              activity = 0.00;
+              endbal = 0.00;
+
+             // balance sheet first
+              res = st.executeQuery("select acb_acct, acb_cc, sum(acb_amt) as sum from acb_mstr where " +
+                    " acb_acct >= " + "'" + balfrom + "'" + " AND " +
+                    " acb_acct <= " + "'" + balto + "'" + " AND " +
+                    " acb_site = " + "'" + site + "'" + " AND " +
+                    " (( acb_year = " + "'" + year + "'" + " AND acb_per <= " + "'" + period + "'" + " ) OR " +
+                    "  ( acb_year <= " + "'" + prioryear + "'" + " )) " +
+                    " group by acb_acct, acb_cc order by acb_acct, acb_cc, acb_year, acb_per;");
+
+                   while (res.next()) {
+                       endbal = res.getDouble("sum");
+                       acctid = res.getString("acb_acct");
+                       cc = res.getString("acb_cc");
+                    mylist.add(acctid + "," + cc + "," + period + "," + year + "," + currformatDoubleUS(endbal) );
+                   }
+
+             //now income statement
+              res = st.executeQuery("select acb_acct, acb_cc, sum(acb_amt) as sum from acb_mstr where " +
+                    " acb_acct >= " + "'" + isfrom + "'" + " AND " +
+                    " acb_acct <= " + "'" + isto + "'" + " AND " +
+                    " acb_site = " + "'" + site + "'" + " AND " +
+                    " acb_year = " + "'" + year + "'" + " AND " +
+                    " acb_per  = " + "'" + period + "'" + 
+                    " group by acb_acct, acb_cc order by acb_acct, acb_cc, acb_year, acb_per;");
+
+                   while (res.next()) {
+                       endbal = res.getDouble("sum");
+                       acctid = res.getString("acb_acct");
+                       cc = res.getString("acb_cc");
+                    mylist.add(acctid + "," + cc + "," + period + "," + year + "," + currformatDoubleUS(endbal) );
+                   }      
+
+
+
+                } // period
+            } // year
+
+
+        } catch (SQLException s) {
+            MainFrame.bslog(s);
+        }
+        con.close();
+    } catch (Exception e) {
+        MainFrame.bslog(e);
+    }
+          return mylist;
+      }
+
+    public static ArrayList getGLBalByYearByPeriod(int fromyear, int toyear, int fromper, int toper, String site, boolean supress, boolean bsact) {
+          java.util.Date now = new java.util.Date();
+          DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+          ArrayList<String> mylist = new ArrayList<String>();   
+          String[] fromdatearray = OVData.getGLCalForDate(dfdate.format(now));
+          int current_year = Integer.valueOf(fromdatearray[0].toString());
+          int current_period = Integer.valueOf(fromdatearray[1].toString());
+          try {
+
+
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try {
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            int qty = 0;
+            double dol = 0;
+            int i = 0;
+
+             int prioryear = 0;
+             double begbal = 0.00;
+             double activity = 0.00;
+             double endbal = 0.00;
+             Map<String,Double> map = new HashMap<String,Double>();
+
+            String acctid = "";
+            String accttype = "";
+            String acctdesc = "";
+            String cc = "";
+            String[] ac = null;
+
+
+             ArrayList<String> glcontrol = OVData.getGLControl(); 
+            String balfrom = glcontrol.get(0);
+            String balto = glcontrol.get(1);
+            String isfrom = glcontrol.get(2);
+            String isto = glcontrol.get(3);
+
+             ArrayList<String> accounts = OVData.getGLAcctListRangeWTypeDesc(balfrom, isto);
+             ArrayList<String> cclist = OVData.getGLCCList();
+
+            for (int year = fromyear; year <= toyear ; year++) {
+                  prioryear = year - 1;
+                  if (year > current_year)
+                      break;
+
+                for (int period = fromper; period <= toper; period++ ) {
+                     if (period > current_period && year == current_year)
+                      break;
+
+              begbal = 0.00;
+              activity = 0.00;
+              endbal = 0.00;
+
+             // balance sheet first
+              if (! bsact) {
+              res = st.executeQuery("select acb_acct, acb_cc, sum(acb_amt) as sum from acb_mstr where " +
+                    " acb_acct >= " + "'" + balfrom + "'" + " AND " +
+                    " acb_acct <= " + "'" + balto + "'" + " AND " +
+                    " acb_site = " + "'" + site + "'" + " AND " +
+                    " (( acb_year = " + "'" + year + "'" + " AND acb_per <= " + "'" + period + "'" + " ) OR " +
+                    "  ( acb_year <= " + "'" + prioryear + "'" + " )) " +
+                    " group by acb_acct, acb_cc order by acb_acct, acb_cc, acb_year, acb_per;");
+              } else {
+                  res = st.executeQuery("select acb_acct, acb_cc, sum(acb_amt) as sum from acb_mstr where " +
+                    " acb_acct >= " + "'" + balfrom + "'" + " AND " +
+                    " acb_acct <= " + "'" + balto + "'" + " AND " +
+                    " acb_site = " + "'" + site + "'" + " AND " +
+                    " acb_year = " + "'" + year + "'" + " AND " +
+                    " acb_per  = " + "'" + period + "'" + 
+                    " group by acb_acct, acb_cc order by acb_acct, acb_cc, acb_year, acb_per;");
+              }
+                   while (res.next()) {
+                       endbal = res.getDouble("sum");
+                       acctid = res.getString("acb_acct");
+                       cc = res.getString("acb_cc");
+                       if (supress && endbal == 0) 
+                           continue;
+                    mylist.add(acctid + "," + cc + "," + period + "," + year + "," + currformatDoubleUS(endbal) );
+                   }
+
+
+
+
+             //now income statement
+           // this assumes Income statement activity ONLY
+
+                   res = st.executeQuery("select acb_acct, acb_cc, sum(acb_amt) as sum from acb_mstr where " +
+                    " acb_acct >= " + "'" + isfrom + "'" + " AND " +
+                    " acb_acct <= " + "'" + isto + "'" + " AND " +
+                    " acb_site = " + "'" + site + "'" + " AND " +
+                    " acb_year = " + "'" + year + "'" + " AND " +
+                    " acb_per  = " + "'" + period + "'" + 
+                    " group by acb_acct, acb_cc order by acb_acct, acb_cc, acb_year, acb_per;");
+
+
+                   while (res.next()) {
+                       endbal = res.getDouble("sum");
+                       acctid = res.getString("acb_acct");
+                       cc = res.getString("acb_cc");
+                       if (supress && endbal == 0) 
+                           continue;
+                    mylist.add(acctid + "," + cc + "," + period + "," + year + "," + currformatDoubleUS(endbal) );
+
+                   }      
+
+
+
+                } // period
+            } // year
+
+
+        } catch (SQLException s) {
+            MainFrame.bslog(s);
+        }
+        con.close();
+    } catch (Exception e) {
+        MainFrame.bslog(e);
+    }
+          return mylist;
+      }
+
+
+    public static String[] getYearEndValues(String site, String year) {
+       String[] myarray = new String[5];
+    try {
+
+    Connection con = DriverManager.getConnection(url + db, user, pass);
+    try {
+        Statement st = con.createStatement();
+        ResultSet res = null;
+
+        int qty = 0;
+        double dol = 0;
+
+        int i = 0;
+
+
+
+        double amt = 0;
+        double i_amt = 0;
+        double e_amt = 0;
+        String acct = "";
+        String acctdesc = "";
+        String accttype = "";
+
+       double current_retearn = OVData.getGLAcctBalYTD(site, OVData.getDefaultRetainedEarningsAcct()); 
+
+       res = st.executeQuery("select acb_acct, ac_desc, ac_type, sum(acb_amt) as sum from acb_mstr " +
+                " inner join ac_mstr on ac_id = acb_acct " +
+                "where acb_year = " + "'" + year + "'" +
+                " and acb_acct >= " + "'" + OVData.getGLIncomeStatementFromAcct() + "'" +
+                " and acb_acct <= " + "'" + OVData.getGLIncomeStatementToAcct() + "'" +
+                " group by acb_acct, ac_desc, ac_type " +
+                ";");
+        while (res.next()) {
+           amt = res.getDouble("sum");
+           acct = res.getString("acb_acct");
+           accttype = res.getString("ac_type");
+           acctdesc = (res.getString("ac_desc") == null) ? "" : res.getString("ac_desc");
+          i++;
+
+          if (accttype.equals("I")) {
+              i_amt += amt;
+          }
+          if (accttype.equals("E")) {
+              e_amt += amt;
+          }
+        }
+
+        myarray[0] = bsFormatDouble(current_retearn);
+        myarray[1] = bsFormatDouble(abs(i_amt));
+        myarray[2] = bsFormatDouble(abs(e_amt));
+        myarray[3] = bsFormatDouble(abs(i_amt) - abs(e_amt));
+        myarray[4] = bsFormatDouble(current_retearn + (abs(i_amt) - abs(e_amt)));
+
+    } catch (SQLException s) {
+        MainFrame.bslog(s);
+
+    }
+    con.close();
+} catch (Exception e) {
+    MainFrame.bslog(e);
+}
+return myarray;
+}
+
+    public static void setYearEndValues(String site, String year) {
+
+       String[] myarray = new String[2];
+
+       ArrayList<String[]> accounts = new ArrayList<String[]>();
+
+    try {
+
+    Connection con = DriverManager.getConnection(url + db, user, pass);
+    try {
+        Statement st = con.createStatement();
+        ResultSet res = null;
+
+        int qty = 0;
+        double dol = 0;
+
+        int i = 0;
+
+
+        // always base currency
+        String curr = OVData.getDefaultCurrency();
+        String basecurr = curr;
+
+
+        double amt = 0;
+        String acct = "";
+        String date = year + "-12" + "-31";
+
+       String cc = OVData.getDefaultCC();
+       String re_acct = OVData.getDefaultRetainedEarningsAcct();
+       double re_value = OVData.getGLAcctBalYTD(site, re_acct); 
+
+       res = st.executeQuery("select acb_acct, ac_desc, ac_type, sum(acb_amt) as sum from acb_mstr " +
+                " inner join ac_mstr on ac_id = acb_acct " +
+                "where acb_year = " + "'" + year + "'" +
+                " and acb_acct >= " + "'" + OVData.getGLIncomeStatementFromAcct() + "'" +
+                " and acb_acct <= " + "'" + OVData.getGLIncomeStatementToAcct() + "'" +
+                " group by acb_acct, ac_desc, ac_type " +
+                ";");
+        while (res.next()) {
+           amt = res.getDouble("sum");
+           acct = res.getString("acb_acct");
+
+
+          // insert the negative of the account summary into a temp ArrayList to be added back through glentry
+          if (amt != 0) {
+              String[] c = new String[2];
+              c[0] = acct;
+              c[1] = currformatDoubleUS(-1 * amt);
+              accounts.add(i, c);
+               i++;
+          }
+        }
+
+
+
+        // now do glentry for all the reversed accounts in the arraylist..washing against the Retained Earnings account
+         for (String[] a : accounts) {
+              fglData.glEntry(re_acct, cc, a[0], cc, date, bsParseDoubleUS(a[1]), bsParseDoubleUS(a[1]), curr, basecurr, "YearEndClose", site, "GL", "YearEndClose");  
          }
-         
-          public static double getSummaryGLHistSumCC(String acct, String fromdate, String todate) {
-             double myamt = 0.00;
-             DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-             try {
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
-                res = st.executeQuery("SELECT sum(glh_base_amt) as sum from gl_hist where " +
-                        " glh_effdate >= " + "'" + fromdate + "'" + " AND " +
-                        " glh_effdate <= " + "'" + todate + "'" + " AND " +
-                        " glh_acct = " + "'" + acct + "'" +  
-                        " group by glh_acct " + ";" );
-                while (res.next()) {
-                   myamt = res.getDouble("sum");
-                }
 
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-            }
-            con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-             return myamt;
-         }
-          
-          public static ArrayList getOpenOrdersList() {
-       ArrayList mylist = new ArrayList() ;
-       
-        try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-               
-                res = st.executeQuery("select so_nbr from so_mstr where so_status = " + "'" + getGlobalProgTag("open") + "'" + " or so_status = " + "'" + getGlobalProgTag("commit") + "'" + " or so_status = " + "'" + getGlobalProgTag("backorder") + "'" + " ;");
-                       while (res.next()) {
-                          mylist.add(res.getString(("so_nbr")));
-                       }
-               
-           }
-            catch (SQLException s){
-                 bsmf.MainFrame.show("Cannot retrieve open order list");
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return mylist;
-        
-    }
-          
-          public static ArrayList getGLICDefsList() {
-       ArrayList mylist = new ArrayList() ;
-       
-        try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-               
-                res = st.executeQuery("select glic_name from glic_def;");
-                       while (res.next()) {
-                          mylist.add(res.getString(("glic_name")));
-                       }
-               
-           }
-            catch (SQLException s){
-                MainFrame.bslog(s);
-                 bsmf.MainFrame.show("Cannot retrieve glic_def info");
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return mylist;
-        
-    }
-          
-          public static String getGLICDefsStart(String name) {
-       String mystring = "";
-       
-        try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-               
-                res = st.executeQuery("select glic_start from glic_def where glic_name = " + "'" + name + "'" + ";");
-                       while (res.next()) {
-                         mystring = res.getString("glic_start");
-                       }
-               
-           }
-            catch (SQLException s){
-                 bsmf.MainFrame.show("Cannot retrieve glic_def info");
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return mystring;
-        
-    }
-          
-          public static String getGLICDefsEnd(String name) {
-       String mystring = "";
-       
-        try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-               
-                res = st.executeQuery("select glic_end from glic_def where glic_name = " + "'" + name + "'" + ";");
-                       while (res.next()) {
-                         mystring = res.getString("glic_end");
-                       }
-               
-           }
-            catch (SQLException s){
-                 bsmf.MainFrame.show("Cannot retrieve glic_def info");
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return mystring;
-        
-    }
-          
-          public static double getGLICElementSeq(String name) {
-       double myreturn = 0;
-       
-        try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-               
-                res = st.executeQuery("select glic_seq from glic_def where glic_name = " + "'" + name + "'"  + ";");
-                       while (res.next()) {
-                          myreturn = res.getDouble("glic_seq"); 
-                       }
-               
-           }
-            catch (SQLException s){
-                 bsmf.MainFrame.show("Cannot retrieve glic_def info");
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myreturn;
-        
-    }
-          
-          public static ArrayList getGLICAccts(String name, String type) {
-       ArrayList mylist = new ArrayList() ;
-       
-        try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-               
-                res = st.executeQuery("select glicd_acct from glic_accts where glicd_name = " + "'" + name + "'" +
-                        " AND glicd_type = " + "'" + type + "'" + ";");
-                       while (res.next()) {
-                          mylist.add(res.getString(("glicd_acct")));
-                       }
-               
-           }
-            catch (SQLException s){
-                 bsmf.MainFrame.show("Cannot retrieve glic_accts info");
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return mylist;
-        
-    }
-          
-          public static Double getGLICBackOut(String acct, String site, String year, String per, Double begamt) {
-              double myamt = 0.00;
-              
-               try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-               
-                res = st.executeQuery("select sum(acb_amt) as sum from acb_mstr where " +
-                       " acb_acct = " + "'" + acct + "'" + 
-                        "AND acb_site = " + "'" + site + "'" +
-                        " AND acb_year = " + "'" + year + "'" + 
-                        " AND acb_per = " + "'" + per + "'" +
-                        ";");
-                       while (res.next()) {
-                          myamt = begamt - res.getDouble("sum");
-                       }
-               
-           }
-            catch (SQLException s){
-                 bsmf.MainFrame.show("Cannot retrieve glic_accts info");
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-              
-              return myamt;
-              
-          }
-            
-           public static Double getGLICAddIn(String acct, String site, String year, String per, Double begamt) {
-              double myamt = 0.00;
-              
-               try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-               
-                res = st.executeQuery("select sum(acb_amt) as sum from acb_mstr where " +
-                       " acb_acct = " + "'" + acct + "'" + 
-                        "AND acb_site = " + "'" + site + "'" +
-                        " AND acb_year = " + "'" + year + "'" + 
-                        " AND acb_per = " + "'" + per + "'" +
-                        ";");
-                       while (res.next()) {
-                          myamt = begamt + res.getDouble("sum");
-                       }
-               
-           }
-            catch (SQLException s){
-                 bsmf.MainFrame.show("Cannot retrieve glic_accts info");
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-              
-              return myamt;
-              
-          }
-          
-            public static ArrayList getGLBalanceRange(int fromyear, int toyear, String site) {
-              java.util.Date now = new java.util.Date();
-              DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-              ArrayList<String> mylist = new ArrayList<String>();   
-              String[] fromdatearray = OVData.getGLCalForDate(dfdate.format(now));
-              
-              int current_year = Integer.valueOf(fromdatearray[0].toString());
-              int current_period = Integer.valueOf(fromdatearray[1].toString());
-              try {
-                  
-                  
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
+       // now post
+       OVData.PostGL2();
 
-                int qty = 0;
-                double dol = 0;
-                int i = 0;
-                
-                 int prioryear = 0;
-                 double begbal = 0.00;
-                 double activity = 0.00;
-                 double endbal = 0.00;
-                String acctid = "";
-                String accttype = "";
-                String acctdesc = "";
-                String[] ac = null;
-                
-                 
-                 ArrayList<String> accounts = OVData.getGLAcctListRangeWTypeDesc("00000000", "9999999999");
-                
-                for (int year = fromyear; year <= toyear ; year++) {
-                      prioryear = year - 1;
-                      if (year > current_year)
-                          break;
-                     
-                    for (int period = 1; period <= 12; period++ ) {
-                         if (period > current_period && year == current_year)
-                          break;
-                 
-                 ACCTS:    for (String account : accounts) {
-                  ac = account.split(",", -1);
-                  acctid = ac[0];
-                  accttype = ac[1];
-                  acctdesc = ac[2];
-                  
-                  
-                  begbal = 0.00;
-                  activity = 0.00;
-                  endbal = 0.00;
-                 
-                
-                  
-                  
-                 // calculate all acb_mstr records for whole periods < fromdateperiod
-                    // begbal += OVData.getGLAcctBalSummCC(account.toString(), String.valueOf(fromdateyear), String.valueOf(p));
-                  if (accttype.equals("L") || accttype.equals("A")) {
-                      //must be type balance sheet
-                  res = st.executeQuery("select sum(acb_amt) as sum from acb_mstr where " +
-                        " acb_acct = " + "'" + acctid + "'" + " AND " +
-                        " acb_site = " + "'" + site + "'" + " AND " +
-                        " (( acb_year = " + "'" + year + "'" + " AND acb_per < " + "'" + period + "'" + " ) OR " +
-                        "  ( acb_year <= " + "'" + prioryear + "'" + " )) " +
-                        ";");
-                
-                       while (res.next()) {
-                          begbal += res.getDouble("sum");
-                       }
-                  } else {
-                     // must be income statement
-                      res = st.executeQuery("select sum(acb_amt) as sum from acb_mstr where " +
-                        " acb_acct = " + "'" + acctid + "'" + " AND " +
-                        " acb_site = " + "'" + site + "'" + " AND " +
-                        " ( acb_year = " + "'" + year + "'" + " AND acb_per < " + "'" + period + "'" + ")" +
-                        ";");
-                
-                       while (res.next()) {
-                          begbal += res.getDouble("sum");
-                       }
-                  }
-                  
-                   
-                   // calculate period(s) activity defined by date range 
-                  // activity += OVData.getGLAcctBalSummCC(account.toString(), String.valueOf(fromdateyear), String.valueOf(p));
-               
-                  res = st.executeQuery("select sum(acb_amt) as sum from acb_mstr where acb_year = " +
-                        "'" + String.valueOf(year) + "'" + 
-                        " AND acb_per = " +
-                        "'" + String.valueOf(period) + "'" +
-                        " AND acb_acct = " +
-                        "'" + acctid + "'" +
-                        " AND acb_site = " + "'" + site + "'" +
-                        ";");
-                
-                       while (res.next()) {
-                          activity += res.getDouble(("sum"));
-                       }
-                                  
-                 endbal = begbal + activity;
-                 
-                 if ( endbal == 0 ) {
-                     continue ACCTS;
-                 }
-                               
-               //  if (begbal == 0 && endbal == 0 && activity == 0)
-               //      bsmf.MainFrame.show(account);
-               
-                 mylist.add(acctid + "," + acctdesc + "," + year + "," + period + "," + currformatDoubleUS(endbal) + ",");
-               
-                
-                        } // account
-                    } // period
-                } // year
-                
-               
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-            }
-            con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-              return mylist;
-          }
-          
-          public static ArrayList getGLBalanceRangeXXX(int fromyear, int toyear, String site) {
-              java.util.Date now = new java.util.Date();
-              DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-              ArrayList<String> mylist = new ArrayList<String>();   
-              String[] fromdatearray = OVData.getGLCalForDate(dfdate.format(now));
-              int current_year = Integer.valueOf(fromdatearray[0].toString());
-              int current_period = Integer.valueOf(fromdatearray[1].toString());
-              try {
-                  
-                  
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
+    } catch (SQLException s) {
+        MainFrame.bslog(s);
 
-                int qty = 0;
-                double dol = 0;
-                int i = 0;
-                
-                 int prioryear = 0;
-                 double begbal = 0.00;
-                 double activity = 0.00;
-                 double endbal = 0.00;
-                String acctid = "";
-                String accttype = "";
-                String acctdesc = "";
-                String[] ac = null;
-                
-                 
-                 ArrayList<String> accounts = OVData.getGLAcctListRangeWTypeDesc("00000000", "9999999999");
-                
-                for (int year = fromyear; year <= toyear ; year++) {
-                      prioryear = year - 1;
-                      if (year > current_year)
-                          break;
-                     
-                    for (int period = 1; period <= 12; period++ ) {
-                         if (period > current_period && year == current_year)
-                          break;
-                 
-                 ACCTS:    for (String account : accounts) {
-                  ac = account.split(",", -1);
-                  acctid = ac[0];
-                  accttype = ac[1];
-                  acctdesc = ac[2];
-                  
-                  
-                  begbal = 0.00;
-                  activity = 0.00;
-                  endbal = 0.00;
-                 
-                
-                  
-                  
-                 // calculate all acb_mstr records for whole periods < fromdateperiod
-                    // begbal += OVData.getGLAcctBalSummCC(account.toString(), String.valueOf(fromdateyear), String.valueOf(p));
-                  if (accttype.equals("L") || accttype.equals("A")) {
-                      //must be type balance sheet
-                  res = st.executeQuery("select sum(acb_amt) as sum from acb_mstr where " +
-                        " acb_acct = " + "'" + acctid + "'" + " AND " +
-                        " acb_site = " + "'" + site + "'" + " AND " +
-                        " (( acb_year = " + "'" + year + "'" + " AND acb_per < " + "'" + period + "'" + " ) OR " +
-                        "  ( acb_year <= " + "'" + prioryear + "'" + " )) " +
-                        ";");
-                
-                       while (res.next()) {
-                          begbal += res.getDouble("sum");
-                       }
-                  } else {
-                     // must be income statement
-                      res = st.executeQuery("select sum(acb_amt) as sum from acb_mstr where " +
-                        " acb_acct = " + "'" + acctid + "'" + " AND " +
-                        " acb_site = " + "'" + site + "'" + " AND " +
-                        " ( acb_year = " + "'" + year + "'" + " AND acb_per < " + "'" + period + "'" + ")" +
-                        ";");
-                
-                       while (res.next()) {
-                          begbal += res.getDouble("sum");
-                       }
-                  }
-                  
-                   
-                   // calculate period(s) activity defined by date range 
-                  // activity += OVData.getGLAcctBalSummCC(account.toString(), String.valueOf(fromdateyear), String.valueOf(p));
-               
-                  res = st.executeQuery("select sum(acb_amt) as sum from acb_mstr where acb_year = " +
-                        "'" + String.valueOf(year) + "'" + 
-                        " AND acb_per = " +
-                        "'" + String.valueOf(period) + "'" +
-                        " AND acb_acct = " +
-                        "'" + acctid + "'" +
-                        " AND acb_site = " + "'" + site + "'" +
-                        ";");
-                
-                       while (res.next()) {
-                          activity += res.getDouble("sum");
-                       }
-                                  
-                 endbal = begbal + activity;
-                 
-                 if ( endbal == 0 ) {
-                     continue ACCTS;
-                 }
-                               
-               //  if (begbal == 0 && endbal == 0 && activity == 0)
-               //      bsmf.MainFrame.show(account);
-                 if (accttype.equals("L") || accttype.equals("A")) {
-                 mylist.add(acctid + "," + acctdesc + "," + year + "," + period + "," + currformatDoubleUS(endbal) + ",");
-                 } else {
-                 mylist.add(acctid + "," + acctdesc + "," + year + "," + period + "," + currformatDoubleUS(activity) + ",");    
-                 }       
-                 
-                
-                        } // account
-                    } // period
-                } // year
-                
-               
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-            }
-            con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-              return mylist;
-          }
-          
-          public static ArrayList getGLBalanceRangeXXXByCC(int fromyear, int toyear, String site) {
-              java.util.Date now = new java.util.Date();
-              DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-              ArrayList<String> mylist = new ArrayList<String>();   
-              String[] fromdatearray = OVData.getGLCalForDate(dfdate.format(now));
-              int current_year = Integer.valueOf(fromdatearray[0].toString());
-              int current_period = Integer.valueOf(fromdatearray[1].toString());
-              try {
-                  
-                  
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
+    }
+    con.close();
+} catch (Exception e) {
+    MainFrame.bslog(e);
+}
 
-                int qty = 0;
-                double dol = 0;
-                 int i = 0;
-                
-                 int prioryear = 0;
-                 double begbal = 0.00;
-                 double activity = 0.00;
-                 double endbal = 0.00;
-                 Map<String,Double> map = new HashMap<String,Double>();
-                 
-                String acctid = "";
-                String accttype = "";
-                String acctdesc = "";
-                String cc = "";
-                String[] ac = null;
-                
-                ArrayList<String> glcontrol = OVData.getGLControl(); 
-                String balfrom = glcontrol.get(0);
-                String balto = glcontrol.get(1);
-                String isfrom = glcontrol.get(2);
-                String isto = glcontrol.get(3);
-                 
-                 ArrayList<String> accounts = OVData.getGLAcctListRangeWTypeDesc(balfrom, isto);
-                 ArrayList<String> cclist = OVData.getGLCCList();
-                
-                for (int year = fromyear; year <= toyear ; year++) {
-                      prioryear = year - 1;
-                      if (year > current_year)
-                          break;
-                     
-                    for (int period = 1; period <= 12; period++ ) {
-                         if (period > current_period && year == current_year)
-                          break;
-                  
-                  begbal = 0.00;
-                  activity = 0.00;
-                  endbal = 0.00;
-                  
-                 // balance sheet first
-                  res = st.executeQuery("select acb_acct, acb_cc, sum(acb_amt) as sum from acb_mstr where " +
-                        " acb_acct >= " + "'" + balfrom + "'" + " AND " +
-                        " acb_acct <= " + "'" + balto + "'" + " AND " +
-                        " acb_site = " + "'" + site + "'" + " AND " +
-                        " (( acb_year = " + "'" + year + "'" + " AND acb_per <= " + "'" + period + "'" + " ) OR " +
-                        "  ( acb_year <= " + "'" + prioryear + "'" + " )) " +
-                        " group by acb_acct, acb_cc order by acb_acct, acb_cc, acb_year, acb_per;");
-                
-                       while (res.next()) {
-                           endbal = res.getDouble("sum");
-                           acctid = res.getString("acb_acct");
-                           cc = res.getString("acb_cc");
-                        mylist.add(acctid + "," + cc + "," + period + "," + year + "," + currformatDoubleUS(endbal) );
-                       }
-                     
-                 //now income statement
-                  res = st.executeQuery("select acb_acct, acb_cc, sum(acb_amt) as sum from acb_mstr where " +
-                        " acb_acct >= " + "'" + isfrom + "'" + " AND " +
-                        " acb_acct <= " + "'" + isto + "'" + " AND " +
-                        " acb_site = " + "'" + site + "'" + " AND " +
-                        " acb_year = " + "'" + year + "'" + " AND " +
-                        " acb_per  = " + "'" + period + "'" + 
-                        " group by acb_acct, acb_cc order by acb_acct, acb_cc, acb_year, acb_per;");
-                
-                       while (res.next()) {
-                           endbal = res.getDouble("sum");
-                           acctid = res.getString("acb_acct");
-                           cc = res.getString("acb_cc");
-                        mylist.add(acctid + "," + cc + "," + period + "," + year + "," + currformatDoubleUS(endbal) );
-                       }      
-                       
-                       
-                       
-                    } // period
-                } // year
-                
-               
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-            }
-            con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-              return mylist;
-          }
-         
-           public static ArrayList getGLBalByYearByPeriod(int fromyear, int toyear, int fromper, int toper, String site, boolean supress, boolean bsact) {
-              java.util.Date now = new java.util.Date();
-              DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-              ArrayList<String> mylist = new ArrayList<String>();   
-              String[] fromdatearray = OVData.getGLCalForDate(dfdate.format(now));
-              int current_year = Integer.valueOf(fromdatearray[0].toString());
-              int current_period = Integer.valueOf(fromdatearray[1].toString());
-              try {
-                  
-                  
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
+}
 
-                int qty = 0;
-                double dol = 0;
-                int i = 0;
-                
-                 int prioryear = 0;
-                 double begbal = 0.00;
-                 double activity = 0.00;
-                 double endbal = 0.00;
-                 Map<String,Double> map = new HashMap<String,Double>();
-                 
-                String acctid = "";
-                String accttype = "";
-                String acctdesc = "";
-                String cc = "";
-                String[] ac = null;
-                
-                 
-                 ArrayList<String> glcontrol = OVData.getGLControl(); 
-                String balfrom = glcontrol.get(0);
-                String balto = glcontrol.get(1);
-                String isfrom = glcontrol.get(2);
-                String isto = glcontrol.get(3);
-                 
-                 ArrayList<String> accounts = OVData.getGLAcctListRangeWTypeDesc(balfrom, isto);
-                 ArrayList<String> cclist = OVData.getGLCCList();
-                
-                for (int year = fromyear; year <= toyear ; year++) {
-                      prioryear = year - 1;
-                      if (year > current_year)
-                          break;
-                     
-                    for (int period = fromper; period <= toper; period++ ) {
-                         if (period > current_period && year == current_year)
-                          break;
-                  
-                  begbal = 0.00;
-                  activity = 0.00;
-                  endbal = 0.00;
-                  
-                 // balance sheet first
-                  if (! bsact) {
-                  res = st.executeQuery("select acb_acct, acb_cc, sum(acb_amt) as sum from acb_mstr where " +
-                        " acb_acct >= " + "'" + balfrom + "'" + " AND " +
-                        " acb_acct <= " + "'" + balto + "'" + " AND " +
-                        " acb_site = " + "'" + site + "'" + " AND " +
-                        " (( acb_year = " + "'" + year + "'" + " AND acb_per <= " + "'" + period + "'" + " ) OR " +
-                        "  ( acb_year <= " + "'" + prioryear + "'" + " )) " +
-                        " group by acb_acct, acb_cc order by acb_acct, acb_cc, acb_year, acb_per;");
-                  } else {
-                      res = st.executeQuery("select acb_acct, acb_cc, sum(acb_amt) as sum from acb_mstr where " +
-                        " acb_acct >= " + "'" + balfrom + "'" + " AND " +
-                        " acb_acct <= " + "'" + balto + "'" + " AND " +
-                        " acb_site = " + "'" + site + "'" + " AND " +
-                        " acb_year = " + "'" + year + "'" + " AND " +
-                        " acb_per  = " + "'" + period + "'" + 
-                        " group by acb_acct, acb_cc order by acb_acct, acb_cc, acb_year, acb_per;");
-                  }
-                       while (res.next()) {
-                           endbal = res.getDouble("sum");
-                           acctid = res.getString("acb_acct");
-                           cc = res.getString("acb_cc");
-                           if (supress && endbal == 0) 
-                               continue;
-                        mylist.add(acctid + "," + cc + "," + period + "," + year + "," + currformatDoubleUS(endbal) );
-                       }
-                      
-                       
-                     
-                       
-                 //now income statement
-               // this assumes Income statement activity ONLY
-                     
-                       res = st.executeQuery("select acb_acct, acb_cc, sum(acb_amt) as sum from acb_mstr where " +
-                        " acb_acct >= " + "'" + isfrom + "'" + " AND " +
-                        " acb_acct <= " + "'" + isto + "'" + " AND " +
-                        " acb_site = " + "'" + site + "'" + " AND " +
-                        " acb_year = " + "'" + year + "'" + " AND " +
-                        " acb_per  = " + "'" + period + "'" + 
-                        " group by acb_acct, acb_cc order by acb_acct, acb_cc, acb_year, acb_per;");
-                       
-                       
-                       while (res.next()) {
-                           endbal = res.getDouble("sum");
-                           acctid = res.getString("acb_acct");
-                           cc = res.getString("acb_cc");
-                           if (supress && endbal == 0) 
-                               continue;
-                        mylist.add(acctid + "," + cc + "," + period + "," + year + "," + currformatDoubleUS(endbal) );
-                           
-                       }      
-                       
-                       
-                       
-                    } // period
-                } // year
-                
-               
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-            }
-            con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-              return mylist;
-          }
-          
            
-           public static String[] getYearEndValues(String site, String year) {
-               String[] myarray = new String[5];
-            try {
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                int qty = 0;
-                double dol = 0;
-                
-                int i = 0;
-               
-                 
-                 
-                double amt = 0;
-                double i_amt = 0;
-                double e_amt = 0;
-                String acct = "";
-                String acctdesc = "";
-                String accttype = "";
-                
-               double current_retearn = OVData.getGLAcctBalYTD(site, OVData.getDefaultRetainedEarningsAcct()); 
-                 
-               res = st.executeQuery("select acb_acct, ac_desc, ac_type, sum(acb_amt) as sum from acb_mstr " +
-                        " inner join ac_mstr on ac_id = acb_acct " +
-                        "where acb_year = " + "'" + year + "'" +
-                        " and acb_acct >= " + "'" + OVData.getGLIncomeStatementFromAcct() + "'" +
-                        " and acb_acct <= " + "'" + OVData.getGLIncomeStatementToAcct() + "'" +
-                        " group by acb_acct, ac_desc, ac_type " +
-                        ";");
-                while (res.next()) {
-                   amt = res.getDouble("sum");
-                   acct = res.getString("acb_acct");
-                   accttype = res.getString("ac_type");
-                   acctdesc = (res.getString("ac_desc") == null) ? "" : res.getString("ac_desc");
-                  i++;
-                  
-                  if (accttype.equals("I")) {
-                      i_amt += amt;
-                  }
-                  if (accttype.equals("E")) {
-                      e_amt += amt;
-                  }
-                }
-                
-                myarray[0] = bsFormatDouble(current_retearn);
-                myarray[1] = bsFormatDouble(abs(i_amt));
-                myarray[2] = bsFormatDouble(abs(e_amt));
-                myarray[3] = bsFormatDouble(abs(i_amt) - abs(e_amt));
-                myarray[4] = bsFormatDouble(current_retearn + (abs(i_amt) - abs(e_amt)));
-                
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                
-            }
-            con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-        return myarray;
-        }
-           
-           public static void setYearEndValues(String site, String year) {
-               
-               String[] myarray = new String[2];
-               
-               ArrayList<String[]> accounts = new ArrayList<String[]>();
-               
-            try {
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                int qty = 0;
-                double dol = 0;
-               
-                int i = 0;
-               
-                
-                // always base currency
-                String curr = OVData.getDefaultCurrency();
-                String basecurr = curr;
-                 
-                 
-                double amt = 0;
-                String acct = "";
-                String date = year + "-12" + "-31";
-                
-               String cc = OVData.getDefaultCC();
-               String re_acct = OVData.getDefaultRetainedEarningsAcct();
-               double re_value = OVData.getGLAcctBalYTD(site, re_acct); 
-                 
-               res = st.executeQuery("select acb_acct, ac_desc, ac_type, sum(acb_amt) as sum from acb_mstr " +
-                        " inner join ac_mstr on ac_id = acb_acct " +
-                        "where acb_year = " + "'" + year + "'" +
-                        " and acb_acct >= " + "'" + OVData.getGLIncomeStatementFromAcct() + "'" +
-                        " and acb_acct <= " + "'" + OVData.getGLIncomeStatementToAcct() + "'" +
-                        " group by acb_acct, ac_desc, ac_type " +
-                        ";");
-                while (res.next()) {
-                   amt = res.getDouble("sum");
-                   acct = res.getString("acb_acct");
-                  
-                  
-                  // insert the negative of the account summary into a temp ArrayList to be added back through glentry
-                  if (amt != 0) {
-                      String[] c = new String[2];
-                      c[0] = acct;
-                      c[1] = currformatDoubleUS(-1 * amt);
-                      accounts.add(i, c);
-                       i++;
-                  }
-                }
-               
-               
-                
-                // now do glentry for all the reversed accounts in the arraylist..washing against the Retained Earnings account
-                 for (String[] a : accounts) {
-                      fglData.glEntry(re_acct, cc, a[0], cc, date, bsParseDoubleUS(a[1]), bsParseDoubleUS(a[1]), curr, basecurr, "YearEndClose", site, "GL", "YearEndClose");  
-                 }
-                 
-               // now post
-               OVData.PostGL2();
-                
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                
-            }
-            con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-        
-        }
-           
-           
-       public static void AcctBalEntry(String site, String acct, String cc, double amt, String EffDate) {
+    public static void AcctBalEntry(String site, String acct, String cc, double amt, String EffDate) {
            try {
              DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
             
@@ -13784,188 +13754,188 @@ public class OVData {
             MainFrame.bslog(e);
         }
        }
-       
-        public static void PostGL2() {
-           try {
-            ArrayList<Integer> gltran = new ArrayList();
-              
-            DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try {
-                Statement st = con.createStatement();
-                Statement st2 = con.createStatement();
-                Statement st3 = con.createStatement();
-                ResultSet res = null;
-                ResultSet res2 = null;
-                int i = 0;
-                int per = 0;
-                int year = 0;
-                String acct = "";
-                String cc = "";
-                String site = "";
-                String curr = "";
-                String basecurr = "";
-                double amt = 0.00;
-                double newamt = 0.00;
-                
-                if (dbtype.equals("sqlite")) {
-                 st.executeUpdate("begin transaction;");
-                } else {
-                 st.executeUpdate("start transaction;");  
-                }
-               
-                res = st.executeQuery("select glt_id, glt_site, glt_acct, glt_cc, glt_amt, glt_base_amt, glc_per, glc_year from gl_tran inner join gl_cal on glc_start <= glt_effdate and glc_end >= glt_effdate ;");
-               while (res.next()) {
-                   i++;
-                gltran.add(res.getInt("glt_id"));
-                acct = res.getString("glt_acct");
-                cc = res.getString("glt_cc");
-                amt = res.getDouble("glt_base_amt");
-                per = res.getInt("glc_per");
-                year = res.getInt("glc_year");
-                site = res.getString("glt_site");
-               
-               
-                if (i > 0 && per != 0 && year != 0) {
-                   
-                   int j = 0;
-                   
-                   res2 = st2.executeQuery("select * from acb_mstr where acb_year = " +
-                        "'" + year + "'" + 
-                        " AND acb_per = " +
-                        "'" + per + "'" +
-                        " AND acb_site = " +
-                        "'" + site + "'" +
-                        " AND acb_acct = " +
-                        "'" + acct + "'" +
-                        " AND acb_cc = " +
-                        "'" + cc + "'" +
-                        ";");
-                
-                       while (res2.next()) {
-                          j++;
-                          newamt = amt + res2.getDouble(("acb_amt"));
-                       }
-                   
-                     if (j > 0) {
-                     st3.executeUpdate("update acb_mstr set "
-                            + " acb_amt = " + "'" + currformatDoubleUS(newamt).replace(defaultDecimalSeparator, '.') + "'"
-                            + " where acb_acct = " + "'" + res.getString("glt_acct") + "'" 
-                            + " AND acb_cc = " + "'" + res.getString("glt_cc") + "'" 
-                             + " AND acb_site = " + "'" + res.getString("glt_site") + "'" 
-                             + " AND acb_year = " + "'" + year + "'"
-                             + " AND acb_per = " + "'" + per + "'"
-                                + ";");
-                     } else {
-                         newamt = amt;
-                         st3.executeUpdate("insert into acb_mstr values ( "
-                                  + "'" + res.getString("glt_acct") + "'" + "," 
-                                  + "'" + res.getString("glt_cc") + "'" + "," 
-                                  + "'" + per + "'" + "," 
-                                  + "'" + year + "'" + "," 
-                                  + "'" + currformatDoubleUS(newamt).replace(defaultDecimalSeparator, '.') + "'" + ","
-                                  + "'" + site + "'" 
-                                  + ");");
-                                  
-                     }   
-               }
-               
-               }
-               
-                 st.executeUpdate("commit;");
-               
-               OVData.glCopyTranToHist(gltran);
-               
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-               // bsmf.MainFrame.show("Cannot update acb_mstr");
+
+    public static void PostGL2() {
+       try {
+        ArrayList<Integer> gltran = new ArrayList();
+
+        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try {
+            Statement st = con.createStatement();
+            Statement st2 = con.createStatement();
+            Statement st3 = con.createStatement();
+            ResultSet res = null;
+            ResultSet res2 = null;
+            int i = 0;
+            int per = 0;
+            int year = 0;
+            String acct = "";
+            String cc = "";
+            String site = "";
+            String curr = "";
+            String basecurr = "";
+            double amt = 0.00;
+            double newamt = 0.00;
+
+            if (dbtype.equals("sqlite")) {
+             st.executeUpdate("begin transaction;");
+            } else {
+             st.executeUpdate("start transaction;");  
             }
-            con.close();
-           
-        } catch (Exception e) {
-            MainFrame.bslog(e);
+
+            res = st.executeQuery("select glt_id, glt_site, glt_acct, glt_cc, glt_amt, glt_base_amt, glc_per, glc_year from gl_tran inner join gl_cal on glc_start <= glt_effdate and glc_end >= glt_effdate ;");
+           while (res.next()) {
+               i++;
+            gltran.add(res.getInt("glt_id"));
+            acct = res.getString("glt_acct");
+            cc = res.getString("glt_cc");
+            amt = res.getDouble("glt_base_amt");
+            per = res.getInt("glc_per");
+            year = res.getInt("glc_year");
+            site = res.getString("glt_site");
+
+
+            if (i > 0 && per != 0 && year != 0) {
+
+               int j = 0;
+
+               res2 = st2.executeQuery("select * from acb_mstr where acb_year = " +
+                    "'" + year + "'" + 
+                    " AND acb_per = " +
+                    "'" + per + "'" +
+                    " AND acb_site = " +
+                    "'" + site + "'" +
+                    " AND acb_acct = " +
+                    "'" + acct + "'" +
+                    " AND acb_cc = " +
+                    "'" + cc + "'" +
+                    ";");
+
+                   while (res2.next()) {
+                      j++;
+                      newamt = amt + res2.getDouble(("acb_amt"));
+                   }
+
+                 if (j > 0) {
+                 st3.executeUpdate("update acb_mstr set "
+                        + " acb_amt = " + "'" + currformatDoubleUS(newamt).replace(defaultDecimalSeparator, '.') + "'"
+                        + " where acb_acct = " + "'" + res.getString("glt_acct") + "'" 
+                        + " AND acb_cc = " + "'" + res.getString("glt_cc") + "'" 
+                         + " AND acb_site = " + "'" + res.getString("glt_site") + "'" 
+                         + " AND acb_year = " + "'" + year + "'"
+                         + " AND acb_per = " + "'" + per + "'"
+                            + ";");
+                 } else {
+                     newamt = amt;
+                     st3.executeUpdate("insert into acb_mstr values ( "
+                              + "'" + res.getString("glt_acct") + "'" + "," 
+                              + "'" + res.getString("glt_cc") + "'" + "," 
+                              + "'" + per + "'" + "," 
+                              + "'" + year + "'" + "," 
+                              + "'" + currformatDoubleUS(newamt).replace(defaultDecimalSeparator, '.') + "'" + ","
+                              + "'" + site + "'" 
+                              + ");");
+
+                 }   
+           }
+
+           }
+
+             st.executeUpdate("commit;");
+
+           OVData.glCopyTranToHist(gltran);
+
+        } catch (SQLException s) {
+            MainFrame.bslog(s);
+           // bsmf.MainFrame.show("Cannot update acb_mstr");
         }
-       }
-       
-       public static void glCopyTranToHist(ArrayList<Integer> trans) {
-           try {
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
-                boolean proceed = true;
-               
-                 if (dbtype.equals("sqlite")) {
-                 st.executeUpdate("begin transaction;");
-                } else {
-                 st.executeUpdate("start transaction;");  
-                }
-               
-               for (int tran : trans) {
-                       st.executeUpdate("insert into gl_hist "
-                        + "(glh_ref, glh_effdate, glh_entdate, glh_acct, "
-                        + "glh_cc, glh_amt, glh_base_amt, glh_site, glh_doc, glh_line,"
-                        + "glh_type, glh_curr, glh_base_curr, glh_desc, glh_userid) "
-                        + " select glt_ref, glt_effdate, glt_entdate, glt_acct, "
-                        + " glt_cc, glt_amt, glt_base_amt, glt_site, glt_doc, glt_line, "
-                        + " glt_type, glt_curr, glt_base_curr, glt_desc, glt_userid " 
-                        + " from gl_tran where glt_id = " + "'" + tran + "'" 
-                        + ";");
-                       st.executeUpdate("delete from gl_tran "
-                        + " where glt_id = " + "'" + tran + "'" 
-                        + ";");
-               }
-              
-                 st.executeUpdate("commit;");
-               
-               
-            } catch (SQLException s) {
-               MainFrame.bslog(s);
+        con.close();
+
+    } catch (Exception e) {
+        MainFrame.bslog(e);
+    }
+   }
+
+    public static void glCopyTranToHist(ArrayList<Integer> trans) {
+       try {
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try {
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            boolean proceed = true;
+
+             if (dbtype.equals("sqlite")) {
+             st.executeUpdate("begin transaction;");
+            } else {
+             st.executeUpdate("start transaction;");  
             }
-            con.close();
-           
-        } catch (Exception e) {
-            MainFrame.bslog(e);
+
+           for (int tran : trans) {
+                   st.executeUpdate("insert into gl_hist "
+                    + "(glh_ref, glh_effdate, glh_entdate, glh_acct, "
+                    + "glh_cc, glh_amt, glh_base_amt, glh_site, glh_doc, glh_line,"
+                    + "glh_type, glh_curr, glh_base_curr, glh_desc, glh_userid) "
+                    + " select glt_ref, glt_effdate, glt_entdate, glt_acct, "
+                    + " glt_cc, glt_amt, glt_base_amt, glt_site, glt_doc, glt_line, "
+                    + " glt_type, glt_curr, glt_base_curr, glt_desc, glt_userid " 
+                    + " from gl_tran where glt_id = " + "'" + tran + "'" 
+                    + ";");
+                   st.executeUpdate("delete from gl_tran "
+                    + " where glt_id = " + "'" + tran + "'" 
+                    + ";");
+           }
+
+             st.executeUpdate("commit;");
+
+
+        } catch (SQLException s) {
+           MainFrame.bslog(s);
         }
-       }
-                       
-       public static void PostGL() {
-           
-           ArrayList<Integer> gltran = new ArrayList();
-           try {
-            DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
-                boolean proceed = true;
-               
-                res = st.executeQuery("select * from gl_tran;");
-               while (res.next()) {
-                gltran.add(res.getInt("glt_id"));
-                }
-               
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
+        con.close();
+
+    } catch (Exception e) {
+        MainFrame.bslog(e);
+    }
+   }
+
+    public static void PostGL() {
+
+       ArrayList<Integer> gltran = new ArrayList();
+       try {
+        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try {
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            boolean proceed = true;
+
+            res = st.executeQuery("select * from gl_tran;");
+           while (res.next()) {
+            gltran.add(res.getInt("glt_id"));
             }
-            con.close();
-           
-        } catch (Exception e) {
-            MainFrame.bslog(e);
+
+        } catch (SQLException s) {
+            MainFrame.bslog(s);
         }
-           
-           // now let's copy gl_tran to gl_hist and delete gl_tran
-           glCopyTranToHist(gltran);         
-       
-        
-           
-       }
-       
-       /* end gl related functions */
-           
+        con.close();
+
+    } catch (Exception e) {
+        MainFrame.bslog(e);
+    }
+
+       // now let's copy gl_tran to gl_hist and delete gl_tran
+       glCopyTranToHist(gltran);         
+
+
+
+   }
+
+    /* end gl related functions */
+
        
        /* start ap related functions */
     public static void APCheckRun(JTable mytable, Date effdate, int checknbr, String type) {
@@ -16001,11 +15971,8 @@ public class OVData {
     }
 
    }
-
-    
-    
-        
-     public static ArrayList getPrinterList() {
+ 
+    public static ArrayList getPrinterList() {
            ArrayList<String> mylist = new ArrayList<String>();  
          try{
             
@@ -16032,7 +15999,7 @@ public class OVData {
         
     }    
      
-      public static String[] getPrinterInfo(String printer) {
+    public static String[] getPrinterInfo(String printer) {
           String myreturn[] = new String[]{"","",""};
          try{
             
@@ -16063,7 +16030,7 @@ public class OVData {
         
     }    
       
-       public static boolean isValidPrinter(String printer) {
+    public static boolean isValidPrinter(String printer) {
           boolean myreturn = false;
          try{
             
@@ -16090,7 +16057,6 @@ public class OVData {
         return myreturn;
         
     }    
-     
       
     public static void exportCSV(JTable tablereport) {
           FileDialog fDialog;
@@ -16132,10 +16098,7 @@ public class OVData {
         }
                 
       }
-        
      
-   
-    
     /* print methods */
     public static void printPOS_Jasper(String nbr) {
         
@@ -17046,8 +17009,6 @@ MainFrame.bslog(e);
             }
       }
     
-    
-    
     public static MimeBodyPart attachmentPart;
     
     public static class SMTPAuthenticator extends javax.mail.Authenticator {
@@ -17352,1564 +17313,1550 @@ MainFrame.bslog(e);
         return m;
         
     }
-    
-    
-    
-    
-      
-       
-       
-       public static String CreateVoucher(JTable voucherdet, String site, String vend, String invoice, Date effdate, String remarks ) {
-          String messg = "";
-          String nbr = String.valueOf(OVData.getNextNbr("voucher"));
-          
-          try {
 
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-          
-            try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
-                boolean proceed = true;
-                int i = 0;
-                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-                java.util.Date now = new java.util.Date();
-                
-                // initialize ord and due date if blank
-                if ( effdate == null) {
-                    effdate = now;
-                }
-                
-                
-                Double amt = 0.00;
-                Double baseamt = 0.00;
-                double qty = 0;
-                
-                
-                // get billto specific data
-                String apacct = "";
-                String apcc = "";
-                String terms = "";
-                String carrier = "";
-                String apbank = "";
-                String curr = "";
-                String basecurr = "";
-                
-               res = st.executeQuery("select vd_ap_acct, vd_ap_cc, vd_terms, vd_bank, vd_curr from vd_mstr where vd_addr = " + "'" + vend + "'" + ";");
-                while (res.next()) {
-                    i++;
-                   apacct = res.getString("vd_ap_acct");
-                   apcc = res.getString("vd_ap_cc");
-                   terms = res.getString("vd_terms");
-                   apbank = res.getString("vd_bank");
-                   curr = res.getString("vd_curr");
-                }
+    public static String CreateVoucher(JTable voucherdet, String site, String vend, String invoice, Date effdate, String remarks ) {
+      String messg = "";
+      String nbr = String.valueOf(OVData.getNextNbr("voucher"));
 
-                if (i == 0) {
-                    messg = "vendor unknown...unable to autovoucher";
-                    proceed = false;
-                }
-                
-                Date duedate = OVData.getDueDateFromTerms(effdate, terms);
-                if (duedate == null) {
-                    duedate = now;
-                }
-                
-                
-                
-                if (proceed) {
-                 // "PO", "Line", "Part", "Qty", "Price", "RecvID", "RecvLine"
-                  //  "Part", "PO", "Line", "Qty", "listprice", "disc", "netprice", "loc", "WH", "serial", "lot", "cost"
-                  for (int j = 0; j < voucherdet.getRowCount(); j++) {
-                        qty = bsParseDouble(voucherdet.getValueAt(j,3).toString());
-                        amt += bsParseDoubleUS(voucherdet.getValueAt(j, 3).toString()) * bsParseDoubleUS(voucherdet.getValueAt(j, 4).toString());
-                        st.executeUpdate("insert into vod_mstr "
-                            + "(vod_id, vod_vend, vod_rvdid, vod_rvdline, vod_part, vod_qty, "
-                            + " vod_voprice, vod_date, vod_invoice, vod_expense_acct, vod_expense_cc )  "
-                            + " values ( " + "'" + nbr + "'" + ","
-                                + "'" + vend + "'" + ","
-                            + "'" + voucherdet.getValueAt(j, 0).toString() + "'" + ","
-                            + "'" + voucherdet.getValueAt(j, 1).toString() + "'" + ","
-                            + "'" + voucherdet.getValueAt(j, 2).toString() + "'" + ","
-                            + "'" + currformatUS(voucherdet.getValueAt(j, 3).toString()) + "'" + ","
-                            + "'" + currformatUS(voucherdet.getValueAt(j, 4).toString()) + "'" + ","
-                            + "'" + dfdate.format(effdate) + "'" + ","
-                            + "'" + invoice + "'" + ","
-                            + "'" + apacct + "'" + ","
-                            + "'" + apcc + "'"
-                            + ")"
-                            + ";");
-                      
-                double voqty = 0.00;
-                double rvqty = 0.00;
-                double rvdvoqty = 0.00;
-                String status = "0";
-                
-                res = st.executeQuery("select rvd_voqty, rvd_qty from recv_det " 
-                         + " where rvd_id = " + "'" + voucherdet.getValueAt(j, 0).toString() + "'"
+      try {
+
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+
+        try {
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            boolean proceed = true;
+            int i = 0;
+             DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+            java.util.Date now = new java.util.Date();
+
+            // initialize ord and due date if blank
+            if ( effdate == null) {
+                effdate = now;
+            }
+
+
+            Double amt = 0.00;
+            Double baseamt = 0.00;
+            double qty = 0;
+
+
+            // get billto specific data
+            String apacct = "";
+            String apcc = "";
+            String terms = "";
+            String carrier = "";
+            String apbank = "";
+            String curr = "";
+            String basecurr = "";
+
+           res = st.executeQuery("select vd_ap_acct, vd_ap_cc, vd_terms, vd_bank, vd_curr from vd_mstr where vd_addr = " + "'" + vend + "'" + ";");
+            while (res.next()) {
+                i++;
+               apacct = res.getString("vd_ap_acct");
+               apcc = res.getString("vd_ap_cc");
+               terms = res.getString("vd_terms");
+               apbank = res.getString("vd_bank");
+               curr = res.getString("vd_curr");
+            }
+
+            if (i == 0) {
+                messg = "vendor unknown...unable to autovoucher";
+                proceed = false;
+            }
+
+            Date duedate = OVData.getDueDateFromTerms(effdate, terms);
+            if (duedate == null) {
+                duedate = now;
+            }
+
+
+
+            if (proceed) {
+             // "PO", "Line", "Part", "Qty", "Price", "RecvID", "RecvLine"
+              //  "Part", "PO", "Line", "Qty", "listprice", "disc", "netprice", "loc", "WH", "serial", "lot", "cost"
+              for (int j = 0; j < voucherdet.getRowCount(); j++) {
+                    qty = bsParseDouble(voucherdet.getValueAt(j,3).toString());
+                    amt += bsParseDoubleUS(voucherdet.getValueAt(j, 3).toString()) * bsParseDoubleUS(voucherdet.getValueAt(j, 4).toString());
+                    st.executeUpdate("insert into vod_mstr "
+                        + "(vod_id, vod_vend, vod_rvdid, vod_rvdline, vod_part, vod_qty, "
+                        + " vod_voprice, vod_date, vod_invoice, vod_expense_acct, vod_expense_cc )  "
+                        + " values ( " + "'" + nbr + "'" + ","
+                            + "'" + vend + "'" + ","
+                        + "'" + voucherdet.getValueAt(j, 0).toString() + "'" + ","
+                        + "'" + voucherdet.getValueAt(j, 1).toString() + "'" + ","
+                        + "'" + voucherdet.getValueAt(j, 2).toString() + "'" + ","
+                        + "'" + currformatUS(voucherdet.getValueAt(j, 3).toString()) + "'" + ","
+                        + "'" + currformatUS(voucherdet.getValueAt(j, 4).toString()) + "'" + ","
+                        + "'" + dfdate.format(effdate) + "'" + ","
+                        + "'" + invoice + "'" + ","
+                        + "'" + apacct + "'" + ","
+                        + "'" + apcc + "'"
+                        + ")"
+                        + ";");
+
+            double voqty = 0.00;
+            double rvqty = 0.00;
+            double rvdvoqty = 0.00;
+            String status = "0";
+
+            res = st.executeQuery("select rvd_voqty, rvd_qty from recv_det " 
+                     + " where rvd_id = " + "'" + voucherdet.getValueAt(j, 0).toString() + "'"
+                    + " AND rvd_rline = " + "'" + voucherdet.getValueAt(j, 1).toString() + "'"
+                    );
+            while (res.next()) {
+                voqty = res.getDouble("rvd_voqty");
+                rvqty = res.getDouble("rvd_qty");
+                if ((voqty + qty) >= rvqty) {
+                    status = "1";
+                }     
+            }
+            res.close();        
+
+               rvdvoqty = voqty + qty;
+
+
+                       if (dbtype.equals("sqlite")) { 
+                        st.executeUpdate("update recv_det  "
+                        + " set rvd_voqty =  " + "'" + rvdvoqty + "'" + ","
+                        + " rvd_status = " + "'" + status + "'"
+                        + " where rvd_id = " + "'" + voucherdet.getValueAt(j, 0).toString() + "'"
                         + " AND rvd_rline = " + "'" + voucherdet.getValueAt(j, 1).toString() + "'"
                         );
-                while (res.next()) {
-                    voqty = res.getDouble("rvd_voqty");
-                    rvqty = res.getDouble("rvd_qty");
-                    if ((voqty + qty) >= rvqty) {
-                        status = "1";
-                    }     
-                }
-                res.close();        
-                        
-                   rvdvoqty = voqty + qty;
-                   
-                       
-                           if (dbtype.equals("sqlite")) { 
-                            st.executeUpdate("update recv_det  "
-                            + " set rvd_voqty =  " + "'" + rvdvoqty + "'" + ","
-                            + " rvd_status = " + "'" + status + "'"
-                            + " where rvd_id = " + "'" + voucherdet.getValueAt(j, 0).toString() + "'"
-                            + " AND rvd_rline = " + "'" + voucherdet.getValueAt(j, 1).toString() + "'"
-                            );
-                           } else {
-                            st.executeUpdate("update recv_det as r1 inner join recv_det as r2 "
-                            + " set r1.rvd_voqty = r2.rvd_voqty + " +  "'" + qty + "'" + ","
-                            + " r1.rvd_status = case when r1.rvd_qty <= ( r2.rvd_voqty + " + "'" + qty + "'" +  ") then '1' else '0' end " 
-                            + " where r1.rvd_id = " + "'" + voucherdet.getValueAt(j, 0).toString() + "'"
-                            + " AND r1.rvd_rline = " + "'" + voucherdet.getValueAt(j, 1).toString() + "'"
-                            + " AND r2.rvd_id = " + "'" + voucherdet.getValueAt(j, 0).toString() + "'"
-                            + " AND r2.rvd_rline = " + "'" + voucherdet.getValueAt(j, 1).toString() + "'"
-                            );   
-                           }
-                       
-                     }  //end of for each line
-                    
-                          
-                  // let's handle the currency exchange...if any
-                    basecurr = OVData.getDefaultCurrency();
-                    
-                    
-                    if (curr.toUpperCase().equals(basecurr.toUpperCase())) {
-                        baseamt = amt;
-                    } else {
-                        baseamt = OVData.getExchangeBaseValue(basecurr, curr, amt);
-                    }
-                  
-                // now the header voucher
-                     st.executeUpdate("insert into ap_mstr "
-                        + "(ap_vend, ap_site, ap_nbr, ap_amt, ap_base_amt, ap_type, ap_ref, ap_rmks, "
-                        + "ap_entdate, ap_effdate, ap_duedate, ap_acct, ap_cc, "
-                        + "ap_terms, ap_status, ap_bank, ap_curr, ap_base_curr ) "
-                        + " values ( " + "'" + vend + "'" + ","
-                              + "'" + site + "'" + ","
-                        + "'" + nbr + "'" + ","
-                        + "'" + currformatDoubleUS(amt) + "'" + ","
-                        + "'" + currformatDoubleUS(baseamt) + "'" + ","        
-                        + "'" + "V" + "'" + ","
-                        + "'" + invoice + "'" + ","
-                        + "'" + remarks + "'" + ","
-                        + "'" + dfdate.format(now) + "'" + ","
-                        + "'" + dfdate.format(effdate) + "'" + ","
-                        + "'" + dfdate.format(duedate) + "'" + ","
-                        + "'" + apacct + "'" + ","
-                        + "'" + apcc + "'" + ","
-                        + "'" + terms + "'" + ","
-                        + "'" + "o" + "'"  + ","
-                        + "'" + apbank + "'" + ","
-                        + "'" + curr + "'" + ","
-                        + "'" + basecurr + "'"        
-                        + ")"
-                        + ";");
-                     
-                     fglData.glEntryFromVoucher(nbr, effdate);
-                     
-                     
-                     
-            } // if proceed       
-                     
-             
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-            }
-            con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-          return messg;
-      } 
-       
-       public static String[] CreateShipperByJSON(String jsonString) {
-          String[] x = new String[]{"","",""};
-          boolean isError = false; 
-          JSONObject json = new JSONObject(jsonString);
-          String junktag = "";
-          String nbr = "";
-          String Site = "";
-          String BOLNumber = "";
-          String BillToCode = "";
-          String ShipToCode = "";
-          String OrderNumber = "";
-          String PONumber = "";
-          String Reference = "";
-          String ShipDate = "";
-          String OrderDate = "";
-          String Remarks = "";
-          String ShipVia = "";
-          String Type = "";
-          ArrayList<String[]> detail = new ArrayList<String[]>();
-          
-          
-          for (String keyStr : json.keySet()) { 
-           Object keyvalue = json.get(keyStr);
-           
-           // process header tags in JSON
-           switch(keyStr) {
-                 case "OrderNumber" :
-                     OrderNumber = keyvalue.toString();
-                     break;
-                 case "PONumber" :
-                     PONumber = keyvalue.toString();
-                     break;
-                 case "Remarks" :
-                     Remarks = keyvalue.toString();
-                     break;
-                 case "OrderDate" :
-                     OrderDate = keyvalue.toString();
-                     break;
-                 case "ShipDate" :
-                     ShipDate = keyvalue.toString();
-                     break;
-                 case "BOLNumber" :
-                     BOLNumber = keyvalue.toString();
-                     break;
-                 case "Type" :
-                     Type = keyvalue.toString();
-                     break; 
-                 case "ShipVia" :
-                     ShipVia = keyvalue.toString();
-                     break;    
-                 case "BillToCode" :
-                     BillToCode = keyvalue.toString();
-                     break;
-                 case "Reference" :
-                     Reference = keyvalue.toString();
-                     break;
-                 case "Site" :
-                     Site = keyvalue.toString();
-                     break;
-                 default :
-                     junktag = keyvalue.toString();
-            }
-           
-           // process detail array 'Items' in JSON
-           if (keyStr.equals("Items")) {
-                for (Object line : (JSONArray) keyvalue) {
-                    JSONObject jsonDetail = new JSONObject(line.toString());
-                        
-                    String ItemNumber = "";
-                    String ItemDescription = "";
-                    String Line = "";
-                    String Order = "";
-                    String PO = "";
-                    String ShipQty = "";
-                    String UOM = "";
-                    String CustItem = "";
-                    String SkuItem = "";
-                    String UpcItem = "";
-                    String ListPrice = "";
-                    String NetPrice = "";
-                    String Discount = "";
-                    String TaxAmt = "";
-                    String Warehouse = "";
-                    String Location = "";
-                    String junktagdet = "";
-                    
-                    
-                    for (String detailKey : jsonDetail.keySet()) {
-                        Object detailValue = jsonDetail.get(detailKey);
-                        switch(detailKey) {
-                             case "ItemNumber" :
-                                 ItemNumber = detailValue.toString();
-                                 break;
-                             case "ItemDescription" :
-                                 ItemDescription = detailValue.toString();
-                                 break;    
-                             case "Line" :
-                                 Line = detailValue.toString();
-                                 break;
-                             case "Order" :
-                                 Order = detailValue.toString();
-                                 break;
-                             case "PO" :
-                                 PO = detailValue.toString();
-                                 break;    
-                             case "ShipQty" :
-                                 ShipQty = detailValue.toString();
-                                 break;
-                             case "UOM" :
-                                 UOM = detailValue.toString();
-                                 break;
-                             case "CustItem" :
-                                 CustItem = detailValue.toString();
-                                 break;
-                             case "SkuItem" :
-                                 SkuItem = detailValue.toString();
-                                 break;    
-                             case "UpcItem" :
-                                 UpcItem = detailValue.toString();
-                                 break;    
-                             case "ListPrice" :
-                                 ListPrice = detailValue.toString();
-                                 break;  
-                             case "NetPrice" :
-                                 NetPrice  = detailValue.toString();
-                                 break;  
-                             case "Discount" :
-                                 Discount = detailValue.toString();
-                                 break;  
-                             case "TaxAmt" :
-                                 TaxAmt = detailValue.toString();
-                                 break;
-                             case "Warehouse" :
-                                 Warehouse = detailValue.toString();
-                                 break;
-                             case "Location" :
-                                 Location = detailValue.toString();
-                                 break;    
-                             default :
-                                 junktagdet = detailValue.toString();
-                        }
-                    }
-                    detail.add(new String[]{ItemNumber, ItemDescription, Line, Order, PO, ShipQty, UOM, CustItem, SkuItem, UpcItem, ListPrice, NetPrice, Discount, TaxAmt, Warehouse, Location});
-	            
-	        }
-           } // if key = "Items"
-           
-          }
-         
-          // here we create the table records
-           try {
+                       } else {
+                        st.executeUpdate("update recv_det as r1 inner join recv_det as r2 "
+                        + " set r1.rvd_voqty = r2.rvd_voqty + " +  "'" + qty + "'" + ","
+                        + " r1.rvd_status = case when r1.rvd_qty <= ( r2.rvd_voqty + " + "'" + qty + "'" +  ") then '1' else '0' end " 
+                        + " where r1.rvd_id = " + "'" + voucherdet.getValueAt(j, 0).toString() + "'"
+                        + " AND r1.rvd_rline = " + "'" + voucherdet.getValueAt(j, 1).toString() + "'"
+                        + " AND r2.rvd_id = " + "'" + voucherdet.getValueAt(j, 0).toString() + "'"
+                        + " AND r2.rvd_rline = " + "'" + voucherdet.getValueAt(j, 1).toString() + "'"
+                        );   
+                       }
 
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-          
-            try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
-                boolean proceed = true;
-                int i = 0;
-                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-                java.util.Date now = new java.util.Date();
-                 
-                if (nbr.isEmpty()) {
-                nbr = String.valueOf(OVData.getNextNbr("shipper"));
+                 }  //end of for each line
+
+
+              // let's handle the currency exchange...if any
+                basecurr = OVData.getDefaultCurrency();
+
+
+                if (curr.toUpperCase().equals(basecurr.toUpperCase())) {
+                    baseamt = amt;
+                } else {
+                    baseamt = OVData.getExchangeBaseValue(basecurr, curr, amt);
                 }
-                
-                 // get billto specific data
-                // aracct, arcc, currency, bank, terms, carrier, onhold, site
-                String[] custinfo = new String[]{"","","","","","","", ""};
-                
-                // if billto exists...use it...otherwise create unique billto/shipto
-                res = st.executeQuery("select * from cm_mstr where cm_code = " + "'" + BillToCode + "'" + " ;");
-               while (res.next()) {
-                   i++;
-                   custinfo[0] = res.getString("cm_ar_acct");
-                   custinfo[1] = res.getString("cm_ar_cc");
-                   custinfo[2] = res.getString("cm_curr");
-                   custinfo[3] = res.getString("cm_bank");
-                   custinfo[4] = res.getString("cm_terms");
-                   custinfo[5] = res.getString("cm_carrier");
-                   custinfo[6] = res.getString("cm_onhold");
-                   custinfo[7] = res.getString("cm_site");
-                }
-                             
-                
-                if (proceed) {
-                    st.executeUpdate("insert into ship_mstr " 
-                        + " (sh_id, sh_cust, sh_ship,"
-                        + " sh_shipdate, sh_po_date, sh_bol, sh_po, sh_ref, sh_rmks, sh_userid, sh_site, sh_curr, sh_shipvia, sh_cust_terms, sh_taxcode, sh_ar_acct, sh_ar_cc, sh_type ) "
-                        + " values ( " + "'" + nbr + "'" + "," 
-                        + "'" + BillToCode + "'" + "," 
-                        + "'" + ShipToCode + "'" + ","
-                        + "'" + ShipDate + "'" + ","
-                        + "'" + OrderDate + "'" + ","
-                        + "'" + BOLNumber + "'" + "," 
-                        + "'" + PONumber + "'" + "," 
-                        + "'" + Reference + "'" + ","        
-                        + "'" + Remarks + "'" + "," 
-                        + "'" + bsmf.MainFrame.userid + "'" + "," 
-                        + "'" + Site + "'" + ","
-                        + "'" + custinfo[2] + "'" + ","
-                        + "'" + ShipVia + "'" + ","        
-                        + "'" + custinfo[4] + "'" + ","
-                        + "'" + "" + "'" + ","
-                        + "'" + custinfo[0] + "'" + ","
-                        + "'" + custinfo[1] + "'" + ","
-                        + "'" + Type + "'"
-                        + ");" );
-                    
-                  
-                    //ItemNumber, ItemDescription, Line, Order, PO, ShipQty, UOM, CustItem, SkuItem, UpcItem, ListPrice, NetPrice, Discount, TaxAmt, Warehouse, Location});
-	            for (String[] s : detail) {
-                    st.executeUpdate("insert into ship_det "
-                            + "(shd_id, shd_soline, shd_part, shd_so, shd_date, shd_po, shd_qty, shd_uom, "
-                            + "shd_netprice, shd_listprice, shd_disc, shd_desc, shd_wh, shd_loc, shd_taxamt, shd_site ) "
-                            + " values ( " + "'" + nbr + "'" + ","
-                            + "'" + s[2] + "'" + ","
-                            + "'" + s[0] + "'" + ","
-                            + "'" + s[3] + "'" + ","
-                            + "'" + ShipDate + "'" + ","        
-                            + "'" + s[4] + "'" + ","
-                            + "'" + s[5] + "'" + ","
-                            + "'" + s[6] + "'" + ","        
-                            + "'" + s[11] + "'" + ","
-                            + "'" + s[10] + "'" + ","
-                            + "'" + s[12] + "'" + ","
-                            + "'" + s[1] + "'" + ","
-                            + "'" + s[14] + "'" + ","
-                            + "'" + s[15] + "'" + ","
-                            + "'" + s[13] + "'" + ","        
-                            + "'" + Site + "'"
-                            + ")"
-                            + ";");
-                    }
-                   
-                    x[0] = "success";
-                    x[1] = "Loaded Shipper Successfully";
-                    x[2] = nbr;
-                    
-                } // if proceed
-                else {
-                    x[0] = "fail";
-                    x[1] = "unable to process";
-                }
-            } catch (SQLException s) {
-                x[0] = "fail";
-                x[1] = "unable to load shipper SQLException";
-                MainFrame.bslog(s);
-            }
-            con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
+
+            // now the header voucher
+                 st.executeUpdate("insert into ap_mstr "
+                    + "(ap_vend, ap_site, ap_nbr, ap_amt, ap_base_amt, ap_type, ap_ref, ap_rmks, "
+                    + "ap_entdate, ap_effdate, ap_duedate, ap_acct, ap_cc, "
+                    + "ap_terms, ap_status, ap_bank, ap_curr, ap_base_curr ) "
+                    + " values ( " + "'" + vend + "'" + ","
+                          + "'" + site + "'" + ","
+                    + "'" + nbr + "'" + ","
+                    + "'" + currformatDoubleUS(amt) + "'" + ","
+                    + "'" + currformatDoubleUS(baseamt) + "'" + ","        
+                    + "'" + "V" + "'" + ","
+                    + "'" + invoice + "'" + ","
+                    + "'" + remarks + "'" + ","
+                    + "'" + dfdate.format(now) + "'" + ","
+                    + "'" + dfdate.format(effdate) + "'" + ","
+                    + "'" + dfdate.format(duedate) + "'" + ","
+                    + "'" + apacct + "'" + ","
+                    + "'" + apcc + "'" + ","
+                    + "'" + terms + "'" + ","
+                    + "'" + "o" + "'"  + ","
+                    + "'" + apbank + "'" + ","
+                    + "'" + curr + "'" + ","
+                    + "'" + basecurr + "'"        
+                    + ")"
+                    + ";");
+
+                 fglData.glEntryFromVoucher(nbr, effdate);
+
+
+
+        } // if proceed       
+
+
+        } catch (SQLException s) {
+            MainFrame.bslog(s);
         }
-          
-          
-          
-          return x;
+        con.close();
+    } catch (Exception e) {
+        MainFrame.bslog(e);
+    }
+      return messg;
+  } 
+
+    public static String[] CreateShipperByJSON(String jsonString) {
+      String[] x = new String[]{"","",""};
+      boolean isError = false; 
+      JSONObject json = new JSONObject(jsonString);
+      String junktag = "";
+      String nbr = "";
+      String Site = "";
+      String BOLNumber = "";
+      String BillToCode = "";
+      String ShipToCode = "";
+      String OrderNumber = "";
+      String PONumber = "";
+      String Reference = "";
+      String ShipDate = "";
+      String OrderDate = "";
+      String Remarks = "";
+      String ShipVia = "";
+      String Type = "";
+      ArrayList<String[]> detail = new ArrayList<String[]>();
+
+
+      for (String keyStr : json.keySet()) { 
+       Object keyvalue = json.get(keyStr);
+
+       // process header tags in JSON
+       switch(keyStr) {
+             case "OrderNumber" :
+                 OrderNumber = keyvalue.toString();
+                 break;
+             case "PONumber" :
+                 PONumber = keyvalue.toString();
+                 break;
+             case "Remarks" :
+                 Remarks = keyvalue.toString();
+                 break;
+             case "OrderDate" :
+                 OrderDate = keyvalue.toString();
+                 break;
+             case "ShipDate" :
+                 ShipDate = keyvalue.toString();
+                 break;
+             case "BOLNumber" :
+                 BOLNumber = keyvalue.toString();
+                 break;
+             case "Type" :
+                 Type = keyvalue.toString();
+                 break; 
+             case "ShipVia" :
+                 ShipVia = keyvalue.toString();
+                 break;    
+             case "BillToCode" :
+                 BillToCode = keyvalue.toString();
+                 break;
+             case "Reference" :
+                 Reference = keyvalue.toString();
+                 break;
+             case "Site" :
+                 Site = keyvalue.toString();
+                 break;
+             default :
+                 junktag = keyvalue.toString();
+        }
+
+       // process detail array 'Items' in JSON
+       if (keyStr.equals("Items")) {
+            for (Object line : (JSONArray) keyvalue) {
+                JSONObject jsonDetail = new JSONObject(line.toString());
+
+                String ItemNumber = "";
+                String ItemDescription = "";
+                String Line = "";
+                String Order = "";
+                String PO = "";
+                String ShipQty = "";
+                String UOM = "";
+                String CustItem = "";
+                String SkuItem = "";
+                String UpcItem = "";
+                String ListPrice = "";
+                String NetPrice = "";
+                String Discount = "";
+                String TaxAmt = "";
+                String Warehouse = "";
+                String Location = "";
+                String junktagdet = "";
+
+
+                for (String detailKey : jsonDetail.keySet()) {
+                    Object detailValue = jsonDetail.get(detailKey);
+                    switch(detailKey) {
+                         case "ItemNumber" :
+                             ItemNumber = detailValue.toString();
+                             break;
+                         case "ItemDescription" :
+                             ItemDescription = detailValue.toString();
+                             break;    
+                         case "Line" :
+                             Line = detailValue.toString();
+                             break;
+                         case "Order" :
+                             Order = detailValue.toString();
+                             break;
+                         case "PO" :
+                             PO = detailValue.toString();
+                             break;    
+                         case "ShipQty" :
+                             ShipQty = detailValue.toString();
+                             break;
+                         case "UOM" :
+                             UOM = detailValue.toString();
+                             break;
+                         case "CustItem" :
+                             CustItem = detailValue.toString();
+                             break;
+                         case "SkuItem" :
+                             SkuItem = detailValue.toString();
+                             break;    
+                         case "UpcItem" :
+                             UpcItem = detailValue.toString();
+                             break;    
+                         case "ListPrice" :
+                             ListPrice = detailValue.toString();
+                             break;  
+                         case "NetPrice" :
+                             NetPrice  = detailValue.toString();
+                             break;  
+                         case "Discount" :
+                             Discount = detailValue.toString();
+                             break;  
+                         case "TaxAmt" :
+                             TaxAmt = detailValue.toString();
+                             break;
+                         case "Warehouse" :
+                             Warehouse = detailValue.toString();
+                             break;
+                         case "Location" :
+                             Location = detailValue.toString();
+                             break;    
+                         default :
+                             junktagdet = detailValue.toString();
+                    }
+                }
+                detail.add(new String[]{ItemNumber, ItemDescription, Line, Order, PO, ShipQty, UOM, CustItem, SkuItem, UpcItem, ListPrice, NetPrice, Discount, TaxAmt, Warehouse, Location});
+
+            }
+       } // if key = "Items"
+
       }
-      
-       
-       public static boolean CreateShipperHdr(String nbr, String site, String bol, String billto, String shipto, String so, String po, String ref, String shipdate, String orddate, String remarks, String shipvia, String shiptype ) {
-          boolean isError = false; 
-          
-          try {
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-          
-            try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
-                boolean proceed = true;
-                int i = 0;
-                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-                java.util.Date now = new java.util.Date();
-                
-                // initialize ord and due date if blank
-                if (orddate.isEmpty() || orddate == null) {
-                    orddate = dfdate.format(now);
-                }
-                if (shipdate.isEmpty() || shipdate == null) {
-                    shipdate = dfdate.format(now);
-                }
-                
-                if (! BlueSeerUtils.isValidDateStr(orddate)) {
-                    if (orddate.length() == 8) {
-                        DateFormat format = new SimpleDateFormat("yyyyMMdd");
-                        Date mydate = format.parse(orddate);
-                        orddate = BlueSeerUtils.setDateFormat(mydate);
-                    }  
-                    if (orddate.length() == 6) {
-                        DateFormat format = new SimpleDateFormat("yyMMdd");
-                        Date mydate = format.parse(orddate);
-                        orddate = BlueSeerUtils.setDateFormat(mydate);
-                    }   
-                }
-                
-                if (! BlueSeerUtils.isValidDateStr(shipdate)) {
-                    if (shipdate.length() == 8) {
-                        DateFormat format = new SimpleDateFormat("yyyyMMdd");
-                        Date mydate = format.parse(shipdate);
-                        shipdate = BlueSeerUtils.setDateFormat(mydate);
-                    }  
-                    if (shipdate.length() == 6) {
-                        DateFormat format = new SimpleDateFormat("yyMMdd");
-                        Date mydate = format.parse(shipdate);
-                        shipdate = BlueSeerUtils.setDateFormat(mydate);
-                    }   
-                }
-                
-                
-                // get billto specific data
-                String acct = "";
-                String cc = "";
-                String terms = "";
-                String carrier = "";
-                String onhold = "";
-                String taxcode = "";
-                String curr = "";
-                
-                res = st.executeQuery("select * from cm_mstr where cm_code = " + "'" + billto + "'" + " ;");
-               while (res.next()) {
-                   i++;
-                   acct = res.getString("cm_ar_acct");
-                   cc = res.getString("cm_ar_cc");
-                   carrier = res.getString("cm_carrier");
-                   terms = res.getString("cm_terms");
-                   taxcode = res.getString("cm_tax_code");
-                   onhold = res.getString("cm_onhold");
-                   curr = res.getString("cm_curr");
-                }
-               
 
-                if (! shipvia.isEmpty()) {
-                    carrier = shipvia;
-                }
-                
-                // override cust currency with order currency
-                String order_curr = ordData.getOrderCurrency(so);
-                if (! order_curr.isEmpty()) {
-                curr = order_curr;
-                }
-                // logic for asset type shipment/sale
-                if (shiptype.equals("A")) {
-                    terms = "N00";
-                }
-                
-                if (proceed) {
-                    st.executeUpdate("insert into ship_mstr " 
-                        + " (sh_id, sh_cust, sh_ship,"
-                        + " sh_shipdate, sh_po_date, sh_bol, sh_po, sh_ref, sh_rmks, sh_userid, sh_site, sh_curr, sh_shipvia, sh_cust_terms, sh_taxcode, sh_ar_acct, sh_ar_cc, sh_type ) "
-                        + " values ( " + "'" + nbr + "'" + "," 
-                        + "'" + billto + "'" + "," 
-                        + "'" + shipto + "'" + ","
-                        + "'" + shipdate + "'" + ","
-                        + "'" + orddate + "'" + ","
-                        + "'" + bol + "'" + "," 
-                        + "'" + po + "'" + "," 
-                        + "'" + ref + "'" + ","        
-                        + "'" + remarks + "'" + "," 
-                        + "'" + bsmf.MainFrame.userid + "'" + "," 
-                        + "'" + site + "'" + ","
-                        + "'" + curr + "'" + ","
-                        + "'" + carrier + "'" + ","        
-                        + "'" + terms + "'" + ","
-                        + "'" + taxcode + "'" + ","
-                        + "'" + acct + "'" + ","
-                        + "'" + cc + "'" + ","
-                        + "'" + shiptype + "'"
-                        + ");" );
-                } // if proceed
-                else {
-                    isError = true;
-                }
-            } catch (SQLException s) {
-                isError = true;
-                MainFrame.bslog(s);
-            }
-            con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-          return isError;
-      } 
-       
-       public static void CreateShipperDet(String nbr, String part, String custpart, String skupart, String so, String po, String qty, String uom, String listprice, String discpercent, String netprice, String shipdate, String desc, String line, String site, String wh, String loc, String taxamt) {
-           try {
+      // here we create the table records
+       try {
 
-         
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-          
-            try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
-                boolean proceed = true;
-                int i = 0;
-                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-                
 
-                if (proceed) {
-                        st.executeUpdate("insert into ship_det "
-                            + "(shd_id, shd_soline, shd_part, shd_so, shd_date, shd_po, shd_qty, shd_uom, "
-                            + "shd_netprice, shd_listprice, shd_disc, shd_desc, shd_wh, shd_loc, shd_taxamt, shd_site ) "
-                            + " values ( " + "'" + nbr + "'" + ","
-                            + "'" + line + "'" + ","
-                            + "'" + part + "'" + ","
-                            + "'" + so + "'" + ","
-                            + "'" + shipdate + "'" + ","        
-                            + "'" + po + "'" + ","
-                            + "'" + qty + "'" + ","
-                            + "'" + uom + "'" + ","        
-                            + "'" + netprice + "'" + ","
-                            + "'" + listprice + "'" + ","
-                            + "'" + discpercent + "'" + ","
-                            + "'" + desc + "'" + ","
-                            + "'" + wh + "'" + ","
-                            + "'" + loc + "'" + ","
-                            + "'" + taxamt + "'" + ","        
-                            + "'" + site + "'"
-                            + ")"
-                            + ";");
-                } // if proceed
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-            }
-            con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-      }
-      
-       public static void CreateShipperDetFromTable(JTable dettable, String shippernbr, String shipdate, String site) {
-          
-          // table field order:  "Line", "Part", "CustPart", "SO", "PO", "Qty", "UOM", "ListPrice", "Discount", "NetPrice", "QtyShip", "Status", "WH", "LOC", "Desc", "Taxamt"
-            try {
-         
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-          
-            try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
-                boolean proceed = true;
-               
-                if (proceed) {
-                    for (int j = 0; j < dettable.getRowCount(); j++) {
-                        st.executeUpdate("insert into ship_det "
-                            + "(shd_id, shd_soline, shd_part, shd_custpart, shd_so, shd_po, shd_date, shd_qty, shd_uom, "
-                            + "shd_listprice, shd_disc, shd_netprice, shd_wh, shd_loc, shd_desc, shd_taxamt, shd_site ) "
-                            + " values ( " + "'" + shippernbr + "'" + ","
-                            + "'" + dettable.getValueAt(j, 0).toString() + "'" + ","
-                            + "'" + dettable.getValueAt(j, 1).toString().replace("'", "") + "'" + ","
-                            + "'" + dettable.getValueAt(j, 2).toString().replace("'", "") + "'" + ","
-                            + "'" + dettable.getValueAt(j, 3).toString().replace("'", "") + "'" + ","
-                            + "'" + dettable.getValueAt(j, 4).toString().replace("'", "") + "'" + ","        
-                            + "'" + shipdate + "'" + ","        
-                            + "'" + dettable.getValueAt(j, 5).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
-                            + "'" + dettable.getValueAt(j, 6).toString() + "'" + ","
-                            + "'" + dettable.getValueAt(j, 7).toString().replace(defaultDecimalSeparator, '.') + "'" + ","        
-                            + "'" + dettable.getValueAt(j, 8).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
-                            + "'" + dettable.getValueAt(j, 9).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
-                            + "'" + dettable.getValueAt(j, 12).toString() + "'" + ","
-                            + "'" + dettable.getValueAt(j, 13).toString() + "'" + ","
-                            + "'" + dettable.getValueAt(j, 14).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
-                            + "'" + dettable.getValueAt(j, 15).toString() + "'" + ","        
-                            + "'" + site + "'"
-                            + ")"
-                            + ";");
-                    }
-                } // if proceed
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-            }
-            con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-      }
-      
-       
-     
-      public static String[] CreateSalesOrderByJSON(String jsonString) {
-          String[] x = new String[]{"","",""};
-          boolean isError = false; 
-          JSONObject json = new JSONObject(jsonString);
-          String junktag = "";
-          String PONumber = "";
-          String Remarks = "";
-          String OrderDate = "";
-          String DueDate = "";
-          String Currency = "";
-          String Type = "";
-          String ShipVia = "";
-          String BillToCode = "";
-          String BillToName = "";
-          String BillToAddr1 = "";
-          String BillToCity = "";
-          String BillToState = "";
-          String BillToZip = "";
-          String BillToCountry = "";
-          String BillToEmail = "";
-          String BillToPhone = "";
-          String ShipToCode = "";
-          String ShipToName = "";
-          String ShipToAddr1 = "";
-          String ShipToCity = "";
-          String ShipToState = "";
-          String ShipToZip = "";
-          String ShipToCountry = "";
-          ArrayList<String[]> detail = new ArrayList<String[]>();
-          
-          
-          for (String keyStr : json.keySet()) { 
-           Object keyvalue = json.get(keyStr);
-           
-           // process header tags in JSON
-           switch(keyStr) {
-                 case "PONumber" :
-                     PONumber = keyvalue.toString();
-                     break;
-                 case "Remarks" :
-                     Remarks = keyvalue.toString();
-                     break;
-                 case "OrderDate" :
-                     OrderDate = keyvalue.toString();
-                     break;
-                 case "DueDate" :
-                     DueDate = keyvalue.toString();
-                     break;
-                 case "Currency" :
-                     Currency = keyvalue.toString();
-                     break;
-                 case "Type" :
-                     Type = keyvalue.toString();
-                     break; 
-                 case "ShipVia" :
-                     ShipVia = keyvalue.toString();
-                     break;    
-                 case "BillToCode" :
-                     BillToCode = keyvalue.toString();
-                     break;
-                 case "BillToName" :
-                     BillToName = keyvalue.toString();
-                     break;
-                 case "BillToAddr1" :
-                     BillToAddr1 = keyvalue.toString();
-                     break;
-                 case "BillToCity" :
-                     BillToCity = keyvalue.toString();
-                     break;
-                 case "BillToState" :
-                     BillToState = keyvalue.toString();
-                     break;
-                 case "BillToZip" :
-                     BillToZip = keyvalue.toString();
-                     break; 
-                 case "BillToCountry" :
-                     BillToCountry = keyvalue.toString();
-                     break;
-                 case "BillToEmail" :
-                     BillToEmail = keyvalue.toString();
-                     break;
-                 case "BillToPhone" :
-                     BillToPhone = keyvalue.toString();
-                     break;
-                 case "ShipToCode" :
-                     ShipToCode = keyvalue.toString();
-                     break;
-                 case "ShipToName" :
-                     ShipToName = keyvalue.toString();
-                     break;
-                 case "ShipToAddr1" :
-                     ShipToAddr1 = keyvalue.toString();
-                     break;
-                 case "ShipToCity" :
-                     ShipToCity = keyvalue.toString();
-                     break;
-                 case "ShipToState" :
-                     ShipToState = keyvalue.toString();
-                     break;
-                 case "ShipToZip" :
-                     ShipToZip = keyvalue.toString();
-                     break; 
-                 case "ShipToCountry" :
-                     ShipToCountry = keyvalue.toString();
-                     break;     
-                 default :
-                     junktag = keyvalue.toString();
-            }
-           
-           // process detail array 'Items' in JSON
-           if (keyStr.equals("Items")) {
-                for (Object line : (JSONArray) keyvalue) {
-                    JSONObject jsonDetail = new JSONObject(line.toString());
-                        
-                    String ItemNumber = "";
-                    String Line = "";
-                    String OrderQty = "";
-                    String UOM = "";
-                    String CustItem = "";
-                    String ListPrice = "";
-                    String NetPrice = "";
-                    String Discount = "";
-                    String junktagdet = "";
-                    
-                    for (String detailKey : jsonDetail.keySet()) {
-                        Object detailValue = jsonDetail.get(detailKey);
-                        switch(detailKey) {
-                             case "ItemNumber" :
-                                 ItemNumber = detailValue.toString();
-                                 break;
-                             case "Line" :
-                                 Line = detailValue.toString();
-                                 break;
-                             case "OrderQty" :
-                                 OrderQty = detailValue.toString();
-                                 break;
-                             case "UOM" :
-                                 UOM = detailValue.toString();
-                                 break;
-                             case "CustItem" :
-                                 CustItem = detailValue.toString();
-                                 break;
-                             case "ListPrice" :
-                                 ListPrice = detailValue.toString();
-                                 break;  
-                             case "NetPrice" :
-                                 NetPrice  = detailValue.toString();
-                                 break;  
-                             case "Discount" :
-                                 Discount = detailValue.toString();
-                                 break;      
-                             default :
-                                 junktagdet = detailValue.toString();
-                        }
-                    }
-                    detail.add(new String[]{ItemNumber, Line, OrderQty, UOM,CustItem,ListPrice,NetPrice,Discount});
-	            
-	        }
-           } // if key = "Items"
-           
-          }
-          
-          
-          
-         
-           try {
+        Connection con = DriverManager.getConnection(url + db, user, pass);
 
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-          
-            try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
-                boolean proceed = true;
-                int i = 0;
-                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-                java.util.Date now = new java.util.Date();
-                 
-                
-                // get billto specific data
-                // aracct, arcc, currency, bank, terms, carrier, onhold, site
-                String[] custinfo = new String[]{"","","","","","","", ""};
-                
-                // if billto exists...use it...otherwise create unique billto/shipto
-                res = st.executeQuery("select * from cm_mstr where cm_code = " + "'" + BillToCode + "'" + " ;");
-               while (res.next()) {
-                   i++;
-                   custinfo[0] = res.getString("cm_ar_acct");
-                   custinfo[1] = res.getString("cm_ar_cc");
-                   custinfo[2] = res.getString("cm_curr");
-                   custinfo[3] = res.getString("cm_bank");
-                   custinfo[4] = res.getString("cm_terms");
-                   custinfo[5] = res.getString("cm_carrier");
-                   custinfo[6] = res.getString("cm_onhold");
-                   custinfo[7] = res.getString("cm_site");
-                }
-               if (i == 0) {
-                   // create billto/shipto on the fly and assign return to custcode
-                   BillToCode = String.valueOf(OVData.getNextNbr("customer"));
-                    // set String array of address info for creation of billto/shipto
-                   String[] addr = new String[]{BillToCode, BillToName, BillToAddr1, "", "", BillToCity, BillToState, BillToZip, BillToCountry, BillToEmail, BillToPhone, ShipToName, ShipToAddr1, "", "", ShipToCity, ShipToState, ShipToZip, ShipToCountry};  
-                   custinfo = OVData.addCustMstrWShipToMinimal(addr);
-               }
-               
-                
-                String nbr = String.valueOf(OVData.getNextNbr("order"));
-                
-                if (proceed) {
-                    st.executeUpdate("insert into so_mstr "
-                        + "(so_nbr, so_cust, so_ship, so_po, so_ord_date, so_due_date, "
-                        + "so_create_date, so_userid, so_status,"
-                        + "so_rmks, so_terms, so_ar_acct, so_ar_cc, so_shipvia, so_type, so_site, so_onhold ) "
+        try {
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            boolean proceed = true;
+            int i = 0;
+            DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+            java.util.Date now = new java.util.Date();
+
+            if (nbr.isEmpty()) {
+            nbr = String.valueOf(OVData.getNextNbr("shipper"));
+            }
+
+             // get billto specific data
+            // aracct, arcc, currency, bank, terms, carrier, onhold, site
+            String[] custinfo = new String[]{"","","","","","","", ""};
+
+            // if billto exists...use it...otherwise create unique billto/shipto
+            res = st.executeQuery("select * from cm_mstr where cm_code = " + "'" + BillToCode + "'" + " ;");
+           while (res.next()) {
+               i++;
+               custinfo[0] = res.getString("cm_ar_acct");
+               custinfo[1] = res.getString("cm_ar_cc");
+               custinfo[2] = res.getString("cm_curr");
+               custinfo[3] = res.getString("cm_bank");
+               custinfo[4] = res.getString("cm_terms");
+               custinfo[5] = res.getString("cm_carrier");
+               custinfo[6] = res.getString("cm_onhold");
+               custinfo[7] = res.getString("cm_site");
+            }
+
+
+            if (proceed) {
+                st.executeUpdate("insert into ship_mstr " 
+                    + " (sh_id, sh_cust, sh_ship,"
+                    + " sh_shipdate, sh_po_date, sh_bol, sh_po, sh_ref, sh_rmks, sh_userid, sh_site, sh_curr, sh_shipvia, sh_cust_terms, sh_taxcode, sh_ar_acct, sh_ar_cc, sh_type ) "
+                    + " values ( " + "'" + nbr + "'" + "," 
+                    + "'" + BillToCode + "'" + "," 
+                    + "'" + ShipToCode + "'" + ","
+                    + "'" + ShipDate + "'" + ","
+                    + "'" + OrderDate + "'" + ","
+                    + "'" + BOLNumber + "'" + "," 
+                    + "'" + PONumber + "'" + "," 
+                    + "'" + Reference + "'" + ","        
+                    + "'" + Remarks + "'" + "," 
+                    + "'" + bsmf.MainFrame.userid + "'" + "," 
+                    + "'" + Site + "'" + ","
+                    + "'" + custinfo[2] + "'" + ","
+                    + "'" + ShipVia + "'" + ","        
+                    + "'" + custinfo[4] + "'" + ","
+                    + "'" + "" + "'" + ","
+                    + "'" + custinfo[0] + "'" + ","
+                    + "'" + custinfo[1] + "'" + ","
+                    + "'" + Type + "'"
+                    + ");" );
+
+
+                //ItemNumber, ItemDescription, Line, Order, PO, ShipQty, UOM, CustItem, SkuItem, UpcItem, ListPrice, NetPrice, Discount, TaxAmt, Warehouse, Location});
+                for (String[] s : detail) {
+                st.executeUpdate("insert into ship_det "
+                        + "(shd_id, shd_soline, shd_part, shd_so, shd_date, shd_po, shd_qty, shd_uom, "
+                        + "shd_netprice, shd_listprice, shd_disc, shd_desc, shd_wh, shd_loc, shd_taxamt, shd_site ) "
                         + " values ( " + "'" + nbr + "'" + ","
-                        + "'" + BillToCode + "'" + ","
-                        + "'" + BillToCode + "'" + ","
-                        + "'" + PONumber + "'" + ","
-                        + "'" + OrderDate + "'" + ","
-                        + "'" + DueDate + "'" + ","
-                        + "'" + dfdate.format(now) + "'" + ","
-                        + "'" + "api" + "'" + ","
-                        + "'" + getGlobalProgTag("open") + "'" + ","
-                        + "'" + Remarks + "'" + ","
-                        + "'" + custinfo[4] + "'" + ","
-                        + "'" + custinfo[0] + "'" + ","
-                        + "'" + custinfo[1] + "'" + ","
-                        + "'" + custinfo[5] + "'" + ","
-                        + "'DISCRETE'" + ","
-                        + "'" + custinfo[7] + "'" + ","
-                        + "'" + custinfo[6] + "'"
+                        + "'" + s[2] + "'" + ","
+                        + "'" + s[0] + "'" + ","
+                        + "'" + s[3] + "'" + ","
+                        + "'" + ShipDate + "'" + ","        
+                        + "'" + s[4] + "'" + ","
+                        + "'" + s[5] + "'" + ","
+                        + "'" + s[6] + "'" + ","        
+                        + "'" + s[11] + "'" + ","
+                        + "'" + s[10] + "'" + ","
+                        + "'" + s[12] + "'" + ","
+                        + "'" + s[1] + "'" + ","
+                        + "'" + s[14] + "'" + ","
+                        + "'" + s[15] + "'" + ","
+                        + "'" + s[13] + "'" + ","        
+                        + "'" + Site + "'"
                         + ")"
                         + ";");
-                    
-                  //  detail.add(new String[]{ItemNumber, Line, OrderQty, UOM,CustItem,ListPrice,NetPrice,Discount});
-	            for (String[] s : detail) {
-                    st.executeUpdate("insert into sod_det "
-                            + "(sod_nbr, sod_part, sod_site, sod_po, sod_ord_qty, sod_netprice, sod_listprice, sod_disc, sod_due_date, "
-                            + "sod_shipped_qty, sod_custpart, sod_status, sod_line) "
-                            + " values ( " + "'" + nbr + "'" + ","
-                            + "'" + s[0] + "'" + ","
-                            + "'" + custinfo[7] + "'" + ","
-                            + "'" + PONumber + "'" + ","
-                            + "'" + s[2] + "'" + ","
-                            + "'" + s[6] + "'" + ","
-                            + "'" + s[5] + "'" + ","
-                            + "'" + s[7] + "'" + ","
-                            + "'" + DueDate + "'" + ","
-                            + '0' + "," + "'" + s[4] + "'" +  "," 
-                            + "'" + getGlobalProgTag("open") + "'" + ","
-                            + "'" + s[1] + "'"
-                            + ")"
-                            + ";");
-                    }
-                   
-                    x[0] = "success";
-                    x[1] = "Loaded Sales Order Successfully";
-                    x[2] = nbr;
-                    
-                } // if proceed
-                else {
-                    x[0] = "fail";
-                    x[1] = "unable to process";
                 }
-            } catch (SQLException s) {
+
+                x[0] = "success";
+                x[1] = "Loaded Shipper Successfully";
+                x[2] = nbr;
+
+            } // if proceed
+            else {
                 x[0] = "fail";
-                x[1] = "unable to load order SQLException";
-                MainFrame.bslog(s);
+                x[1] = "unable to process";
             }
-            con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
+        } catch (SQLException s) {
+            x[0] = "fail";
+            x[1] = "unable to load shipper SQLException";
+            MainFrame.bslog(s);
         }
-          
-          
-          
-          return x;
-      }
-      
-      
-      public static void CreateSalesOrderSchedDet(String order, String line, String date, String qty, String type, String ref, String rlse) {
-          String part = "";
-          String po = "";
-          try {
-         
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-          
-            try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
-                boolean proceed = true;
-                int i = 0;
-               
-                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-                Date now = new Date();
-                 // Rule 1:  if no blanket order,line,status=open for this part then proceed = false
-                i = 0;
-                res = st.executeQuery("select sod_part, sod_po from sod_det where sod_nbr = " + "'" + order + "'" 
-                         + " AND sod_line = " + "'" + line + "'" 
-                         + " AND sod_status = " + "'" + getGlobalProgTag("open") + "'"                           
-                         + " ;");
-                   while (res.next()) {
-                       i++;
-                   part = res.getString("sod_part");
-                   po = res.getString("sod_po");
-                   }
-                   if (i == 0) {
-                       proceed = false;
-                       return;
-                   }
-                
-                   // Rule 2:  if schedule so,po,part,line,Ref,DueDate,Type already exists then proceed = false
-                   i = 0;
-                   res = st.executeQuery("select * from srl_mstr where srl_so = " + "'" + order + "'" 
-                            + " AND srl_line = " + "'" + line + "'" 
-                            + " AND srl_part = " + "'" + part + "'" 
-                            + " AND srl_po = " + "'" + po + "'" 
-                            + " AND srl_ref = " + "'" + ref + "'" 
-                            + " AND srl_duedate = " + "'" + date + "'" 
-                            + " AND srl_type = " + "'" + type + "'"
-                            + " ;");
-                   while (res.next()) {
-                  i++;
-                   }
-                    if (i > 0) {
-                       proceed = false;
-                       return;
-                   }
-                   
-                   
-                   
-                if (proceed) {
-                  
-                        st.executeUpdate("insert into srl_mstr "
-                            + " (srl_so, srl_po, srl_line, srl_part, srl_ref, srl_qtyord, srl_duedate, srl_crtdate, "
-                            + "srl_type, srl_rlse ) "
-                            + " values ( " + "'" + order + "'" + ","
-                            + "'" + po + "'" + ","
-                            + "'" + line + "'" + ","
-                            + "'" + part + "'" + ","
-                            + "'" + ref + "'" + ","
-                            + "'" + qty + "'" + ","
-                            + "'" + date + "'" + ","
-                            + "'" + dfdate.format(now) + "'" + ","
-                            + "'" + type + "'" + ","
-                            + "'" + rlse + "'"
-                            + ")"
-                            + ";");
-                } // if proceed
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-            }
-            con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-      }
-     
-      public static Integer getSOMaxLine(String order) {
-          int myreturn = -1;
-          try {
-
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-          
-            try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
-                 res = st.executeQuery("select max(sod_line) as sod_line from sod_det where sod_nbr = " + "'" + order + "'" 
-                         + " ;");
-               while (res.next()) {
-                   myreturn = res.getInt("sod_line");
-               }
-              
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-            }
-            con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-          return myreturn;
-      }
-      
-      public static String orderPlanStatus(String order) {
-          String x = "unknown";
-          int summation = 0;
-          int scheduled = 0;
-          int linecount = 0;
-          int nullcount = 0;
-           try {
-
-             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try {
-                Statement st = con.createStatement();
-                 ResultSet res = null;
-                 boolean proceed = true;
-                 res = st.executeQuery("select sod_nbr, sod_line, plan_order, plan_line, plan_status, plan_is_sched " +
-                         " from sod_det " +
-                         " left outer join plan_mstr on plan_order = sod_nbr and plan_line = sod_line " +
-                         " where sod_nbr = " + "'" + order + "'" 
-                         + " ;");
-               while (res.next()) {
-                   linecount++;
-                   if (res.getString("plan_status") == null) {
-                       nullcount++;
-                   } else {
-                       summation += res.getInt("plan_status");
-                       scheduled += res.getInt("plan_is_sched");
-                   }
-                   
-                   
-               }
-               
-               if (summation == linecount && scheduled == linecount && nullcount == 0) {
-                   x = "complete";
-               }
-               if (summation == 0 && nullcount == 0 && scheduled == linecount) {
-                   x = "planned";
-               }
-               if (summation == 0 && nullcount >= 0 && scheduled == 0) {
-                   x = "unplanned";
-               }
-               
-               
-             
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-            }
-            con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-          return x;
-      }
-      
-      public static boolean updatePlanOrder(String order, String schedqty, String cell, String scheddate, String status) {
-          boolean myreturn = false;  
-          try {
-
-               if (status.equals(getGlobalProgTag("open"))) { status = "0"; }
-               if (status.equals(getGlobalProgTag("close"))) { status = "1"; }
-               if (status.equals(getGlobalProgTag("void"))) { status = "-1"; }
-              
-             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try {
-                Statement st = con.createStatement();
-                 ResultSet res = null;
-                 boolean proceed = true;
-                 res = st.executeQuery("select plan_status from plan_mstr where plan_nbr = " + "'" + order + "'" 
-                         + " ;");
-               while (res.next()) {
-                    if (res.getInt("plan_status") > 0 || res.getInt("plan_status") < 0)
-                        proceed = false;
-               }
-               
-               if (proceed) {
-                        st.executeUpdate("update plan_mstr set "
-                            + "plan_cell =  " + "'" + cell + "'" + ","
-                            + "plan_qty_sched =  " + "'" + schedqty + "'" + ","
-                            + "plan_date_sched =  " + "'" + scheddate + "'" + ","        
-                            + "plan_status = " + "'" + status + "'"
-                            + " where plan_nbr = " + "'" + order + "'" 
-                            + ";");
-                        myreturn = true;
-               }
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-            }
-            con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-          return myreturn;
-      }
-      
-      public static int getLabelStatus(String serialno) {
-          
-          // From perspective of "has it been scanned...or is there a 1 in lbl_scan which is set when label is scanned
-          // assume it's false i.e. hasn't been scanned.
-          int myreturn = 0;
-          
-          try {
-
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-          
-            try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
-                 res = st.executeQuery("select lbl_scan from label_mstr where lbl_id = " + "'" + serialno + "'" 
-                         + " ;");
-               while (res.next()) {
-                   myreturn = res.getInt("lbl_scan");
-               }
-              
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-            }
-            con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-          return myreturn;
-      }
-      
-      public static boolean isInvCtrlPlanMultiScan() {
-       boolean myreturn = false;
-        try{
-           
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
- 
-                res = st.executeQuery("select planmultiscan from inv_ctrl;");
-               while (res.next()) {
-                   myreturn = res.getBoolean("planmultiscan");
-               }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myreturn;
-        
+        con.close();
+    } catch (Exception e) {
+        MainFrame.bslog(e);
     }
-      
-      public static boolean isPrintTicketFromPlanScan() {
-       boolean myreturn = false;
-        try{
-           
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
- 
-                res = st.executeQuery("select printsubticket from inv_ctrl;");
-               while (res.next()) {
-                   myreturn = res.getBoolean("printsubticket");
-               }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myreturn;
-        
-    }
-       
-       
-      public static boolean isInvCtrlDemdToPlan() {
-       boolean myreturn = false;
-        try{
-           
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
- 
-                res = st.executeQuery("select demdtoplan from inv_ctrl;");
-               while (res.next()) {
-                   myreturn = res.getBoolean("demdtoplan");
-               }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myreturn;
-        
-    }
-       
-      public static boolean isPlanDetByOp(String serialno, String op) {
-          
-          // From perspective of "has it been scanned...or is there a 1 in lbl_scan which is set when label is scanned
-          // assume it's false i.e. hasn't been scanned.
-          boolean myreturn = false;
-          
-          try {
 
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-          
-            try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
-                 res = st.executeQuery("select * from pland_mstr where pland_parent = " + "'" + serialno + "'" 
-                         + " AND pland_op = " + "'" + op + "'"
-                         + " ;");
-               while (res.next()) {
-                   myreturn = true;
-               }
-              
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
+
+
+      return x;
+  }
+
+    public static boolean CreateShipperHdr(String nbr, String site, String bol, String billto, String shipto, String so, String po, String ref, String shipdate, String orddate, String remarks, String shipvia, String shiptype ) {
+      boolean isError = false; 
+
+      try {
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+
+        try {
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            boolean proceed = true;
+            int i = 0;
+            DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+            java.util.Date now = new java.util.Date();
+
+            // initialize ord and due date if blank
+            if (orddate.isEmpty() || orddate == null) {
+                orddate = dfdate.format(now);
             }
-            con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-          return myreturn;
-      }
-      
-      public static int CreatePlanDet(JTable mytable) {
-      /*  0=part
-          1=type 
-          2=operation
-          3=qty
-          4=effdate
-          5=location
-          6=serialno
-          7=reference
-          8=site
-          9=userid
-          10=prodline
-          11=AssyCell
-          12=remarks
-          13=PackCell
-          14=packdate
-          15=assydate
-          16=program
-         */ 
-         int planid = 0; 
-          
-          try {
-         
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-          
-            try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
-                boolean proceed = true;
-                String _part = "";
-                String _parent = "";
-                String _op = "";
-                double _qty = 0;
-                
-                
-                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-                Date now = new Date();
-                  for (int i = 0; i < mytable.getRowCount(); i++) {
-                      _parent = mytable.getValueAt(i, 6).toString();
-                      _part = mytable.getValueAt(i, 0).toString();
-                      _qty = bsParseDouble(mytable.getValueAt(i,3).toString());
-                      _op = mytable.getValueAt(i, 2).toString();
-                      planid = OVData.getNextNbr("pland");
-                        st.executeUpdate("insert into pland_mstr "
-                            + " (pland_id, pland_parent, pland_part, pland_op, pland_qty, pland_cell, pland_ref, pland_date ) "
-                            + " values ( " + "'" + planid + "'" + ","  
-                            + "'" + _parent + "'" + ","
-                            + "'" + _part + "'" + ","
-                            + "'" + _op + "'" + ","
-                            + "'" + _qty + "'" + ","
-                            + "'" + mytable.getValueAt(i, 11).toString() + "'" + ","
-                            + "'" + mytable.getValueAt(i, 7).toString() + "'" + ","
-                            + "'" + mytable.getValueAt(i, 4).toString() + "'" 
-                            + ")"
-                            + ";");
-                        
-                      
-        /*
-                         int prevscanned = OVData.getPlanDetTotQtyByOp(tbscan.getText(), ddop.getSelectedItem().toString());
-                         int schedqty = OVData.getPlanSchedQty(tbscan.getText());
-        if ( qty > (schedqty - prevscanned) ) {
-             lblmessage.setText("Qty Exceeds limit (Already Scanned Qty: " + String.valueOf(prevscanned) + " out of SchedQty: " + String.valueOf(schedqty) + ")");
-            lblmessage.setForeground(Color.red);
-            initvars(null);
-            return;
-        }
-                        
-                        
-        */
-                        // if multiscan then close only when plan sched qty = scanned qty exactly
-                        double scanqty = OVData.getPlanDetTotQtyByOp(_parent, _op);
-                        double schedqty = OVData.getPlanSchedQty(_parent);
-                        if ((scanqty >= schedqty) && OVData.isLastOperation(_part, _op) ) {
-                         OVData.updatePlanQty(_parent, scanqty);
-                         OVData.updatePlanStatus(_parent, "1");   
-                        }
-                        
-                        
-                        // if not multiscan then close plan order....one scan per planned order regardless if they produced sched qty exactly
-                        if (! OVData.isInvCtrlPlanMultiScan() && OVData.isLastOperation(_part, _op)) {
-                        OVData.updatePlanQty(_parent, _qty);
-                        OVData.updatePlanStatus(_parent, "1");
-                        }
-                  }
-               
-                  
-                  
-                  
-                  
-                  
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
+            if (shipdate.isEmpty() || shipdate == null) {
+                shipdate = dfdate.format(now);
             }
-            con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-       
-          return planid;
-      }
-      
-        public static void CreateItemMasterImport(JTable mytable) {
-      /*  0=part
-          1=desc 
-          2=uom
-          3=prodline
-          4=type
-          5=site
-          6=location
-          7=code
-         */ 
-          
-          
-          try {
-         
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-          
-            try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
-                boolean proceed = true;
-                String _part = "";
-                String _parent = "";
-                String _op = "";
-                int _qty = 0;
-               
-                
-                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-                Date now = new Date();
-                  for (int i = 0; i < mytable.getRowCount(); i++) {
-                     
-                        st.executeUpdate("insert into item_mstr "
-                            + " (it_item, it_desc, it_uom, it_prodline, it_type, it_site, it_loc, it_code ) "
-                            + " values ( " + "'" + mytable.getValueAt(i, 0).toString() + "'" + ","  
-                            + "'" + mytable.getValueAt(i, 1).toString() + "'" + ","
-                            + "'" + mytable.getValueAt(i, 2).toString() + "'" + ","
-                            + "'" + mytable.getValueAt(i, 3).toString() + "'" + ","
-                            + "'" + mytable.getValueAt(i, 4).toString() + "'" + ","
-                            + "'" + mytable.getValueAt(i, 5).toString() + "'" + ","
-                            + "'" + mytable.getValueAt(i, 6).toString() + "'" + ","
-                            + "'" + mytable.getValueAt(i, 7).toString() + "'" 
-                            + ")"
-                            + ";");
-                  }
-               
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
+
+            if (! BlueSeerUtils.isValidDateStr(orddate)) {
+                if (orddate.length() == 8) {
+                    DateFormat format = new SimpleDateFormat("yyyyMMdd");
+                    Date mydate = format.parse(orddate);
+                    orddate = BlueSeerUtils.setDateFormat(mydate);
+                }  
+                if (orddate.length() == 6) {
+                    DateFormat format = new SimpleDateFormat("yyMMdd");
+                    Date mydate = format.parse(orddate);
+                    orddate = BlueSeerUtils.setDateFormat(mydate);
+                }   
             }
-            con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
+
+            if (! BlueSeerUtils.isValidDateStr(shipdate)) {
+                if (shipdate.length() == 8) {
+                    DateFormat format = new SimpleDateFormat("yyyyMMdd");
+                    Date mydate = format.parse(shipdate);
+                    shipdate = BlueSeerUtils.setDateFormat(mydate);
+                }  
+                if (shipdate.length() == 6) {
+                    DateFormat format = new SimpleDateFormat("yyMMdd");
+                    Date mydate = format.parse(shipdate);
+                    shipdate = BlueSeerUtils.setDateFormat(mydate);
+                }   
+            }
+
+
+            // get billto specific data
+            String acct = "";
+            String cc = "";
+            String terms = "";
+            String carrier = "";
+            String onhold = "";
+            String taxcode = "";
+            String curr = "";
+
+            res = st.executeQuery("select * from cm_mstr where cm_code = " + "'" + billto + "'" + " ;");
+           while (res.next()) {
+               i++;
+               acct = res.getString("cm_ar_acct");
+               cc = res.getString("cm_ar_cc");
+               carrier = res.getString("cm_carrier");
+               terms = res.getString("cm_terms");
+               taxcode = res.getString("cm_tax_code");
+               onhold = res.getString("cm_onhold");
+               curr = res.getString("cm_curr");
+            }
+
+
+            if (! shipvia.isEmpty()) {
+                carrier = shipvia;
+            }
+
+            // override cust currency with order currency
+            String order_curr = ordData.getOrderCurrency(so);
+            if (! order_curr.isEmpty()) {
+            curr = order_curr;
+            }
+            // logic for asset type shipment/sale
+            if (shiptype.equals("A")) {
+                terms = "N00";
+            }
+
+            if (proceed) {
+                st.executeUpdate("insert into ship_mstr " 
+                    + " (sh_id, sh_cust, sh_ship,"
+                    + " sh_shipdate, sh_po_date, sh_bol, sh_po, sh_ref, sh_rmks, sh_userid, sh_site, sh_curr, sh_shipvia, sh_cust_terms, sh_taxcode, sh_ar_acct, sh_ar_cc, sh_type ) "
+                    + " values ( " + "'" + nbr + "'" + "," 
+                    + "'" + billto + "'" + "," 
+                    + "'" + shipto + "'" + ","
+                    + "'" + shipdate + "'" + ","
+                    + "'" + orddate + "'" + ","
+                    + "'" + bol + "'" + "," 
+                    + "'" + po + "'" + "," 
+                    + "'" + ref + "'" + ","        
+                    + "'" + remarks + "'" + "," 
+                    + "'" + bsmf.MainFrame.userid + "'" + "," 
+                    + "'" + site + "'" + ","
+                    + "'" + curr + "'" + ","
+                    + "'" + carrier + "'" + ","        
+                    + "'" + terms + "'" + ","
+                    + "'" + taxcode + "'" + ","
+                    + "'" + acct + "'" + ","
+                    + "'" + cc + "'" + ","
+                    + "'" + shiptype + "'"
+                    + ");" );
+            } // if proceed
+            else {
+                isError = true;
+            }
+        } catch (SQLException s) {
+            isError = true;
+            MainFrame.bslog(s);
         }
-          
-      }
-      
-       public static ArrayList getTaskMasterList() {
-       ArrayList myarray = new ArrayList();
-        try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-               
-                res = st.executeQuery("select task_id from task_mstr order by task_id ;"); 
-                
-               while (res.next()) {
-                    myarray.add(res.getString("task_id"));
-                    
+        con.close();
+    } catch (Exception e) {
+        MainFrame.bslog(e);
+    }
+      return isError;
+  } 
+
+    public static void CreateShipperDet(String nbr, String part, String custpart, String skupart, String so, String po, String qty, String uom, String listprice, String discpercent, String netprice, String shipdate, String desc, String line, String site, String wh, String loc, String taxamt) {
+       try {
+
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+
+        try {
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            boolean proceed = true;
+            int i = 0;
+            DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+
+
+            if (proceed) {
+                    st.executeUpdate("insert into ship_det "
+                        + "(shd_id, shd_soline, shd_part, shd_so, shd_date, shd_po, shd_qty, shd_uom, "
+                        + "shd_netprice, shd_listprice, shd_disc, shd_desc, shd_wh, shd_loc, shd_taxamt, shd_site ) "
+                        + " values ( " + "'" + nbr + "'" + ","
+                        + "'" + line + "'" + ","
+                        + "'" + part + "'" + ","
+                        + "'" + so + "'" + ","
+                        + "'" + shipdate + "'" + ","        
+                        + "'" + po + "'" + ","
+                        + "'" + qty + "'" + ","
+                        + "'" + uom + "'" + ","        
+                        + "'" + netprice + "'" + ","
+                        + "'" + listprice + "'" + ","
+                        + "'" + discpercent + "'" + ","
+                        + "'" + desc + "'" + ","
+                        + "'" + wh + "'" + ","
+                        + "'" + loc + "'" + ","
+                        + "'" + taxamt + "'" + ","        
+                        + "'" + site + "'"
+                        + ")"
+                        + ";");
+            } // if proceed
+        } catch (SQLException s) {
+            MainFrame.bslog(s);
+        }
+        con.close();
+    } catch (Exception e) {
+        MainFrame.bslog(e);
+    }
+  }
+
+    public static void CreateShipperDetFromTable(JTable dettable, String shippernbr, String shipdate, String site) {
+
+      // table field order:  "Line", "Part", "CustPart", "SO", "PO", "Qty", "UOM", "ListPrice", "Discount", "NetPrice", "QtyShip", "Status", "WH", "LOC", "Desc", "Taxamt"
+        try {
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+
+        try {
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            boolean proceed = true;
+
+            if (proceed) {
+                for (int j = 0; j < dettable.getRowCount(); j++) {
+                    st.executeUpdate("insert into ship_det "
+                        + "(shd_id, shd_soline, shd_part, shd_custpart, shd_so, shd_po, shd_date, shd_qty, shd_uom, "
+                        + "shd_listprice, shd_disc, shd_netprice, shd_wh, shd_loc, shd_desc, shd_taxamt, shd_site ) "
+                        + " values ( " + "'" + shippernbr + "'" + ","
+                        + "'" + dettable.getValueAt(j, 0).toString() + "'" + ","
+                        + "'" + dettable.getValueAt(j, 1).toString().replace("'", "") + "'" + ","
+                        + "'" + dettable.getValueAt(j, 2).toString().replace("'", "") + "'" + ","
+                        + "'" + dettable.getValueAt(j, 3).toString().replace("'", "") + "'" + ","
+                        + "'" + dettable.getValueAt(j, 4).toString().replace("'", "") + "'" + ","        
+                        + "'" + shipdate + "'" + ","        
+                        + "'" + dettable.getValueAt(j, 5).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "'" + dettable.getValueAt(j, 6).toString() + "'" + ","
+                        + "'" + dettable.getValueAt(j, 7).toString().replace(defaultDecimalSeparator, '.') + "'" + ","        
+                        + "'" + dettable.getValueAt(j, 8).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "'" + dettable.getValueAt(j, 9).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "'" + dettable.getValueAt(j, 12).toString() + "'" + ","
+                        + "'" + dettable.getValueAt(j, 13).toString() + "'" + ","
+                        + "'" + dettable.getValueAt(j, 14).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "'" + dettable.getValueAt(j, 15).toString() + "'" + ","        
+                        + "'" + site + "'"
+                        + ")"
+                        + ";");
                 }
-               
-           }
-            catch (SQLException s){
-                 bsmf.MainFrame.show("SQL cannot get Master Task List");
-            }
-            con.close();
+            } // if proceed
+        } catch (SQLException s) {
+            MainFrame.bslog(s);
         }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myarray;
-        
+        con.close();
+    } catch (Exception e) {
+        MainFrame.bslog(e);
     }
-        
-        
-        
-        
-      public static String getPlanPart(String serialno) {
-          
-          // From perspective of "has it been scanned...or is there a 1 in lbl_scan which is set when label is scanned
-          // assume it's false i.e. hasn't been scanned.
-         String myreturn = "";
-          
-          try {
+  }
 
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-          
-            try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
-                 res = st.executeQuery("select plan_part from plan_mstr where plan_nbr = " + "'" + serialno + "'" 
-                         + " ;");
-               while (res.next()) {
-                   myreturn = res.getString("plan_part");
-               }
-              
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-            }
-            con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-          return myreturn;
-      }
-      
-      public static double getPlanSchedQty(String serialno) {
-          
-          // From perspective of "has it been scanned...or is there a 1 in lbl_scan which is set when label is scanned
-          // assume it's false i.e. hasn't been scanned.
-          double myreturn = 0;
-          
-          try {
+    public static String[] CreateSalesOrderByJSON(String jsonString) {
+      String[] x = new String[]{"","",""};
+      boolean isError = false; 
+      JSONObject json = new JSONObject(jsonString);
+      String junktag = "";
+      String PONumber = "";
+      String Remarks = "";
+      String OrderDate = "";
+      String DueDate = "";
+      String Currency = "";
+      String Type = "";
+      String ShipVia = "";
+      String BillToCode = "";
+      String BillToName = "";
+      String BillToAddr1 = "";
+      String BillToCity = "";
+      String BillToState = "";
+      String BillToZip = "";
+      String BillToCountry = "";
+      String BillToEmail = "";
+      String BillToPhone = "";
+      String ShipToCode = "";
+      String ShipToName = "";
+      String ShipToAddr1 = "";
+      String ShipToCity = "";
+      String ShipToState = "";
+      String ShipToZip = "";
+      String ShipToCountry = "";
+      ArrayList<String[]> detail = new ArrayList<String[]>();
 
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-          
-            try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
-                 res = st.executeQuery("select plan_qty_sched from plan_mstr where plan_nbr = " + "'" + serialno + "'" 
-                         + " ;");
-               while (res.next()) {
-                   myreturn = res.getDouble("plan_qty_sched");
-               }
-              
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-            }
-            con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-          return myreturn;
-      }
-      
-      public static double getPlanDetTotQtyByOp(String serialno, String op) {
-          
-          // From perspective of "has it been scanned...or is there a 1 in lbl_scan which is set when label is scanned
-          // assume it's false i.e. hasn't been scanned.
-          double myreturn = 0;
-          
-          try {
 
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-          
-            try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
-                 res = st.executeQuery("select sum(pland_qty) as 'mysum' from pland_mstr where pland_parent = " + "'" + serialno + "'" 
-                         + " AND pland_op = " + "'" + op + "'"
-                         + " ;");
-               while (res.next()) {
-                   myreturn = res.getDouble("mysum");
-               }
-              
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-            }
-            con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
+      for (String keyStr : json.keySet()) { 
+       Object keyvalue = json.get(keyStr);
+
+       // process header tags in JSON
+       switch(keyStr) {
+             case "PONumber" :
+                 PONumber = keyvalue.toString();
+                 break;
+             case "Remarks" :
+                 Remarks = keyvalue.toString();
+                 break;
+             case "OrderDate" :
+                 OrderDate = keyvalue.toString();
+                 break;
+             case "DueDate" :
+                 DueDate = keyvalue.toString();
+                 break;
+             case "Currency" :
+                 Currency = keyvalue.toString();
+                 break;
+             case "Type" :
+                 Type = keyvalue.toString();
+                 break; 
+             case "ShipVia" :
+                 ShipVia = keyvalue.toString();
+                 break;    
+             case "BillToCode" :
+                 BillToCode = keyvalue.toString();
+                 break;
+             case "BillToName" :
+                 BillToName = keyvalue.toString();
+                 break;
+             case "BillToAddr1" :
+                 BillToAddr1 = keyvalue.toString();
+                 break;
+             case "BillToCity" :
+                 BillToCity = keyvalue.toString();
+                 break;
+             case "BillToState" :
+                 BillToState = keyvalue.toString();
+                 break;
+             case "BillToZip" :
+                 BillToZip = keyvalue.toString();
+                 break; 
+             case "BillToCountry" :
+                 BillToCountry = keyvalue.toString();
+                 break;
+             case "BillToEmail" :
+                 BillToEmail = keyvalue.toString();
+                 break;
+             case "BillToPhone" :
+                 BillToPhone = keyvalue.toString();
+                 break;
+             case "ShipToCode" :
+                 ShipToCode = keyvalue.toString();
+                 break;
+             case "ShipToName" :
+                 ShipToName = keyvalue.toString();
+                 break;
+             case "ShipToAddr1" :
+                 ShipToAddr1 = keyvalue.toString();
+                 break;
+             case "ShipToCity" :
+                 ShipToCity = keyvalue.toString();
+                 break;
+             case "ShipToState" :
+                 ShipToState = keyvalue.toString();
+                 break;
+             case "ShipToZip" :
+                 ShipToZip = keyvalue.toString();
+                 break; 
+             case "ShipToCountry" :
+                 ShipToCountry = keyvalue.toString();
+                 break;     
+             default :
+                 junktag = keyvalue.toString();
         }
-          return myreturn;
+
+       // process detail array 'Items' in JSON
+       if (keyStr.equals("Items")) {
+            for (Object line : (JSONArray) keyvalue) {
+                JSONObject jsonDetail = new JSONObject(line.toString());
+
+                String ItemNumber = "";
+                String Line = "";
+                String OrderQty = "";
+                String UOM = "";
+                String CustItem = "";
+                String ListPrice = "";
+                String NetPrice = "";
+                String Discount = "";
+                String junktagdet = "";
+
+                for (String detailKey : jsonDetail.keySet()) {
+                    Object detailValue = jsonDetail.get(detailKey);
+                    switch(detailKey) {
+                         case "ItemNumber" :
+                             ItemNumber = detailValue.toString();
+                             break;
+                         case "Line" :
+                             Line = detailValue.toString();
+                             break;
+                         case "OrderQty" :
+                             OrderQty = detailValue.toString();
+                             break;
+                         case "UOM" :
+                             UOM = detailValue.toString();
+                             break;
+                         case "CustItem" :
+                             CustItem = detailValue.toString();
+                             break;
+                         case "ListPrice" :
+                             ListPrice = detailValue.toString();
+                             break;  
+                         case "NetPrice" :
+                             NetPrice  = detailValue.toString();
+                             break;  
+                         case "Discount" :
+                             Discount = detailValue.toString();
+                             break;      
+                         default :
+                             junktagdet = detailValue.toString();
+                    }
+                }
+                detail.add(new String[]{ItemNumber, Line, OrderQty, UOM,CustItem,ListPrice,NetPrice,Discount});
+
+            }
+       } // if key = "Items"
+
       }
-      
+
+
+
+
+       try {
+
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+
+        try {
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            boolean proceed = true;
+            int i = 0;
+            DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+            java.util.Date now = new java.util.Date();
+
+
+            // get billto specific data
+            // aracct, arcc, currency, bank, terms, carrier, onhold, site
+            String[] custinfo = new String[]{"","","","","","","", ""};
+
+            // if billto exists...use it...otherwise create unique billto/shipto
+            res = st.executeQuery("select * from cm_mstr where cm_code = " + "'" + BillToCode + "'" + " ;");
+           while (res.next()) {
+               i++;
+               custinfo[0] = res.getString("cm_ar_acct");
+               custinfo[1] = res.getString("cm_ar_cc");
+               custinfo[2] = res.getString("cm_curr");
+               custinfo[3] = res.getString("cm_bank");
+               custinfo[4] = res.getString("cm_terms");
+               custinfo[5] = res.getString("cm_carrier");
+               custinfo[6] = res.getString("cm_onhold");
+               custinfo[7] = res.getString("cm_site");
+            }
+           if (i == 0) {
+               // create billto/shipto on the fly and assign return to custcode
+               BillToCode = String.valueOf(OVData.getNextNbr("customer"));
+                // set String array of address info for creation of billto/shipto
+               String[] addr = new String[]{BillToCode, BillToName, BillToAddr1, "", "", BillToCity, BillToState, BillToZip, BillToCountry, BillToEmail, BillToPhone, ShipToName, ShipToAddr1, "", "", ShipToCity, ShipToState, ShipToZip, ShipToCountry};  
+               custinfo = OVData.addCustMstrWShipToMinimal(addr);
+           }
+
+
+            String nbr = String.valueOf(OVData.getNextNbr("order"));
+
+            if (proceed) {
+                st.executeUpdate("insert into so_mstr "
+                    + "(so_nbr, so_cust, so_ship, so_po, so_ord_date, so_due_date, "
+                    + "so_create_date, so_userid, so_status,"
+                    + "so_rmks, so_terms, so_ar_acct, so_ar_cc, so_shipvia, so_type, so_site, so_onhold ) "
+                    + " values ( " + "'" + nbr + "'" + ","
+                    + "'" + BillToCode + "'" + ","
+                    + "'" + BillToCode + "'" + ","
+                    + "'" + PONumber + "'" + ","
+                    + "'" + OrderDate + "'" + ","
+                    + "'" + DueDate + "'" + ","
+                    + "'" + dfdate.format(now) + "'" + ","
+                    + "'" + "api" + "'" + ","
+                    + "'" + getGlobalProgTag("open") + "'" + ","
+                    + "'" + Remarks + "'" + ","
+                    + "'" + custinfo[4] + "'" + ","
+                    + "'" + custinfo[0] + "'" + ","
+                    + "'" + custinfo[1] + "'" + ","
+                    + "'" + custinfo[5] + "'" + ","
+                    + "'DISCRETE'" + ","
+                    + "'" + custinfo[7] + "'" + ","
+                    + "'" + custinfo[6] + "'"
+                    + ")"
+                    + ";");
+
+              //  detail.add(new String[]{ItemNumber, Line, OrderQty, UOM,CustItem,ListPrice,NetPrice,Discount});
+                for (String[] s : detail) {
+                st.executeUpdate("insert into sod_det "
+                        + "(sod_nbr, sod_part, sod_site, sod_po, sod_ord_qty, sod_netprice, sod_listprice, sod_disc, sod_due_date, "
+                        + "sod_shipped_qty, sod_custpart, sod_status, sod_line) "
+                        + " values ( " + "'" + nbr + "'" + ","
+                        + "'" + s[0] + "'" + ","
+                        + "'" + custinfo[7] + "'" + ","
+                        + "'" + PONumber + "'" + ","
+                        + "'" + s[2] + "'" + ","
+                        + "'" + s[6] + "'" + ","
+                        + "'" + s[5] + "'" + ","
+                        + "'" + s[7] + "'" + ","
+                        + "'" + DueDate + "'" + ","
+                        + '0' + "," + "'" + s[4] + "'" +  "," 
+                        + "'" + getGlobalProgTag("open") + "'" + ","
+                        + "'" + s[1] + "'"
+                        + ")"
+                        + ";");
+                }
+
+                x[0] = "success";
+                x[1] = "Loaded Sales Order Successfully";
+                x[2] = nbr;
+
+            } // if proceed
+            else {
+                x[0] = "fail";
+                x[1] = "unable to process";
+            }
+        } catch (SQLException s) {
+            x[0] = "fail";
+            x[1] = "unable to load order SQLException";
+            MainFrame.bslog(s);
+        }
+        con.close();
+    } catch (Exception e) {
+        MainFrame.bslog(e);
+    }
+
+
+
+      return x;
+  }
+
+    public static void CreateSalesOrderSchedDet(String order, String line, String date, String qty, String type, String ref, String rlse) {
+      String part = "";
+      String po = "";
+      try {
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+
+        try {
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            boolean proceed = true;
+            int i = 0;
+
+            DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+            Date now = new Date();
+             // Rule 1:  if no blanket order,line,status=open for this part then proceed = false
+            i = 0;
+            res = st.executeQuery("select sod_part, sod_po from sod_det where sod_nbr = " + "'" + order + "'" 
+                     + " AND sod_line = " + "'" + line + "'" 
+                     + " AND sod_status = " + "'" + getGlobalProgTag("open") + "'"                           
+                     + " ;");
+               while (res.next()) {
+                   i++;
+               part = res.getString("sod_part");
+               po = res.getString("sod_po");
+               }
+               if (i == 0) {
+                   proceed = false;
+                   return;
+               }
+
+               // Rule 2:  if schedule so,po,part,line,Ref,DueDate,Type already exists then proceed = false
+               i = 0;
+               res = st.executeQuery("select * from srl_mstr where srl_so = " + "'" + order + "'" 
+                        + " AND srl_line = " + "'" + line + "'" 
+                        + " AND srl_part = " + "'" + part + "'" 
+                        + " AND srl_po = " + "'" + po + "'" 
+                        + " AND srl_ref = " + "'" + ref + "'" 
+                        + " AND srl_duedate = " + "'" + date + "'" 
+                        + " AND srl_type = " + "'" + type + "'"
+                        + " ;");
+               while (res.next()) {
+              i++;
+               }
+                if (i > 0) {
+                   proceed = false;
+                   return;
+               }
+
+
+
+            if (proceed) {
+
+                    st.executeUpdate("insert into srl_mstr "
+                        + " (srl_so, srl_po, srl_line, srl_part, srl_ref, srl_qtyord, srl_duedate, srl_crtdate, "
+                        + "srl_type, srl_rlse ) "
+                        + " values ( " + "'" + order + "'" + ","
+                        + "'" + po + "'" + ","
+                        + "'" + line + "'" + ","
+                        + "'" + part + "'" + ","
+                        + "'" + ref + "'" + ","
+                        + "'" + qty + "'" + ","
+                        + "'" + date + "'" + ","
+                        + "'" + dfdate.format(now) + "'" + ","
+                        + "'" + type + "'" + ","
+                        + "'" + rlse + "'"
+                        + ")"
+                        + ";");
+            } // if proceed
+        } catch (SQLException s) {
+            MainFrame.bslog(s);
+        }
+        con.close();
+    } catch (Exception e) {
+        MainFrame.bslog(e);
+    }
+  }
+
+    public static Integer getSOMaxLine(String order) {
+      int myreturn = -1;
+      try {
+
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+
+        try {
+            Statement st = con.createStatement();
+            ResultSet res = null;
+             res = st.executeQuery("select max(sod_line) as sod_line from sod_det where sod_nbr = " + "'" + order + "'" 
+                     + " ;");
+           while (res.next()) {
+               myreturn = res.getInt("sod_line");
+           }
+
+        } catch (SQLException s) {
+            MainFrame.bslog(s);
+        }
+        con.close();
+    } catch (Exception e) {
+        MainFrame.bslog(e);
+    }
+      return myreturn;
+  }
+
+    public static String orderPlanStatus(String order) {
+      String x = "unknown";
+      int summation = 0;
+      int scheduled = 0;
+      int linecount = 0;
+      int nullcount = 0;
+       try {
+
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try {
+            Statement st = con.createStatement();
+             ResultSet res = null;
+             boolean proceed = true;
+             res = st.executeQuery("select sod_nbr, sod_line, plan_order, plan_line, plan_status, plan_is_sched " +
+                     " from sod_det " +
+                     " left outer join plan_mstr on plan_order = sod_nbr and plan_line = sod_line " +
+                     " where sod_nbr = " + "'" + order + "'" 
+                     + " ;");
+           while (res.next()) {
+               linecount++;
+               if (res.getString("plan_status") == null) {
+                   nullcount++;
+               } else {
+                   summation += res.getInt("plan_status");
+                   scheduled += res.getInt("plan_is_sched");
+               }
+
+
+           }
+
+           if (summation == linecount && scheduled == linecount && nullcount == 0) {
+               x = "complete";
+           }
+           if (summation == 0 && nullcount == 0 && scheduled == linecount) {
+               x = "planned";
+           }
+           if (summation == 0 && nullcount >= 0 && scheduled == 0) {
+               x = "unplanned";
+           }
+
+
+
+        } catch (SQLException s) {
+            MainFrame.bslog(s);
+        }
+        con.close();
+    } catch (Exception e) {
+        MainFrame.bslog(e);
+    }
+      return x;
+  }
+
+    public static boolean updatePlanOrder(String order, String schedqty, String cell, String scheddate, String status) {
+      boolean myreturn = false;  
+      try {
+
+           if (status.equals(getGlobalProgTag("open"))) { status = "0"; }
+           if (status.equals(getGlobalProgTag("close"))) { status = "1"; }
+           if (status.equals(getGlobalProgTag("void"))) { status = "-1"; }
+
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try {
+            Statement st = con.createStatement();
+             ResultSet res = null;
+             boolean proceed = true;
+             res = st.executeQuery("select plan_status from plan_mstr where plan_nbr = " + "'" + order + "'" 
+                     + " ;");
+           while (res.next()) {
+                if (res.getInt("plan_status") > 0 || res.getInt("plan_status") < 0)
+                    proceed = false;
+           }
+
+           if (proceed) {
+                    st.executeUpdate("update plan_mstr set "
+                        + "plan_cell =  " + "'" + cell + "'" + ","
+                        + "plan_qty_sched =  " + "'" + schedqty + "'" + ","
+                        + "plan_date_sched =  " + "'" + scheddate + "'" + ","        
+                        + "plan_status = " + "'" + status + "'"
+                        + " where plan_nbr = " + "'" + order + "'" 
+                        + ";");
+                    myreturn = true;
+           }
+        } catch (SQLException s) {
+            MainFrame.bslog(s);
+        }
+        con.close();
+    } catch (Exception e) {
+        MainFrame.bslog(e);
+    }
+      return myreturn;
+  }
+
+    public static int getLabelStatus(String serialno) {
+
+      // From perspective of "has it been scanned...or is there a 1 in lbl_scan which is set when label is scanned
+      // assume it's false i.e. hasn't been scanned.
+      int myreturn = 0;
+
+      try {
+
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+
+        try {
+            Statement st = con.createStatement();
+            ResultSet res = null;
+             res = st.executeQuery("select lbl_scan from label_mstr where lbl_id = " + "'" + serialno + "'" 
+                     + " ;");
+           while (res.next()) {
+               myreturn = res.getInt("lbl_scan");
+           }
+
+        } catch (SQLException s) {
+            MainFrame.bslog(s);
+        }
+        con.close();
+    } catch (Exception e) {
+        MainFrame.bslog(e);
+    }
+      return myreturn;
+  }
+
+    public static boolean isInvCtrlPlanMultiScan() {
+   boolean myreturn = false;
+    try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select planmultiscan from inv_ctrl;");
+           while (res.next()) {
+               myreturn = res.getBoolean("planmultiscan");
+           }
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myreturn;
+
+}
+
+    public static boolean isPrintTicketFromPlanScan() {
+   boolean myreturn = false;
+    try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select printsubticket from inv_ctrl;");
+           while (res.next()) {
+               myreturn = res.getBoolean("printsubticket");
+           }
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myreturn;
+
+}
+
+    public static boolean isInvCtrlDemdToPlan() {
+   boolean myreturn = false;
+    try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select demdtoplan from inv_ctrl;");
+           while (res.next()) {
+               myreturn = res.getBoolean("demdtoplan");
+           }
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myreturn;
+
+}
+
+    public static boolean isPlanDetByOp(String serialno, String op) {
+
+      // From perspective of "has it been scanned...or is there a 1 in lbl_scan which is set when label is scanned
+      // assume it's false i.e. hasn't been scanned.
+      boolean myreturn = false;
+
+      try {
+
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+
+        try {
+            Statement st = con.createStatement();
+            ResultSet res = null;
+             res = st.executeQuery("select * from pland_mstr where pland_parent = " + "'" + serialno + "'" 
+                     + " AND pland_op = " + "'" + op + "'"
+                     + " ;");
+           while (res.next()) {
+               myreturn = true;
+           }
+
+        } catch (SQLException s) {
+            MainFrame.bslog(s);
+        }
+        con.close();
+    } catch (Exception e) {
+        MainFrame.bslog(e);
+    }
+      return myreturn;
+  }
+
+    public static int CreatePlanDet(JTable mytable) {
+  /*  0=part
+      1=type 
+      2=operation
+      3=qty
+      4=effdate
+      5=location
+      6=serialno
+      7=reference
+      8=site
+      9=userid
+      10=prodline
+      11=AssyCell
+      12=remarks
+      13=PackCell
+      14=packdate
+      15=assydate
+      16=program
+     */ 
+     int planid = 0; 
+
+      try {
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+
+        try {
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            boolean proceed = true;
+            String _part = "";
+            String _parent = "";
+            String _op = "";
+            double _qty = 0;
+
+
+            DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+            Date now = new Date();
+              for (int i = 0; i < mytable.getRowCount(); i++) {
+                  _parent = mytable.getValueAt(i, 6).toString();
+                  _part = mytable.getValueAt(i, 0).toString();
+                  _qty = bsParseDouble(mytable.getValueAt(i,3).toString());
+                  _op = mytable.getValueAt(i, 2).toString();
+                  planid = OVData.getNextNbr("pland");
+                    st.executeUpdate("insert into pland_mstr "
+                        + " (pland_id, pland_parent, pland_part, pland_op, pland_qty, pland_cell, pland_ref, pland_date ) "
+                        + " values ( " + "'" + planid + "'" + ","  
+                        + "'" + _parent + "'" + ","
+                        + "'" + _part + "'" + ","
+                        + "'" + _op + "'" + ","
+                        + "'" + _qty + "'" + ","
+                        + "'" + mytable.getValueAt(i, 11).toString() + "'" + ","
+                        + "'" + mytable.getValueAt(i, 7).toString() + "'" + ","
+                        + "'" + mytable.getValueAt(i, 4).toString() + "'" 
+                        + ")"
+                        + ";");
+
+
+    /*
+                     int prevscanned = OVData.getPlanDetTotQtyByOp(tbscan.getText(), ddop.getSelectedItem().toString());
+                     int schedqty = OVData.getPlanSchedQty(tbscan.getText());
+    if ( qty > (schedqty - prevscanned) ) {
+         lblmessage.setText("Qty Exceeds limit (Already Scanned Qty: " + String.valueOf(prevscanned) + " out of SchedQty: " + String.valueOf(schedqty) + ")");
+        lblmessage.setForeground(Color.red);
+        initvars(null);
+        return;
+    }
+
+
+    */
+                    // if multiscan then close only when plan sched qty = scanned qty exactly
+                    double scanqty = OVData.getPlanDetTotQtyByOp(_parent, _op);
+                    double schedqty = OVData.getPlanSchedQty(_parent);
+                    if ((scanqty >= schedqty) && OVData.isLastOperation(_part, _op) ) {
+                     OVData.updatePlanQty(_parent, scanqty);
+                     OVData.updatePlanStatus(_parent, "1");   
+                    }
+
+
+                    // if not multiscan then close plan order....one scan per planned order regardless if they produced sched qty exactly
+                    if (! OVData.isInvCtrlPlanMultiScan() && OVData.isLastOperation(_part, _op)) {
+                    OVData.updatePlanQty(_parent, _qty);
+                    OVData.updatePlanStatus(_parent, "1");
+                    }
+              }
+
+
+
+
+
+
+        } catch (SQLException s) {
+            MainFrame.bslog(s);
+        }
+        con.close();
+    } catch (Exception e) {
+        MainFrame.bslog(e);
+    }
+
+      return planid;
+  }
+
+    public static void CreateItemMasterImport(JTable mytable) {
+  /*  0=part
+      1=desc 
+      2=uom
+      3=prodline
+      4=type
+      5=site
+      6=location
+      7=code
+     */ 
+
+
+      try {
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+
+        try {
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            boolean proceed = true;
+            String _part = "";
+            String _parent = "";
+            String _op = "";
+            int _qty = 0;
+
+
+            DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+            Date now = new Date();
+              for (int i = 0; i < mytable.getRowCount(); i++) {
+
+                    st.executeUpdate("insert into item_mstr "
+                        + " (it_item, it_desc, it_uom, it_prodline, it_type, it_site, it_loc, it_code ) "
+                        + " values ( " + "'" + mytable.getValueAt(i, 0).toString() + "'" + ","  
+                        + "'" + mytable.getValueAt(i, 1).toString() + "'" + ","
+                        + "'" + mytable.getValueAt(i, 2).toString() + "'" + ","
+                        + "'" + mytable.getValueAt(i, 3).toString() + "'" + ","
+                        + "'" + mytable.getValueAt(i, 4).toString() + "'" + ","
+                        + "'" + mytable.getValueAt(i, 5).toString() + "'" + ","
+                        + "'" + mytable.getValueAt(i, 6).toString() + "'" + ","
+                        + "'" + mytable.getValueAt(i, 7).toString() + "'" 
+                        + ")"
+                        + ";");
+              }
+
+        } catch (SQLException s) {
+            MainFrame.bslog(s);
+        }
+        con.close();
+    } catch (Exception e) {
+        MainFrame.bslog(e);
+    }
+
+  }
+
+    public static ArrayList getTaskMasterList() {
+   ArrayList myarray = new ArrayList();
+    try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select task_id from task_mstr order by task_id ;"); 
+
+           while (res.next()) {
+                myarray.add(res.getString("task_id"));
+
+            }
+
+       }
+        catch (SQLException s){
+             bsmf.MainFrame.show("SQL cannot get Master Task List");
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myarray;
+
+}
+
+    public static String getPlanPart(String serialno) {
+
+      // From perspective of "has it been scanned...or is there a 1 in lbl_scan which is set when label is scanned
+      // assume it's false i.e. hasn't been scanned.
+     String myreturn = "";
+
+      try {
+
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+
+        try {
+            Statement st = con.createStatement();
+            ResultSet res = null;
+             res = st.executeQuery("select plan_part from plan_mstr where plan_nbr = " + "'" + serialno + "'" 
+                     + " ;");
+           while (res.next()) {
+               myreturn = res.getString("plan_part");
+           }
+
+        } catch (SQLException s) {
+            MainFrame.bslog(s);
+        }
+        con.close();
+    } catch (Exception e) {
+        MainFrame.bslog(e);
+    }
+      return myreturn;
+  }
+
+    public static double getPlanSchedQty(String serialno) {
+
+      // From perspective of "has it been scanned...or is there a 1 in lbl_scan which is set when label is scanned
+      // assume it's false i.e. hasn't been scanned.
+      double myreturn = 0;
+
+      try {
+
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+
+        try {
+            Statement st = con.createStatement();
+            ResultSet res = null;
+             res = st.executeQuery("select plan_qty_sched from plan_mstr where plan_nbr = " + "'" + serialno + "'" 
+                     + " ;");
+           while (res.next()) {
+               myreturn = res.getDouble("plan_qty_sched");
+           }
+
+        } catch (SQLException s) {
+            MainFrame.bslog(s);
+        }
+        con.close();
+    } catch (Exception e) {
+        MainFrame.bslog(e);
+    }
+      return myreturn;
+  }
+
+    public static double getPlanDetTotQtyByOp(String serialno, String op) {
+
+      // From perspective of "has it been scanned...or is there a 1 in lbl_scan which is set when label is scanned
+      // assume it's false i.e. hasn't been scanned.
+      double myreturn = 0;
+
+      try {
+
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+
+        try {
+            Statement st = con.createStatement();
+            ResultSet res = null;
+             res = st.executeQuery("select sum(pland_qty) as 'mysum' from pland_mstr where pland_parent = " + "'" + serialno + "'" 
+                     + " AND pland_op = " + "'" + op + "'"
+                     + " ;");
+           while (res.next()) {
+               myreturn = res.getDouble("mysum");
+           }
+
+        } catch (SQLException s) {
+            MainFrame.bslog(s);
+        }
+        con.close();
+    } catch (Exception e) {
+        MainFrame.bslog(e);
+    }
+      return myreturn;
+  }
+
     public static int getPlanStatus(String serialno) {
           
           // -1 plan_status is void
@@ -18977,7 +18924,6 @@ MainFrame.bslog(e);
           return x;
       }
     
-    
     public static void updateLabelStatus(String serialno, String value) {
           try {
 
@@ -18997,7 +18943,7 @@ MainFrame.bslog(e);
         }
       }
       
-      public static void updatePlanStatus(String serialno, String value) {
+    public static void updatePlanStatus(String serialno, String value) {
           try {
 
             
@@ -19016,7 +18962,7 @@ MainFrame.bslog(e);
         }
       }
       
-      public static void updatePlanQty(String serialno, double qty) {
+    public static void updatePlanQty(String serialno, double qty) {
           try {
 
             
@@ -19035,7 +18981,7 @@ MainFrame.bslog(e);
         }
       }
       
-         public static void updatePlanQtyByOp(String serialno, int qty, String op, String ref, String cell) {
+    public static void updatePlanQtyByOp(String serialno, int qty, String op, String ref, String cell) {
           try {
 
             
@@ -19054,7 +19000,7 @@ MainFrame.bslog(e);
         }
       }
       
-      public static boolean isLabel(String serialno) {
+    public static boolean isLabel(String serialno) {
           
           // From perspective of "does it exist"
           // assume it's false i.e. it doesnt exist.
@@ -19088,7 +19034,7 @@ MainFrame.bslog(e);
           return myreturn;
       }
       
-      public static ArrayList getLabelFileList(String type) {
+    public static ArrayList getLabelFileList(String type) {
        ArrayList myarray = new ArrayList();
         try{
             
@@ -19121,7 +19067,7 @@ MainFrame.bslog(e);
         
     }
       
-       public static boolean isPlan(String serialno) {
+    public static boolean isPlan(String serialno) {
           
           // From perspective of "does it exist"
           // assume it's false i.e. it doesnt exist.
@@ -19155,7 +19101,7 @@ MainFrame.bslog(e);
           return myreturn;
       }
       
-      public static String getLabelInfo(String serialno) {
+    public static String getLabelInfo(String serialno) {
           String myreturn = "";
           String delim = "+-+";
           try {
@@ -19215,7 +19161,7 @@ MainFrame.bslog(e);
           return myreturn;
       }
       
-      public static String CreateLabelMstr(String serialno, String part, String custpart, String serialnostring, 
+    public static String CreateLabelMstr(String serialno, String part, String custpart, String serialnostring, 
               String conttype, String qty, String po, String order, String line, String ref, String lot,
               String parent, String parentstring, String addrcode, String addrname, String addr1, String addr2,
               String addrcity, String addrstate, String addrzip, String addrcountry, String createdate, String effdate, 
@@ -19286,7 +19232,7 @@ MainFrame.bslog(e);
       }
       
       
-       public static void locTolocTransfer(String partno, int qty, String user) throws ParseException {
+    public static void locTolocTransfer(String partno, int qty, String user) throws ParseException {
           java.util.Date now = new java.util.Date();
           DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
           String op = "";
@@ -19323,9 +19269,8 @@ MainFrame.bslog(e);
           OVData.UpdateInventoryDiscrete(partno, "BS", "locB", "warehouse", "", "", (bsParseDouble(String.valueOf(qty)))); 
                
       }
-      
-   
-      public static String CreateShipTo(String billtocode, String name, String line1, String line2, String line3, String city, String state, String zip, String country, String plantcode) {
+     
+    public static String CreateShipTo(String billtocode, String name, String line1, String line2, String line3, String city, String state, String zip, String country, String plantcode) {
           String shiptocode = "";
           try {
 
@@ -19378,7 +19323,7 @@ MainFrame.bslog(e);
           return shiptocode;
       }
      
-      public static void updateOrderStatusError(String nbr) {
+    public static void updateOrderStatusError(String nbr) {
             try{
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
@@ -19399,7 +19344,7 @@ MainFrame.bslog(e);
         
        }
       
-       public static void updateOrderSourceFlag(String nbr) {
+    public static void updateOrderSourceFlag(String nbr) {
             try{
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
@@ -19420,7 +19365,7 @@ MainFrame.bslog(e);
         
        }
       
-        public static void updateFreightOrderQuoteFlag(String nbr) {
+    public static void updateFreightOrderQuoteFlag(String nbr) {
             try{
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
@@ -19441,7 +19386,7 @@ MainFrame.bslog(e);
         
        }
         
-       public static void updateFreightOrderTenderFlag(String nbr) {
+    public static void updateFreightOrderTenderFlag(String nbr) {
             try{
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
@@ -19462,7 +19407,7 @@ MainFrame.bslog(e);
         
        }
         
-        public static void updateFreightOrderReasonCode(String nbr, String reasoncode) {
+    public static void updateFreightOrderReasonCode(String nbr, String reasoncode) {
             try{
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
@@ -19483,464 +19428,463 @@ MainFrame.bslog(e);
         
        }
        
-       public static void updateFreightOrderStatus(String nbr, String status) {
-            try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                           st.executeUpdate(
-                                 " update fo_mstr set fo_status = " + "'" + status + "'" +
-                                 " where fo_nbr = " + "'" + nbr + "'" + ";" );
-            }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            }
-            con.close();
+    public static void updateFreightOrderStatus(String nbr, String status) {
+        try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+                       st.executeUpdate(
+                             " update fo_mstr set fo_status = " + "'" + status + "'" +
+                             " where fo_nbr = " + "'" + nbr + "'" + ";" );
         }
-        catch (Exception e){
-            MainFrame.bslog(e);
+        catch (SQLException s){
+             MainFrame.bslog(s);
         }
-        
-       }
-            
-       public static int getForecastWeek(Date thisdate) {
-        int week = 0;
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(thisdate);
-        ArrayList<Date> fctdates = getForecastDates(String.valueOf(cal.get(Calendar.YEAR)));
-        DateFormat format = new SimpleDateFormat("MM/dd/yy");
-            for (int i = 0; i < 52; i++) {
-             if ((thisdate.after(fctdates.get(i)) && thisdate.before(fctdates.get(i + 1))) || thisdate.compareTo(fctdates.get(i)) == 0) {
-                 week = i;
-                 break;
-             }
-        }
-       // return d.after(min) && d.before(max);
-        
-        return week + 1;
+        con.close();
     }
-    
-       public static int createPlanFromFcst(String fromsite, String tosite, String frompart, String topart) {
-        
-        int recnumber = 0;
-        
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        Calendar cal = Calendar.getInstance();
-        cal.getTime();
-        int wk = getForecastWeek(cal.getTime());
-        ArrayList<Date> dates = OVData.getForecastDates(String.valueOf(cal.get(Calendar.YEAR)));
-        
-        
-         try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-                Statement st2 = con.createStatement();
-                Statement st3 = con.createStatement();
-                ResultSet res2 = null;
-               String part = "";
-               String site = "";
-                 int k = 0;
-                 
-                 if (frompart.isEmpty()) {
-                     frompart = bsmf.MainFrame.lowchar;
-                 }
-                 if (topart.isEmpty()) {
-                     topart = bsmf.MainFrame.hichar;
-                 }
-                  if (fromsite.isEmpty()) {
-                     fromsite = bsmf.MainFrame.lowchar;
-                 }
-                 if (tosite.isEmpty()) {
-                     tosite = bsmf.MainFrame.hichar;
-                 }
-                 
-                 int qty = 0;
-                  res = st.executeQuery("select * from fct_mstr " +
-                          " inner join item_mstr on it_item = fct_part " +
-                          " where fct_part >= " + "'" + frompart + "'" +
-                          " and fct_part <= " + "'" + topart + "'" + 
-                          " and fct_site >= " + "'" + fromsite + "'" + 
-                          " and fct_site <= " + "'" + tosite + "'" + 
-                          " and it_plan = '1' " +
-                                         ";" );
-                    while (res.next()) {
-                      // for this part, this site, and this 'next' 13 weeks...see what plan_mstr records exist
-                       
-                     part = res.getString("fct_part");
-                     site = res.getString("fct_site");
-                     
-                     
-                        for (int j = wk; j < wk + 13 ; j++) {
-                          qty = res.getInt(j + 3);
-                          k = 0;
-                         // bsmf.MainFrame.show(String.valueOf(wk) + "/" + String.valueOf(qty) + "/" + String.valueOf(j) + "/" + String.valueOf(dates.get(j - 1)));
-                         
-                          if (qty == 0)
-                              continue;
-                          
-                          
-                          res2 = st2.executeQuery("select * from plan_mstr where plan_part = " + "'" + part + "'" +
-                                   " AND plan_site = " + "'" + site + "'" + 
-                                  " AND plan_date_due = " + "'" + df.format(dates.get(j - 1)) + "'" + 
-                                  " AND plan_type = 'FCST' " + ";");
-                             while (res2.next()) {
-                                 k++;
-                             }
-                             if (k == 0) {
-                                 recnumber++;
-                                    int nbr = OVData.getNextNbr("plan");
-                                    st3.executeUpdate("insert into plan_mstr "
-                                        + "(plan_nbr, plan_part, plan_qty_req, plan_date_create, plan_date_due, plan_type, plan_site ) "
-                                        + " values ( " + "'" + nbr + "'" + ","
-                                        + "'" + part + "'" + ","
-                                        + "'" + qty + "'" + ","
-                                        + "'" + df.format(cal.getTime()) + "'" + ","
-                                        + "'" + df.format(dates.get(j - 1)) + "'" + ","
-                                        + "'FCST'" + ","
-                                        + "'" + site + "'"
-                                        + ")"
-                                        + ";");
-                             }
-                      }  
-                       
-                    }
-                  
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-                 
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-            
-        }
-        return recnumber;
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+
+   }
+
+    public static int getForecastWeek(Date thisdate) {
+    int week = 0;
+    Calendar cal = Calendar.getInstance();
+    cal.setTime(thisdate);
+    ArrayList<Date> fctdates = getForecastDates(String.valueOf(cal.get(Calendar.YEAR)));
+    DateFormat format = new SimpleDateFormat("MM/dd/yy");
+        for (int i = 0; i < 52; i++) {
+         if ((thisdate.after(fctdates.get(i)) && thisdate.before(fctdates.get(i + 1))) || thisdate.compareTo(fctdates.get(i)) == 0) {
+             week = i;
+             break;
+         }
+    }
+   // return d.after(min) && d.before(max);
+
+    return week + 1;
+}
+
+    public static int createPlanFromFcst(String fromsite, String tosite, String frompart, String topart) {
+
+    int recnumber = 0;
+
+    DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+    Calendar cal = Calendar.getInstance();
+    cal.getTime();
+    int wk = getForecastWeek(cal.getTime());
+    ArrayList<Date> dates = OVData.getForecastDates(String.valueOf(cal.get(Calendar.YEAR)));
+
+
+     try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            Statement st2 = con.createStatement();
+            Statement st3 = con.createStatement();
+            ResultSet res2 = null;
+           String part = "";
+           String site = "";
+             int k = 0;
+
+             if (frompart.isEmpty()) {
+                 frompart = bsmf.MainFrame.lowchar;
+             }
+             if (topart.isEmpty()) {
+                 topart = bsmf.MainFrame.hichar;
+             }
+              if (fromsite.isEmpty()) {
+                 fromsite = bsmf.MainFrame.lowchar;
+             }
+             if (tosite.isEmpty()) {
+                 tosite = bsmf.MainFrame.hichar;
+             }
+
+             int qty = 0;
+              res = st.executeQuery("select * from fct_mstr " +
+                      " inner join item_mstr on it_item = fct_part " +
+                      " where fct_part >= " + "'" + frompart + "'" +
+                      " and fct_part <= " + "'" + topart + "'" + 
+                      " and fct_site >= " + "'" + fromsite + "'" + 
+                      " and fct_site <= " + "'" + tosite + "'" + 
+                      " and it_plan = '1' " +
+                                     ";" );
+                while (res.next()) {
+                  // for this part, this site, and this 'next' 13 weeks...see what plan_mstr records exist
+
+                 part = res.getString("fct_part");
+                 site = res.getString("fct_site");
+
+
+                    for (int j = wk; j < wk + 13 ; j++) {
+                      qty = res.getInt(j + 3);
+                      k = 0;
+                     // bsmf.MainFrame.show(String.valueOf(wk) + "/" + String.valueOf(qty) + "/" + String.valueOf(j) + "/" + String.valueOf(dates.get(j - 1)));
+
+                      if (qty == 0)
+                          continue;
+
+
+                      res2 = st2.executeQuery("select * from plan_mstr where plan_part = " + "'" + part + "'" +
+                               " AND plan_site = " + "'" + site + "'" + 
+                              " AND plan_date_due = " + "'" + df.format(dates.get(j - 1)) + "'" + 
+                              " AND plan_type = 'FCST' " + ";");
+                         while (res2.next()) {
+                             k++;
+                         }
+                         if (k == 0) {
+                             recnumber++;
+                                int nbr = OVData.getNextNbr("plan");
+                                st3.executeUpdate("insert into plan_mstr "
+                                    + "(plan_nbr, plan_part, plan_qty_req, plan_date_create, plan_date_due, plan_type, plan_site ) "
+                                    + " values ( " + "'" + nbr + "'" + ","
+                                    + "'" + part + "'" + ","
+                                    + "'" + qty + "'" + ","
+                                    + "'" + df.format(cal.getTime()) + "'" + ","
+                                    + "'" + df.format(dates.get(j - 1)) + "'" + ","
+                                    + "'FCST'" + ","
+                                    + "'" + site + "'"
+                                    + ")"
+                                    + ";");
+                         }
+                  }  
+
+                }
+
        }
-      
-       public static int createPlanFromLocationMin(String fromsite, String tosite, String fromprod, String toprod) {
-        
-        int recnumber = 0;
-        
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        java.util.Date now = new java.util.Date();
-        Calendar cal = Calendar.getInstance();
-        cal.getTime();
-        cal.add(Calendar.DATE, 14);
-        String enddate = df.format(cal.getTime());
-        int wk = getForecastWeek(cal.getTime());
-        ArrayList<Date> dates = OVData.getForecastDates(String.valueOf(cal.get(Calendar.YEAR)));
-        
-        
-         try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-                Statement st2 = con.createStatement();
-                Statement st3 = con.createStatement();
-                ResultSet res2 = null;
-               String part = "";
-               double makeqty = 0;
-               double demand = 0;
-               double qoh = 0;
-               double ticketqty = 0;
-               double min = 0;
-               double qtywk = 0;
-               double qtyyear = 0;
-               
-               String site = "";
-               String remarks = "";
-                 int k = 0;
-                 
-                 if (fromprod.isEmpty()) {
-                     fromprod = bsmf.MainFrame.lowchar;
-                 }
-                 if (toprod.isEmpty()) {
-                     toprod = bsmf.MainFrame.hichar;
-                 }
-                  if (fromsite.isEmpty()) {
-                     fromsite = bsmf.MainFrame.lowchar;
-                 }
-                 if (tosite.isEmpty()) {
-                     tosite = bsmf.MainFrame.hichar;
-                 }
-                 
-                 double qty = 0;
-                  res = st.executeQuery("select it_item, ita_fct, sod_site, in_qoh, round(ita_fct / 25) as '2week', " +
-                          " coalesce(sum(sod_ord_qty - sod_shipped_qty),0) as mydemand " +
-                          " from item_mstr " +
-                          " left outer join in_mstr on in_part = it_item and in_loc = 'locA' and in_site = '1000' " +
-                          " left outer join item_apd on ita_item = it_item " +
-                          " left outer join sod_det on sod_char1 = it_item and sod_due_date <= " + "'" + enddate + "'" + " AND sod_site = '1000' " +
-                          " where it_prodline >= " + "'" + fromprod + "'" +
-                          " and it_prodline <= " + "'" + toprod + "'" + 
-                          " group by it_item, ita_fct, sod_site, in_qoh " +
-                                         ";" );
-                    while (res.next()) {
-                     part = res.getString("it_item");
-                     qoh = res.getDouble("in_qoh");
-                     qtywk = res.getDouble("2week");
-                     demand = res.getDouble("mydemand"); 
-                     site = res.getString("sod_site");
-                     qtyyear = res.getDouble("ita_fct");
-                    
-                      if (qtywk < 2) {
-                        qtywk = 2;
-                    }
-                    min = qtywk; 
-                    if (qtywk <= 60) {
-                    min = qtyyear; 
-                    }
-                    if (qtywk <= 60 && qtyyear <= 60 ) {
-                    min = qtyyear;
-                    }
-                    if (qtyyear >= 60 && qtyyear < 400  ) {
-                    min = qtyyear;
-                    }
-                    if (qtyyear >= 400 && qtyyear < 1000  ) {
-                    min = qtyyear / 2;
-                    }
-                    if (qtyyear >= 800 && qtyyear < 1250  ) {
-                    min = qtyyear / 3;
-                    }
-                    if (qtyyear >= 1250 && qtyyear < 2000  ) {
-                    min = qtyyear / 4;
-                    }
-                    if (qtyyear >= 2000 && qtyyear < 3000  ) {
-                    min = qtyyear / 6;
-                    }
-                    if (qtyyear >= 3000 && qtyyear < 4000  ) {
-                    min = qtyyear / 8;
-                    }
-                    if (qtyyear >= 4000 && qtyyear < 6000  ) {
-                    min = qtyyear / 12;
-                    }
-                    if (qtyyear >= 6000 && qtyyear < 8000  ) {
-                    min = qtyyear / 14;
-                    }
-                    if (qtyyear >= 8000 && qtyyear < 10000  ) {
-                    min = qtyyear / 16;
-                    }
-                    if (qtyyear >= 10000  ) {
-                    min = qtywk;
-                    }
-                    
-                     
-                     
-                     
-                     
-                     
-                     ticketqty = 0;
-                     makeqty = 0;
-                     qty = 0;
-                     
-                     // now lets find out what tickets we already have open ...tickets that are not closed (whether sched or not sched).
-                          
-                          res2 = st2.executeQuery("select sum(plan_qty_req) as 'sum' from plan_mstr where plan_part = " + "'" + part + "'" +
-                                   " AND plan_site = " + "'" + site + "'" + 
-                                  " AND plan_status = '0' " + ";" );
-                             while (res2.next()) {
-                                 ticketqty = res2.getInt("sum");
-                             }
-                             
-                            makeqty = demand - qoh - ticketqty;
-                            
-                            // if make qty is less than the min2weekqty then create ticket for min
-                            if (makeqty < 0) {
-                                continue;
-                            }
-                            remarks = String.valueOf(makeqty) + "/" + String.valueOf(demand) + "/" + String.valueOf(qoh) + "/" + String.valueOf(ticketqty) + "/" + String.valueOf(min);
-                            // if make qty is greater than 0 and less than the min2weekqty then create ticket for min
-                            if (makeqty > 0 && makeqty <= min) {
-                                 recnumber++;
-                                    int nbr = OVData.getNextNbr("plan");
-                                    st3.executeUpdate("insert into plan_mstr "
-                                        + "(plan_nbr, plan_part, plan_qty_req, plan_date_create, plan_date_due, plan_type, plan_site, plan_rmks ) "
-                                        + " values ( " + "'" + nbr + "'" + ","
-                                        + "'" + part + "'" + ","
-                                        + "'" + min + "'" + ","
-                                        + "'" + df.format(now) + "'" + ","
-                                        + "'" + df.format(now) + "'" + ","
-                                        + "'LocA'" + ","
-                                        + "'" + site + "'" + "," 
-                                        + "'" + remarks + "'"
-                                        + ")"
-                                        + ";");
-                             }
-                            
-                            // if makeqty is greater than minqty then create plan tickets as multiple of division.... + 1 if modulus > 0
-                             if (makeqty > min) {
-                                 qty = (makeqty / min);
-                                 if (makeqty % min > 0) {
-                                     qty += 1;
-                                 }
-                                 for (int j = 0; j < qty; j++) {
-                                 recnumber++;
-                                    int nbr = OVData.getNextNbr("plan");
-                                    st3.executeUpdate("insert into plan_mstr "
-                                        + "(plan_nbr, plan_part, plan_qty_req, plan_date_create, plan_date_due, plan_type, plan_site, plan_rmks ) "
-                                        + " values ( " + "'" + nbr + "'" + ","
-                                        + "'" + part + "'" + ","
-                                        + "'" + min + "'" + ","
-                                        + "'" + df.format(now) + "'" + ","
-                                        + "'" + df.format(now) + "'" + ","
-                                        + "'LocB'" + ","
-                                        + "'" + site + "'" + "," 
-                                        + "'" + remarks + "'"
-                                        + ")"
-                                        + ";");
-                                 }
-                             }
-                       
-                    }
-                  
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-                 
-            }
-            con.close();
+        catch (SQLException s){
+             MainFrame.bslog(s);
+
         }
-        catch (Exception e){
-            MainFrame.bslog(e);
-            
-        }
-        return recnumber;
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+
+    }
+    return recnumber;
+   }
+
+    public static int createPlanFromLocationMin(String fromsite, String tosite, String fromprod, String toprod) {
+
+    int recnumber = 0;
+
+    DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+    java.util.Date now = new java.util.Date();
+    Calendar cal = Calendar.getInstance();
+    cal.getTime();
+    cal.add(Calendar.DATE, 14);
+    String enddate = df.format(cal.getTime());
+    int wk = getForecastWeek(cal.getTime());
+    ArrayList<Date> dates = OVData.getForecastDates(String.valueOf(cal.get(Calendar.YEAR)));
+
+
+     try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            Statement st2 = con.createStatement();
+            Statement st3 = con.createStatement();
+            ResultSet res2 = null;
+           String part = "";
+           double makeqty = 0;
+           double demand = 0;
+           double qoh = 0;
+           double ticketqty = 0;
+           double min = 0;
+           double qtywk = 0;
+           double qtyyear = 0;
+
+           String site = "";
+           String remarks = "";
+             int k = 0;
+
+             if (fromprod.isEmpty()) {
+                 fromprod = bsmf.MainFrame.lowchar;
+             }
+             if (toprod.isEmpty()) {
+                 toprod = bsmf.MainFrame.hichar;
+             }
+              if (fromsite.isEmpty()) {
+                 fromsite = bsmf.MainFrame.lowchar;
+             }
+             if (tosite.isEmpty()) {
+                 tosite = bsmf.MainFrame.hichar;
+             }
+
+             double qty = 0;
+              res = st.executeQuery("select it_item, ita_fct, sod_site, in_qoh, round(ita_fct / 25) as '2week', " +
+                      " coalesce(sum(sod_ord_qty - sod_shipped_qty),0) as mydemand " +
+                      " from item_mstr " +
+                      " left outer join in_mstr on in_part = it_item and in_loc = 'locA' and in_site = '1000' " +
+                      " left outer join item_apd on ita_item = it_item " +
+                      " left outer join sod_det on sod_char1 = it_item and sod_due_date <= " + "'" + enddate + "'" + " AND sod_site = '1000' " +
+                      " where it_prodline >= " + "'" + fromprod + "'" +
+                      " and it_prodline <= " + "'" + toprod + "'" + 
+                      " group by it_item, ita_fct, sod_site, in_qoh " +
+                                     ";" );
+                while (res.next()) {
+                 part = res.getString("it_item");
+                 qoh = res.getDouble("in_qoh");
+                 qtywk = res.getDouble("2week");
+                 demand = res.getDouble("mydemand"); 
+                 site = res.getString("sod_site");
+                 qtyyear = res.getDouble("ita_fct");
+
+                  if (qtywk < 2) {
+                    qtywk = 2;
+                }
+                min = qtywk; 
+                if (qtywk <= 60) {
+                min = qtyyear; 
+                }
+                if (qtywk <= 60 && qtyyear <= 60 ) {
+                min = qtyyear;
+                }
+                if (qtyyear >= 60 && qtyyear < 400  ) {
+                min = qtyyear;
+                }
+                if (qtyyear >= 400 && qtyyear < 1000  ) {
+                min = qtyyear / 2;
+                }
+                if (qtyyear >= 800 && qtyyear < 1250  ) {
+                min = qtyyear / 3;
+                }
+                if (qtyyear >= 1250 && qtyyear < 2000  ) {
+                min = qtyyear / 4;
+                }
+                if (qtyyear >= 2000 && qtyyear < 3000  ) {
+                min = qtyyear / 6;
+                }
+                if (qtyyear >= 3000 && qtyyear < 4000  ) {
+                min = qtyyear / 8;
+                }
+                if (qtyyear >= 4000 && qtyyear < 6000  ) {
+                min = qtyyear / 12;
+                }
+                if (qtyyear >= 6000 && qtyyear < 8000  ) {
+                min = qtyyear / 14;
+                }
+                if (qtyyear >= 8000 && qtyyear < 10000  ) {
+                min = qtyyear / 16;
+                }
+                if (qtyyear >= 10000  ) {
+                min = qtywk;
+                }
+
+
+
+
+
+
+                 ticketqty = 0;
+                 makeqty = 0;
+                 qty = 0;
+
+                 // now lets find out what tickets we already have open ...tickets that are not closed (whether sched or not sched).
+
+                      res2 = st2.executeQuery("select sum(plan_qty_req) as 'sum' from plan_mstr where plan_part = " + "'" + part + "'" +
+                               " AND plan_site = " + "'" + site + "'" + 
+                              " AND plan_status = '0' " + ";" );
+                         while (res2.next()) {
+                             ticketqty = res2.getInt("sum");
+                         }
+
+                        makeqty = demand - qoh - ticketqty;
+
+                        // if make qty is less than the min2weekqty then create ticket for min
+                        if (makeqty < 0) {
+                            continue;
+                        }
+                        remarks = String.valueOf(makeqty) + "/" + String.valueOf(demand) + "/" + String.valueOf(qoh) + "/" + String.valueOf(ticketqty) + "/" + String.valueOf(min);
+                        // if make qty is greater than 0 and less than the min2weekqty then create ticket for min
+                        if (makeqty > 0 && makeqty <= min) {
+                             recnumber++;
+                                int nbr = OVData.getNextNbr("plan");
+                                st3.executeUpdate("insert into plan_mstr "
+                                    + "(plan_nbr, plan_part, plan_qty_req, plan_date_create, plan_date_due, plan_type, plan_site, plan_rmks ) "
+                                    + " values ( " + "'" + nbr + "'" + ","
+                                    + "'" + part + "'" + ","
+                                    + "'" + min + "'" + ","
+                                    + "'" + df.format(now) + "'" + ","
+                                    + "'" + df.format(now) + "'" + ","
+                                    + "'LocA'" + ","
+                                    + "'" + site + "'" + "," 
+                                    + "'" + remarks + "'"
+                                    + ")"
+                                    + ";");
+                         }
+
+                        // if makeqty is greater than minqty then create plan tickets as multiple of division.... + 1 if modulus > 0
+                         if (makeqty > min) {
+                             qty = (makeqty / min);
+                             if (makeqty % min > 0) {
+                                 qty += 1;
+                             }
+                             for (int j = 0; j < qty; j++) {
+                             recnumber++;
+                                int nbr = OVData.getNextNbr("plan");
+                                st3.executeUpdate("insert into plan_mstr "
+                                    + "(plan_nbr, plan_part, plan_qty_req, plan_date_create, plan_date_due, plan_type, plan_site, plan_rmks ) "
+                                    + " values ( " + "'" + nbr + "'" + ","
+                                    + "'" + part + "'" + ","
+                                    + "'" + min + "'" + ","
+                                    + "'" + df.format(now) + "'" + ","
+                                    + "'" + df.format(now) + "'" + ","
+                                    + "'LocB'" + ","
+                                    + "'" + site + "'" + "," 
+                                    + "'" + remarks + "'"
+                                    + ")"
+                                    + ";");
+                             }
+                         }
+
+                }
+
        }
-       
-       public static int createPlanFromDemand(String site) {
-        
-        int recnumber = 0;
-        
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        Calendar cal = Calendar.getInstance();
-        cal.getTime();
-        int wk = getForecastWeek(cal.getTime());
-        ArrayList<Date> dates = OVData.getForecastDates(String.valueOf(cal.get(Calendar.YEAR)));
-        
-        
-         try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-                Statement st2 = con.createStatement();
-                ResultSet res2 = null;
-               String part = "";
-               String order = "";
-               String line = "";
-               String duedate = "";
-               
-               ArrayList a_part = new ArrayList();
-               ArrayList a_order =  new ArrayList();
-               ArrayList a_line =   new ArrayList();
-               ArrayList a_qty =   new ArrayList();
-               ArrayList a_duedate =   new ArrayList();
-               
-               
-               
-                double qty = 0;
-               
-                 int k = 0;
-                                 
-                  res = st.executeQuery("select sod_site, sod_nbr, sod_due_date, sod_part, sod_ord_qty, sod_shipped_qty, sod_line from so_mstr " +
-                          " inner join sod_det on sod_nbr = so_nbr and sod_status = " + "'" + getGlobalProgTag("open") + "'" + " and (sod_ord_qty - sod_shipped_qty) > 0 " +
-                          " inner join item_mstr on it_item = sod_part " +
-                          " where so_site = " + "'" + site + "'" +
-                          " and so_status = " + "'" + getGlobalProgTag("open") + "'" +
-                          " and it_plan = '1' " + 
-                                         ";" );
-                    while (res.next()) {
-                     
-                        // for this part, this site, this order, this line ....see what plan_mstr records exist
-                       
-                     part = res.getString("sod_part");
-                     order = res.getString("sod_nbr");
-                     line = res.getString("sod_line");
-                     qty = res.getDouble("sod_ord_qty") - res.getDouble("sod_shipped_qty");
-                     duedate = res.getString("sod_due_date");
-                     k = 0;
-                    
-                          
-                          res2 = st2.executeQuery("select * from plan_mstr where plan_part = " + "'" + part + "'" +
-                                   " AND plan_site = " + "'" + site + "'" + 
-                                   " AND plan_order = " + "'" + order + "'" +
-                                  " AND plan_line = " + "'" + line + "'" + ";");
-                          
-                             while (res2.next()) {
-                                 k++;
-                             }
-                             if (k == 0) {
-                                 a_part.add(part);
-                                 a_order.add(order);
-                                 a_line.add(line);
-                                 a_qty.add(qty);
-                                 a_duedate.add(duedate);
-                                 /*
-                                 recnumber++;
-                                    int nbr = OVData.getNextNbr("plan");
-                                    st3.executeUpdate("insert into plan_mstr "
-                                        + "(plan_nbr, plan_order, plan_line, plan_part, plan_qty_req, plan_date_create, plan_date_due, plan_type, plan_site ) "
-                                        + " values ( " + "'" + nbr + "'" + ","
-                                        + "'" + order + "'" + ","
-                                        + "'" + line + "'" + ","
-                                        + "'" + part + "'" + ","
-                                        + "'" + qty + "'" + ","
-                                        + "'" + df.format(cal.getTime()) + "'" + ","
-                                        + "'" + duedate + "'" + ","
-                                        + "'DEMD'" + ","
-                                        + "'" + site + "'"
-                                        + ")"
-                                        + ";");
-                                 */
-                             }
-                    }  
-                    
-                    
-                    // adjustment for sqlite
-                    for (int z = 0 ; z < a_part.size(); z++) {
-                        int nbr = OVData.getNextNbr("plan");
-                        recnumber++;
-                                    st.executeUpdate("insert into plan_mstr "
-                                        + "(plan_nbr, plan_order, plan_line, plan_part, plan_qty_req, plan_date_create, plan_date_due, plan_type, plan_site ) "
-                                        + " values ( " + "'" + nbr + "'" + ","
-                                        + "'" + a_order.get(z) + "'" + ","
-                                        + "'" + a_line.get(z) + "'" + ","
-                                        + "'" + a_part.get(z) + "'" + ","
-                                        + "'" + a_qty.get(z) + "'" + ","
-                                        + "'" + df.format(cal.getTime()) + "'" + ","
-                                        + "'" + a_duedate.get(z) + "'" + ","
-                                        + "'DEMD'" + ","
-                                        + "'" + site + "'"
-                                        + ")"
-                                        + ";");
-                    }
-                       
-                    
-                  
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-                 
-            }
-            con.close();
+        catch (SQLException s){
+             MainFrame.bslog(s);
+
         }
-        catch (Exception e){
-            MainFrame.bslog(e);
-            
-        }
-        return recnumber;
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+
+    }
+    return recnumber;
+   }
+
+    public static int createPlanFromDemand(String site) {
+
+    int recnumber = 0;
+
+    DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+    Calendar cal = Calendar.getInstance();
+    cal.getTime();
+    int wk = getForecastWeek(cal.getTime());
+    ArrayList<Date> dates = OVData.getForecastDates(String.valueOf(cal.get(Calendar.YEAR)));
+
+
+     try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            Statement st2 = con.createStatement();
+            ResultSet res2 = null;
+           String part = "";
+           String order = "";
+           String line = "";
+           String duedate = "";
+
+           ArrayList a_part = new ArrayList();
+           ArrayList a_order =  new ArrayList();
+           ArrayList a_line =   new ArrayList();
+           ArrayList a_qty =   new ArrayList();
+           ArrayList a_duedate =   new ArrayList();
+
+
+
+            double qty = 0;
+
+             int k = 0;
+
+              res = st.executeQuery("select sod_site, sod_nbr, sod_due_date, sod_part, sod_ord_qty, sod_shipped_qty, sod_line from so_mstr " +
+                      " inner join sod_det on sod_nbr = so_nbr and sod_status = " + "'" + getGlobalProgTag("open") + "'" + " and (sod_ord_qty - sod_shipped_qty) > 0 " +
+                      " inner join item_mstr on it_item = sod_part " +
+                      " where so_site = " + "'" + site + "'" +
+                      " and so_status = " + "'" + getGlobalProgTag("open") + "'" +
+                      " and it_plan = '1' " + 
+                                     ";" );
+                while (res.next()) {
+
+                    // for this part, this site, this order, this line ....see what plan_mstr records exist
+
+                 part = res.getString("sod_part");
+                 order = res.getString("sod_nbr");
+                 line = res.getString("sod_line");
+                 qty = res.getDouble("sod_ord_qty") - res.getDouble("sod_shipped_qty");
+                 duedate = res.getString("sod_due_date");
+                 k = 0;
+
+
+                      res2 = st2.executeQuery("select * from plan_mstr where plan_part = " + "'" + part + "'" +
+                               " AND plan_site = " + "'" + site + "'" + 
+                               " AND plan_order = " + "'" + order + "'" +
+                              " AND plan_line = " + "'" + line + "'" + ";");
+
+                         while (res2.next()) {
+                             k++;
+                         }
+                         if (k == 0) {
+                             a_part.add(part);
+                             a_order.add(order);
+                             a_line.add(line);
+                             a_qty.add(qty);
+                             a_duedate.add(duedate);
+                             /*
+                             recnumber++;
+                                int nbr = OVData.getNextNbr("plan");
+                                st3.executeUpdate("insert into plan_mstr "
+                                    + "(plan_nbr, plan_order, plan_line, plan_part, plan_qty_req, plan_date_create, plan_date_due, plan_type, plan_site ) "
+                                    + " values ( " + "'" + nbr + "'" + ","
+                                    + "'" + order + "'" + ","
+                                    + "'" + line + "'" + ","
+                                    + "'" + part + "'" + ","
+                                    + "'" + qty + "'" + ","
+                                    + "'" + df.format(cal.getTime()) + "'" + ","
+                                    + "'" + duedate + "'" + ","
+                                    + "'DEMD'" + ","
+                                    + "'" + site + "'"
+                                    + ")"
+                                    + ";");
+                             */
+                         }
+                }  
+
+
+                // adjustment for sqlite
+                for (int z = 0 ; z < a_part.size(); z++) {
+                    int nbr = OVData.getNextNbr("plan");
+                    recnumber++;
+                                st.executeUpdate("insert into plan_mstr "
+                                    + "(plan_nbr, plan_order, plan_line, plan_part, plan_qty_req, plan_date_create, plan_date_due, plan_type, plan_site ) "
+                                    + " values ( " + "'" + nbr + "'" + ","
+                                    + "'" + a_order.get(z) + "'" + ","
+                                    + "'" + a_line.get(z) + "'" + ","
+                                    + "'" + a_part.get(z) + "'" + ","
+                                    + "'" + a_qty.get(z) + "'" + ","
+                                    + "'" + df.format(cal.getTime()) + "'" + ","
+                                    + "'" + a_duedate.get(z) + "'" + ","
+                                    + "'DEMD'" + ","
+                                    + "'" + site + "'"
+                                    + ")"
+                                    + ";");
+                }
+
+
+
        }
-       
-       
+        catch (SQLException s){
+             MainFrame.bslog(s);
+
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+
+    }
+    return recnumber;
+   }
+  
     public static ArrayList getForecastDates(String year) {
         ArrayList<Date> fctdates = new ArrayList<Date>();
         Calendar cal = Calendar.getInstance();
@@ -19994,7 +19938,7 @@ MainFrame.bslog(e);
         return fctdates;
     }
   
-     public static void createClockRecord66(String empnbr, Date clockdate, String start, String end) {
+    public static void createClockRecord66(String empnbr, Date clockdate, String start, String end) {
        
          DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
          DateFormat dt = new SimpleDateFormat("HH:mm");
@@ -20033,12 +19977,11 @@ MainFrame.bslog(e);
        
     }
     
-     
-     public static double degreesToRadians(double degrees) {
+    public static double degreesToRadians(double degrees) {
          return degrees * Math.PI / 180;
      }
      
-     public static double calcDistanceBetweenTwoLatLon(double lat1, double lon1, double lat2, double lon2) {
+    public static double calcDistanceBetweenTwoLatLon(double lat1, double lon1, double lat2, double lon2) {
          
          double earthradiusKM = 6371;
          
@@ -20056,94 +19999,93 @@ MainFrame.bslog(e);
          
      }
     
-          public static ArrayList getClockCodes() {
-        ArrayList<String> mylist = new ArrayList<String>();
-              
-        try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-               
-                  res = st.executeQuery("select clc_code from clock_code order by clc_code;" );
-                    while (res.next()) {
-                        mylist.add(res.getString("clc_code"));
-                    }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-                 
+    public static ArrayList getClockCodes() {
+ArrayList<String> mylist = new ArrayList<String>();
+
+try{
+
+    Connection con = DriverManager.getConnection(url + db, user, pass);
+    try{
+        Statement st = con.createStatement();
+        ResultSet res = null;
+
+          res = st.executeQuery("select clc_code from clock_code order by clc_code;" );
+            while (res.next()) {
+                mylist.add(res.getString("clc_code"));
             }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-            
-        }
-        return mylist;
-        
-         }
-    
-     
-           public static ArrayList getClockCodesAndDesc() {
-        ArrayList<String> mylist = new ArrayList<String>();
-              
-        try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-               
-                  res = st.executeQuery("select clc_code, clc_desc from clock_code order by clc_code;" );
-                    while (res.next()) {
-                        mylist.add(res.getString("clc_code") + "," + res.getString("clc_desc"));
-                    }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-                 
+   }
+    catch (SQLException s){
+         MainFrame.bslog(s);
+
+    }
+    con.close();
+}
+catch (Exception e){
+    MainFrame.bslog(e);
+
+}
+return mylist;
+
+ }
+
+    public static ArrayList getClockCodesAndDesc() {
+ArrayList<String> mylist = new ArrayList<String>();
+
+try{
+
+    Connection con = DriverManager.getConnection(url + db, user, pass);
+    try{
+        Statement st = con.createStatement();
+        ResultSet res = null;
+
+          res = st.executeQuery("select clc_code, clc_desc from clock_code order by clc_code;" );
+            while (res.next()) {
+                mylist.add(res.getString("clc_code") + "," + res.getString("clc_desc"));
             }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-            
-        }
-        return mylist;
-        
-         }
-           
-                   public static ArrayList getEmployeeIDAndName() {
-        ArrayList<String> mylist = new ArrayList<String>();
-              
-        try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-               
-                  res = st.executeQuery("select emp_nbr, emp_lname, emp_fname from emp_mstr order by emp_nbr;" );
-                    while (res.next()) {
-                        mylist.add(res.getString("emp_nbr") + "," + res.getString("emp_fname") + " " + res.getString("emp_lname"));
-                    }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-                 
+   }
+    catch (SQLException s){
+         MainFrame.bslog(s);
+
+    }
+    con.close();
+}
+catch (Exception e){
+    MainFrame.bslog(e);
+
+}
+return mylist;
+
+ }
+
+    public static ArrayList getEmployeeIDAndName() {
+ArrayList<String> mylist = new ArrayList<String>();
+
+try{
+
+    Connection con = DriverManager.getConnection(url + db, user, pass);
+    try{
+        Statement st = con.createStatement();
+        ResultSet res = null;
+
+          res = st.executeQuery("select emp_nbr, emp_lname, emp_fname from emp_mstr order by emp_nbr;" );
+            while (res.next()) {
+                mylist.add(res.getString("emp_nbr") + "," + res.getString("emp_fname") + " " + res.getString("emp_lname"));
             }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-            
-        }
-        return mylist;
-        
-         }
-          
+   }
+    catch (SQLException s){
+         MainFrame.bslog(s);
+
+    }
+    con.close();
+}
+catch (Exception e){
+    MainFrame.bslog(e);
+
+}
+return mylist;
+
+ }
+
     public static boolean isClockRecord(String empnbr, Date clockdate) {
         boolean myreturn = false;
          DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
@@ -20174,7 +20116,7 @@ MainFrame.bslog(e);
         return myreturn;
     }
     
-     public static boolean isClockScanCard() {
+    public static boolean isClockScanCard() {
          boolean myreturn = false;
          try {
 
@@ -20200,7 +20142,7 @@ MainFrame.bslog(e);
          return myreturn;
      }
     
-     public static java.util.Date getPayWindowForSalary(String frequency, java.util.Date weeklyPayDate) {
+    public static java.util.Date getPayWindowForSalary(String frequency, java.util.Date weeklyPayDate) {
         java.util.Date r = null;
         
         java.util.Date now = new java.util.Date();
@@ -20227,12 +20169,11 @@ MainFrame.bslog(e);
          return r;
      }
      
-     public static long getDifferenceDays(Date d1, Date d2) {
+    public static long getDifferenceDays(Date d1, Date d2) {
        long diff = d2.getTime() - d1.getTime();
        return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
     }
      
-    
     public static double calcClockHours(String indate, String intime, String outdate, String outtime) {
        
         // lets trim off millisecs from intime and outtime if exists
@@ -20265,7 +20206,7 @@ MainFrame.bslog(e);
         return quarterhour;
     }
     
-     public static String getShiftClockForThisDay(String shift, int day) {
+    public static String getShiftClockForThisDay(String shift, int day) {
         String myreturn = "";
         try{
             
@@ -20318,7 +20259,7 @@ MainFrame.bslog(e);
         return myreturn;
     }
     
-     public static boolean shouldClock(String shift, int day) {
+    public static boolean shouldClock(String shift, int day) {
         boolean myreturn = false;
         try{
             
@@ -20375,8 +20316,7 @@ MainFrame.bslog(e);
         return myreturn;
     }
     
-     
-     public static void autoclock(int days) {
+    public static void autoclock(int days) {
          
          
          // return if days is not negative

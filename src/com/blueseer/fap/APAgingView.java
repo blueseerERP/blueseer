@@ -513,7 +513,7 @@ public class APAgingView extends javax.swing.JPanel {
         
         ddfromvend.removeAllItems();
         ddtovend.removeAllItems();
-        ArrayList vends = OVData.getvendmstrlist();
+        ArrayList vends = OVData.getVendMstrList();
         for (int i = 0; i < vends.size(); i++) {
             ddfromvend.addItem(vends.get(i));
         }
@@ -833,7 +833,7 @@ try {
                     tovend = ddtovend.getSelectedItem().toString();
                 }
                 
-                 ArrayList vends = OVData.getvendmstrlistBetween(fromvend, tovend);
+                 ArrayList vends = OVData.getVendMstrListBetween(fromvend, tovend);
                  
                 
                  for (int j = 0; j < vends.size(); j++) {

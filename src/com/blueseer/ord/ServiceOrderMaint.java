@@ -39,7 +39,9 @@ import com.blueseer.ord.ordData.svd_det;
 import static com.blueseer.ord.ordData.updateServiceOrderTransaction;
 import com.blueseer.shp.shpData;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
@@ -336,7 +338,6 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
         myorddetmodel.addTableModelListener(ml);
          
         ddtype.setSelectedIndex(0);
-        ddstatus.setSelectedIndex(0);
         
         ddsite.removeAllItems();
         ArrayList<String> site = OVData.getSiteList();
@@ -728,7 +729,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
     public void itemChangeEvent(String myitem) {
           
          lbdesc.setText(invData.getItemDesc(dditem.getSelectedItem().toString()));
-         tbprice.setText(BlueSeerUtils.bsformat("",String.valueOf(invData.getItemPOSPrice(dditem.getSelectedItem().toString())),"2"));
+         tbprice.setText(BlueSeerUtils.bsformat("",String.valueOf(invData.getItemPOSPrice(dditem.getSelectedItem().toString())).replace('.', defaultDecimalSeparator),"2"));
          dduom.setSelectedItem(OVData.getUOMFromItemSite(myitem, ddsite.getSelectedItem().toString()));
      }
      
@@ -866,18 +867,18 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
         double qty = 0;
          for (int j = 0; j < orddet.getRowCount(); j++) {
              if (!orddet.getValueAt(j, 5).toString().isEmpty())
-             qty = qty + Double.valueOf(orddet.getValueAt(j, 5).toString()); 
+             qty = qty + bsParseDouble(orddet.getValueAt(j, 5).toString()); 
          }
-         tbtotqty.setText(String.valueOf(qty));
+         tbtotqty.setText(currformatDouble(qty));
     }
     
     public void setTotalPrice() {
         double qty = 0;
          for (int j = 0; j < orddet.getRowCount(); j++) {
              if (!orddet.getValueAt(j, 6).toString().isEmpty() && !orddet.getValueAt(j, 5).toString().isEmpty())
-             qty = qty + ( Double.valueOf(orddet.getValueAt(j, 5).toString()) * Double.valueOf(orddet.getValueAt(j, 6).toString())); 
+             qty = qty + ( bsParseDouble(orddet.getValueAt(j, 5).toString()) * bsParseDouble(orddet.getValueAt(j, 6).toString())); 
          }
-         tbtotdollars.setText(BlueSeerUtils.bsformat("",String.valueOf(qty),"2"));
+         tbtotdollars.setText(currformatDouble(qty));
     }
     
     public Integer getmaxline() {
@@ -1661,7 +1662,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
          boolean canproceed = true;
         int line = 0;
         double qty = 0;
-        double price = 0.00;
+        double price = 0;
         orddet.setModel(myorddetmodel);
         line = getmaxline();
         line++;
@@ -1670,12 +1671,12 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
             if (tbhours.getText().isEmpty()) { 
                 qty = 0; 
             } else {
-                qty = Double.valueOf(tbhours.getText());
+                qty = bsParseDouble(tbhours.getText());
             }
             if (tbserviceprice.getText().isEmpty()) { 
-                price = 0.00; 
+                price = 0; 
             } else {
-                price = Double.valueOf(tbserviceprice.getText()); 
+                price = bsParseDouble(tbserviceprice.getText()); 
             }
         } else {
             
@@ -1686,12 +1687,12 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
             if (tbqty.getText().isEmpty()) { 
                 qty = 0; 
             } else {
-                qty = Double.valueOf(tbqty.getText());
+                qty = bsParseDouble(tbqty.getText());
             }
             if (tbprice.getText().isEmpty()) { 
-                price = 0.00; 
+                price = 0; 
             } else {
-                price = Double.valueOf(tbprice.getText()); 
+                price = bsParseDouble(tbprice.getText()); 
             }
         }
         
@@ -1703,11 +1704,11 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
          if (rbservice.isSelected()) {
            myorddetmodel.addRow(new Object[]{line, serviceitem.getText(), 
                "S", "", tbkey.getText(),  String.valueOf(qty), 
-              BlueSeerUtils.bsformat("",String.valueOf(price),"2"), "EA"}); 
+              String.valueOf(price).replace('.', defaultDecimalSeparator), "EA"}); 
          } else {
           myorddetmodel.addRow(new Object[]{line, dditem.getSelectedItem().toString(), 
-             "I", lbdesc.getText(), tbkey.getText(),  String.valueOf(qty), 
-             BlueSeerUtils.bsformat("",String.valueOf(price),"2"), dduom.getSelectedItem().toString()});
+             "I", lbdesc.getText(), tbkey.getText(),  String.valueOf(qty).replace('.', defaultDecimalSeparator), 
+             String.valueOf(price).replace('.', defaultDecimalSeparator), dduom.getSelectedItem().toString()});
          }
          
          setTotalHours();

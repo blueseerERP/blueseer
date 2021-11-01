@@ -528,6 +528,7 @@ public class invData {
     }
 
 
+    /* misc functions */
     public static ArrayList getItemListFromCustCode(String cust) {
         ArrayList myarray = new ArrayList();   
         try {

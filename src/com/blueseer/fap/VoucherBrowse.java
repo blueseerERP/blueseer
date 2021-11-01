@@ -306,7 +306,7 @@ public class VoucherBrowse extends javax.swing.JPanel {
         }
         
         ddvendfrom.removeAllItems();
-        ArrayList vends = OVData.getvendmstrlist();
+        ArrayList vends = OVData.getVendMstrList();
         for (Object vend : vends) {
             ddvendfrom.addItem(vend);
         }
