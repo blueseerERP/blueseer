@@ -551,16 +551,12 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeer {
      }
     
     public String[] addRecord(String[] key) {
-        String[] m = new String[2];
-        m = addVendMstr(createRecord());
-        initvars(null);
+        String[] m = addVendMstr(createRecord());
         return m;   
     }
     
     public String[] updateRecord(String[] key) {
-        String[] m = new String[2];
-        m = updateVendMstr(createRecord());
-        initvars(null);
+        String[] m = updateVendMstr(createRecord());
         return m;   
     }
     

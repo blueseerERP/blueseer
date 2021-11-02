@@ -546,7 +546,6 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeer {
          m = new String[] {"0",getMessageTag(1125)};
      }
     }
-    initvars(null);
     return m;
     }
     

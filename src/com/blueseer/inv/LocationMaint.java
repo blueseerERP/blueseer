@@ -30,6 +30,9 @@ import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
+import static com.blueseer.inv.invData.addLocationMstr;
+import com.blueseer.inv.invData.loc_mstr;
+import static com.blueseer.inv.invData.updateLocationMstr;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -370,97 +373,12 @@ public class LocationMaint extends javax.swing.JPanel implements IBlueSeer {
     }
     
     public String[] addRecord(String[] x) {
-     String[] m = new String[2];
-     
-     try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            Statement st = bsmf.MainFrame.con.createStatement();
-            ResultSet res = null;
-            try {
-                boolean proceed = true;
-                int i = 0;
-                
-                proceed = validateInput("addRecord");
-                
-                if (proceed) {
-
-                    res = st.executeQuery("SELECT loc_loc FROM  loc_mstr where loc_loc = " + "'" + x[0] + "'" + ";");
-                    while (res.next()) {
-                        i++;
-                    }
-                    if (i == 0) {
-                        st.executeUpdate("insert into loc_mstr "
-                            + "(loc_loc, loc_desc, loc_site, loc_wh, loc_active ) "
-                            + " values ( " + "'" + tbkey.getText().toString() + "'" + ","
-                            + "'" + tbdesc.getText().toString() + "'" + ","
-                            + "'" + ddsite.getSelectedItem().toString() + "'" + ","
-                            + "'" + ddwh.getSelectedItem().toString() + "'" + ","
-                            + "'" + BlueSeerUtils.boolToInt(cbactive.isSelected()) + "'"
-                            + ")"
-                            + ";");
-                        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
-                    } else {
-                       m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists}; 
-                    }
-
-                   initvars(null);
-                   
-                } // if proceed
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                 m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};  
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-             m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1020, Thread.currentThread().getStackTrace()[1].getMethodName())};
-        }
-     
+     String[] m = addLocationMstr(createRecord());
      return m;
      }
      
     public String[] updateRecord(String[] x) {
-     String[] m = new String[2];
-     
-     try {
-            boolean proceed = true;
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            Statement st = bsmf.MainFrame.con.createStatement();
-            ResultSet res = null;
-            try {
-                   
-               proceed = validateInput("updateRecord");
-                
-                if (proceed) {
-                    st.executeUpdate("update loc_mstr set loc_desc = " + "'" + tbdesc.getText() + "'" + ","
-                            + "loc_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + ","
-                            + "loc_wh = " + "'" + ddwh.getSelectedItem().toString() + "'" + ","
-                            + "loc_active = " + "'" + BlueSeerUtils.boolToInt(cbactive.isSelected()) + "'"
-                            + " where loc_loc = " + "'" + tbkey.getText() + "'"                             
-                            + ";");
-                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
-                    initvars(null);
-                } 
-         
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};  
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1020, Thread.currentThread().getStackTrace()[1].getMethodName())};
-        }
-     
+     String[] m = updateLocationMstr(createRecord());
      return m;
      }
      
@@ -537,6 +455,18 @@ public class LocationMaint extends javax.swing.JPanel implements IBlueSeer {
         }
       return m;
     }
+    
+     public loc_mstr createRecord() {
+        loc_mstr x = new loc_mstr(null, 
+           tbkey.getText(),
+           tbdesc.getText(),
+           ddsite.getSelectedItem().toString(),
+           ddwh.getSelectedItem().toString(),
+           String.valueOf(BlueSeerUtils.boolToInt(cbactive.isSelected()))
+        );
+        return x;
+    }
+    
     
     public void lookUpFrame() {
         

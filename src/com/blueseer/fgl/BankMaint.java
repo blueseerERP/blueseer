@@ -390,7 +390,7 @@ public class BankMaint extends javax.swing.JPanel implements IBlueSeerT {
                 tbroute.getText().toString(),
                 tbassignedID.getText().toString(),
                 ddcurr.getSelectedItem().toString(),
-                BlueSeerUtils.boolToInt(cbactive.isSelected())
+                String.valueOf(BlueSeerUtils.boolToInt(cbactive.isSelected()))
                 );
         return x;
     }

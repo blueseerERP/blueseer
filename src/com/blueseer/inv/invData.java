@@ -527,6 +527,60 @@ public class invData {
         return m;
     }
 
+    public static String[] addLocationMstr(loc_mstr x) {
+        String[] m = new String[2];
+        String sqlSelect = "SELECT * FROM  loc_mstr where loc_loc = ?";
+        String sqlInsert = "insert into loc_mstr (loc_loc, loc_desc, loc_site, "
+                        + " loc_wh, loc_active ) "
+                        + " values (?,?,?,?,?); "; 
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+             PreparedStatement ps = con.prepareStatement(sqlSelect);) {
+             ps.setString(1, x.loc_loc);
+          try (ResultSet res = ps.executeQuery();
+               PreparedStatement psi = con.prepareStatement(sqlInsert);) {  
+            if (! res.isBeforeFirst()) {
+            psi.setString(1, x.loc_loc);
+            psi.setString(2, x.loc_desc);
+            psi.setString(3, x.loc_site);
+            psi.setString(4, x.loc_wh);
+            psi.setString(5, x.loc_active);
+            int rows = psi.executeUpdate();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+            } else {
+            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists};    
+            }
+          } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+          }
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+
+    public static String[] updateLocationMstr(loc_mstr x) {
+        String[] m = new String[2];
+        String sql = "update loc_mstr set loc_desc = ?, loc_site = ?, "
+                        + " loc_wh = ?, loc_active = ? " 
+                        + " where loc_loc = ? ;"; 
+         try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(5, x.loc_loc);
+            ps.setString(1, x.loc_desc);
+            ps.setString(2, x.loc_site);
+            ps.setString(3, x.loc_wh);
+            ps.setString(4, x.loc_active);
+            int rows = ps.executeUpdate();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+
 
     /* misc functions */
     public static ArrayList getItemListFromCustCode(String cust) {
@@ -2559,7 +2613,7 @@ public class invData {
     }
      
      
-     public record wc_mstr(String[] m, String wc_cell, String wc_desc,
+    public record wc_mstr(String[] m, String wc_cell, String wc_desc,
         String wc_site, String wc_cc, String wc_run_rate, String wc_setup_rate,
         String wc_bdn_rate, String wc_run_crew, String wc_setup, String wc_remarks) {
         public wc_mstr(String[] m) {
@@ -2567,5 +2621,10 @@ public class invData {
         }
     }
      
-    
+    public record loc_mstr(String[] m, String loc_loc, String loc_desc, String loc_site, 
+        String loc_wh, String loc_active) {
+        public loc_mstr(String[] m) {
+            this(m, "", "", "", "", "");
+        }
+    }
 }

@@ -431,16 +431,12 @@ public class SiteMaint extends javax.swing.JPanel implements IBlueSeer {
     }
     
     public String[] addRecord(String[] x) {
-     String[] m = new String[2];
-     m = addSiteMstr(createRecord());
-     initvars(null);
+     String[] m = addSiteMstr(createRecord());
      return m;
     }
     
     public String[] updateRecord(String[] x) {
-     String[] m = new String[2];
-     m = updateSiteMstr(createRecord());
-     initvars(null);
+     String[] m = updateSiteMstr(createRecord());
      return m;
     }
     

@@ -369,14 +369,12 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
         } else { 
         m = addCustomerTransaction(createRecord(), contacts, null);    
         }   
-        initvars(null);
         return m;   
     }
     
     public String[] updateRecord(String[] x) {
         String[] m = new String[2];
         m = updateCustMstr(createRecord());
-        initvars(null);
         return m;   
      }
      

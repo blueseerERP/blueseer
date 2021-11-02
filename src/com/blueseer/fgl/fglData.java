@@ -69,7 +69,7 @@ public class fglData {
             psi.setString(2, x.desc);
             psi.setString(3, x.type);
             psi.setString(4, x.currency);
-            psi.setInt(5, x.cbdisplay);
+            psi.setString(5, x.cbdisplay);
             int rows = psi.executeUpdate();
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
             } else {
@@ -95,7 +95,7 @@ public class fglData {
         ps.setString(1, x.desc);
         ps.setString(2, x.type);
         ps.setString(3, x.currency);
-        ps.setInt(4, x.cbdisplay);
+        ps.setString(4, x.cbdisplay);
         ps.setString(5, x.id);
         int rows = ps.executeUpdate();
         m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
@@ -139,7 +139,7 @@ public class fglData {
                             res.getString("ac_desc"),
                             res.getString("ac_type"),
                             res.getString("ac_cur"),
-                            res.getInt("ac_display")
+                            res.getString("ac_display")
                         );
                     }
                 }
@@ -169,7 +169,7 @@ public class fglData {
             psi.setString(3, x.desc);
             psi.setString(4, x.account);
             psi.setString(5, x.currency);
-            psi.setInt(6, x.cbactive);
+            psi.setString(6, x.cbactive);
             psi.setString(7, x.routing);
             psi.setString(8, x.assignedID);
             int rows = psi.executeUpdate();
@@ -198,7 +198,7 @@ public class fglData {
             ps.setString(2, x.desc);
             ps.setString(3, x.account);
             ps.setString(4, x.currency);
-            ps.setInt(5, x.cbactive);
+            ps.setString(5, x.cbactive);
             ps.setString(6, x.routing);
             ps.setString(7, x.assignedID);
             ps.setString(8, x.id);
@@ -247,7 +247,7 @@ public class fglData {
                             res.getString("bk_route"),
                             res.getString("bk_assignID"),
                             res.getString("bk_cur"),    
-                            res.getInt("bk_active")
+                            res.getString("bk_active")
                         );
                     }
                 }
@@ -2084,15 +2084,15 @@ public class fglData {
     
     
     
-    public record AcctMstr(String[] m, String id, String desc, String type, String currency, int cbdisplay) {
+    public record AcctMstr(String[] m, String id, String desc, String type, String currency, String cbdisplay) {
         public AcctMstr(String[] m) {
-            this(m, "", "", "", "", 0);
+            this(m, "", "", "", "", "0");
         }
     }
     
-    public record BankMstr(String[] m, String id, String site, String desc, String account, String routing, String assignedID, String currency, int cbactive) {
+    public record BankMstr(String[] m, String id, String site, String desc, String account, String routing, String assignedID, String currency, String cbactive) {
         public BankMstr(String[] m) {
-            this(m, "", "", "", "", "", "", "", 0);
+            this(m, "", "", "", "", "", "", "", "0");
         }
     }
     

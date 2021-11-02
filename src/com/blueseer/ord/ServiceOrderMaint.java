@@ -547,8 +547,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
     }
     
     public String[] addRecord(String[] x) {
-     String[] m = new String[2];
-     m = addServiceOrderTransaction(createDetRecord(), createRecord());
+     String[] m = addServiceOrderTransaction(createDetRecord(), createRecord());
      return m;
     } 
     

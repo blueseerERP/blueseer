@@ -509,8 +509,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeer {
     }
         
     public String[] addRecord(String[] x) {
-     String[] m = new String[2];
-     m = addPOTransaction(createDetRecord(), createRecord());
+     String[] m = addPOTransaction(createDetRecord(), createRecord());
      return m;
      } 
       

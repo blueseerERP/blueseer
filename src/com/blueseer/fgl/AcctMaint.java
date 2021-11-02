@@ -383,22 +383,18 @@ public class AcctMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 tbdesc.getText().toUpperCase(),
                 ddtype.getSelectedItem().toString(),
                 ddcur.getSelectedItem().toString(),
-                BlueSeerUtils.boolToInt(cbdisplay.isSelected())
+                String.valueOf(BlueSeerUtils.boolToInt(cbdisplay.isSelected()))
                 );
         return x;
     }
        
     public String[] addRecord(String[] key) {
-         String[] m = new String[2];
-         m = addAcctMstr(createRecord());
-         initvars(null);
+         String[] m = addAcctMstr(createRecord());
          return m;
     }
         
     public String[] updateRecord(String[] key) {
-         String[] m = new String[2];
-         m = updateAcctMstr(createRecord());
-         initvars(null);
+         String[] m = updateAcctMstr(createRecord());
          return m;
     }
     

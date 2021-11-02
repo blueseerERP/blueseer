@@ -538,16 +538,12 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
             }
           // now add item cost record for later use
           OVData.addItemCostRec(tbkey.getText(), ddsite.getSelectedItem().toString(), "standard", mtlcost, ovhcost, outcost, (mtlcost + ovhcost + outcost));
-                        
-         initvars(null);
-         return m;
+        return m;
        
      }
    
     public String[] updateRecord(String[] x) {
-      String[] m = new String[2];
-         m = updateItemMstr(createRecord());
-         initvars(null);
+      String[] m = updateItemMstr(createRecord());
          return m;
     }
     

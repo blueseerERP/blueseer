@@ -468,7 +468,7 @@ public class WorkCenterMaint extends javax.swing.JPanel implements IBlueSeer {
             tbbdnrate.getText().replace(defaultDecimalSeparator, '.'),    
             tbruncrewsize.getText().replace(defaultDecimalSeparator, '.'),
             tbsetupcrewsize.getText().replace(defaultDecimalSeparator, '.'),
-            tarmks.getText() + "'"      
+            tarmks.getText()  
         );
         return x;
     }
