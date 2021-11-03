@@ -11341,8 +11341,9 @@ return mystring;
           13=PackCell
           14=packdate
           15=assydate
-          16=program
-          17=warehouse
+          16=expiredate
+          17=program
+          18=warehouse
           
           */
           
@@ -11384,6 +11385,7 @@ return mystring;
                 String _packcell = "";
                 String _packdate = "";
                 String _assydate = "";
+                String _expiredate = "";
                 String _program = "";
                 
                 // added later
@@ -11409,8 +11411,8 @@ return mystring;
               _packcell = mytable.getValueAt(i, 13).toString();
                _packdate = mytable.getValueAt(i, 14).toString();
                _assydate = mytable.getValueAt(i, 15).toString();
-               _assydate = mytable.getValueAt(i, 15).toString();
-               _program = mytable.getValueAt(i,16).toString();
+               _expiredate = mytable.getValueAt(i, 16).toString();
+               _program = mytable.getValueAt(i,17).toString();
                // defaults to baseqty
                _baseqty = _qty;
                _uom = OVData.getUOMFromItemSite(_part, _site);
@@ -11456,7 +11458,7 @@ return mystring;
               if (dbtype.equals("sqlite")) {    
               st.executeUpdate("insert into tran_mstr "
                         + "(tr_part, tr_type, tr_op, tr_qty, tr_base_qty, tr_uom, tr_cost, tr_eff_date, tr_loc, tr_wh, "
-                        + "tr_serial, tr_ref, tr_site, tr_userid, tr_prodline, tr_export, tr_actcell, tr_rmks, tr_pack, tr_assy_date, tr_pack_date, tr_ent_date, tr_program )"
+                        + "tr_serial, tr_ref, tr_site, tr_userid, tr_prodline, tr_export, tr_expire, tr_actcell, tr_rmks, tr_pack, tr_assy_date, tr_pack_date, tr_ent_date, tr_program )"
                         + " values ( " + "'" + _part + "'" + ","
                         + "'" + temptype + "'" + ","
                         + "'" + _op + "'" + ","
@@ -11473,6 +11475,7 @@ return mystring;
                         + "'" + _userid + "'" + ","
                         + "'" + _prodline + "'" + ","
                         + "'0'" + ","
+                        + "'" + _expiredate + "'" + ","
                         + "'" + _assycell + "'" + ","
                         + "'" + _remarks + "'" + ","
                         + "'" + _packcell + "'" + ","
@@ -11485,7 +11488,7 @@ return mystring;
               } else {
                   st.executeUpdate("insert into tran_mstr "
                         + "(tr_part, tr_type, tr_op, tr_qty, tr_base_qty, tr_uom, tr_cost, tr_eff_date, tr_loc, tr_wh, "
-                        + "tr_serial, tr_ref, tr_site, tr_userid, tr_prodline, tr_export, tr_actcell, tr_rmks, tr_pack, tr_assy_date, tr_pack_date, tr_ent_date, tr_program )"
+                        + "tr_serial, tr_ref, tr_site, tr_userid, tr_prodline, tr_export, tr_expire, tr_actcell, tr_rmks, tr_pack, tr_assy_date, tr_pack_date, tr_ent_date, tr_program )"
                         + " values ( " + "'" + _part + "'" + ","
                         + "'" + temptype + "'" + ","
                         + "'" + _op + "'" + ","
@@ -11502,7 +11505,8 @@ return mystring;
                         + "'" + _userid + "'" + ","
                         + "'" + _prodline + "'" + ","
                         + "'0'" + ","
-                        + "'" + _assycell + "'" + ","
+                        + "'" + _expiredate + "'" + ","
+                        + "'" + _assycell + "'" + ","         
                         + "'" + _remarks + "'" + ","
                         + "'" + _packcell + "'" + ","
                         +  _assydate + ","
@@ -11527,7 +11531,7 @@ return mystring;
                   /* if this is last op... */
                   /* adjust inventory for this part FG being produced ...if last OP */
                   if (islastop) {
-                     OVData.UpdateInventoryDiscrete(_part, _site, _loc, _wh, "", "", _qty);
+                     OVData.UpdateInventoryDiscrete(_part, _site, _loc, _wh, _serial, _expiredate, _qty);
                      double cost = (invData.getItemCost(_part, "standard", _site) * _qty);
                      OVData.wip_to_fg(_part, _site, cost, _date, mytrkey, "RCT-FG", _remarks);
                   }

@@ -27,6 +27,7 @@ SOFTWARE.
 package com.blueseer.prd;
 
 import static bsmf.MainFrame.tags;
+import com.blueseer.inv.invData;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
@@ -215,7 +216,9 @@ public class ReworkMaint extends javax.swing.JPanel {
                 getGlobalColumnTag("cell"), 
                 getGlobalColumnTag("packdate"), 
                 getGlobalColumnTag("assydate"), 
-                getGlobalColumnTag("program")
+                getGlobalColumnTag("expiredate"),
+                getGlobalColumnTag("program"),
+                getGlobalColumnTag("warehouse")                    
             })    {
     @Override
     public boolean isCellEditable(int row, int column) {
@@ -516,7 +519,10 @@ public class ReworkMaint extends javax.swing.JPanel {
             op = ddop.getSelectedItem().toString();
         } 
         
-        String loc = OVData.getLocationByPart(tbpart.getText());
+        String[] detail = invData.getItemDetail(tbpart.getText());
+        String loc = detail[8];
+        String wh = detail[9];
+        String expire = detail[10];
         
         if (canproceed) {
             transmodel.addRow(new Object[]{tbpart.getText().toString(),
@@ -535,7 +541,9 @@ public class ReworkMaint extends javax.swing.JPanel {
                 "",  // pack station
                 "", // pack date
                 "", // assembly date
-                "ReworkMaint"
+                expire,
+                "ReworkMaint",
+                wh
             });
         }
         tbpart.requestFocus();

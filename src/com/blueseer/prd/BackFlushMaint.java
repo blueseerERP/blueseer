@@ -26,6 +26,7 @@ SOFTWARE.
 package com.blueseer.prd;
 
 import static bsmf.MainFrame.tags;
+import com.blueseer.inv.invData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -70,7 +71,9 @@ public class BackFlushMaint extends javax.swing.JPanel {
                 getGlobalColumnTag("cell"), 
                 getGlobalColumnTag("packdate"), 
                 getGlobalColumnTag("assydate"), 
-                getGlobalColumnTag("program")
+                getGlobalColumnTag("expiredate"), 
+                getGlobalColumnTag("program"),
+                getGlobalColumnTag("warehouse")
             });
     
     
@@ -422,7 +425,10 @@ public class BackFlushMaint extends javax.swing.JPanel {
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
         boolean canproceed = true;
         String prodline = "";
-        String loc = OVData.getLocationByPart(tbpart.getText());
+        String[] detail = invData.getItemDetail(tbpart.getText());
+        String loc = detail[8];
+        String wh = detail[9];
+        String expire = detail[10];
        
         transtable.setModel(transmodel);
         
@@ -452,7 +458,14 @@ public class BackFlushMaint extends javax.swing.JPanel {
                 tbsite.getText(),
                 tbuser.getText(),
                 prodline,
-                ddcell.getSelectedItem().toString(), "", "", "", "", "BackFlushMaint" });
+                ddcell.getSelectedItem().toString(), 
+                "", // remarks
+                "", // packcell
+                "", // packdate
+                "", // assydate
+                expire, 
+                "BackFlushMaint", 
+                wh });
         }
         ddop.removeAllItems();
         tbpart.setText("");

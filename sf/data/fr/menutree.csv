@@ -180,7 +180,7 @@ ProductionMenu,ProdEntryMaint,1,JMenuItem,Entrée de la production,,,,1,1
 ProductionMenu,ProdEntryByPlan,2,JMenuItem,Saisie de la production par plan,,,,1,1
 ProductionMenu,OEEEntry,3,JMenuItem,Entrée TRS,,,,1,1
 ProductionMenu,ProductionReports,4,JMenu,Rapports de production,,,,1,1
-ProductionReports,ProdRptDet,1,JMenuItem,Détail du rapport de production,,1,,1,1
+ProductionReports,ProdDetRpt,1,JMenuItem,Détail du rapport de production,,1,,1,1
 ProductionReports,ProdByWeekFGUnits,2,JMenuItem,Unités de production hebdomadaires de FG (BarChart),,1,,1,1
 ProductionReports,ProdByWeekFGDollars,3,JMenuItem,Dollars de production FG hebdomadaires (Bar Chart),,1,,1,1
 ScrapMenu,ScrapEntry,1,JMenuItem,Entrée de ferraille,,,,1,1

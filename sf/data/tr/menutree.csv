@@ -180,7 +180,7 @@ ProductionMenu,ProdEntryMaint,1,JMenuItem,Üretim Girişi,,,,1,1
 ProductionMenu,ProdEntryByPlan,2,JMenuItem,Plana Göre Üretim Girişi,,,,1,1
 ProductionMenu,OEEEntry,3,JMenuItem,OEE Girişi,,,,1,1
 ProductionMenu,ProductionReports,4,JMenu,Üretim Raporları,,,,1,1
-ProductionReports,ProdRptDet,1,JMenuItem,Üretim Raporu Detayı,,1,,1,1
+ProductionReports,ProdDetRpt,1,JMenuItem,Üretim Raporu Detayı,,1,,1,1
 ProductionReports,ProdByWeekFGUnits,2,JMenuItem,Haftalık FG Üretim Birimleri (BarChart),,1,,1,1
 ProductionReports,ProdByWeekFGDollars,3,JMenuItem,Haftalık FG Üretim Doları (BarChart),,1,,1,1
 ScrapMenu,ScrapEntry,1,JMenuItem,Hurda Girişi,,,,1,1

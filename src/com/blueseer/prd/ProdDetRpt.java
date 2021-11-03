@@ -60,6 +60,7 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.OVData;
@@ -93,7 +94,7 @@ public class ProdDetRpt extends javax.swing.JPanel {
          
         @Override  
           public Class getColumnClass(int col) {  
-            if (col == 2 || col == 3 || col == 4)       
+            if (col == 3 || col == 4)       
                 return Double.class;  
             else return String.class;  //other columns accept String values  
         }  
@@ -114,13 +115,7 @@ public class ProdDetRpt extends javax.swing.JPanel {
 
         Component c = super.getTableCellRendererComponent(table,
                 value, isSelected, hasFocus, row, column);
-
-       
-            if (column == 0)
-            c.setForeground(Color.BLUE);
-            else
                 c.setBackground(table.getBackground());
-       
         return c;
     }
     }
@@ -265,11 +260,6 @@ public class ProdDetRpt extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        tableprod.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tableprodMouseClicked(evt);
-            }
-        });
         jScrollPane1.setViewportView(tableprod);
 
         btexport.setText("Export");
@@ -434,8 +424,7 @@ try {
 
                 int qty = 0;
                 double dol = 0;
-                DecimalFormat df = new DecimalFormat("###,###,###.##", new DecimalFormatSymbols(Locale.US));
-                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 int i = 0;
                 String frompart = "";
                 String topart = "";
@@ -476,14 +465,15 @@ try {
                    
                    
                 ProdDetRpt.MyTableModel mymodel = new ProdDetRpt.MyTableModel(new Object[][]{},
-                        new String[]{getGlobalColumnTag("item"), 
+                        new String[]{
+                            getGlobalColumnTag("id"),
+                            getGlobalColumnTag("item"), 
                             getGlobalColumnTag("class"), 
                             getGlobalColumnTag("quantity"), 
                             getGlobalColumnTag("cost"), 
                             getGlobalColumnTag("operation"), 
-                            getGlobalColumnTag("effdate"),  
+                            getGlobalColumnTag("effectivedate"),  
                             getGlobalColumnTag("cell"),  
-                            getGlobalColumnTag("export"), 
                             getGlobalColumnTag("userid")});
                 tableprod.setModel(mymodel);
                 tableprod.getColumnModel().getColumn(0).setCellRenderer(new ProdDetRpt.SomeRenderer());  
@@ -494,9 +484,9 @@ try {
                  
                  
                   if (ddtype.getSelectedItem().toString().equals("ALL")) {    
-                   res = st.executeQuery("SELECT tr_part,  tr_cost, tr_type, it_code, tr_qty, " +
+                   res = st.executeQuery("SELECT tr_id, tr_part,  tr_cost, tr_type, it_code, tr_qty, " +
                         " tr_op, tr_eff_date, tr_assy_date, tr_ref, tr_actcell, tr_cost, " +
-                         " tr_timestamp, tr_export, tr_userid, tr_pack, tr_pack_date " +
+                         " tr_timestamp, tr_userid, tr_pack, tr_pack_date " +
                         " FROM  tran_mstr inner join item_mstr on it_item = tr_part " +
                         " left outer join itemr_cost on itr_item = tr_part and itr_op = tr_op and itr_routing = it_wf and itr_set = 'standard' and itr_site = it_site " +
                          " left outer join item_cost on itc_item = tr_part and itc_set = 'standard' and itc_site = it_site " +
@@ -509,9 +499,9 @@ try {
                         " AND ( tr_type = 'ISS-WIP' or tr_type = 'RCT-FG') " + 
                         " order by tr_id desc ;");    
                   } else {
-                      res = st.executeQuery("SELECT tr_part,  tr_cost, tr_type, it_code, tr_qty, " +
+                      res = st.executeQuery("SELECT tr_id, tr_part,  tr_cost, tr_type, it_code, tr_qty, " +
                         " tr_op, tr_eff_date, tr_assy_date, tr_ref, tr_actcell, tr_cost, " +
-                         " tr_timestamp, tr_export, tr_userid, tr_pack, tr_pack_date " +
+                         " tr_timestamp, tr_userid, tr_pack, tr_pack_date " +
                         " FROM  tran_mstr inner join item_mstr on it_item = tr_part " +
                         " left outer join itemr_cost on itr_item = tr_part and itr_op = tr_op and itr_routing = it_wf and itr_set = 'standard' and itr_site = it_site " +
                          " left outer join item_cost on itc_item = tr_part and itc_set = 'standard' and itc_site = it_site " +
@@ -530,19 +520,20 @@ try {
                    
                    qty = qty + res.getInt("tr_qty");
                     dol = dol + (res.getDouble("tr_cost") * res.getInt("tr_qty"));
-                         mymodel.addRow(new Object[]{res.getString("tr_part"),
+                         mymodel.addRow(new Object[]{
+                                res.getString("tr_id"),
+                                res.getString("tr_part"),
                                 res.getString("it_code"),
                                 res.getInt("tr_qty"),
                                 res.getDouble("tr_cost"),
                                 res.getInt("tr_op"),
                                 res.getString("tr_eff_date"),
                                 res.getString("tr_actcell"),
-                                res.getString("tr_export"),
                                 res.getString("tr_userid")
                             });
                     
                 }
-                labeldollar.setText(String.valueOf(df.format(dol)));
+                labeldollar.setText(String.valueOf(currformatDouble(dol)));
                 labelcount.setText(String.valueOf(i));
                 labelqty.setText(String.valueOf(qty));
             } catch (SQLException s) {
@@ -667,15 +658,6 @@ try {
             Logger.getLogger(bsmf.MainFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btexportActionPerformed
-
-    private void tableprodMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableprodMouseClicked
-        int row = tableprod.rowAtPoint(evt.getPoint());
-        int col = tableprod.columnAtPoint(evt.getPoint());
-        if ( col == 0) {
-              if (! checkperms("ItemMaint")) { return; }
-                bsmf.MainFrame.reinitpanels("ItemMaint", true, new String[]{tableprod.getValueAt(row, col).toString()});
-        }
-    }//GEN-LAST:event_tableprodMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -15,8 +15,9 @@ InvRptGroup,Informations sur l'article par plage d'articles,iteminfoByItemRange,
 InvRptGroup,Informations sur l'article par gamme ProdLine,itemByProdLineRange,1,L2
 InvRptGroup,Coûts des articles par plage d'articles,itemCostsRange,2,L8
 InvRptGroup,Prix ??de vente de l'article par article,itemCustPriceRange,3,L8
-InvRptGroup,Article QOH par article,itemQOHRange,4,L6
-InvRptGroup,Ordre des allocations par article,itemAllocatedToOrder,5,L7
+InvRptGroup,Article Inventaire par article,itemInventoryRange,4,L7
+InvRptGroup,Article QOH par article,itemQOHRange,5,L6
+InvRptGroup,Ordre des allocations par article,itemAllocatedToOrder,6,L7
 VenRptGroup,Maître du fournisseur par code de vente,vendAddrInfoByRange,0,L8
 VenRptGroup,Coordonnées du fournisseur par code,vendPhoneEmailByRange,1,L8
 VenRptGroup,Informations sur le financement du fournisseur par code,vendFinanceInfoByRange,2,L8

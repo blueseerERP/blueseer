@@ -150,7 +150,7 @@ admin,ProdEntryMaint
 admin,ProdEntryByPlan
 admin,OEEEntry
 admin,ProductionReports
-admin,ProdRptDet
+admin,ProdDetRpt
 admin,ProdByWeekFGUnits
 admin,ProdByWeekFGDollars
 admin,ScrapMenu

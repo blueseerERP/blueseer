@@ -43,6 +43,7 @@ import java.sql.Statement;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Locale;
 import javax.swing.JOptionPane;
 
@@ -1159,6 +1160,113 @@ public class invData {
     return myitem;  
     }
 
+    public static String getItemExpireDate(String item) {
+      String mydate = "";
+    try{
+    Connection con = DriverManager.getConnection(url + db, user, pass);
+    Statement st = con.createStatement();
+    ResultSet res = null;
+    try{
+     
+        res = st.executeQuery("select it_expire from item_mstr where it_item = " + "'" + item + "';" );
+       while (res.next()) {
+        mydate = res.getString("it_expire");                    
+        }
+
+    }
+    catch (SQLException s){
+        MainFrame.bslog(s);
+    } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+          }
+    }
+    catch (Exception e){
+    MainFrame.bslog(e);
+    }
+    return mydate;  
+    }
+
+     public static String getItemExpireDateCalc(String item) {
+      String mydate = "";
+      Calendar caldate = Calendar.getInstance();
+      int days = 0;
+         
+    try{
+    Connection con = DriverManager.getConnection(url + db, user, pass);
+    Statement st = con.createStatement();
+    ResultSet res = null;
+    try{
+     
+        res = st.executeQuery("select it_expiredays from item_mstr where it_item = " + "'" + item + "';" );
+       while (res.next()) {
+           if (res.getString("it_expiredays") != null && ! res.getString("it_expiredays").isEmpty()) {
+            days = res.getInt("it_expiredays");
+           }           
+        }
+       if (days > 0) {
+         caldate.add(Calendar.DATE, days);
+         mydate = BlueSeerUtils.setDateFormat(caldate.getTime());
+       }
+
+    }
+    catch (SQLException s){
+        MainFrame.bslog(s);
+    } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+          }
+    }
+    catch (Exception e){
+    MainFrame.bslog(e);
+    }
+    return mydate;  
+    }
+
+    public static int getItemExpireDays(String item) {
+      int days = 0;
+    try{
+    Connection con = DriverManager.getConnection(url + db, user, pass);
+    Statement st = con.createStatement();
+    ResultSet res = null;
+    try{
+     
+        res = st.executeQuery("select it_expiredays from item_mstr where it_item = " + "'" + item + "';" );
+       while (res.next()) {
+        if (res.getString("it_expiredays") != null && ! res.getString("it_expiredays").isEmpty()) {
+            days = res.getInt("it_expiredays");
+        }                   
+        }
+
+    }
+    catch (SQLException s){
+        MainFrame.bslog(s);
+    } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+          }
+    }
+    catch (Exception e){
+    MainFrame.bslog(e);
+    }
+    return days;  
+    }
+    
     public static String getItemTypeByPart(String mypart) {
     String myitem = "";
     try{
@@ -2035,15 +2143,20 @@ public class invData {
     }
 
     public static String[] getItemDetail(String mypart) {
-           String[] x = new String[]{"","","","","","","","","",""};
-         try{
+           String[] x = new String[]{"","","","","","","","","","",""};
+           int days = 0;
+           Calendar caldate = Calendar.getInstance();
+           try{
             Class.forName(driver).newInstance();
             Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
-                res = st.executeQuery("select it_item, it_desc, it_uom, it_prodline, it_code, it_rev, it_status, it_site, it_loc, it_wh from item_mstr where it_item = " + "'" + mypart.toString() + "';" );
+                res = st.executeQuery("select it_item, it_desc, it_uom, it_prodline, it_code, it_rev, it_status, it_site, it_loc, it_wh, it_expiredays from item_mstr where it_item = " + "'" + mypart.toString() + "';" );
                while (res.next()) {
+                   if (res.getString("it_expiredays") != null && ! res.getString("it_expiredays").isEmpty()) {
+                   days = res.getInt("it_expiredays");
+                   }  
                 x[0] = res.getString("it_item"); 
                 x[1] = res.getString("it_desc"); 
                 x[2] = res.getString("it_uom"); 
@@ -2054,6 +2167,10 @@ public class invData {
                 x[7] = res.getString("it_site"); 
                 x[8] = res.getString("it_loc"); 
                 x[9] = res.getString("it_wh"); 
+                if (days > 0) {
+                  caldate.add(Calendar.DATE, days);
+                  x[10] = BlueSeerUtils.setDateFormat(caldate.getTime());
+                }
                 }
           } catch (SQLException s) {
                 MainFrame.bslog(s);

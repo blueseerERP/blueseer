@@ -232,7 +232,7 @@ ClockChartByWeek,,com.blueseer.utl.ChartView,JMenuItem,clor4
 ClockCode66Browse,,com.blueseer.utl.ReportPanel,JMenuItem,cl66
 OEEEntry,,com.blueseer.prd.OEEEntryMaint,JMenuItem,oeee
 DemdToPlan,,com.blueseer.sch.DemdToPlanMaint,JMenuItem,dm2pl
-ProdRptDet,,com.blueseer.prd.ProdRptDet,JMenuItem,prdr1
+ProdDetRpt,,com.blueseer.prd.ProdDetRpt,JMenuItem,prdr1
 ProdByWeekFGUnits,,com.blueseer.utl.ChartView,JMenuItem,prdr2
 ProdByWeekFGDollars,,com.blueseer.utl.ChartView,JMenuItem,prdr3
 DiscreteOrderPerWeekUnits,,com.blueseer.utl.ChartView,JMenuItem,orc1

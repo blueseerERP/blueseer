@@ -180,7 +180,7 @@ ProductionMenu,ProdEntryMaint,1,JMenuItem,Production Entry,,,,1,1
 ProductionMenu,ProdEntryByPlan,2,JMenuItem,Production Entry By Plan,,,,1,1
 ProductionMenu,OEEEntry,3,JMenuItem,OEE Entry,,,,1,1
 ProductionMenu,ProductionReports,4,JMenu,Production Reports,,,,1,1
-ProductionReports,ProdRptDet,1,JMenuItem,Production Report Detail,,1,,1,1
+ProductionReports,ProdDetRpt,1,JMenuItem,Production Report Detail,,1,,1,1
 ProductionReports,ProdByWeekFGUnits,2,JMenuItem,Weekly FG Production Units (BarChart),,1,,1,1
 ProductionReports,ProdByWeekFGDollars,3,JMenuItem,Weekly FG Production Dollars (BarChart),,1,,1,1
 ScrapMenu,ScrapEntry,1,JMenuItem,Scrap Entry,,,,1,1

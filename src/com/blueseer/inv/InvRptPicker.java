@@ -750,6 +750,114 @@ public class InvRptPicker extends javax.swing.JPanel {
                
     }
    
+     /* Item Inventory range */
+    public void itemInventoryRange (boolean input) {
+        
+        if (input) { // input...draw variable input panel
+           resetVariables();
+           hidePanels();
+           showPanels(new String[]{"tb1"});
+           lbkey1.setText(getClassLabelTag("lblfromitem", this.getClass().getSimpleName()));
+           lbkey2.setText(getClassLabelTag("lbltoitem", this.getClass().getSimpleName()));
+          
+         } else { // output...fill report
+            // colect variables from input
+            String fromitem = tbkey1.getText();
+            String toitem = tbkey2.getText();
+            String site = OVData.getDefaultSite();
+            // cleanup variables
+          
+            if (fromitem.isEmpty()) {
+                  fromitem = bsmf.MainFrame.lownbr;
+            }
+            if (toitem.isEmpty()) {
+                  toitem = bsmf.MainFrame.hinbr;
+            }
+            
+             // create and fill tablemodel
+            // column 1 is always 'select' and always type ImageIcon
+            // the remaining columns are whatever you require
+               javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                        new String[]{
+                            getGlobalColumnTag("select"),
+                             getGlobalColumnTag("item"), 
+                             getGlobalColumnTag("description"), 
+                             getGlobalColumnTag("qoh"), 
+                             getGlobalColumnTag("serial"), 
+                             getGlobalColumnTag("location"), 
+                             getGlobalColumnTag("warehouse"),
+                             getGlobalColumnTag("expiredate")})
+                   {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        };
+           
+           try{
+            Class.forName(driver).newInstance();
+            con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+              String qtyall = "";                  
+              res = st.executeQuery("select it_item, it_desc, " + 
+                      " in_qoh as qoh, in_loc as loc, in_wh as wh, in_serial as serial, in_expire as expire " +
+                      /*
+                       "case when in_qoh is null then 'na' else in_qoh end as qoh, " +
+                       "case when in_loc is null then 'na' else in_loc end as loc, " +
+                       "case when in_wh is null then 'na' else in_wh end as wh, " +
+                       "case when in_serial is null then 'na' else in_serial end as serial, " +
+                       "case when in_expire is null then 'na' else in_expire end as expire " +
+                      */ 
+                      " from item_mstr left outer join in_mstr on in_part = it_item " +
+                       " where it_item >= " + "'" + fromitem + "'" +  " AND " 
+                       + " it_item <= " + "'" + toitem + "'"         
+                       + ";" );
+              
+              
+                while (res.next()) {
+                    mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, 
+                        res.getString("it_item"),
+                        res.getString("it_desc"),
+                        res.getString("qoh"),
+                        res.getString("serial"),
+                        res.getString("loc"),
+                        res.getString("wh"),
+                        res.getString("expire")
+                                });
+                }
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+      
+      // now assign tablemodel to table
+            tablereport.setModel(mymodel);
+            tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
+            Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
+              while (en.hasMoreElements()) {
+                 TableColumn tc = en.nextElement();
+                 if (mymodel.getColumnClass(tc.getModelIndex()).getSimpleName().equals("ImageIcon")) { // select column
+                     continue;  
+                 }
+                 tc.setCellRenderer(new InvRptPicker.renderer1());
+             }
+        } // else run report
+               
+    }
+   
+    
     /* Item QOH range */
     public void itemQOHRange (boolean input) {
         

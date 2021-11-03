@@ -533,7 +533,7 @@ public class WorkOrdServ extends HttpServlet {
          JTable mytable = new JTable();
             javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
-                "Part", "Type", "Operation", "Qty", "Date", "Location", "SerialNo", "Reference", "Site", "Userid", "ProdLine", "AssyCell", "Rmks", "PackCell", "PackDate", "AssyDate", "Program", "Warehouse"
+                "Part", "Type", "Operation", "Qty", "Date", "Location", "SerialNo", "Reference", "Site", "Userid", "ProdLine", "AssyCell", "Rmks", "PackCell", "PackDate", "AssyDate", "ExpireDate", "Program", "Warehouse"
             });
         
         // read xml and convert to DOM
@@ -640,6 +640,7 @@ public class WorkOrdServ extends HttpServlet {
                 "", // pack station
                 "", // pack date
                 "", // assembly date
+                det[10], // expiredate
                 "WorkOrdServ", // program
                 det[9] // warehouse
             });
@@ -660,7 +661,7 @@ public class WorkOrdServ extends HttpServlet {
          JTable mytable = new JTable();
             javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
-                "Part", "Type", "Operation", "Qty", "Date", "Location", "SerialNo", "Reference", "Site", "Userid", "ProdLine", "AssyCell", "Rmks", "PackCell", "PackDate", "AssyDate", "Program", "Warehouse"
+                "Part", "Type", "Operation", "Qty", "Date", "Location", "SerialNo", "Reference", "Site", "Userid", "ProdLine", "AssyCell", "Rmks", "PackCell", "PackDate", "AssyDate", "ExpireDate", "Program", "Warehouse"
             });
         String line = "";
         StringBuffer jb = new StringBuffer();
@@ -762,6 +763,7 @@ public class WorkOrdServ extends HttpServlet {
                 "", // pack station
                 "", // pack date
                 "", // assembly date
+                det[10], // expire date
                 "WorkOrdServ", // program
                 det[9] // warehouse
             });

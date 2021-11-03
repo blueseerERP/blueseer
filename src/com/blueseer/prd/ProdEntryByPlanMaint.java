@@ -500,9 +500,11 @@ String sitecitystatezip = "";
                  
                 res = st.executeQuery("select * from plan_mstr where plan_nbr = " + "'" + tbscan.getText() + "'" + ";" );
                     while (res.next()) {
-                  String prodline = OVData.getProdLineFromItem(res.getString("plan_part")); 
-                  String loc = OVData.getLocationByPart(res.getString("plan_part")); 
-                  String wh = OVData.getWarehouseByPart(res.getString("plan_part"));
+                  String[] detail = invData.getItemDetail(res.getString("plan_part"));
+                  String prodline = detail[3];
+                  String loc = detail[8];
+                  String wh = detail[9];
+                  String expire = detail[10];
                  mymodel.addRow(new Object[]{res.getString("plan_part"),
                 "ISS-WIP",
                 ddop.getSelectedItem().toString(),
@@ -519,6 +521,7 @@ String sitecitystatezip = "";
                 "", // pack station
                 "", // pack date
                 "", // assembly date
+                expire,
                 "ProdEntryByPlan", // program
                 wh
             });

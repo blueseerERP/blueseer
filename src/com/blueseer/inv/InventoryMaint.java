@@ -30,7 +30,18 @@ import static bsmf.MainFrame.tags;
 import com.blueseer.fgl.fglData;
 
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import static com.blueseer.utl.BlueSeerUtils.luModel;
+import static com.blueseer.utl.BlueSeerUtils.luTable;
+import static com.blueseer.utl.BlueSeerUtils.lual;
+import static com.blueseer.utl.BlueSeerUtils.ludialog;
+import static com.blueseer.utl.BlueSeerUtils.luinput;
+import static com.blueseer.utl.BlueSeerUtils.luml;
+import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.OVData;
 import java.awt.BorderLayout;
@@ -231,156 +242,86 @@ public class InventoryMaint extends javax.swing.JPanel {
         }
     }
     
-    
-    public static void lookUpFrameItemDesc() {
-        if (dialog != null) {
-            dialog.dispose();
-        }
-        if (lookUpModel != null && lookUpModel.getRowCount() > 0) {
-        lookUpModel.setRowCount(0);
-        lookUpModel.setColumnCount(0);
-        }
-        // MouseListener[] mllist = lookUpTable.getMouseListeners();
-       // for (MouseListener ml : mllist) {
-        //    System.out.println(ml.toString());
-            //lookUpTable.removeMouseListener(ml);
-       // }
-       lookUpTable.removeMouseListener(mllu);
-        final JTextField input = new JTextField(20);
-        input.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent event) {
-        if (rb1.isSelected()) {  
-         lookUpModel = DTData.getItemDescBrowse(input.getText(), "it_item");
-        } else {
-         lookUpModel = DTData.getItemDescBrowse(input.getText(), "it_desc");   
-        }
-        lookUpTable.setModel(lookUpModel);
-        lookUpTable.getColumnModel().getColumn(0).setMaxWidth(50);
-        if (lookUpModel.getRowCount() < 1) {
-            dialog.setTitle("No Records Found!");
-        } else {
-            dialog.setTitle(lookUpModel.getRowCount() + " Records Found!");
-        }
-        }
-        });
+    public void lookUpFrameItemDesc() {
         
-       
-        lookUpTable.setPreferredScrollableViewportSize(new Dimension(400,100));
-        JScrollPane scrollPane = new JScrollPane(lookUpTable);
-        mllu = new MouseAdapter() {
+        luinput.removeActionListener(lual);
+        lual = new ActionListener() {
+        public void actionPerformed(ActionEvent event) {
+        if (lurb1.isSelected()) {  
+         luModel = DTData.getItemDescBrowse(luinput.getText(), "it_item");
+        } else {
+         luModel = DTData.getItemDescBrowse(luinput.getText(), "it_desc");   
+        }
+        luTable.setModel(luModel);
+        luTable.getColumnModel().getColumn(0).setMaxWidth(50);
+        if (luModel.getRowCount() < 1) {
+            ludialog.setTitle(getMessageTag(1001));
+        } else {
+            ludialog.setTitle(getMessageTag(1002, String.valueOf(luModel.getRowCount())));
+        }
+        }
+        };
+        luinput.addActionListener(lual);
+        
+        luTable.removeMouseListener(luml);
+        luml = new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
                 JTable target = (JTable)e.getSource();
                 int row = target.getSelectedRow();
                 int column = target.getSelectedColumn();
                 if ( column == 0) {
+                ludialog.dispose();
                 tbpart.setText(target.getValueAt(row,1).toString());
-                dialog.dispose();
                 }
             }
         };
-        lookUpTable.addMouseListener(mllu);
+        luTable.addMouseListener(luml);
       
-        
-        JPanel rbpanel = new JPanel();
-        bg = new ButtonGroup();
-        rb1 = new JRadioButton("item");
-        rb2 = new JRadioButton("description");
-        rb1.setSelected(true);
-        rb2.setSelected(false);
-        BoxLayout radiobuttonpanellayout = new BoxLayout(rbpanel, BoxLayout.X_AXIS);
-        rbpanel.setLayout(radiobuttonpanellayout);
-        rbpanel.add(rb1);
-        JLabel spacer = new JLabel("   ");
-        rbpanel.add(spacer);
-        rbpanel.add(rb2);
-        bg.add(rb1);
-        bg.add(rb2);
+        callDialog(getClassLabelTag("lblitem", this.getClass().getSimpleName()), getGlobalColumnTag("description")); 
         
         
-        dialog = new JDialog();
-        dialog.setTitle("Search By Text:");
-        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridBagLayout());
-      
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(2,2,2,2);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        panel.add(input, gbc);
-        
-        gbc.gridwidth = 1;
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        panel.add(rbpanel, gbc);
-        
-        gbc.gridwidth = 1;
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        panel.add( scrollPane, gbc );
-        
-        dialog.add(panel);
-        
-        dialog.pack();
-        dialog.setLocationRelativeTo( null );
-        dialog.setVisible(true);
     }
 
-    public static void lookUpFrameAcctDesc() {
-        if (dialog != null) {
-            dialog.dispose();
-        }
-        if (lookUpModel != null && lookUpModel.getRowCount() > 0) {
-        lookUpModel.setRowCount(0);
-        lookUpModel.setColumnCount(0);
-        }
-        // MouseListener[] mllist = lookUpTable.getMouseListeners();
-       // for (MouseListener ml : mllist) {
-        //    System.out.println(ml.toString());
-            //lookUpTable.removeMouseListener(ml);
-       // }
-       lookUpTable.removeMouseListener(mllu);
-        final JTextField input = new JTextField(20);
-        input.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent event) {
-        lookUpModel = DTData.getAcctBrowseUtil(input.getText(),0, "ac_desc");
-        lookUpTable.setModel(lookUpModel);
-        lookUpTable.getColumnModel().getColumn(0).setMaxWidth(50);
-        if (lookUpModel.getRowCount() < 1) {
-            dialog.setTitle("No Records Found!");
-        } else {
-            dialog.setTitle(lookUpModel.getRowCount() + " Records Found!");
-        }
-        }
-        });
+    public void lookUpFrameAcctDesc() {
         
-       
-        lookUpTable.setPreferredScrollableViewportSize(new Dimension(400,100));
-        JScrollPane scrollPane = new JScrollPane(lookUpTable);
-        mllu = new MouseAdapter() {
+        luinput.removeActionListener(lual);
+        lual = new ActionListener() {
+        public void actionPerformed(ActionEvent event) {
+        if (lurb1.isSelected()) {  
+         luModel = DTData.getAcctBrowseUtil(luinput.getText(),0, "ac_id");
+        } else {
+         luModel = DTData.getAcctBrowseUtil(luinput.getText(),0, "ac_desc");   
+        }
+        luTable.setModel(luModel);
+        luTable.getColumnModel().getColumn(0).setMaxWidth(50);
+        if (luModel.getRowCount() < 1) {
+            ludialog.setTitle(getMessageTag(1001));
+        } else {
+            ludialog.setTitle(getMessageTag(1002, String.valueOf(luModel.getRowCount())));
+        }
+        }
+        };
+        luinput.addActionListener(lual);
+        
+        luTable.removeMouseListener(luml);
+        luml = new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
                 JTable target = (JTable)e.getSource();
                 int row = target.getSelectedRow();
                 int column = target.getSelectedColumn();
                 if ( column == 0) {
+                ludialog.dispose();
                 ddacct.setSelectedItem(target.getValueAt(row,1).toString());
-                dialog.dispose();
                 }
             }
         };
-        lookUpTable.addMouseListener(mllu);
+        luTable.addMouseListener(luml);
       
+        callDialog(getClassLabelTag("lblacct", this.getClass().getSimpleName()), 
+                getGlobalColumnTag("description")); 
         
-        dialog = new JDialog();
-        dialog.setTitle("Search By Acct Desc:");
-        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        dialog.add(input, BorderLayout.NORTH);
-        dialog.add( scrollPane );
-        dialog.pack();
-        dialog.setLocationRelativeTo( null );
-        dialog.setVisible(true);
+        
     }
 
     
@@ -734,7 +675,7 @@ public class InventoryMaint extends javax.swing.JPanel {
         }
         String expire = "";
         if (dcexpire.getDate() != null) {
-            expire = dfdate.format(dcdate.getDate());
+            expire = dfdate.format(dcexpire.getDate());
         }
         
         if (proceed) {

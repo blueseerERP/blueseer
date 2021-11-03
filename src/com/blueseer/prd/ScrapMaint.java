@@ -74,7 +74,9 @@ public class ScrapMaint extends javax.swing.JPanel {
                 getGlobalColumnTag("cell"), 
                 getGlobalColumnTag("packdate"), 
                 getGlobalColumnTag("assydate"), 
-                getGlobalColumnTag("program")
+                getGlobalColumnTag("expiredate"),
+                getGlobalColumnTag("program"),
+                getGlobalColumnTag("warehouse")
             })    {
     @Override
     public boolean isCellEditable(int row, int column) {
@@ -437,8 +439,10 @@ public class ScrapMaint extends javax.swing.JPanel {
         if (ddop.getSelectedItem() != null) {
             op = ddop.getSelectedItem().toString();
         } 
-        
-        String loc = OVData.getLocationByPart(tbpart.getText());
+        String[] detail = invData.getItemDetail(tbpart.getText());
+        String loc = detail[8];
+        String wh = detail[9];
+        String expire = detail[10];
         
         String code = "";
         if (ddcode.getItemCount() > 0)
@@ -478,7 +482,9 @@ public class ScrapMaint extends javax.swing.JPanel {
                 "", // pack station
                 packdate, // pack date
                 assydate, // assembly date
-                "ScrapMaint" // program             
+                expire,
+                "ScrapMaint", // program
+                wh
             });
             
             
