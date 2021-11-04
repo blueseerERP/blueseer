@@ -29,9 +29,24 @@ import static bsmf.MainFrame.tags;
 import com.blueseer.inv.invData;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import static com.blueseer.utl.BlueSeerUtils.luModel;
+import static com.blueseer.utl.BlueSeerUtils.luTable;
+import static com.blueseer.utl.BlueSeerUtils.lual;
+import static com.blueseer.utl.BlueSeerUtils.ludialog;
+import static com.blueseer.utl.BlueSeerUtils.luinput;
+import static com.blueseer.utl.BlueSeerUtils.luml;
+import static com.blueseer.utl.BlueSeerUtils.lurb1;
+import com.blueseer.utl.DTData;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -45,6 +60,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTable;
 
 /**
  *
@@ -112,6 +128,32 @@ public class ProdEntryMaint extends javax.swing.JPanel {
        }
     }
     
+    public void setItemInfo() {
+        ddop.removeAllItems();
+        dcexpire.setDate(null);
+        if (! tbpart.getText().isEmpty()) {
+            if (! OVData.isValidItem(tbpart.getText())) {
+               bsmf.MainFrame.show(getMessageTag(1021,tbpart.getText()));
+               tbpart.setForeground(Color.red);
+            } else {
+            tbpart.setForeground(Color.black);
+             Calendar calfrom = Calendar.getInstance();
+             int days = invData.getItemExpireDays(tbpart.getText());
+             if (days > 0) {
+             calfrom.add(Calendar.DATE, days);
+             dcexpire.setDate(calfrom.getTime());
+             }
+            ArrayList myops = OVData.getOperationsByPart(tbpart.getText());
+            for (int i = 0; i < myops.size(); i++) {
+                ddop.addItem(myops.get(i));
+            }
+              if (ddop.getItemCount() <= 0) {
+                ddop.addItem("0");
+              }
+           }
+        }
+    }
+    
     public void initvars(String[] arg) {
         
         transmodel.setRowCount(0);
@@ -128,6 +170,52 @@ public class ProdEntryMaint extends javax.swing.JPanel {
         tbserialno.setText("");
         tbqty.setText("");
     }
+   
+    public void lookUpFrameItemDesc() {
+        
+        luinput.removeActionListener(lual);
+        lual = new ActionListener() {
+        public void actionPerformed(ActionEvent event) {
+        if (lurb1.isSelected()) {  
+         luModel = DTData.getItemDescBrowse(luinput.getText(), "it_item");
+        } else {
+         luModel = DTData.getItemDescBrowse(luinput.getText(), "it_desc");   
+        }
+        luTable.setModel(luModel);
+        luTable.getColumnModel().getColumn(0).setMaxWidth(50);
+        if (luModel.getRowCount() < 1) {
+            ludialog.setTitle(getMessageTag(1001));
+        } else {
+            ludialog.setTitle(getMessageTag(1002, String.valueOf(luModel.getRowCount())));
+        }
+        }
+        };
+        luinput.addActionListener(lual);
+        
+        luTable.removeMouseListener(luml);
+        luml = new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                JTable target = (JTable)e.getSource();
+                int row = target.getSelectedRow();
+                int column = target.getSelectedColumn();
+                if ( column == 0) {
+                    ludialog.dispose();
+                    tbpart.setText(target.getValueAt(row,1).toString());
+                    setItemInfo();
+                    
+                }
+            }
+        };
+        luTable.addMouseListener(luml);
+      
+        callDialog(getClassLabelTag("lblitem", this.getClass().getSimpleName()), getGlobalColumnTag("description")); 
+        
+        
+        
+    }
+
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -158,6 +246,7 @@ public class ProdEntryMaint extends javax.swing.JPanel {
         tbpart = new javax.swing.JTextField();
         dcexpire = new com.toedter.calendar.JDateChooser();
         jLabel3 = new javax.swing.JLabel();
+        btLookUpItemDesc = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -171,8 +260,8 @@ public class ProdEntryMaint extends javax.swing.JPanel {
 
         jLabel9.setText("Reference");
 
-        btsubmit.setText("Submit");
-        btsubmit.setName("btsubmit"); // NOI18N
+        btsubmit.setText("Commit");
+        btsubmit.setName("btcommit"); // NOI18N
         btsubmit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btsubmitActionPerformed(evt);
@@ -210,6 +299,14 @@ public class ProdEntryMaint extends javax.swing.JPanel {
         jLabel3.setText("Expire");
         jLabel3.setName("lblexpire"); // NOI18N
 
+        btLookUpItemDesc.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/find.png"))); // NOI18N
+        btLookUpItemDesc.setName(""); // NOI18N
+        btLookUpItemDesc.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btLookUpItemDescActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -234,20 +331,21 @@ public class ProdEntryMaint extends javax.swing.JPanel {
                             .addComponent(tbserialno)
                             .addComponent(tbpart)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(tbsite)
-                                    .addComponent(dcdate, javax.swing.GroupLayout.DEFAULT_SIZE, 164, Short.MAX_VALUE))
+                                .addComponent(tbsite)
                                 .addGap(48, 48, 48))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(tbuser, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(ddop, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(tbqty, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(dcexpire, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(0, 0, Short.MAX_VALUE))))
+                                    .addComponent(dcexpire, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(dcdate, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(0, 15, Short.MAX_VALUE))))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btsubmit)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btLookUpItemDesc, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -268,9 +366,11 @@ public class ProdEntryMaint extends javax.swing.JPanel {
                             .addComponent(dcdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel10))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(tbpart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel4))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(tbpart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel4))
+                            .addComponent(btLookUpItemDesc))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(ddop, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -370,33 +470,15 @@ public class ProdEntryMaint extends javax.swing.JPanel {
     }//GEN-LAST:event_btsubmitActionPerformed
 
     private void tbpartFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbpartFocusLost
-      if (! tbpart.getText().isEmpty()) {
-        ddop.removeAllItems();
-        boolean goodpart = false;
-       goodpart = OVData.isValidItem(tbpart.getText());
-       if (! goodpart) {
-           bsmf.MainFrame.show(getMessageTag(1021,tbpart.getText()));
-           tbpart.setForeground(Color.red);
-       } else {
-        tbpart.setForeground(Color.black);
-         Calendar calfrom = Calendar.getInstance();
-         int days = invData.getItemExpireDays(tbpart.getText());
-         if (days > 0) {
-         calfrom.add(Calendar.DATE, days);
-         dcexpire.setDate(calfrom.getTime());
-         }
-        ArrayList myops = OVData.getOperationsByPart(tbpart.getText());
-        for (int i = 0; i < myops.size(); i++) {
-            ddop.addItem(myops.get(i));
-        }
-          if (ddop.getItemCount() <= 0) {
-            ddop.addItem("0");
-          }
-       }
-      }
+              setItemInfo();
     }//GEN-LAST:event_tbpartFocusLost
 
+    private void btLookUpItemDescActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btLookUpItemDescActionPerformed
+        lookUpFrameItemDesc();
+    }//GEN-LAST:event_btLookUpItemDescActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btLookUpItemDesc;
     private javax.swing.JButton btsubmit;
     private com.toedter.calendar.JDateChooser dcdate;
     private com.toedter.calendar.JDateChooser dcexpire;

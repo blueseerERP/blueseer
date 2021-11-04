@@ -319,7 +319,7 @@ CREATE TABLE IF NOT EXISTS `cup_mstr` (
   `cup_sku` varchar(30)  NOT NULL DEFAULT '') ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `cur_mstr` (
   `cur_id` varchar(10)  NOT NULL DEFAULT '',
-  `cur_desc` varchar(30)  NOT NULL DEFAULT ''
+  `cur_desc` varchar(50)  NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `exc_mstr` (
   `exc_base` varchar(3)  NOT NULL DEFAULT '',

@@ -357,7 +357,7 @@ CREATE TABLE "cup_mstr" (
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "cur_mstr" (
   "cur_id" varchar(10) COLLATE NOCASE DEFAULT '',
-  "cur_desc" varchar(30) COLLATE NOCASE DEFAULT ''
+  "cur_desc" varchar(50) COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;

@@ -231,8 +231,8 @@ public class ScrapMaint extends javax.swing.JPanel {
         jLabel9.setText("ScrapCode");
         jLabel9.setName("lblcode"); // NOI18N
 
-        btsubmit.setText("Submit");
-        btsubmit.setName("btsubmit"); // NOI18N
+        btsubmit.setText("Commit");
+        btsubmit.setName("btcommit"); // NOI18N
         btsubmit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btsubmitActionPerformed(evt);
