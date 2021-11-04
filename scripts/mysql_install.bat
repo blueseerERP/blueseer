@@ -1,6 +1,5 @@
 @echo off
 
-
 @echo "NOTE:  if at any time you receive an error such as "mysql unknown or unrecognized executable....then make sure you have mysql installed AND your PATH variable in enviromental settings has the mysql bin directory included."
 
 @echo ""
@@ -13,8 +12,17 @@ if /I "%IP%"=="10.17.2.5" (
 pause 2
 exit /b ) 
 
+
 set /p pass=Enter the administrator password for the MySQL Database:%=%
 
+set /p lang=Enter the two character language code (en,fr,es,tr,etc):%=%
+
+if not defined lang (
+rem @echo "must pass the two character lang parameter"
+rem pause 2
+rem exit /b 
+set "lang=en"
+)
 
 set "ROOT=root"
 set "DB=bsdb"
@@ -57,10 +65,11 @@ mysql --defaults-extra-file=my.cnf -e "create user if not exists 'bs_user'@'%' i
 mysql --defaults-extra-file=my.cnf -e "grant select,insert,delete,update on bsdb.* to 'bs_user'@'%';" 
 
 
-@echo "loading 'some' default records for tables....."
-mysql --defaults-extra-file=my.cnf -D bsdb -e "source sq_mysql.txt;" 
+cd "%lang%"
+@echo "loading 'some' default records for tables from language pack %lang%....."
+mysql --defaults-extra-file=..\my.cnf -D bsdb -e "source sq_mysql.txt;" 
 
-
+cd ..
 rem clean up my.cnf
 del my.cnf >nul 2>&1
 
