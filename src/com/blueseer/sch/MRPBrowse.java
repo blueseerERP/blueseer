@@ -30,6 +30,7 @@ import static bsmf.MainFrame.tags;
 import com.blueseer.inv.invData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.OVData;
 import com.toedter.calendar.DateUtil;
 import java.awt.Color;
@@ -125,7 +126,6 @@ public class MRPBrowse extends javax.swing.JPanel {
       
          
          double total = 0.00;
-         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
          
           ArrayList<String> parents = new ArrayList<String>();
         parents = OVData.getpsmstrparents2(part);
@@ -188,7 +188,7 @@ public class MRPBrowse extends javax.swing.JPanel {
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to get Order Detail");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -201,7 +201,6 @@ public class MRPBrowse extends javax.swing.JPanel {
       
        
          double total = 0.00;
-         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
          String status = "";
          
          Enumeration<TableColumn> en = tabledetail.getColumnModel().getColumns();
@@ -256,7 +255,7 @@ public class MRPBrowse extends javax.swing.JPanel {
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to get Plan Detail for MRP");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -269,11 +268,7 @@ public class MRPBrowse extends javax.swing.JPanel {
       
        
          double total = 0.00;
-         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
-         
-         
-         
-       
+        
           ArrayList<String> parents = new ArrayList<String>();
        
          
@@ -308,7 +303,7 @@ public class MRPBrowse extends javax.swing.JPanel {
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to get Plan Detail for MRP");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -327,7 +322,6 @@ public class MRPBrowse extends javax.swing.JPanel {
                  
        Double opcost = 0.00;
        Double prevcost = 0.00;
-       DecimalFormat df = new DecimalFormat("#.####", new DecimalFormatSymbols(Locale.US)); 
         try {
             Class.forName(bsmf.MainFrame.driver).newInstance();
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
@@ -362,7 +356,7 @@ public class MRPBrowse extends javax.swing.JPanel {
                 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("sql problem selecting recent trans");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -1496,7 +1490,7 @@ public class MRPBrowse extends javax.swing.JPanel {
   
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("sql problem during execution");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {

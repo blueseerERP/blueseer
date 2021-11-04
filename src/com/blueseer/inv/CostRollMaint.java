@@ -41,14 +41,32 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import static bsmf.MainFrame.con;
 import static bsmf.MainFrame.db;
+import static bsmf.MainFrame.defaultDecimalSeparator;
 import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
+import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
+import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import static com.blueseer.utl.BlueSeerUtils.luModel;
+import static com.blueseer.utl.BlueSeerUtils.luTable;
+import static com.blueseer.utl.BlueSeerUtils.lual;
+import static com.blueseer.utl.BlueSeerUtils.ludialog;
+import static com.blueseer.utl.BlueSeerUtils.luinput;
+import static com.blueseer.utl.BlueSeerUtils.luml;
+import static com.blueseer.utl.BlueSeerUtils.lurb1;
+import com.blueseer.utl.DTData;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.math.RoundingMode;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
@@ -60,6 +78,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTable;
 import javax.swing.tree.TreeNode;
 
 /**
@@ -78,7 +97,7 @@ public class CostRollMaint extends javax.swing.JPanel {
                 getGlobalColumnTag("costcenter"), 
                 getGlobalColumnTag("lbr"), 
                 getGlobalColumnTag("bdn"), 
-                getGlobalColumnTag("mat"), 
+                getGlobalColumnTag("mtl"), 
                 getGlobalColumnTag("ovh"), 
                 getGlobalColumnTag("out"), 
                 getGlobalColumnTag("setuprate"), 
@@ -106,7 +125,7 @@ public class CostRollMaint extends javax.swing.JPanel {
                 getGlobalColumnTag("setuprate"), 
                 getGlobalColumnTag("laborrate"), 
                 getGlobalColumnTag("burdenrate"), 
-                getGlobalColumnTag("setuphrs"), 
+                getGlobalColumnTag("setuphours"), 
                 getGlobalColumnTag("runhours"), 
                 getGlobalColumnTag("lotsize"), 
                 getGlobalColumnTag("rollcost"), 
@@ -119,8 +138,8 @@ public class CostRollMaint extends javax.swing.JPanel {
                getGlobalColumnTag("stdlower"), 
                getGlobalColumnTag("rollupper"), 
                getGlobalColumnTag("stdupper") , 
-               getGlobalColumnTag("rolltotal"), 
-               getGlobalColumnTag("stdtotal")
+               getGlobalColumnTag("rollcost"), 
+               getGlobalColumnTag("standardcost")
             });
     
     String thissite = "";
@@ -184,7 +203,7 @@ public class CostRollMaint extends javax.swing.JPanel {
         costs = invData.getItemCostElements(tbitem.getText(), "standard", thissite);
        
         calcCost cur = new calcCost();
-        DecimalFormat df = new DecimalFormat("#.0000", new DecimalFormatSymbols(Locale.US)); 
+        
         ArrayList<Double> costcur = new ArrayList<Double>();
         costcur = cur.getTotalCostElements(tbitem.getText());
         
@@ -225,18 +244,18 @@ public class CostRollMaint extends javax.swing.JPanel {
         double totcur = curmtl + curlbr + curbdn + curovh + curout;
         double totstd = stdmtl + stdlbr + stdbdn + stdovh + stdout;
         
-        toplowmodel.addRow(new Object[] {"Material", curmtllow, df.format(stdmtllow), curmtltop, df.format(stdmtltop), curmtl, stdmtl });
-        toplowmodel.addRow(new Object[] {"Labor", curlbrlow, df.format(stdlbrlow), curlbrtop, df.format(stdlbrtop), curlbr, stdlbr });
-        toplowmodel.addRow(new Object[] {"Burden", curbdnlow, df.format(stdbdnlow), curbdntop, df.format(stdbdntop), curbdn, stdbdn });
-        toplowmodel.addRow(new Object[] {"Overhead", curovhlow, df.format(stdovhlow), curovhtop, df.format(stdovhtop), curovh, stdovh });
-        toplowmodel.addRow(new Object[] {"Outside", curoutlow, df.format(stdoutlow), curouttop, df.format(stdouttop), curout, stdout });
-        toplowmodel.addRow(new Object[] {"Total", "", "" , "" , "" , totcur, totstd });
+        toplowmodel.addRow(new Object[] {"Material", currformatDouble(curmtllow), currformatDouble(stdmtllow), currformatDouble(curmtltop), currformatDouble(stdmtltop), currformatDouble(curmtl), currformatDouble(stdmtl) });
+        toplowmodel.addRow(new Object[] {"Labor", currformatDouble(curlbrlow), currformatDouble(stdlbrlow), currformatDouble(curlbrtop), currformatDouble(stdlbrtop), currformatDouble(curlbr), currformatDouble(stdlbr) });
+        toplowmodel.addRow(new Object[] {"Burden", currformatDouble(curbdnlow), currformatDouble(stdbdnlow), currformatDouble(curbdntop), currformatDouble(stdbdntop), currformatDouble(curbdn), currformatDouble(stdbdn) });
+        toplowmodel.addRow(new Object[] {"Overhead", currformatDouble(curovhlow), currformatDouble(stdovhlow), currformatDouble(curovhtop), currformatDouble(stdovhtop), currformatDouble(curovh), currformatDouble(stdovh) });
+        toplowmodel.addRow(new Object[] {"Outside", currformatDouble(curoutlow), currformatDouble(stdoutlow), currformatDouble(curouttop), currformatDouble(stdouttop), currformatDouble(curout), currformatDouble(stdout) });
+        toplowmodel.addRow(new Object[] {"Total", "", "" , "" , "" , currformatDouble(totcur), currformatDouble(totstd) });
         
         
         toplowtable.setModel(toplowmodel);
         
-        labelcost.setText(String.valueOf(totcur));
-        labelstandard.setText(String.valueOf(totstd));
+        labelcost.setText(String.valueOf(currformatDouble(totcur)));
+        labelstandard.setText(String.valueOf(currformatDouble(totstd)));
     }
     
     public void setcostmodeltable() {
@@ -249,8 +268,7 @@ public class CostRollMaint extends javax.swing.JPanel {
         double totovh = 0.0;
         double totout = 0.0;
         String stdtotalcost = "";
-        DecimalFormat df = new DecimalFormat("#.00000", new DecimalFormatSymbols(Locale.US)); 
-        df.setRoundingMode(RoundingMode.HALF_UP);
+        
           for (String cost : costs) {
               String[] elements = cost.split(",", -1);
               total = total + Double.valueOf(elements[17]);
@@ -267,35 +285,36 @@ public class CostRollMaint extends javax.swing.JPanel {
                       elements[3],
                       elements[4],
                       elements[5],
-                      df.format(Double.valueOf(elements[6].toString())),
-                      df.format(Double.valueOf(elements[7].toString())),
-                      df.format(Double.valueOf(elements[8].toString())),
-                      df.format(Double.valueOf(elements[9].toString())),
-                      df.format(Double.valueOf(elements[10].toString())),
-                      elements[11],
-                      elements[12],
-                      elements[13],
-                      elements[14],
-                      elements[15],
-                      elements[16],
-                      elements[17],
-                      elements[18],
-                      elements[19]
+                      currformatDouble(bsParseDouble(elements[6].toString())),
+                      currformatDouble(bsParseDouble(elements[7].toString())),
+                      currformatDouble(bsParseDouble(elements[8].toString())),
+                      currformatDouble(bsParseDouble(elements[9].toString())),
+                      currformatDouble(bsParseDouble(elements[10].toString())),
+                      currformatDouble(bsParseDouble(elements[11].toString())),
+                      currformatDouble(bsParseDouble(elements[12].toString())),
+                      currformatDouble(bsParseDouble(elements[13].toString())),
+                      currformatDouble(bsParseDouble(elements[14].toString())),
+                      currformatDouble(bsParseDouble(elements[15].toString())),
+                      currformatDouble(bsParseDouble(elements[16].toString())),
+                      currformatDouble(bsParseDouble(elements[17].toString())),
+                      currformatDouble(bsParseDouble(elements[18].toString())),
+                      currformatDouble(bsParseDouble(elements[19].toString()))
+                      
                       });
           } 
           
           costmodel.addRow(new Object[]{
-                      "total",
+                      getGlobalColumnTag("total"),
                      "",
                       "",
                       "",
                       "",
                       "",
-                      df.format(totmtl),
-                      df.format(totlbr),
-                      df.format(totbdn),
-                      df.format(totovh),
-                      df.format(totout),
+                      currformatDouble(totmtl),
+                      currformatDouble(totlbr),
+                      currformatDouble(totbdn),
+                      currformatDouble(totovh),
+                      currformatDouble(totout),
                       "",
                       "",
                       "",
@@ -328,20 +347,20 @@ public class CostRollMaint extends javax.swing.JPanel {
                       elements[3],
                       elements[4],
                       elements[5],
-                      elements[6],
-                      elements[7],
-                      elements[8],
-                      elements[9],
-                      elements[10],
-                      elements[11],
-                      elements[12],
-                      elements[13],
-                      elements[14],
-                      elements[15],
-                      elements[16],
-                      elements[17],
-                      elements[18],
-                      elements[19]
+                      currformatDouble(bsParseDouble(elements[6].toString())),
+                      currformatDouble(bsParseDouble(elements[7].toString())),
+                      currformatDouble(bsParseDouble(elements[8].toString())),
+                      currformatDouble(bsParseDouble(elements[9].toString())),
+                      currformatDouble(bsParseDouble(elements[10].toString())),
+                      currformatDouble(bsParseDouble(elements[11].toString())),
+                      currformatDouble(bsParseDouble(elements[12].toString())),
+                      currformatDouble(bsParseDouble(elements[13].toString())),
+                      currformatDouble(bsParseDouble(elements[14].toString())),
+                      currformatDouble(bsParseDouble(elements[15].toString())),
+                      currformatDouble(bsParseDouble(elements[16].toString())),
+                      currformatDouble(bsParseDouble(elements[17].toString())),
+                      currformatDouble(bsParseDouble(elements[18].toString())),
+                      currformatDouble(bsParseDouble(elements[19].toString()))
                       });
           } 
                 subcosttable.setModel(subcostmodel);
@@ -387,7 +406,7 @@ public class CostRollMaint extends javax.swing.JPanel {
                 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("unable to select pbm_mstr and/or item_mstr");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             bsmf.MainFrame.con.close();
         } catch (Exception e) {
@@ -429,6 +448,48 @@ public class CostRollMaint extends javax.swing.JPanel {
              }
     }
     
+    public void lookUpFrame() {
+        
+        luinput.removeActionListener(lual);
+        lual = new ActionListener() {
+        public void actionPerformed(ActionEvent event) {
+        if (lurb1.isSelected()) {  
+         luModel = DTData.getItemDescBrowse(luinput.getText(), "it_item");
+        } else {
+         luModel = DTData.getItemDescBrowse(luinput.getText(), "it_desc");   
+        }
+        luTable.setModel(luModel);
+        luTable.getColumnModel().getColumn(0).setMaxWidth(50);
+        if (luModel.getRowCount() < 1) {
+            ludialog.setTitle(getMessageTag(1001));
+        } else {
+            ludialog.setTitle(getMessageTag(1002, String.valueOf(luModel.getRowCount())));
+        }
+        }
+        };
+        luinput.addActionListener(lual);
+        
+        luTable.removeMouseListener(luml);
+        luml = new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                JTable target = (JTable)e.getSource();
+                int row = target.getSelectedRow();
+                int column = target.getSelectedColumn();
+                if ( column == 0) {
+                ludialog.dispose();
+                tbitem.setText(target.getValueAt(row,1).toString());
+                establishParent(tbitem.getText());
+                }
+            }
+        };
+        luTable.addMouseListener(luml);
+      
+        callDialog(getClassLabelTag("lblitem", this.getClass().getSimpleName()), getGlobalColumnTag("description")); 
+        
+        
+        
+    }
+ 
      
     public void disableAll() {
         btroll.setEnabled(false);
@@ -516,9 +577,9 @@ public class CostRollMaint extends javax.swing.JPanel {
         jScrollPane3 = new javax.swing.JScrollPane();
         jTree1 = new javax.swing.JTree();
         btroll = new javax.swing.JButton();
-        btbrowse = new javax.swing.JButton();
         lblitem = new javax.swing.JLabel();
         btclear = new javax.swing.JButton();
+        btLookUpItemDesc = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -747,7 +808,7 @@ public class CostRollMaint extends javax.swing.JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addComponent(jPanel5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, 314, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -779,18 +840,18 @@ public class CostRollMaint extends javax.swing.JPanel {
             }
         });
 
-        btbrowse.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
-        btbrowse.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btbrowseActionPerformed(evt);
-            }
-        });
-
         btclear.setText("clear");
         btclear.setName("btclear"); // NOI18N
         btclear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btclearActionPerformed(evt);
+            }
+        });
+
+        btLookUpItemDesc.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/find.png"))); // NOI18N
+        btLookUpItemDesc.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btLookUpItemDescActionPerformed(evt);
             }
         });
 
@@ -804,10 +865,10 @@ public class CostRollMaint extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(tbitem, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btLookUpItemDesc, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btclear)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(28, 28, 28)
                 .addComponent(lblitem, javax.swing.GroupLayout.PREFERRED_SIZE, 391, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btroll)
@@ -837,9 +898,10 @@ public class CostRollMaint extends javax.swing.JPanel {
                     .addComponent(labelcost, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btroll)
                     .addComponent(jLabel5)
-                    .addComponent(btbrowse)
                     .addComponent(lblitem, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btclear))
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(btLookUpItemDesc)
+                        .addComponent(btclear)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
@@ -902,24 +964,24 @@ public class CostRollMaint extends javax.swing.JPanel {
 
                     if (i > 0) {
                         st.executeUpdate("update item_cost set "
-                                + "itc_mtl_low = " + "'" + toplowtable.getValueAt(0, 1) + "'" + ","
-                                + "itc_mtl_top = " + "'" + toplowtable.getValueAt(0, 3) + "'" + ","
-                                + "itc_lbr_low = " + "'" + toplowtable.getValueAt(1, 1) + "'" + ","
-                                + "itc_lbr_top = " + "'" + toplowtable.getValueAt(1, 3) + "'" + ","
-                                + "itc_bdn_low = " + "'" + toplowtable.getValueAt(2, 1) + "'" + ","
-                                + "itc_bdn_top = " + "'" + toplowtable.getValueAt(2, 3) + "'" + ","
-                                + "itc_ovh_low = " + "'" + toplowtable.getValueAt(3, 1) + "'" + ","
-                                + "itc_ovh_top = " + "'" + toplowtable.getValueAt(3, 3) + "'" + ","
-                                + "itc_out_low = " + "'" + toplowtable.getValueAt(4, 1) + "'" + ","
-                                + "itc_out_top = " + "'" + toplowtable.getValueAt(4, 3) + "'" + ","
-                                + "itc_total = " + "'" + toplowtable.getValueAt(5, 5) + "'" 
+                                + "itc_mtl_low = " + "'" + toplowtable.getValueAt(0, 1).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "itc_mtl_top = " + "'" + toplowtable.getValueAt(0, 3).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "itc_lbr_low = " + "'" + toplowtable.getValueAt(1, 1).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "itc_lbr_top = " + "'" + toplowtable.getValueAt(1, 3).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "itc_bdn_low = " + "'" + toplowtable.getValueAt(2, 1).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "itc_bdn_top = " + "'" + toplowtable.getValueAt(2, 3).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "itc_ovh_low = " + "'" + toplowtable.getValueAt(3, 1).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "itc_ovh_top = " + "'" + toplowtable.getValueAt(3, 3).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "itc_out_low = " + "'" + toplowtable.getValueAt(4, 1).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "itc_out_top = " + "'" + toplowtable.getValueAt(4, 3).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "itc_total = " + "'" + toplowtable.getValueAt(5, 5).toString().replace(defaultDecimalSeparator, '.') + "'" 
                                 + " where itc_item = " + "'" + tbitem.getText() + "'"
                                 + " AND itc_set = 'standard' "
                                 + " AND itc_site = " + "'" + thissite + "'"
                                 + ";");
                        
                     } else {
-                        bsmf.MainFrame.show("No item_cost record found");
+                        bsmf.MainFrame.show(getMessageTag(1001));
                         proceed = false;
                     }
 
@@ -953,12 +1015,12 @@ public class CostRollMaint extends javax.swing.JPanel {
                                 + "'" + "standard" + "'" + ","
                                 + "'" + routing + "'" + ","
                                 + "'" + op + "'" + ","
-                                + "'" + itrcost + "'" + "," 
-                                + "'" + costtable.getValueAt(i, 8) + "'" + ","   
-                                + "'" + costtable.getValueAt(i, 6) + "'" + ","
-                                + "'" + costtable.getValueAt(i, 7) + "'" + ","
-                                + "'" + costtable.getValueAt(i, 9) + "'" + ","
-                                + "'" + costtable.getValueAt(i, 10) + "'" + ","
+                                + "'" + currformatDouble(itrcost).replace(defaultDecimalSeparator, '.') + "'" + "," 
+                                + "'" + costtable.getValueAt(i, 8).toString().replace(defaultDecimalSeparator, '.') + "'" + ","   
+                                + "'" + costtable.getValueAt(i, 6).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + costtable.getValueAt(i, 7).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + costtable.getValueAt(i, 9).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + costtable.getValueAt(i, 10).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
                                 + "'" + "0" + "'" + ","
                                 + "'" + "0" + "'" + ","
                                 + "'" + "0" + "'" + ","
@@ -968,12 +1030,12 @@ public class CostRollMaint extends javax.swing.JPanel {
                         
                   
                     } // for ops
-                    bsmf.MainFrame.show("Cost Roll Complete");
+                    bsmf.MainFrame.show(getMessageTag(1125));
                     initvars(new String[]{tbitem.getText()});
                    }
             } // if proceed
             catch (SQLException s) {
-                bsmf.MainFrame.show("problem rolling cost at sql level");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
                 MainFrame.bslog(s);
             }
             con.close();
@@ -981,10 +1043,6 @@ public class CostRollMaint extends javax.swing.JPanel {
             MainFrame.bslog(e);
         }  
     }//GEN-LAST:event_btrollActionPerformed
-
-    private void btbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseActionPerformed
-        reinitpanels("BrowseUtil", true, new String[]{"costmaint","it_item"});
-    }//GEN-LAST:event_btbrowseActionPerformed
 
     private void tbitemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbitemActionPerformed
        establishParent(tbitem.getText());
@@ -994,9 +1052,13 @@ public class CostRollMaint extends javax.swing.JPanel {
         initvars(null);
     }//GEN-LAST:event_btclearActionPerformed
 
+    private void btLookUpItemDescActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btLookUpItemDescActionPerformed
+       lookUpFrame();
+    }//GEN-LAST:event_btLookUpItemDescActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btbrowse;
+    private javax.swing.JButton btLookUpItemDesc;
     private javax.swing.JButton btclear;
     private javax.swing.JButton btroll;
     private javax.swing.JTable costtable;

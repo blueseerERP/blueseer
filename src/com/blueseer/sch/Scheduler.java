@@ -735,7 +735,6 @@ public class Scheduler extends javax.swing.JPanel {
     public void getDetail() {
          modeldetail.setRowCount(0);
          modelavailable.setRowCount(0);
-         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
          DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
       
         try {
@@ -1387,8 +1386,7 @@ public class Scheduler extends javax.swing.JPanel {
 
                 double amt = 0;
 
-                DecimalFormat df = new DecimalFormat("###,###,###.##", new DecimalFormatSymbols(Locale.US));
-                int i = 0;
+                 int i = 0;
                 String fpart = "";
                 String tpart = "";
                 String fcell = bsmf.MainFrame.lowchar;

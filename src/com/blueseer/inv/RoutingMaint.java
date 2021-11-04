@@ -31,7 +31,12 @@ import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
+import static com.blueseer.inv.invData.addRoutingMstr;
+import static com.blueseer.inv.invData.updateRoutingMstr;
+import com.blueseer.inv.invData.wf_mstr;
+import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
@@ -384,105 +389,12 @@ public class RoutingMaint extends javax.swing.JPanel implements IBlueSeer {
     }
     
     public String[] addRecord(String[] x) {
-     String[] m = new String[2];
-     
-     try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            Statement st = bsmf.MainFrame.con.createStatement();
-            ResultSet res = null;
-            try {
-                boolean proceed = true;
-                int i = 0;
-                
-                proceed = validateInput("addRecord");
-                
-                if (proceed) {
-
-                    res = st.executeQuery("select * from wf_mstr where wf_id = " + "'" + tbkey.getText() + "'" + " AND " + 
-                        " wf_op = " + "'" + ddop.getSelectedItem().toString() + "'" + ";");
-                    while (res.next()) {
-                        i++;
-                    }
-                    if (i == 0) {
-                         st.executeUpdate("insert into wf_mstr "
-                            + " values ( " + "'" + tbkey.getText() + "'" + ","
-                            + "'" + tbopdesc.getText() + "'" + ","
-                            + "'" + ddsite.getSelectedItem().toString() + "'" + ","
-                            + "'" + ddop.getSelectedItem().toString() + "'" + ","
-                            + "'" + BlueSeerUtils.boolToInt(cbmilestone.isSelected()) + "'" + ","
-                            + "'" + tbopdesc.getText() + "'" + ","
-                            + "'" + ddwc.getSelectedItem().toString() + "'" + ","
-                            + "'" + tbsetuphours.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
-                            + "'" + tbrunhours.getText().replace(defaultDecimalSeparator, '.') + "'" 
-                            + ")"
-                            + ";");
-                        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
-                    } else {
-                       m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists}; 
-                    }
-
-                   initvars(null);
-                   
-                } // if proceed
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                 m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};  
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-             m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1020, Thread.currentThread().getStackTrace()[1].getMethodName())};
-        }
-     
+     String[] m = addRoutingMstr(createRecord());
      return m;
      }
      
     public String[] updateRecord(String[] x) {
-     String[] m = new String[2];
-     
-     try {
-            boolean proceed = true;
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            Statement st = bsmf.MainFrame.con.createStatement();
-            ResultSet res = null;
-            try {
-                   
-               proceed = validateInput("updateRecord");
-                
-                if (proceed) {
-                    st.executeUpdate("update wf_mstr set wf_desc = " + "'" + tbopdesc.getText() + "'" + ","
-                            + "wf_op_desc = " + "'" + tbopdesc.getText() + "'" + "," 
-                            + "wf_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + "," 
-                            + "wf_cell = " + "'" + ddwc.getSelectedItem().toString() + "'" + ","
-                            + "wf_setup_hours = " + "'" + tbsetuphours.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
-                            + "wf_run_hours = " + "'" + tbrunhours.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
-                            + "wf_assert = " + "'" + BlueSeerUtils.boolToInt(cbmilestone.isSelected()) + "'"
-                            + " where wf_id = " + "'" + x[0] + "'" + " AND "
-                            + " wf_op = " + "'" + x[1] + "'"
-                            + ";");
-                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
-                    initvars(null);
-                } 
-         
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};  
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1020, Thread.currentThread().getStackTrace()[1].getMethodName())};
-        }
-     
+     String[] m = updateRoutingMstr(createRecord());
      return m;
      }
      
@@ -591,6 +503,22 @@ public class RoutingMaint extends javax.swing.JPanel implements IBlueSeer {
         }
       return m;
     }
+    
+    public wf_mstr createRecord() {
+        wf_mstr x = new wf_mstr(null, 
+           tbkey.getText(),
+           tbopdesc.getText(),
+            ddsite.getSelectedItem().toString(),
+            ddop.getSelectedItem().toString(),
+            String.valueOf(BlueSeerUtils.boolToInt(cbmilestone.isSelected())),
+            tbopdesc.getText(),
+            ddwc.getSelectedItem().toString(),    
+            tbsetuphours.getText().replace(defaultDecimalSeparator, '.'),
+            tbrunhours.getText().replace(defaultDecimalSeparator, '.')
+        );
+        return x;
+    }
+    
     
     public void lookUpFrame() {
         
@@ -1023,9 +951,8 @@ public class RoutingMaint extends javax.swing.JPanel implements IBlueSeer {
     }//GEN-LAST:event_btdeleteActionPerformed
 
     private void tbrunhoursinvertedFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbrunhoursinvertedFocusLost
-        DecimalFormat df = new DecimalFormat("#0.00000", new DecimalFormatSymbols(Locale.US));
-        if (! tbrunhoursinverted.getText().isEmpty() && Double.valueOf(tbrunhoursinverted.getText()) > 0)
-        tbrunhours.setText(df.format(1 / Double.valueOf(tbrunhoursinverted.getText())));
+        if (! tbrunhoursinverted.getText().isEmpty() && bsParseDouble(tbrunhoursinverted.getText()) > 0)
+        tbrunhours.setText(currformatDouble(1 / bsParseDouble(tbrunhoursinverted.getText())));
         else
             tbrunhours.setText("0.00");
         

@@ -581,7 +581,7 @@ public class InventoryMaint extends javax.swing.JPanel {
         String op = "";
         double qty = 0;
         double totalcost = 0.00;
-         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
+        
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
         String loc = "";
         String wh = "";

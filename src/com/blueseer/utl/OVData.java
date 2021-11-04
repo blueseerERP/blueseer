@@ -2088,7 +2088,7 @@ return myitem;
                 }
 
             } catch (SQLException s) {
-                JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Panels Master");
+                MainFrame.bslog(s);
             } finally {
                 if (res != null) {
                     res.close();
@@ -2796,7 +2796,7 @@ return myitem;
                 }
 
             } catch (SQLException s) {
-                JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get EmpMstr");
+                MainFrame.bslog(s);
             } finally {
                 if (res != null) {
                     res.close();
@@ -2866,7 +2866,7 @@ return myitem;
                 }
 
             } catch (SQLException s) {
-                JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Cust list");
+                MainFrame.bslog(s);
             } finally {
                 if (res != null) {
                     res.close();
@@ -3056,7 +3056,7 @@ return myitem;
                 }
 
             } catch (SQLException s) {
-                JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Cust list");
+                MainFrame.bslog(s);
             } finally {
                 if (res != null) {
                     res.close();
@@ -3618,7 +3618,7 @@ return myitem;
                 }
 
             } catch (SQLException s) {
-                JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get psmstrlist");
+                MainFrame.bslog(s);
             } finally {
                 if (res != null) {
                     res.close();
@@ -3653,7 +3653,7 @@ return myitem;
                 }
 
             } catch (SQLException s) {
-                JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get psmstrlistCompOpOnly");
+                MainFrame.bslog(s);
             } finally {
                 if (res != null) {
                     res.close();
@@ -3694,7 +3694,7 @@ return myitem;
                 }
 
             } catch (SQLException s) {
-                JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get psmstrlistwithop");
+                MainFrame.bslog(s);
             } finally {
                 if (res != null) {
                     res.close();
@@ -3739,7 +3739,7 @@ return myitem;
                 }
 
             } catch (SQLException s) {
-                JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get psmstrlist");
+                MainFrame.bslog(s);
             } finally {
                 if (res != null) {
                     res.close();
@@ -5387,7 +5387,7 @@ return myitem;
                
            }
             catch (SQLException s){
-                 JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Code Mstr");
+                 MainFrame.bslog(s);
             }
             con.close();
         }
@@ -5444,7 +5444,7 @@ return myitem;
 
            }
             catch (SQLException s){
-                 JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get PriceGroupList from Code Mstr");
+                 MainFrame.bslog(s);
             }
             con.close();
         }
@@ -5562,7 +5562,6 @@ return myitem;
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL can not get Code Mstr");
             }
             con.close();
         }
@@ -5625,7 +5624,7 @@ return myitem;
 
        }
         catch (SQLException s){
-             JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Code Mstr");
+             MainFrame.bslog(s);
         }
         con.close();
     }
@@ -5761,7 +5760,7 @@ return myitem;
                
            }
             catch (SQLException s){
-                 JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Code Mstr");
+                 MainFrame.bslog(s);
             }
             con.close();
         }
@@ -5789,7 +5788,7 @@ return myitem;
                
            }
             catch (SQLException s){
-                 JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Code Mstr");
+                 MainFrame.bslog(s);
             }
             con.close();
         }
@@ -8663,7 +8662,7 @@ return autosource;
                
            }
             catch (SQLException s){
-                 JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Item Master FG");
+                 MainFrame.bslog(s);
             }
             con.close();
         }
@@ -9121,7 +9120,7 @@ return myarray;
 
        }
         catch (SQLException s){
-             JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get WorkFlow Op");
+             MainFrame.bslog(s);
         }
         con.close();
     }
@@ -9214,7 +9213,6 @@ return myarray;
        }
         catch (SQLException s){
             MainFrame.bslog(s);
-             bsmf.MainFrame.show("SQL cannot get Labor Cost");
         }
         con.close();
     }
@@ -9256,7 +9254,7 @@ return myarray;
 
        }
         catch (SQLException s){
-             bsmf.MainFrame.show("SQL cannot get Labor Cost All Ops");
+          MainFrame.bslog(s);
         }
         con.close();
     }
@@ -9295,7 +9293,7 @@ return myarray;
 
        }
         catch (SQLException s){
-             bsmf.MainFrame.show("SQL cannot get Burden Cost All Ops");
+            MainFrame.bslog(s);
         }
         con.close();
     }
@@ -9327,7 +9325,8 @@ return myarray;
 
        }
         catch (SQLException s){
-             JOptionPane.showMessageDialog(bsmf.MainFrame.mydialog, "SQL cannot get Labor Cost");
+        MainFrame.bslog(s);
+
         }
         con.close();
     }

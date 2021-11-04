@@ -78,6 +78,7 @@ import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.inv.invData;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.text.DecimalFormatSymbols;
@@ -714,7 +715,6 @@ public class RetailReorderRpt extends javax.swing.JPanel {
                  Integer[] values = new Integer[13];
                  double diff = 0.0;
                  
-                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
                 int i = 0;
                 int days = 0;
                 if (! tbdays.getText().isEmpty()) {
@@ -934,7 +934,7 @@ public class RetailReorderRpt extends javax.swing.JPanel {
                 
                 
                  i++;
-                 String myratio = df.format(Double.valueOf(forecastratio)) + "%";
+                 String myratio = currformatDouble(Double.valueOf(forecastratio)) + "%";
                      // new String[]{"Select", "Item", "Desc", "LeadTime", "QOH", "UQOH", "SafetyStock", "POQty", "DemandUnAllocated", "FwdQty", "FcstQty", "Status", "Ratio"})
                      summarymodel.addRow(new Object[]{
                             BlueSeerUtils.clickbasket,

@@ -461,7 +461,6 @@ public class invData {
         ps.close();
     }
     
-
     public static String[] addWorkCenterMstr(wc_mstr x) {
         String[] m = new String[2];
         String sqlSelect = "SELECT * FROM  wc_mstr where wc_cell = ?";
@@ -573,6 +572,70 @@ public class invData {
             ps.setString(2, x.loc_site);
             ps.setString(3, x.loc_wh);
             ps.setString(4, x.loc_active);
+            int rows = ps.executeUpdate();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+
+    public static String[] addRoutingMstr(wf_mstr x) {
+        String[] m = new String[2];
+        String sqlSelect = "SELECT * FROM  wf_mstr where wf_id = ?";
+        String sqlInsert = "insert into wf_mstr (wf_id, wf_desc, wf_site, "
+                        + " wf_op, wf_assert, wf_op_desc, wf_cell, " +
+                          " wf_setup_hours, wf_run_hours ) " 
+                        + " values (?,?,?,?,?,?,?,?,?); "; 
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+             PreparedStatement ps = con.prepareStatement(sqlSelect);) {
+             ps.setString(1, x.wf_id);
+          try (ResultSet res = ps.executeQuery();
+               PreparedStatement psi = con.prepareStatement(sqlInsert);) {  
+            if (! res.isBeforeFirst()) {
+            psi.setString(1, x.wf_id);
+            psi.setString(2, x.wf_desc);
+            psi.setString(3, x.wf_site);
+            psi.setString(4, x.wf_op);
+            psi.setString(5, x.wf_assert);
+            psi.setString(6, x.wf_op_desc);
+            psi.setString(7, x.wf_cell);
+            psi.setString(8, x.wf_setup_hours);
+            psi.setString(9, x.wf_run_hours);
+            int rows = psi.executeUpdate();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+            } else {
+            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists};    
+            }
+          } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+          }
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+
+    public static String[] updateRoutingMstr(wf_mstr x) {
+        String[] m = new String[2];
+        String sql = "update wf_mstr set wf_desc = ?, wf_site = ?, "
+                        + " wf_op = ?, wf_assert = ?, wf_op_desc = ?, wf_cell = ?, " +
+                          " wf_setup_hours = ?, wf_run_hours = ? " 
+                        + " where wf_id = ? ;"; 
+         try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(9, x.wf_id);
+            ps.setString(1, x.wf_desc);
+            ps.setString(2, x.wf_site);
+            ps.setString(3, x.wf_op);
+            ps.setString(4, x.wf_assert);
+            ps.setString(5, x.wf_op_desc);
+            ps.setString(6, x.wf_cell);
+            ps.setString(7, x.wf_setup_hours);
+            ps.setString(8, x.wf_run_hours);
             int rows = ps.executeUpdate();
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
         } catch (SQLException s) {
@@ -2728,7 +2791,14 @@ public class invData {
             this(m, "", "", "", "", "", "");
         }
     }
-     
+    
+    public record wf_mstr(String[] m, String wf_id, String wf_desc,
+        String wf_site, String wf_op, String wf_assert, String wf_op_desc,
+        String wf_cell, String wf_setup_hours, String wf_run_hours ) {
+        public wf_mstr(String[] m) {
+            this(m, "", "", "", "", "", "", "", "", "");
+        }
+    }
      
     public record wc_mstr(String[] m, String wc_cell, String wc_desc,
         String wc_site, String wc_cc, String wc_run_rate, String wc_setup_rate,
