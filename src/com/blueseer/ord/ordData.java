@@ -998,8 +998,154 @@ public class ordData {
     return m;
     }
     
+    public static String[] addPOSMstr(pos_mstr x) {
+        String[] m = new String[2];
+        if (x == null) {
+            return new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordError};
+        }
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet res = null;
+        try { 
+            con = DriverManager.getConnection(url + db, user, pass);
+            int rows = _addPOSMstr(x, con, ps, res);  
+            if (rows > 0) {
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+            } else {
+            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordError};    
+            }
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordError};
+        } finally {
+            if (res != null) {
+                try {
+                    res.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
+    }
+        
+    private static int _addPOSMstr(pos_mstr x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+        int rows = 0;
+        String sqlSelect = "select * from pos_mstr where pos_nbr = ?";
+        String sqlInsert = "insert into pos_mstr (pos_nbr, pos_entrydate, pos_entrytime, "
+                        + " pos_aracct, pos_arcc, pos_bank, pos_totqty, pos_totlines, "
+                        + " pos_grossamt, pos_tottax, pos_totamt ) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?); "; 
+       
+          ps = con.prepareStatement(sqlSelect); 
+          ps.setString(1, x.pos_nbr);
+          res = ps.executeQuery();
+          ps = con.prepareStatement(sqlInsert);
+            if (! res.isBeforeFirst()) {
+            ps.setString(1, x.pos_nbr);
+            ps.setString(2, x.pos_entrydate);
+            ps.setString(3, x.pos_entrytime);
+            ps.setString(4, x.pos_aracct);
+            ps.setString(5, x.pos_arcc);
+            ps.setString(6, x.pos_bank);
+            ps.setString(7, x.pos_totqty);
+            ps.setString(8, x.pos_totlines);
+            ps.setString(9, x.pos_grossamt);
+            ps.setString(10, x.pos_tottax);
+            ps.setString(11, x.pos_totamt);
+            rows = ps.executeUpdate();
+            } 
+            return rows;
+    }
     
-    
+    public static String[] addPOSTransaction(ArrayList<pos_det> posd, pos_mstr pos) {
+        String[] m = new String[2];
+        Connection bscon = null;
+        PreparedStatement ps = null;
+        ResultSet res = null;
+        try { 
+            bscon = DriverManager.getConnection(url + db, user, pass);
+            bscon.setAutoCommit(false);
+            _addPOSMstr(pos, bscon, ps, res);  
+            for (pos_det z : posd) {
+                _addPOSDet(z, bscon, ps, res);
+            }
+            bscon.commit();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             try {
+                 bscon.rollback();
+                 m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordError};
+             } catch (SQLException rb) {
+                 MainFrame.bslog(rb);
+             }
+        } finally {
+            if (res != null) {
+                try {
+                    res.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (bscon != null) {
+                try {
+                    bscon.setAutoCommit(true);
+                    bscon.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
+    }
+     
+    private static int _addPOSDet(pos_det x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+        int rows = 0;
+        String sqlSelect = "select * from pos_det where posd_nbr = ?";
+        String sqlInsert = "insert into pos_det (posd_nbr, posd_line, posd_item, "
+                        + " posd_qty, posd_listprice, posd_disc, posd_netprice, posd_tax ) " 
+                        + " values (?,?,?,?,?,?,?,?); "; 
+       
+          ps = con.prepareStatement(sqlSelect); 
+          ps.setString(1, x.posd_nbr);
+          res = ps.executeQuery();
+          ps = con.prepareStatement(sqlInsert);
+            if (! res.isBeforeFirst()) {
+            ps.setString(1, x.posd_nbr);
+            ps.setString(2, x.posd_line);
+            ps.setString(3, x.posd_item);
+            ps.setString(4, x.posd_qty);
+            ps.setString(5, x.posd_listprice);
+            ps.setString(6, x.posd_disc);
+            ps.setString(7, x.posd_netprice);
+            ps.setString(8, x.posd_tax);
+            rows = ps.executeUpdate();
+            } 
+            return rows;
+    }
+     
     // miscellaneous SQL queries
     public static Double getOrderItemAllocatedQty(String item, String site) {
        Double qty = 0.00;
@@ -1160,7 +1306,7 @@ public class ordData {
     }
     
     
-     public record sv_mstr(String[] m, String sv_nbr, String sv_cust, String sv_ship, String sv_po,
+    public record sv_mstr(String[] m, String sv_nbr, String sv_cust, String sv_ship, String sv_po,
         String sv_crew, String sv_create_date, String sv_due_date, String sv_rmks,
     String sv_status, String sv_issched, String sv_userid, String sv_type,
     String sv_char1, String sv_char2, String sv_char3, String sv_terms, 
@@ -1174,7 +1320,7 @@ public class ordData {
         }
     }
     
-      public record svd_det(String[] m, String svd_nbr, String svd_line, String svd_uom, 
+    public record svd_det(String[] m, String svd_nbr, String svd_line, String svd_uom, 
         String svd_item, String svd_desc, String svd_type, String svd_custpart, 
         String svd_qty, String svd_completed_hrs, String svd_po,  String svd_ord_date, 
         String svd_due_date, String svd_create_date, String svd_char1, String svd_char2, String svd_char3,
@@ -1187,5 +1333,22 @@ public class ordData {
         }
     }
     
-       
+    public record pos_mstr(String[] m, String pos_nbr, String pos_entrydate, String pos_entrytime,
+        String pos_aracct, String pos_arcc, String pos_bank, String pos_totqty, 
+        String pos_totlines, String pos_grossamt, String pos_tottax, String pos_totamt)  {
+        public pos_mstr(String[] m) {
+            this (m, "", "", "", "", "", "", "", "", "", "",
+                     "");
+        }
+    }
+
+    public record pos_det(String[] m, String posd_nbr, String posd_line, String posd_item, 
+        String posd_qty, String posd_listprice, String posd_disc, 
+        String posd_netprice, String posd_tax)  {
+        public pos_det(String[] m) {
+            this (m, "", "", "", "", "", "", "", "");
+        }
+    }
+
+    
 }

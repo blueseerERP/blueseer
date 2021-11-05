@@ -27,12 +27,19 @@ package com.blueseer.ctr;
 
 import bsmf.MainFrame;
 import static bsmf.MainFrame.db;
+import static bsmf.MainFrame.defaultDecimalSeparator;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.fgl.fglData;
 import com.blueseer.inv.invData;
+import static com.blueseer.ord.ordData.addPOSTransaction;
+import com.blueseer.ord.ordData.pos_det;
+import com.blueseer.ord.ordData.pos_mstr;
+import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
+import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.OVData;
@@ -102,10 +109,7 @@ public class POSMaint extends javax.swing.JPanel {
                 ResultSet res = null;
                // partnbr.removeAllItems();
                int i = 0;
-                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
                
-             
-              
                 // lets first try as cust part
                
                 res = st.executeQuery("select * from item_mstr where it_item = " + "'" + item.toString() + "'" + ";");
@@ -125,10 +129,10 @@ public class POSMaint extends javax.swing.JPanel {
                     lbdesc.setText("Item not in inventory");
                     lbdesc.setForeground(Color.red);
                     dditem.setForeground(Color.red);
-                     tbdisc.setText("0.00");
-            tblistprice.setText("0.00");
-            tbnetprice.setText("0.00");
-            tbtax.setText("0.00");
+                     tbdisc.setText("0");
+            tblistprice.setText("0");
+            tbnetprice.setText("0");
+            tbtax.setText("0");
             tbqty.setText("1");
                    
                     
@@ -136,17 +140,17 @@ public class POSMaint extends javax.swing.JPanel {
                
                 
              if (i > 0) {   
-            tbdisc.setText("0.00");
-            tblistprice.setText("0.00");
-            tbnetprice.setText("0.00");
-            tbtax.setText("0.00");
+            tbdisc.setText("0");
+            tblistprice.setText("0");
+            tbnetprice.setText("0");
+            tbtax.setText("0");
             tbqty.setText("1");
-            Double discpercent = 0.00;
+            double discpercent = 0;
             String mypart = "";
             if (dditem.getItemCount() > 0) {
                 mypart = dditem.getSelectedItem().toString();
-                tblistprice.setText(df.format(invData.getItemPOSPrice(dditem.getSelectedItem().toString())));
-                tbdisc.setText(df.format(invData.getItemPOSDisc(dditem.getSelectedItem().toString())));
+                tblistprice.setText(currformatDouble(invData.getItemPOSPrice(dditem.getSelectedItem().toString())));
+                tbdisc.setText(currformatDouble(invData.getItemPOSDisc(dditem.getSelectedItem().toString())));
                 dditem.setForeground(Color.blue);
                 setnetprice();
                  tbqty.setText("1");
@@ -167,24 +171,23 @@ public class POSMaint extends javax.swing.JPanel {
     }
     
     public void setnetprice() {
-        Double disc = 0.00;
-        Double list = 0.00;
-        Double net = 0.00;
-        DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
+        double disc = 0;
+        double list = 0;
+        double net = 0;
         
-        if (tbdisc.getText().isEmpty() || Double.parseDouble(tbdisc.getText().toString()) == 0) {
+        if (tbdisc.getText().isEmpty() || bsParseDouble(tbdisc.getText().toString()) == 0) {
             tbnetprice.setText(tblistprice.getText());
         } else {
            
-           if (tblistprice.getText().isEmpty() || Double.parseDouble(tblistprice.getText().toString()) == 0) {
+           if (tblistprice.getText().isEmpty() || bsParseDouble(tblistprice.getText().toString()) == 0) {
              tblistprice.setText("0");
              tbnetprice.setText("0");
            } else {               
-           disc = Double.parseDouble(tbdisc.getText().toString());
-           list = Double.parseDouble(tblistprice.getText().toString());
+           disc = bsParseDouble(tbdisc.getText().toString());
+           list = bsParseDouble(tblistprice.getText().toString());
             
            net = list - ((disc / 100) * list);
-           tbnetprice.setText(df.format(net));
+           tbnetprice.setText(currformatDouble(net));
            }
         }
     }
@@ -295,11 +298,11 @@ public class POSMaint extends javax.swing.JPanel {
        
         ordernbr.setText("");
         
-        tblistprice.setText("0.00");
-        tbnetprice.setText("0.00");
+        tblistprice.setText("0");
+        tbnetprice.setText("0");
         tbnetprice.setEditable(false);
         tbqty.setText("0");
-        tbdisc.setText("0.00");
+        tbdisc.setText("0");
        
         
        
@@ -365,9 +368,9 @@ public class POSMaint extends javax.swing.JPanel {
     }
     
     public void sumqty() {
-        int qty = 0;
+        double qty = 0;
          for (int j = 0; j < orddet.getRowCount(); j++) {
-             qty = qty + Integer.valueOf(orddet.getValueAt(j, 3).toString()); 
+             qty = qty + bsParseDouble(orddet.getValueAt(j, 3).toString()); 
          }
          tbtotqty.setText(String.valueOf(qty));
     }
@@ -384,6 +387,43 @@ public class POSMaint extends javax.swing.JPanel {
         return max;
     }
     
+    public pos_mstr createRecord() {
+        String bank = OVData.getPOSBank(); 
+        String aracct = OVData.getDefaultARAcct();
+        String arcc = OVData.getDefaultARCC();
+        pos_mstr x = new pos_mstr(null, 
+                ordernbr.getText().toString(),
+                clockdate.toString(),
+                clocktime.toString(),
+                aracct,
+                arcc,
+                bank,
+                tbtotqty.getText().replace(defaultDecimalSeparator, '.'),
+                tbtotlines.getText(),
+                currformatDouble(bsParseDouble(tbtotgross.getText())).replace(defaultDecimalSeparator, '.'),
+                currformatDouble(bsParseDouble(tbtottax.getText())).replace(defaultDecimalSeparator, '.'),
+                currformatDouble(bsParseDouble(tbtotnet.getText())).replace(defaultDecimalSeparator, '.')
+                );
+        return x;
+    }
+    
+     public ArrayList<pos_det> createDetRecord() {
+        ArrayList<pos_det> list = new ArrayList<pos_det>();
+            for (int j = 0; j < orddet.getRowCount(); j++) {
+                pos_det x = new pos_det(null, 
+                orddet.getValueAt(j, 0).toString(),
+                orddet.getValueAt(j, 1).toString(),
+                orddet.getValueAt(j, 2).toString(),
+                orddet.getValueAt(j, 3).toString().replace(defaultDecimalSeparator, '.'),
+                orddet.getValueAt(j, 4).toString().replace(defaultDecimalSeparator, '.'),
+                orddet.getValueAt(j, 5).toString().replace(defaultDecimalSeparator, '.'),
+                orddet.getValueAt(j, 6).toString().replace(defaultDecimalSeparator, '.'),
+                orddet.getValueAt(j, 7).toString().replace(defaultDecimalSeparator, '.')
+                );  
+                list.add(x);
+            } 
+        return list;
+    }
     
     
     
@@ -391,7 +431,7 @@ public class POSMaint extends javax.swing.JPanel {
     public double calcGrossTotal() {
         double dol = 0;
          for (int j = 0; j < orddet.getRowCount(); j++) {
-             dol = dol + ( Double.valueOf(orddet.getValueAt(j, 3).toString()) * Double.valueOf(orddet.getValueAt(j, 6).toString()) ); 
+             dol = dol + ( bsParseDouble(orddet.getValueAt(j, 3).toString()) * bsParseDouble(orddet.getValueAt(j, 6).toString()) ); 
          }
          return dol;
     }
@@ -409,10 +449,10 @@ public class POSMaint extends javax.swing.JPanel {
         try { 
             bscon = DriverManager.getConnection(url + db, user, pass);
             bscon.setAutoCommit(false);
-            fglData.voidGLEntryFromPOS(nbr, now, bscon);
+            fglData.glEntryFromPOS(nbr, now, bscon);
             OVData.TRHistIssSalesPOS(nbr, now, false, bscon); 
             OVData.UpdateInventoryFromPOS(nbr, false, bscon);
-            OVData.voidPOSStatus(nbr, bscon);
+           // OVData.voidPOSStatus(nbr, bscon);
             bscon.commit();
             bsmf.MainFrame.show(getMessageTag(1083));
         } catch (SQLException s) {
@@ -679,7 +719,7 @@ public class POSMaint extends javax.swing.JPanel {
                     .addComponent(lbvendor, javax.swing.GroupLayout.PREFERRED_SIZE, 315, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(dditem, javax.swing.GroupLayout.PREFERRED_SIZE, 315, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, 315, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
@@ -783,7 +823,7 @@ public class POSMaint extends javax.swing.JPanel {
                 .addComponent(btnew)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(39, 39, 39)
+                .addGap(36, 36, 36)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -801,7 +841,9 @@ public class POSMaint extends javax.swing.JPanel {
                     .addComponent(jLabel7))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(tbtotnet, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(tbtotnet, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(tbtottax)
@@ -816,11 +858,11 @@ public class POSMaint extends javax.swing.JPanel {
                             .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(tbcash, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tbchange, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btcommit)
-                .addContainerGap())
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(tbcash, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btcommit))
+                            .addComponent(tbchange, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -833,17 +875,17 @@ public class POSMaint extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 294, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbtotlines, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3)
                     .addComponent(tbtotgross, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4)
-                    .addComponent(btcommit)
                     .addComponent(tbcash, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5)
-                    .addComponent(rbcash))
+                    .addComponent(rbcash)
+                    .addComponent(btcommit))
                 .addGap(3, 3, 3)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbtotqty, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -856,21 +898,22 @@ public class POSMaint extends javax.swing.JPanel {
                 .addGap(2, 2, 2)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbtotnet, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel7)))
+                    .addComponent(jLabel7))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(30, 30, 30))
         );
 
         add(jPanel6);
@@ -906,8 +949,7 @@ public class POSMaint extends javax.swing.JPanel {
     private void btadditemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btadditemActionPerformed
         boolean canproceed = true;
         int line = 0;
-         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
-        String part = "";
+         String part = "";
         String custpart = "";
         
             
@@ -916,38 +958,8 @@ public class POSMaint extends javax.swing.JPanel {
         part = dditem.getSelectedItem().toString();
        
         orddet.setModel(myorddetmodel);
-        
-        Pattern p = Pattern.compile("^[0-9]\\d*(\\.\\d+)?$");
-        Matcher m = p.matcher(tblistprice.getText());
-        if (!m.find() || tblistprice.getText() == null) {
-            bsmf.MainFrame.show(getMessageTag(1033));
-            tblistprice.requestFocus();
-            return;
-        }
-        
-        p = Pattern.compile("^[0-9]\\d*(\\.\\d+)?$");
-        m = p.matcher(tbdisc.getText());
-        if (!m.find() || tbdisc.getText() == null) {
-            bsmf.MainFrame.show(getMessageTag(1033));
-            tbdisc.requestFocus();
-            return;
-        }
-        
-        p = Pattern.compile("^[0-9]\\d*(\\.\\d+)?$");
-        m = p.matcher(tbnetprice.getText());
-        if (!m.find() || tbnetprice.getText() == null) {
-            bsmf.MainFrame.show(getMessageTag(1033));
-            tbnetprice.requestFocus();
-            return;
-        }
-        
-        p = Pattern.compile("^[1-9]\\d*$");
-        m = p.matcher(tbqty.getText());
-        if (!m.find() || tbqty.getText() == null) {
-            bsmf.MainFrame.show(getMessageTag(1033));
-            tbqty.requestFocus();
-            return;
-        }
+       
+      
         line = getmaxline();
         line++;
        
@@ -958,115 +970,29 @@ public class POSMaint extends javax.swing.JPanel {
          double grosstotal = calcGrossTotal();
          double tax = calcTotalTax(grosstotal);
          double nettotal = grosstotal + tax;
-         tbtotgross.setText(df.format(grosstotal));
-         tbtottax.setText(df.format(tax));
-         tbtotnet.setText(df.format(nettotal));
+         tbtotgross.setText(currformatDouble(grosstotal));
+         tbtottax.setText(currformatDouble(tax));
+         tbtotnet.setText(currformatDouble(nettotal));
         
          dditem.requestFocus();
         }
     }//GEN-LAST:event_btadditemActionPerformed
 
     private void btcommitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcommitActionPerformed
-         boolean isError = false;
-         java.util.Date now = new java.util.Date();
-                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-                DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
-                clockdate = dfdate.format(now);
-                clocktime = dftime.format(now);
-                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
         
-        try {
-       
-           Class.forName(bsmf.MainFrame.driver).newInstance();
-           bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-          
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                boolean proceed = true;
-                int i = 0;
-               
-                String aracct = "";
-                String arcc = "";
-                String bank = OVData.getPOSBank(); 
-                String totaltax = "";
-                String totalamt = "";                
-                
-                 aracct = OVData.getDefaultARAcct();
-                 arcc = OVData.getDefaultARCC();
-                 
-                 if (! tbtotgross.getText().isEmpty()) {
-                     totaltax = df.format(Double.valueOf(tbtotgross.getText()));
-                 } else {
-                     totaltax = "0.00";
-                 }
-                 
-                 if (! tbtottax.getText().isEmpty()) {
-                     totalamt = df.format(Double.valueOf(tbtottax.getText()));
-                 } else {
-                     bsmf.MainFrame.show(getMessageTag(1087));
-                     return;
-                 }
-                 
-                 
-                                 
-                 
-                if (proceed) {
-                    st.executeUpdate("insert into pos_mstr "
-                        + "(pos_nbr, pos_entrydate, pos_entrytime, "
-                        + " pos_aracct, pos_arcc, pos_bank, pos_totqty, pos_totlines, pos_grossamt, pos_tottax, pos_totamt ) "
-                        + " values ( " + "'" + ordernbr.getText().toString() + "'" + ","
-                        + "'" + clockdate.toString() + "'" + ","
-                        + "'" + clocktime.toString() + "'" + ","
-                        + "'" + aracct + "'" + ","
-                        + "'" + arcc + "'" + ","
-                        + "'" + bank + "'" + ","    
-                        + "'" + tbtotqty.getText() + "'" + "," 
-                        + "'" + tbtotlines.getText() + "'" + "," 
-                        + "'" + df.format(Double.valueOf(tbtotgross.getText())) + "'" + ","
-                        + "'" + df.format(Double.valueOf(tbtottax.getText())) + "'" + ","
-                        + "'" + df.format(Double.valueOf(tbtotnet.getText())) + "'" 
-                            
-                        + ")"
-                        + ";");
-
-                  
-                    
-                    for (int j = 0; j < orddet.getRowCount(); j++) {
-                        st.executeUpdate("insert into pos_det "
-                            + "(posd_nbr, posd_line, posd_item, posd_qty, posd_listprice, posd_disc, posd_netprice, posd_tax ) "
-                            + " values ( " 
-                            + "'" + orddet.getValueAt(j, 0).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 1).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 2).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 3).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 4).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 5).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 6).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 7).toString() + "'"
-                            + ")"
-                            + ";");
-                    }
-                } // if proceed
-            } catch (SQLException s) {
-                isError = true;
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            }
-            bsmf.MainFrame.con.close();
-            if (! isError) {
-            commitTransactions(ordernbr.getText());  // commits multiple transactions
-            }
-            initvars(null);
-            
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        } 
+        java.util.Date now = new java.util.Date();
+        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+        DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
+        clockdate = dfdate.format(now);
+        clocktime = dftime.format(now);
+        String[] m = new String[2];
+        m = addPOSTransaction(createDetRecord(), createRecord());
+        commitTransactions(ordernbr.getText());
+    
     }//GEN-LAST:event_btcommitActionPerformed
 
     private void btdelitemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdelitemActionPerformed
         int[] rows = orddet.getSelectedRows();
-        DecimalFormat df = new DecimalFormat("#.00", new DecimalFormatSymbols(Locale.US));
         for (int i : rows) {
             if (orddet.getValueAt(i, 10).toString().equals("close") || orddet.getValueAt(i, 10).toString().equals("partial")) {
                 bsmf.MainFrame.show(getMessageTag(1088));
@@ -1082,9 +1008,9 @@ public class POSMaint extends javax.swing.JPanel {
          double grosstotal = calcGrossTotal();
          double tax = calcTotalTax(grosstotal);
          double nettotal = grosstotal + tax;
-         tbtotgross.setText(df.format(grosstotal));
-         tbtottax.setText(df.format(nettotal));
-         tbtotnet.setText(df.format(tax));
+         tbtotgross.setText(currformatDouble(grosstotal));
+         tbtottax.setText(currformatDouble(nettotal));
+         tbtotnet.setText(currformatDouble(tax));
     }//GEN-LAST:event_btdelitemActionPerformed
 
     private void tbnetpriceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbnetpriceActionPerformed
@@ -1103,18 +1029,49 @@ public class POSMaint extends javax.swing.JPanel {
     }//GEN-LAST:event_tbqtyFocusGained
 
     private void tbqtyFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbqtyFocusLost
-       if (tbqty.getText().isEmpty() || tbqty.getText().equals("0")) {
-           bsmf.MainFrame.show(getMessageTag(1036));
+       String x = BlueSeerUtils.bsformat("", tbqty.getText(), "2");
+        if (x.equals("error")) {
+            tbqty.setText("");
+            tbqty.setBackground(Color.yellow);
+            bsmf.MainFrame.show(getMessageTag(1000));
             tbqty.requestFocus();
+        } else {
+            tbqty.setText(x);
+            tbqty.setBackground(Color.white);
         }
+        
     }//GEN-LAST:event_tbqtyFocusLost
 
     private void tblistpriceFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tblistpriceFocusLost
+         if (! tblistprice.getText().isEmpty()) {
+        String x = BlueSeerUtils.bsformat("", tblistprice.getText(), "4");
+        if (x.equals("error")) {
+            tblistprice.setText("");
+            tblistprice.setBackground(Color.yellow);
+            bsmf.MainFrame.show(getMessageTag(1000));
+            tblistprice.requestFocus();
+        } else {
+            tblistprice.setText(x);
+            tblistprice.setBackground(Color.white);
+        }
         setnetprice();
+        }
     }//GEN-LAST:event_tblistpriceFocusLost
 
     private void tbdiscFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbdiscFocusLost
-         setnetprice();
+           if (! tbdisc.getText().isEmpty()) {
+        String x = BlueSeerUtils.bsformat("", tbdisc.getText(), "4");
+        if (x.equals("error")) {
+            tbdisc.setText("");
+            tbdisc.setBackground(Color.yellow);
+            bsmf.MainFrame.show(getMessageTag(1000));
+            tbdisc.requestFocus();
+        } else {
+            tbdisc.setText(x);
+            tbdisc.setBackground(Color.white);
+        }
+        setnetprice();
+        }
     }//GEN-LAST:event_tbdiscFocusLost
 
     private void rbcashActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbcashActionPerformed
@@ -1131,9 +1088,8 @@ public class POSMaint extends javax.swing.JPanel {
     }//GEN-LAST:event_rbcardActionPerformed
 
     private void tbcashFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbcashFocusLost
-         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
-        double change = Double.valueOf(tbcash.getText()) - Double.valueOf(tbtotnet.getText());
-        tbchange.setText(df.format(change));
+          double change = bsParseDouble(tbcash.getText()) - bsParseDouble(tbtotnet.getText());
+        tbchange.setText(currformatDouble(change));
         tbcash.setBackground(Color.white);
         
     }//GEN-LAST:event_tbcashFocusLost

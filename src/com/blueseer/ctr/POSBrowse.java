@@ -67,12 +67,14 @@ import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.fgl.fglData;
+import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.text.DecimalFormatSymbols;
 import java.util.Enumeration;
 import java.util.Locale;
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -99,7 +101,15 @@ public class POSBrowse extends javax.swing.JPanel {
                             getGlobalColumnTag("tax"), 
                             getGlobalColumnTag("total"), 
                             getGlobalColumnTag("status"), 
-                            getGlobalColumnTag("void")});
+                            getGlobalColumnTag("void")})
+            {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0 || col == 1 || col == 9)       
+                            return ImageIcon.class;   
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        };
                 
     javax.swing.table.DefaultTableModel modeldetail = new javax.swing.table.DefaultTableModel(new Object[][]{},
                         new String[]{getGlobalColumnTag("id"), 
@@ -180,8 +190,6 @@ public class POSBrowse extends javax.swing.JPanel {
          modeldetail.setNumRows(0);
          double totalsales = 0.00;
          double totalqty = 0.00;
-         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
-        
         try {
 
             Class.forName(bsmf.MainFrame.driver).newInstance();
@@ -205,8 +213,8 @@ public class POSBrowse extends javax.swing.JPanel {
                       res.getString("posd_netprice")});
                 }
                
-               tbdetsales.setText(df.format(totalsales));
-               tbdetqty.setText(df.format(totalqty));
+               tbdetsales.setText(currformatDouble(totalsales));
+               tbdetqty.setText(currformatDouble(totalqty));
                
                 tabledetail.setModel(modeldetail);
                 this.repaint();
@@ -315,6 +323,9 @@ public class POSBrowse extends javax.swing.JPanel {
         modeldetail.setNumRows(0);
         tablereport.setModel(mymodel);
         tabledetail.setModel(modeldetail);
+        tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
+        tablereport.getColumnModel().getColumn(1).setMaxWidth(100);
+        tablereport.getColumnModel().getColumn(9).setMaxWidth(100);
         
       
                 //          ReportPanel.TableReport.getColumn("CallID").setCellEditor(
@@ -638,16 +649,16 @@ try {
                          }
                          totqty = totqty + 1;
                          
-                         mymodel.addRow(new Object[]{"Detail", 
-                               "Print",
+                         mymodel.addRow(new Object[]{BlueSeerUtils.clickbasket, 
+                               BlueSeerUtils.clickprint,
                                res.getString("pos_nbr"),
                                 BlueSeerUtils.xNull(res.getString("pos_entrydate")),
                                 BlueSeerUtils.xNull(res.getString("pos_entrytime")),
-                                df.format(res.getDouble("pos_grossamt")),
-                                df.format(res.getDouble("pos_tottax")),
-                                df.format(res.getDouble("pos_totamt")),
+                                currformatDouble(res.getDouble("pos_grossamt")),
+                                currformatDouble(res.getDouble("pos_tottax")),
+                                currformatDouble(res.getDouble("pos_totamt")),
                                 res.getString("pos_status"),
-                                "Void"
+                                BlueSeerUtils.clickvoid
                             });
                                 
                        }
@@ -655,19 +666,13 @@ try {
                    Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
                  while (en.hasMoreElements()) {
                      TableColumn tc = en.nextElement();
+                     if (mymodel.getColumnClass(tc.getModelIndex()).getSimpleName().equals("ImageIcon")) {
+                         continue;
+                     }
                      tc.setCellRenderer(new SomeRenderer());
-                 }     
-                 
-                 
-                    tablereport.getColumnModel().getColumn(0).setCellRenderer(new ButtonRenderer());
-         tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
-          tablereport.getColumnModel().getColumn(9).setCellRenderer(new ButtonRenderer());
-         tablereport.getColumnModel().getColumn(9).setMaxWidth(100);
-          tablereport.getColumnModel().getColumn(1).setCellRenderer(new ButtonRenderer());
-         tablereport.getColumnModel().getColumn(1).setMaxWidth(100);
-                       
-                tbtotqty.setText(df.format(totqty));
-                tbtotsales.setText(df.format(totsales));
+                 }    
+                tbtotqty.setText(currformatDouble(totqty));
+                tbtotsales.setText(currformatDouble(totsales));
                 
             } catch (SQLException s) {
                 MainFrame.bslog(s);

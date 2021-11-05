@@ -1128,15 +1128,12 @@ public class fglData {
         
         }
         
-    public static boolean glEntryFromPOS(String batchnbr, Date effdate) {
+    public static boolean glEntryFromPOS(String batchnbr, Date effdate, Connection bscon) {
                 boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
         try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = bscon.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-                
                 
                java.util.Date now = new java.util.Date();
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
@@ -1192,7 +1189,7 @@ public class fglData {
                     res.close();
                     // process the arrays into glEntry
                     for (int j = 0; j < v_acct_cr.size(); j++) {
-                      glEntry(v_acct_cr.get(j).toString(), v_cc_cr.get(j).toString(), v_acct_dr.get(j).toString(), v_cc_dr.get(j).toString(), dfdate.format(effdate), bsParseDoubleUS(v_cost.get(j).toString()), bsParseDoubleUS(v_cost.get(j).toString()), curr, basecurr, v_ref.get(j).toString(), v_site.get(j).toString(), v_type.get(j).toString(), v_desc.get(j).toString());  
+                      glEntryXP(bscon, v_acct_cr.get(j).toString(), v_cc_cr.get(j).toString(), v_acct_dr.get(j).toString(), v_cc_dr.get(j).toString(), dfdate.format(effdate), bsParseDoubleUS(v_cost.get(j).toString()), bsParseDoubleUS(v_cost.get(j).toString()), curr, basecurr, v_ref.get(j).toString(), v_site.get(j).toString(), v_type.get(j).toString(), v_desc.get(j).toString());  
                     }
                     
            }
@@ -1200,7 +1197,14 @@ public class fglData {
                  MainFrame.bslog(s);
                  myerror = true;
             }
-            con.close();
+            finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+            }
         }
         catch (Exception e){
             MainFrame.bslog(e);

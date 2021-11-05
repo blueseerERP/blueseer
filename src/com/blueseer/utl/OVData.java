@@ -5997,20 +5997,27 @@ return myreturn;
          try{
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
                 res = st.executeQuery("select ov_site from ov_mstr;" );
                while (res.next()) {
                 myitem = res.getString("ov_site");                    
                 }
-               
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -7156,10 +7163,9 @@ return outvalue;
      try{
 
         Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
         try{
-            Statement st = con.createStatement();
-            ResultSet res = null;
-
             res = st.executeQuery("select it_uom from item_mstr where it_item = " + "'" + mypart.toString() + "'" +
                                   " AND it_site = " + "'" + mysite + "'" + ";" ); 
            while (res.next()) {
@@ -7169,8 +7175,15 @@ return outvalue;
        }
         catch (SQLException s){
             MainFrame.bslog(s);
-        }
-        con.close();
+        } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                    con.close();
+            }
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -10309,12 +10322,10 @@ return mystring;
      }
 
     public static void UpdateInventoryFromPOS(String nbr, boolean isVoid, Connection bscon) throws SQLException {
-
-    Connection con = DriverManager.getConnection(url + db, user, pass);
-    Statement st = con.createStatement();
-    Statement st2 = con.createStatement();
-    Statement st3 = con.createStatement();
-    Statement st4 = con.createStatement();
+    Statement st = bscon.createStatement();
+    Statement st2 = bscon.createStatement();
+    Statement st3 = bscon.createStatement();
+    Statement st4 = bscon.createStatement();
     ResultSet res = null;
     ResultSet res2 = null;
     ResultSet nres = null;
@@ -10332,15 +10343,9 @@ return mystring;
                 String site = OVData.getDefaultSite();
                 double sum = 0;
                 int i = 0;
-
-
-
                   res = st.executeQuery("select posd_item, posd_qty from pos_det " +
                           " where posd_nbr = " + "'" + nbr + "'" +";");
-
-
                 while (res.next()) {
-
                     i = 0;
                     part = res.getString("posd_item");
 
@@ -10370,9 +10375,6 @@ return mystring;
                     if (i == 0) {
                         continue;
                     }
-
-
-
                     // check if in_mstr record exists for this part,loc,site combo
                     // if not add it
                     nres = st2.executeQuery("select in_qoh from in_mstr where "
@@ -10417,8 +10419,6 @@ return mystring;
                             + " and in_site = " + "'" + site + "'"
                             + ";");
                     }
-
-
                 }
        if (st != null) {st.close();}
        if (st2 != null) {st2.close();}
@@ -10427,7 +10427,6 @@ return mystring;
        if (res != null) {res.close();}
        if (res2 != null) {res2.close();}
        if (nres != null) {nres.close();}
-       if (con != null) {con.close();}
 
      }
 
@@ -11106,17 +11105,13 @@ return mystring;
       
     public static void TRHistIssSalesPOS(String nbr, Date effdate, boolean isVoid, Connection bscon) throws SQLException {
         
-                
                 Statement st = bscon.createStatement();
                 Statement st2 = bscon.createStatement();
-                ResultSet res = null;
-                
-                
+                ResultSet res;
                java.util.Date now = new java.util.Date();
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
                 String mydate = dfdate.format(now);
-                
                     String cust = "";
                     String ref = nbr;
                     String rmks = "POS Sales";
@@ -11138,9 +11133,6 @@ return mystring;
                     String lot = "";
                     String terms = "";
                     String uom = "";
-                    
-                    
-                   
                    
                     res = st.executeQuery("select * from pos_det where posd_nbr = " + "'" + nbr + "'" +";");
                     while (res.next()) {
@@ -11152,7 +11144,6 @@ return mystring;
                         }
                         baseqty = qty;
                         uom = OVData.getUOMFromItemSite(part, site);  //always base uom for POS program
-                        
                         
                 st2.executeUpdate("insert into tran_mstr "
                                 + "(tr_site, tr_part, tr_qty, tr_base_qty, tr_uom, tr_ent_date, tr_eff_date, "
@@ -11187,18 +11178,13 @@ return mystring;
                                 + "'" + terms + "'"
                                 + ")"
                                 + ";");
-                
                }
-                    if (res != null) {
-                       res.close(); 
-                    }
+                   
+                    res.close();
+                    st.close();
                     if (st2 != null) {
                     st2.close();
                     }
-                    if (st != null) {
-                    st.close();
-                    }
-                    
     }
     
     public static boolean TRHistIssSalesRV(String shipper, Date effdate) {
