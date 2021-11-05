@@ -34,6 +34,7 @@ import com.blueseer.edi.EDI.*;
 import static com.blueseer.utl.BlueSeerUtils.convertDateFormat;
 import com.blueseer.edi.EDI;
 import com.blueseer.inv.invData;
+import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import com.blueseer.utl.EDData;
 import static com.blueseer.utl.EDData.writeEDILog;
 
@@ -199,11 +200,10 @@ public class Generic850i extends com.blueseer.edi.EDIMap {
                       if (discount != 0)
                       netprice = listprice - (listprice * (discount / 100));
 
-                      DecimalFormat df = new DecimalFormat("#.##");
-
-                      e.setDetNetPrice(i,String.valueOf(df.format(netprice)));
-                      e.setDetListPrice(i,String.valueOf(df.format(listprice)));
-                      e.setDetDisc(i,String.valueOf(df.format(discount)));
+                   
+                      e.setDetNetPrice(i,String.valueOf(currformatDouble(netprice)));
+                      e.setDetListPrice(i,String.valueOf(currformatDouble(listprice)));
+                      e.setDetDisc(i,String.valueOf(currformatDouble(discount)));
                  }
                 }
                   

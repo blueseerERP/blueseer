@@ -36,8 +36,10 @@ import static com.blueseer.inv.invData.addItemMstr;
 import static com.blueseer.inv.invData.deleteItemMstr;
 import static com.blueseer.inv.invData.getItemMstr;
 import static com.blueseer.inv.invData.updateItemMstr;
+import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsformat;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -524,17 +526,17 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
         String[] m = new String[2];
          m = addItemMstr(createRecord());
          
-            double mtlcost = 0.00;
+            double mtlcost = 0;
             if (! tbmtlcost.getText().isEmpty()) {
-                mtlcost = Double.valueOf(tbmtlcost.getText().replace(defaultDecimalSeparator, '.'));
+                mtlcost = bsParseDouble(tbmtlcost.getText());
             }
-             double ovhcost = 0.00;
+             double ovhcost = 0;
             if (! tbovhcost.getText().isEmpty()) {
-                ovhcost = Double.valueOf(tbovhcost.getText().replace(defaultDecimalSeparator, '.'));
+                ovhcost = bsParseDouble(tbovhcost.getText());
             }
-             double outcost = 0.00;
+             double outcost = 0;
             if (! tboutcost.getText().isEmpty()) {
-                outcost = Double.valueOf(tboutcost.getText().replace(defaultDecimalSeparator, '.'));
+                outcost = bsParseDouble(tboutcost.getText());
             }
           // now add item cost record for later use
           OVData.addItemCostRec(tbkey.getText(), ddsite.getSelectedItem().toString(), "standard", mtlcost, ovhcost, outcost, (mtlcost + ovhcost + outcost));
@@ -717,8 +719,8 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
     
     public void getrecenttrans(String parentpart) {
              
-       Double opcost = 0.00;
-       Double prevcost = 0.00;
+       double opcost = 0;
+       double prevcost = 0;
       
         try {
             Class.forName(bsmf.MainFrame.driver).newInstance();
@@ -774,7 +776,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 ResultSet res = null;
 
                 int i = 0;
-                double tot = 0.00;
+                double tot = 0;
 
                 
                 locmodel.setRowCount(0);
@@ -791,7 +793,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
 
                 while (res.next()) {
                     i++;
-                    tot = tot + Double.valueOf(res.getInt("in_qoh"));
+                    tot = tot + bsParseDouble(res.getString("in_qoh"));
                     locmodel.addRow(new Object[]{
                                 res.getString("in_site"),
                                 res.getString("in_loc"),
@@ -816,30 +818,25 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
      
     public void getcurrentcost(String parentpart) {
         calcCost cur = new calcCost();
-        String pattern = "#0.00000";
-        DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.getDefault());    
-        df.applyPattern(pattern); 
         ArrayList<Double> costlist = new ArrayList<Double>();
         costlist = cur.getTotalCost(tbkey.getText());
-     tbmtlcur.setText(df.format(costlist.get(0)));
-     tblbrcur.setText(df.format(costlist.get(1)));
-     tbbdncur.setText(df.format(costlist.get(2)));
-     tbovhcur.setText(df.format(costlist.get(3)));
-     tboutcur.setText(df.format(costlist.get(4)));
-     tbtotcostcur.setText(df.format(costlist.get(0) + costlist.get(1) + costlist.get(2) + costlist.get(3) + costlist.get(4)));
+     tbmtlcur.setText(currformatDouble(costlist.get(0)));
+     tblbrcur.setText(currformatDouble(costlist.get(1)));
+     tbbdncur.setText(currformatDouble(costlist.get(2)));
+     tbovhcur.setText(currformatDouble(costlist.get(3)));
+     tboutcur.setText(currformatDouble(costlist.get(4)));
+     tbtotcostcur.setText(currformatDouble(costlist.get(0) + costlist.get(1) + costlist.get(2) + costlist.get(3) + costlist.get(4)));
          }
     
     public void getstandardcost(String parentpart) {
     ArrayList<Double> costs = invData.getItemCostElements(tbkey.getText(), "standard", ddsite.getSelectedItem().toString());
-    String pattern = "#0.00000";
-    DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.getDefault());    
-    df.applyPattern(pattern);  
-     tbmtlstd.setText(df.format(costs.get(0) + costs.get(5)));
-     tblbrstd.setText(df.format(costs.get(1) + costs.get(6)));
-     tbbdnstd.setText(df.format(costs.get(2) + costs.get(7)));
-     tbovhstd.setText(df.format(costs.get(3) + costs.get(8)));
-     tboutstd.setText(df.format(costs.get(4) + costs.get(9)));
-     tbtotcoststd.setText(df.format(costs.get(10)));
+   
+     tbmtlstd.setText(currformatDouble(costs.get(0) + costs.get(5)));
+     tblbrstd.setText(currformatDouble(costs.get(1) + costs.get(6)));
+     tbbdnstd.setText(currformatDouble(costs.get(2) + costs.get(7)));
+     tbovhstd.setText(currformatDouble(costs.get(3) + costs.get(8)));
+     tboutstd.setText(currformatDouble(costs.get(4) + costs.get(9)));
+     tbtotcoststd.setText(currformatDouble(costs.get(10)));
      }
         
     

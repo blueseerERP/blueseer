@@ -54,7 +54,9 @@ import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
+import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -912,7 +914,6 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeer {
           modelearnings.setNumRows(0);
           jtpEarnings.setText("");
           jtpEarnings.setContentType("text/html");
-         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
         
         try {
 
@@ -953,14 +954,14 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeer {
                     } else {
                         codedesc = res.getString("clc_desc");
                     }
-                    html += "<tr><td align='right'>" + codedesc + ":" + "</td><td>" + df.format(res.getDouble("t.tothrs") * res.getDouble("e.emp_rate")) + "</td></tr>";
+                    html += "<tr><td align='right'>" + codedesc + ":" + "</td><td>" + currformatDouble(res.getDouble("t.tothrs") * res.getDouble("e.emp_rate")) + "</td></tr>";
                 
                 modelearnings.addRow(new Object []{empnbr,
                                             "earnings",
                                             res.getString("t.code_id"),
                                             res.getString("clc_desc"),
                                             res.getString("e.emp_rate"),
-                                            df.format(res.getDouble("t.tothrs") * res.getDouble("e.emp_rate"))
+                                            currformatDouble(res.getDouble("t.tothrs") * res.getDouble("e.emp_rate"))
                                             } );
                 
                 }
@@ -972,14 +973,14 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeer {
                         " order by pyd_paydate desc ;");
                       
                      while (res.next()) {
-                     html += "<tr><td align='right'>" + "Salary" + ":" + "</td><td>" + df.format(res.getDouble("pyd_tothours") * res.getDouble("pyd_emprate")) + "</td></tr>";
+                     html += "<tr><td align='right'>" + "Salary" + ":" + "</td><td>" + currformatDouble(res.getDouble("pyd_tothours") * res.getDouble("pyd_emprate")) + "</td></tr>";
                 
                      modelearnings.addRow(new Object []{empnbr,
                                             "earnings",
                                             "Salary",
                                             res.getString("emp_payfrequency"),
                                             res.getString("pyd_emprate"),
-                                            df.format(res.getDouble("pyd_payamt"))
+                                            currformatDouble(res.getDouble("pyd_payamt"))
                                             } );
                      }
                 }
@@ -1014,8 +1015,7 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeer {
           StyleConstants.setForeground(keyWord, Color.RED);
           StyleConstants.setBackground(keyWord, Color.YELLOW);
           StyleConstants.setBold(keyWord, true);
-         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
-         double empexception = 0.00;
+          double empexception = 0;
         
         try {
 
@@ -1034,16 +1034,16 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeer {
                 
                 html += "<table>";
                 while (res.next()) {
-                    html += "<tr><td align='right'>" + res.getString("paypd_desc") + ":" + "</td><td>" + df.format(amount * (res.getDouble("paypd_amt") / 100)) + "</td></tr>";
+                    html += "<tr><td align='right'>" + res.getString("paypd_desc") + ":" + "</td><td>" + currformatDouble(amount * (res.getDouble("paypd_amt") / 100)) + "</td></tr>";
                 // doc.insertString(doc.getLength(), res.getString("paypd_desc") + ":\t", null );
-                // doc.insertString(doc.getLength(), df.format(amount * res.getDouble("paypd_amt")) + "\n", null );
+                // doc.insertString(doc.getLength(), currformatDouble(amount * res.getDouble("paypd_amt")) + "\n", null );
                 // "EmpID", "type", "code", "desc", "rate", "amt"
                  modeldeduct.addRow(new Object []{empnbr,
                                             "deduction",
                                             "",
                                             res.getString("paypd_desc"),
                                             res.getString("paypd_amt").replace('.',defaultDecimalSeparator),
-                                            df.format(amount * (res.getDouble("paypd_amt") / 100)).replace('.',defaultDecimalSeparator)
+                                            currformatDouble(amount * (res.getDouble("paypd_amt") / 100)).replace('.',defaultDecimalSeparator)
                                             } );
                 
                 }
@@ -1059,9 +1059,9 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeer {
                     } else {
                       empexception = res.getDouble("empx_amt");  
                     }
-                    html += "<tr><td align='right'>" + res.getString("empx_desc") + ":" + "</td><td>" + df.format(empexception) + "</td></tr>";
+                    html += "<tr><td align='right'>" + res.getString("empx_desc") + ":" + "</td><td>" + currformatDouble(empexception) + "</td></tr>";
                 // doc.insertString(doc.getLength(), res.getString("paypd_desc") + ":\t", null );
-                // doc.insertString(doc.getLength(), df.format(amount * res.getDouble("paypd_amt")) + "\n", null ); 
+                // doc.insertString(doc.getLength(), currformatDouble(amount * res.getDouble("paypd_amt")) + "\n", null ); 
                 
                     modeldeduct.addRow(new Object []{empnbr,
                                             "deduction",
@@ -1089,9 +1089,8 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeer {
     public void getdetail(String empnbr, String checknbr) {
       
          modeldetail.setNumRows(0);
-         double totalsales = 0.00;
-         double totalqty = 0.00;
-         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
+         double totalsales = 0;
+         double totalqty = 0;
         
         try {
 
@@ -1153,7 +1152,7 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeer {
                 ResultSet res = null;
                 mymodel.setNumRows(0);
                 int i = 0;
-                double netcheck = 0.00;
+                double netcheck = 0;
                     res = st.executeQuery("SELECT pyd_id, pyd_empnbr, pyd_checknbr, pyd_paydate, pyd_tothours, pyd_payamt, " +
                              " (select sum(pyl_amt) from pay_line where pyl_id = pyd_id and pyl_checknbr = pyd_checknbr ) as 'deductions' " +
                             " FROM  pay_det where pyd_empnbr = " + "'" + empnbr + "'" + " order by pyd_paydate desc ;");
@@ -2262,7 +2261,7 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeer {
             summarypanel.setVisible(false);
             detailpanel.setVisible(true);
             chartpanel.setVisible(true);
-            getDeductions(tablereport.getValueAt(row, 2).toString(), Double.valueOf(tablereport.getValueAt(row,6).toString()));
+            getDeductions(tablereport.getValueAt(row, 2).toString(), bsParseDouble(tablereport.getValueAt(row,6).toString()));
             getEarnings(tablereport.getValueAt(row, 2).toString(), tablereport.getValueAt(row, 3).toString() );
         }
         

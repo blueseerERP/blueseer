@@ -69,6 +69,8 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
+import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.text.DecimalFormatSymbols;
@@ -190,9 +192,7 @@ public class POBrowse extends javax.swing.JPanel {
     public void getdetail(String po) {
       
          modeldetail.setNumRows(0);
-         double total = 0.00;
-         DecimalFormat df = new DecimalFormat("#0.0000", new DecimalFormatSymbols(Locale.US));
-        
+         double total = 0;
         
         try {
 
@@ -209,7 +209,7 @@ public class POBrowse extends javax.swing.JPanel {
                    modeldetail.addRow(new Object[]{ 
                       res.getString("pod_nbr"), 
                        res.getString("pod_part"),
-                       Double.valueOf(df.format(res.getDouble("pod_netprice"))),
+                       bsParseDouble(currformatDouble(res.getDouble("pod_netprice"))),
                       res.getInt("pod_ord_qty"), 
                       res.getInt("pod_rcvd_qty"), 
                       res.getString("pod_status")});
@@ -616,7 +616,6 @@ try {
                 Statement st = con.createStatement();
                 ResultSet res = null;
              
-                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
                 int i = 0;
                
                mymodel.setNumRows(0);
@@ -626,8 +625,8 @@ try {
               tablereport.getColumnModel().getColumn(1).setMaxWidth(100);
                  DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 
-                 double totqty = 0.00;
-                 double totamt = 0.00;
+                 double totqty = 0;
+                 double totamt = 0;
                  
                  String pofrom = tbfrompo.getText();
                  String poto = tbtopo.getText();
@@ -690,7 +689,7 @@ try {
                                 res.getString("po_ord_date"),
                                 res.getString("po_type"),
                                 res.getString("po_status"),
-                                Double.valueOf(df.format(res.getDouble("total")))
+                                bsParseDouble(currformatDouble(res.getDouble("total")))
                             });
                
              
@@ -698,8 +697,8 @@ try {
                 } // while   
                     
                  
-                lblamttot.setText(df.format(totamt));
-                lblqtytot.setText(df.format(totqty));
+                lblamttot.setText(currformatDouble(totamt));
+                lblqtytot.setText(currformatDouble(totqty));
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));

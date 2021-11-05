@@ -69,6 +69,7 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.text.DecimalFormatSymbols;
@@ -142,9 +143,7 @@ public class DOBrowse extends javax.swing.JPanel {
      public void getdetail(String donbr) {
       
          modeldetail.setNumRows(0);
-         double total = 0.00;
-         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
-        
+         double total = 0;
         
         try {
 
@@ -512,7 +511,6 @@ try {
                 Statement st = con.createStatement();
                 ResultSet res = null;
              
-                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
                 int i = 0;
                
                mymodel.setNumRows(0);
@@ -525,8 +523,8 @@ try {
               tablereport.getColumnModel().getColumn(1).setMaxWidth(100);
                  DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 
-                 double totqty = 0.00;
-                 double totamt = 0.00;
+                 double totqty = 0;
+                 double totamt = 0;
                  
                  String sofrom = tbfromso.getText();
                  String soto = tbtoso.getText();
@@ -560,7 +558,7 @@ try {
                                 res.getString("do_shipdate"),
                                 res.getString("do_type"),
                                 res.getString("do_status"),
-                                df.format(res.getDouble("qty"))
+                                currformatDouble(res.getDouble("qty"))
                             });
                
              
@@ -568,7 +566,7 @@ try {
                 } // while   
                     
                  
-                lblqtytot.setText(df.format(totqty));
+                lblqtytot.setText(currformatDouble(totqty));
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));

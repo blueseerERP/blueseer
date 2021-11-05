@@ -63,6 +63,7 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.text.DecimalFormatSymbols;
@@ -139,10 +140,9 @@ public class ShipperDetBrowse extends javax.swing.JPanel {
     public void getdetail(String shipper) {
       
          modeldetail.setNumRows(0);
-         double totalsales = 0.00;
-         double totalqty = 0.00;
-         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
-        
+         double totalsales = 0;
+         double totalqty = 0;
+       
         try {
 
             Class.forName(bsmf.MainFrame.driver).newInstance();
@@ -471,16 +471,13 @@ try {
                 Statement st = con.createStatement();
                 ResultSet res = null;
 
-                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
-              
-               
                mymodel.setNumRows(0);
                  
               
                 
-                 double totsales = 0.00;
-                 double sales = 0.00;
-                 double totqty = 0.00;
+                 double totsales = 0;
+                 double sales = 0;
+                 double totqty = 0;
                  
             
                 // String site = ddsite.getSelectedItem().toString(); 
@@ -537,13 +534,13 @@ try {
                                 res.getString("shd_part"),
                                 res.getString("shd_qty"),
                                 res.getString("shd_netprice"),
-                                df.format(sales)
+                                currformatDouble(sales)
                             });
                                 
                        }
               
-                tbtotqty.setText(df.format(totqty));
-                tbtotsales.setText(df.format(totsales));
+                tbtotqty.setText(currformatDouble(totqty));
+                tbtotsales.setText(currformatDouble(totsales));
                 
             } catch (SQLException s) {
                 MainFrame.bslog(s);

@@ -33,6 +33,8 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
+import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -718,8 +720,8 @@ public class invData {
 
     }
 
-    public static Double getItemPriceFromCust(String cust, String part, String uom, String curr) {
-    Double price = 0.00;
+    public static double getItemPriceFromCust(String cust, String part, String uom, String curr) {
+    double price = 0;
     String pricecode = "";
 
     try{
@@ -770,8 +772,8 @@ public class invData {
 
     }
 
-    public static Double getItemPriceFromListCode(String code, String part, String uom, String curr) {
-    Double myreturn = 0.00;
+    public static double getItemPriceFromListCode(String code, String part, String uom, String curr) {
+    double myreturn = 0;
     String pricecode = "";
 
     try{
@@ -809,8 +811,8 @@ public class invData {
 
     }
 
-    public static Double getItemDiscFromCust(String cust) {
-    Double myreturn = 0.00;
+    public static double getItemDiscFromCust(String cust) {
+    double myreturn = 0;
     String disccode = "";
     int i = 0;
     try{
@@ -932,8 +934,8 @@ public class invData {
 
     }
 
-    public static Double getItemPriceFromVend(String vend, String part, String uom, String curr) {
-       Double myreturn = 0.00;
+    public static double getItemPriceFromVend(String vend, String part, String uom, String curr) {
+       double myreturn = 0;
        String pricecode = "";
 
         try{
@@ -1468,8 +1470,8 @@ public class invData {
 
     }
 
-    public static Double getItemQOHTotal(String item, String site) {
-       Double qty = 0.00;
+    public static double getItemQOHTotal(String item, String site) {
+       double qty = 0;
      try{
         Class.forName(driver).newInstance();
         Connection con = DriverManager.getConnection(url + db, user, pass);
@@ -1506,8 +1508,8 @@ public class invData {
 
     }
 
-    public static Double getItemQOHUnallocated(String item, String site, String currentorder) {
-       Double qohu = 0.00;
+    public static double getItemQOHUnallocated(String item, String site, String currentorder) {
+       double qohu = 0;
      try{
         Class.forName(driver).newInstance();
         Connection con = DriverManager.getConnection(url + db, user, pass);
@@ -1555,8 +1557,8 @@ public class invData {
 
     }   
 
-    public static Double getItemQtyByWarehouse(String item, String site, String wh) {
-       Double cost = 0.00;
+    public static double getItemQtyByWarehouse(String item, String site, String wh) {
+       double cost = 0;
      try{
         Class.forName(driver).newInstance();
         Connection con = DriverManager.getConnection(url + db, user, pass);
@@ -1594,8 +1596,8 @@ public class invData {
 
     }   
 
-    public static Double getItemQtyByWarehouseAndLocation(String item, String site, String wh, String loc) {
-       Double cost = 0.00;
+    public static double getItemQtyByWarehouseAndLocation(String item, String site, String wh, String loc) {
+       double cost = 0;
      try{
         Class.forName(driver).newInstance();
         Connection con = DriverManager.getConnection(url + db, user, pass);
@@ -1634,8 +1636,8 @@ public class invData {
 
     }    
 
-    public static Double getItemPOSPrice(String item) {
-       Double price = 0.00;
+    public static double getItemPOSPrice(String item) {
+       double price = 0;
      try{
         Class.forName(driver).newInstance();
         Connection con = DriverManager.getConnection(url + db, user, pass);
@@ -1666,8 +1668,8 @@ public class invData {
 
     }
 
-    public static Double getItemPOSDisc(String item) {
-       Double price = 0.00;
+    public static double getItemPOSDisc(String item) {
+       double price = 0;
      try{
         Class.forName(driver).newInstance();
         Connection con = DriverManager.getConnection(url + db, user, pass);
@@ -1701,8 +1703,8 @@ public class invData {
 
     }
 
-    public static Double getItemCost(String item, String set, String site) {
-               Double cost = 0.00;
+    public static double getItemCost(String item, String set, String site) {
+               double cost = 0;
              try{
                 Class.forName(driver).newInstance();
                 Connection con = DriverManager.getConnection(url + db, user, pass);
@@ -1738,8 +1740,8 @@ public class invData {
 
         }
 
-    public static Double getItemCostUpToOp(String item, String set, String site, String op) {
-               Double cost = 0.00;
+    public static double getItemCostUpToOp(String item, String set, String site, String op) {
+               double cost = 0;
              try{
                 Class.forName(driver).newInstance();
                 Connection con = DriverManager.getConnection(url + db, user, pass);
@@ -1881,8 +1883,8 @@ public class invData {
         }
 
 
-    public static Double getItemOperationalCost(String item, String set, String site) {
-    double cost = 0.00; 
+    public static double getItemOperationalCost(String item, String set, String site) {
+    double cost = 0; 
     try{
     Class.forName(driver).newInstance();
     Connection con = DriverManager.getConnection(url + db, user, pass);
@@ -1921,8 +1923,8 @@ public class invData {
 
     }
 
-    public static Double getItemMtlCostStd(String item, String set, String site) {
-    Double cost = 0.00;
+    public static double getItemMtlCostStd(String item, String set, String site) {
+    double cost = 0;
     try{
     Class.forName(driver).newInstance();
     Connection con = DriverManager.getConnection(url + db, user, pass);
@@ -1958,8 +1960,8 @@ public class invData {
 
     }
 
-    public static Double getItemMtlCost(String item) {
-    Double cost = 0.00;
+    public static double getItemMtlCost(String item) {
+    double cost = 0;
     try{
     Class.forName(driver).newInstance();
     Connection con = DriverManager.getConnection(url + db, user, pass);
@@ -1993,8 +1995,8 @@ public class invData {
 
     }
 
-    public static Double getItemOvhCostStd(String item, String set, String site) {
-    Double cost = 0.00;
+    public static double getItemOvhCostStd(String item, String set, String site) {
+    double cost = 0;
     try{
     Class.forName(driver).newInstance();
     Connection con = DriverManager.getConnection(url + db, user, pass);
@@ -2030,8 +2032,8 @@ public class invData {
 
     }
 
-    public static Double getItemOvhCost(String item) {
-    Double cost = 0.00;
+    public static double getItemOvhCost(String item) {
+    double cost = 0;
     try{
     Class.forName(driver).newInstance();
     Connection con = DriverManager.getConnection(url + db, user, pass);
@@ -2065,8 +2067,8 @@ public class invData {
 
     }
 
-    public static Double getItemOutCostStd(String item, String set, String site) {
-    Double cost = 0.00;
+    public static double getItemOutCostStd(String item, String set, String site) {
+    double cost = 0;
     try{
     Class.forName(driver).newInstance();
     Connection con = DriverManager.getConnection(url + db, user, pass);
@@ -2102,8 +2104,8 @@ public class invData {
 
     }
 
-    public static Double getItemOutCost(String item) {
-           Double cost = 0.00;
+    public static double getItemOutCost(String item) {
+           double cost = 0;
          try{
             Class.forName(driver).newInstance();
             Connection con = DriverManager.getConnection(url + db, user, pass);
@@ -2682,9 +2684,8 @@ public class invData {
 
     }
 
-    public static Double getItemLbrCost(String part, String op, String site, String set) {
-             Double labor = 0.00;
-              DecimalFormat df = new DecimalFormat("#.00000", new DecimalFormatSymbols(Locale.US)); 
+    public static double getItemLbrCost(String part, String op, String site, String set) {
+             double labor = 0;
               try{
             Class.forName(driver).newInstance();
             Connection con = DriverManager.getConnection(url + db, user, pass);
@@ -2703,7 +2704,7 @@ public class invData {
                while (res.next()) {
                     labor += ( res.getDouble("itr_lbr_top") + res.getDouble("itr_lbr_low") );
                 }
-               labor = Double.valueOf(df.format(labor));
+               labor = bsParseDouble(currformatDouble(labor));
            }
             catch (SQLException s){
                 MainFrame.bslog(s);
@@ -2723,10 +2724,9 @@ public class invData {
              return labor;
          }
 
-    public static Double getItemBdnCost(String part, String op, String site, String set) {
-         Double burden = 0.00;
-          DecimalFormat df = new DecimalFormat("#.00000", new DecimalFormatSymbols(Locale.US)); 
-          try{
+    public static double getItemBdnCost(String part, String op, String site, String set) {
+         double burden = 0;
+           try{
         Class.forName(driver).newInstance();
         Connection con = DriverManager.getConnection(url + db, user, pass);
         Statement st = con.createStatement();
@@ -2743,7 +2743,7 @@ public class invData {
            while (res.next()) {
                 burden += ( res.getDouble("itr_bdn_top") + res.getDouble("itr_bdn_low") );
             }
-           burden = Double.valueOf(df.format(burden));
+           burden = bsParseDouble(currformatDouble(burden));
        }
         catch (SQLException s){
             MainFrame.bslog(s);

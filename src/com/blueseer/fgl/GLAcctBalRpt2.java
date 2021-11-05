@@ -67,6 +67,8 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
+import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.text.DecimalFormatSymbols;
@@ -244,7 +246,6 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
       
          modeldetail.setNumRows(0);
          double total = 0.00;
-         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
          ArrayList<Date> actdatearray = OVData.getGLCalForPeriod(year, period);  
                 String datestart = String.valueOf(actdatearray.get(0));
                 String dateend = String.valueOf(actdatearray.get(1));
@@ -275,10 +276,10 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
                       res.getString("glh_type"), 
                       res.getString("glh_effdate"),
                       res.getString("glh_desc"),
-                      Double.valueOf(df.format(res.getDouble("glh_base_amt")))  });
+                      res.getDouble("glh_base_amt")  });
                 }
                
-               labeldettotal.setText(df.format(total));
+               labeldettotal.setText(currformatDouble(total));
                 tabledetail.setModel(modeldetail);
                 this.repaint();
 
@@ -297,7 +298,6 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
       
          modeldetail.setNumRows(0);
          double total = 0.00;
-         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
          ArrayList<Date> actdatearray = OVData.getGLCalForPeriod(year, period);  
                 String datestart = String.valueOf(actdatearray.get(0));
                 String dateend = String.valueOf(actdatearray.get(1));
@@ -327,10 +327,10 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
                       res.getString("glh_doc"), 
                       res.getString("glh_effdate"),
                       res.getString("glh_desc"),
-                      Double.valueOf(df.format(res.getDouble("glh_base_amt")))});
+                      res.getDouble("glh_base_amt")});
                 }
                
-               labeldettotal.setText(df.format(total));
+               labeldettotal.setText(currformatDouble(total));
                 tabledetail.setModel(modeldetail);
                 this.repaint();
 
@@ -747,7 +747,6 @@ try {
                 
                 int qty = 0;
                 double dol = 0;
-                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
                 int j = 0;
                
                mymodel.setNumRows(0);
@@ -889,9 +888,9 @@ try {
                                 acctdesc,
                                 site,
                                 res.getString("acb_cc"),
-                                Double.valueOf(df.format(begbal)),
-                                Double.valueOf(df.format(activity)),
-                                Double.valueOf(df.format(endbal))
+                                bsParseDouble(currformatDouble(begbal)),
+                                bsParseDouble(currformatDouble(activity)),
+                                bsParseDouble(currformatDouble(endbal))
                             });
                  totendbal = totendbal + endbal;
                  totbegbal = totbegbal + begbal;
@@ -940,9 +939,9 @@ try {
                                 acctdesc,
                                 site,
                                 res.getString("acb_cc"),
-                                Double.valueOf(df.format(begbal)),
-                                Double.valueOf(df.format(activity)),
-                                Double.valueOf(df.format(endbal))
+                                bsParseDouble(currformatDouble(begbal)),
+                                bsParseDouble(currformatDouble(activity)),
+                                bsParseDouble(currformatDouble(endbal))
                             });
                             
                                   
@@ -1070,9 +1069,9 @@ try {
                     mymodel.addRow(new Object[]{BlueSeerUtils.clickbasket, acctid, accttype, acctcurr,
                                 acctdesc,
                                 site,
-                                Double.valueOf(df.format(begbal)),
-                                Double.valueOf(df.format(activity)),
-                                Double.valueOf(df.format(endbal))
+                                bsParseDouble(currformatDouble(begbal)),
+                                bsParseDouble(currformatDouble(activity)),
+                                bsParseDouble(currformatDouble(endbal))
                             });
                
              
@@ -1085,9 +1084,9 @@ try {
                  
                  
                  
-                lblendbal.setText(df.format(totendbal));
-                lblbegbal.setText(df.format(totbegbal));
-                lblactbal.setText(df.format(totactivity));
+                lblendbal.setText(currformatDouble(totendbal));
+                lblbegbal.setText(currformatDouble(totbegbal));
+                lblactbal.setText(currformatDouble(totactivity));
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show(getMessageTag(1016, this.getClass().getEnclosingMethod().getName()));

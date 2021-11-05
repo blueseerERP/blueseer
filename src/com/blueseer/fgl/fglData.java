@@ -391,7 +391,7 @@ public class fglData {
          
           String rndamt = "";
           
-          //bsmf.MainFrame.show(String.valueOf(amt) + "/" + df.format(amt));
+       
           
        if ( amt != 0 ) {   
        try {

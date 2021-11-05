@@ -63,6 +63,7 @@ import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.ctr.cusData;
+import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.text.DecimalFormatSymbols;
@@ -423,7 +424,6 @@ try {
 
                 int qty = 0;
                 double dol = 0;
-                DecimalFormat df = new DecimalFormat("###,###,###.##", new DecimalFormatSymbols(Locale.US));
                 int i = 0;
                 String fromcust = "";
                 String tocust = "";
@@ -484,7 +484,7 @@ try {
                                 res.getString("so_status")
                             });
                 }
-                labeldollar.setText(String.valueOf(df.format(dol)));
+                labeldollar.setText(String.valueOf(currformatDouble(dol)));
                 labelcount.setText(String.valueOf(i));
                 labelqty.setText(String.valueOf(qty));
             } catch (SQLException s) {

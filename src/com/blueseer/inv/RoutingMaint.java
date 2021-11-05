@@ -272,10 +272,10 @@ public class RoutingMaint extends javax.swing.JPanel implements IBlueSeer {
         tbkey.setText("");
         ddop.removeAllItems();
         tbopdesc.setText("");
-        tbrunhoursinverted.setText("0.00");
+        tbrunhoursinverted.setText("0");
        
         tbrunhours.setText("");
-        tbsetuphours.setText("0.00");
+        tbsetuphours.setText("0");
         cbmilestone.setSelected(false);
         
         ddsite.removeAllItems();
@@ -445,9 +445,8 @@ public class RoutingMaint extends javax.swing.JPanel implements IBlueSeer {
             ResultSet res = null;
             try {
                 
-                double runhours = 0.00;
-                double setuphours = 0.00;
-                DecimalFormat df = new DecimalFormat("#0.00000", new DecimalFormatSymbols(Locale.US));
+                double runhours = 0;
+                double setuphours = 0;
                 int i = 0;
                  if (x == null && x.length < 1) { return new String[]{}; };
                  
@@ -471,7 +470,7 @@ public class RoutingMaint extends javax.swing.JPanel implements IBlueSeer {
                     if (res.getDouble("wf_run_hours") > 0)
                         runhours = 1 / res.getDouble("wf_run_hours");
                     else
-                        runhours = 0.00;
+                        runhours = 0;
                     
                     
                     
@@ -482,7 +481,7 @@ public class RoutingMaint extends javax.swing.JPanel implements IBlueSeer {
                     ddop.setSelectedItem(res.getString("wf_op"));
                     tbrunhours.setText(res.getString("wf_run_hours").replace('.',defaultDecimalSeparator));
                     tbsetuphours.setText(res.getString("wf_setup_hours").replace('.',defaultDecimalSeparator));
-                    tbrunhoursinverted.setText(String.valueOf(df.format(runhours)).replace('.',defaultDecimalSeparator));
+                    tbrunhoursinverted.setText(String.valueOf(currformatDouble(runhours)).replace('.',defaultDecimalSeparator));
                     cbmilestone.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("wf_assert")));
                 }
                
@@ -893,10 +892,9 @@ public class RoutingMaint extends javax.swing.JPanel implements IBlueSeer {
             try {
                 Statement st = bsmf.MainFrame.con.createStatement();
                 ResultSet res = null;
-                double runhours = 0.00;
-                double setuphours = 0.00;
-                DecimalFormat df = new DecimalFormat("#0.00000", new DecimalFormatSymbols(Locale.US));
-                int i = 0;
+                double runhours = 0;
+                double setuphours = 0;
+                 int i = 0;
                 res = st.executeQuery("select * from wf_mstr where wf_id = " + "'" + tbkey.getText() + "'"  + " AND " +
                         " wf_op = " + "'" + ddop.getSelectedItem().toString() + "'" + ";");
                         
@@ -906,7 +904,7 @@ public class RoutingMaint extends javax.swing.JPanel implements IBlueSeer {
                     if (res.getDouble("wf_run_hours") > 0)
                         runhours = 1 / res.getDouble("wf_run_hours");
                     else
-                        runhours = 0.00;
+                        runhours = 0;
                     
                     
                     ddwc.setSelectedItem(res.getString("wf_cell"));
@@ -914,7 +912,7 @@ public class RoutingMaint extends javax.swing.JPanel implements IBlueSeer {
                     ddsite.setSelectedItem(res.getString("wf_site"));
                     tbrunhours.setText(res.getString("wf_run_hours"));
                     tbsetuphours.setText(res.getString("wf_setup_hours"));
-                    tbrunhoursinverted.setText(String.valueOf(df.format(runhours)));
+                    tbrunhoursinverted.setText(String.valueOf(currformatDouble(runhours)));
                     cbmilestone.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("wf_assert")));
                 }
            } catch (SQLException s) {
@@ -954,7 +952,7 @@ public class RoutingMaint extends javax.swing.JPanel implements IBlueSeer {
         if (! tbrunhoursinverted.getText().isEmpty() && bsParseDouble(tbrunhoursinverted.getText()) > 0)
         tbrunhours.setText(currformatDouble(1 / bsParseDouble(tbrunhoursinverted.getText())));
         else
-            tbrunhours.setText("0.00");
+            tbrunhours.setText("0");
         
           String x = BlueSeerUtils.bsformat("", tbrunhoursinverted.getText(), "2");
         if (x.equals("error")) {
@@ -967,7 +965,7 @@ public class RoutingMaint extends javax.swing.JPanel implements IBlueSeer {
             tbrunhoursinverted.setBackground(Color.white);
         }
         if (tbrunhoursinverted.getText().isEmpty()) {
-            tbrunhoursinverted.setText("0.00");
+            tbrunhoursinverted.setText("0");
         }
         
         
@@ -989,7 +987,7 @@ public class RoutingMaint extends javax.swing.JPanel implements IBlueSeer {
             tbsetuphours.setBackground(Color.white);
         }
         if (tbsetuphours.getText().isEmpty()) {
-            tbsetuphours.setText("0.00");
+            tbsetuphours.setText("0");
         }
     }//GEN-LAST:event_tbsetuphoursFocusLost
 

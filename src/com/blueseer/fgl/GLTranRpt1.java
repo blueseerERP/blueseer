@@ -72,6 +72,7 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.text.DecimalFormatSymbols;
@@ -440,17 +441,8 @@ try {
 
                 int qty = 0;
                 double dol = 0;
-                DecimalFormat df = new DecimalFormat("###,###,###.##", new DecimalFormatSymbols(Locale.US));
                 int i = 0;
-               
                 
-               
-               
-                 
-               //  ScrapReportPanel.MyTableModel mymodel = new ScrapReportPanel.MyTableModel(new Object[][]{},
-               //         new String[]{"Acct", "Description", "Amt"});
-               // tablescrap.setModel(mymodel);
-               
                    
                  mymodel.setNumRows(0);
                    
@@ -491,7 +483,7 @@ try {
                                 res.getDouble("glh_base_amt")
                             });
                 }
-                labeldollar.setText(String.valueOf(df.format(dol)));
+                labeldollar.setText(String.valueOf(currformatDouble(dol)));
                 labelcount.setText(String.valueOf(i));
                
             } catch (SQLException s) {

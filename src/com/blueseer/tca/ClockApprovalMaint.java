@@ -27,6 +27,7 @@ SOFTWARE.
 package com.blueseer.tca;
 
 import bsmf.MainFrame;
+import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import com.blueseer.utl.OVData;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -495,9 +496,8 @@ public class ClockApprovalMaint extends javax.swing.JPanel {
 
     private void btcalcActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcalcActionPerformed
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-        DecimalFormat df = new DecimalFormat("#0.00");
         double hours = OVData.calcClockHours(dfdate.format(dcindate.getDate()),  tbintimeadj.getText(), dfdate.format(dcoutdate.getDate()), tbouttimeadj.getText() );
-        tbtothrs.setText(df.format(hours));
+        tbtothrs.setText(currformatDouble(hours));
     }//GEN-LAST:event_btcalcActionPerformed
 
 

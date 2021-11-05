@@ -28,6 +28,7 @@ package com.blueseer.inv;
 
 import bsmf.MainFrame;
 import static bsmf.MainFrame.tags;
+import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.awt.Component;
 import java.sql.DriverManager;
@@ -205,9 +206,8 @@ public class ItemMastRoutingRpt extends javax.swing.JPanel {
 
     private void btviewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btviewActionPerformed
 
-       Double opcost = 0.00;
-       Double prevcost = 0.00;
-       DecimalFormat df = new DecimalFormat("#.#####", new DecimalFormatSymbols(Locale.US)); 
+       double opcost = 0;
+       double prevcost = 0;
         try {
             Class.forName(bsmf.MainFrame.driver).newInstance();
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
@@ -243,7 +243,7 @@ public class ItemMastRoutingRpt extends javax.swing.JPanel {
                                 res.getString("it_wf"),
                                 res.getString("wf_desc"),
                                 res.getInt("itr_op"),
-                                df.format(opcost),
+                                currformatDouble(opcost),
                                 res.getDouble("itr_total")
                             });
                 prevcost = res.getDouble("itr_total");

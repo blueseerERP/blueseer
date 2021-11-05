@@ -66,6 +66,7 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.text.DecimalFormatSymbols;
@@ -151,9 +152,8 @@ public class ShipperBrowse extends javax.swing.JPanel {
     public void getdetail(String shipper) {
       
          modeldetail.setNumRows(0);
-         double totalsales = 0.00;
-         double totalqty = 0.00;
-         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
+         double totalsales = 0;
+         double totalqty = 0;
         
         try {
 
@@ -180,8 +180,8 @@ public class ShipperBrowse extends javax.swing.JPanel {
                       res.getString("shd_netprice")});
                 }
                
-               tbdetsales.setText(df.format(totalsales));
-               tbdetqty.setText(df.format(totalqty));
+               tbdetsales.setText(currformatDouble(totalsales));
+               tbdetqty.setText(currformatDouble(totalqty));
                
                 tabledetail.setModel(modeldetail);
                 this.repaint();
@@ -610,7 +610,6 @@ try {
                 Statement st = con.createStatement();
                 ResultSet res = null;
 
-                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 String fromdate = "";
                 String todate = "";
@@ -618,8 +617,8 @@ try {
                  
               
                 
-                 double totsales = 0.00;
-                 double totqty = 0.00;
+                 double totsales = 0;
+                 double totqty = 0;
                  
             
                 // String site = ddsite.getSelectedItem().toString(); 
@@ -693,13 +692,13 @@ try {
                                 BlueSeerUtils.xNull(res.getString("sh_confdate")),
                                 status,
                                 res.getString("qty"),
-                                df.format(res.getDouble("price"))
+                                currformatDouble(res.getDouble("price"))
                             });
                                 
                        }
               
-                tbtotqty.setText(df.format(totqty));
-                tbtotsales.setText(df.format(totsales));
+                tbtotqty.setText(currformatDouble(totqty));
+                tbtotsales.setText(currformatDouble(totsales));
                 
             } catch (SQLException s) {
                 MainFrame.bslog(s);

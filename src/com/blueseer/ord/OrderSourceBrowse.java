@@ -70,6 +70,7 @@ import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.ctr.cusData;
+import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.text.DecimalFormatSymbols;
@@ -147,7 +148,6 @@ public class OrderSourceBrowse extends javax.swing.JPanel {
       
          modeldetail.setNumRows(0);
          double total = 0.00;
-         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
         
         
         try {
@@ -165,7 +165,7 @@ public class OrderSourceBrowse extends javax.swing.JPanel {
                    modeldetail.addRow(new Object[]{ 
                       res.getString("sod_nbr"), 
                        res.getString("sod_part"),
-                       df.format(res.getDouble("sod_netprice")),
+                       currformatDouble(res.getDouble("sod_netprice")),
                       res.getInt("sod_ord_qty"), 
                       res.getInt("sod_shipped_qty"), 
                       res.getString("sod_status"),
@@ -552,7 +552,6 @@ try {
                 Statement st = con.createStatement();
                 ResultSet res = null;
              
-                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
                 int i = 0;
                
                mymodel.setNumRows(0);
@@ -600,7 +599,7 @@ try {
                                 res.getString("so_ord_date"),
                                 res.getString("so_type"),
                                 res.getString("so_status"),
-                                df.format(res.getDouble("total")),
+                                currformatDouble(res.getDouble("total")),
                                 BlueSeerUtils.ConvertIntToYesNo(res.getInt("so_issourced"))
                             });
                
@@ -609,8 +608,8 @@ try {
                 } // while   
                     
                  
-                lblamttot.setText(df.format(totamt));
-                lblqtytot.setText(df.format(totqty));
+                lblamttot.setText(currformatDouble(totamt));
+                lblqtytot.setText(currformatDouble(totqty));
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));

@@ -69,6 +69,7 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.text.DecimalFormatSymbols;
@@ -182,10 +183,8 @@ public class VoucherBrowse extends javax.swing.JPanel {
      public void getdetail(String po, String line) {
       
          modeldetail.setNumRows(0);
-         double total = 0.00;
-         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
-        
-        
+         double total = 0;
+         
         try {
 
             Class.forName(bsmf.MainFrame.driver).newInstance();
@@ -207,7 +206,7 @@ public class VoucherBrowse extends javax.swing.JPanel {
                        res.getString("rvd_part"),
                        res.getString("rvd_packingslip"),
                        res.getString("rvd_date"),
-                       df.format(res.getDouble("rvd_netprice")),
+                       currformatDouble(res.getDouble("rvd_netprice")),
                       res.getInt("rvd_qty"), 
                       res.getInt("rvd_voqty")});
                 }
@@ -548,7 +547,6 @@ try {
                 Statement st = con.createStatement();
                 ResultSet res = null;
              
-                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
                 int i = 0;
                
                mymodel.setNumRows(0);

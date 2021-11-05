@@ -69,6 +69,7 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.text.DecimalFormatSymbols;
@@ -156,9 +157,7 @@ public class RecvBrowse extends javax.swing.JPanel {
      public void getdetail(String rvid) {
       
          modeldetail.setNumRows(0);
-         double total = 0.00;
-         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
-        
+         double total = 0;
         
         try {
 
@@ -180,7 +179,7 @@ public class RecvBrowse extends javax.swing.JPanel {
                        res.getString("rvd_part"),
                        res.getString("rvd_packingslip"),
                        res.getString("rvd_date"),
-                       df.format(res.getDouble("rvd_netprice")),
+                       currformatDouble(res.getDouble("rvd_netprice")),
                       res.getInt("rvd_qty"), 
                       res.getInt("rvd_voqty")});
                 }

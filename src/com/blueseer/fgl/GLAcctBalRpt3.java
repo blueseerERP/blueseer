@@ -64,6 +64,8 @@ import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
+import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.getTitleTag;
@@ -152,9 +154,9 @@ public class GLAcctBalRpt3 extends javax.swing.JPanel {
               String acctdesc = OVData.getGLAcctDesc(acct);
               DefaultCategoryDataset dataset = new DefaultCategoryDataset();  
               int i = 1;
-              double doublevalue = 0.00;
+              double doublevalue = 0;
                for (String value : values) {
-                        doublevalue = Double.valueOf(value);
+                        doublevalue = bsParseDouble(value);
                            if (doublevalue < 0) {
                                doublevalue *= -1;
                            }
@@ -555,7 +557,6 @@ try {
 
                 int qty = 0;
                 double dol = 0;
-                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
                 int i = 0;
                
                mymodel.setNumRows(0);
@@ -647,23 +648,23 @@ try {
                           activity += res.getDouble(("sum"));
                        }
                  
-                     str_activity[k - 1] = df.format(activity);
+                     str_activity[k - 1] = currformatDouble(activity);
                  
                  
                   } // k
                  
-                 if (cbzero.isSelected() && ( ( Double.valueOf(str_activity[0]) +
-                       Double.valueOf(str_activity[1]) +
-                       Double.valueOf(str_activity[2]) +
-                       Double.valueOf(str_activity[3]) +       
-                       Double.valueOf(str_activity[4]) +
-                       Double.valueOf(str_activity[5]) +       
-                       Double.valueOf(str_activity[6]) +       
-                       Double.valueOf(str_activity[7]) +        
-                       Double.valueOf(str_activity[8]) +       
-                       Double.valueOf(str_activity[9]) +       
-                       Double.valueOf(str_activity[10]) +
-                       Double.valueOf(str_activity[11]) ) == 0) ) {
+                 if (cbzero.isSelected() && ( ( bsParseDouble(str_activity[0]) +
+                       bsParseDouble(str_activity[1]) +
+                       bsParseDouble(str_activity[2]) +
+                       bsParseDouble(str_activity[3]) +       
+                       bsParseDouble(str_activity[4]) +
+                       bsParseDouble(str_activity[5]) +       
+                       bsParseDouble(str_activity[6]) +       
+                       bsParseDouble(str_activity[7]) +        
+                       bsParseDouble(str_activity[8]) +       
+                       bsParseDouble(str_activity[9]) +       
+                       bsParseDouble(str_activity[10]) +
+                       bsParseDouble(str_activity[11]) ) == 0) ) {
                      continue;
                  }
                                
@@ -727,12 +728,11 @@ try {
     }//GEN-LAST:event_bthidechartActionPerformed
 
     private void ddsumActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddsumActionPerformed
-       DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
         double amt = 0.00;
         for (int i = 0 ; i < tablereport.getRowCount() ; i++) {
-               amt += Double.valueOf(tablereport.getValueAt(i, Integer.valueOf(ddsum.getSelectedItem().toString()) + 2).toString());
+               amt += bsParseDouble(tablereport.getValueAt(i, Integer.valueOf(ddsum.getSelectedItem().toString()) + 2).toString());
        }
-        labelsum.setText(df.format(amt));
+        labelsum.setText(currformatDouble(amt));
     }//GEN-LAST:event_ddsumActionPerformed
 
 

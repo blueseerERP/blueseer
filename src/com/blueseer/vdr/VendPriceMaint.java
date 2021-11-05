@@ -32,8 +32,10 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import com.blueseer.inv.invData;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsformat;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
@@ -694,20 +696,18 @@ public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeer {
     }
       
     public void setData() {
-         DecimalFormat df = new DecimalFormat("#0.0000", new DecimalFormatSymbols(Locale.US));
-         
         if (ddpart.getItemCount() > 0 && ! tbkey.getText().isEmpty() && dduom.getItemCount() > 0 && ddcurr.getItemCount() > 0) {
         double myprice = invData.getItemPriceFromVend(tbkey.getText(), ddpart.getSelectedItem().toString(), 
                 dduom.getSelectedItem().toString(), ddcurr.getSelectedItem().toString());
          lbitem.setText(invData.getItemDesc(ddpart.getSelectedItem().toString()));
-        if (myprice == 0.00) {
-            price.setText("0.00");
+        if (myprice == 0) {
+            price.setText("0");
             btadd.setEnabled(true);
             btupdate.setEnabled(false);
             btdelete.setEnabled(false);
             price.setBackground(Color.YELLOW);
         } else {
-            price.setText(df.format(myprice));
+            price.setText(currformatDouble(myprice));
             btadd.setEnabled(false);
             btupdate.setEnabled(true);
             btdelete.setEnabled(true); 
@@ -1071,7 +1071,7 @@ public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeer {
     }//GEN-LAST:event_priceFocusLost
 
     private void priceFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_priceFocusGained
-        if (price.getText().equals("0.0000")) {
+        if (bsParseDouble(price.getText()) == 0) {
             price.setText("");
         }
     }//GEN-LAST:event_priceFocusGained

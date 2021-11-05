@@ -30,6 +30,8 @@ import bsmf.MainFrame;
 import static bsmf.MainFrame.tags;
 import com.blueseer.ctr.cusData;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
+import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.OVData;
@@ -269,8 +271,7 @@ public class ARTranRpt extends javax.swing.JPanel {
     public void getdetail(String id) {
       
          modeldetail.setNumRows(0);
-         double total = 0.00;
-         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
+         double total = 0;
         
           tabledetail.getColumnModel().getColumn(7).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
         
@@ -285,7 +286,7 @@ public class ARTranRpt extends javax.swing.JPanel {
                 ResultSet res = null;
                 int i = 0;
                 String blanket = "";
-                double dol = 0.00;
+                double dol = 0;
                 int qty = 0;
                 
                  res = st.executeQuery("SELECT * " +
@@ -306,7 +307,7 @@ public class ARTranRpt extends javax.swing.JPanel {
                             res.getString("ard_date"),
                             res.getString("ard_acct"),
                             res.getString("ard_cc"),
-                                Double.valueOf(df.format(res.getDouble("ard_amt")))
+                                bsParseDouble(currformatDouble(res.getDouble("ard_amt")))
                             });
                    }
                
@@ -673,8 +674,7 @@ try {
                 
                 int qty = 0;
                 
-                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
-                int i = 0;
+                 int i = 0;
                
                
                  
@@ -694,9 +694,9 @@ try {
 
               
                 
-                double openamt = 0.00;
-                double paidamt = 0.00;
-                double amt = 0.00;
+                double openamt = 0;
+                double paidamt = 0;
+                double amt = 0;
                 String fromcust = "";
                 String tocust = "";
                 String fromcode = "";
@@ -748,17 +748,17 @@ try {
                                 res.getString("ar_status"),
                                 res.getString("ar_ref"),
                                 res.getString("ar_rmks"),
-                                Double.valueOf(df.format(res.getDouble("ar_amt"))),
-                                Double.valueOf(df.format(res.getDouble("ar_applied"))),
-                                Double.valueOf(df.format(res.getDouble("ar_open_amt")))
+                                bsParseDouble(currformatDouble(res.getDouble("ar_amt"))),
+                                bsParseDouble(currformatDouble(res.getDouble("ar_applied"))),
+                                bsParseDouble(currformatDouble(res.getDouble("ar_open_amt")))
                             });
                 }
                  
                
                 labelcount.setText(String.valueOf(i));
-                labelopen.setText(String.valueOf(df.format(openamt)));
-                labelpaid.setText(String.valueOf(df.format(paidamt)));
-                labelamt.setText(String.valueOf(df.format(amt)));
+                labelopen.setText(String.valueOf(currformatDouble(openamt)));
+                labelpaid.setText(String.valueOf(currformatDouble(paidamt)));
+                labelamt.setText(String.valueOf(currformatDouble(amt)));
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));

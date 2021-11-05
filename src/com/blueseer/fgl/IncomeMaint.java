@@ -31,7 +31,9 @@ import static bsmf.MainFrame.dfdate;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
@@ -119,7 +121,7 @@ public class IncomeMaint extends javax.swing.JPanel implements IBlueSeer {
                 
                  // global variable declarations
                 boolean isLoad = false;
-                double actamt = 0.00;
+                double actamt = 0;
                 String cashacct = "";
                 int line = 0;
     
@@ -325,7 +327,7 @@ public class IncomeMaint extends javax.swing.JPanel implements IBlueSeer {
         tbkey.setText("");
       
         
-         actamt = 0.00;
+         actamt = 0;
          line = 0;
         
        
@@ -389,7 +391,6 @@ public class IncomeMaint extends javax.swing.JPanel implements IBlueSeer {
     
     public String[] setAction(int i) {
         String[] m = new String[2];
-        DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
         if (i > 0) {
             m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
                    setPanelComponentState(this, true);
@@ -439,7 +440,7 @@ public class IncomeMaint extends javax.swing.JPanel implements IBlueSeer {
                     return b;
                 }
                
-                 if ( actamt == 0.00 ) {
+                 if ( actamt == 0 ) {
                     b = false;
                     bsmf.MainFrame.show(getMessageTag(1036));
                     return b;
@@ -482,10 +483,9 @@ public class IncomeMaint extends javax.swing.JPanel implements IBlueSeer {
                 boolean proceed = true;
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 java.util.Date now = new java.util.Date();
-                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US)); 
+               
                 
-                
-                actamt = Double.valueOf(tbamt.getText());
+                actamt = bsParseDouble(tbamt.getText());
                 String curr = OVData.getDefaultCurrency();
                 String basecurr = curr;
                        // Credit Income Account
@@ -496,8 +496,8 @@ public class IncomeMaint extends javax.swing.JPanel implements IBlueSeer {
                         + "'" + ddacct.getSelectedItem().toString() + "'" + ","
                         + "'" + ddcc.getSelectedItem().toString() + "'" + ","
                         + "'" + dfdate.format(dcdate.getDate()) + "'" + ","
-                        + "'" + df.format(actamt * -1).replace(defaultDecimalSeparator, '.') + "'" + ","
-                        + "'" + df.format(actamt * -1).replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "'" + currformatDouble(actamt * -1).replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "'" + currformatDouble(actamt * -1).replace(defaultDecimalSeparator, '.') + "'" + ","
                         + "'" + curr + "'" + ","
                         + "'" + basecurr + "'" + ","        
                         + "'" + tbkey.getText().toString() + "'" + ","
@@ -517,8 +517,8 @@ public class IncomeMaint extends javax.swing.JPanel implements IBlueSeer {
                         + "'" + cashacct + "'" + ","
                         + "'" + ddcc.getSelectedItem().toString() + "'" + ","
                         + "'" + dfdate.format(dcdate.getDate()) + "'" + ","
-                        + "'" + df.format(actamt).replace(defaultDecimalSeparator, '.') + "'" + ","
-                        + "'" + df.format(actamt).replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "'" + currformatDouble(actamt).replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "'" + currformatDouble(actamt).replace(defaultDecimalSeparator, '.') + "'" + ","
                         + "'" + curr + "'" + ","
                         + "'" + basecurr + "'" + ","
                         + "'" + tbkey.getText().toString() + "'" + ","
@@ -572,7 +572,7 @@ public class IncomeMaint extends javax.swing.JPanel implements IBlueSeer {
             ResultSet res = null;
             try {
                 int i = 0;
-                actamt = 0.00;
+                actamt = 0;
                 res = st.executeQuery("SELECT * FROM  gl_tran where glt_id = " + "'" + x[0] + "'" + " and glt_ref = " + "'" + x[1] + "'" + ";");
                 while (res.next()) {
                   i++;
@@ -897,7 +897,7 @@ public class IncomeMaint extends javax.swing.JPanel implements IBlueSeer {
                  String x = BlueSeerUtils.bsformat("", tbamt.getText(), "2");
         if (x.equals("error")) {
             tbamt.setText("");
-            actamt = 0.00;
+            actamt = 0;
             tbamt.setBackground(Color.yellow);
             bsmf.MainFrame.show(getMessageTag(1000));
             tbamt.requestFocus();
@@ -905,7 +905,7 @@ public class IncomeMaint extends javax.swing.JPanel implements IBlueSeer {
             tbamt.setText(x);
             tbamt.setBackground(Color.white);
             if (! tbamt.getText().isEmpty()) {
-            actamt = Double.valueOf(tbamt.getText());
+            actamt = bsParseDouble(tbamt.getText());
             }
         }
        

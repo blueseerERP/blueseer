@@ -77,6 +77,8 @@ import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.ctr.cusData;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
+import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.text.DecimalFormatSymbols;
@@ -568,7 +570,6 @@ try {
 
                 int qty = 0;
                 double dol = 0;
-                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
                 int i = 0;
                 String fromcust = "";
                 String tocust = "";
@@ -655,12 +656,12 @@ try {
                                 res.getString("so_ord_date"),
                                 res.getString("so_due_date"),
                                 res.getInt("totqty"),
-                                Double.valueOf(df.format(res.getDouble("totdol"))),
+                                bsParseDouble(currformatDouble(res.getDouble("totdol"))),
                                 res.getString("so_status"),
                                 planstatus
                             });
                 }
-                labeldollar.setText(String.valueOf(df.format(dol)));
+                labeldollar.setText(String.valueOf(currformatDouble(dol)));
                 labelcount.setText(String.valueOf(i));
                 labelqty.setText(String.valueOf(qty));
                 

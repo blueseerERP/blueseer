@@ -59,6 +59,7 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.awt.Component;
 import java.text.DecimalFormatSymbols;
@@ -89,7 +90,7 @@ public class PaymentMaint extends javax.swing.JPanel {
 
 
       
-      double amtselected = 0.00;
+      double amtselected = 0;
       double tot = 0;
       
       
@@ -550,9 +551,7 @@ try {
                 ResultSet res = null;
 
                 double amt = 0;
-               
-                DecimalFormat df = new DecimalFormat("###,###,###.##", new DecimalFormatSymbols(Locale.US));
-                int i = 0;
+                 int i = 0;
                 String fvend = "";
                 String tvend = "";
                 String fbank = "";
@@ -621,7 +620,7 @@ try {
                                 Boolean.TRUE
                             });
                 }
-                labeldollar.setText("$" + String.valueOf(df.format(tot)));
+                labeldollar.setText("$" + String.valueOf(currformatDouble(tot)));
                 labelcount.setText(String.valueOf(i));
                
                 
@@ -755,7 +754,7 @@ try {
        if (mytable.getRowCount() > 0) {
         // this is to calculate the selected rows sum
          int[] rows = mytable.getSelectedRows();
-        amtselected = 0.00;
+        amtselected = 0;
         for (int i : rows) {
            amtselected += Double.valueOf(mytable.getValueAt(i, 6).toString());
         }

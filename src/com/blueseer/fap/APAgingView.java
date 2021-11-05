@@ -28,6 +28,8 @@ package com.blueseer.fap;
 import bsmf.MainFrame;
 import static bsmf.MainFrame.tags;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
+import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.OVData;
@@ -300,9 +302,8 @@ public class APAgingView extends javax.swing.JPanel {
       
          modeldetail.setNumRows(0);
           modelpayment.setNumRows(0);
-         double total = 0.00;
-         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
-        
+         double total = 0;
+       
           tabledetail.getColumnModel().getColumn(5).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
           tabledetail.getColumnModel().getColumn(6).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
           tabledetail.getColumnModel().getColumn(7).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
@@ -318,7 +319,7 @@ public class APAgingView extends javax.swing.JPanel {
                 ResultSet res = null;
                 int i = 0;
                 String blanket = "";
-                double dol = 0.00;
+                double dol = 0;
                 int qty = 0;
                  if (bsmf.MainFrame.dbtype.equals("sqlite")) {
                  res = st.executeQuery("SELECT ap_vend, ap_ref, ap_type, ap_nbr, ap_effdate, ap_duedate, " +
@@ -359,11 +360,11 @@ public class APAgingView extends javax.swing.JPanel {
                             ponbr,
                             res.getString("ap_effdate"),
                             res.getString("ap_duedate"),
-                                Double.valueOf(df.format(res.getDouble("0"))),
-                                Double.valueOf(df.format(res.getDouble("30"))),
-                                Double.valueOf(df.format(res.getDouble("60"))),
-                                Double.valueOf(df.format(res.getDouble("90"))),
-                                Double.valueOf(df.format(res.getDouble("90p")))
+                                bsParseDouble(currformatDouble(res.getDouble("0"))),
+                                bsParseDouble(currformatDouble(res.getDouble("30"))),
+                                bsParseDouble(currformatDouble(res.getDouble("60"))),
+                                bsParseDouble(currformatDouble(res.getDouble("90"))),
+                                bsParseDouble(currformatDouble(res.getDouble("90p")))
                             });
                    }
                
@@ -386,8 +387,7 @@ public class APAgingView extends javax.swing.JPanel {
     public void getpayment(String vend) {
       
          modelpayment.setNumRows(0);
-         double total = 0.00;
-         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
+         double total = 0;
         
           tablepayment.getColumnModel().getColumn(7).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
           tablepayment.getColumnModel().getColumn(8).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
@@ -401,7 +401,7 @@ public class APAgingView extends javax.swing.JPanel {
                 ResultSet res = null;
                 int i = 0;
                 String blanket = "";
-                double dol = 0.00;
+                double dol = 0;
                 int qty = 0;
                 
                  res = st.executeQuery("SELECT ap_vend, apd_nbr, ap_ref, apd_ref, ap_type, ap_nbr, ap_check, ap_effdate, ap_duedate, ap_amt, apd_voamt " +
@@ -426,8 +426,8 @@ public class APAgingView extends javax.swing.JPanel {
                             res.getString("ap_duedate"),
                             res.getString("ap_type"),
                             res.getString("ap_check"),
-                            Double.valueOf(df.format(res.getDouble("apd_voamt"))),
-                            Double.valueOf(df.format(res.getDouble("ap_amt")))
+                            bsParseDouble(currformatDouble(res.getDouble("apd_voamt"))),
+                            bsParseDouble(currformatDouble(res.getDouble("ap_amt")))
                             });
                    }
                
@@ -795,8 +795,7 @@ try {
                 
                 int qty = 0;
                 
-                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
-                int i = 0;
+                 int i = 0;
                
                 tablesummary.setModel(modelsummary);
                  
@@ -871,11 +870,11 @@ try {
                         modelsummary.addRow(new Object[]{
                                 BlueSeerUtils.clickbasket,
                                 res.getString("ap_vend"),
-                                Double.valueOf(df.format(res.getDouble("0"))),
-                                Double.valueOf(df.format(res.getDouble("30"))),
-                                Double.valueOf(df.format(res.getDouble("60"))),
-                                Double.valueOf(df.format(res.getDouble("90"))),
-                                Double.valueOf(df.format(res.getDouble("90p")))
+                                bsParseDouble(currformatDouble(res.getDouble("0"))),
+                                bsParseDouble(currformatDouble(res.getDouble("30"))),
+                                bsParseDouble(currformatDouble(res.getDouble("60"))),
+                                bsParseDouble(currformatDouble(res.getDouble("90"))),
+                                bsParseDouble(currformatDouble(res.getDouble("90p")))
                             });
                 }
                   
@@ -891,7 +890,7 @@ try {
             }  //for each vendor in range    
                
                 labelcount.setText(String.valueOf(i));
-                labeldollar.setText(String.valueOf(df.format(dol)));
+                labeldollar.setText(String.valueOf(currformatDouble(dol)));
             } catch (SQLException s) {
                 MainFrame.bslog(s); 
                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));

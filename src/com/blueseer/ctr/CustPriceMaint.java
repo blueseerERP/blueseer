@@ -318,14 +318,13 @@ public class CustPriceMaint extends javax.swing.JPanel {
         if (ddpart.getItemCount() > 0 && ddcustcode.getItemCount() > 0 && dduom.getItemCount() > 0 && ddcurr.getItemCount() > 0) {
         double myprice = invData.getItemPriceFromCust(ddcustcode.getSelectedItem().toString(), ddpart.getSelectedItem().toString(), dduom.getSelectedItem().toString(), ddcurr.getSelectedItem().toString());
         lbitem.setText(invData.getItemDesc(ddpart.getSelectedItem().toString()));
-        if (myprice == 0.00) {
+        if (myprice == 0) {
             tbprice.setText("0");
             btAdd.setEnabled(true);
             btUpdate.setEnabled(false);
             btDelete.setEnabled(false);
             tbprice.setBackground(Color.YELLOW);
         } else {
-        //    bsmf.MainFrame.show(ddcustcode.getSelectedItem().toString() + ":" + ddpart.getSelectedItem().toString() + ":" + dduom.getSelectedItem().toString() + ":" + df.format(myprice));
             tbprice.setText(bsFormatDouble(myprice,"4"));
             btAdd.setEnabled(false);
             btUpdate.setEnabled(false);

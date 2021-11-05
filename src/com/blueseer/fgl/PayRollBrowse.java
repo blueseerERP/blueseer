@@ -70,6 +70,7 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
@@ -139,10 +140,8 @@ public class PayRollBrowse extends javax.swing.JPanel {
     public void getdetail(String empnbr, String checknbr) {
       
          modeldetail.setNumRows(0);
-         double total = 0.00;
-         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
-        
-        
+         double total = 0;
+         
         try {
 
             Class.forName(bsmf.MainFrame.driver).newInstance();
@@ -569,15 +568,12 @@ try {
                 Statement st = con.createStatement();
                 ResultSet res = null;
              
-                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
-                
-               
                mymodel.setNumRows(0);
                tbtotal.setText("0");
                tbcount.setText("0"); 
                int i = 0;
-               double total = 0.00;
-               double netcheck = 0.00;
+               double total = 0;
+               double netcheck = 0;
                  DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                
                
@@ -629,7 +625,7 @@ try {
                             });
                } // while   
                                                                                                                                 
-                tbtotal.setText(df.format(total));
+                tbtotal.setText(currformatDouble(total));
                 tbcount.setText(String.valueOf(i));
         
             } catch (SQLException s) {

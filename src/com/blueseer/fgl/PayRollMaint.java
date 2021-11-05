@@ -69,7 +69,9 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
@@ -129,8 +131,8 @@ public class PayRollMaint extends javax.swing.JPanel {
  
     String exoincfilepath = OVData.getSystemTempDirectory() + "/" + "chartexpinc.jpg";
     String buysellfilepath = OVData.getSystemTempDirectory() + "/" + "chartbuysell.jpg";
-    Double expenses = 0.00;
-    Double inventory = 0.00;
+    double expenses = 0;
+    double inventory = 0;
     boolean isnew = false;
     
      javax.swing.table.DefaultTableModel mymodel =  new javax.swing.table.DefaultTableModel(new Object[][]{},
@@ -278,8 +280,8 @@ public class PayRollMaint extends javax.swing.JPanel {
                 ResultSet res = null;
                 boolean proceed = true;
                 int i = 0;
-                double netcash = 0.00;
-                double netdeduction = 0.00;
+                double netcash = 0;
+                double netdeduction = 0;
                 
                 if (proceed) {
                     st.executeUpdate("insert into pay_mstr "
@@ -303,7 +305,7 @@ public class PayRollMaint extends javax.swing.JPanel {
                     int checknbr = Integer.valueOf(tbchecknbr.getText());
                     String paydate = "";
                     for (int j = 0; j < tablereport.getRowCount(); j++) {
-                        netcash += Double.valueOf(tablereport.getValueAt(j, 14).toString());
+                        netcash += bsParseDouble(tablereport.getValueAt(j, 14).toString());
                         if (tablereport.getValueAt(j, 15).toString().isEmpty()) {
                             paydate = dfdate.format(dcpay.getDate()).toString();
                         } else {
@@ -357,7 +359,7 @@ public class PayRollMaint extends javax.swing.JPanel {
                               }
                               
                          // now do deductions detail
-                         getDeductions(tablereport.getValueAt(j, 2).toString(), Double.valueOf(tablereport.getValueAt(j, 14).toString()));
+                         getDeductions(tablereport.getValueAt(j, 2).toString(), bsParseDouble(tablereport.getValueAt(j, 14).toString()));
                          // "EmpID", "type", "code", "desc", "rate", "amt"
                               for (int e = 0; e < modeldeduct.getRowCount() ; e++) {
                                       st.executeUpdate("insert into pay_line "
@@ -375,7 +377,7 @@ public class PayRollMaint extends javax.swing.JPanel {
                                 + "'" + modeldeduct.getValueAt(e, 7).toString().replace(defaultDecimalSeparator, '.') + "'" 
                                 + ")"
                                 + ";");
-                                      netdeduction += Double.valueOf(modeldeduct.getValueAt(e, 7).toString());
+                                      netdeduction += bsParseDouble(modeldeduct.getValueAt(e, 7).toString());
                               }     
                         
                               // now update timeclock records for employee and date range
@@ -442,7 +444,6 @@ public class PayRollMaint extends javax.swing.JPanel {
           modelearnings.setNumRows(0);
           jtpEarnings.setText("");
           jtpEarnings.setContentType("text/html");
-         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
         
         try {
 
@@ -472,7 +473,7 @@ public class PayRollMaint extends javax.swing.JPanel {
                     } else {
                         codedesc = res.getString("clc_desc");
                     }
-                    html += "<tr><td align='right'>" + codedesc + ":" + "</td><td>" + df.format(res.getDouble("t.tothrs") * res.getDouble("e.emp_rate")) + "</td></tr>";
+                    html += "<tr><td align='right'>" + codedesc + ":" + "</td><td>" + currformatDouble(res.getDouble("t.tothrs") * res.getDouble("e.emp_rate")) + "</td></tr>";
                 
                 modelearnings.addRow(new Object []{empnbr,
                                             "earnings",
@@ -481,7 +482,7 @@ public class PayRollMaint extends javax.swing.JPanel {
                                             "",
                                             res.getString("clc_desc"),
                                             res.getString("e.emp_rate").replace('.',defaultDecimalSeparator),
-                                            df.format(res.getDouble("t.tothrs") * res.getDouble("e.emp_rate")).replace('.',defaultDecimalSeparator)
+                                            currformatDouble(res.getDouble("t.tothrs") * res.getDouble("e.emp_rate")).replace('.',defaultDecimalSeparator)
                                             } );
                 
                 }
@@ -510,8 +511,7 @@ public class PayRollMaint extends javax.swing.JPanel {
           StyleConstants.setForeground(keyWord, Color.RED);
           StyleConstants.setBackground(keyWord, Color.YELLOW);
           StyleConstants.setBold(keyWord, true);
-         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
-         double empexception = 0.00;
+          double empexception = 0;
         
         try {
 
@@ -530,9 +530,9 @@ public class PayRollMaint extends javax.swing.JPanel {
                 
                 html += "<table>";
                 while (res.next()) {
-                    html += "<tr><td align='right'>" + res.getString("paypd_desc") + ":" + "</td><td>" + df.format(amount * (res.getDouble("paypd_amt") / 100)) + "</td></tr>";
+                    html += "<tr><td align='right'>" + res.getString("paypd_desc") + ":" + "</td><td>" + currformatDouble(amount * (res.getDouble("paypd_amt") / 100)) + "</td></tr>";
                 // doc.insertString(doc.getLength(), res.getString("paypd_desc") + ":\t", null );
-                // doc.insertString(doc.getLength(), df.format(amount * res.getDouble("paypd_amt")) + "\n", null );
+                // doc.insertString(doc.getLength(), currformatDouble(amount * res.getDouble("paypd_amt")) + "\n", null );
                 // "EmpID", "type", "code", "desc", "rate", "amt"
                  modeldeduct.addRow(new Object []{empnbr,
                                             "deduction",
@@ -541,7 +541,7 @@ public class PayRollMaint extends javax.swing.JPanel {
                                             res.getString("paypd_id"),
                                             res.getString("paypd_desc"),
                                             res.getString("paypd_amt").replace('.',defaultDecimalSeparator),
-                                            df.format(amount * (res.getDouble("paypd_amt") / 100)).replace('.',defaultDecimalSeparator)
+                                            currformatDouble(amount * (res.getDouble("paypd_amt") / 100)).replace('.',defaultDecimalSeparator)
                                             } );
                 
                 }
@@ -557,9 +557,9 @@ public class PayRollMaint extends javax.swing.JPanel {
                     } else {
                       empexception = res.getDouble("empx_amt");  
                     }
-                    html += "<tr><td align='right'>" + res.getString("empx_desc") + ":" + "</td><td>" + df.format(empexception) + "</td></tr>";
+                    html += "<tr><td align='right'>" + res.getString("empx_desc") + ":" + "</td><td>" + currformatDouble(empexception) + "</td></tr>";
                 // doc.insertString(doc.getLength(), res.getString("paypd_desc") + ":\t", null );
-                // doc.insertString(doc.getLength(), df.format(amount * res.getDouble("paypd_amt")) + "\n", null ); 
+                // doc.insertString(doc.getLength(), currformatDouble(amount * res.getDouble("paypd_amt")) + "\n", null ); 
                 
                     modeldeduct.addRow(new Object []{empnbr,
                                             "deduction",
@@ -597,9 +597,8 @@ public class PayRollMaint extends javax.swing.JPanel {
     public void getdetail(String empnbr, String fromdate, String todate) {
       
          modeldetail.setNumRows(0);
-         double totalsales = 0.00;
-         double totalqty = 0.00;
-         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
+         double totalsales = 0;
+         double totalqty = 0;
         
         try {
 
@@ -667,9 +666,8 @@ public class PayRollMaint extends javax.swing.JPanel {
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
-                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
                 int i = 0;
-                   double amount = 0.00;
+                   double amount = 0;
                    tbid.setText(batch);
                        res = st.executeQuery(" select * from pay_mstr p inner join pay_det d on d.pyd_id = p.py_id " +
                               " where p.py_id = " + "'" + tbid.getText() + "'" + ";");
@@ -696,7 +694,7 @@ public class PayRollMaint extends javax.swing.JPanel {
                                             } );
                     }
                     
-                    tbtotpayroll.setText(String.valueOf(df.format(amount)));
+                    tbtotpayroll.setText(String.valueOf(currformatDouble(amount)));
                     
                     if (i > 0) {
                         btcommit.setEnabled(false);
@@ -726,14 +724,13 @@ public class PayRollMaint extends javax.swing.JPanel {
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
-                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
                 java.util.Date now = new java.util.Date();
                 DateFormat dfdatetm = new SimpleDateFormat("yyMMddhhmm");
                 DateFormat dfdate = new SimpleDateFormat("yyMMdd");
                 DateFormat dfd = new SimpleDateFormat("yyyy-MM-dd");
                 
                 int i = 0;
-                   double amount = 0.00;
+                   double amount = 0;
                    String hrec = "";
                    String brec = "";
                    String drec = "";
@@ -1524,8 +1521,7 @@ public class PayRollMaint extends javax.swing.JPanel {
          // if lastdayofmonth >= today and less than nowplus7   --- monthly
          // if 15th >= today and less than nowplus7  --- midmonth
          
-        DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
-        mymodel.setRowCount(0);
+         mymodel.setRowCount(0);
          try{
             Class.forName(driver).newInstance();
             con = DriverManager.getConnection(url + db, user, pass);
@@ -1535,8 +1531,8 @@ public class PayRollMaint extends javax.swing.JPanel {
                 ResultSet res = null;
                 ResultSet res2 = null;
              
-                   double amount = 0.00;
-                   double hours = 0.00;
+                   double amount = 0;
+                   double hours = 0;
                    String ispaid = isnew ? "0" : "1";
                
                    // Collect hourly/timepunchers first
@@ -1645,11 +1641,11 @@ public class PayRollMaint extends javax.swing.JPanel {
         }
         
        
-        double totamt = 0.00; 
+        double totamt = 0; 
                  for (int j = 0; j < tablereport.getRowCount(); j++) {
-                  totamt += Double.valueOf(tablereport.getValueAt(j, 14).toString()); 
+                  totamt += bsParseDouble(tablereport.getValueAt(j, 14).toString()); 
                  }
-                 tbtotpayroll.setText(String.valueOf(df.format(totamt)));
+                 tbtotpayroll.setText(String.valueOf(currformatDouble(totamt)));
           if (totamt > 0) {
               btcommit.setEnabled(true);
           } else {
@@ -1672,7 +1668,7 @@ public class PayRollMaint extends javax.swing.JPanel {
                 btdetail.setEnabled(true);
                 detailpanel.setVisible(true);
                  chartpanel.setVisible(true);
-                getDeductions(tablereport.getValueAt(row, 2).toString(), Double.valueOf(tablereport.getValueAt(row, 14).toString()));
+                getDeductions(tablereport.getValueAt(row, 2).toString(), bsParseDouble(tablereport.getValueAt(row, 14).toString()));
                 getEarnings(tablereport.getValueAt(row, 2).toString(), dfdate.format(dcfrom.getDate()), dfdate.format(dcto.getDate()) );
         }
     }//GEN-LAST:event_tablereportMouseClicked

@@ -27,6 +27,8 @@ package com.blueseer.fgl;
 
 import bsmf.MainFrame;
 import static bsmf.MainFrame.tags;
+import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
+import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import com.blueseer.utl.OVData;
 import java.awt.Component;
@@ -372,14 +374,13 @@ public class LedgerBalanceExport extends javax.swing.JPanel {
 
     private void btviewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btviewActionPerformed
         ArrayList<String> mylist = new ArrayList<String>();
-         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
-        String[] ac = null;
-        double total = 0.00;
+          String[] ac = null;
+        double total = 0;
         mylist = OVData.getGLBalByYearByPeriod(Integer.valueOf(ddfromyear.getSelectedItem().toString()), Integer.valueOf(ddtoyear.getSelectedItem().toString()), Integer.valueOf(ddfromper.getSelectedItem().toString()), Integer.valueOf(ddtoper.getSelectedItem().toString()), ddsite.getSelectedItem().toString(), cbzero.isSelected(), cbbs.isSelected());
         mymodel.setNumRows(0);
         for (String rec : mylist) {
         ac = rec.split(",", -1);
-        total = total + Double.valueOf(ac[4]);
+        total = total + bsParseDouble(ac[4]);
         String desc = OVData.getGLAcctDesc(ac[0]);
         mymodel.addRow(new Object[]{ddsite.getSelectedItem().toString(), ac[0],
                                 desc,
@@ -390,7 +391,7 @@ public class LedgerBalanceExport extends javax.swing.JPanel {
                             });
         }
         tablereport.setModel(mymodel);
-        lblendbal.setText(df.format(total));
+        lblendbal.setText(currformatDouble(total));
     }//GEN-LAST:event_btviewActionPerformed
 
     private void btexportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btexportActionPerformed

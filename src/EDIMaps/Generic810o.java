@@ -29,6 +29,8 @@ package EDIMaps;
 import com.blueseer.ctr.cusData;
 import java.util.ArrayList;
 import com.blueseer.edi.EDI;
+import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
+import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import com.blueseer.utl.OVData;
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -65,15 +67,14 @@ public class Generic810o extends com.blueseer.edi.EDIMap {
         // detail
          int i = 0;
          int sumqty = 0;
-         double sumamt = 0.00;
-         double sumlistamt = 0.00;
+         double sumamt = 0;
+         double sumlistamt = 0;
          
         
-         double sumamtTDS = 0.00;
+         double sumamtTDS = 0;
          String sku = "";
          
-           DecimalFormat df00 = new DecimalFormat("#0.00");
-           DecimalFormat df = new DecimalFormat("#0");
+      
          // part, custpart, qty, po, cumqty, listprice, netprice, reference, sku
          ArrayList<String[]> lines = OVData.getShipperLines(key);
               for (String[] d : lines) {
@@ -83,16 +84,16 @@ public class Generic810o extends com.blueseer.edi.EDIMap {
                   }
                                     
                   sumqty = sumqty + Integer.valueOf(d[2]);
-                  sumamt = sumamt + (Double.valueOf(d[2]) * Double.valueOf(d[6]));
-                  sumlistamt = sumlistamt + (Double.valueOf(d[2]) * Double.valueOf(d[5]));
-                  D.add("IT1" + ed  +  ed + d[2] + ed + "EA" + ed + df00.format(Double.valueOf(d[5])) + ed + ed + "IN" + ed + sku + ed + "VP" + ed + d[1]);
+                  sumamt = sumamt + (bsParseDouble(d[2]) * bsParseDouble(d[6]));
+                  sumlistamt = sumlistamt + (bsParseDouble(d[2]) * bsParseDouble(d[5]));
+                  D.add("IT1" + ed  +  ed + d[2] + ed + "EA" + ed + currformatDouble(bsParseDouble(d[5])) + ed + ed + "IN" + ed + sku + ed + "VP" + ed + d[1]);
                   i++;
               }
             sumamtTDS = (sumamt * 100);
             
             // trailer
          
-          T.add("TDS" + ed + df.format(sumamtTDS));
+          T.add("TDS" + ed + currformatDouble(sumamtTDS));
           T.add("ISS" + ed + String.valueOf(sumqty) + ed + "EA" + ed + String.valueOf(sumqty) + ed + "LB");
           T.add("CTT" + ed + String.valueOf(i));
    

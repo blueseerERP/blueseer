@@ -69,6 +69,7 @@ import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import javax.swing.BorderFactory;
@@ -148,9 +149,7 @@ public class FOBrowse extends javax.swing.JPanel {
     public void getdetail(String donbr) {
       
          modeldetail.setNumRows(0);
-         double total = 0.00;
-         DecimalFormat df = new DecimalFormat("#0.00");
-        
+         double total = 0;
         
         try {
 
@@ -521,7 +520,6 @@ try {
                 Statement st = con.createStatement();
                 ResultSet res = null;
              
-                DecimalFormat df = new DecimalFormat("#0.00");
                 int i = 0;
                
                mymodel.setNumRows(0);
@@ -534,8 +532,8 @@ try {
               tablereport.getColumnModel().getColumn(1).setMaxWidth(100);
                  DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 
-                 double totqty = 0.00;
-                 double totamt = 0.00;
+                 double totqty = 0;
+                 double totamt = 0;
                  
                  String sofrom = tbfromso.getText();
                  String soto = tbtoso.getText();
@@ -573,7 +571,7 @@ try {
                 } // while   
                     
                  
-                lblqtytot.setText(df.format(totqty));
+                lblqtytot.setText(currformatDouble(totqty));
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));

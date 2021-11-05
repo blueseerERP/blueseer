@@ -30,7 +30,9 @@ import bsmf.MainFrame;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
@@ -563,7 +565,7 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
                          
                             // we skip the first sequence authorization if the dollar amount is less than the threshold
                             // first sequence owner must always be the person making the ultimate decision
-                        if (Double.valueOf(tbamt.getText().toString()) < threshold &&
+                        if (bsParseDouble(tbamt.getText().toString()) < threshold &&
                             mytable.getValueAt(j, 3).toString().compareTo("1") == 0) {
                             continue;
                         } 
@@ -996,10 +998,9 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
     }
     
     public void settotal() {
-        double totamt = 0.00;
+        double totamt = 0;
         double myqty = 0;
-        double myprice = 0.00;
-        DecimalFormat df = new DecimalFormat("##0.00", new DecimalFormatSymbols(Locale.US));
+        double myprice = 0;
         
         for (int i = 0; i < itemtable.getRowCount(); i++) {
             myqty = 0;
@@ -1016,17 +1017,17 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
             
             
             if (itemtable.getModel().getValueAt(i, 1) != null && ! itemtable.getModel().getValueAt(i, 1).toString().isEmpty() ) {
-                myqty = Double.valueOf(itemtable.getModel().getValueAt(i, 1).toString());
+                myqty = bsParseDouble(itemtable.getModel().getValueAt(i, 1).toString());
             }
              if (itemtable.getModel().getValueAt(i, 2) != null && ! itemtable.getModel().getValueAt(i, 2).toString().isEmpty()) {
-                myprice = Double.valueOf(itemtable.getModel().getValueAt(i, 2).toString());
+                myprice = bsParseDouble(itemtable.getModel().getValueAt(i, 2).toString());
             }
                   
              
 	 
             totamt += (myqty * myprice);
         }
-        tbamt.setText(String.valueOf(df.format(totamt)));
+        tbamt.setText(String.valueOf(currformatDouble(totamt)));
     }
     
     public void noApprovalUpdate(String myid) {

@@ -61,6 +61,7 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
@@ -460,7 +461,6 @@ try {
 
                 int qty = 0;
                 double dol = 0;
-                DecimalFormat df = new DecimalFormat("###,###,###.##", new DecimalFormatSymbols(Locale.US));
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 int i = 0;
                 String frompart = "";
@@ -664,7 +664,7 @@ try {
                             });
                     }
                 }
-                labeldollar.setText(String.valueOf(df.format(dol)));
+                labeldollar.setText(String.valueOf(currformatDouble(dol)));
                 labelcount.setText(String.valueOf(i));
                 labelqty.setText(String.valueOf(qty));
             } catch (SQLException s) {

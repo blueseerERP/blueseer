@@ -174,7 +174,7 @@ public class FileOrderLoad extends javax.swing.JPanel {
         File file = null;
         fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
         int returnVal = fc.showOpenDialog(this);
-        DateFormat df = new SimpleDateFormat(calduedate.getDateFormatString());
+        DateFormat dtf = new SimpleDateFormat(calduedate.getDateFormatString());
 
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             try {
@@ -210,7 +210,7 @@ public class FileOrderLoad extends javax.swing.JPanel {
                 String newline = tbpo.getText().toString() + "," +
                                  ddcustcode.getSelectedItem().toString() + "," +
                                  ddcustcode.getSelectedItem().toString() + "," +
-                                 df.format(calduedate.getDate()) + "," +
+                                 dtf.format(calduedate.getDate()) + "," +
                                  "ODFL" + "," +
                                  "GENERIC" + "," +
                                  recs[0].toString() + "," + 

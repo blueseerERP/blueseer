@@ -69,6 +69,7 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.awt.Image;
@@ -104,8 +105,8 @@ public class ServiceOrderBrowse extends javax.swing.JPanel {
  
     String quotesfilepath = OVData.getSystemTempDirectory() + "/" + "chartquotes.jpg";
     String ordersfilepath = OVData.getSystemTempDirectory() + "/" + "chartorders.jpg";
-    Double quotes = 0.00;
-    Double orders = 0.00;
+    double quotes = 0;
+    double orders = 0;
     
     javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                         new String[]{
@@ -200,7 +201,7 @@ public class ServiceOrderBrowse extends javax.swing.JPanel {
     
       public void chartQuotes() {
           
-          quotes = 0.00;
+          quotes = 0;
           
          try {
           
@@ -353,9 +354,8 @@ public class ServiceOrderBrowse extends javax.swing.JPanel {
     public void getdetail(String order) {
       
          modeldetail.setNumRows(0);
-         double totalsales = 0.00;
-         double totalqty = 0.00;
-         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
+         double totalsales = 0;
+         double totalqty = 0;
         
         try {
 
@@ -780,7 +780,6 @@ try {
                 Statement st = con.createStatement();
                 ResultSet res = null;
 
-                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 String fromdate = "";
                 String todate = "";
@@ -788,8 +787,8 @@ try {
                  
               
                 
-                 double totsales = 0.00;
-                 double totquotes = 0.00;
+                 double totsales = 0;
+                 double totquotes = 0;
                  
                  String trantype = "";
                  String status = "";
@@ -853,7 +852,7 @@ try {
                                 res.getString("sv_status"),
                                 res.getString("sv_create_date"),
                                 res.getString("sv_due_date"),
-                                df.format(res.getDouble("price")),
+                                currformatDouble(res.getDouble("price")),
                                 BlueSeerUtils.clickprint 
                             });
                        }
@@ -862,8 +861,8 @@ try {
                 chartQuotes();
                 chartOrders();       
                        
-                tbtotorders.setText(df.format(totsales));
-                tbtotquotes.setText(df.format(totquotes));
+                tbtotorders.setText(currformatDouble(totsales));
+                tbtotquotes.setText(currformatDouble(totquotes));
                 
             } catch (SQLException s) {
                 MainFrame.bslog(s);

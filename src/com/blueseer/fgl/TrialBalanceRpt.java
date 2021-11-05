@@ -67,6 +67,8 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
+import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.text.DecimalFormatSymbols;
@@ -193,8 +195,7 @@ public class TrialBalanceRpt extends javax.swing.JPanel {
     public void getdetail(String acct, String site, String year, String period) {
       
          modeldetail.setNumRows(0);
-         double total = 0.00;
-         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
+         double total = 0;
          ArrayList<Date> actdatearray = OVData.getGLCalForPeriod(year, period);  
                 String datestart = String.valueOf(actdatearray.get(0));
                 String dateend = String.valueOf(actdatearray.get(1));
@@ -225,7 +226,7 @@ public class TrialBalanceRpt extends javax.swing.JPanel {
                       res.getString("glh_type"), 
                       res.getString("glh_effdate"),
                       res.getString("glh_desc"),
-                      Double.valueOf(df.format(res.getDouble("glh_base_amt")))  });
+                      bsParseDouble(currformatDouble(res.getDouble("glh_base_amt")))  });
                 }
                
                 tabledetail.setModel(modeldetail);
@@ -245,8 +246,7 @@ public class TrialBalanceRpt extends javax.swing.JPanel {
     public void getdetailCC(String acct, String cc, String site, String year, String period) {
       
          modeldetail.setNumRows(0);
-         double total = 0.00;
-         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
+         double total = 0;
          ArrayList<Date> actdatearray = OVData.getGLCalForPeriod(year, period);  
                 String datestart = String.valueOf(actdatearray.get(0));
                 String dateend = String.valueOf(actdatearray.get(1));
@@ -276,7 +276,7 @@ public class TrialBalanceRpt extends javax.swing.JPanel {
                       res.getString("glh_doc"), 
                       res.getString("glh_effdate"),
                       res.getString("glh_desc"),
-                      Double.valueOf(df.format(res.getDouble("glh_base_amt")))});
+                      bsParseDouble(currformatDouble(res.getDouble("glh_base_amt")))});
                 }
                
               
@@ -680,7 +680,6 @@ try {
                 
                 int qty = 0;
                 double dol = 0;
-                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
                 int j = 0;
                
                mymodel.setNumRows(0);
@@ -731,16 +730,16 @@ try {
                  int period = Integer.valueOf(ddperiod.getSelectedItem().toString());
                  int year = Integer.valueOf(ddyear.getSelectedItem().toString());
                  int prioryear = 0;
-                 double begbal = 0.00;
-                 double activity = 0.00;
-                 double endbal = 0.00;
-                 double totbegbal = 0.00;
-                 double totactivity = 0.00;
-                 double totendbal = 0.00;
-                 double totaldebits = 0.00;
-                 double totalcredits = 0.00;
-                 double preact = 0.00;
-                 double postact = 0.00;
+                 double begbal = 0;
+                 double activity = 0;
+                 double endbal = 0;
+                 double totbegbal = 0;
+                 double totactivity = 0;
+                 double totendbal = 0;
+                 double totaldebits = 0;
+                 double totalcredits = 0;
+                 double preact = 0;
+                 double postact = 0;
                  Date p_datestart = null;
                  Date p_dateend = null;
                  
@@ -751,9 +750,9 @@ try {
                  
                  ArrayList<String> ccs = OVData.getGLCCList();
                  
-                  totbegbal = 0.00;
-                  totactivity = 0.00;
-                  totendbal = 0.00;
+                  totbegbal = 0;
+                  totactivity = 0;
+                  totendbal = 0;
                  
                  prioryear = year - 1;
                  String site = ddsite.getSelectedItem().toString(); 
@@ -777,11 +776,11 @@ try {
                   
                  
                   
-                  begbal = 0.00;
-                  activity = 0.00;
-                  endbal = 0.00;
-                  preact = 0.00;
-                  postact = 0.00;
+                  begbal = 0;
+                  activity = 0;
+                  endbal = 0;
+                  preact = 0;
+                  postact = 0;
                 
                   
                   
@@ -826,8 +825,8 @@ try {
                                 acctdesc,
                                 site,
                                 res.getString("acb_cc"),
-                                Double.valueOf(df.format(0)),
-                                Double.valueOf(df.format((-1 * endbal)))
+                                0,
+                                bsParseDouble(currformatDouble((-1 * endbal)))
                             });
                                } else {
                                    totaldebits = totaldebits + endbal ;
@@ -835,8 +834,8 @@ try {
                                 acctdesc,
                                 site,
                                 res.getString("acb_cc"),
-                                Double.valueOf(df.format(endbal)),
-                                Double.valueOf(df.format(0))
+                                bsParseDouble(currformatDouble(endbal)),
+                                0
                             });
                                }
                  totendbal = totendbal + endbal;
@@ -883,8 +882,8 @@ try {
                                 acctdesc,
                                 site,
                                 res.getString("acb_cc"),
-                                Double.valueOf(df.format(0)),
-                                Double.valueOf(df.format((-1 * endbal)))
+                                0,
+                                bsParseDouble(currformatDouble((-1 * endbal)))
                             });
                                } else {
                                    totaldebits = totaldebits + endbal ;
@@ -892,8 +891,8 @@ try {
                                 acctdesc,
                                 site,
                                 res.getString("acb_cc"),
-                                Double.valueOf(df.format(endbal)),
-                                Double.valueOf(df.format(0))
+                                bsParseDouble(currformatDouble(endbal)),
+                                0
                             });
                                }
                             
@@ -946,11 +945,11 @@ try {
                   acctdesc = account[3];
                
                   
-                  begbal = 0.00;
-                  activity = 0.00;
-                  endbal = 0.00;
-                  preact = 0.00;
-                  postact = 0.00;
+                  begbal = 0;
+                  activity = 0;
+                  endbal = 0;
+                  preact = 0;
+                  postact = 0;
                   
                 
                   
@@ -1026,16 +1025,16 @@ try {
                      mymodel.addRow(new Object[]{BlueSeerUtils.clickbasket, acctid, accttype, acctcurr,
                                 acctdesc,
                                 site,
-                                Double.valueOf(df.format(endbal)),
-                                Double.valueOf(df.format(0))
+                                bsParseDouble(currformatDouble(endbal)),
+                                0
                             });
                  } else {  // credits
                      totalcredits = totalcredits + (-1 * endbal);
                     mymodel.addRow(new Object[]{BlueSeerUtils.clickbasket, acctid, accttype, acctcurr,
                                 acctdesc,
                                 site,
-                                Double.valueOf(df.format(0)),
-                                Double.valueOf(df.format((-1 * endbal)))  // reverse sign of credit column for trial balance
+                                0,
+                                bsParseDouble(currformatDouble((-1 * endbal)))  // reverse sign of credit column for trial balance
                             }); 
                  }
                     
@@ -1050,8 +1049,8 @@ try {
                  
                  
               
-                lbldebits.setText(df.format(totaldebits));
-                lblcredits.setText(df.format(totalcredits));
+                lbldebits.setText(currformatDouble(totaldebits));
+                lblcredits.setText(currformatDouble(totalcredits));
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show(getMessageTag(1016,this.getClass().getEnclosingMethod().getName()));

@@ -1552,7 +1552,7 @@ public class Scheduler extends javax.swing.JPanel {
     private void btcommitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcommitActionPerformed
         boolean commit = true;
         int count = 0;
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat dtf = new SimpleDateFormat("yyyy-MM-dd");
         // clean out the unchecked rows
 
         for (int i = 0 ; i < mymodel.getRowCount(); i++) {
@@ -1587,7 +1587,7 @@ public class Scheduler extends javax.swing.JPanel {
 
             // all that should be left are lines to be scheduled
             if (mytable.getRowCount() > 0) {
-                count = OVData.CommitSchedules(mytable, df.format(jc.getDate()) );
+                count = OVData.CommitSchedules(mytable, dtf.format(jc.getDate()) );
             }
             postcommit();
             bsmf.MainFrame.show(getMessageTag(1121, String.valueOf(count)));

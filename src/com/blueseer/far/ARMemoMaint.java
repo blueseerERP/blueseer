@@ -51,6 +51,8 @@ import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.tags;
 import com.blueseer.ctr.cusData;
 import com.blueseer.fgl.fglData;
+import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
+import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.text.DecimalFormatSymbols;
@@ -70,7 +72,7 @@ import javax.swing.JTabbedPane;
  */
 public class ARMemoMaint extends javax.swing.JPanel {
 
-     Double actamt = 0.00;
+     double actamt = 0;
     
     /**
      * Creates new form UserMaintPanel
@@ -124,9 +126,9 @@ public class ARMemoMaint extends javax.swing.JPanel {
     }
     
     public void tallyamount() {
-        double amt = 0.00;
+        double amt = 0;
         for (int i = 0; i < transtable.getRowCount(); i++) {
-             amt += Double.valueOf(transtable.getValueAt(i, 4).toString());
+             amt += bsParseDouble(transtable.getValueAt(i, 4).toString());
           }
         actamt = amt;
         labeltotal.setText(String.valueOf(amt));
@@ -214,8 +216,8 @@ public class ARMemoMaint extends javax.swing.JPanel {
     }
     
     public void initvars(String[] arg) {
-       actamt = 0.00;
-       labeltotal.setText("0.00");
+       actamt = 0;
+       labeltotal.setText("0");
        java.util.Date now = new java.util.Date();
        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
        dceffdate.setDate(now);
@@ -745,9 +747,7 @@ public class ARMemoMaint extends javax.swing.JPanel {
                 int i = 0;
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 java.util.Date now = new java.util.Date();
-                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));   
-                
-                     
+                   
                     if (proceed) {
                                         
                       st.executeUpdate("insert into ar_mstr "
@@ -756,8 +756,8 @@ public class ARMemoMaint extends javax.swing.JPanel {
                         + "ar_status, ar_bank, ar_site ) "
                         + " values ( " + "'" + ddcust.getSelectedItem() + "'" + ","
                         + "'" + tbref.getText() + "'" + ","
-                        + "'" + df.format(actamt).replace(defaultDecimalSeparator, '.') + "'" + ","
-                        + "'" + df.format(actamt).replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "'" + currformatDouble(actamt).replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "'" + currformatDouble(actamt).replace(defaultDecimalSeparator, '.') + "'" + ","
                         + "'" + "M" + "'" + ","
                         + "'" + tbref.getText() + "'" + ","
                         + "'" + tbrmks.getText() + "'" + ","
@@ -776,7 +776,7 @@ public class ARMemoMaint extends javax.swing.JPanel {
                // "Reference", "Type", "Date", "Amount"
                 // "Line", "Acct", "CC", "Desc", "Amt"
                     for (int j = 0; j < transtable.getRowCount(); j++) {
-                        amt = Double.valueOf(transtable.getValueAt(j, 4).toString());
+                        amt = bsParseDouble(transtable.getValueAt(j, 4).toString());
                         st.executeUpdate("insert into ard_mstr "
                             + "(ard_id, ard_cust, ard_ref, ard_line, ard_date, ard_amt, ard_acct, ard_cc) "
                             + " values ( " + "'" + tbref.getText() + "'" + ","
@@ -784,7 +784,7 @@ public class ARMemoMaint extends javax.swing.JPanel {
                             + "'" + transtable.getValueAt(j, 3).toString() + "'" + ","
                             + "'" + (j + 1) + "'" + ","
                             + "'" + dfdate.format(dceffdate.getDate()) + "'" + ","
-                            + "'" + df.format(amt).replace(defaultDecimalSeparator, '.') + "'" + ","
+                            + "'" + currformatDouble(amt).replace(defaultDecimalSeparator, '.') + "'" + ","
                             + "'" + transtable.getValueAt(j, 1).toString() + "'" + "," 
                             + "'" + transtable.getValueAt(j, 2).toString() + "'"
                             + ")"
@@ -826,8 +826,7 @@ public class ARMemoMaint extends javax.swing.JPanel {
         String status = "";
         String op = "";
         transtable.setModel(transmodel);
-         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US)); 
-         double amt = 0.00;
+         double amt = 0;
       
         if (! BlueSeerUtils.isMoneyFormat(tbamt.getText())) {
              bsmf.MainFrame.show(getMessageTag(1023,"2"));
@@ -862,12 +861,12 @@ public class ARMemoMaint extends javax.swing.JPanel {
         
         
         if (canproceed) {
-            amt = Double.valueOf(tbamt.getText());
+            amt = bsParseDouble(tbamt.getText());
             transmodel.addRow(new Object[]{transmodel.getRowCount() + 1,
                 tbacct.getText(),
                 tbcc.getText(),
                 tbdesc.getText(),
-                df.format(amt)
+                currformatDouble(amt)
             });
             tallyamount();
             clearinput();

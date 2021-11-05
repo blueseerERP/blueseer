@@ -67,6 +67,7 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.text.DecimalFormatSymbols;
 import java.util.HashMap;
@@ -250,10 +251,9 @@ public class InvoiceBrowse extends javax.swing.JPanel {
     public void getdetail(String shipper) {
       
          modeldetail.setNumRows(0);
-         double totalsales = 0.00;
-         double totalqty = 0.00;
-         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
-        
+         double totalsales = 0;
+         double totalqty = 0;
+         
         try {
 
             Class.forName(bsmf.MainFrame.driver).newInstance();
@@ -276,12 +276,12 @@ public class InvoiceBrowse extends javax.swing.JPanel {
                       res.getString("shd_soline"), 
                       res.getString("shd_po"),
                       res.getString("shd_qty"),
-                      df.format(res.getDouble("shd_netprice"))
+                      currformatDouble(res.getDouble("shd_netprice"))
                    });
                 }
                
-               tbdetsales.setText(df.format(totalsales));
-               tbdetqty.setText(df.format(totalqty));
+               tbdetsales.setText(currformatDouble(totalsales));
+               tbdetqty.setText(currformatDouble(totalqty));
                
                 tabledetail.setModel(modeldetail);
                 this.repaint();
@@ -701,7 +701,6 @@ try {
                 Statement st = con.createStatement();
                 ResultSet res = null;
 
-                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 String fromdate = "";
                 String todate = "";
@@ -709,8 +708,8 @@ try {
                  
               //  tablereport.getColumnModel().getColumn(10).setCellRenderer(new InvoiceBrowsePanel.SomeRenderer());
                 
-                 double totsales = 0.00;
-                 double totopen = 0.00;
+                 double totsales = 0;
+                 double totopen = 0;
                  
             
                 // String site = ddsite.getSelectedItem().toString(); 
@@ -774,16 +773,16 @@ try {
                                 BlueSeerUtils.xNull(res.getString("sh_shipdate")),
                                 BlueSeerUtils.xNull(res.getString("sh_confdate")),
                                 status,
-                                df.format(res.getDouble("ar_amt")),
-                                df.format(res.getDouble("ar_open_amt")),
+                                currformatDouble(res.getDouble("ar_amt")),
+                                currformatDouble(res.getDouble("ar_open_amt")),
                                 BlueSeerUtils.clickprint,
                                 BlueSeerUtils.clickmail
                             });
                                 
                        }
               
-                tbtotopen.setText(df.format(totopen));
-                tbtotsales.setText(df.format(totsales));
+                tbtotopen.setText(currformatDouble(totopen));
+                tbtotsales.setText(currformatDouble(totsales));
                 
             } catch (SQLException s) {
                 MainFrame.bslog(s);

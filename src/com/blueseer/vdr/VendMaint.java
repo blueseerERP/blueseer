@@ -291,9 +291,9 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeer {
         jTabbedPane1.add("Contact", contactPanel);
        
        java.util.Date now = new java.util.Date();
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        tbdateadded.setText(df.format(now));
-        tbdatemod.setText(df.format(now));
+        DateFormat dtf = new SimpleDateFormat("yyyy-MM-dd");
+        tbdateadded.setText(dtf.format(now));
+        tbdatemod.setText(dtf.format(now));
        
         tbkey.setText("");
         tbkey.setForeground(Color.black);

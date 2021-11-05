@@ -32,7 +32,9 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import com.blueseer.fgl.fglData;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
+import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -120,9 +122,9 @@ public class VoucherMaint extends javax.swing.JPanel {
                 String apacct = "";
                 String apcc = "";
                 String apbank = "";
-                Double actamt = 0.00;
-                Double baseamt = 0.00;
-                Double rcvamt = 0.00;
+                double actamt = 0;
+                double baseamt = 0;
+                double rcvamt = 0;
                 int voucherline = 0;
                 String curr = "";
                 String basecurr = OVData.getDefaultCurrency();
@@ -224,8 +226,8 @@ public class VoucherMaint extends javax.swing.JPanel {
          apacct = "";
          apcc = "";
          apbank = "";
-         actamt = 0.00;
-         rcvamt = 0.00;
+         actamt = 0;
+         rcvamt = 0;
          vouchernbr.setText("");
          tbinvoice.setText("");
         tbrmks.setText("");
@@ -455,7 +457,6 @@ public class VoucherMaint extends javax.swing.JPanel {
       public void getreceiverinfo(String myreceiver) {
         
         try {
-            DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
             Class.forName(bsmf.MainFrame.driver).newInstance();
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
             int i = 0;
@@ -465,7 +466,7 @@ public class VoucherMaint extends javax.swing.JPanel {
                 Statement st = bsmf.MainFrame.con.createStatement();
                 ResultSet res = null;
 
-                rcvamt = 0.00;
+                rcvamt = 0;
                 res = st.executeQuery("select * from recv_det inner join recv_mstr on rv_id = rvd_id where rvd_id = " + "'" + myreceiver + "'" + ";");
                 while (res.next()) {
                     // "Part", "PO", "Line", "Qty", "listprice", "disc", "netprice", "loc", "serial", "lot", "RecvID", "RecvLine", "Acct", "CC"
@@ -478,7 +479,7 @@ public class VoucherMaint extends javax.swing.JPanel {
                
                 d++;
                 }
-                tbrecvamt.setText(df.format(rcvamt).replace('.',defaultDecimalSeparator));
+                tbrecvamt.setText(currformatDouble(rcvamt).replace('.',defaultDecimalSeparator));
                 receiverdet.setModel(receivermodel);
 
             } catch (SQLException s) {
@@ -494,7 +495,6 @@ public class VoucherMaint extends javax.swing.JPanel {
        public void getvoucherinfo(String voucher) {
         
         try {
-            DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
             Class.forName(bsmf.MainFrame.driver).newInstance();
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
             int i = 0;
@@ -504,7 +504,7 @@ public class VoucherMaint extends javax.swing.JPanel {
                 Statement st = bsmf.MainFrame.con.createStatement();
                 ResultSet res = null;
 
-                rcvamt = 0.00;
+                rcvamt = 0;
                 res = st.executeQuery("select * from vod_mstr inner join ap_mstr on ap_nbr = vod_id inner join recv_det on rvd_id = vod_rvdid and rvd_poline = vod_rvdline " +
                         " where vod_id = " + "'" + voucher + "'" + ";");
                 while (res.next()) {
@@ -520,7 +520,7 @@ public class VoucherMaint extends javax.swing.JPanel {
                     btnew.setEnabled(false);
                 }
                 vouchernbr.setText(voucher);
-                tbrecvamt.setText(df.format(rcvamt));
+                tbrecvamt.setText(currformatDouble(rcvamt));
                 receiverdet.setModel(receivermodel);
 
             } catch (SQLException s) {
@@ -979,16 +979,15 @@ public class VoucherMaint extends javax.swing.JPanel {
 
     private void btadditemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btadditemActionPerformed
         boolean canproceed = true;
-        DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
-       // Pattern p = Pattern.compile("\\d\\.\\d\\d");
+        // Pattern p = Pattern.compile("\\d\\.\\d\\d");
       //  Matcher m = p.matcher(tbprice.getText());
        // receiverdet  "Part", "PO", "Line", "Qty", "listprice", "disc", "netprice", "loc", "serial", "lot", "RecvID", "RecvLine", "Acct", "CC"
        // voucherdet   "PO", "Line", "Part", "Qty", "Price", "RecvID", "RecvLine", "Acct", "CC"
         if (ddtype.getSelectedItem().toString().equals(("Receipt"))) {
         int[] rows = receiverdet.getSelectedRows();
             for (int i : rows) {
-                actamt += Double.valueOf(receiverdet.getModel().getValueAt(i,3).toString()) * 
-                          Double.valueOf(receiverdet.getModel().getValueAt(i,6).toString());
+                actamt += bsParseDouble(receiverdet.getModel().getValueAt(i,3).toString()) * 
+                          bsParseDouble(receiverdet.getModel().getValueAt(i,6).toString());
 
                vouchermodel.addRow(new Object[] { receiverdet.getModel().getValueAt(i, 1),
                                                   receiverdet.getModel().getValueAt(i, 2),
@@ -1003,8 +1002,8 @@ public class VoucherMaint extends javax.swing.JPanel {
             }
         } else {
             voucherline++;
-            actamt += Double.valueOf(tbqty.getText()) * 
-                          Double.valueOf(tbprice.getText());
+            actamt += bsParseDouble(tbqty.getText()) * 
+                          bsParseDouble(tbprice.getText());
             vouchermodel.addRow(new Object[] { "", voucherline,
                                                   tbitemservice.getText(),
                                                   tbqty.getText(),
@@ -1016,7 +1015,7 @@ public class VoucherMaint extends javax.swing.JPanel {
                                                   });
         }
         
-        tbactualamt.setText(df.format(actamt));
+        tbactualamt.setText(currformatDouble(actamt));
     }//GEN-LAST:event_btadditemActionPerformed
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
@@ -1032,7 +1031,6 @@ public class VoucherMaint extends javax.swing.JPanel {
                 int i = 0;
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 java.util.Date now = new java.util.Date();
-                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));   
                 setvendorvariables(ddvend.getSelectedItem().toString());
                     
                                         
@@ -1065,8 +1063,8 @@ public class VoucherMaint extends javax.swing.JPanel {
                         + " values ( " + "'" + ddvend.getSelectedItem() + "'" + ","
                               + "'" + ddsite.getSelectedItem().toString() + "'" + ","
                         + "'" + vouchernbr.getText() + "'" + ","
-                        + "'" + df.format(actamt).replace(defaultDecimalSeparator, '.') + "'" + ","
-                        + "'" + df.format(baseamt).replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "'" + currformatDouble(actamt).replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "'" + currformatDouble(baseamt).replace(defaultDecimalSeparator, '.') + "'" + ","
                         + "'" + curr + "'" + ","
                         + "'" + basecurr + "'" + ","
                         + "'" + "V" + "'" + ","
@@ -1085,7 +1083,7 @@ public class VoucherMaint extends javax.swing.JPanel {
                 double amt = 0;
                // voucherdet =  "PO", "Line", "Part", "Qty", "voprice", "recvID", "recvLine", "Acct", "CC"
                     for (int j = 0; j < voucherdet.getRowCount(); j++) {
-                        amt = Double.valueOf(voucherdet.getValueAt(j, 3).toString());
+                        amt = bsParseDouble(voucherdet.getValueAt(j, 3).toString());
                         st.executeUpdate("insert into vod_mstr "
                             + "(vod_id, vod_vend, vod_rvdid, vod_rvdline, vod_part, vod_qty, "
                             + " vod_voprice, vod_date, vod_invoice, vod_expense_acct, vod_expense_cc )  "
@@ -1103,9 +1101,9 @@ public class VoucherMaint extends javax.swing.JPanel {
                             + ")"
                             + ";");
                       
-                double voqty = 0.00;
-                double rvqty = 0.00;
-                double rvdvoqty = 0.00;
+                double voqty = 0;
+                double rvqty = 0;
+                double rvdvoqty = 0;
                 String status = "0";
                 
                 res = st.executeQuery("select rvd_voqty, rvd_qty from recv_det " 
@@ -1126,15 +1124,15 @@ public class VoucherMaint extends javax.swing.JPanel {
                         if (ddtype.getSelectedItem().toString().equals("Receipt")) {
                            if (bsmf.MainFrame.dbtype.equals("sqlite")) { 
                             st.executeUpdate("update recv_det  "
-                            + " set rvd_voqty =  " + "'" + df.format(rvdvoqty).replace(defaultDecimalSeparator, '.') + "'" + ","
+                            + " set rvd_voqty =  " + "'" + currformatDouble(rvdvoqty).replace(defaultDecimalSeparator, '.') + "'" + ","
                             + " rvd_status = " + "'" + status + "'"
                             + " where rvd_id = " + "'" + voucherdet.getValueAt(j, 5).toString() + "'"
                             + " AND rvd_rline = " + "'" + voucherdet.getValueAt(j, 6).toString() + "'"
                             );
                            } else {
                             st.executeUpdate("update recv_det as r1 inner join recv_det as r2 "
-                            + " set r1.rvd_voqty = r2.rvd_voqty + " +  "'" + df.format(amt).replace(defaultDecimalSeparator, '.') + "'" + ","
-                            + " r1.rvd_status = case when r1.rvd_qty <= ( r2.rvd_voqty + " + "'" + df.format(amt).replace(defaultDecimalSeparator, '.') + "'" +  ") then '1' else '0' end " 
+                            + " set r1.rvd_voqty = r2.rvd_voqty + " +  "'" + currformatDouble(amt).replace(defaultDecimalSeparator, '.') + "'" + ","
+                            + " r1.rvd_status = case when r1.rvd_qty <= ( r2.rvd_voqty + " + "'" + currformatDouble(amt).replace(defaultDecimalSeparator, '.') + "'" +  ") then '1' else '0' end " 
                             + " where r1.rvd_id = " + "'" + voucherdet.getValueAt(j, 5).toString() + "'"
                             + " AND r1.rvd_rline = " + "'" + voucherdet.getValueAt(j, 6).toString() + "'"
                             + " AND r2.rvd_id = " + "'" + voucherdet.getValueAt(j, 5).toString() + "'"
@@ -1212,14 +1210,13 @@ public class VoucherMaint extends javax.swing.JPanel {
 
     private void btdeleteitemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteitemActionPerformed
         int[] rows = voucherdet.getSelectedRows();
-        DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
         for (int i : rows) {
             bsmf.MainFrame.show(getMessageTag(1031,String.valueOf(i)));
-             actamt -= Double.valueOf(voucherdet.getModel().getValueAt(i,3).toString()) * Double.valueOf(voucherdet.getModel().getValueAt(i,4).toString());
+             actamt -= bsParseDouble(voucherdet.getModel().getValueAt(i,3).toString()) * bsParseDouble(voucherdet.getModel().getValueAt(i,4).toString());
             ((javax.swing.table.DefaultTableModel) voucherdet.getModel()).removeRow(i);
            voucherline--;
         }
-        tbactualamt.setText(df.format(actamt));
+        tbactualamt.setText(currformatDouble(actamt));
     }//GEN-LAST:event_btdeleteitemActionPerformed
 
     private void bteditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bteditActionPerformed
@@ -1316,9 +1313,8 @@ public class VoucherMaint extends javax.swing.JPanel {
     }//GEN-LAST:event_ddpoActionPerformed
 
     private void btaddallActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddallActionPerformed
-          DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
-        for (int i = 0; i < receiverdet.getRowCount(); i++) {
-            actamt += Double.valueOf(receiverdet.getModel().getValueAt(i,3).toString()) * Double.valueOf(receiverdet.getModel().getValueAt(i,6).toString());
+         for (int i = 0; i < receiverdet.getRowCount(); i++) {
+            actamt += bsParseDouble(receiverdet.getModel().getValueAt(i,3).toString()) * bsParseDouble(receiverdet.getModel().getValueAt(i,6).toString());
             
            vouchermodel.addRow(new Object[] { receiverdet.getModel().getValueAt(i, 1),
                                               receiverdet.getModel().getValueAt(i, 2),
@@ -1331,7 +1327,7 @@ public class VoucherMaint extends javax.swing.JPanel {
                                               receiverdet.getModel().getValueAt(i, 13)
                                               });
         }
-        tbactualamt.setText(df.format(actamt));
+        tbactualamt.setText(currformatDouble(actamt));
     }//GEN-LAST:event_btaddallActionPerformed
 
     private void ddtypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddtypeActionPerformed

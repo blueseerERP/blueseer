@@ -33,6 +33,7 @@ import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import java.sql.DriverManager;
@@ -64,21 +65,21 @@ public class DTData {
         cal.getTime();
        
         ArrayList<Date> dates = OVData.getForecastDates(String.valueOf(cal.get(Calendar.YEAR)));
-        DateFormat df = new SimpleDateFormat("MM/dd");
+        DateFormat dtf = new SimpleDateFormat("MM/dd");
         // week dates are base 0
-        String wk1 = df.format(dates.get(wk - 1));
-        String wk2 = df.format(dates.get(wk));
-        String wk3 = df.format(dates.get(wk + 1));
-        String wk4 = df.format(dates.get(wk + 2));
-        String wk5 = df.format(dates.get(wk + 3));
-        String wk6 = df.format(dates.get(wk + 4));
-        String wk7 = df.format(dates.get(wk + 5));
-        String wk8 = df.format(dates.get(wk + 6));
-        String wk9 = df.format(dates.get(wk + 7));
-        String wk10 = df.format(dates.get(wk + 8));
-        String wk11 = df.format(dates.get(wk + 9));
-        String wk12 = df.format(dates.get(wk + 10));
-        String wk13 = df.format(dates.get(wk + 11));
+        String wk1 = dtf.format(dates.get(wk - 1));
+        String wk2 = dtf.format(dates.get(wk));
+        String wk3 = dtf.format(dates.get(wk + 1));
+        String wk4 = dtf.format(dates.get(wk + 2));
+        String wk5 = dtf.format(dates.get(wk + 3));
+        String wk6 = dtf.format(dates.get(wk + 4));
+        String wk7 = dtf.format(dates.get(wk + 5));
+        String wk8 = dtf.format(dates.get(wk + 6));
+        String wk9 = dtf.format(dates.get(wk + 7));
+        String wk10 = dtf.format(dates.get(wk + 8));
+        String wk11 = dtf.format(dates.get(wk + 9));
+        String wk12 = dtf.format(dates.get(wk + 10));
+        String wk13 = dtf.format(dates.get(wk + 11));
         
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("item"), getGlobalColumnTag("year"), getGlobalColumnTag("site"), wk1, wk2, wk3, wk4, wk5, wk6, wk7, wk8, wk9, wk10, wk11, wk12, wk13 })
@@ -5439,9 +5440,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
    } 
 
     public static DefaultTableModel getShipperAll() {
-       DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
-            df.setMinimumFractionDigits(2);
-            df.setMaximumFractionDigits(2);
+      
        javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                     new String[]{getGlobalColumnTag("shipper"), getGlobalColumnTag("customer"), getGlobalColumnTag("item"), getGlobalColumnTag("po"), getGlobalColumnTag("quantity"), getGlobalColumnTag("price"), getGlobalColumnTag("shipdate")});
 
@@ -5458,7 +5457,7 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
                 mymodel.addRow(new Object[]{res.getString("shdet_id"), res.getString("ship_cust"), res.getString("shdet_part"),
                             res.getString("shdet_po"),
                             res.getDouble("shdet_ship_qty"),
-                            df.format(res.getDouble("shdet_ship_price")),
+                            currformatDouble(res.getDouble("shdet_ship_price")),
                             res.getString("shdet_shdet_date"),});
             }
        }
@@ -5927,7 +5926,7 @@ return mymodel;
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
-                   double amount = 0.00;
+                   double amount = 0;
                    
                        res = st.executeQuery("SELECT sum(t.tothrs) as 't.tothrs',  " +
                            " t.emp_nbr as 't.emp_nbr', e.emp_lname as 'e.emp_lname', e.emp_fname as 'e.emp_fname', e.emp_mname as 'e.emp_mname', e.emp_jobtitle as 'e.emp_jobtitle', " +

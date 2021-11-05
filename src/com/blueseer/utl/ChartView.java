@@ -67,6 +67,7 @@ import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.fgl.fglData;
+import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getTitleTag;
 import static com.blueseer.utl.ReportPanel.TableReport;
@@ -962,7 +963,7 @@ public class ChartView extends javax.swing.JPanel {
                 tot += amt;
               dataset.setValue(acct, amt);
             }
-    JFreeChart chart = ChartFactory.createPieChart(getTitleTag(5010) + String.valueOf(df.format(tot)), dataset, true, true, false);
+    JFreeChart chart = ChartFactory.createPieChart(getTitleTag(5010) + String.valueOf(currformatDouble(tot)), dataset, true, true, false);
     PiePlot plot = (PiePlot) chart.getPlot();
    PieSectionLabelGenerator gen = new StandardPieSectionLabelGenerator(("{1} ({2})"), NumberFormat.getCurrencyInstance(), new DecimalFormat("0.00%"));
     plot.setLabelGenerator(gen);

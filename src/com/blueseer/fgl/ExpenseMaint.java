@@ -419,14 +419,13 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeer {
     
     public String[] setAction(int i) {
         String[] m = new String[2];
-        DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
         if (i > 0) {
             m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
                    setPanelComponentState(this, true);
                    btadd.setEnabled(false);
                    tbkey.setEditable(false);
                    tbkey.setForeground(Color.blue);
-                   tbactualamt.setText(df.format(actamt));
+                   tbactualamt.setText(currformatDouble(actamt));
                    lbmessage.setText("Batch has been committed");
         } else {
            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
@@ -523,8 +522,7 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeer {
                 int i = 0;
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 java.util.Date now = new java.util.Date();
-                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US)); 
-                Date duedate = OVData.getDueDateFromTerms(dcdate.getDate(), terms);
+                 Date duedate = OVData.getDueDateFromTerms(dcdate.getDate(), terms);
                 
                 proceed = validateInput("addRecord");
                 
@@ -542,7 +540,7 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeer {
                         + " values ( " + "'" + ddvend.getSelectedItem() + "'" + ","
                               + "'" + ddsite.getSelectedItem().toString() + "'" + ","
                         + "'" + tbkey.getText() + "'" + ","
-                        + "'" + df.format(actamt).replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "'" + currformatDouble(actamt).replace(defaultDecimalSeparator, '.') + "'" + ","
                         + "'" + "V" + "'" + ","
                         + "'" + tbcheck.getText().replace("'", "''") + "'" + ","        
                         + "'" + tbrmks.getText().replace("'", "''") + "'" + ","

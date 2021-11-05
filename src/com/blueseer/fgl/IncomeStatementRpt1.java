@@ -71,6 +71,7 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.text.DecimalFormatSymbols;
@@ -425,7 +426,6 @@ try {
 
                 int qty = 0;
                 double dol = 0;
-                DecimalFormat df = new DecimalFormat("###,###,###.##", new DecimalFormatSymbols(Locale.US));
                 int i = 0;
                
                 
@@ -446,26 +446,26 @@ try {
                  DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
 
                  
-                 double sales = 0.00;
-                 double cogs = 0.00;
-                 double stdmargin  = 0.00;
-                 double mtlvar = 0.00;
-                 double lbrvar = 0.00;
-                 double bdnvar = 0.00;
-                 double mfggrossmargin = 0.00;
-                 double prodeng = 0.00;
-                 double marketingandsales = 0.00;
-                 double grossmargin = 0.00;
-                 double generalandadmin = 0.00;
-                 double profitbeforealloc = 0.00;
-                 double interest = 0.00;
-                 double alloc = 0.00;
-                 double mgtfees = 0.00;
-                 double bankfees = 0.00;
-                 double other = 0.00;
-                 double opprofitbeforetaxes = 0.00;
-                 double ebitda = 0.00;
-                 double depreciation = 0.00;
+                 double sales = 0;
+                 double cogs = 0;
+                 double stdmargin  = 0;
+                 double mtlvar = 0;
+                 double lbrvar = 0;
+                 double bdnvar = 0;
+                 double mfggrossmargin = 0;
+                 double prodeng = 0;
+                 double marketingandsales = 0;
+                 double grossmargin = 0;
+                 double generalandadmin = 0;
+                 double profitbeforealloc = 0;
+                 double interest = 0;
+                 double alloc = 0;
+                 double mgtfees = 0;
+                 double bankfees = 0;
+                 double other = 0;
+                 double opprofitbeforetaxes = 0;
+                 double ebitda = 0;
+                 double depreciation = 0;
                  
                  String startacct = "";
                  String endacct = "";
@@ -939,8 +939,8 @@ try {
                      mymodel.addRow(new Object[] { "EBITDA","", ebitda});  
                      
                      
-                labeldollar.setText(String.valueOf(df.format(ebitda)));
-                labelcount.setText(String.valueOf(df.format(opprofitbeforetaxes)));
+                labeldollar.setText(String.valueOf(currformatDouble(ebitda)));
+                labelcount.setText(String.valueOf(currformatDouble(opprofitbeforetaxes)));
                
             } catch (SQLException s) {
                 MainFrame.bslog(s);

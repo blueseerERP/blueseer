@@ -67,6 +67,8 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
+import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -105,8 +107,8 @@ public class ReconAccount extends javax.swing.JPanel {
  
     String exoincfilepath = OVData.getSystemTempDirectory() + "/" + "chartexpinc.jpg";
     String buysellfilepath = OVData.getSystemTempDirectory() + "/" + "chartbuysell.jpg";
-    Double expenses = 0.00;
-    Double inventory = 0.00;
+    double expenses = 0;
+    double inventory = 0;
     boolean isLoad = false;
     
     ReconAccount.MyTableModel mymodel = new ReconAccount.MyTableModel(new Object[][]{},
@@ -266,7 +268,7 @@ public class ReconAccount extends javax.swing.JPanel {
     
       public void chartExp() {
           
-          expenses = 0.00;
+          expenses = 0;
           
          try {
           
@@ -419,10 +421,9 @@ public class ReconAccount extends javax.swing.JPanel {
     public void getdetail(String shipper) {
       
          modeldetail.setNumRows(0);
-         double totalsales = 0.00;
-         double totalqty = 0.00;
-         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
-        
+         double totalsales = 0;
+         double totalqty = 0;
+         
         try {
 
             Class.forName(bsmf.MainFrame.driver).newInstance();
@@ -462,12 +463,11 @@ public class ReconAccount extends javax.swing.JPanel {
     }
     
     public Double sumtoggle () {
-        double x = 0.00;
-        DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
+        double x = 0;
          for (int i = 0 ; i < mymodel.getRowCount(); i++) {    
             //  if (mymodel.getValueAt(i, 10).toString().equals("open") && (boolean) mymodel.getValueAt(i, 9)) {
                  if ((boolean) mymodel.getValueAt(i, 9)) {
-                     x += Double.valueOf(mymodel.getValueAt(i, 8).toString());
+                     x += bsParseDouble(mymodel.getValueAt(i, 8).toString());
                  }
          }
         sumAll(x); 
@@ -475,24 +475,23 @@ public class ReconAccount extends javax.swing.JPanel {
     }
     
     public void sumAll(double x) {
-        DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
-        double stendbal = 0.00;
-        double prevGLBalance = 0.00;
-        double diff = 0.00;
+         double stendbal = 0;
+        double prevGLBalance = 0;
+        double diff = 0;
         
         if (! tbendbalance.getText().isEmpty()) {
-            stendbal = Double.valueOf(tbendbalance.getText());
-            lbstatementbal.setText(df.format(Double.valueOf(tbendbalance.getText())));
+            stendbal = bsParseDouble(tbendbalance.getText());
+            lbstatementbal.setText(currformatDouble(bsParseDouble(tbendbalance.getText())));
         } else {
-            lbstatementbal.setText("0.00");
+            lbstatementbal.setText("0");
         }
         
         if (! lbacctbal.getText().isEmpty()) {
-            prevGLBalance = Double.valueOf(lbacctbal.getText());
+            prevGLBalance = bsParseDouble(lbacctbal.getText());
         }
         
-        lbselecttotal.setText(df.format(x));
-        lbdiff.setText(df.format(stendbal - prevGLBalance -  x));
+        lbselecttotal.setText(currformatDouble(x));
+        lbdiff.setText(currformatDouble(stendbal - prevGLBalance -  x));
         if ( (stendbal - prevGLBalance -  x) == 0) {
             lbdiff.setForeground(Color.blue);
         } else {
@@ -511,9 +510,8 @@ public class ReconAccount extends javax.swing.JPanel {
             ResultSet res = null;
             try {
                 
-              double x = 0.00;
-              DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
-              for (int i = 0 ; i < mymodel.getRowCount(); i++) {    
+              double x = 0;
+             for (int i = 0 ; i < mymodel.getRowCount(); i++) {    
                  if ( (boolean) mymodel.getValueAt(i, 9) ) {
                      st.executeUpdate("update gl_hist set glh_recon = " + "'" + '1' + "'" 
                             + " where glh_id = " + "'" + mymodel.getValueAt(i, 0).toString() + "'"                             
@@ -592,7 +590,7 @@ public class ReconAccount extends javax.swing.JPanel {
         tbendbalance.setText("");
         lbstatementbal.setText("0");
         lbselecttotal.setText("0");
-        expenses = 0.00;
+        expenses = 0;
         
              btRun.setEnabled(false);
              btcommit.setEnabled(false);
@@ -1019,15 +1017,14 @@ try {
                 Statement st = con.createStatement();
                 ResultSet res = null;
 
-                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 String fromdate = "";
                 String todate = "";
                mymodel.setNumRows(0);
                  
               
-                double total = 0.00;
-                double toggletotal = 0.00;
+                double total = 0;
+                double toggletotal = 0;
                 boolean haveOpen = false;
                
                  
@@ -1082,12 +1079,12 @@ try {
                           res.getString("glh_type"), 
                           res.getString("glh_effdate"),
                           res.getString("glh_desc"),
-                          Double.valueOf(df.format(res.getDouble("glh_amt"))),
+                          bsParseDouble(currformatDouble(res.getDouble("glh_amt"))),
                           toggle, status });
                    
                 }
                
-              lbacctbal.setText(df.format(OVData.getGLAcctBalAsOfDate(ddsite.getSelectedItem().toString(), ddacct.getSelectedItem().toString(), fromdate)));
+              lbacctbal.setText(currformatDouble(OVData.getGLAcctBalAsOfDate(ddsite.getSelectedItem().toString(), ddacct.getSelectedItem().toString(), fromdate)));
             
               sumAll(toggletotal);
                
@@ -1159,15 +1156,14 @@ try {
     }//GEN-LAST:event_cbtoggleActionPerformed
 
     private void btcommitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcommitActionPerformed
-        DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
             
-                if (lbstatementbal.getText().isEmpty() || Double.valueOf(lbstatementbal.getText()) == 0.00) {
+                if (lbstatementbal.getText().isEmpty() || bsParseDouble(lbstatementbal.getText()) == 0) {
                     bsmf.MainFrame.show(getMessageTag(1059));
                     return;
                 }
 
 
-                if (Double.valueOf(lbdiff.getText()) == 0.00) {
+                if (bsParseDouble(lbdiff.getText()) == 0) {
                     boolean sure = bsmf.MainFrame.warn(getMessageTag(1060));     
                     if (sure) {
                      updateRecon();
@@ -1185,7 +1181,7 @@ try {
             tbendbalance.setText("");
             tbendbalance.setBackground(Color.yellow);
             bsmf.MainFrame.show(getMessageTag(1000));
-            lbstatementbal.setText("0.00");
+            lbstatementbal.setText("0");
             tbendbalance.requestFocus();
              btRun.setEnabled(false);
              btcommit.setEnabled(false);
