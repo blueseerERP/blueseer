@@ -67,6 +67,7 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.awt.Image;
@@ -102,8 +103,8 @@ public class CashTranBrowse extends javax.swing.JPanel {
  
     String exoincfilepath = OVData.getSystemTempDirectory() + "/" + "chartexpinc.jpg";
     String buysellfilepath = OVData.getSystemTempDirectory() + "/" + "chartbuysell.jpg";
-    Double expenses = 0.00;
-    Double inventory = 0.00;
+    double expenses = 0;
+    double inventory = 0;
     
     javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                         new String[]{getGlobalColumnTag("detail"), 
@@ -197,7 +198,7 @@ public class CashTranBrowse extends javax.swing.JPanel {
     
       public void chartExp() {
           
-          expenses = 0.00;
+          expenses = 0;
           
          try {
           
@@ -225,7 +226,7 @@ public class CashTranBrowse extends javax.swing.JPanel {
                 String acct = "";
                 while (res.next()) {
                       acct = res.getString("ac_desc");  
-                    Double amt = res.getDouble("sum");
+                    double amt = res.getDouble("sum");
                     if (amt < 0) {amt = amt * -1;}
                     
                     expenses += amt;
@@ -298,7 +299,7 @@ public class CashTranBrowse extends javax.swing.JPanel {
                       if (acct.equals("income")) {
                           acct = "misc income";
                       }
-                    Double amt = res.getDouble("sum");
+                    double amt = res.getDouble("sum");
                     if (amt < 0) {amt = amt * -1;}
                   dataset.setValue(acct, amt);
                 }
@@ -350,10 +351,9 @@ public class CashTranBrowse extends javax.swing.JPanel {
     public void getdetail(String shipper) {
       
          modeldetail.setNumRows(0);
-         double totalsales = 0.00;
-         double totalqty = 0.00;
-         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
-        
+         double totalsales = 0;
+         double totalqty = 0;
+         
         try {
 
             Class.forName(bsmf.MainFrame.driver).newInstance();
@@ -446,7 +446,7 @@ public class CashTranBrowse extends javax.swing.JPanel {
         tbincome.setText("0");
         tbtotpurch.setText("0");
         saleslessexp.setText("0");
-        expenses = 0.00;
+        expenses = 0;
         cbchart.setSelected(false);
         
         java.util.Date now = new java.util.Date();
@@ -837,18 +837,16 @@ try {
             try {
                 Statement st = con.createStatement();
                 ResultSet res = null;
-
-                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
-                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 String fromdate = "";
                 String todate = "";
                mymodel.setNumRows(0);
                  
               
                 
-                 double totsales = 0.00;
-                 double totpurch = 0.00;
-                 double totincome = 0.00;
+                 double totsales = 0;
+                 double totpurch = 0;
+                 double totincome = 0;
                  
                  String trantype = "";
                  
@@ -877,13 +875,13 @@ try {
                  }
                   
                       //lets get the total inventory value first
-                      inventory = 0.00;
+                      inventory = 0;
                       res = st.executeQuery("select sum(in_qoh * it_mtl_cost) as 'sum' from in_mstr " +
                         " inner join item_mstr on it_item = in_part where it_code = 'A' " );
                       while (res.next()) {
                           inventory += res.getDouble("sum");
                       }
-                      tbinventory.setText(df.format(inventory));
+                      tbinventory.setText(currformatDouble(inventory));
                 
                       
                   // now lets get the pos_mstr records    
@@ -908,7 +906,7 @@ try {
                                 res.getString("pos_entityname"),
                                 res.getString("pos_entrydate"),
                                 res.getString("pos_totqty"),
-                                df.format(res.getDouble("pos_totamt")),
+                                currformatDouble(res.getDouble("pos_totamt")),
                                 BlueSeerUtils.clickprint 
                             });
                          } else if (trantype.equals("buy")) {
@@ -921,7 +919,7 @@ try {
                                 res.getString("pos_entityname"),
                                 res.getString("pos_entrydate"),
                                 res.getString("pos_totqty"),
-                                df.format(res.getDouble("pos_totamt")),
+                                currformatDouble(res.getDouble("pos_totamt")),
                                 BlueSeerUtils.clicklock 
                             }); 
                          } else if (trantype.equals("income")) {
@@ -934,7 +932,7 @@ try {
                                 res.getString("pos_entityname"),
                                 res.getString("pos_entrydate"),
                                 res.getString("pos_totqty"),
-                                df.format(res.getDouble("pos_totamt")),
+                                currformatDouble(res.getDouble("pos_totamt")),
                                 BlueSeerUtils.clicklock 
                             });     
                          } else {
@@ -946,7 +944,7 @@ try {
                                 res.getString("pos_entityname"),
                                 res.getString("pos_entrydate"),
                                 res.getString("pos_totqty"),
-                                df.format(res.getDouble("pos_totamt")),
+                                currformatDouble(res.getDouble("pos_totamt")),
                                 BlueSeerUtils.clicklock 
                             }); 
                          }
@@ -957,11 +955,11 @@ try {
                 chartBuyAndSell();
                 chartExp();       
                        
-                tbtotsales.setText(df.format(totsales));
-                tbincome.setText(df.format(totincome));
-                tbtotpurch.setText(df.format(totpurch));
-                tbtotexpenses.setText(df.format(expenses));
-                saleslessexp.setText(df.format((totsales - totpurch) - expenses));  // expenses depend on math in chartExp();
+                tbtotsales.setText(currformatDouble(totsales));
+                tbincome.setText(currformatDouble(totincome));
+                tbtotpurch.setText(currformatDouble(totpurch));
+                tbtotexpenses.setText(currformatDouble(expenses));
+                saleslessexp.setText(currformatDouble((totsales - totpurch) - expenses));  // expenses depend on math in chartExp();
                 
              
                 

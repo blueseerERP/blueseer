@@ -136,8 +136,8 @@ public class CashTran extends javax.swing.JPanel {
                 String apcc = "";
                 String apbank = "";
                 String curr = "";
-                Double actamt = 0.00;
-                Double actqty = 0.00;
+                double actamt = 0;
+                double actqty = 0;
                
                 int voucherline = 0;
                 int incomeline = 0;
@@ -364,10 +364,9 @@ public class CashTran extends javax.swing.JPanel {
     }
    
     public void calcdiff() {
-         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));   
-        double diff = 0.00;
-        double totincome = 0.00;
-        double totexpense = 0.00;
+        double diff = 0;
+        double totincome = 0;
+        double totexpense = 0;
         
         
         if (! tbrexpincome.getText().isEmpty()) {
@@ -377,7 +376,7 @@ public class CashTran extends javax.swing.JPanel {
             totexpense = bsParseDouble(tbrexptotamt.getText());
         }
         diff = totincome - totexpense;
-        tbrexpdiff.setText(df.format(diff));
+        tbrexpdiff.setText(currformatDouble(diff));
         if (diff < 0) {
             tbrexpdiff.setBackground(Color.red);
         } else {
@@ -390,10 +389,10 @@ public class CashTran extends javax.swing.JPanel {
         rexpensemodel.setRowCount(0);
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
         java.util.Date now = new java.util.Date();
-         double totexpense = 0.00;
-         double totincome = 0.00;
+         double totexpense = 0;
+         double totincome = 0;
          ImageIcon haspaid = null;
-         double paidamt = 0.00;
+         double paidamt = 0;
         try {
 
            
@@ -559,7 +558,6 @@ public class CashTran extends javax.swing.JPanel {
                 int i = 0;
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 java.util.Date now = new java.util.Date();
-                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));   
                 setvendorvariables(ddentity.getSelectedItem().toString());
                     
                 curr = OVData.getDefaultCurrency();
@@ -576,7 +574,7 @@ public class CashTran extends javax.swing.JPanel {
                         + " values ( " + "'" + ddentity.getSelectedItem() + "'" + ","
                               + "'" + site + "'" + ","
                         + "'" + expensenbr.getText() + "'" + ","
-                        + "'" + df.format(actamt) + "'" + ","
+                        + "'" + currformatDouble(actamt).replace(defaultDecimalSeparator, '.') + "'" + ","
                         + "'" + "V" + "'" + ","
                         + "'" + tbpo.getText() + "'" + ","
                         + "'" + tbrmks.getText().replace("'", "") + "'" + ","
@@ -642,16 +640,16 @@ public class CashTran extends javax.swing.JPanel {
                             + "'" + detailtable.getValueAt(j, 1).toString() + "'" + ","
                             + "'" + tbpo.getText() + "'" + ","
                             + "'" + String.valueOf(j + 1) + "'" + ","
-                            + "'" + detailtable.getValueAt(j, 2).toString() + "'" + ","
-                            + "'" + detailtable.getValueAt(j, 2).toString() + "'" + ","  // go ahead and set receiver voucher qty         
-                            + "'" + detailtable.getValueAt(j, 3).toString() + "'" + ","
+                            + "'" + detailtable.getValueAt(j, 2).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
+                            + "'" + detailtable.getValueAt(j, 2).toString().replace(defaultDecimalSeparator, '.') + "'" + ","  // go ahead and set receiver voucher qty         
+                            + "'" + detailtable.getValueAt(j, 3).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
                             + "'" + "0" + "'" + ","
-                            + "'" + detailtable.getValueAt(j, 3).toString() + "'" + ","
+                            + "'" + detailtable.getValueAt(j, 3).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
                             + "'" + "" + "'" + ","
                             + "'" + "" + "'" + ","
                             + "'" + detailtable.getValueAt(j, 5).toString() + "'" + ","
                             + "'" + detailtable.getValueAt(j, 5).toString() + "'" + ","
-                            + "'" + detailtable.getValueAt(j, 3).toString() + "'" + ","
+                            + "'" + detailtable.getValueAt(j, 3).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
                             + "'" + site + "'" + ","        
                             + "'" + "asset" + "'" + ","
                             + "'" + dfdate.format(dcdate.getDate()) + "'" 
@@ -668,8 +666,8 @@ public class CashTran extends javax.swing.JPanel {
                             + "'" + String.valueOf(receiverNbr) + "'" + ","
                             + "'" + String.valueOf(j + 1) + "'" + ","
                             + "'" + detailtable.getValueAt(j, 1).toString() + "'" + ","
-                            + "'" + detailtable.getValueAt(j, 2).toString() + "'" + ","
-                            + "'" + detailtable.getValueAt(j, 3).toString() + "'" + ","
+                            + "'" + detailtable.getValueAt(j, 2).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
+                            + "'" + detailtable.getValueAt(j, 3).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
                             + "'" + dfdate.format(dcdate.getDate()) + "'" + ","
                             + "'" + tbref.getText() + "'" + ","        
                             + "'" + OVData.getDefaultAssetAcctAP() + "'" + ","
@@ -705,8 +703,8 @@ public class CashTran extends javax.swing.JPanel {
                         + "'" + lbname.getText() + "'" + ","
                         + "'" + "buy" + "'" + ","       
                         + "'" + key + "'" + ","         
-                        + "'" + df.format(actqty) + "'" + ","
-                        + "'" + df.format(actamt) + "'" 
+                        + "'" + currformatDouble(actqty).replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "'" + currformatDouble(actamt).replace(defaultDecimalSeparator, '.') + "'" 
                         + ")"
                         + ";");
                      
@@ -718,9 +716,9 @@ public class CashTran extends javax.swing.JPanel {
                                 + "'" + detailtable.getValueAt(j, 1).toString() + "'"  + ","      
                                 + "'" + detailtable.getValueAt(j, 4).toString() + "'"  + "," 
                                 + "'" + detailtable.getValueAt(j, 5).toString() + "'"  + ","        
-                                + "'" + detailtable.getValueAt(j, 2).toString() + "'"  + ","   
-                                + "'" + detailtable.getValueAt(j, 3).toString() + "'"  + ","
-                                + "'" + detailtable.getValueAt(j, 3).toString() + "'" + "," 
+                                + "'" + detailtable.getValueAt(j, 2).toString().replace(defaultDecimalSeparator, '.') + "'"  + ","   
+                                + "'" + detailtable.getValueAt(j, 3).toString().replace(defaultDecimalSeparator, '.') + "'"  + ","
+                                + "'" + detailtable.getValueAt(j, 3).toString().replace(defaultDecimalSeparator, '.') + "'" + "," 
                                 + "'" + detailtable.getValueAt(j, 5).toString() + "'"  
                                 + ")"
                                 + ";");
@@ -776,8 +774,7 @@ public class CashTran extends javax.swing.JPanel {
                 int i = 0;
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 java.util.Date now = new java.util.Date();
-                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));   
-                setvendorvariables(entity);
+                 setvendorvariables(entity);
                     
                 curr = OVData.getDefaultCurrency();
                 String site = OVData.getDefaultSite();   
@@ -835,7 +832,7 @@ public class CashTran extends javax.swing.JPanel {
                         + "ar_status, ar_bank, ar_curr, ar_base_curr, ar_site ) "
                         + " values ( " + "'" + entity + "'" + ","
                         + "'" + batchnbr + "'" + ","
-                        + "'" + df.format(actamt) + "'" + ","
+                        + "'" + currformatDouble(actamt).replace(defaultDecimalSeparator, '.') + "'" + ","
                         + "'" + "P" + "'" + ","
                         + "'" + shipperid + "'" + ","
                         + "'" + tbrmks1.getText() + "'" + ","
@@ -864,7 +861,7 @@ public class CashTran extends javax.swing.JPanel {
                                 + "'" + shipperid + "'" + ","
                                 + "'" + (j + 1) + "'" + ","
                                 + "'" + dfdate.format(dcdate1.getDate()) + "'" + ","
-                                + "'" + detailtable1.getValueAt(j, 3).toString() + "'"  + ","
+                                + "'" + detailtable1.getValueAt(j, 3).toString().replace(defaultDecimalSeparator, '.') + "'"  + ","
                                 + "'" + "0" + "'" + ","
                                 + "'" + acct + "'" + ","
                                 + "'" + cc + "'"   
@@ -908,8 +905,8 @@ public class CashTran extends javax.swing.JPanel {
                         + "'" + lbname1.getText() + "'" + ","
                         + "'" + "sell" + "'" + ","       
                         + "'" + key + "'" + ","         
-                        + "'" + df.format(actqty) + "'" + ","
-                        + "'" + df.format(actamt) + "'" 
+                        + "'" + currformatDouble(actqty).replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "'" + currformatDouble(actamt).replace(defaultDecimalSeparator, '.') + "'" 
                         + ")"
                         + ";");
                      
@@ -921,9 +918,9 @@ public class CashTran extends javax.swing.JPanel {
                                 + "'" + detailtable1.getValueAt(j, 1).toString() + "'"  + ","      
                                 + "'" + detailtable1.getValueAt(j, 4).toString() + "'"  + "," 
                                 + "'" + detailtable1.getValueAt(j, 5).toString() + "'"  + ","        
-                                + "'" + detailtable1.getValueAt(j, 2).toString() + "'"  + ","   
-                                + "'" + detailtable1.getValueAt(j, 3).toString() + "'"  + ","
-                                + "'" + detailtable1.getValueAt(j, 3).toString() + "'" + "," 
+                                + "'" + detailtable1.getValueAt(j, 2).toString().replace(defaultDecimalSeparator, '.') + "'"  + ","   
+                                + "'" + detailtable1.getValueAt(j, 3).toString().replace(defaultDecimalSeparator, '.') + "'"  + ","
+                                + "'" + detailtable1.getValueAt(j, 3).toString().replace(defaultDecimalSeparator, '.') + "'" + "," 
                                 + "'" + detailtable1.getValueAt(j, 5).toString() + "'"  
                                 + ")"
                                 + ";");
@@ -971,7 +968,6 @@ public class CashTran extends javax.swing.JPanel {
                 int i = 0;
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 java.util.Date now = new java.util.Date();
-                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));   
                 setvendorvariables(ddentityExpense.getSelectedItem().toString());
                     
                 curr = OVData.getDefaultCurrency();
@@ -988,7 +984,7 @@ public class CashTran extends javax.swing.JPanel {
                         + " values ( " + "'" + ddentityExpense.getSelectedItem() + "'" + ","
                               + "'" + site + "'" + ","
                         + "'" + tbKeyExpense.getText() + "'" + ","
-                        + "'" + df.format(total) + "'" + ","
+                        + "'" + currformatDouble(total).replace(defaultDecimalSeparator, '.') + "'" + ","
                         + "'" + "V" + "'" + ","
                         + "'" + tbexpensePO.getText() + "'" + ","
                         + "'" + tbexpenseRemarks.getText() + "'" + ","
@@ -1013,8 +1009,8 @@ public class CashTran extends javax.swing.JPanel {
                             + "'" + "expense" + "'" + ","
                             + "'" +expenseTable.getValueAt(j, 0).toString() + "'" + ","
                             + "'" + expenseTable.getValueAt(j, 1).toString() + "'" + ","
-                            + "'" + expenseTable.getValueAt(j, 2).toString() + "'" + ","
-                            + "'" + expenseTable.getValueAt(j, 3).toString() + "'" + ","
+                            + "'" + expenseTable.getValueAt(j, 2).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
+                            + "'" + expenseTable.getValueAt(j, 3).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
                             + "'" + dfdate.format(dcdateExpense.getDate()) + "'" + ","
                             + "'" + tbexpensePO.getText().toString() + "'" + ","
                             + "'" + expenseTable.getValueAt(j, 5).toString() + "'" + ","
@@ -1049,8 +1045,8 @@ public class CashTran extends javax.swing.JPanel {
                         + "'" + lbexpenseEntityName.getText() + "'" + ","
                         + "'" + "expense" + "'" + ","       
                         + "'" + key + "'" + ","         
-                        + "'" + df.format(actqty) + "'" + ","
-                        + "'" + df.format(total) + "'" 
+                        + "'" + currformatDouble(actqty).replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "'" + currformatDouble(total).replace(defaultDecimalSeparator, '.') + "'" 
                         + ")"
                         + ";");
                      
@@ -1062,9 +1058,9 @@ public class CashTran extends javax.swing.JPanel {
                                 + "'" + expenseTable.getValueAt(j, 1).toString() + "'"  + ","      
                                 + "'" + expenseTable.getValueAt(j, 4).toString() + "'"  + "," 
                                 + "'" + expenseTable.getValueAt(j, 5).toString() + "'"  + ","        
-                                + "'" + expenseTable.getValueAt(j, 2).toString() + "'"  + ","   
-                                + "'" + expenseTable.getValueAt(j, 3).toString() + "'"  + ","
-                                + "'" + expenseTable.getValueAt(j, 3).toString() + "'" + "," 
+                                + "'" + expenseTable.getValueAt(j, 2).toString().replace(defaultDecimalSeparator, '.') + "'"  + ","   
+                                + "'" + expenseTable.getValueAt(j, 3).toString().replace(defaultDecimalSeparator, '.') + "'"  + ","
+                                + "'" + expenseTable.getValueAt(j, 3).toString().replace(defaultDecimalSeparator, '.') + "'" + "," 
                                 + "'" + expenseTable.getValueAt(j, 5).toString() + "'"  
                                 + ")"
                                 + ";");
@@ -1106,7 +1102,6 @@ public class CashTran extends javax.swing.JPanel {
                 int i = 0;
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 java.util.Date now = new java.util.Date();
-                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US)); 
                     
                 curr = OVData.getDefaultCurrency();
                 String basecurr = curr;
@@ -1195,9 +1190,9 @@ public class CashTran extends javax.swing.JPanel {
                                 + "'" + incomeTable.getValueAt(j, 1).toString() + "'"  + ","      
                                 + "'" + incomeTable.getValueAt(j, 4).toString() + "'"  + "," 
                                 + "'" + incomeTable.getValueAt(j, 5).toString() + "/" + OVData.getGLAcctDesc(incomeTable.getValueAt(j, 5).toString()) + "'"  + ","        
-                                + "'" + incomeTable.getValueAt(j, 2).toString() + "'"  + ","   
-                                + "'" + incomeTable.getValueAt(j, 3).toString() + "'"  + ","
-                                + "'" + incomeTable.getValueAt(j, 3).toString() + "'" + "," 
+                                + "'" + incomeTable.getValueAt(j, 2).toString().replace(defaultDecimalSeparator, '.') + "'"  + ","   
+                                + "'" + incomeTable.getValueAt(j, 3).toString().replace(defaultDecimalSeparator, '.') + "'"  + ","
+                                + "'" + incomeTable.getValueAt(j, 3).toString().replace(defaultDecimalSeparator, '.') + "'" + "," 
                                 + "'" + incomeTable.getValueAt(j, 5).toString() + "'"  
                                 + ")"
                                 + ";");
@@ -1247,8 +1242,7 @@ public class CashTran extends javax.swing.JPanel {
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 DateFormat dfdate2 = new SimpleDateFormat("yyyyMMdd");
                 java.util.Date now = new java.util.Date();
-                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));   
-                setvendorvariables(ddentityExpense.getSelectedItem().toString());
+                 setvendorvariables(ddentityExpense.getSelectedItem().toString());
                     
                
                 String po = tbexpensePO.getText();
@@ -1273,7 +1267,7 @@ public class CashTran extends javax.swing.JPanel {
                         + " values ( " + "'" + recurexpensetable.getValueAt(z, 3).toString() + "'" + ","
                               + "'" + recurexpensetable.getValueAt(z, 2).toString() + "'" + ","
                         + "'" + key + "'" + ","
-                        + "'" + recurexpensetable.getValueAt(z, 9).toString() + "'" + ","
+                        + "'" + recurexpensetable.getValueAt(z, 9).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
                         + "'" + "V" + "'" + ","
                         + "'" + recurexpensetable.getValueAt(z, 3).toString().replace("'", "''") + "'" + ","
                         + "'" + "" + "'" + ","
@@ -1299,7 +1293,7 @@ public class CashTran extends javax.swing.JPanel {
                             + "'" + "1" + "'" + ","
                             + "'" + recurexpensetable.getValueAt(z, 5).toString() + "'" + ","
                             + "'" + "1" + "'" + ","
-                            + "'" + recurexpensetable.getValueAt(z, 9).toString() + "'" + ","
+                            + "'" + recurexpensetable.getValueAt(z, 9).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
                             + "'" + dfdate.format(now) + "'" + ","
                             + "'" + recurexpensetable.getValueAt(z, 1).toString() + "'" + ","
                             + "'" + recurexpensetable.getValueAt(z, 6).toString() + "'" + ","
@@ -1336,7 +1330,7 @@ public class CashTran extends javax.swing.JPanel {
                         + "'" + recurexpensetable.getValueAt(z, 1).toString() + "'" + ","      // key for recurring is the ID of the recurring exp   
                         + "'" + "1" + "'" + ","
                         + "'" + recurexpensetable.getValueAt(z, 6).toString() + "'" + ","         
-                        + "'" + recurexpensetable.getValueAt(z, 9).toString() + "'" 
+                        + "'" + recurexpensetable.getValueAt(z, 9).toString().replace(defaultDecimalSeparator, '.') + "'" 
                         + ")"
                         + ";");
                      
@@ -1349,8 +1343,8 @@ public class CashTran extends javax.swing.JPanel {
                                 + "'" + recurexpensetable.getValueAt(z, 5).toString() + "'"  + "," 
                                 + "'" + "" + "'"  + ","        
                                 + "'" + "1" + "'"  + ","   
-                                + "'" + recurexpensetable.getValueAt(z, 9).toString() + "'"  + ","
-                                + "'" + recurexpensetable.getValueAt(z, 9).toString() + "'" + "," 
+                                + "'" + recurexpensetable.getValueAt(z, 9).toString().replace(defaultDecimalSeparator, '.') + "'"  + ","
+                                + "'" + recurexpensetable.getValueAt(z, 9).toString().replace(defaultDecimalSeparator, '.') + "'" + "," 
                                 + "'" + recurexpensetable.getValueAt(z, 6).toString() + "'"  
                                 + ")"
                                 + ";");
@@ -1778,8 +1772,8 @@ public class CashTran extends javax.swing.JPanel {
          apacct = "";
          apcc = "";
          apbank = "";
-         actamt = 0.00;
-         actqty = 0.00;
+         actamt = 0;
+         actqty = 0;
          expensenbr.setText("");
          tbpo.setText("");
         tbrmks.setText("");
@@ -1810,8 +1804,8 @@ public class CashTran extends javax.swing.JPanel {
          apacct = "";
          apcc = "";
          apbank = "";
-         actamt = 0.00;
-         actqty = 0.00;
+         actamt = 0;
+         actqty = 0;
          tbKeyExpense.setText("");
          tbexpenseDesc.setText("");
          tbexpensePO.setText("");
@@ -1882,8 +1876,8 @@ public class CashTran extends javax.swing.JPanel {
          apacct = "";
          apcc = "";
          apbank = "";
-         actamt = 0.00;
-         actqty = 0.00;
+         actamt = 0;
+         actqty = 0;
          tbrexpensedesc.setText("");
          tbrexpincome.setText("");
          cbrexpenabled.setSelected(true);
@@ -1969,8 +1963,8 @@ public class CashTran extends javax.swing.JPanel {
          apacct = "";
          apcc = "";
          apbank = "";
-         actamt = 0.00;
-         actqty = 0.00;
+         actamt = 0;
+         actqty = 0;
          expensenbr1.setText("");
          tbpo1.setText("");
         tbrmks1.setText("");
@@ -2060,7 +2054,7 @@ public class CashTran extends javax.swing.JPanel {
     }
     
      public void sumIncomeTotal() {
-         double total = 0.00;
+         double total = 0;
          for (int j = 0; j < incomeTable.getRowCount(); j++) {
              total += ( bsParseDouble(incomeTable.getValueAt(j, 2).toString()) * bsParseDouble(incomeTable.getValueAt(j, 3).toString()));
          } 
@@ -3942,7 +3936,6 @@ public class CashTran extends javax.swing.JPanel {
        // receiverdet  "Part", "PO", "line", "Qty",  listprice, disc, netprice, loc, serial, lot, recvID, recvLine
        // voucherdet   "PO", "Line", "Part", "Qty", "Price", "RecvID", "RecvLine", "Acct", "CC"
        // shipperdet   "Line", "Part", "CustPart", "SO", "PO", "Qty", "ListPrice", "Discount", "NetPrice", "shippedqty", "status", "WH", "LOC", "Desc"
-            DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US)); 
             voucherline++;
             actqty += bsParseDouble(tbqty.getText()); 
             actamt += bsParseDouble(tbqty.getText()) * 
@@ -3957,7 +3950,7 @@ public class CashTran extends javax.swing.JPanel {
                                                   });
         tbitemservice.setText("");
         tbprice.setText("");
-        tbactualamt.setText(df.format(actamt));
+        tbactualamt.setText(currformatDouble(actamt));
         dditem1.setSelectedIndex(0);
         tbitemservice.requestFocus();
         
@@ -4005,7 +3998,7 @@ public class CashTran extends javax.swing.JPanel {
             ((javax.swing.table.DefaultTableModel) detailtable.getModel()).removeRow(i);
            voucherline--;
         }
-        tbactualamt.setText(actamt.toString());
+        tbactualamt.setText(currformatDouble(actamt));
     }//GEN-LAST:event_btdeleteitemActionPerformed
 
     private void tbactualamtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbactualamtActionPerformed
@@ -4163,7 +4156,6 @@ public class CashTran extends javax.swing.JPanel {
        // receiverdet  "Part", "PO", "line", "Qty",  listprice, disc, netprice, loc, serial, lot, recvID, recvLine
        // voucherdet   "PO", "Line", "Part", "Qty", "Price", "RecvID", "RecvLine", "Acct", "CC"
        // shipperdet   "Line", "Part", "CustPart", "SO", "PO", "Qty", "ListPrice", "Discount", "NetPrice", "shippedqty", "status", "WH", "LOC", "Desc"
-            DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US)); 
             voucherline++;
             actqty += bsParseDouble(tbqty1.getText()); 
             actamt += bsParseDouble(tbqty1.getText()) * 
@@ -4179,7 +4171,7 @@ public class CashTran extends javax.swing.JPanel {
             
        
         tbprice1.setText("");
-        tbactualamt1.setText(df.format(actamt));
+        tbactualamt1.setText(currformatDouble(actamt));
         dditem1.setSelectedIndex(0);
         dditem1.requestFocus();
     }//GEN-LAST:event_btadditem1ActionPerformed
@@ -4327,9 +4319,7 @@ public class CashTran extends javax.swing.JPanel {
        }
         
        partnumber = String.valueOf(OVData.getNextNbr("item"));
-       
-            DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US)); 
-            voucherline++;
+         voucherline++;
             
            
                  //"Line", "Item", "Qty", "Price", "Ref", "Acct"
@@ -4469,9 +4459,7 @@ public class CashTran extends javax.swing.JPanel {
        }
        
        String uniqueID = String.valueOf(OVData.getNextNbr("rexpense"));
-       
-            DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US)); 
-            DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
             java.util.Date now = new java.util.Date();
             
             try {
@@ -4493,7 +4481,7 @@ public class CashTran extends javax.swing.JPanel {
                             + "'" + bsmf.MainFrame.userid + "'"  + ","   
                             + "'" + tbrexpensedesc.getText().replace("'","") + "'"  + ","   
                             + "'" + "" + "'"  + ","   // ref        
-                            + "'" + tbrexprice.getText() + "'"  + ","          
+                            + "'" + tbrexprice.getText().replace(defaultDecimalSeparator, '.') + "'"  + ","          
                             + "'" + "1" + "'"        // active
                             + " )" + ";");              
                           bsmf.MainFrame.show(getMessageTag(1030));
@@ -4625,7 +4613,7 @@ public class CashTran extends javax.swing.JPanel {
                     st.executeUpdate("insert into exp_mstr (exp_id, exp_site, exp_amt) values (" + 
                             "'" + "bsint" + "'" + "," +
                             "'" + ddrexpsite.getSelectedItem().toString() + "'" + "," +
-                            "'" + tbrexpincome.getText() + "'" +      
+                            "'" + tbrexpincome.getText().replace(defaultDecimalSeparator, '.') + "'" +      
                             ") ;");           
                            bsmf.MainFrame.show("income set");
                     } else {
@@ -4727,11 +4715,7 @@ public class CashTran extends javax.swing.JPanel {
        if (! tbincomeRef.getText().isEmpty()) {
            ref = ref + "/" + tbincomeRef.getText();
        }
-       
-            DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US)); 
-            incomeline++;
-            
-           
+       incomeline++;
                  //"Line", "Item", "Qty", "Price", "Ref", "Acct"
            incomemodel.addRow(new Object[] { incomeline, 
                                             tbincomeDesc.getText().replace("'",""),

@@ -29,11 +29,19 @@ import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.backgroundcolor;
 import static bsmf.MainFrame.backgroundpanel;
+import static bsmf.MainFrame.db;
+import static bsmf.MainFrame.defaultDecimalSeparator;
+import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
+import static bsmf.MainFrame.url;
+import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
+import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.GradientPaint;
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -69,31 +77,34 @@ public class POSControl extends javax.swing.JPanel {
 
     
     public void getcontrol() {
-          DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));   
-         try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                
+          try {
+          Connection con = DriverManager.getConnection(url + db, user, pass);
+          Statement st = bsmf.MainFrame.con.createStatement();
+          ResultSet res = null;
+          try {
                 int i = 0;
                     res = st.executeQuery("SELECT * FROM  pos_ctrl;");
                     while (res.next()) {
                         i++;
-                        taxpercent.setText(df.format(res.getDouble("posc_taxpercent")));
+                        taxpercent.setText(currformatDouble(res.getDouble("posc_taxpercent")));
                         ddbank.setSelectedItem(res.getString("posc_bank"));
                         tbtaxacct.setText(res.getString("posc_taxacct"));
-                       
                     }
-           
             }
             catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -264,7 +275,7 @@ public class POSControl extends javax.swing.JPanel {
                 if (i == 0) {
                     
                     st.executeUpdate("insert into pos_ctrl values (" + 
-                            "'" + taxpercent.getText() + "'" +  "," +
+                            "'" + taxpercent.getText().replace(defaultDecimalSeparator, '.') + "'" +  "," +
                             "'" + tbtaxacct.getText() + "'" + "," +
                             "'" + ddbank.getSelectedItem().toString() + "'" +
                             
@@ -272,7 +283,7 @@ public class POSControl extends javax.swing.JPanel {
                           bsmf.MainFrame.show(getMessageTag(1007));
                 } else {
                     st.executeUpdate("update pos_ctrl set " +
-                            " posc_taxpercent = " + "'" + taxpercent.getText() + "'" + "," +
+                            " posc_taxpercent = " + "'" + taxpercent.getText().replace(defaultDecimalSeparator, '.') + "'" + "," +
                             " posc_taxacct = " + "'" + tbtaxacct.getText() + "'"  + "," +
                             " posc_bank = " + "'" + ddbank.getSelectedItem().toString() + "'" +
                             ";");   
@@ -292,10 +303,9 @@ public class POSControl extends javax.swing.JPanel {
     }//GEN-LAST:event_btupdateActionPerformed
 
     private void taxpercentFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_taxpercentFocusLost
-        DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
         if (! taxpercent.getText().isEmpty()) {
-        double taxpct = Double.valueOf(taxpercent.getText());
-        taxpercent.setText(df.format(taxpct));
+        double taxpct = bsParseDouble(taxpercent.getText());
+        taxpercent.setText(currformatDouble(taxpct));
         }
     }//GEN-LAST:event_taxpercentFocusLost
 
