@@ -1,0 +1,33 @@
+.mode csv
+.output itemmstr.csv
+select * from item_mstr;
+.output itemcost.csv
+select * from item_cost;
+.output itemrcost.csv
+select * from itemr_cost;
+.output shipmstr.csv
+select * from ship_mstr;
+.output shipdet.csv
+select * from ship_det;
+.output armstr.csv
+select * from ar_mstr;
+.output ardmstr.csv
+select * from ard_mstr;
+.output somstr.csv
+select * from so_mstr;
+.output sodet.csv
+select * from sod_det;
+.output acbmstr.csv
+select * from acb_mstr;
+.output tranmstr.csv
+select * from tran_mstr;
+.output gltran.csv
+select * from gl_tran;
+.output glhist.csv
+select * from gl_hist;
+.output counter.csv
+select * from counter;
+.output cmmstr.csv
+select * from cm_mstr;
+.output cmsdet.csv
+select * from cms_det;

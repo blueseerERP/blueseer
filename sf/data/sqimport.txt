@@ -1,0 +1,17 @@
+.mode csv
+.import itemmstr.csv item_mstr
+.import itemcost.csv item_cost
+.import itemrcost.csv itemr_cost
+.import shipmstr.csv ship_mstr
+.import shipdet.csv ship_det
+.import armstr.csv ar_mstr
+.import ardmstr.csv ard_mstr
+.import somstr.csv so_mstr
+.import sodet.csv sod_det
+.import acbmstr.csv acb_mstr
+.import tranmstr.csv tran_mstr
+.import gltran.csv gl_tran
+.import glhist.csv gl_hist
+.import counter.csv counter
+.import cmmstr.csv cm_mstr
+.import cmsdet.csv cms_det

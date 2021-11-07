@@ -86,6 +86,30 @@ Name: "{commondesktop}\{#MyAppName}";  components: turkish; Filename: "{app}\jre
 ;Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: shellexec postinstall skipifsilent
 
 [Code]
+function CreateLangFile(): boolean;
+var
+  fileName : string;
+  lines : TArrayOfString;
+begin
+  Result := true;
+  fileName := ExpandConstant('{app}\.lang');
+  SetArrayLength(lines, 3);
+  lines[0] := 'echo hello';
+  lines[1] := 'pause';
+  lines[2] := 'exit';
+  Result := SaveStringsToFile(filename,lines,false);
+  exit;
+end;
+
+procedure CurStepChanged(CurStep: TSetupStep);
+begin
+  if  CurStep=ssPostInstall then
+    begin
+         CreateLangFile();
+    end
+end;
+
+
 
 var
   LangParam: string;

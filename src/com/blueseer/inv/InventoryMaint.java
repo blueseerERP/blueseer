@@ -683,7 +683,7 @@ public class InventoryMaint extends javax.swing.JPanel {
            isError = OVData.TRHistIssDiscrete(dcdate.getDate(), tbpart.getText(), qty, op, type, 0.00, cost, 
                 site, loc, wh, expire,
                 "", "", "", 0, "", "", tblotserial.getText(), tbrmks.getText(), tbref.getText(), 
-                acct, cc, "", "", "InventoryMaint", bsmf.MainFrame.userid);
+                acct, cc, "", tblotserial.getText(), "InventoryMaint", bsmf.MainFrame.userid);
         
         if (! isError) {
             isError = OVData.UpdateInventoryDiscrete(tbpart.getText(), site, loc, wh, tblotserial.getText(), expire, Double.valueOf(qty)); 
