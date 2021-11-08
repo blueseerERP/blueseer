@@ -30,7 +30,7 @@ com.blueseer.ctr.POSMaint,,1
 com.blueseer.ctr.TermsMaint,,1
 com.blueseer.dst.DOBrowse,,1
 com.blueseer.dst.DOMaint,,1
-com.blueseer.dst.WareHouseMaint,,1
+com.blueseer.inv.WareHouseMaint,,1
 com.blueseer.edi.EDI,,1
 com.blueseer.edi.EDIbs,,1
 com.blueseer.edi.EDIControl,,1

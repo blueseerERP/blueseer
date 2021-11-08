@@ -456,7 +456,7 @@ public class LocationMaint extends javax.swing.JPanel implements IBlueSeer {
       return m;
     }
     
-     public loc_mstr createRecord() {
+    public loc_mstr createRecord() {
         loc_mstr x = new loc_mstr(null, 
            tbkey.getText(),
            tbdesc.getText(),

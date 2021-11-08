@@ -105,7 +105,7 @@ DOMaint,,com.blueseer.dst.DOMaint,JMenuItem,domm
 DOBrowse,,com.blueseer.dst.DOBrowse,JMenuItem,domb
 FOMaint,,com.blueseer.frt.FOMaint,JMenuItem,form
 FOBrowse,,com.blueseer.frt.FOBrowse,JMenuItem,forb
-WareHouseMaint,,com.blueseer.dst.WareHouseMaint,JMenuItem,wahm
+WareHouseMaint,,com.blueseer.inv.WareHouseMaint,JMenuItem,wahm
 WareHouseBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,wahb
 LocationTransfer,,com.blueseer.inv.LocationTransfer,JMenuItem,loaj
 MRPBrowse,,com.blueseer.sch.MRPBrowse,JMenuItem,mrpb

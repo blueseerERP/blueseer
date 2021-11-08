@@ -23,12 +23,15 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-package com.blueseer.dst;
+package com.blueseer.inv;
 
 import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
+import static com.blueseer.inv.invData.addWareHouseMstr;
+import static com.blueseer.inv.invData.updateWareHouseMstr;
+import com.blueseer.inv.invData.wh_mstr;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
@@ -380,98 +383,12 @@ public class WareHouseMaint extends javax.swing.JPanel implements IBlueSeer {
     }
     
     public String[] addRecord(String[] x) {
-     String[] m = new String[2];
-     
-     try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                boolean proceed = true;
-                int i = 0;
-                
-                proceed = validateInput("addRecord");
-                
-                if (proceed) {
-
-                    res = st.executeQuery("SELECT wh_id FROM  wh_mstr where wh_id = " + "'" + tbkey.getText() + "'" + ";");
-                    while (res.next()) {
-                        i++;
-                    }
-                    if (i == 0) {
-                       st.executeUpdate("insert into wh_mstr "
-                            + "(wh_id, wh_site, wh_name, wh_addr1, wh_addr2, wh_city, wh_state, wh_zip, wh_country ) "
-                            + " values ( " + "'" + tbkey.getText().toString() + "'" + ","
-                            + "'" + ddsite.getSelectedItem().toString() + "'" + ","
-                            + "'" + tbname.getText().toString() + "'" + ","
-                            + "'" + tbaddr1.getText().toString() + "'" + ","
-                            + "'" + tbaddr2.getText().toString() + "'" + ","
-                            + "'" + tbcity.getText().toString() + "'" + ","
-                            + "'" + ddstate.getSelectedItem().toString() + "'" + ","
-                            + "'" + tbzip.getText().toString() + "'" + ","
-                            + "'" + ddcountry.getSelectedItem().toString() + "'" 
-                            + ")"
-                            + ";");
-                        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
-                    } else {
-                       m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists}; 
-                    }
-
-                   initvars(null);
-                   
-                } // if proceed
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordSQLError};  
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordConnError};
-        }
-     
+    String[] m = addWareHouseMstr(createRecord());
      return m;
      }
      
     public String[] updateRecord(String[] x) {
-     String[] m = new String[2];
-     
-     try {
-            boolean proceed = true;
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                   
-               proceed = validateInput("updateRecord");
-                
-                if (proceed) {
-                    st.executeUpdate("update wh_mstr set wh_name = " + "'" + tbname.getText() + "'" + ","
-                            + "wh_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + ","
-                            + "wh_addr1 = " + "'" + tbaddr1.getText() + "'" + ","
-                            + "wh_addr2 = " + "'" + tbaddr2.getText() + "'" + ","
-                            + "wh_city = " + "'" + tbcity.getText() + "'" + ","
-                            + "wh_state = " + "'" + ddstate.getSelectedItem().toString() + "'" + ","
-                            + "wh_zip = " + "'" + tbzip.getText() + "'" + ","
-                            + "wh_country = " + "'" + ddcountry.getSelectedItem().toString() + "'" 
-                            + " where wh_id = " + "'" + tbkey.getText() + "'"                             
-                            + ";");
-                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
-                    initvars(null);
-                } 
-         
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError};  
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordConnError};
-        }
-     
+    String[] m = updateWareHouseMstr(createRecord());
      return m;
      }
      
@@ -545,6 +462,22 @@ public class WareHouseMaint extends javax.swing.JPanel implements IBlueSeer {
         }
       return m;
     }
+    
+    public wh_mstr createRecord() {
+        wh_mstr x = new wh_mstr(null, 
+           tbkey.getText().toString(), 
+            ddsite.getSelectedItem().toString(),
+            tbname.getText().toString(),
+            tbaddr1.getText().toString(),
+            tbaddr2.getText().toString(),
+            tbcity.getText().toString(),
+            ddstate.getSelectedItem().toString(),
+            tbzip.getText().toString(),
+            ddcountry.getSelectedItem().toString()
+        );
+        return x;
+    }
+    
     
      public void lookUpFrame() {
         
