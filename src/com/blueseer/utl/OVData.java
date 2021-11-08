@@ -3626,9 +3626,7 @@ return myitem;
                 if (st != null) {
                     st.close();
                 }
-                if (con != null) {
-                    con.close();
-                }
+                con.close();
             }
         } catch (Exception e) {
             MainFrame.bslog(e);
@@ -5375,10 +5373,9 @@ return myitem;
         try{
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
                 res = st.executeQuery("select code_key from code_mstr where code_code = " + "'" + type + "'" + " order by code_key ;");
                while (res.next()) {
                     myarray.add(res.getString("code_key"));
@@ -5403,10 +5400,9 @@ return myitem;
         try{
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
                 res = st.executeQuery("select code_key from code_mstr where code_code = " + "'" + code + "'" + " order by code_key ;");
                while (res.next()) {
                     myarray.add(res.getString("code_key"));
@@ -5432,10 +5428,9 @@ return myitem;
         try{
 
             Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
                 res = st.executeQuery("select code_key from code_mstr where code_code = " + "'PRICEGROUP'" + " order by code_key ;");
                while (res.next()) {
                     myarray.add(res.getString("code_key"));
@@ -5460,10 +5455,9 @@ return myitem;
         try{
 
             Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
                 res = st.executeQuery("select cm_price_code from cm_mstr where cm_code = " + "'" + custcode + "'" + ";");
                while (res.next()) {
                     myreturn = res.getString("cm_price_code");
@@ -5487,10 +5481,9 @@ return myitem;
         try{
 
             Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
                 res = st.executeQuery("select vd_price_code from vd_mstr where vd_addr = " + "'" + vend + "'" + ";");
                while (res.next()) {
                     myreturn = res.getString("vd_price_code");
@@ -5548,10 +5541,9 @@ return myitem;
         try{
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
                 res = st.executeQuery("select * from jasp_mstr " +
                         " where jasp_group = " + "'" + group + "'" + 
                         " order by cast(jasp_sequence as decimal) ;");
@@ -5590,11 +5582,10 @@ return myitem;
            }
             catch (SQLException s){
                MainFrame.bslog(s);
-               bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             } finally {
                 if (res != null) res.close();
                 if (ps != null) ps.close();
-                if (con != null) con.close();
+                if (con != null) con.close(); 
             }
         }
         catch (Exception e){
@@ -5609,11 +5600,10 @@ return myitem;
 
     try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
-
+            try{
             res = st.executeQuery("select code_key, code_value from code_mstr " +
                     " where code_code = " + "'" + type + "'" + 
                     " order by cast(code_key as decimal) ;");
@@ -5646,12 +5636,9 @@ return myitem;
         try{
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                // customer based pricing
-               
                     res = st.executeQuery("select cm_price_code from cm_mstr where cm_code = " + "'" + entity + "'" + ";");
                      while (res.next()) {
                        pricecode = res.getString("cm_price_code");
@@ -5694,12 +5681,9 @@ return myitem;
         try{
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
-                // customer based pricing
-               
                     res = st.executeQuery("select vd_price_code from vd_mstr where vd_addr = " + "'" + entity + "'" + ";");
                  while (res.next()) {
                    pricecode = res.getString("vd_price_code");
@@ -5748,10 +5732,9 @@ return myitem;
         try{
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
                 res = st.executeQuery("select code_value from code_mstr where code_key = " + "'" + key + "'" + " order by code_key ;");
                while (res.next()) {
                    mystring = res.getString("code_value");
@@ -5775,11 +5758,10 @@ return myitem;
        String mystring = "";
         try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+           Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
                 res = st.executeQuery("select code_key from code_mstr where code_code = " + "'" + code + "'" + " order by code_key ;");
                while (res.next()) {
                    mystring = res.getString("code_key");
@@ -5804,10 +5786,9 @@ return myitem;
         try{
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
                 res = st.executeQuery("select code_value from code_mstr where " +
                         " code_code = " + "'" + code + "'" + 
                         " AND code_key = " + "'" + key + "'" + " ;");
@@ -5835,10 +5816,9 @@ return myitem;
  try{
 
     Connection con = DriverManager.getConnection(url + db, user, pass);
+    Statement st = con.createStatement();
+    ResultSet res = null;
     try{
-        Statement st = con.createStatement();
-        ResultSet res = null;
-
         res = st.executeQuery("select ov_image_directory from ov_ctrl;" );
        while (res.next()) {
         myreturn = res.getString("ov_image_directory");                    
@@ -5862,15 +5842,13 @@ return myreturn;
  try{
 
     Connection con = DriverManager.getConnection(url + db, user, pass);
+    Statement st = con.createStatement();
+    ResultSet res = null;
     try{
-        Statement st = con.createStatement();
-        ResultSet res = null;
-
         res = st.executeQuery("select ov_temp_directory from ov_ctrl;" );
        while (res.next()) {
         myreturn = res.getString("ov_temp_directory");                    
         }
-
    }
     catch (SQLException s){
          MainFrame.bslog(s);
@@ -5889,10 +5867,9 @@ return myreturn;
  try{
 
     Connection con = DriverManager.getConnection(url + db, user, pass);
+    Statement st = con.createStatement();
+    ResultSet res = null;
     try{
-        Statement st = con.createStatement();
-        ResultSet res = null;
-
         res = st.executeQuery("select ov_label_directory from ov_ctrl;" );
        while (res.next()) {
         myreturn = res.getString("ov_label_directory");                    
@@ -5916,10 +5893,9 @@ return myreturn;
  try{
 
     Connection con = DriverManager.getConnection(url + db, user, pass);
+    Statement st = con.createStatement();
+    ResultSet res = null;
     try{
-        Statement st = con.createStatement();
-        ResultSet res = null;
-
         res = st.executeQuery("select ov_jasper_directory from ov_ctrl;" );
        while (res.next()) {
         myreturn = res.getString("ov_jasper_directory");                    
@@ -5943,10 +5919,9 @@ return myreturn;
  try{
 
     Connection con = DriverManager.getConnection(url + db, user, pass);
+    Statement st = con.createStatement();
+    ResultSet res = null;
     try{
-        Statement st = con.createStatement();
-        ResultSet res = null;
-
         res = st.executeQuery("select ov_edi_directory from ov_ctrl;" );
        while (res.next()) {
         myreturn = res.getString("ov_edi_directory");                    
@@ -5970,10 +5945,9 @@ return myreturn;
  try{
 
     Connection con = DriverManager.getConnection(url + db, user, pass);
+    Statement st = con.createStatement();
+    ResultSet res = null;
     try{
-        Statement st = con.createStatement();
-        ResultSet res = null;
-
         res = st.executeQuery("select ov_fileservertype from ov_ctrl;" );
        while (res.next()) {
         myreturn = res.getString("ov_fileservertype");                    
@@ -6014,9 +5988,7 @@ return myreturn;
                 if (st != null) {
                     st.close();
                 }
-                if (con != null) {
-                    con.close();
-                }
+                con.close();
             }
         }
         catch (Exception e){

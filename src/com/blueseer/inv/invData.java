@@ -647,6 +647,52 @@ public class invData {
         return m;
     }
 
+     public static String[] addUOMMstr(uom_mstr x) {
+        String[] m = new String[2];
+        String sqlSelect = "SELECT * FROM  uom_mstr where uom_id = ?";
+        String sqlInsert = "insert into uom_mstr (uom_id, uom_desc ) "
+                        + " values (?,?); "; 
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+             PreparedStatement ps = con.prepareStatement(sqlSelect);) {
+             ps.setString(1, x.uom_id);
+          try (ResultSet res = ps.executeQuery();
+               PreparedStatement psi = con.prepareStatement(sqlInsert);) {  
+            if (! res.isBeforeFirst()) {
+            psi.setString(1, x.uom_id);
+            psi.setString(2, x.uom_desc);
+            int rows = psi.executeUpdate();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+            } else {
+            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists};    
+            }
+          } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+          }
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+
+    public static String[] updateUOMMstr(uom_mstr x) {
+        String[] m = new String[2];
+        String sql = "update uom_mstr set uom_desc = ? "
+                        + " where uom_id = ? ;"; 
+         try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(5, x.uom_id);
+            ps.setString(1, x.uom_desc);
+            int rows = ps.executeUpdate();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+
 
     /* misc functions */
     public static ArrayList getItemListFromCustCode(String cust) {
@@ -2814,4 +2860,13 @@ public class invData {
             this(m, "", "", "", "", "");
         }
     }
+
+    public record uom_mstr(String[] m, String uom_id, String uom_desc) {
+        public uom_mstr(String[] m) {
+            this(m, "", "");
+        }
+    }
+
+
+
 }
