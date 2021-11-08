@@ -647,7 +647,7 @@ public class invData {
         return m;
     }
 
-     public static String[] addUOMMstr(uom_mstr x) {
+    public static String[] addUOMMstr(uom_mstr x) {
         String[] m = new String[2];
         String sqlSelect = "SELECT * FROM  uom_mstr where uom_id = ?";
         String sqlInsert = "insert into uom_mstr (uom_id, uom_desc ) "
@@ -693,7 +693,52 @@ public class invData {
         return m;
     }
 
-       public static String[] addWareHouseMstr(wh_mstr x) {
+    public static uom_mstr getUOMMstr(String[] x) {
+        uom_mstr r = null;
+        String[] m = new String[2];
+        String sql = "select * from uom_mstr where uom_id = ? ;";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, x[0]);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new uom_mstr(m);  // minimum return
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new uom_mstr(m, res.getString("uom_id"), res.getString("uom_desc"));
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getClassName() + "." + Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new uom_mstr(m);
+        }
+        return r;
+    }
+  
+    public static String[] deleteUOMMstr(uom_mstr x) {
+        String[] m;
+        String sqlDelete = "delete from uom_mstr where uom_id = ? ;"; 
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+             PreparedStatement ps = con.prepareStatement(sqlDelete);) {
+             ps.setString(1, x.uom_id);
+             int rows = ps.executeUpdate();
+             if (rows > 0) {
+                m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess}; 
+             } else {
+                m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordError}; 
+             }
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+    
+    public static String[] addWareHouseMstr(wh_mstr x) {
         String[] m = new String[2];
         String sqlSelect = "SELECT * FROM  wh_mstr where wh_id = ?";
         String sqlInsert = "insert into wh_mstr (wh_id, wh_site, wh_name, "

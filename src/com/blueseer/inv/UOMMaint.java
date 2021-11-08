@@ -29,9 +29,13 @@ package com.blueseer.inv;
 import bsmf.MainFrame;
 import static bsmf.MainFrame.tags;
 import static com.blueseer.inv.invData.addUOMMstr;
+import static com.blueseer.inv.invData.deleteUOMMstr;
+import static com.blueseer.inv.invData.getUOMMstr;
+import com.blueseer.inv.invData.uom_mstr;
 import static com.blueseer.inv.invData.updateUOMMstr;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
@@ -43,6 +47,7 @@ import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeer;
+import com.blueseer.utl.IBlueSeerT;
 import com.blueseer.utl.OVData;
 import java.awt.Color;
 import java.awt.Component;
@@ -70,12 +75,12 @@ import javax.swing.SwingWorker;
  *
  * @author vaughnte
  */
-public class UOMMaint extends javax.swing.JPanel implements IBlueSeer {
+public class UOMMaint extends javax.swing.JPanel implements IBlueSeerT { 
 
-     // global variable declarations
-                boolean isLoad = false;
+    // global variable declarations
+    boolean isLoad = false;
     
-   // global datatablemodel declarations    
+    // global datatablemodel declarations    
                 
     /**
      * Creates new form CarrierMaintPanel
@@ -85,15 +90,15 @@ public class UOMMaint extends javax.swing.JPanel implements IBlueSeer {
         setLanguageTags(this);
     }
 
-     public void executeTask(String x, String[] y) { 
+    public void executeTask(dbaction x, String[] y) { 
       
         class Task extends SwingWorker<String[], Void> {
        
-          String type = "";
+          String type;
           String[] key = null;
           
-          public Task(String type, String[] key) { 
-              this.type = type;
+          public Task(dbaction type, String[] key) { 
+              this.type = type.name();
               this.key = key;
           } 
            
@@ -102,10 +107,8 @@ public class UOMMaint extends javax.swing.JPanel implements IBlueSeer {
             String[] message = new String[2];
             message[0] = "";
             message[1] = "";
-            
-            
              switch(this.type) {
-                case "add":
+                case "add" :
                     message = addRecord(key);
                     break;
                 case "update":
@@ -217,7 +220,7 @@ public class UOMMaint extends javax.swing.JPanel implements IBlueSeer {
             }
     } 
     
-     public void setLanguageTags(Object myobj) {
+    public void setLanguageTags(Object myobj) {
        JPanel panel = null;
         JTabbedPane tabpane = null;
         JScrollPane scrollpane = null;
@@ -260,8 +263,7 @@ public class UOMMaint extends javax.swing.JPanel implements IBlueSeer {
                 }
        }
     }
-    
-     
+         
     public void setComponentDefaultValues() {
        isLoad = true;
         tbkey.setText("");
@@ -270,7 +272,7 @@ public class UOMMaint extends javax.swing.JPanel implements IBlueSeer {
     }
     
     public void newAction(String x) {
-       setPanelComponentState(this, true);
+        setPanelComponentState(this, true);
         setComponentDefaultValues();
         BlueSeerUtils.message(new String[]{"0",BlueSeerUtils.addRecordInit});
         btupdate.setEnabled(false);
@@ -285,42 +287,30 @@ public class UOMMaint extends javax.swing.JPanel implements IBlueSeer {
         tbkey.requestFocus();
     }
     
-    public String[] setAction(int i) {
-        String[] m = new String[2];
-        if (i > 0) {
-            m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
-                   setPanelComponentState(this, true);
-                   btadd.setEnabled(false);
-                   tbkey.setEditable(false);
-                   tbkey.setForeground(Color.blue);
+    public void setAction(String[] x) {
+        if (x[0].equals("0")) { 
+           setPanelComponentState(this, true);
+           btadd.setEnabled(false);
+           tbkey.setEditable(false);
+           tbkey.setForeground(Color.blue);
         } else {
-           m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
-                   tbkey.setForeground(Color.red); 
+           tbkey.setForeground(Color.red); 
         }
-        return m;
     }
     
-    public boolean validateInput(String x) {
-        boolean b = true;
-                
-                if (tbkey.getText().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1024));
-                    tbkey.requestFocus();
-                    return b;
-                }
-                
-                if (tbdesc.getText().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1024));
-                    tbdesc.requestFocus();
-                    return b;
-                }
-                
-                
-                
-               
-        return b;
+    public boolean validateInput(dbaction x) {
+        if (tbkey.getText().isEmpty()) {
+            bsmf.MainFrame.show(getMessageTag(1024));
+            tbkey.requestFocus();
+            return false;
+        }
+
+        if (tbdesc.getText().isEmpty()) {
+            bsmf.MainFrame.show(getMessageTag(1024));
+            tbdesc.requestFocus();
+            return false;
+        }
+        return true;
     }
     
     public void initvars(String[] arg) {
@@ -331,7 +321,7 @@ public class UOMMaint extends javax.swing.JPanel implements IBlueSeer {
         btlookup.setEnabled(true);
         
         if (arg != null && arg.length > 0) {
-            executeTask("get",arg);
+            executeTask(dbaction.get,arg);
         } else {
             tbkey.setEnabled(true);
             tbkey.setEditable(true);
@@ -350,74 +340,22 @@ public class UOMMaint extends javax.swing.JPanel implements IBlueSeer {
      }
      
     public String[] deleteRecord(String[] x) {
-     String[] m = new String[2];
+      String[] m;
         boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
         if (proceed) {
-        try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            Statement st = bsmf.MainFrame.con.createStatement();
-            ResultSet res = null;
-            try {
-                   int i = st.executeUpdate("delete from uom_mstr where uom_id = " + "'" + x[0] + "'" + ";");
-                    if (i > 0) {
-                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
-                    initvars(null);
-                    }
-                } catch (SQLException s) {
-                 MainFrame.bslog(s); 
-                m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};  
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1020, Thread.currentThread().getStackTrace()[1].getMethodName())};
-        }
+         m = deleteUOMMstr(createRecord()); 
         } else {
            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
         }
-     return m;
+         return m;
      }
       
-    public String[] getRecord(String[] x) {
-       String[] m = new String[2];
-       
-        try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            Statement st = bsmf.MainFrame.con.createStatement();
-            ResultSet res = null;
-            try {
-                
-                int i = 0;
-                res = st.executeQuery("select * from uom_mstr where uom_id = " + "'" + x[0] + "'" + ";");
-                while (res.next()) {
-                    i++;
-                    tbkey.setText(x[0]);
-                    tbdesc.setText(res.getString("uom_desc"));
-                }
-               
-                // set Action if Record found (i > 0)
-                m = setAction(i);
-                
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};  
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1020, Thread.currentThread().getStackTrace()[1].getMethodName())};  
-        }
-      return m;
+    public String[] getRecord(String[] key) {
+      uom_mstr x = getUOMMstr(key);
+      tbkey.setText(x.uom_id());
+      tbdesc.setText(x.uom_desc());
+      setAction(x.m());
+      return x.m();  
     }
     
      public invData.uom_mstr createRecord() {
@@ -464,8 +402,6 @@ public class UOMMaint extends javax.swing.JPanel implements IBlueSeer {
         luTable.addMouseListener(luml);
       
         callDialog(getClassLabelTag("lblid", this.getClass().getSimpleName()), getClassLabelTag("lbldesc", this.getClass().getSimpleName())); 
-         
-        
         
     }
 
@@ -612,27 +548,27 @@ public class UOMMaint extends javax.swing.JPanel implements IBlueSeer {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
-       if (! validateInput("addRecord")) {
+       if (! validateInput(dbaction.add)) {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("add", new String[]{tbkey.getText()});
+        executeTask(dbaction.add, new String[]{tbkey.getText()});
     }//GEN-LAST:event_btaddActionPerformed
 
     private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
-       if (! validateInput("updateRecord")) {
+       if (! validateInput(dbaction.update)) {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("update", new String[]{tbkey.getText()});
+        executeTask(dbaction.update, new String[]{tbkey.getText()});
     }//GEN-LAST:event_btupdateActionPerformed
 
     private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
-          if (! validateInput("deleteRecord")) {
+          if (! validateInput(dbaction.delete)) {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("delete", new String[]{tbkey.getText()});   
+        executeTask(dbaction.delete, new String[]{tbkey.getText()});   
     }//GEN-LAST:event_btdeleteActionPerformed
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
@@ -649,7 +585,7 @@ public class UOMMaint extends javax.swing.JPanel implements IBlueSeer {
     }//GEN-LAST:event_btclearActionPerformed
 
     private void tbkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkeyActionPerformed
-        executeTask("get", new String[]{tbkey.getText()});
+        executeTask(dbaction.get, new String[]{tbkey.getText()});
     }//GEN-LAST:event_tbkeyActionPerformed
 
 

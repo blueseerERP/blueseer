@@ -89,6 +89,10 @@ import org.w3c.dom.Element;
  */
 public class BlueSeerUtils {
     
+    public enum dbaction {
+        add, update, get, delete
+    }
+    
     public static DateFormat mysqlDateFormat = new SimpleDateFormat("yyyy-MM-dd");
     public static DateFormat bsdate = new SimpleDateFormat("yyyy-MM-dd");
     public static ImageIcon clickflag = new ImageIcon(BlueSeerUtils.class.getResource("/images/flag.png")); 

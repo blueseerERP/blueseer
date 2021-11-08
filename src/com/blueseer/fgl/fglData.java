@@ -130,7 +130,7 @@ public class fglData {
         ps.setString(1, x[0]);
              try (ResultSet res = ps.executeQuery();) {
                 if (! res.isBeforeFirst()) {
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
                 r = new AcctMstr(m);
                 } else {
                     while(res.next()) {
@@ -235,7 +235,7 @@ public class fglData {
         ps.setString(1, x[0]);
              try (ResultSet res = ps.executeQuery();) {
                 if (! res.isBeforeFirst()) {
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
                 r = new BankMstr(m);
                 } else {
                     while(res.next()) {
@@ -330,7 +330,7 @@ public class fglData {
         ps.setString(1, x[0]);
              try (ResultSet res = ps.executeQuery();) {
                 if (! res.isBeforeFirst()) {
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
                 r = new CurrMstr(m);
                 } else {
                     while(res.next()) {
