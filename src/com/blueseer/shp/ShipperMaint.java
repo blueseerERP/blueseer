@@ -2218,7 +2218,7 @@ public class ShipperMaint extends javax.swing.JPanel {
         } 
         String[] m = new String[2];
         m = addShipperTransaction(createDetRecord(), createRecord());
-        OVData.updateShipperSAC(tbshipper.getText());
+        shpData.updateShipperSAC(tbshipper.getText());
         initvars(new String[]{tbshipper.getText()});
         
     }//GEN-LAST:event_btaddActionPerformed
@@ -2330,7 +2330,7 @@ public class ShipperMaint extends javax.swing.JPanel {
                     
                     
                      // now update shs_det
-                    OVData.updateShipperSAC(tbshipper.getText());
+                    shpData.updateShipperSAC(tbshipper.getText());
                     
                     
                    

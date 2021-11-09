@@ -32,6 +32,7 @@ import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import com.blueseer.shp.shpData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.createMessageJSON;
 import com.blueseer.utl.OVData;
@@ -265,7 +266,7 @@ public static String postShipperJSON(HttpServletRequest request) throws IOExcept
         jb.append(line);
         }
             
-        String[] m = OVData.CreateShipperByJSON(jb.toString());
+        String[] m = shpData.CreateShipperByJSON(jb.toString());
         return createMessageJSON(m[0], m[1], m[2]); 
         
     }

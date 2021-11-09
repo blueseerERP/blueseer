@@ -40,6 +40,7 @@ import java.util.HashMap;
 import java.util.Map;
 import com.blueseer.utl.OVData;
 import com.blueseer.edi.EDI.*;
+import com.blueseer.shp.shpData;
 import com.blueseer.utl.BlueSeerUtils;
 
 
@@ -63,7 +64,7 @@ public class Generic856o extends com.blueseer.edi.EDIMap {
         
          
         
-         String[] h = OVData.getShipperHeader(key);  // 13 elements...see declaration
+         String[] h = shpData.getShipperHeader(key);  // 13 elements...see declaration
         
          H.add("BSN" + ed + "00" + ed +  key + ed + h[5] + ed + "1200");
          H.add("DTM" + ed + "011" + ed + h[4] + ed + "1200");
@@ -79,7 +80,7 @@ public class Generic856o extends com.blueseer.edi.EDIMap {
          int i = 0;
          int sumqty = 0;
          // part, custpart, qty, po, cumqty, listprice, netprice, reference
-         ArrayList<String[]> lines = OVData.getShipperLines(key);
+         ArrayList<String[]> lines = shpData.getShipperLines(key);
         
               for (String[] d : lines) {
                   sumqty = sumqty + Integer.valueOf(d[2]);

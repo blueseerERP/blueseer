@@ -25,11 +25,11 @@ SOFTWARE.
  */
 package com.blueseer.far;
 
-import com.blueseer.shp.*;
+
 import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
-import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
+import com.blueseer.shp.shpData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
@@ -46,75 +46,29 @@ import static com.blueseer.utl.BlueSeerUtils.luinput;
 import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import com.blueseer.utl.DTData;
-import static com.blueseer.utl.OVData.TRHistIssSales;
-import static com.blueseer.utl.OVData.UpdateInventoryFromShipper;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.sql.Connection;
 import java.util.ArrayList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import javax.swing.JOptionPane;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Phrase;
-import com.itextpdf.text.pdf.BaseFont;
-import com.itextpdf.text.pdf.PdfContentByte;
-import com.itextpdf.text.pdf.PdfWriter;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Locale;
-import javax.print.Doc;
-import javax.print.DocFlavor;
-import javax.print.DocPrintJob;
-import javax.print.PrintService;
-import javax.print.PrintServiceLookup;
-import javax.print.SimpleDoc;
-import javax.print.attribute.HashPrintRequestAttributeSet;
-import javax.print.attribute.PrintRequestAttributeSet;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
 import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
-import javax.swing.JTree;
 import javax.swing.JViewport;
 import javax.swing.SwingWorker;
-import javax.swing.ToolTipManager;
-import javax.swing.event.PopupMenuEvent;
-import javax.swing.event.PopupMenuListener;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreeNode;
-import javax.swing.tree.TreePath;
-import net.sf.jasperreports.engine.JasperExportManager;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.view.JasperViewer;
 
 
 /**
@@ -495,13 +449,10 @@ public class InvoiceMaint extends javax.swing.JPanel {
             int i = 0;
             int d = 0;
             
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Connection con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Statement st = con.createStatement();
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                   
                proceed = validateInput("updateRecord");
-                
                 if (proceed) {
                     // lets collect single or multiple PO status
                        for (int j = 0; j < tabledetail.getRowCount(); j++) {
@@ -514,8 +465,6 @@ public class InvoiceMaint extends javax.swing.JPanel {
                          d++;
                          uniqpo = tabledetail.getValueAt(j, 3).toString();
                        }
-                    
-                    
                     
                     st.executeUpdate("update ship_mstr set " 
                         + " sh_shipdate = " + "'" + bsmf.MainFrame.dfdate.format(dcshipdate.getDate()) + "'" + ","
@@ -551,16 +500,17 @@ public class InvoiceMaint extends javax.swing.JPanel {
                     }
                     
                      // now update shs_det
-                    OVData.updateShipperSAC(tbkey.getText());
+                    shpData.updateShipperSAC(tbkey.getText());
                     m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
-                    initvars(null);
                 } 
          
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError};  
+            } finally {
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordConnError};
@@ -577,8 +527,8 @@ public class InvoiceMaint extends javax.swing.JPanel {
         try {
 
             Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            Statement st = bsmf.MainFrame.con.createStatement();
+            Connection con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Statement st = con.createStatement();
             ResultSet res = null;
             int i = 0;
             try {
@@ -623,7 +573,7 @@ public class InvoiceMaint extends javax.swing.JPanel {
                          if (! s[0].isEmpty() && ! s[1].isEmpty()) {
                              _adjustedqty = bsParseDouble(s[4]) - bsParseDouble(s[5]);
                              if (_adjustedqty > 0) {
-                                 finalstatus = "backorder";
+                                 finalstatus = getGlobalProgTag("backorder");
                              }
                              st.executeUpdate("update sod_det set " +
                              " sod_shipped_qty = " + "'" + _adjustedqty + "'" + "," +
@@ -658,15 +608,14 @@ public class InvoiceMaint extends javax.swing.JPanel {
                    
                     if (i > 0  & c == 0) {
                     m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
-                    initvars(null);
                     }
-                } catch (SQLException s) {
+            } catch (SQLException s) {
                  MainFrame.bslog(s); 
                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordSQLError};  
             } finally {
                if (res != null) res.close();
                if (st != null) st.close();
-               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
+               if (con != null) con.close();
             }
         } catch (Exception e) {
             MainFrame.bslog(e);
@@ -681,14 +630,12 @@ public class InvoiceMaint extends javax.swing.JPanel {
       
     public String[] getRecord(String[] x) {
        String[] m = new String[2];
-       
         try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Connection con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null; int i = 0;
+                 int i = 0;
                 int d = 0;
                 String order = "";
                 String po = "";
@@ -765,8 +712,11 @@ public class InvoiceMaint extends javax.swing.JPanel {
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};  
@@ -866,26 +816,24 @@ public class InvoiceMaint extends javax.swing.JPanel {
         
     public void setLabelByShipTo(String shipto) {
         try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            
+            Connection con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Statement st = con.createStatement();
+                ResultSet res = null;
             int i = 0;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-
-
                 res = st.executeQuery("select * from cms_det where cms_shipto = " + "'" + shipto + "'" + ";");
                 while (res.next()) {
                     i++;
                 }
-              
-                
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }

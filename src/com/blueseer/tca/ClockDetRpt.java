@@ -62,7 +62,7 @@ import javax.swing.ImageIcon;
  *
  * @author vaughnte
  */
-public class ClockDetailRpt extends javax.swing.JPanel {
+public class ClockDetRpt extends javax.swing.JPanel {
  
          javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object [][] {},
             new String [] {
@@ -81,7 +81,7 @@ public class ClockDetailRpt extends javax.swing.JPanel {
     /**
      * Creates new form ScrapReportPanel
      */
-    public ClockDetailRpt() {
+    public ClockDetRpt() {
         initComponents();
     }
 

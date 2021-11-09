@@ -31,6 +31,7 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.ctr.cusData;
+import com.blueseer.shp.shpData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDoubleUS;
 import static com.blueseer.utl.BlueSeerUtils.currformatDoubleUS;
@@ -1449,12 +1450,12 @@ public class fglData {
         
          }
        
-    public static void glEntryFromShipper(String shipper, Date effdate, Connection bscon) throws SQLException {
+    public static void _glEntryFromShipper(String shipper, Date effdate, Connection bscon) throws SQLException {
         
             Statement st = bscon.createStatement();
             Statement st2 = bscon.createStatement();
             ResultSet res;
-            ResultSet nres;
+            ResultSet nres = null;
                 
                 double totamt = 0.00;
                 double basetotamt = 0.00;
@@ -1673,7 +1674,7 @@ public class fglData {
                     
                    // Trailer / Summary Charges
                     // we will credit sales and debit AR
-                    charges = OVData.getShipperTrailerCharges(shipper);
+                    charges = shpData.getShipperTrailerCharges(shipper);
                     if (charges > 0) {
                        acct_cr.add(OVData.getDefaultSalesAcct());
                         acct_dr.add(cusData.getCustSalesAcct(cust));
@@ -1693,6 +1694,10 @@ public class fglData {
                    for (int j = 0; j < acct_cr.size(); j++) {
                       glEntryXP(bscon, acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), BlueSeerUtils.setDateFormat(effdate), bsParseDoubleUS(cost.get(j).toString()), bsParseDoubleUS(basecost.get(j).toString()), curr, basecurr, ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString());  
                     }
+            res.close();
+            nres.close();
+            st.close();
+            st2.close();
     }
                
     public static boolean glEntryFromShipperRV(String shipper, Date effdate) {
@@ -1918,7 +1923,7 @@ public class fglData {
                     
                    // Trailer / Summary Charges
                     // we will credit sales and debit AR
-                    charges = OVData.getShipperTrailerCharges(shipper);
+                    charges = shpData.getShipperTrailerCharges(shipper);
                     if (tottax > 0) {
                        acct_cr.add(OVData.getDefaultSalesAcct());
                         acct_dr.add(cusData.getCustSalesAcct(cust));

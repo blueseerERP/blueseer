@@ -29,6 +29,7 @@ package EDIMaps;
 import com.blueseer.ctr.cusData;
 import java.util.ArrayList;
 import com.blueseer.edi.EDI;
+import com.blueseer.shp.shpData;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import com.blueseer.utl.OVData;
@@ -54,7 +55,7 @@ public class Generic810o extends com.blueseer.edi.EDIMap {
     // you can then override individual envelope elements as desired
     setOutPutEnvelopeStrings(c);
         
-         String[] h = OVData.getShipperHeader(key);  // 13 elements...see declaration
+         String[] h = shpData.getShipperHeader(key);  // 13 elements...see declaration
         
          // header
         
@@ -76,7 +77,7 @@ public class Generic810o extends com.blueseer.edi.EDIMap {
          
       
          // part, custpart, qty, po, cumqty, listprice, netprice, reference, sku
-         ArrayList<String[]> lines = OVData.getShipperLines(key);
+         ArrayList<String[]> lines = shpData.getShipperLines(key);
               for (String[] d : lines) {
                   
                   if (d[8].isEmpty() && d[8] != null) {

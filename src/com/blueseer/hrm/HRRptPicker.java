@@ -378,7 +378,7 @@ public class HRRptPicker extends javax.swing.JPanel {
                  getGlobalColumnTag("empid"), 
                  getGlobalColumnTag("lastname"), 
                  getGlobalColumnTag("firstname"), 
-                 getGlobalColumnTag("department"), 
+                 getGlobalColumnTag("dept"), 
                  getGlobalColumnTag("status"), 
                  getGlobalColumnTag("shift"), 
                  getGlobalColumnTag("startdate"), 

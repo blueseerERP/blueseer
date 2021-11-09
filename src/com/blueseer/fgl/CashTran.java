@@ -32,6 +32,7 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import com.blueseer.ctr.cusData;
 import com.blueseer.inv.invData;
+import com.blueseer.shp.shpData;
 import static com.blueseer.shp.shpData.confirmShipperTransaction;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
@@ -792,7 +793,7 @@ public class CashTran extends javax.swing.JPanel {
                  
                           int shipperid = OVData.getNextNbr("shipper");   
                           key = String.valueOf(shipperid);
-                             boolean iserror = OVData.CreateShipperHdr(key, site,
+                             boolean iserror = shpData.CreateShipperHdr(key, site,
                              String.valueOf(key), 
                               entity, // sh_cust
                               entity,  // sh_ship
@@ -810,7 +811,7 @@ public class CashTran extends javax.swing.JPanel {
                              
                     
                          for (int j = 0; j < detailtable1.getRowCount(); j++) {
-                             OVData.CreateShipperDet(String.valueOf(shipperid), detailtable1.getValueAt(j, 1).toString(), "", "", "", "", "1", "EA", 
+                             shpData.CreateShipperDet(String.valueOf(shipperid), detailtable1.getValueAt(j, 1).toString(), "", "", "", "", "1", "EA", 
                                      detailtable1.getValueAt(j, 3).toString(), "0", detailtable1.getValueAt(j, 3).toString(), dfdate.format(now), 
                                      detailtable1.getValueAt(j, 4).toString(), detailtable1.getValueAt(j, 0).toString(), site, "", "", "0");
                          }

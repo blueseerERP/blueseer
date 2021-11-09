@@ -924,7 +924,7 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
          }
     }
     
-     public void sumdollars() {
+    public void sumdollars() {
         double dol = 0;
         double summaryTaxPercent = 0;
         double headertax = 0;

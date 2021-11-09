@@ -28,6 +28,7 @@ package com.blueseer.edi;
 
 import bsmf.MainFrame;
 import static com.blueseer.edi.EDIMap.ed;
+import com.blueseer.shp.shpData;
 import com.blueseer.utl.EDData;
 import com.blueseer.utl.BlueSeerUtils;
 import com.blueseer.utl.OVData;
@@ -1625,7 +1626,7 @@ public class EDI {
                    if ( Double.valueOf(e.getDetNetPrice(j)) == 0)
                       error = true;
                   
-               OVData.CreateShipperDet(String.valueOf(shipperid),
+               shpData.CreateShipperDet(String.valueOf(shipperid),
                        e.getDetItem(j), 
                        e.getDetCustItem(j), 
                        e.getDetSku(j),
@@ -1825,7 +1826,7 @@ public class EDI {
        
          
         // lets determine the billto of this shipper
-        billto = OVData.getShipperBillto(shipper);
+        billto = shpData.getShipperBillto(shipper);
         if (billto.isEmpty()) {
             proceed = false;
             errorcode = 2;
@@ -1913,7 +1914,7 @@ public class EDI {
        
          
         // lets determine the billto of this shipper
-        billto = OVData.getShipperBillto(shipper);
+        billto = shpData.getShipperBillto(shipper);
         if (billto.isEmpty()) {
             proceed = false;
             errorcode = 2;

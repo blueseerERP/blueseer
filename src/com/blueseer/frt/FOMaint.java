@@ -32,6 +32,7 @@ import com.blueseer.edi.EDILogBrowse;
 import static bsmf.MainFrame.checkperms;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
+import com.blueseer.shp.shpData;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
@@ -842,7 +843,7 @@ public class FOMaint extends javax.swing.JPanel {
          ddshipfrom.setSelectedIndex(0);
         
         ddshipper.removeAllItems();
-         ArrayList<String> shippers = OVData.getShippersOpenListForFreight();
+         ArrayList<String> shippers = shpData.getShippersOpenListForFreight();
          lock_ddshipper = true;
         for (String code : shippers) {
             ddshipper.addItem(code);
@@ -2154,7 +2155,7 @@ public class FOMaint extends javax.swing.JPanel {
                     }
                     
                     // update every shipper with freight order number assignment...sh_freight = freightorder
-                    OVData.updateShipperWithFreightOrder(orddet);
+                    shpData.updateShipperWithFreightOrder(orddet);
                     
                     bsmf.MainFrame.show(getMessageTag(1007));
                    initvars(null);
@@ -2243,7 +2244,7 @@ public class FOMaint extends javax.swing.JPanel {
                     }
                     
                     // update every shipper with freight order number assignment...sh_freight = freightorder
-                    OVData.updateShipperWithFreightOrder(orddet);
+                    shpData.updateShipperWithFreightOrder(orddet);
                     
                     bsmf.MainFrame.show(getMessageTag(1008));
                    initvars(null);

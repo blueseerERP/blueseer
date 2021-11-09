@@ -34,6 +34,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Connection;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -44,7 +45,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
-import static bsmf.MainFrame.con;
 import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.defaultDecimalSeparator;
 import static bsmf.MainFrame.driver;
@@ -96,15 +96,11 @@ public class ARMemoMaint extends javax.swing.JPanel {
     
     
       public void getBilltoInfo(String arg) {
-        
         try {
-            
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
+            Connection con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Statement st = con.createStatement();
                 ResultSet res = null;
-              
+            try {
                 res = st.executeQuery("select * from cm_mstr where cm_code = " + "'" + arg + "'"  + ";");
                 while (res.next()) {
                 ddbank.setSelectedItem(res.getString("cm_bank"));
@@ -117,8 +113,11 @@ public class ARMemoMaint extends javax.swing.JPanel {
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -736,12 +735,11 @@ public class ARMemoMaint extends javax.swing.JPanel {
 
     private void btsubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btsubmitActionPerformed
         try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Connection con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
+                
                 boolean proceed = true;
                 boolean error = false;
                 int i = 0;
@@ -809,8 +807,11 @@ public class ARMemoMaint extends javax.swing.JPanel {
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
