@@ -1449,23 +1449,12 @@ public class fglData {
         
          }
        
-    public static boolean glEntryFromShipper(String shipper, Date effdate) {
-              boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
-        try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            Statement st2 = con.createStatement();
-            ResultSet res = null;
-            ResultSet nres = null;
-            try{
-                
-               
-                
-               java.util.Date now = new java.util.Date();
-                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-                DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
-                String mydate = dfdate.format(now);
+    public static void glEntryFromShipper(String shipper, Date effdate, Connection bscon) throws SQLException {
+        
+            Statement st = bscon.createStatement();
+            Statement st2 = bscon.createStatement();
+            ResultSet res;
+            ResultSet nres;
                 
                 double totamt = 0.00;
                 double basetotamt = 0.00;
@@ -1678,7 +1667,7 @@ public class fglData {
                     if (tottax > 0) {
                       ArrayList<String[]> taxelements = OVData.getTaxPercentElementsApplicableByTaxCode(taxcode);
                           for (String[] elements : taxelements) {
-                          glEntry(OVData.getDefaultSalesAcct(), OVData.getDefaultSalesCC(), OVData.getDefaultTaxAcctByType(elements[2]), OVData.getDefaultTaxCCByType(elements[2]), dfdate.format(effdate), ( totamt * ( bsParseDoubleUS(elements[1]) / 100 )), ( basetotamt * ( bsParseDoubleUS(elements[1]) / 100 )), curr, basecurr, thisref, thissite, thistype, "Tax: " + elements[2]);
+                          glEntry(OVData.getDefaultSalesAcct(), OVData.getDefaultSalesCC(), OVData.getDefaultTaxAcctByType(elements[2]), OVData.getDefaultTaxCCByType(elements[2]), BlueSeerUtils.setDateFormat(effdate), ( totamt * ( bsParseDoubleUS(elements[1]) / 100 )), ( basetotamt * ( bsParseDoubleUS(elements[1]) / 100 )), curr, basecurr, thisref, thissite, thistype, "Tax: " + elements[2]);
                           }
                     }
                     
@@ -1701,43 +1690,10 @@ public class fglData {
                         type.add(thistype);
                         desc.add("Summary Charges for Shipper");
                     }
-                    
-                    
-                    
-                    
-                    
                    for (int j = 0; j < acct_cr.size(); j++) {
-                      glEntry(acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), dfdate.format(effdate), bsParseDoubleUS(cost.get(j).toString()), bsParseDoubleUS(basecost.get(j).toString()), curr, basecurr, ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString());  
+                      glEntryXP(bscon, acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), BlueSeerUtils.setDateFormat(effdate), bsParseDoubleUS(cost.get(j).toString()), bsParseDoubleUS(basecost.get(j).toString()), curr, basecurr, ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString());  
                     }
-                    
-                    
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-                 myerror = true;
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (nres != null) {
-                    nres.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                if (st2 != null) {
-                    st2.close();
-                }
-                con.close();
-            }
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-            myerror = true;
-        }
-        return myerror;
-        
-         }
+    }
                
     public static boolean glEntryFromShipperRV(String shipper, Date effdate) {
               boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false

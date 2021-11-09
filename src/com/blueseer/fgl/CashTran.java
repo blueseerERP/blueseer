@@ -32,6 +32,7 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import com.blueseer.ctr.cusData;
 import com.blueseer.inv.invData;
+import static com.blueseer.shp.shpData.confirmShipperTransaction;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.currformat;
@@ -816,7 +817,7 @@ public class CashTran extends javax.swing.JPanel {
                     
 
                      // now confirm shipment
-                     message = OVData.confirmShipment(String.valueOf(shipperid), now);
+                    message = confirmShipperTransaction("cash", String.valueOf(shipperid), now);
                      if (message[0].equals("1")) { // if error
                        error = true;
                        return message;

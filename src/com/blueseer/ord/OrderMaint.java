@@ -46,6 +46,7 @@ import com.blueseer.ord.ordData.sod_tax;
 import com.blueseer.ord.ordData.sos_det;
 import static com.blueseer.ord.ordData.updateOrderTransaction;
 import com.blueseer.shp.shpData;
+import static com.blueseer.shp.shpData.confirmShipperTransaction;
 import com.blueseer.shp.shpData.ship_mstr;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
@@ -789,7 +790,6 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
                 int i = st.executeUpdate("delete from so_mstr where so_nbr = " + "'" + tbkey.getText() + "'" + ";");
                     if (i > 0) {
                     m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
-                    initvars(null);
                     }
                 } catch (SQLException s) {
                  MainFrame.bslog(s); 
@@ -1226,8 +1226,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
         shpData.addShipperTransaction(shd, sh);
         OVData.updateShipperSAC(String.valueOf(shipperid));
         // now confirm shipment
-        String[] message = OVData.confirmShipment(String.valueOf(shipperid), now);
-                    
+        String[] message = confirmShipperTransaction("order", String.valueOf(shipperid), now);
         return message;
     }
     

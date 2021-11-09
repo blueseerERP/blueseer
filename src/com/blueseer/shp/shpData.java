@@ -32,10 +32,14 @@ import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.ctr.cusData;
 import com.blueseer.ctr.cusData.cm_mstr;
+import com.blueseer.fgl.fglData;
 import com.blueseer.ord.ordData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import com.blueseer.utl.OVData;
+import static com.blueseer.utl.OVData.AREntry;
+import static com.blueseer.utl.OVData.TRHistIssSales;
+import static com.blueseer.utl.OVData.UpdateInventoryFromShipper;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -45,6 +49,7 @@ import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import javax.swing.JTable;
 /**
  *
@@ -199,6 +204,66 @@ public class shpData {
         }
     return m;
     }
+    
+    public static String[] confirmShipperTransaction(String type, String shipper, Date effdate) {
+        String[] m = new String[2];
+        Connection bscon = null;
+        PreparedStatement ps = null;
+        ResultSet res = null;
+        try { 
+            bscon = DriverManager.getConnection(url + db, user, pass);
+            bscon.setAutoCommit(false);
+            
+            AREntry("I", shipper, effdate, bscon);  
+            TRHistIssSales(shipper, effdate, bscon);
+            UpdateInventoryFromShipper(shipper, bscon);
+            fglData.glEntryFromShipper(shipper, effdate, bscon);
+            OVData.updateShipperStatus(shipper, effdate, bscon); 
+            if (type.equals("order")) {
+            OVData.updateOrderFromShipper(shipper, bscon); 
+            }
+            if (type.equals("serviceorder")) {
+            OVData.updateServiceOrderFromShipper(shipper, bscon); 
+            }
+            // if type.equals("cash")....no order to update
+           
+            bscon.commit();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             try {
+                 bscon.rollback();
+                 m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordError};
+             } catch (SQLException rb) {
+                 MainFrame.bslog(rb);
+             }
+        } finally {
+            if (res != null) {
+                try {
+                    res.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (bscon != null) {
+                try {
+                    bscon.setAutoCommit(true);
+                    bscon.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
+    }
+    
     
     private static int _updateShipMstr(ship_mstr x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
         int rows = 0;

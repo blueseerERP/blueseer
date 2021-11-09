@@ -30,6 +30,7 @@ import bsmf.MainFrame;
 import static bsmf.MainFrame.tags;
 import com.blueseer.utl.OVData;
 import com.blueseer.edi.EDI;
+import static com.blueseer.shp.shpData.confirmShipperTransaction;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.awt.Component;
 import java.io.IOException;
@@ -215,7 +216,7 @@ public class ShipperConfirm extends javax.swing.JPanel {
             bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
            
 
-                OVData.confirmShipment(tbshipid.getText(), dcdate.getDate() );
+                String[] message = confirmShipperTransaction("order", tbshipid.getText(), dcdate.getDate());
                
            
             bsmf.MainFrame.con.close();

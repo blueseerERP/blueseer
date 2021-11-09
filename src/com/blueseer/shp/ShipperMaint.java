@@ -33,6 +33,7 @@ import static bsmf.MainFrame.tags;
 import com.blueseer.ctr.cusData;
 import com.blueseer.inv.invData;
 import static com.blueseer.shp.shpData.addShipperTransaction;
+import static com.blueseer.shp.shpData.confirmShipperTransaction;
 import com.blueseer.shp.shpData.ship_det;
 import com.blueseer.shp.shpData.ship_mstr;
 import com.blueseer.utl.BlueSeerUtils;
@@ -2351,17 +2352,9 @@ public class ShipperMaint extends javax.swing.JPanel {
     }//GEN-LAST:event_btshiptoActionPerformed
 
     private void btconfirmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btconfirmActionPerformed
-        try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-                String[] message = OVData.confirmShipment(tbshipper.getText(), dcshipdate.getDate() );
-                bsmf.MainFrame.show(message[1]);
-            bsmf.MainFrame.con.close();
-             initvars(new String[]{tbshipper.getText()});
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
+        String[] message = confirmShipperTransaction("order", tbshipper.getText(), dcshipdate.getDate());
+        bsmf.MainFrame.show(message[1]);
+        initvars(new String[]{tbshipper.getText()});
     }//GEN-LAST:event_btconfirmActionPerformed
 
     private void ddorderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddorderActionPerformed

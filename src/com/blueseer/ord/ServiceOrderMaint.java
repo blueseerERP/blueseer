@@ -38,6 +38,7 @@ import com.blueseer.ord.ordData.sv_mstr;
 import com.blueseer.ord.ordData.svd_det;
 import static com.blueseer.ord.ordData.updateServiceOrderTransaction;
 import com.blueseer.shp.shpData;
+import static com.blueseer.shp.shpData.confirmShipperTransaction;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
@@ -844,8 +845,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
         shpData.addShipperTransaction(shd, sh);
         OVData.updateShipperSAC(String.valueOf(shipperid));
         // now confirm shipment
-        String[] message = OVData.confirmShipment(String.valueOf(shipperid), now);
-        OVData.updateServiceOrderFromShipper(String.valueOf(shipperid));
+        String[] message = confirmShipperTransaction("serviceorder", String.valueOf(shipperid), now);
         message = new String[]{"0", "Service Order has been invoiced"};    
         // now auto payment
         if (cbpaid.isSelected()) {

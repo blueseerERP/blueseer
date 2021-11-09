@@ -10402,26 +10402,19 @@ return mystring;
 
      }
 
-    public static boolean UpdateInventoryFromShipper(String shipper) {
-          boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
-    try{
-
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
-            Statement st = con.createStatement();
-            Statement st2 = con.createStatement();
-            Statement st3 = con.createStatement();
-            Statement st4 = con.createStatement();
-            ResultSet res = null;
-            ResultSet res2 = null;
-            ResultSet nres = null;
+    public static void UpdateInventoryFromShipper(String shipper, Connection bscon) throws SQLException {
+   
+            Statement st = bscon.createStatement();
+            Statement st2 = bscon.createStatement();
+            Statement st3 = bscon.createStatement();
+            Statement st4 = bscon.createStatement();
+            ResultSet res;
+            ResultSet res2;
+            ResultSet nres;
 
            java.util.Date now = new java.util.Date();
             DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-            DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
             String mydate = dfdate.format(now);
-
-
                 String part = "";
                 double qty = 0;
                 String uom = "";
@@ -10433,16 +10426,10 @@ return mystring;
                 String expire = "";
                 double sum = 0;
                 int i = 0;
-
-
-
                   res = st.executeQuery("select sh_site, shd_part, shd_qty, shd_uom, shd_loc, shd_wh, shd_site, shd_serial " +
                           " from ship_det inner join ship_mstr on sh_id = shd_id  " +
                           " where shd_id = " + "'" + shipper + "'" +";");
-
-
                 while (res.next()) {
-
                     i = 0;
                     part = res.getString("shd_part");
                     qty = res.getDouble("shd_qty");
@@ -10528,24 +10515,7 @@ return mystring;
                             + " and in_serial = " + "'" + serial + "'"             
                             + ";");
                     }
-
-
-
-
                 }
-       }
-        catch (SQLException s){
-             MainFrame.bslog(s);
-             myerror = true;
-        }
-        con.close();
-    }
-    catch (Exception e){
-        MainFrame.bslog(e);
-        myerror = true;
-    }
-    return myerror;
-
      }
 
     public static boolean UpdateInventoryFromShipperRV(String shipper) {
@@ -10960,119 +10930,104 @@ return mystring;
 
 }
 
-    public static boolean TRHistIssSales(String shipper, Date effdate) {
-        boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
-        try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                Statement st2 = con.createStatement();
-                ResultSet res = null;
+    public static void TRHistIssSales(String shipper, Date effdate, Connection bscon) throws SQLException {
+           
+        Statement st = bscon.createStatement();
+        Statement st2 = bscon.createStatement();
+        ResultSet res;
+        java.util.Date now = new java.util.Date();
+        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+        String mydate = dfdate.format(now);
                 
-                
-               java.util.Date now = new java.util.Date();
-                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-                DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
-                String mydate = dfdate.format(now);
-                
-                    String cust = "";
-                    String ref = "";
-                    String rmks = "";
-                    String acct = "";
-                    String cc = "";
-                    String type = "";
-                    String jobnbr = "";
-                    String serial = "";
-                    String part = "";
-                    String uom = "";
-                    double qty = 0;
-                    double baseqty = 0;
-                    double price = 0.00;
-                    double cost = 0.00;
-                    String loc = "";
-                    int line = 0;
-                    String order = "";
-                    String po = "";
-                    String site = "";
-                    String lot = "";
-                    String terms = "";
-                    
-                    
-                    res = st.executeQuery("select * from ship_mstr where sh_id = " + "'" + shipper + "'" +";");
-                    while (res.next()) {
-                     cust = res.getString("sh_cust");
-                     ref = res.getString("sh_ref");
-                     rmks = res.getString("sh_rmks");
-                     acct = res.getString("sh_ar_acct");
-                     cc = res.getString("sh_ar_cc");
-                     site = res.getString("sh_site");
-                     terms = res.getString("sh_cust_terms");
-                     type = "ISS-SALES";
-                    }
-                   
-                    res = st.executeQuery("select * from ship_det where shd_id = " + "'" + shipper + "'" +";");
-                    while (res.next()) {
-                        part = res.getString("shd_part");
-                        uom = res.getString("shd_uom");
-                        qty = res.getDouble("shd_qty");
-                        order = res.getString("shd_so");
-                        po = res.getString("shd_po");
-                        line = res.getInt("shd_soline");
-                        lot = res.getString("shd_lot");
-                        loc = res.getString("shd_loc");
-                        jobnbr = res.getString("shd_jobnbr");
-                        serial = res.getString("shd_serial");
-                        baseqty = OVData.getUOMBaseQty(part, site, uom, qty);
-                        
-                st2.executeUpdate("insert into tran_mstr "
-                                + "(tr_site, tr_part, tr_qty, tr_base_qty, tr_uom, tr_ent_date, tr_eff_date, "
-                                + " tr_userid, tr_ref, tr_addrcode, tr_type, tr_rmks, tr_nbr, "
-                                + " tr_acct, tr_cc, tr_lot, tr_serial, tr_program, tr_loc, "
-                                + " tr_order, tr_line, tr_po, tr_price, tr_cost, tr_terms ) "
-                                + " values ( " 
-                                + "'" + site + "'" + ","
-                                + "'" + part + "'" + ","
-                                + "'" + qty + "'" + ","
-                                + "'" + baseqty + "'" + ","
-                                + "'" + uom + "'" + ","        
-                                + "'" + mydate + "'" + ","
-                                + "'" + dfdate.format(effdate) + "'" + ","
-                                + "'" + bsmf.MainFrame.userid.toString() + "'" + ","
-                                + "'" + ref + "'" + ","
-                                + "'" + cust + "'" + ","
-                                + "'" + type + "'" + ","
-                                + "'" + rmks + "'" + ","
-                                + "'" + shipper + "'" + ","
-                                + "'" + acct + "'" + ","
-                                + "'" + cc + "'" + ","
-                                + "'" + lot + "'" + ","
-                                + "'" + serial + "'" + ","
-                                + "'" + "shconf" + "'" + ","
-                                + "'" + loc + "'" + ","
-                                + "'" + order + "'" + ","
-                                + "'" + line + "'" + ","
-                                + "'" + po + "'" + ","
-                                + "'" + price + "'" + ","
-                                + "'" + cost + "'" + ","
-                                + "'" + terms + "'"
-                                + ")"
-                                + ";");
-                
-               }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-                 myerror = true;
-            }
-            con.close();
+        String cust = "";
+        String ref = "";
+        String rmks = "";
+        String acct = "";
+        String cc = "";
+        String type = "";
+        String jobnbr = "";
+        String serial = "";
+        String part = "";
+        String uom = "";
+        double qty = 0;
+        double baseqty = 0;
+        double price = 0.00;
+        double cost = 0.00;
+        String loc = "";
+        int line = 0;
+        String order = "";
+        String po = "";
+        String site = "";
+        String lot = "";
+        String terms = "";
+
+
+        res = st.executeQuery("select * from ship_mstr where sh_id = " + "'" + shipper + "'" +";");
+        while (res.next()) {
+         cust = res.getString("sh_cust");
+         ref = res.getString("sh_ref");
+         rmks = res.getString("sh_rmks");
+         acct = res.getString("sh_ar_acct");
+         cc = res.getString("sh_ar_cc");
+         site = res.getString("sh_site");
+         terms = res.getString("sh_cust_terms");
+         type = "ISS-SALES";
         }
-        catch (Exception e){
-            MainFrame.bslog(e);
-            myerror = true;
+
+        res = st.executeQuery("select * from ship_det where shd_id = " + "'" + shipper + "'" +";");
+        while (res.next()) {
+            part = res.getString("shd_part");
+            uom = res.getString("shd_uom");
+            qty = res.getDouble("shd_qty");
+            order = res.getString("shd_so");
+            po = res.getString("shd_po");
+            line = res.getInt("shd_soline");
+            lot = res.getString("shd_lot");
+            loc = res.getString("shd_loc");
+            jobnbr = res.getString("shd_jobnbr");
+            serial = res.getString("shd_serial");
+            baseqty = OVData.getUOMBaseQty(part, site, uom, qty);
+
+    st2.executeUpdate("insert into tran_mstr "
+                    + "(tr_site, tr_part, tr_qty, tr_base_qty, tr_uom, tr_ent_date, tr_eff_date, "
+                    + " tr_userid, tr_ref, tr_addrcode, tr_type, tr_rmks, tr_nbr, "
+                    + " tr_acct, tr_cc, tr_lot, tr_serial, tr_program, tr_loc, "
+                    + " tr_order, tr_line, tr_po, tr_price, tr_cost, tr_terms ) "
+                    + " values ( " 
+                    + "'" + site + "'" + ","
+                    + "'" + part + "'" + ","
+                    + "'" + qty + "'" + ","
+                    + "'" + baseqty + "'" + ","
+                    + "'" + uom + "'" + ","        
+                    + "'" + mydate + "'" + ","
+                    + "'" + dfdate.format(effdate) + "'" + ","
+                    + "'" + bsmf.MainFrame.userid + "'" + ","
+                    + "'" + ref + "'" + ","
+                    + "'" + cust + "'" + ","
+                    + "'" + type + "'" + ","
+                    + "'" + rmks + "'" + ","
+                    + "'" + shipper + "'" + ","
+                    + "'" + acct + "'" + ","
+                    + "'" + cc + "'" + ","
+                    + "'" + lot + "'" + ","
+                    + "'" + serial + "'" + ","
+                    + "'" + "shconf" + "'" + ","
+                    + "'" + loc + "'" + ","
+                    + "'" + order + "'" + ","
+                    + "'" + line + "'" + ","
+                    + "'" + po + "'" + ","
+                    + "'" + price + "'" + ","
+                    + "'" + cost + "'" + ","
+                    + "'" + terms + "'"
+                    + ")"
+                    + ";");
         }
-        return myerror;
-        
+        res.close();
+        st.close();
+        if (st2 != null) {
+        st2.close();
+        }            
+           
     }
       
     public static void TRHistIssSalesPOS(String nbr, Date effdate, boolean isVoid, Connection bscon) throws SQLException {
@@ -14302,7 +14257,192 @@ return myarray;
                    
            return duedate;           
        }
-       
+    
+    public static void AREntry(String type, String shipper, Date effdate, Connection bscon) throws SQLException {
+           
+            DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+            java.util.Date now = new java.util.Date();
+            Statement st = bscon.createStatement();
+            ResultSet res;
+                    String cust = "";
+                    String ref = "";
+                    String rmks = "";
+                    String acct = "";
+                    String cc = "";
+                    String terms = "";
+                    String site = "";
+                    String taxcode = "";
+                    String curr = "";
+                    String basecurr = "";
+                    String bank = "";
+                    Date duedate = new Date();
+                    double amt = 0.00;
+                    double baseamt = 0.00;
+                    double taxamt = 0.00;
+                    double basetaxamt = 0.00;
+                    double matltax = 0.00;
+                   
+                    res = st.executeQuery("select * from ship_det where shd_id = " + "'" + shipper + "'" +";");
+                    while (res.next()) {
+                    amt += (res.getDouble("shd_qty") * res.getDouble("shd_netprice"));
+                    matltax += OVData.getTaxAmtApplicableByItem(res.getString("shd_part"),res.getDouble("shd_qty") * res.getDouble("shd_netprice")); // line level matl tax
+                    }
+                    res.close();
+                    // lets retrieve any summary charges from orders associated with this shipment.
+                    res = st.executeQuery("select * from shs_det where shs_nbr = " + "'" + shipper + "'" + 
+                            " and shs_type = 'charge' " +               
+                            ";");
+                    while (res.next()) {
+                    amt += res.getDouble("shs_amt");
+                    }
+                    res.close();
+                    
+                    res = st.executeQuery("select * from ship_mstr where sh_id = " + "'" + shipper + "'" +";");
+                    while (res.next()) {
+                     cust = res.getString("sh_cust");
+                     ref = res.getString("sh_ref");
+                     rmks = res.getString("sh_rmks");
+                     acct = res.getString("sh_ar_acct");
+                     cc = res.getString("sh_ar_cc");
+                     terms = res.getString("sh_cust_terms");
+                     taxcode = res.getString("sh_taxcode");
+                     site = res.getString("sh_site");
+                     curr = res.getString("sh_curr");
+                    }
+                    res.close();
+                    
+                    // line matl tax versus order level tax....material Tax will be at line level..
+                    //..summary tax will ONLY be at summary level...it will not be baked into line level
+                    // ...summary level tax cannot be reported at line level
+                    taxamt += OVData.getTaxAmtApplicableByShipper(shipper, amt); 
+                    duedate = getDueDateFromTerms(effdate, terms);
+                    
+                    bank = OVData.getBankCodeOfCust(cust);
+                    if (bank.isEmpty()) {
+                        bank = OVData.getDefaultARBank();
+                    }
+                    
+                    
+                    // let's handle the currency exchange...if any
+                    basecurr = OVData.getDefaultCurrency();
+                    
+                    
+                    if (curr.toUpperCase().equals(basecurr.toUpperCase())) {
+                        baseamt = amt;
+                        basetaxamt = taxamt;
+                    } else {
+                        baseamt = OVData.getExchangeBaseValue(basecurr, curr, amt);
+                        basetaxamt = OVData.getExchangeBaseValue(basecurr, curr, taxamt);
+                    }
+                    if (type.equals("I")) {
+                         st.executeUpdate("insert into ar_mstr "
+                        + "(ar_cust, ar_nbr, ar_amt, ar_base_amt, ar_curr, ar_base_curr, ar_amt_tax, ar_base_amt_tax, ar_open_amt, ar_type, ar_ref, ar_rmks, "
+                        + "ar_entdate, ar_effdate, ar_duedate, ar_acct, ar_cc, "
+                        + "ar_terms, ar_tax_code, ar_bank, ar_site, ar_status) "
+                        + " values ( " + "'" + cust + "'" + ","
+                        + "'" + shipper + "'" + ","
+                        + "'" + currformatDoubleUS(amt + taxamt) + "'" + ","
+                        + "'" + currformatDoubleUS(baseamt + basetaxamt) + "'" + ","   
+                        + "'" + curr + "'" + ","   
+                        + "'" + basecurr + "'" + ","        
+                        + "'" + currformatDoubleUS(taxamt) + "'" + ","
+                        + "'" + currformatDoubleUS(basetaxamt) + "'" + ","        
+                        + "'" + currformatDoubleUS(amt + taxamt) + "'" + "," // open_amount.....should this be base or foreign ?  currently it's foreign
+                        + "'" + "I" + "'" + ","
+                        + "'" + ref + "'" + ","
+                        + "'" + rmks + "'" + ","
+                        + "'" + dfdate.format(now) + "'" + ","
+                        + "'" + dfdate.format(effdate) + "'" + ","
+                        + "'" + dfdate.format(duedate) + "'" + ","
+                        + "'" + acct + "'" + ","
+                        + "'" + cc + "'" + ","
+                        + "'" + terms + "'" + ","
+                        + "'" + taxcode + "'" + ","
+                        + "'" + bank + "'" + ","
+                        + "'" + site + "'" + ","
+                        + "'" + "o" + "'" 
+                        + ")"
+                        + ";");
+                    if (taxamt > 0) {
+                      ArrayList<String[]> taxelements = OVData.getTaxPercentElementsApplicableByTaxCode(taxcode);
+                          for (String[] elements : taxelements) {
+                                  st.executeUpdate("insert into art_tax "
+                                + "(art_nbr, art_desc, art_type, art_amt, art_percent ) "
+                                + " values ( " + "'" + shipper + "'" + ","
+                                + "'" + elements[0] + "'" + ","
+                                + "'" + elements[2] + "'" + ","
+                                + "'" + currformatDoubleUS(amt * ( bsParseDoubleUS(elements[1]) / 100 )) + "'" + ","   // amount is currently 'foreign' ...not base
+                                + "'" + elements[1] + "'" 
+                                + ")"
+                                + ";");
+                          }
+                    }
+                    
+                  } // if type = "I"
+                    
+                    
+                   if (type.equals("P")) {
+                       String arnbr = (String.valueOf(OVData.getNextNbr("ar")));
+                         st.executeUpdate("insert into ar_mstr "
+                        + "(ar_cust, ar_nbr, ar_amt, ar_base_amt, ar_curr, ar_base_curr, ar_amt_tax, ar_base_amt_tax, ar_open_amt, ar_type, ar_ref, ar_rmks, "
+                        + "ar_entdate, ar_effdate, ar_duedate, ar_paiddate, ar_acct, ar_cc, "
+                        + "ar_terms, ar_tax_code, ar_bank, ar_site, ar_status) "
+                        + " values ( " + "'" + cust + "'" + ","
+                        + "'" + arnbr + "'" + ","
+                        + "'" + currformatDoubleUS(amt + taxamt) + "'" + ","
+                        + "'" + currformatDoubleUS(baseamt + basetaxamt) + "'" + ","   
+                        + "'" + curr + "'" + ","   
+                        + "'" + basecurr + "'" + ","        
+                        + "'" + currformatDoubleUS(taxamt) + "'" + ","
+                        + "'" + currformatDoubleUS(basetaxamt) + "'" + ","        
+                        + "'" + currformatDoubleUS(amt + taxamt) + "'" + "," // open_amount.....should this be base or foreign ?  currently it's foreign
+                        + "'" + "P" + "'" + ","
+                        + "'" + "cash" + "'" + ","
+                        + "'" + rmks + "'" + ","
+                        + "'" + dfdate.format(now) + "'" + ","
+                        + "'" + dfdate.format(effdate) + "'" + ","
+                        + "'" + dfdate.format(effdate) + "'" + ","
+                        + "'" + dfdate.format(effdate) + "'" + ","        
+                        + "'" + acct + "'" + ","
+                        + "'" + cc + "'" + ","
+                        + "'" + terms + "'" + ","
+                        + "'" + taxcode + "'" + ","
+                        + "'" + bank + "'" + ","
+                        + "'" + site + "'" + ","
+                        + "'" + "c" + "'" 
+                        + ")"
+                        + ";");
+                         
+                      st.executeUpdate("insert into ard_mstr "
+                            + "(ard_id, ard_cust, ard_ref, ard_line, ard_date, ard_amt, ard_amt_tax, ard_base_amt, ard_base_amt_tax, ard_curr, ard_base_curr, ard_acct, ard_cc ) "
+                            + " values ( " + "'" + arnbr + "'" + ","
+                                + "'" + cust + "'" + ","
+                            + "'" + shipper + "'" + ","
+                            + "'" + "1" + "'" + ","
+                            + "'" + dfdate.format(effdate) + "'" + ","
+                            + "'" + currformatDoubleUS(amt) + "'"  + ","
+                            + "'" + currformatDoubleUS(taxamt) + "'"  + ","
+                            + "'" + currformatDoubleUS(baseamt) + "'"  + ","                
+                            + "'" + currformatDoubleUS(basetaxamt) + "'" + "," 
+                            + "'" + curr + "'"  + ","
+                            + "'" + basecurr + "'" + ","
+                            + "'" + acct + "'" + ","
+                            + "'" + cc + "'"  
+                            + ")"
+                            + ";");    
+                      
+                      // update AR entry for original invoices with status and open amt  
+                      ARUpdate(arnbr);  
+                      // execute glentry
+                      fglData.glEntryFromARPayment(arnbr,effdate);
+                     
+                  } // if type = "P"
+          
+                res.close();
+                st.close();
+    }
+    
+    
     public static String[] AREntry(String type, String shipper, Date effdate) {
             String[] m = new String[]{"",""};
             
@@ -15204,8 +15344,6 @@ return myarray;
        message[1] = "";
        boolean proceed = true;
        try {
-
-
         Connection con = DriverManager.getConnection(url + db, user, pass);
         Savepoint mysave = con.setSavepoint("mysave");
         Statement st = con.createStatement();
@@ -15255,19 +15393,19 @@ return myarray;
 
                     /* create tran_mstr records */
                     if (! error)
-                    error = TRHistIssSales(shipper, effdate);
+                 //   error = TRHistIssSales(shipper, effdate);
 
                     /* adjust inventory */
                     if (! error)
-                    error = UpdateInventoryFromShipper(shipper);
+                 //   error = UpdateInventoryFromShipper(shipper);
 
                     /* create gl_tran records */
                     if (! error)
-                    error = fglData.glEntryFromShipper(shipper, effdate);
+                 //   error = fglData.glEntryFromShipper(shipper, effdate);
 
                     if (! error) {   
-                    OVData.updateShipperStatus(shipper, effdate);
-                    OVData.updateOrderFromShipper(shipper);
+                 //   OVData.updateShipperStatus(shipper, effdate);
+                 //   OVData.updateOrderFromShipper(shipper);
                     }
 
              //   con.commit();
@@ -15353,33 +15491,12 @@ return myarray;
     }
    }
        
-    public static void updateShipperStatus(String shipper, Date effdate) {
-       DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd"); 
-       try{
-
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        Statement st = con.createStatement();
-        try{
-
-                       st.executeUpdate(
-                             " update ship_mstr set sh_status = '1', sh_confdate = " + "'" + dfdate.format(effdate) + "'" +
-                             " where sh_id = " + "'" + shipper + "'" + ";" );
-        }
-        catch (SQLException s){
-             MainFrame.bslog(s);
-        } finally {
-            if (st != null) {
-                st.close();
-            }
-            if (con != null) {
-                con.close();
-            }
-        }
-    }
-    catch (Exception e){
-        MainFrame.bslog(e);
-    }
-
+    public static void updateShipperStatus(String shipper, Date effdate, Connection bscon) throws SQLException {
+        Statement st = bscon.createStatement();
+        st.executeUpdate(
+             " update ship_mstr set sh_status = '1', sh_confdate = " + "'" + BlueSeerUtils.setDateFormat(effdate) + "'" +
+             " where sh_id = " + "'" + shipper + "'" + ";" );
+        st.close();
    }
 
     public static ArrayList<String[]> getOrderSAC(String order) {
@@ -15582,19 +15699,17 @@ return myarray;
 
    }
 
-    public static void updateOrderFromShipper(String shipper) {
+    public static void updateOrderFromShipper(String shipper, Connection bscon) throws SQLException {
 
         boolean partial = false;
         boolean complete = true;
         ArrayList<String> orders = new ArrayList<String>();
         Set<String> uniqueorders = new HashSet<String>();
 
-        try{
-
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        Statement st = con.createStatement();
+       
+        Statement st = bscon.createStatement();
         ResultSet res = null;
-        try{
+        
             ArrayList qty = new ArrayList();
             ArrayList shippedqty = new ArrayList();
             ArrayList line = new ArrayList();
@@ -15632,11 +15747,6 @@ return myarray;
                            " and sod_line = " + "'" + line.get(j).toString() + "'" +
                           ";" );
               }
-        //   st.executeUpdate(
-       //              " update sod_det set sod_shipped_qty = where sod_line in inner join ship_det on shd_part = sod_part and shd_soline = sod_line and shd_so = sod_nbr " +
-       //              " inner join so_mstr on so_nbr = sod_nbr and so_type = 'DISCRETE' " +
-      //                " set sod_shipped_qty = sod_shipped_qty + shd_qty, sod_status = (case when sod_shipped_qty + shd_qty >= sod_ord_qty then 'closed' else sod_status end) " +
-      //           " where shd_id = " + "'" + shipper + "'" + ";" );
           } else {
               st.executeUpdate(
                      " update sod_det inner join ship_det on shd_part = sod_part and shd_soline = sod_line and shd_so = sod_nbr " +
@@ -15652,8 +15762,6 @@ return myarray;
                while (res.next()) {
                    uniqueorders.add(res.getString("sod_nbr"));
                 }
-
-
                for (String uniqueorder : uniqueorders) {
                    orders.clear();
                     partial = false;
@@ -15679,42 +15787,14 @@ return myarray;
                    if (partial && ! complete) {
                    st.executeUpdate( "update so_mstr set so_status = 'backorder' where so_nbr = " + "'" + uniqueorder + "'" + ";");
                    }
-
-               }
-
-        }
-        catch (SQLException s){
-             MainFrame.bslog(s);
-        } finally {
-            if (res != null) {
-                res.close();
-            }
-            if (st != null) {
-                st.close();
-            }
-            con.close();
-        }
-    }
-    catch (Exception e){
-        MainFrame.bslog(e);
-    }
-
+                }
+        res.close();
+        st.close();
    }
 
-    public static void updateServiceOrderFromShipper(String shipper) {
-
-        boolean partial = false;
-        boolean complete = true;
-        ArrayList<String> orders = new ArrayList<String>();
-        Set<String> uniqueorders = new HashSet<String>();
-
-        try{
-
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        Statement st = con.createStatement();
+    public static void updateServiceOrderFromShipper(String shipper, Connection bscon) throws SQLException {
+        Statement st = bscon.createStatement();
         ResultSet res = null;
-        try{
-           
             String ordernbr = "";
              res = st.executeQuery("select svd_nbr from ship_det inner join " +
                      " svd_det on shd_part = svd_item and shd_soline = svd_line and shd_so = svd_nbr " +
@@ -15724,23 +15804,8 @@ return myarray;
                 }
                res.close();
                st.executeUpdate( "update sv_mstr set sv_status = " + "'" + getGlobalProgTag("closed") + "'" + " where sv_nbr = " + "'" + ordernbr + "'" + ";"); 
-        }
-        catch (SQLException s){
-             MainFrame.bslog(s);
-        } finally {
-            if (res != null) {
-                res.close();
-            }
-            if (st != null) {
-                st.close();
-            }
-            con.close();
-        }
-    }
-    catch (Exception e){
-        MainFrame.bslog(e);
-    }
-
+        res.close();
+        st.close();
    }
 
     public static void updateOrderFromShipperRV(String shipper) {
@@ -17860,15 +17925,15 @@ MainFrame.bslog(e);
                         + "'" + so + "'" + ","
                         + "'" + shipdate + "'" + ","        
                         + "'" + po + "'" + ","
-                        + "'" + qty + "'" + ","
+                        + "'" + qty.replace(defaultDecimalSeparator, '.') + "'" + ","
                         + "'" + uom + "'" + ","        
-                        + "'" + netprice + "'" + ","
-                        + "'" + listprice + "'" + ","
-                        + "'" + discpercent + "'" + ","
+                        + "'" + netprice.replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "'" + listprice.replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "'" + discpercent.replace(defaultDecimalSeparator, '.') + "'" + ","
                         + "'" + desc + "'" + ","
                         + "'" + wh + "'" + ","
                         + "'" + loc + "'" + ","
-                        + "'" + taxamt + "'" + ","        
+                        + "'" + taxamt.replace(defaultDecimalSeparator, '.') + "'" + ","        
                         + "'" + site + "'"
                         + ")"
                         + ";");
@@ -18170,10 +18235,10 @@ MainFrame.bslog(e);
                         + "'" + s[0] + "'" + ","
                         + "'" + custinfo[7] + "'" + ","
                         + "'" + PONumber + "'" + ","
-                        + "'" + s[2] + "'" + ","
-                        + "'" + s[6] + "'" + ","
-                        + "'" + s[5] + "'" + ","
-                        + "'" + s[7] + "'" + ","
+                        + "'" + s[2].replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "'" + s[6].replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "'" + s[5].replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "'" + s[7].replace(defaultDecimalSeparator, '.') + "'" + ","
                         + "'" + DueDate + "'" + ","
                         + '0' + "," + "'" + s[4] + "'" +  "," 
                         + "'" + getGlobalProgTag("open") + "'" + ","
@@ -18387,7 +18452,7 @@ MainFrame.bslog(e);
            if (proceed) {
                     st.executeUpdate("update plan_mstr set "
                         + "plan_cell =  " + "'" + cell + "'" + ","
-                        + "plan_qty_sched =  " + "'" + schedqty + "'" + ","
+                        + "plan_qty_sched =  " + "'" + schedqty.replace(defaultDecimalSeparator, '.') + "'" + ","
                         + "plan_date_sched =  " + "'" + scheddate + "'" + ","        
                         + "plan_status = " + "'" + status + "'"
                         + " where plan_nbr = " + "'" + order + "'" 
