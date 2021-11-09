@@ -27,9 +27,11 @@ package com.blueseer.far;
 
 import bsmf.MainFrame;
 import static bsmf.MainFrame.defaultDecimalSeparator;
-import static bsmf.MainFrame.reinitpanels;
-import static bsmf.MainFrame.tags;
+import static bsmf.MainFrame.tags; 
 import com.blueseer.ctr.cusData;
+import static com.blueseer.far.farData.addArTransaction;
+import com.blueseer.far.farData.ar_mstr;
+import com.blueseer.far.farData.ard_mstr;
 import com.blueseer.fgl.fglData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
@@ -52,8 +54,6 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -92,6 +92,7 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
                 double baseamt = 0.00;
                 double rcvamt = 0.00;
                 String curr = "";
+                String basecurr = "";
                 
     
     // global datatablemodel declarations 
@@ -473,201 +474,20 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
     }
     
     public String[] addRecord(String[] x) {
-     String[] m = new String[2];
-     
-     try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            Statement st = bsmf.MainFrame.con.createStatement();
-            ResultSet res = null;
-            try {
-                
-               
-                int i = 0;
-                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-                java.util.Date now = new java.util.Date();
-               
-                String basecurr = OVData.getDefaultCurrency();
-                
-                if (basecurr.toUpperCase().equals(ddcurr.getSelectedItem().toString().toUpperCase())) {
-                  baseamt = actamt;  
-                } else {
-                  baseamt = OVData.getExchangeBaseValue(basecurr, ddcurr.getSelectedItem().toString(), actamt);
-                }
-
-                    res = st.executeQuery("SELECT ar_nbr FROM  ar_mstr where ar_nbr = " + "'" + x[0] + "'" + ";");
-                    while (res.next()) {
-                        i++;
-                    }
-                    if (i == 0) {
-                        st.executeUpdate("insert into ar_mstr "
-                        + "(ar_cust, ar_nbr, ar_amt, ar_base_amt, ar_type, ar_curr, ar_base_curr, ar_ref, ar_rmks, "
-                        + "ar_entdate, ar_effdate, ar_paiddate, ar_acct, ar_cc, "
-                        + "ar_status, ar_bank, ar_site ) "
-                        + " values ( " + "'" + ddcust.getSelectedItem() + "'" + ","
-                        + "'" + tbkey.getText() + "'" + ","
-                        + "'" + currformatDouble(actamt).replace(defaultDecimalSeparator, '.') + "'" + ","
-                        + "'" + currformatDouble(baseamt).replace(defaultDecimalSeparator, '.') + "'" + ","
-                        + "'" + "P" + "'" + ","
-                        + "'" + ddcurr.getSelectedItem().toString() + "'" + ","      
-                        + "'" + basecurr + "'" + ","
-                        + "'" + tbcheck.getText().replace("'", "''") + "'" + ","
-                        + "'" + tbrmks.getText().replace("'", "''") + "'" + ","
-                        + "'" + dfdate.format(now) + "'" + ","
-                        + "'" + dfdate.format(dcdate.getDate()) + "'" + ","
-                        + "'" + dfdate.format(now) + "'" + ","
-                        + "'" + aracct + "'" + ","
-                        + "'" + arcc + "'" + ","
-                        + "'" + "c" + "'"  + ","
-                        + "'" + arbank + "'" + ","
-                        + "'" + ddsite.getSelectedItem().toString() + "'"
-                        + ")"
-                        + ";");
-                        
-                        // now add detail
-                        double amt_d = 0;
-                        double taxamt_d = 0;
-                        double baseamt_d = 0;
-                        double basetaxamt_d = 0;
-               // "Reference", "Type", "Date", "Amount"
-                    for (int j = 0; j < ardet.getRowCount(); j++) {
-                        amt_d = bsParseDouble(ardet.getValueAt(j, 1).toString());
-                        taxamt_d = bsParseDouble(ardet.getValueAt(j, 2).toString());
-                         if (basecurr.toUpperCase().equals(ddcurr.getSelectedItem().toString().toUpperCase())) {
-                         baseamt_d = amt_d;
-                         basetaxamt_d = taxamt_d;
-                         } else {
-                         baseamt_d = OVData.getExchangeBaseValue(basecurr, ddcurr.getSelectedItem().toString(), amt_d);
-                         basetaxamt_d = OVData.getExchangeBaseValue(basecurr, ddcurr.getSelectedItem().toString(), taxamt_d);
-                         }
-                        st.executeUpdate("insert into ard_mstr "
-                            + "(ard_id, ard_cust, ard_ref, ard_line, ard_date, ard_amt, ard_amt_tax, ard_base_amt, ard_base_amt_tax, ard_curr, ard_base_curr, ard_acct, ard_cc ) "
-                            + " values ( " + "'" + tbkey.getText() + "'" + ","
-                                + "'" + ddcust.getSelectedItem() + "'" + ","
-                            + "'" + ardet.getValueAt(j, 0).toString() + "'" + ","
-                            + "'" + (j + 1) + "'" + ","
-                            + "'" + dfdate.format(dcdate.getDate()) + "'" + ","
-                            + "'" + currformatDouble(amt_d).replace(defaultDecimalSeparator, '.') + "'"  + ","
-                            + "'" + currformatDouble(taxamt_d).replace(defaultDecimalSeparator, '.') + "'"  + ","
-                            + "'" + currformatDouble(baseamt_d).replace(defaultDecimalSeparator, '.') + "'"  + ","                
-                            + "'" + currformatDouble(basetaxamt_d).replace(defaultDecimalSeparator, '.') + "'" + "," 
-                            + "'" + ddcurr.getSelectedItem().toString() + "'"  + ","
-                            + "'" + basecurr + "'" + ","
-                            + "'" + aracct + "'" + ","
-                            + "'" + arcc + "'"   
-                            + ")"
-                            + ";");
-                    }
-                    
-                     // update AR entry for original invoices with status and open amt  
-                     boolean error = OVData.ARUpdate(tbkey.getText());
-                    
-                    /* create gl_tran records */
-                        if (! error)
-                        error = fglData.glEntryFromARPayment(tbkey.getText(), dcdate.getDate());
-                    /* done */
-                    
-                     m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
-                    } else {
-                       m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists}; 
-                    }
-
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordSQLError};  
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordConnError};
-        }
-     
-     return m;
-     }
+        String[] m = addArTransaction(createDetRecord(), createRecord());
+        boolean error = OVData.ARUpdate(tbkey.getText());
+        if (! error)
+        error = fglData.glEntryFromARPayment(tbkey.getText(), dcdate.getDate());
+        return m;
+    }
      
     public String[] updateRecord(String[] x) {
-     String[] m = new String[2];
-     
-     m = new String[]{BlueSeerUtils.ErrorBit, "This update functionality is not implemented at this time"};
-     /*
-     try {
-            boolean proceed = true;
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            Statement st = bsmf.MainFrame.con.createStatement();
-            try {
-                
-                
-                
-                    st.executeUpdate("update bk_mstr set bk_desc = " + "'" + tbdesc.getText() + "'" + ","
-                            + "bk_acct = " + "'" + tbacct.getText().toString() + "'" + ","
-                            + "bk_route = " + "'" + tbroute.getText().toString() + "'" + ","
-                            + "bk_assignedID = " + "'" + tbassignedID.getText().toString() + "'" + ","        
-                            + "bk_cur = " + "'" + ddcurr.getSelectedItem().toString() + "'" + ","
-                            + "bk_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + ","        
-                            + "bk_active = " + "'" + BlueSeerUtils.boolToInt(cbactive.isSelected()) + "'"
-                            + " where bk_id = " + "'" + x[0] + "'"                             
-                            + ";");
-                
-                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
-               
-         
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError};  
-            } finally {
-               if (st != null) st.close();
-               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordConnError};
-        }
-     
-     */
-     
+     String[] m = new String[]{BlueSeerUtils.ErrorBit, "This update functionality is not implemented at this time"};
      return m;
      }
      
     public String[] deleteRecord(String[] x) {
-     String[] m = new String[2];
-       
-        m = new String[]{BlueSeerUtils.ErrorBit, "This delete functionality is not implemented at this time"};
-        /*
-         boolean proceed = bsmf.MainFrame.warn("Are you sure?");
-        if (proceed) {
-        try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            Statement st = bsmf.MainFrame.con.createStatement();
-            try {
-                   int i = st.executeUpdate("delete from ar_mstr where ar_nbr = " + "'" + x[0] + "'" + ";");
-                    if (i > 0) {
-                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
-                    } else {
-                    m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordError};    
-                    }
-                } catch (SQLException s) {
-                 MainFrame.bslog(s); 
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordSQLError};  
-            } finally {
-               if (st != null) st.close();
-               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordConnError};
-        }
-        } else {
-           m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
-        }
-        */
-        
+     String[] m = new String[]{BlueSeerUtils.ErrorBit, "This delete functionality is not implemented at this time"};
      return m;
      }
       
@@ -727,6 +547,75 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};  
         }
       return m;
+    }
+    
+    public ar_mstr createRecord() { 
+        java.util.Date now = new java.util.Date(); 
+        basecurr = OVData.getDefaultCurrency();
+                if (basecurr.toUpperCase().equals(ddcurr.getSelectedItem().toString().toUpperCase())) {
+                  baseamt = actamt;  
+                } else {
+                  baseamt = OVData.getExchangeBaseValue(basecurr, ddcurr.getSelectedItem().toString(), actamt);
+                } 
+        ar_mstr x = new ar_mstr(null, 
+                tbkey.getText(),
+                ddcust.getSelectedItem().toString(),
+                currformatDouble(actamt).replace(defaultDecimalSeparator, '.'),
+                currformatDouble(baseamt).replace(defaultDecimalSeparator, '.'),
+                "P",
+                ddcurr.getSelectedItem().toString(),
+                basecurr,
+                tbcheck.getText(),
+                tbrmks.getText(),
+                BlueSeerUtils.setDateFormat(now),
+                BlueSeerUtils.setDateFormat(dcdate.getDate()),
+                BlueSeerUtils.setDateFormat(now),
+                aracct,
+                arcc,
+                "c",
+                arbank,
+                ddsite.getSelectedItem().toString()
+                );
+        return x;
+    }
+   
+    public ArrayList<ard_mstr> createDetRecord() {
+        ArrayList<ard_mstr> list = new ArrayList<ard_mstr>();
+        
+            
+            double amt_d = 0;
+            double taxamt_d = 0;
+            double baseamt_d = 0;
+            double basetaxamt_d = 0;
+            boolean completeAllocation = true;
+            for (int j = 0; j < ardet.getRowCount(); j++) {
+                        amt_d = bsParseDouble(ardet.getValueAt(j, 1).toString());
+                        taxamt_d = bsParseDouble(ardet.getValueAt(j, 2).toString());
+                         if (basecurr.toUpperCase().equals(ddcurr.getSelectedItem().toString().toUpperCase())) {
+                         baseamt_d = amt_d;
+                         basetaxamt_d = taxamt_d;
+                         } else {
+                         baseamt_d = OVData.getExchangeBaseValue(basecurr, ddcurr.getSelectedItem().toString(), amt_d);
+                         basetaxamt_d = OVData.getExchangeBaseValue(basecurr, ddcurr.getSelectedItem().toString(), taxamt_d);
+                         }
+                        ard_mstr x = new ard_mstr(null,  
+                            tbkey.getText(), 
+                            String.valueOf(j + 1),    
+                            ddcust.getSelectedItem().toString(),
+                            ardet.getValueAt(j, 0).toString(),
+                            BlueSeerUtils.setDateFormat(dcdate.getDate()),
+                            currformatDouble(amt_d).replace(defaultDecimalSeparator, '.'),
+                            currformatDouble(taxamt_d).replace(defaultDecimalSeparator, '.'),
+                            currformatDouble(baseamt_d).replace(defaultDecimalSeparator, '.'),     
+                            currformatDouble(basetaxamt_d).replace(defaultDecimalSeparator, '.'),
+                            ddcurr.getSelectedItem().toString(),
+                            basecurr,
+                            aracct,
+                            arcc
+                            ); 
+                    list.add(x);
+                    }
+        return list;
     }
     
     public void lookUpFrame() {
