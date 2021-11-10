@@ -41,7 +41,6 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import static bsmf.MainFrame.checkperms;
-import static bsmf.MainFrame.con;
 import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.menumap;
@@ -57,6 +56,7 @@ import com.blueseer.utl.DTData;
 import com.blueseer.utl.RPData;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Currency;
 import java.util.Enumeration;
@@ -383,8 +383,7 @@ public class CusRptPicker extends javax.swing.JPanel {
                 }; 
             
       try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{   
@@ -479,8 +478,7 @@ public class CusRptPicker extends javax.swing.JPanel {
                 }; 
             
       try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{   
@@ -574,8 +572,7 @@ public class CusRptPicker extends javax.swing.JPanel {
                 }; 
             
       try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{   
@@ -674,8 +671,7 @@ public class CusRptPicker extends javax.swing.JPanel {
                 }; 
             
       try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{   
@@ -784,8 +780,7 @@ public class CusRptPicker extends javax.swing.JPanel {
                 }; 
             
       try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{   
@@ -883,8 +878,7 @@ public class CusRptPicker extends javax.swing.JPanel {
                 }; 
             
       try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{   

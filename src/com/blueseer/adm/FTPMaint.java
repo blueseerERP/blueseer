@@ -26,9 +26,13 @@ SOFTWARE.
 package com.blueseer.adm;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.db;
+import static bsmf.MainFrame.pass;
 import com.blueseer.utl.BlueSeerUtils;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
+import static bsmf.MainFrame.url;
+import static bsmf.MainFrame.user;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -48,6 +52,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -370,9 +375,8 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeer {
      
      try {
 
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            Statement st = bsmf.MainFrame.con.createStatement();
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
             ResultSet res = null;
             try {
                 boolean proceed = true;
@@ -409,7 +413,7 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeer {
             } finally {
                if (res != null) res.close();
                if (st != null) st.close();
-               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
+               if (con != null) con.close();
             }
         } catch (Exception e) {
             MainFrame.bslog(e);
@@ -424,9 +428,8 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeer {
      
      try {
             boolean proceed = true;
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            Statement st = bsmf.MainFrame.con.createStatement();
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
             ResultSet res = null;
             try {
                    st.executeUpdate("update ftp_mstr set ftp_desc = " + "'" + tbdesc.getText() + "'" + ","
@@ -448,7 +451,7 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeer {
             } finally {
                if (res != null) res.close();
                if (st != null) st.close();
-               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
+               if (con != null) con.close();
             }
         } catch (Exception e) {
             MainFrame.bslog(e);
@@ -464,9 +467,8 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeer {
         if (proceed) {
         try {
 
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            Statement st = bsmf.MainFrame.con.createStatement();
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
             ResultSet res = null;
             try {
               
@@ -482,7 +484,7 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeer {
             } finally {
                if (res != null) res.close();
                if (st != null) st.close();
-               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
+               if (con != null) con.close();
             }
         } catch (Exception e) {
             MainFrame.bslog(e);
@@ -498,9 +500,8 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeer {
        String[] m = new String[2];
        
         try {
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            Statement st = bsmf.MainFrame.con.createStatement();
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
             ResultSet res = null;
             try {
                 int i = 0;
@@ -527,7 +528,7 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeer {
             } finally {
                if (res != null) res.close();
                if (st != null) st.close();
-               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
+               if (con != null) con.close();
             }
         } catch (Exception e) {
             MainFrame.bslog(e);

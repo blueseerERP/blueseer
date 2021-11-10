@@ -78,10 +78,10 @@ public class POSControl extends javax.swing.JPanel {
     
     public void getcontrol() {
           try {
-          Connection con = DriverManager.getConnection(url + db, user, pass);
-          Statement st = bsmf.MainFrame.con.createStatement();
-          ResultSet res = null;
-          try {
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
                 int i = 0;
                     res = st.executeQuery("SELECT * FROM  pos_ctrl;");
                     while (res.next()) {
@@ -101,9 +101,8 @@ public class POSControl extends javax.swing.JPanel {
                 if (st != null) {
                     st.close();
                 }
-                if (con != null) {
                     con.close();
-                }
+                
             }
         } catch (Exception e) {
             MainFrame.bslog(e);
@@ -256,18 +255,14 @@ public class POSControl extends javax.swing.JPanel {
     private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
         try {
 
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
+                
                 boolean proceed = true;
                 int i = 0;
                 String login = "";
-                
-             
-                
-                
                 res = st.executeQuery("SELECT *  FROM  pos_ctrl ;");
                     while (res.next()) {
                         i++;
@@ -295,8 +290,15 @@ public class POSControl extends javax.swing.JPanel {
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }

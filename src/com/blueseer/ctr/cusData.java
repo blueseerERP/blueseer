@@ -928,10 +928,9 @@ public class cusData {
          try{
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
                 res = st.executeQuery("select cm_ar_acct from cm_mstr where cm_code = " + "'" + cust + "'" + ";" );
                while (res.next()) {
                 myitem = res.getString("cm_ar_acct");                    
@@ -940,8 +939,15 @@ public class cusData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -955,10 +961,9 @@ public class cusData {
          try{
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
                 res = st.executeQuery("select cm_ar_cc from cm_mstr where cm_code = " + "'" + cust + "'" + ";" );
                while (res.next()) {
                 myitem = res.getString("cm_ar_cc");                    
@@ -967,8 +972,15 @@ public class cusData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -982,10 +994,9 @@ public class cusData {
          try{
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
                 res = st.executeQuery("select cm_curr from cm_mstr where cm_code = " + "'" + cust + "'" + ";" );
                while (res.next()) {
                 myitem = res.getString("cm_curr");                    
@@ -994,8 +1005,15 @@ public class cusData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1009,10 +1027,9 @@ public class cusData {
          try{
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
                 res = st.executeQuery("select cm_terms from cm_mstr where cm_code = " + "'" + cust + "'" + ";" );
                while (res.next()) {
                 myitem = res.getString("cm_terms");                    
@@ -1021,8 +1038,15 @@ public class cusData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1047,11 +1071,14 @@ public class cusData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-            }
-            finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
         }
         catch (Exception e){
@@ -1078,11 +1105,14 @@ public class cusData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-            }
-            finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
         }
         catch (Exception e){
@@ -1110,9 +1140,13 @@ public class cusData {
             catch (SQLException s){
                  bsmf.MainFrame.show("SQL cannot get Cust list");
             } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
         }
         catch (Exception e){
@@ -1148,9 +1182,7 @@ public class cusData {
                 if (st != null) {
                     st.close();
                 }
-                if (con != null) {
-                    con.close();
-                }
+                con.close();
             }
         } catch (Exception e) {
             MainFrame.bslog(e);
@@ -1182,9 +1214,7 @@ public class cusData {
                 if (st != null) {
                     st.close();
                 }
-                if (con != null) {
-                    con.close();
-                }
+                con.close();
             }
         } catch (Exception e) {
             MainFrame.bslog(e);
@@ -1217,9 +1247,7 @@ public class cusData {
                 if (st != null) {
                     st.close();
                 }
-                if (con != null) {
-                    con.close();
-                }
+                con.close();
             }
         } catch (Exception e) {
             MainFrame.bslog(e);
@@ -1251,9 +1279,7 @@ public class cusData {
                 if (st != null) {
                     st.close();
                 }
-                if (con != null) {
-                    con.close();
-                }
+                con.close();
             }
         } catch (Exception e) {
             MainFrame.bslog(e);
@@ -1301,10 +1327,9 @@ public class cusData {
     try{
         
         Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
             Statement st = con.createStatement();
             ResultSet res = null;
-
+            try {
             res = st.executeQuery("select cup_citem2 from cup_mstr where cup_cust = " + "'" + cust + "'" + 
                                   " AND cup_item = " + "'" + part + "'" + ";");
            while (res.next()) {
@@ -1315,8 +1340,15 @@ public class cusData {
        }
         catch (SQLException s){
              MainFrame.bslog(s);
-        }
-        con.close();
+        } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -1330,10 +1362,9 @@ public class cusData {
     try{
         
         Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
             Statement st = con.createStatement();
             ResultSet res = null;
-
+            try {
             res = st.executeQuery("select cup_sku from cup_mstr where cup_cust = " + "'" + cust + "'" + 
                                   " AND cup_item = " + "'" + part + "'" + ";");
            while (res.next()) {
@@ -1344,8 +1375,15 @@ public class cusData {
        }
         catch (SQLException s){
              MainFrame.bslog(s);
-        }
-        con.close();
+        } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -1359,10 +1397,9 @@ public class cusData {
     try{
         
         Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
             Statement st = con.createStatement();
             ResultSet res = null;
-
+            try {
             res = st.executeQuery("select cup_citem from cup_mstr where cup_cust = " + "'" + cust + "'" + 
                                   " AND cup_item = " + "'" + part + "'" + ";");
            while (res.next()) {
@@ -1373,8 +1410,15 @@ public class cusData {
        }
         catch (SQLException s){
             MainFrame.bslog(s);
-        }
-        con.close();
+        } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -1388,10 +1432,9 @@ public class cusData {
          try{
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
                 res = st.executeQuery("select so_cust from so_mstr where so_nbr = " + "'" + order + "';" );
                while (res.next()) {
                 myitem = res.getString("so_cust");                    
@@ -1400,8 +1443,15 @@ public class cusData {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-          con.close();  
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1411,83 +1461,100 @@ public class cusData {
     }
               
     public static String getCustName(String cust) {
-String myitem = "";
-try{
+    String myitem = "";
+    try{
 
-Connection con = DriverManager.getConnection(url + db, user, pass);
-try{
-    Statement st = con.createStatement();
-    ResultSet res = null;
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try  {
+        res = st.executeQuery("select cm_name from cm_mstr where cm_code = " + "'" + cust + "';" );
+       while (res.next()) {
+        myitem = res.getString("cm_name");                    
+        }
 
-    res = st.executeQuery("select cm_name from cm_mstr where cm_code = " + "'" + cust + "';" );
-   while (res.next()) {
-    myitem = res.getString("cm_name");                    
     }
-
-}
-catch (SQLException s){
-     MainFrame.bslog(s);
-}
-con.close();  
-}
-catch (Exception e){
-MainFrame.bslog(e);
-}
-return myitem;
+    catch (SQLException s){
+         MainFrame.bslog(s);
+    } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            } 
+    }
+    catch (Exception e){
+    MainFrame.bslog(e);
+    }
+    return myitem;
 
 }
 
     public static String getCustLabel(String cust) {
-String myitem = "";
-try{
+        String myitem = "";
+        try{
 
-Connection con = DriverManager.getConnection(url + db, user, pass);
-try{
-    Statement st = con.createStatement();
-    ResultSet res = null;
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+            res = st.executeQuery("select cm_label from cm_mstr where cm_code = " + "'" + cust + "';" );
+           while (res.next()) {
+            myitem = res.getString("cm_label");                    
+            }
 
-    res = st.executeQuery("select cm_label from cm_mstr where cm_code = " + "'" + cust + "';" );
-   while (res.next()) {
-    myitem = res.getString("cm_label");                    
-    }
-
-}
-catch (SQLException s){
-     MainFrame.bslog(s);
-}
-con.close();  
-}
-catch (Exception e){
-MainFrame.bslog(e);
-}
-return myitem;
+        }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
+        }
+        catch (Exception e){
+        MainFrame.bslog(e);
+        }
+        return myitem;
 
 }
 
     public static String getCustLogo(String cust) {
-String myitem = "";
-try{
+        String myitem = "";
+        try{
 
-Connection con = DriverManager.getConnection(url + db, user, pass);
-try{
-    Statement st = con.createStatement();
-    ResultSet res = null;
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+            res = st.executeQuery("select cm_logo from cm_mstr where cm_code = " + "'" + cust + "';" );
+           while (res.next()) {
+            myitem = res.getString("cm_logo");                    
+            }
 
-    res = st.executeQuery("select cm_logo from cm_mstr where cm_code = " + "'" + cust + "';" );
-   while (res.next()) {
-    myitem = res.getString("cm_logo");                    
-    }
-
-}
-catch (SQLException s){
-     MainFrame.bslog(s);
-}
-con.close();  
-}
-catch (Exception e){
-MainFrame.bslog(e);
-}
-return myitem;
+        }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }  
+        } catch (Exception e){
+        MainFrame.bslog(e);
+        }
+        return myitem;
 
 }
 
@@ -1496,10 +1563,9 @@ return myitem;
          try{
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
                 res = st.executeQuery("select cm_iv_jasper from cm_mstr where cm_code = " + "'" + cust + "';" );
                while (res.next()) {
                 myitem = res.getString("cm_iv_jasper");                    
@@ -1508,8 +1574,15 @@ return myitem;
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1523,10 +1596,9 @@ return myitem;
          try{
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
                 res = st.executeQuery("select cm_ps_jasper from cm_mstr where cm_code = " + "'" + cust + "';" );
                while (res.next()) {
                 myitem = res.getString("cm_ps_jasper");                    
