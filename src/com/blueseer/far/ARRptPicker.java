@@ -32,6 +32,7 @@ import com.blueseer.inv.*;
 import com.blueseer.sch.*;
 import com.blueseer.inv.*;
 import bsmf.MainFrame;
+import static bsmf.MainFrame.db;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import java.awt.Color;
@@ -43,25 +44,16 @@ import java.sql.Statement;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import static bsmf.MainFrame.checkperms;
-import static bsmf.MainFrame.con;
-import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.driver;
-import static bsmf.MainFrame.menumap;
-import static bsmf.MainFrame.panelmap;
 import static bsmf.MainFrame.pass;
-import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
-import com.blueseer.utl.DTData;
-import com.blueseer.utl.RPData;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Currency;
 import java.util.Enumeration;
@@ -387,8 +379,7 @@ public class ARRptPicker extends javax.swing.JPanel {
                    getGlobalColumnTag("status")});
            
            try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -478,8 +469,7 @@ public class ARRptPicker extends javax.swing.JPanel {
                             getGlobalColumnTag("90daysold"), 
                             getGlobalColumnTag("90+daysold")});
            try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -597,8 +587,7 @@ public class ARRptPicker extends javax.swing.JPanel {
                             getGlobalColumnTag("90+daysold")});
            
            try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -731,8 +720,7 @@ public class ARRptPicker extends javax.swing.JPanel {
                             getGlobalColumnTag("checkamt")});
            
            try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{

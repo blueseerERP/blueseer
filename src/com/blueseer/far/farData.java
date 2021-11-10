@@ -129,7 +129,7 @@ public class farData {
     private static int _addArdMstr(ard_mstr x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
         int rows = 0;
         String sqlSelect = "select * from ard_mstr where ard_id = ? and ard_line = ?";
-        String sqlInsert = "insert into ard_mstr (ard_id, ard_cust, ard_ref, ard_line, ard_date, "
+        String sqlInsert = "insert into ard_mstr (ard_id, ard_line, ard_cust, ard_ref, ard_date, "
                         + " ard_amt, ard_amt_tax, ard_base_amt, ard_base_amt_tax, ard_curr, ard_base_curr, " 
                         + " ard_acct, ard_cc ) "
                         + " values (?,?,?,?,?,?,?,?,?,?,?,?,?); "; 

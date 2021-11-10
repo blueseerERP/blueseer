@@ -50,6 +50,7 @@ import static bsmf.MainFrame.defaultDecimalSeparator;
 import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.tags;
 import com.blueseer.ctr.cusData;
+import static com.blueseer.ctr.cusData.getCustInfo;
 import com.blueseer.fgl.fglData;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
@@ -95,32 +96,14 @@ public class ARMemoMaint extends javax.swing.JPanel {
 };
     
     
-      public void getBilltoInfo(String arg) {
-        try {
-            Connection con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            Statement st = con.createStatement();
-                ResultSet res = null;
-            try {
-                res = st.executeQuery("select * from cm_mstr where cm_code = " + "'" + arg + "'"  + ";");
-                while (res.next()) {
-                ddbank.setSelectedItem(res.getString("cm_bank"));
-                ddterms.setSelectedItem(res.getString("cm_terms"));
-                tbhdracct.setText(res.getString("cm_ar_acct"));
-                tbhdrcc.setText(res.getString("cm_ar_cc"));
-                }
-             
-
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
+    public void getBilltoInfo(String cust) {
+        
+         // aracct, arcc, currency, bank, terms, carrier, onhold, site
+            String[] custinfo = getCustInfo(cust);
+            tbhdracct.setText(custinfo[0]);
+            tbhdrcc.setText(custinfo[1]);
+            ddterms.setSelectedItem(custinfo[4]);
+            ddbank.setSelectedItem(custinfo[3]);
         
     }
     
@@ -240,7 +223,7 @@ public class ARMemoMaint extends javax.swing.JPanel {
        btsubmit.setEnabled(false);
        type = "";
        
-         ddsite.removeAllItems();
+        ddsite.removeAllItems();
         ArrayList mylist = OVData.getSiteList();
         for (int i = 0; i < mylist.size(); i++) {
             ddsite.addItem(mylist.get(i));

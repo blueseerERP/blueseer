@@ -33,7 +33,6 @@ import java.util.ArrayList;
 import javax.swing.SwingWorker;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
-import static bsmf.MainFrame.con;
 import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.tags;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;

@@ -884,7 +884,45 @@ public class cusData {
     
          
     // miscellaneous functions
-    
+    public static String[] getCustInfo(String cust) {
+           // get billto specific data
+            // aracct, arcc, currency, bank, terms, carrier, onhold, site
+            String[] custinfo = new String[]{"","","","","","","", ""};
+         try{
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+                res = st.executeQuery("select cm_ar_acct, cm_ar_cc, cm_curr, cm_bank, cm_terms, cm_carrier, cm_onhold, cm_site from cm_mstr where cm_code = " + "'" + cust + "'" + ";" );
+               while (res.next()) {
+               custinfo[0] = res.getString("cm_ar_acct");
+               custinfo[1] = res.getString("cm_ar_cc");
+               custinfo[2] = res.getString("cm_curr");
+               custinfo[3] = res.getString("cm_bank");
+               custinfo[4] = res.getString("cm_terms");
+               custinfo[5] = res.getString("cm_carrier");
+               custinfo[6] = res.getString("cm_onhold");
+               custinfo[7] = res.getString("cm_site");                   
+               }
+            }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return custinfo;
+    }
+        
     public static String getCustSalesAcct(String cust) {
            String myitem = "";
          try{

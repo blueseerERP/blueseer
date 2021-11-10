@@ -14630,10 +14630,7 @@ return myarray;
      }
         
     public static void sourceOrder(String order) {
-            
            try {
-
-            
             Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
@@ -14657,27 +14654,26 @@ return myarray;
                  if (i > 0 && ! status.isEmpty() && isSourced == 0) {
                        int error = EDI.Create940(order);
                        if (error == 0) {
-                          bsmf.MainFrame.show("Order has been sourced");
+                          bsmf.MainFrame.show(getMessageTag(1125));
                           updateOrderSourceFlag(order); 
                        }
                        if (error == 1)
                            bsmf.MainFrame.show("Missing WH/Doctype/Dir Record in cmedi_mstr");
 
                        if (error == 2)
-                           bsmf.MainFrame.show("Unable to retrieve wh from order");
+                           bsmf.MainFrame.show(getMessageTag(1016));
 
                        if (error == 3)
-                           bsmf.MainFrame.show("ClassDef and/or Invocation error");
+                           bsmf.MainFrame.show(getMessageTag(1106));
                       
                  } else {
-                     bsmf.MainFrame.show("Order does not exist");
+                     bsmf.MainFrame.show(getMessageTag(1034, order));
                      return;
                  }
               
              
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("error in sourcing");
             } finally {
             if (res != null) {
                 res.close();
@@ -16426,19 +16422,19 @@ MainFrame.bslog(e);
                while (res.next()) {
                    if (res.getString("ov_email_server").isEmpty()) {
                     x[0] = "1";
-                    x[1] = "SMTP server not defined";
+                    x[1] = getMessageTag(1154);
                    }
                    if (res.getString("ov_email_from").isEmpty()) {
                     x[0] = "1";
-                    x[1] = "From Email not defined";
+                    x[1] = getMessageTag(1155);
                    }
                    if (res.getString("ov_smtpauthuser").isEmpty()) {
                     x[0] = "1";
-                    x[1] = "Missing Auth User for SMTP Authetincation";
+                    x[1] = getMessageTag(1156);
                    }
                    if (res.getString("ov_smtpauthpass").isEmpty()) {
                     x[0] = "1";
-                    x[1] = "Missing Auth Passwd for SMTP Authetincation";
+                    x[1] = getMessageTag(1157);
                    }
                      
                 }

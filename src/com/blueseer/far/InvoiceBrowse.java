@@ -30,6 +30,7 @@ import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import static bsmf.MainFrame.checkperms;
+import static bsmf.MainFrame.db;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.FileDialog;
@@ -58,8 +59,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.UIManager;
 import javax.swing.table.TableCellRenderer;
-import static bsmf.MainFrame.con;
-import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.mydialog;
 import static bsmf.MainFrame.pass;
@@ -68,7 +67,9 @@ import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import java.sql.Connection;
 import java.text.DecimalFormatSymbols;
 import java.util.HashMap;
 import java.util.Locale;
@@ -95,7 +96,18 @@ public class InvoiceBrowse extends javax.swing.JPanel {
     boolean sending = false;
     
     javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"Select", "Detail", "Shipper", "Site", "Cust", "ShipDate", "InvDate", "Status", "Amount", "AmountOpen", "Print", "Email"})
+                        new String[]{getGlobalColumnTag("select"), 
+                            getGlobalColumnTag("detail"), 
+                            getGlobalColumnTag("shipper"), 
+                            getGlobalColumnTag("site"),
+                            getGlobalColumnTag("customer"), 
+                            getGlobalColumnTag("shipdate"), 
+                            getGlobalColumnTag("invdate"), 
+                            getGlobalColumnTag("status"), 
+                            getGlobalColumnTag("amount"), 
+                            getGlobalColumnTag("open"), 
+                            getGlobalColumnTag("print"), 
+                            getGlobalColumnTag("email")})
             {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -106,7 +118,14 @@ public class InvoiceBrowse extends javax.swing.JPanel {
                         };
                 
     javax.swing.table.DefaultTableModel modeldetail = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"Shipper", "Part", "CustPart", "SO", "SOLine", "PO", "Qty", "NetPrice"});
+                        new String[]{getGlobalColumnTag("shipper"), 
+                            getGlobalColumnTag("item"), 
+                            getGlobalColumnTag("custitem"), 
+                            getGlobalColumnTag("order"), 
+                            getGlobalColumnTag("line"), 
+                            getGlobalColumnTag("po"), 
+                            getGlobalColumnTag("qty"), 
+                            getGlobalColumnTag("price")});
     
      class ButtonRenderer extends JButton implements TableCellRenderer {
 
@@ -256,11 +275,10 @@ public class InvoiceBrowse extends javax.swing.JPanel {
          
         try {
 
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null; try {
+                
                 int i = 0;
                 String blanket = "";
                 res = st.executeQuery("select shd_id, shd_soline, shd_part, shd_custpart, shd_so, shd_po, shd_qty, shd_netprice from ship_det " +
@@ -296,45 +314,7 @@ public class InvoiceBrowse extends javax.swing.JPanel {
         }
 
     }
-    
-    public void jasperInvoice(String jobid, String bustitle) {
-        
-       try {
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                String jasperfile = "jobticket.jasper";  // need to make this changeable via site_mstr
-
-                HashMap hm = new HashMap();
-                hm.put("BUSINESSTITLE", bustitle);
-                hm.put("REPORT_TITLE", jasperfile);
-                 hm.put("SUBREPORT_DIR", "jasper/");
-                hm.put("myid",  jobid);
-                //hm.put("imagepath", "images/avmlogo.png");
-               // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_part, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
-               // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
-                File mytemplate = new File("jasper/" + jasperfile);
-              //  JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, hm, bsmf.MainFrame.con );
-                JasperPrint jasperPrint = JasperFillManager.fillReport(mytemplate.getPath(), hm, bsmf.MainFrame.con );
-                JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/jobticket.pdf");
-         
-            JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
-            jasperViewer.setVisible(true);
-                
-                
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-        
-    }
-  
+   
     
     public void initvars(String[] arg) {
         tbdetqty.setText("0");
@@ -693,13 +673,12 @@ public class InvoiceBrowse extends javax.swing.JPanel {
 
     private void btRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRunActionPerformed
 
-    
-try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+        try {
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
 
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 String fromdate = "";
@@ -787,8 +766,15 @@ try {
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }

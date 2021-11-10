@@ -29,6 +29,7 @@ import bsmf.MainFrame;
 import static bsmf.MainFrame.defaultDecimalSeparator;
 import static bsmf.MainFrame.tags; 
 import com.blueseer.ctr.cusData;
+import static com.blueseer.ctr.cusData.getCustInfo;
 import static com.blueseer.far.farData.addArTransaction;
 import com.blueseer.far.farData.ar_mstr;
 import com.blueseer.far.farData.ard_mstr;
@@ -54,6 +55,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -493,12 +495,10 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
       
     public String[] getRecord(String[] x) {
        String[] m = new String[2];
-       
-        try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            Statement st = bsmf.MainFrame.con.createStatement();
+        
+       try {
+            Connection con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Statement st = con.createStatement();
             ResultSet res = null;
             try {
                 
@@ -540,7 +540,7 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
             } finally {
                if (res != null) res.close();
                if (st != null) st.close();
-               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
+               if (con != null) con.close();
             }
         } catch (Exception e) {
             MainFrame.bslog(e);
@@ -662,63 +662,35 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
     
     // custom funcs      
     public void setcustvariables(String cust) {
-        try {
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            Statement st = bsmf.MainFrame.con.createStatement();
-            ResultSet res = null;
-            int i = 0;
-            int d = 0;
-            String uniqpo = null;
-            try {
-                
-
-
-                res = st.executeQuery("select cm_ar_acct, cm_ar_cc, cm_terms, cm_bank from cm_mstr where cm_code = " + "'" + cust + "'" + ";");
-                while (res.next()) {
-                    i++;
-                   aracct = res.getString("cm_ar_acct");
-                   arcc = res.getString("cm_ar_cc");
-                   terms = res.getString("cm_terms");
-                   arbank = res.getString("cm_bank");
-                }
-
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
+       
+        // aracct, arcc, currency, bank, terms, carrier, onhold, site
+            String[] custinfo = getCustInfo(cust);
+            aracct = custinfo[0];
+            arcc = custinfo[1];
+            terms = custinfo[4];
+            arbank = custinfo[3];
+       
     }
       
     public void getreferences(String cust) {
         referencemodel.setRowCount(0);
         try {
-             Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            Statement st = bsmf.MainFrame.con.createStatement();
+            Connection con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Statement st = con.createStatement();
             ResultSet res = null;
             int i = 0;
             int d = 0;
             String uniqpo = null;
             try {
-                
-
                 rcvamt = 0.00;
                 res = st.executeQuery("select * from ar_mstr where ar_cust = " + "'" + cust + "'" +
                         " AND ar_curr = " + "'" + curr + "'" + 
                         " AND ar_status = 'o' " + ";");
                 while (res.next()) {
-                    // "Reference", "Type", "DueDate", "Amount", "AmtApplied", "AmtOpen"
                   referencemodel.addRow(new Object[]{res.getString("ar_nbr"), 
                       res.getString("ar_type"), 
                       res.getString("ar_duedate"), 
-                      res.getDouble("ar_amt"), 
+                      currformatDouble(res.getDouble("ar_amt")), 
                       res.getDouble("ar_applied"), 
                       currformatDouble(res.getDouble("ar_open_amt")),
                       currformatDouble(res.getDouble("ar_amt_tax")),
@@ -736,18 +708,18 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
             } finally {
                if (res != null) res.close();
                if (st != null) st.close();
-               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
+               if (con != null) con.close();
             }
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
     }
            
-    public void setstatus(javax.swing.JTable mytable) throws SQLException {
-            
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-             ResultSet res = null;
-             Statement st = bsmf.MainFrame.con.createStatement();
+    public void setstatus(javax.swing.JTable mytable) {
+            try {
+            Connection con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
              
              String sonbr = null;
              int i = 0;
@@ -762,9 +734,9 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
              String thispart = mytable.getModel().getValueAt(j, 0).toString();
              String thisorder = mytable.getModel().getValueAt(j, 1).toString();
              String thispo = mytable.getModel().getValueAt(j, 2).toString();
-             int thisrecvqty = Integer.valueOf(mytable.getModel().getValueAt(j, 3).toString());
+             double thisrecvqty = Double.valueOf(mytable.getModel().getValueAt(j, 3).toString());
              String thislinestatus = "";
-             int thisrecvpedtotal = 0;
+             double thisrecvpedtotal = 0;
             
              try {
             
@@ -773,17 +745,15 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
                                      " AND sod_part = " + "'" + thispart + "'" + ";");
                while (res.next()) {     
                  i++;
-                   if (Integer.valueOf(res.getString("sod_recvped_qty") + thisrecvqty) < Integer.valueOf(res.getString("sod_ord_qty")) ) {
+                   if (Double.valueOf(res.getString("sod_recvped_qty") + thisrecvqty) < Double.valueOf(res.getString("sod_ord_qty")) ) {
                    thislinestatus = "Partial"; 
                    }
-                   if (Integer.valueOf(res.getString("sod_recvped_qty") + thisrecvqty) >= Integer.valueOf(res.getString("sod_ord_qty")) ) {
+                   if (Double.valueOf(res.getString("sod_recvped_qty") + thisrecvqty) >= Double.valueOf(res.getString("sod_ord_qty")) ) {
                    thislinestatus = "Shipped"; 
                    }
-                   thisrecvpedtotal = thisrecvqty + Integer.valueOf(res.getString("sod_recvped_qty"));
+                   thisrecvpedtotal = thisrecvqty + Double.valueOf(res.getString("sod_recvped_qty"));
                    
                 }
-                 
-                 
                  
                  /* ok...now lets update the status of this sod_det line item */
                  st.executeUpdate("update sod_det set sod_recvped_qty = " + "'" + thisrecvpedtotal + "'" + 
@@ -793,24 +763,22 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
                                   " and sod_po = " + "'" + thispo + "'" +
                      ";");
                  
-                 
-                 
              } catch (SQLException s) {
                  MainFrame.bslog(s);
                  bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
              } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
-            }
-              // JOptionPane.showMessageDialog(mydialog, mytable.getModel().getValueAt(j,1).toString());
-              
-                
-            //if (iscomplete) {
-            //    st.executeUpdate("update so_mstr set so_status = 'Shipped' where so_nbr = " + "'" + mytable.getModel().getValueAt(j, 1).toString() + "'" );
-           // }
-            
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+             }
          }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
     }
     
     public void sumdollars() {

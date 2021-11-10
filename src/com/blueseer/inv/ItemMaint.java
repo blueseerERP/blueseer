@@ -27,10 +27,14 @@ SOFTWARE.
 package com.blueseer.inv;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.defaultDecimalSeparator;
+import static bsmf.MainFrame.pass;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import static bsmf.MainFrame.tags;
+import static bsmf.MainFrame.url;
+import static bsmf.MainFrame.user;
 import com.blueseer.inv.invData.item_mstr;
 import static com.blueseer.inv.invData.addItemMstr;
 import static com.blueseer.inv.invData.deleteItemMstr;
@@ -63,6 +67,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -412,7 +417,6 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
             ddtype.addItem(code[1]);
             if (code[0].equals("routing"))
             ddrouting.addItem(code[1]);
-            
         }
        
         ddrouting.insertItemAt("", 0);
@@ -420,7 +424,6 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
        
         ddwh.insertItemAt("", 0);
         ddwh.setSelectedIndex(0);
-        
        
         ddloc.insertItemAt("", 0);
         ddloc.setSelectedIndex(0);
@@ -555,7 +558,6 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
         boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
         if (proceed) {
          m = deleteItemMstr(createRecord()); 
-         initvars(null);
         } else {
            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
         }
@@ -723,11 +725,11 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
        double prevcost = 0;
       
         try {
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+           Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
+              
 
                 int i = 0;
 
@@ -741,7 +743,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
 
                res = st.executeQuery("SELECT tr_type, tr_eff_date, tr_id, tr_base_qty  " +
                         " FROM  tran_mstr  " +
-                        " where tr_part = " + "'" + parentpart.toString() + "'" + 
+                        " where tr_part = " + "'" + parentpart + "'" + 
                         " order by tr_eff_date desc limit 25 ;");
 
                 while (res.next()) {
@@ -758,8 +760,15 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -769,12 +778,11 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
              
     public void getlocqty(String parentpart) {
         try {
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+          Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-
+               
                 int i = 0;
                 double tot = 0;
 
@@ -788,7 +796,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
 
                res = st.executeQuery("SELECT in_site, in_wh, in_loc, in_qoh, in_date  " +
                         " FROM  in_mstr  " +
-                        " where in_part = " + "'" + parentpart.toString() + "'" + 
+                        " where in_part = " + "'" + parentpart + "'" + 
                         " order by in_wh, in_loc ;");
 
                 while (res.next()) {
@@ -807,8 +815,15 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
             } catch (SQLException s) {
                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
                 MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -2193,10 +2208,10 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
         if (proceed) {
         try {
 
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+         Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
               
                    int i = st.executeUpdate("delete from item_image where iti_item = " + "'" + tbkey.getText() + "'" 
                            + " AND iti_file = " + "'" + ddimage.getSelectedItem().toString() + "'"
@@ -2209,8 +2224,15 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 } catch (SQLException s) {
                     MainFrame.bslog(s);
                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -2223,11 +2245,11 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
         }
          
         try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;  
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
+               
                 int defaultvalue = BlueSeerUtils.boolToInt(cbdefault.isSelected());
               
                    int i = st.executeUpdate("update item_image set iti_default = " + "'" + defaultvalue + "'" + 
@@ -2238,8 +2260,15 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 } catch (SQLException s) {
                     MainFrame.bslog(s);
                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            }
-            bsmf.MainFrame.con.close();
+                } finally {
+                    if (res != null) {
+                        res.close();
+                    }
+                    if (st != null) {
+                        st.close();
+                    }
+                    con.close();
+                }
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
