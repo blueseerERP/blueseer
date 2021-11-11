@@ -27,8 +27,12 @@ SOFTWARE.
 package com.blueseer.pur;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.db;
+import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
+import static bsmf.MainFrame.url;
+import static bsmf.MainFrame.user;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
@@ -62,6 +66,7 @@ import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.io.File;
+import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -463,13 +468,10 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
          
          String[] m = new String[2];
          try {
-
-           Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-           
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
                 boolean proceed = true;
                 int i = 0;
                 double threshold = 0;
@@ -617,8 +619,15 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordSQLError};  
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordConnError};
@@ -631,28 +640,27 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
         String[] m = new String[2];
         boolean proceed = bsmf.MainFrame.warn("Are you sure?");
         if (proceed) {
-                   try {
+           try {
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+                try {
+                    st.executeUpdate("delete from req_det where reqd_id = " + "'" + x[0] + "'" + ";"); 
+                    st.executeUpdate("delete from req_task where reqt_id = " + "'" + x[0] + "'" + ";"); 
 
-                    Class.forName(bsmf.MainFrame.driver).newInstance();
-                    bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-                    try {
-                        Statement st = bsmf.MainFrame.con.createStatement();
-                        ResultSet res = null;
- 
-                       
-                        st.executeUpdate("delete from req_det where reqd_id = " + "'" + x[0] + "'" + ";"); 
-                        st.executeUpdate("delete from req_task where reqt_id = " + "'" + x[0] + "'" + ";"); 
-                        
-                        
-                        int i = st.executeUpdate("delete from req_mstr where req_id = " + "'" + x[0] + "'" + ";");   
-                            if (i > 0) {
-                                m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
-                            }
-                        } catch (SQLException s) {
-                            MainFrame.bslog(s);
-                        m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordSQLError}; 
+
+                    int i = st.executeUpdate("delete from req_mstr where req_id = " + "'" + x[0] + "'" + ";");   
+                        if (i > 0) {
+                            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+                        }
+                    } catch (SQLException s) {
+                        MainFrame.bslog(s);
+                    m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordSQLError}; 
+                    } finally {
+                        if (st != null) {
+                            st.close();
+                        }
+                        con.close();
                     }
-                    bsmf.MainFrame.con.close();
                 } catch (Exception e) {
                     MainFrame.bslog(e);
                 }
@@ -667,12 +675,10 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
        try {
         java.util.Date now = new java.util.Date();
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-           Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-          
+          Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
                 boolean proceed = true;
                
                 boolean isadmin = false;
@@ -734,8 +740,15 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError};   
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordConnError};
             MainFrame.bslog(e);
@@ -748,12 +761,10 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
          reqtask.setRowCount(0);
         
         try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
                 int i = 0;
                 String blanket = "";
                 
@@ -815,8 +826,15 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
              m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};   
@@ -889,11 +907,10 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
         
        int i = 0;
         try{
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
                 res = st.executeQuery("select * from req_mstr inner join user_mstr on " +
                           " user_id = req_name " +
                           "where " +
@@ -910,8 +927,15 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
             catch (SQLException s){
                 MainFrame.bslog(s);
                  bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            bsmf.MainFrame.con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -935,11 +959,10 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
         
        int i = 0;
         try{
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
                 res = st.executeQuery("SELECT req_admins from req_ctrl;");
                     while (res.next()) {
                         i++;
@@ -961,8 +984,15 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
             catch (SQLException s){
                 MainFrame.bslog(s);
                  bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            bsmf.MainFrame.con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -974,11 +1004,10 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
         
        int i = 0;
         try{
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
                  // now...lets update task and set to approved 
                  st.executeUpdate("update req_task set reqt_status = 'approved' where " + 
                         " reqt_id = " + "'" + myid + "'" +  ";");
@@ -988,8 +1017,15 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
             catch (SQLException s){
                 MainFrame.bslog(s);
                  bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            bsmf.MainFrame.con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1038,12 +1074,11 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
                          tbstatus.setText(getGlobalProgTag("approved"));
                          sendEmailToRequestor(myid, String.valueOf(mypo));
           
-                          try {
-             Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
+    try {
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try {
               
                st.executeUpdate("update req_mstr set " + 
                        " req_status = " + "'" + "approved" + "'" + "," +
@@ -1053,8 +1088,16 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-              } catch (Exception e) {
+        } catch (Exception e) {
             MainFrame.bslog(e);
         }
                          
@@ -1069,15 +1112,13 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
             int mypo = 0;
             int mysequence = Integer.valueOf(thissequence);
             reqtask.setRowCount(0);
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            int i = 0;
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null; int i = 0;
             int nextsequence = 0;
             boolean islast = false;
             boolean emailrequestor = false;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
 
                 // OK...lets determine if last sequence
                 
@@ -1176,8 +1217,15 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -1185,12 +1233,10 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
     
     public void vendChangeEvent(String mykey) {
       try {
-             Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-          
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
                 tbvendcode.setText("");
                 res = st.executeQuery("select vd_addr from vd_mstr where vd_name = " + "'" + ddvend.getSelectedItem().toString() + "'" + ";");
                 while (res.next()) {
@@ -1199,8 +1245,15 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -1819,11 +1872,10 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
     {
        try {
 
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+           Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
               
                 res = st.executeQuery("select vd_addr from vd_mstr where vd_name = " + "'" + ddvend.getSelectedItem().toString().replace("'", "") + "'"  + ";");
                 while (res.next()) {
@@ -1834,8 +1886,15 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -1853,12 +1912,8 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
     private void btprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btprintActionPerformed
        
         try {
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            
                 HashMap hm = new HashMap();
                 hm.put("REPORT_TITLE", "SHIPPER");
                 hm.put("myid",  tbkey.getText().toString());
@@ -1866,19 +1921,12 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
                // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_part, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
                 File mytemplate = new File("jasper/req_print.jasper");
-              //  JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, hm, bsmf.MainFrame.con );
-                JasperPrint jasperPrint = JasperFillManager.fillReport(mytemplate.getPath(), hm, bsmf.MainFrame.con );
+                JasperPrint jasperPrint = JasperFillManager.fillReport(mytemplate.getPath(), hm, con );
                 JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/b1.pdf");
          
             JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
             jasperViewer.setVisible(true);
-                
-                
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            }
-            bsmf.MainFrame.con.close();
+            con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }

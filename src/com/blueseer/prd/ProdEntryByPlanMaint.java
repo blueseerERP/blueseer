@@ -27,6 +27,7 @@ package com.blueseer.prd;
 
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.db;
 import com.blueseer.utl.OVData;
 import java.awt.Color;
 import java.awt.print.PrinterException;
@@ -51,20 +52,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.print.PrintService;
 import javax.print.PrintServiceLookup;
-import javax.print.attribute.HashPrintRequestAttributeSet;
-import javax.print.attribute.PrintRequestAttributeSet;
-import javax.print.attribute.standard.Copies;
-import javax.print.attribute.standard.MediaPrintableArea;
-import javax.print.attribute.standard.MediaSize;
-import javax.print.attribute.standard.MediaSizeName;
 import javax.swing.JTable;
-import net.sf.jasperreports.engine.JRExporterParameter;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.export.JRPrintServiceExporter;
-import net.sf.jasperreports.engine.export.JRPrintServiceExporterParameter;
-import static bsmf.MainFrame.con;
-import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
@@ -73,6 +63,7 @@ import static bsmf.MainFrame.user;
 import com.blueseer.inv.invData;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.awt.Component;
+import java.sql.Connection;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -122,23 +113,17 @@ String sitecitystatezip = "";
         if ( service != null) {
          job.setPrintService(service);
          try {
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+           
 
                 HashMap hm = new HashMap();
                 hm.put("REPORT_TITLE", "MASTER TICKET");
                  hm.put("SUBREPORT_DIR", "jasper/");
                 hm.put("myid",  scan);
                 hm.put("subid",  subid);
-              
-               // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_part, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
-               // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
                 File mytemplate = new File("jasper/subticket.jasper");
-              //  JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, hm, bsmf.MainFrame.con );
-                JasperPrint print = JasperFillManager.fillReport(mytemplate.getPath(), hm, bsmf.MainFrame.con );
+                JasperPrint print = JasperFillManager.fillReport(mytemplate.getPath(), hm, con );
+                con.close();
   
                // code auto sends to printer
 //PrintRequestAttributeSet printRequestAttributeSet = new HashPrintRequestAttributeSet();
@@ -154,16 +139,12 @@ String sitecitystatezip = "";
  //   exporter.exportReport();  
          // end code auto sends to printer
      
-    JasperExportManager.exportReportToPdfFile(print,"temp/subjob.pdf");
+                JasperExportManager.exportReportToPdfFile(print,"temp/subjob.pdf");
                 JasperViewer jasperViewer = new JasperViewer(print, false);
                 jasperViewer.setVisible(true);
     
     
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("unable to print prodentrybyplan");
-            }
-            bsmf.MainFrame.con.close();
+            
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -490,11 +471,10 @@ String sitecitystatezip = "";
             
             // get necessary info from plan_mstr for this scan and store into mytable(mymodel)
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
                  java.util.Date now = new java.util.Date();
                  DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                  
@@ -531,8 +511,15 @@ String sitecitystatezip = "";
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
                  
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
