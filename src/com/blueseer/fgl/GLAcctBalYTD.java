@@ -27,6 +27,7 @@ SOFTWARE.
 package com.blueseer.fgl;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.db;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import java.awt.FileDialog;
@@ -49,8 +50,6 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
-import static bsmf.MainFrame.con;
-import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.mydialog;
 import static bsmf.MainFrame.pass;
@@ -61,6 +60,7 @@ import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.awt.Component;
+import java.sql.Connection;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 import javax.swing.BorderFactory;
@@ -318,11 +318,10 @@ public class GLAcctBalYTD extends javax.swing.JPanel {
    
     
 try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
 
                 int qty = 0;
                 double dol = 0;
@@ -376,8 +375,15 @@ try {
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show(getMessageTag(1016, this.getClass().getEnclosingMethod().getName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }

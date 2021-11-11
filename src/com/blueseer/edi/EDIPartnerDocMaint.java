@@ -28,9 +28,13 @@ package com.blueseer.edi;
 
 import com.blueseer.ctr.*;
 import bsmf.MainFrame;
+import static bsmf.MainFrame.db;
+import static bsmf.MainFrame.pass;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import static bsmf.MainFrame.reinitpanels;
+import static bsmf.MainFrame.url;
+import static bsmf.MainFrame.user;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
 import static com.blueseer.utl.BlueSeerUtils.luTable;
@@ -46,6 +50,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -89,11 +94,10 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
         
         try {
 
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
                 int i = 0;
                 res = st.executeQuery("select * from edi_mstr where edi_id = " + "'" + code + "'" +
                                       " AND edi_doc = " + "'" + doctype + "'" +
@@ -137,8 +141,15 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to retrieve edi_mstr");
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -789,11 +800,10 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
        try {
 
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
                 boolean proceed = true;
                 String fa = "";
                 int i = 0;
@@ -869,8 +879,15 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to Add to edi_mstr");
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -881,10 +898,9 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
             boolean proceed = true;
            
             String fa = "";
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
                    
                 // check the code field
                if (tbkey.getText().isEmpty()) {
@@ -944,8 +960,12 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show("Problem updating edi_mstr");
+            } finally {
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -958,10 +978,9 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
         if (proceed) {
         try {
 
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
               
                  
                 
@@ -977,8 +996,12 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
                 } catch (SQLException s) {
                     MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to Delete edi_mstr");
+            } finally {
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -1058,10 +1081,9 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
             String[] z = listAttributes.getSelectedValue().toString().split(":");
         try {
 
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
               
                    int i = st.executeUpdate("delete from edi_attr where exa_sndid = " + "'" + tbsndgs.getText() + "'" + 
                                             " and exa_rcvid = " + "'" + tbrcvgs.getText() + "'" +
@@ -1075,8 +1097,12 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
                 } catch (SQLException s) {
                     MainFrame.bslog(s);
                     bsmf.MainFrame.show("Unable to Delete edi_attr Record");
+            } finally {
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }

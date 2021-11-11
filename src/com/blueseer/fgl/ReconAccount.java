@@ -30,7 +30,6 @@ import com.blueseer.shp.*;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import static bsmf.MainFrame.checkperms;
-import static bsmf.MainFrame.con;
 import static bsmf.MainFrame.db;
 import java.awt.Color;
 import java.awt.Component;
@@ -72,6 +71,7 @@ import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.sql.Connection;
 import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
 import java.util.Calendar;
@@ -272,12 +272,10 @@ public class ReconAccount extends javax.swing.JPanel {
           
          try {
           
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 
                  DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");       
                  
@@ -334,8 +332,15 @@ public class ReconAccount extends javax.swing.JPanel {
               } catch (SQLException s) {
                   MainFrame.bslog(s);
                   bsmf.MainFrame.show(getMessageTag(1016,this.getClass().getEnclosingMethod().getName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -344,12 +349,10 @@ public class ReconAccount extends javax.swing.JPanel {
        public void chartBuyAndSell() {
          try {
           
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 
                  DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");       
                  
@@ -400,8 +403,15 @@ public class ReconAccount extends javax.swing.JPanel {
               } catch (SQLException s) {
                   MainFrame.bslog(s);
                   bsmf.MainFrame.show(getMessageTag(1016,this.getClass().getEnclosingMethod().getName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -426,11 +436,10 @@ public class ReconAccount extends javax.swing.JPanel {
          
         try {
 
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
                 int i = 0;
                 String blanket = "";
                 res = st.executeQuery("select posd_nbr, posd_item, posd_desc, posd_ref, posd_qty, posd_netprice from pos_det " +
@@ -454,8 +463,15 @@ public class ReconAccount extends javax.swing.JPanel {
 
             } catch (SQLException s) {
                 bsmf.MainFrame.show(getMessageTag(1016,this.getClass().getEnclosingMethod().getName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -504,9 +520,8 @@ public class ReconAccount extends javax.swing.JPanel {
      
      try {
             
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            Statement st = bsmf.MainFrame.con.createStatement();
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
             ResultSet res = null;
             try {
                 
@@ -523,10 +538,14 @@ public class ReconAccount extends javax.swing.JPanel {
               
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
+            }  finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
             
         } catch (Exception e) {
@@ -1011,11 +1030,10 @@ public class ReconAccount extends javax.swing.JPanel {
        
     
 try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
 
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 String fromdate = "";
@@ -1104,8 +1122,15 @@ try {
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show(getMessageTag(1016,this.getClass().getEnclosingMethod().getName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -1210,20 +1235,26 @@ try {
     private void ddacctActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddacctActionPerformed
          if (ddacct.getSelectedItem() != null && ! isLoad )
         try {
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                         res = st.executeQuery("select ac_desc from ac_mstr where ac_id = " + "'" + ddacct.getSelectedItem().toString() + "'" + ";");
+                    res = st.executeQuery("select ac_desc from ac_mstr where ac_id = " + "'" + ddacct.getSelectedItem().toString() + "'" + ";");
                     while (res.next()) {
                         lbacct.setText(res.getString("ac_desc"));
                     }
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show(getMessageTag(1016,this.getClass().getEnclosingMethod().getName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }

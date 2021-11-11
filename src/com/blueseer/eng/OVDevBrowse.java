@@ -37,9 +37,14 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import static bsmf.MainFrame.checkperms;
+import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.menumap;
 import static bsmf.MainFrame.panelmap;
+import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
+import static bsmf.MainFrame.url;
+import static bsmf.MainFrame.user;
+import java.sql.Connection;
 
 /**
  *
@@ -239,11 +244,10 @@ public class OVDevBrowse extends javax.swing.JPanel {
         
         
         try {
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
 
                 int i = 0;
 
@@ -277,8 +281,15 @@ public class OVDevBrowse extends javax.swing.JPanel {
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show("Sql code does not execute");
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }

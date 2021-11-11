@@ -29,7 +29,11 @@ package com.blueseer.edi;
 import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.checkperms;
+import static bsmf.MainFrame.db;
+import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
+import static bsmf.MainFrame.url;
+import static bsmf.MainFrame.user;
 import com.blueseer.utl.EDData;
 import java.awt.Color;
 import java.awt.Component;
@@ -44,6 +48,7 @@ import java.io.Reader;
 import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.UnknownHostException;
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -196,11 +201,10 @@ public class EDILogBrowse extends javax.swing.JPanel {
         mymodel.setNumRows(0);
         tafile.setText("");
         try {
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
 
                 int i = 0;
 
@@ -272,8 +276,15 @@ public class EDILogBrowse extends javax.swing.JPanel {
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show("Sql code does not execute");
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -439,123 +450,7 @@ public class EDILogBrowse extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btviewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btviewActionPerformed
-      
         getEDIIDX();
-        /*
-        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-       // if (rberror.isSelected() && rbinfo.isSelected()) {
-      //     bsmf.MainFrame.show("Select either active OR inactive...not both");
-       //     return;
-       // }
-        
-        mymodel.setNumRows(0);
-        tafile.setText("");
-        try {
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-
-                int i = 0;
-
-               
-                tablereport.setModel(mymodel);
-                 tablereport.getColumnModel().getColumn(4).setCellRenderer(new EDILogBrowse.SomeRenderer()); 
-                 tablereport.getColumnModel().getColumn(7).setCellRenderer(new EDILogBrowse.SomeRenderer()); 
-                // ReportPanel.TableReport.getColumn("CallID").setCellRenderer(new ButtonRenderer());
-                //          ReportPanel.TableReport.getColumn("CallID").setCellEditor(
-                    //       new ButtonEditor(new JCheckBox()));
-                 
-                if (! cbinfo.isSelected() && ! cberror.isSelected()) {
-                return;
-                }
-                
-                String dir = "out";
-                
-                String fromdoc = bsmf.MainFrame.lowchar;
-                String todoc = bsmf.MainFrame.hichar;
-                
-                String fromtp = bsmf.MainFrame.lowchar;
-                String totp = bsmf.MainFrame.hichar;
-                
-                if (! ddtpdoc.getSelectedItem().toString().equals("ALL")) {
-                    fromdoc = ddtpdoc.getSelectedItem().toString();
-                    todoc = ddtpdoc.getSelectedItem().toString();
-                }
-                
-                if (! ddtpid.getSelectedItem().toString().equals("ALL")) {
-                    fromtp = ddtpid.getSelectedItem().toString();
-                    totp = ddtpid.getSelectedItem().toString();
-                }
-                
-                 
-                if (cberror.isSelected()) {
-                res = st.executeQuery("SELECT elg_id, elg_dir, editp_name, elg_severity, elg_isa, elg_doc, elg_order, elg_gsctrlnum, elg_stctrlnum, elg_ctrlnum,  elg_file, elg_ref, elg_desc, elg_ts FROM  edi_log  " +
-                        " left outer join editp_mstr on editp_id = elg_isa  where " +
-                    " elg_isa >= " + "'" + fromtp + "'" +
-                    " AND elg_isa <= " + "'" + totp + "'" +
-                    " AND elg_doc >= " + "'" + fromdoc + "'" +
-                    " AND elg_doc <= " + "'" + todoc + "'" +
-                    " AND elg_severity = 'ERROR' " +
-                    " AND elg_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
-                    " AND elg_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 24:00:00" + "'" + " order by elg_id desc ;" ) ;
-                } 
-                if (cbinfo.isSelected()) {
-                res = st.executeQuery("SELECT elg_id, elg_dir, editp_name, elg_severity, elg_isa, elg_doc, elg_order, elg_gsctrlnum, elg_stctrlnum, elg_ctrlnum, elg_file, elg_ref, elg_desc, elg_ts FROM  edi_log  " +
-                        " left outer join editp_mstr on editp_id = elg_isa  where " +
-                    " elg_isa >= " + "'" + fromtp + "'" +
-                    " AND elg_isa <= " + "'" + totp + "'" +
-                    " AND elg_doc >= " + "'" + fromdoc + "'" +
-                    " AND elg_doc <= " + "'" + todoc + "'" +
-                    " AND elg_severity = 'INFO' " +
-                    " AND elg_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
-                    " AND elg_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 24:00:00" + "'" + " order by elg_id desc ;" ) ;
-                }
-                if (cbinfo.isSelected() && cberror.isSelected()) {
-                    res = st.executeQuery("SELECT elg_id, elg_dir, editp_name, elg_severity, elg_isa, elg_doc, elg_order, elg_gsctrlnum, elg_stctrlnum, elg_ctrlnum, elg_file, elg_ref, elg_desc, elg_ts FROM  edi_log  " +
-                        " left outer join editp_mstr on editp_id = elg_isa  where " +
-                    " elg_isa >= " + "'" + fromtp + "'" +
-                    " AND elg_isa <= " + "'" + totp + "'" +
-                    " AND elg_doc >= " + "'" + fromdoc + "'" +
-                    " AND elg_doc <= " + "'" + todoc + "'" +
-                    " AND elg_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
-                    " AND elg_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 24:00:00" + "'" + " order by elg_id desc ;" ) ;
-                  
-                }
-                
-
-                while (res.next()) {
-                    i++;
-                    if (res.getInt("elg_dir") == 0) {
-                     dir = "In";   
-                    } else {
-                     dir = "Out";
-                    }
-                    mymodel.addRow(new Object[]{
-                        res.getString("elg_isa"),
-                        res.getString("editp_name"),
-                        dir,
-                        res.getString("elg_doc"),
-                        res.getString("elg_file"),
-                        res.getString("elg_ctrlnum"),
-                        res.getString("elg_gsctrlnum"),
-                        res.getString("elg_stctrlnum"),
-                        res.getString("elg_desc"),
-                        res.getString("elg_order"),
-                        res.getString("elg_ts")
-                    });
-                }
-
-            } catch (SQLException s) {
-                bsmf.MainFrame.show("Sql code does not execute");
-            }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-        
-        */
     }//GEN-LAST:event_btviewActionPerformed
 
     private void tablereportMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablereportMouseClicked

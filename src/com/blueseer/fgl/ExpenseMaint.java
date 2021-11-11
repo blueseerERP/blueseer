@@ -26,10 +26,14 @@ SOFTWARE.
 package com.blueseer.fgl;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.defaultDecimalSeparator;
 import static bsmf.MainFrame.dfdate;
+import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
+import static bsmf.MainFrame.url;
+import static bsmf.MainFrame.user;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
@@ -100,6 +104,7 @@ import javax.swing.tree.TreePath;
 import static com.blueseer.utl.OVData.getDueDateFromTerms;
 import java.awt.Color;
 import java.awt.Component;
+import java.sql.Connection;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 import javax.swing.BorderFactory;
@@ -512,9 +517,8 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeer {
      
      try {
 
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            Statement st = bsmf.MainFrame.con.createStatement();
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
             ResultSet res = null;
             boolean error = false;
             try {
@@ -596,7 +600,7 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeer {
             } finally {
                if (res != null) res.close();
                if (st != null) st.close();
-               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
+               if (con != null) con.close();
             }
         } catch (Exception e) {
             MainFrame.bslog(e);
@@ -623,9 +627,8 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeer {
        
         try {
 
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            Statement st = bsmf.MainFrame.con.createStatement();
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
             ResultSet res = null;
             try {
                 int i = 0;
@@ -669,7 +672,7 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeer {
             } finally {
                if (res != null) res.close();
                if (st != null) st.close();
-               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
+               if (con != null) con.close();
             }
         } catch (Exception e) {
             MainFrame.bslog(e);
@@ -724,14 +727,12 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeer {
         
         try {
      
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            int i = 0;
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;int i = 0;
             int d = 0;
             String uniqpo = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
 
 
                 res = st.executeQuery("select vd_name, vd_ap_acct, vd_ap_cc, vd_terms, vd_bank from vd_mstr where vd_addr = " + "'" + vendor + "'" + ";");
@@ -748,8 +749,15 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeer {
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show(getMessageTag(1016, this.getClass().getEnclosingMethod().getName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -1172,11 +1180,10 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeer {
         try {
             
         
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
 
                 res = st.executeQuery("select ac_desc from ac_mstr where ac_id = " + "'" + ddacct.getSelectedItem().toString() + "'" + ";");
                 while (res.next()) {
@@ -1185,8 +1192,15 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeer {
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show(getMessageTag(1016, this.getClass().getEnclosingMethod().getName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }

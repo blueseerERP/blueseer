@@ -27,6 +27,10 @@ SOFTWARE.
 package com.blueseer.edi;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.db;
+import static bsmf.MainFrame.pass;
+import static bsmf.MainFrame.url;
+import static bsmf.MainFrame.user;
 import com.blueseer.utl.EDData;
 import com.blueseer.utl.BlueSeerUtils;
 import java.awt.Color;
@@ -45,6 +49,7 @@ import javax.swing.JTable;
 import javax.swing.UIManager;
 import javax.swing.table.TableCellRenderer;
 import java.net.MalformedURLException;
+import java.sql.Connection;
 import java.text.DecimalFormatSymbols;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -184,11 +189,10 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
         docmodel.setNumRows(0);
         tafile.setText("");
         try {
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
 
                 int i = 0;
 
@@ -284,8 +288,15 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show("Sql code does not execute");
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -298,11 +309,10 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
         filemodel.setNumRows(0);
         tafile.setText("");
         try {
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
 
                 int i = 0;
 
@@ -383,8 +393,15 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show("Sql code does not execute");
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -410,11 +427,10 @@ public EDITransactionBrowse() {
         
         try {
 
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
                 int i = 0;
                 String blanket = "";
                 res = st.executeQuery("select elg_id, elg_comkey, elg_idxnbr, elg_severity, elg_desc, elg_ts from edi_log " +
@@ -435,8 +451,15 @@ public EDITransactionBrowse() {
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show("Unable to get browse detail");
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }

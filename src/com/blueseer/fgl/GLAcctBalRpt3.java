@@ -55,7 +55,6 @@ import javax.swing.JTable;
 import javax.swing.UIManager;
 import javax.swing.table.TableCellRenderer;
 import static bsmf.MainFrame.checkperms;
-import static bsmf.MainFrame.con;
 import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.mydialog;
@@ -69,6 +68,7 @@ import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.getTitleTag;
+import java.sql.Connection;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.Calendar;
@@ -196,12 +196,10 @@ public class GLAcctBalRpt3 extends javax.swing.JPanel {
     public void chartExpAndInc() {
          try {
           
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
-            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 java.util.Date now = new java.util.Date();
                  DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");       
                   Calendar cal = new GregorianCalendar();
@@ -255,8 +253,15 @@ public class GLAcctBalRpt3 extends javax.swing.JPanel {
               } catch (SQLException s) {
                   MainFrame.bslog(s);
                   bsmf.MainFrame.show(getMessageTag(1016, this.getClass().getEnclosingMethod().getName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -549,12 +554,10 @@ public class GLAcctBalRpt3 extends javax.swing.JPanel {
 
     // chartlabel.setVisible(false);
 try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
                 int qty = 0;
                 double dol = 0;
                 int i = 0;
@@ -696,8 +699,15 @@ try {
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show(getMessageTag(1016, this.getClass().getEnclosingMethod().getName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }

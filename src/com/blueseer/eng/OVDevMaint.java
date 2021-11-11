@@ -27,7 +27,12 @@ SOFTWARE.
 package com.blueseer.eng;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.db;
+import static bsmf.MainFrame.pass;
+import static bsmf.MainFrame.url;
+import static bsmf.MainFrame.user;
 import com.blueseer.utl.OVData;
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -63,13 +68,10 @@ public class OVDevMaint extends javax.swing.JPanel {
         log.setText("");
         try {
 
-           Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-          
+           Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-               
-                ResultSet res = null;
                 String mystring = "";
                   res = st.executeQuery("Select * from ov_devm where ovdm_id = " + "'" + parent.toString() + "'" + ";" );
                     while (res.next()) {
@@ -82,8 +84,15 @@ public class OVDevMaint extends javax.swing.JPanel {
                       } catch (SQLException s) {
                           MainFrame.bslog(s);
                 bsmf.MainFrame.show("Cannot retrieve notes from ov_devd");
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -95,13 +104,10 @@ public class OVDevMaint extends javax.swing.JPanel {
         log.setText("");
         try {
 
-           Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-          
+          Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-               
-                ResultSet res = null;
                 String mystring = "";
                   res = st.executeQuery("Select * from ov_devd where ovdd_parent = " + "'" + tbid.getText().toString() + "'" + ";" );
                     while (res.next()) {
@@ -111,8 +117,15 @@ public class OVDevMaint extends javax.swing.JPanel {
                       } catch (SQLException s) {
                           MainFrame.bslog(s);
                 bsmf.MainFrame.show("Cannot retrieve notes from ov_devd");
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -278,13 +291,10 @@ public class OVDevMaint extends javax.swing.JPanel {
     private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
         try {
 
-           Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-          
+           Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-               
-                ResultSet res = null;
                 boolean proceed = true;
                 int i = 0;
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
@@ -332,8 +342,15 @@ public class OVDevMaint extends javax.swing.JPanel {
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show("Cannot add or update ov_devm");
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -349,13 +366,10 @@ public class OVDevMaint extends javax.swing.JPanel {
     private void btaddnoteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddnoteActionPerformed
        try {
 
-           Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-          
+           Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-               
-                ResultSet res = null;
                 boolean proceed = false;
                 int i = 0;
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
@@ -388,8 +402,15 @@ public class OVDevMaint extends javax.swing.JPanel {
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show("Cannot note to ov_devd");
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }

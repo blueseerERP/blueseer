@@ -27,9 +27,13 @@ SOFTWARE.
 package com.blueseer.eng;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.db;
+import static bsmf.MainFrame.pass;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
+import static bsmf.MainFrame.url;
+import static bsmf.MainFrame.user;
 import com.blueseer.inv.invData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
@@ -64,6 +68,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -765,9 +770,8 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
      
      try {
 
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            Statement st = bsmf.MainFrame.con.createStatement();
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
             ResultSet res = null;
             try {
                 
@@ -822,9 +826,13 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
                 MainFrame.bslog(s);
                  m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordSQLError};  
             } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
         } catch (Exception e) {
             MainFrame.bslog(e);
@@ -838,10 +846,8 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
      String[] m = new String[2];
      
      try {
-            boolean proceed = true;
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            Statement st = bsmf.MainFrame.con.createStatement();
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
             try {
                     st.executeUpdate("update ecn_mstr set ecn_poc = " + "'" + ddengineer.getSelectedItem().toString() + "'" + ","
                             + "ecn_mstrtask = " + "'" + ddtask.getSelectedItem().toString() + "'" + ","
@@ -880,8 +886,10 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
                 MainFrame.bslog(s);
                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError};  
             } finally {
-               if (st != null) st.close();
-               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
         } catch (Exception e) {
             MainFrame.bslog(e);
@@ -897,9 +905,8 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
         if (proceed) {
         try {
 
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            Statement st = bsmf.MainFrame.con.createStatement();
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
             try {
                    int i = st.executeUpdate("delete from ecn_mstr where ecn_nbr = " + "'" + x[0] + "'" + ";");
                    st.executeUpdate("delete from ecn_task where ecnt_nbr = " + "'" + x[0] + "'" + ";");
@@ -912,8 +919,10 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
                  MainFrame.bslog(s); 
                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordSQLError};  
             } finally {
-               if (st != null) st.close();
-               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
         } catch (Exception e) {
             MainFrame.bslog(e);
@@ -930,9 +939,8 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
        
         try {
 
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            Statement st = bsmf.MainFrame.con.createStatement();
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
             ResultSet res = null;
             try {
                 
@@ -959,9 +967,13 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
                 MainFrame.bslog(s);
                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
             } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
         } catch (Exception e) {
             MainFrame.bslog(e);
@@ -1028,16 +1040,15 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
             int mypo = 0;
             int mysequence = Integer.valueOf(thissequence);
             taskmodel.setRowCount(0);
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
             int i = 0;
             int nextsequence = 0;
             boolean islast = false;
             boolean isEmail = false;
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-
                 // OK...lets determine if last sequence
                 
                res = st.executeQuery("select * from ecn_task left outer join ecn_ctrl on ecnc_email <> '' where ecnt_nbr = "
@@ -1126,8 +1137,15 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -1137,11 +1155,10 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
         
        int i = 0;
         try{
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
                 res = st.executeQuery("select * from ecn_task " +
                         " inner join ecn_mstr on ecn_nbr = ecnt_nbr " +
                         " inner join user_mstr on " +
@@ -1163,8 +1180,15 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
             catch (SQLException s){
                 MainFrame.bslog(s);
                  bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            bsmf.MainFrame.con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1180,14 +1204,12 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
         taskmodel.setNumRows(0);
         try {
      
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
             int i = 0;
            
-            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
                
                 res = st.executeQuery("select * from task_det where taskd_id = " + "'" + task + "'" + " order by taskd_sequence;");
                 while (res.next()) {
@@ -1198,8 +1220,15 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -1208,15 +1237,12 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
     public void getNotes(String ecn, String seq) {
         tanotes.setText("");
         try {
-     
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
             int i = 0;
-           
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
                
                 res = st.executeQuery("select * from ecn_task where ecnt_nbr = " + "'" + ecn + "'" 
                         + " and ecnt_seq = " + "'" + seq + "'" 
@@ -1228,8 +1254,15 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -1238,14 +1271,10 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
     public void updateNotes(String ecn, String seq) {
        
         try {
-     
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
             int i = 0;
-           
-            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
                
                 st.executeUpdate(" update ecn_task " +
                         " set ecnt_notes = " + "'" + tanotes.getText().replace("'", "") + "'" +
@@ -1259,8 +1288,12 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }

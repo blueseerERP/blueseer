@@ -31,7 +31,6 @@ import com.blueseer.shp.*;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import static bsmf.MainFrame.checkperms;
-import static bsmf.MainFrame.con;
 import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.defaultDecimalSeparator;
 import java.awt.Color;
@@ -92,6 +91,7 @@ import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.Connection;
 import java.text.DecimalFormatSymbols;
 import java.util.Calendar;
 import java.util.Enumeration;
@@ -272,12 +272,11 @@ public class PayRollMaint extends javax.swing.JPanel {
           try {
         java.util.Date now = new java.util.Date();
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-           Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-          
+           Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
+                
                 boolean proceed = true;
                 int i = 0;
                 double netcash = 0;
@@ -401,8 +400,15 @@ public class PayRollMaint extends javax.swing.JPanel {
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 message = new String[]{"1", "Cannot commit PayRoll"};
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -415,11 +421,10 @@ public class PayRollMaint extends javax.swing.JPanel {
      public void updateClockRecords(String empnbr, String fromdate, String todate, String checknbr) {
           try {
 
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
                 int i = 0;
                 String blanket = "";
                 st.executeUpdate("update time_clock set " +
@@ -433,8 +438,15 @@ public class PayRollMaint extends javax.swing.JPanel {
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show(getMessageTag(1016,this.getClass().getEnclosingMethod().getName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -447,11 +459,10 @@ public class PayRollMaint extends javax.swing.JPanel {
         
         try {
 
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
                 int i = 0;
                 String html = "<html><body><table><tr><td align='right' style='color:blue;font-size:20px;'>Earnings:</td><td></td></tr></table>";
                 String codedesc = "";
@@ -492,8 +503,15 @@ public class PayRollMaint extends javax.swing.JPanel {
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show(getMessageTag(1016,this.getClass().getEnclosingMethod().getName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -515,11 +533,10 @@ public class PayRollMaint extends javax.swing.JPanel {
         
         try {
 
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
                 int i = 0;
                 String html = "<html><body><table><tr><td align='right' style='color:blue;font-size:20px;'>Deductions:</td><td></td></tr></table>";
                 res = st.executeQuery("SELECT paypd_desc, paypd_id, paypd_parentcode, paypd_amt from pay_profdet inner join " +
@@ -579,8 +596,15 @@ public class PayRollMaint extends javax.swing.JPanel {
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show(getMessageTag(1016,this.getClass().getEnclosingMethod().getName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -602,11 +626,10 @@ public class PayRollMaint extends javax.swing.JPanel {
         
         try {
 
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
                 int i = 0;
                 String ispaid = isnew ? "0" : "1";
                 
@@ -650,8 +673,15 @@ public class PayRollMaint extends javax.swing.JPanel {
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show(getMessageTag(1016,this.getClass().getEnclosingMethod().getName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -661,11 +691,10 @@ public class PayRollMaint extends javax.swing.JPanel {
     public boolean getPaymentBatch(String batch) {
         boolean myreturn = true;
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 int i = 0;
                    double amount = 0;
                    tbid.setText(batch);
@@ -706,8 +735,15 @@ public class PayRollMaint extends javax.swing.JPanel {
             catch (SQLException s){
                  MainFrame.bslog(s);
                  bsmf.MainFrame.show(getMessageTag(1016,this.getClass().getEnclosingMethod().getName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -719,11 +755,10 @@ public class PayRollMaint extends javax.swing.JPanel {
      public boolean processNACHAFile(String batch) throws MalformedURLException, SmbException, IOException {
         boolean myreturn = true;
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 java.util.Date now = new java.util.Date();
                 DateFormat dfdatetm = new SimpleDateFormat("yyMMddhhmm");
                 DateFormat dfdate = new SimpleDateFormat("yyMMdd");
@@ -881,8 +916,15 @@ public class PayRollMaint extends javax.swing.JPanel {
             catch (SQLException s){
                  MainFrame.bslog(s);
                  myreturn = false;
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -1523,13 +1565,12 @@ public class PayRollMaint extends javax.swing.JPanel {
          
          mymodel.setRowCount(0);
          try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            Statement st2 = con.createStatement();
+            ResultSet res2 = null;
             try{
-                Statement st = con.createStatement();
-                Statement st2 = con.createStatement();
-                ResultSet res = null;
-                ResultSet res2 = null;
              
                    double amount = 0;
                    double hours = 0;
@@ -1632,8 +1673,21 @@ public class PayRollMaint extends javax.swing.JPanel {
                  MainFrame.bslog(s);
                  bsmf.MainFrame.show(getMessageTag(1016,this.getClass().getEnclosingMethod().getName()));
                  
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (res2 != null) {
+                    res2.close();
+                }
+                if (st != null) {
+                    st.close();
+                }                
+                if (st2 != null) {
+                    st2.close();
+                }
+                con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);

@@ -29,9 +29,13 @@ import bsmf.MainFrame;
 import com.blueseer.utl.BlueSeerUtils;
 import static bsmf.MainFrame.backgroundcolor;
 import static bsmf.MainFrame.backgroundpanel;
+import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.defaultDecimalSeparator;
+import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
+import static bsmf.MainFrame.url;
+import static bsmf.MainFrame.user;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
@@ -50,6 +54,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -94,11 +99,10 @@ public class PayProfileMaint extends javax.swing.JPanel {
     public void getProfile(String code) {
          try {
 
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
                 
                 int i = 0;
                     res = st.executeQuery("SELECT * FROM  pay_profile where payp_code = " + "'" + code + "'" + ";");
@@ -125,8 +129,15 @@ public class PayProfileMaint extends javax.swing.JPanel {
             catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show(getMessageTag(1016, this.getClass().getEnclosingMethod().getName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -585,11 +596,10 @@ public class PayProfileMaint extends javax.swing.JPanel {
         
         try {
 
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
                 
                 int i = 0;
                     
@@ -619,8 +629,15 @@ public class PayProfileMaint extends javax.swing.JPanel {
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show(getMessageTag(1016, this.getClass().getEnclosingMethod().getName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -673,11 +690,10 @@ public class PayProfileMaint extends javax.swing.JPanel {
         
         try {
 
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
           
                 int i = 0;
                 
@@ -717,8 +733,15 @@ public class PayProfileMaint extends javax.swing.JPanel {
             } catch (SQLException s) {
                 MainFrame.bslog(s);                  
                 bsmf.MainFrame.show(getMessageTag(1016, this.getClass().getEnclosingMethod().getName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -732,11 +755,10 @@ public class PayProfileMaint extends javax.swing.JPanel {
         if (proceed) {
             try {
 
-                Class.forName(bsmf.MainFrame.driver).newInstance();
-                bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-                ResultSet res = null;
-                try {
-                    Statement st = bsmf.MainFrame.con.createStatement();
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
                     int k = 0;
                     res = st.executeQuery("SELECT emp_profile FROM  emp_mstr where emp_profile = " + "'" + tbprofilecode.getText() + "'" + ";");
                     while (res.next()) {
@@ -756,8 +778,15 @@ public class PayProfileMaint extends javax.swing.JPanel {
                 } catch (SQLException s) {
                     MainFrame.bslog(s);
                     bsmf.MainFrame.show(getMessageTag(1016, this.getClass().getEnclosingMethod().getName()));
+                } finally {
+                if (res != null) {
+                    res.close();
                 }
-                bsmf.MainFrame.con.close();
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
             } catch (Exception e) {
                 MainFrame.bslog(e);
             }
