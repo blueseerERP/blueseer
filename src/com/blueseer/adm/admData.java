@@ -189,6 +189,94 @@ public class admData {
         }
         return m;
     }
+        
+    public static String[] addUpdateOVMstr(ov_mstr x) {
+        int rows = 0;
+        String[] m = new String[2];
+        String sqlSelect = "SELECT * FROM  ov_mstr"; // there should always be only 1 or 0 records in ov_mstr
+        String sqlInsert = "insert into ov_mstr (ov_site, ov_cc, ov_wh, ov_currency, ov_labelprinter) "
+                        + " values (?,?,?,?,?); "; 
+        String sqlUpdate = "update ov_mstr set ov_site = ?, ov_cc = ?, ov_wh = ?, "
+                         + "ov_currency = ?, ov_labelprinter = ? ; ";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+             PreparedStatement ps = con.prepareStatement(sqlSelect);) {
+          try (ResultSet res = ps.executeQuery();
+               PreparedStatement psi = con.prepareStatement(sqlInsert);
+               PreparedStatement psu = con.prepareStatement(sqlUpdate);) {  
+            if (! res.isBeforeFirst()) {
+            psi.setString(1, x.ov_site);
+            psi.setString(2, x.ov_cc);
+            psi.setString(3, x.ov_wh);
+            psi.setString(4, x.ov_currency);
+            psi.setString(5, x.ov_labelprinter);
+             rows = psi.executeUpdate();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+            } else {
+            psu.setString(1, x.ov_site);
+            psu.setString(2, x.ov_cc);
+            psu.setString(3, x.ov_wh);
+            psu.setString(4, x.ov_currency);
+            psu.setString(5, x.ov_labelprinter); 
+            rows = psu.executeUpdate();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};    
+            }
+          } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+          }
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+   
+    public static ov_mstr getOVMstr(String[] x) {
+        ov_mstr r = null;
+        String[] m = new String[2];
+        String sql = "select * from ov_mstr ;";  // will always be only 0 or 1 records
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql);) {
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new ov_mstr(m);  // minimum return
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new ov_mstr(m, res.getString("ov_site"), res.getString("ov_cc"),
+                        res.getString("ov_wh"), res.getString("ov_currency"), res.getString("ov_labelprinter"));
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getClassName() + "." + Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new ov_mstr(m);
+        }
+        return r;
+    }
+  
+    public static String[] deleteOVMstr(ov_mstr x) {
+        String[] m;
+        String sqlDelete = "delete from ov_mstr ;"; // should only be at most 1 record...not sure this function will ever be used 
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+             PreparedStatement ps = con.prepareStatement(sqlDelete);) {
+             int rows = ps.executeUpdate();
+             if (rows > 0) {
+                m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess}; 
+             } else {
+                m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordError}; 
+             }
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+    
+    
+    
     
     // misc
     public static void updateDefaultCurrency(String x) {
@@ -239,5 +327,11 @@ public class admData {
         }
     }
 
+    public record ov_mstr(String[] m, String ov_site, String ov_cc, String ov_wh, 
+        String ov_currency, String ov_labelprinter) {
+        public ov_mstr(String[] m) {
+            this(m, "", "", "", "", "");
+        }
+    }
 
 }

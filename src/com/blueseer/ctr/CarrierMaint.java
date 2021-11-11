@@ -702,7 +702,7 @@ public class CarrierMaint extends javax.swing.JPanel implements IBlueSeer {
         jLabel3.setName("lblacct"); // NOI18N
 
         btupdate.setText("update");
-        btupdate.setName("btdelete"); // NOI18N
+        btupdate.setName("btupdate"); // NOI18N
         btupdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btupdateActionPerformed(evt);

@@ -32,6 +32,9 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.adm.admData.addUpdateOVMstr;
+import static com.blueseer.adm.admData.getOVMstr;
+import com.blueseer.adm.admData.ov_mstr;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callCurrencySet;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -75,7 +78,7 @@ public class DefaultMaint extends javax.swing.JPanel implements IBlueSeerc {
 
     
     // global variable declarations
-                boolean isLoad = false;
+        boolean isLoad = false;
     
     
     // interface functions implemented
@@ -116,18 +119,12 @@ public class DefaultMaint extends javax.swing.JPanel implements IBlueSeerc {
        public void done() {
             try {
             String[] message = get();
-           
             BlueSeerUtils.endTask(message);
-          
-            
             } catch (Exception e) {
                 MainFrame.bslog(e);
-            } 
-           
+            }
         }
     }  
-      
-      
        Task z = new Task(x, y); 
        z.execute(); 
        
@@ -213,95 +210,30 @@ public class DefaultMaint extends javax.swing.JPanel implements IBlueSeerc {
     }
     
     public String[] updateRecord(String[] x) {
-     String[] m = new String[2];
-     
-     try {
-           
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                
-                    
-                
-                    int i = 0;
-                    res = st.executeQuery("SELECT *  FROM  ov_mstr;");
-                    while (res.next()) {
-                        i++;
-                    }
-                    if (i == 0) {
-                    st.executeUpdate("insert into ov_mstr (ov_site, ov_cc, ov_wh, ov_currency, ov_labelprinter) values (" + 
-                            "'" + tbsite.getText() + "'" + "," +
-                            "'" + tbcc.getText() + "'" + "," +
-                            "'" + tbwh.getText() + "'" + "," +
-                            "'" + tbcurrency.getText() + "'" +  "," +
-                            "'" + tblabelprinter.getText() + "'" +        
-                            ") ;");              
-                          m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
-                    } else {
-                    st.executeUpdate("update ov_mstr set ov_site = " + "'" + tbsite.getText() + "'"  + "," +
-                            " ov_cc = " + "'" + tbcc.getText() + "'" + "," +
-                            " ov_wh = " + "'" + tbwh.getText() + "'" + "," +
-                            " ov_currency = " + "'" + tbcurrency.getText() + "'" + "," +
-                            " ov_labelprinter = " + "'" + tblabelprinter.getText() + "'"           
-                            + ";");  
-                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
-                    }
-                    
-                    
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};  
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1020, Thread.currentThread().getStackTrace()[1].getMethodName())};
-        }
-     
+     String[] m = addUpdateOVMstr(createRecord());
      return m;
      }
-      
-    public String[] getRecord(String[] x) {
-       String[] m = new String[2];
-       
-        try {
-
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                
-                int i = 0;
-                res = st.executeQuery("select * from ov_mstr;");
-                while (res.next()) {
-                    i++;
-                    tbsite.setText(res.getString("ov_site"));
-                    tbcc.setText(res.getString("ov_cc"));
-                    tbwh.setText(res.getString("ov_wh"));
-                    tbcurrency.setText(res.getString("ov_currency"));
-                    tblabelprinter.setText(res.getString("ov_labelprinter"));
-                }
-               
-                // set Action if Record found (i > 0)
-                m = setAction(i);
-                
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};  
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1020, Thread.currentThread().getStackTrace()[1].getMethodName())};  
-        }
-      return m;
+    
+    public ov_mstr createRecord() {
+        ov_mstr x = new ov_mstr(null, 
+                tbsite.getText(),
+                tbcc.getText(),  
+                tbwh.getText(),
+                tbcurrency.getText(),
+                tblabelprinter.getText()
+        );
+        return x;
+    }
+    
+    public String[] getRecord(String[] key) {
+       ov_mstr x = getOVMstr(key);
+      tbsite.setText(x.ov_site());
+      tbcc.setText(x.ov_cc());
+      tbwh.setText(x.ov_wh());
+      tbcurrency.setText(x.ov_currency());
+      tblabelprinter.setText(x.ov_labelprinter());
+     // setAction(x.m());  no need to call for default record panels
+      return x.m();  
     }
     
     
@@ -327,7 +259,6 @@ public class DefaultMaint extends javax.swing.JPanel implements IBlueSeerc {
         jLabel4 = new javax.swing.JLabel();
         tblabelprinter = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        bttest = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -357,13 +288,6 @@ public class DefaultMaint extends javax.swing.JPanel implements IBlueSeerc {
         jLabel5.setText("Default Label Printer:");
         jLabel5.setName("lblprinter"); // NOI18N
 
-        bttest.setText("test");
-        bttest.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bttestActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -371,25 +295,22 @@ public class DefaultMaint extends javax.swing.JPanel implements IBlueSeerc {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap(39, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(tbwh, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tbcurrency, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(tbsite, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(tbwh, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tbcurrency, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(tbsite, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btupdate))
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(tblabelprinter, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(tbcc, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 93, Short.MAX_VALUE))))
-                    .addComponent(bttest, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addComponent(btupdate))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(tblabelprinter, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(tbcc, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 93, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -416,9 +337,7 @@ public class DefaultMaint extends javax.swing.JPanel implements IBlueSeerc {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tblabelprinter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(bttest)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(45, Short.MAX_VALUE))
         );
 
         add(jPanel1);
@@ -431,14 +350,8 @@ public class DefaultMaint extends javax.swing.JPanel implements IBlueSeerc {
         executeTask("update", null);
     }//GEN-LAST:event_btupdateActionPerformed
 
-    private void bttestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bttestActionPerformed
-        bsmf.MainFrame.show(Locale.getDefault().toString());
-        callCurrencySet();
-    }//GEN-LAST:event_bttestActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton bttest;
     private javax.swing.JButton btupdate;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

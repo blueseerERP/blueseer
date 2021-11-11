@@ -368,16 +368,12 @@ public class UserMaint extends javax.swing.JPanel implements IBlueSeer {
     }
     
     public String[] addRecord(String[] x) {
-     String[] m = new String[2];
-     m = addUserMstr(createRecord());
-     initvars(null);
+     String[] m = addUserMstr(createRecord());
      return m;
      }
      
     public String[] updateRecord(String[] x) {
-     String[] m = new String[2];
-     m = updateUserMstr(createRecord());
-     initvars(null);
+     String[] m = updateUserMstr(createRecord());
      return m;
      }
      
