@@ -26,9 +26,13 @@ SOFTWARE.
 package com.blueseer.sch;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.defaultDecimalSeparator;
+import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
+import static bsmf.MainFrame.url;
+import static bsmf.MainFrame.user;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.IBlueSeer;
@@ -37,6 +41,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -452,9 +457,8 @@ public class ForecastMaint extends javax.swing.JPanel implements IBlueSeer {
      
      try {
 
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            Statement st = bsmf.MainFrame.con.createStatement();
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
             ResultSet res = null;
             try {
                  java.util.Date now = new java.util.Date();
@@ -549,7 +553,7 @@ public class ForecastMaint extends javax.swing.JPanel implements IBlueSeer {
             } finally {
                if (res != null) res.close();
                if (st != null) st.close();
-               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
+               if (con != null) con.close();
             }
         } catch (Exception e) {
             MainFrame.bslog(e);
@@ -566,9 +570,8 @@ public class ForecastMaint extends javax.swing.JPanel implements IBlueSeer {
             java.util.Date now = new java.util.Date();
             DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
             boolean proceed = true;
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            Statement st = bsmf.MainFrame.con.createStatement();
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
             try {
                      st.executeUpdate("update fct_mstr "
                             + "set " + "fct_chg_userid = " + "'" + bsmf.MainFrame.userid + "'" + "," +
@@ -642,7 +645,7 @@ public class ForecastMaint extends javax.swing.JPanel implements IBlueSeer {
                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError};  
             } finally {
                if (st != null) st.close();
-               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
+               if (con != null) con.close();
             }
         } catch (Exception e) {
             MainFrame.bslog(e);
@@ -658,9 +661,8 @@ public class ForecastMaint extends javax.swing.JPanel implements IBlueSeer {
         if (proceed) {
         try {
 
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            Statement st = bsmf.MainFrame.con.createStatement();
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
             try {
                 
                 
@@ -681,7 +683,7 @@ public class ForecastMaint extends javax.swing.JPanel implements IBlueSeer {
                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordSQLError};  
             } finally {
                if (st != null) st.close();
-               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
+               if (con != null) con.close();
             }
         } catch (Exception e) {
             MainFrame.bslog(e);
@@ -698,9 +700,8 @@ public class ForecastMaint extends javax.swing.JPanel implements IBlueSeer {
        
         try {
 
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            Statement st = bsmf.MainFrame.con.createStatement();
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
             ResultSet res = null;
             try {
                 
@@ -787,7 +788,7 @@ public class ForecastMaint extends javax.swing.JPanel implements IBlueSeer {
             } finally {
                if (res != null) res.close();
                if (st != null) st.close();
-               if (bsmf.MainFrame.con != null) bsmf.MainFrame.con.close();
+               if (con != null) con.close();
             }
         } catch (Exception e) {
             MainFrame.bslog(e);

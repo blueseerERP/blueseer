@@ -27,6 +27,7 @@ package com.blueseer.tca;
 
 import bsmf.MainFrame;
 import static bsmf.MainFrame.checkperms;
+import static bsmf.MainFrame.db;
 import com.blueseer.utl.OVData;
 import java.awt.FileDialog;
 import java.awt.Frame;
@@ -47,8 +48,6 @@ import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import static bsmf.MainFrame.con;
-import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.mydialog;
 import static bsmf.MainFrame.pass;
@@ -56,6 +55,7 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.utl.BlueSeerUtils;
+import java.sql.Connection;
 import javax.swing.ImageIcon;
 
 /**
@@ -294,15 +294,10 @@ public class ClockDetRpt extends javax.swing.JPanel {
         mymodel.setRowCount(0);
     
 try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
-                   
-          
-                       
-                
                
                  DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                
@@ -356,8 +351,15 @@ try {
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show("Cannot execute sql query for TimeClock Report");
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }

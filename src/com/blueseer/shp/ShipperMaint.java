@@ -27,9 +27,13 @@ package com.blueseer.shp;
 
 import bsmf.MainFrame;
 import static bsmf.MainFrame.bslog;
+import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.defaultDecimalSeparator;
+import static bsmf.MainFrame.pass;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.tags;
+import static bsmf.MainFrame.url;
+import static bsmf.MainFrame.user;
 import com.blueseer.ctr.cusData;
 import com.blueseer.inv.invData;
 import static com.blueseer.shp.shpData.addShipperTransaction;
@@ -66,6 +70,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.Connection;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Locale;
@@ -592,14 +597,12 @@ public class ShipperMaint extends javax.swing.JPanel {
         initvars(null);
         try {
      
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            int i = 0;
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;int i = 0;
             int d = 0;
             String uniqpo = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
                 String status = "";
 
                 res = st.executeQuery("select * from ship_mstr left outer join cms_det on cms_shipto = sh_ship where sh_id = " + "'" + myshipper + "'" + ";");
@@ -679,8 +682,15 @@ public class ShipperMaint extends javax.swing.JPanel {
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -707,12 +717,10 @@ public class ShipperMaint extends javax.swing.JPanel {
     
     public void getOrderInfoByPO(String cust, String po, String item) {
         try {
-             Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-          
+             Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
                 
                 
                 res = st.executeQuery("select so_nbr, sod_line, sod_wh, sod_loc, sod_netprice, sod_shipped_qty, (sod_ord_qty - sod_shipped_qty) as qty from sod_det inner join so_mstr on so_nbr = sod_nbr where so_cust = " + "'" + cust + "'" +
@@ -730,8 +738,15 @@ public class ShipperMaint extends javax.swing.JPanel {
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -772,13 +787,10 @@ public class ShipperMaint extends javax.swing.JPanel {
     
     public void setLabelByShipTo(String shipto) {
         try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            int i = 0;
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;int i = 0;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
 
 
                 res = st.executeQuery("select * from cms_det where cms_shipto = " + "'" + shipto + "'" + ";");
@@ -790,8 +802,15 @@ public class ShipperMaint extends javax.swing.JPanel {
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -800,13 +819,11 @@ public class ShipperMaint extends javax.swing.JPanel {
     public void setCustShipCodes(String nbr) {
         try {
 
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             int i = 0;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-
 
                 res = st.executeQuery("select * from so_mstr inner join cms_det on cms_shipto = so_ship where so_nbr = " + "'" + nbr + "'" + ";");
                 while (res.next()) {
@@ -818,8 +835,15 @@ public class ShipperMaint extends javax.swing.JPanel {
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -832,12 +856,11 @@ public class ShipperMaint extends javax.swing.JPanel {
         
         try {
 
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             int i = 0;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
 
 
                 res = st.executeQuery("select * from cms_det inner join cm_mstr on cm_code = cms_code where cms_shipto = " + "'" + shipto + "'" + ";");
@@ -873,8 +896,15 @@ public class ShipperMaint extends javax.swing.JPanel {
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -882,12 +912,10 @@ public class ShipperMaint extends javax.swing.JPanel {
         
     public void setDetail(String nbr, String line) {
          try {
-             Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-          
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
                 
                 tbitem.setText("");
                 tbpo.setText("");
@@ -919,8 +947,15 @@ public class ShipperMaint extends javax.swing.JPanel {
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -929,13 +964,10 @@ public class ShipperMaint extends javax.swing.JPanel {
     public void setShipperByOrder(String myorder) {
          disableradiobuttons();
         try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            int i = 0;
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;int i = 0;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
                 boolean proceed = true;
                 int qtyavailable = 0;
                 status = "";
@@ -1042,26 +1074,36 @@ public class ShipperMaint extends javax.swing.JPanel {
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
     }
 
-    public void setSOstatus(javax.swing.JTable mytable) throws SQLException {
-            
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+    public void setSOstatus(javax.swing.JTable mytable) {
+    try {  
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             int i = 0;
-             ResultSet res = null;
-             Statement st = bsmf.MainFrame.con.createStatement();
              String sonbr = null;
              int qty = 0;
              boolean iscomplete = true;
              String sodstatus = "";
              
-        // find the sod record for each line / So pair
-        for (int j = 0; j < mytable.getRowCount(); j++) {
+         
+        try {
+                 
+                  // find the sod record for each line / So pair
+          for (int j = 0; j < mytable.getRowCount(); j++) {
                //    mytable.getModel().getValueAt(j, 0);  
              i = 0;
              String thispart = mytable.getModel().getValueAt(j, 0).toString();
@@ -1071,7 +1113,6 @@ public class ShipperMaint extends javax.swing.JPanel {
              String thislinestatus = "";
              int thisshippedtotal = 0;
             
-             try {
             
                  /* ok....let's get the current state of this line item on the sales order */
                  res = st.executeQuery("select * from sod_det where sod_nbr = " + "'" + thisorder + "'" + 
@@ -1088,8 +1129,6 @@ public class ShipperMaint extends javax.swing.JPanel {
                    
                 }
                  
-                 
-                 
                  /* ok...now lets update the status of this sod_det line item */
                  st.executeUpdate("update sod_det set sod_shipped_qty = " + "'" + thisshippedtotal + "'" + 
                                   "," + " sod_status = " + "'" + thislinestatus + "'" +
@@ -1098,14 +1137,24 @@ public class ShipperMaint extends javax.swing.JPanel {
                                   " and sod_po = " + "'" + thispo + "'" +
                      ";");
                  
-                 
+              } // foreach    
                  
              } catch (SQLException s) {
                  MainFrame.bslog(s);
-             bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-             }
-          
-         }
+                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+             } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
+        
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
     }
     
     public void lookUpFrame() {
@@ -2249,11 +2298,10 @@ public class ShipperMaint extends javax.swing.JPanel {
     private void bteditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bteditActionPerformed
         try {
              DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
                 boolean proceed = true;
                 int i = 0;
                 int d = 0;
@@ -2340,8 +2388,15 @@ public class ShipperMaint extends javax.swing.JPanel {
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }

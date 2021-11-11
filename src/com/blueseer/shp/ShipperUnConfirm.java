@@ -182,15 +182,7 @@ public class ShipperUnConfirm extends javax.swing.JPanel {
 
     private void btConfirmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btConfirmActionPerformed
         try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-           
-
-                OVData.unconfirmShipment(tbshipid.getText(), dcdate.getDate() );
-               
-           
-            bsmf.MainFrame.con.close();
+            OVData.unconfirmShipment(tbshipid.getText(), dcdate.getDate() );
         } catch (Exception e) {
             MainFrame.bslog(e);
         }

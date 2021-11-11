@@ -27,6 +27,10 @@ SOFTWARE.
 package com.blueseer.utl;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.db;
+import static bsmf.MainFrame.pass;
+import static bsmf.MainFrame.url;
+import static bsmf.MainFrame.user;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.DataOutputStream;
@@ -38,6 +42,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -162,11 +167,8 @@ public class test extends javax.swing.JPanel {
     private void btjasperActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btjasperActionPerformed
        
   try {
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            
 
                 HashMap hm = new HashMap();
                 hm.put("REPORT_TITLE", "SHIPPER");
@@ -176,19 +178,14 @@ public class test extends javax.swing.JPanel {
                // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_part, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
                 File mytemplate = new File("jasper/ps_generic_multi.jasper");
-              //  JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, hm, bsmf.MainFrame.con );
-                JasperPrint jasperPrint = JasperFillManager.fillReport(mytemplate.getPath(), hm, bsmf.MainFrame.con );
+                JasperPrint jasperPrint = JasperFillManager.fillReport(mytemplate.getPath(), hm, con );
                 JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/b1.pdf");
          
             JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
             jasperViewer.setVisible(true);
                 
                 
-            } catch (SQLException s) {
-                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("sql problem during execution");
-            }
-            bsmf.MainFrame.con.close();
+            con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -272,12 +269,8 @@ MainFrame.bslog(e);
 
     private void btjobticketActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btjobticketActionPerformed
          try {
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            
                 HashMap hm = new HashMap();
                 hm.put("REPORT_TITLE", "MASTER TICKET");
                  hm.put("SUBREPORT_DIR", "jasper/");
@@ -286,19 +279,14 @@ MainFrame.bslog(e);
                // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_part, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
                 File mytemplate = new File("jasper/jobticket.jasper");
-              //  JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, hm, bsmf.MainFrame.con );
-                JasperPrint jasperPrint = JasperFillManager.fillReport(mytemplate.getPath(), hm, bsmf.MainFrame.con );
+                JasperPrint jasperPrint = JasperFillManager.fillReport(mytemplate.getPath(), hm, con );
                 JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/jobticket.pdf");
          
             JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
             jasperViewer.setVisible(true);
                 
                 
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("sql problem during execution");
-            }
-            bsmf.MainFrame.con.close();
+           con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }

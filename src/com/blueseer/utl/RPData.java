@@ -26,7 +26,6 @@ SOFTWARE.
 package com.blueseer.utl;
 
 import bsmf.MainFrame;
-import static bsmf.MainFrame.con;
 import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.pass;

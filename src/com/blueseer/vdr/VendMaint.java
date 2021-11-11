@@ -26,8 +26,12 @@ SOFTWARE.
 package com.blueseer.vdr;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.db;
+import static bsmf.MainFrame.pass;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.tags;
+import static bsmf.MainFrame.url;
+import static bsmf.MainFrame.user;
 import com.blueseer.ctr.cusData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
@@ -53,6 +57,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -482,11 +487,10 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeer {
          String[] m = new String[2];
          try {
            
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
                 
                 contactmodel.setRowCount(0);
                 int i = 0;
@@ -541,8 +545,15 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeer {
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};  
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
             m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1020, Thread.currentThread().getStackTrace()[1].getMethodName())};  
@@ -566,10 +577,9 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeer {
         if (proceed) {
         try {
 
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
               
                    int i = st.executeUpdate("delete from vd_mstr where vd_addr = " + "'" + tbkey.getText() + "'" + ";");
                    st.executeUpdate("delete from vpr_mstr where vpr_vend = " + "'" + tbkey.getText() + "'" + ";");
@@ -582,8 +592,12 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeer {
                 } catch (SQLException s) {
                  MainFrame.bslog(s); 
                 m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};  
+            } finally {
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
             m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1020, Thread.currentThread().getStackTrace()[1].getMethodName())};
@@ -685,12 +699,10 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeer {
     public void addContact(String vend) {
         try {
 
-           Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-          
+           Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
                 boolean proceed = true;
                 int i = 0;
 
@@ -716,8 +728,15 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeer {
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 BlueSeerUtils.message(new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordSQLError});
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -726,12 +745,10 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeer {
     public void editContact(String vend, String z) {
         try {
 
-           Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-          
+           Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
                 boolean proceed = true;
                 int i = 0;
 
@@ -755,8 +772,15 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeer {
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 BlueSeerUtils.message(new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError});
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -765,12 +789,10 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeer {
     public void deleteContact(String vend, String z) {
         try {
 
-           Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-          
+           Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
                 boolean proceed = true;
                 int i = 0;
 
@@ -783,8 +805,15 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeer {
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 BlueSeerUtils.message(new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordSQLError});
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -801,11 +830,10 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeer {
       contactmodel.setRowCount(0);
        try {
             
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
                 res = st.executeQuery("select * from vdc_det where vdc_code = " + "'" + vend + "'" + ";");
                 while (res.next()) {
                     contactmodel.addRow(new Object[]{res.getString("vdc_id"), res.getString("vdc_type"), res.getString("vdc_name"), res.getString("vdc_phone"), res.getString("vdc_fax"), res.getString("vdc_email") }); 
@@ -815,8 +843,15 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeer {
                  } catch (SQLException s) {
                 MainFrame.bslog(s);
                 BlueSeerUtils.message(new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError});
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }

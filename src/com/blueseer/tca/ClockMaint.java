@@ -27,9 +27,14 @@ SOFTWARE.
 package com.blueseer.tca;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.db;
+import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
+import static bsmf.MainFrame.url;
+import static bsmf.MainFrame.user;
 import com.blueseer.utl.BlueSeerUtils;
 import java.awt.Color;
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -114,11 +119,10 @@ public class ClockMaint extends javax.swing.JPanel {
         boolean hasRec = false;
         
         try{
-         Class.forName(bsmf.MainFrame.driver).newInstance();
-         bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url+bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-        try{
-         Statement st = bsmf.MainFrame.con.createStatement();
-        ResultSet res = null;
+         Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
 
         int i = 0;
 
@@ -155,8 +159,15 @@ public class ClockMaint extends javax.swing.JPanel {
       catch (SQLException s){
           MainFrame.bslog(s);
        bsmf.MainFrame.show("Cannot Retrieve View on RecID.");
-      }
-      bsmf.MainFrame.con.close();
+      } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
     }
     catch (Exception e){
       MainFrame.bslog(e);
@@ -486,11 +497,10 @@ public class ClockMaint extends javax.swing.JPanel {
     private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
         try{
 
-         Class.forName(bsmf.MainFrame.driver).newInstance();
-         bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url+bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-        try{
-         Statement st = bsmf.MainFrame.con.createStatement();
-        ResultSet res = null;
+         Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
 
         int i = 0;
         boolean proceed = true;
@@ -534,8 +544,15 @@ public class ClockMaint extends javax.swing.JPanel {
       catch (SQLException s){
           MainFrame.bslog(s);
         bsmf.MainFrame.show("SQL code does not execute.");
-      }
-      bsmf.MainFrame.con.close();
+      } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
     }
     catch (Exception e){
       MainFrame.bslog(e);

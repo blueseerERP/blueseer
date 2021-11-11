@@ -30,13 +30,18 @@ import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import static bsmf.MainFrame.checkperms;
+import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.menumap;
 import static bsmf.MainFrame.panelmap;
+import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
+import static bsmf.MainFrame.url;
+import static bsmf.MainFrame.user;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.awt.Color;
 import java.awt.Component;
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -300,11 +305,10 @@ public class VendPriceRpt extends javax.swing.JPanel {
 
         
         try {
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
                 int i = 0;
                 if (rbpart.isSelected()) {
                 res = st.executeQuery("SELECT vpr_vend, vd_name, vpr_item, it_desc, vpr_uom, vpr_curr, vpr_price FROM  vpr_mstr inner join vd_mstr on vd_addr = vpr_vend inner join item_mstr on it_item = vpr_item where " +
@@ -330,8 +334,15 @@ public class VendPriceRpt extends javax.swing.JPanel {
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }

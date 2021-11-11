@@ -26,7 +26,6 @@ SOFTWARE.
 package com.blueseer.srv;
 
 import bsmf.MainFrame;
-import static bsmf.MainFrame.con;
 import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.pass;
@@ -38,6 +37,7 @@ import com.blueseer.utl.OVData;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -90,8 +90,7 @@ public static String getCustomerJSON(String id) {
         String x = ""; 
         
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -184,8 +183,7 @@ public static String getCustomerListByVarJSON(String fromcust, String tocust, St
        
        // System.out.println("HERE: " + fromnbr + "/" + tonbr + "/" + fromdate + "/" + todate + "/" + fromcust + "/" + tocust);
         try{
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try{

@@ -27,6 +27,8 @@ SOFTWARE.
 package com.blueseer.tca;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.db;
+import static bsmf.MainFrame.pass;
 import com.blueseer.utl.OVData;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
@@ -44,11 +46,13 @@ import java.util.Calendar;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
-import static bsmf.MainFrame.con;
 import static bsmf.MainFrame.tags;
+import static bsmf.MainFrame.url;
+import static bsmf.MainFrame.user;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.awt.Component;
+import java.sql.Connection;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -228,48 +232,51 @@ public class Clock extends javax.swing.JPanel {
    
        boolean returnvalue = false;
        try{
-      Class.forName(bsmf.MainFrame.driver).newInstance();
-      con = DriverManager.getConnection(bsmf.MainFrame.url+bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-      try{
-        Statement st = con.createStatement();
-        ResultSet res = null;
-        char[] input = tbclocknumber.getPassword();
-        String myid = String.valueOf(input);
-        String emp_clockin = null;
-        int i = 0;
-       
-        res = st.executeQuery("SELECT * FROM  emp_mstr where emp_nbr = " + "'" + myid + "'" + ";" );
-      //  System.out.println("Make: " + "\t" + "MakeName: ");
-        
-        while (res.next()) {
-            emp_clockin = res.getString("emp_clockin");
-            i++;
-          }
-        con.close();
-        if (i > 0) {
-        if (emp_clockin.toString().equals("1") && clockdir.toString().equals(getGlobalProgTag("clockin"))) {
-            //  Already clocked in
-            failureAction(getMessageTag(1119));
-            returnvalue = true;
-        }
-        if (emp_clockin.equals("0") && clockdir.equals(getGlobalProgTag("clockout"))) {
-            //  Already clocked out
-            failureAction(getMessageTag(1118));
-            returnvalue = true;
-        }
-          } 
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                char[] input = tbclocknumber.getPassword();
+                String myid = String.valueOf(input);
+                String emp_clockin = null;
+                int i = 0;
 
-       
-      }
-      catch (SQLException s){
-          MainFrame.bslog(s);
-        System.out.println(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-      }
+                res = st.executeQuery("SELECT * FROM  emp_mstr where emp_nbr = " + "'" + myid + "'" + ";" );
+              //  System.out.println("Make: " + "\t" + "MakeName: ");
 
-    }
-    catch (Exception e){
-      MainFrame.bslog(e);
-    }
+                while (res.next()) {
+                    emp_clockin = res.getString("emp_clockin");
+                    i++;
+                }
+                if (i > 0) {
+                    if (emp_clockin.toString().equals("1") && clockdir.toString().equals(getGlobalProgTag("clockin"))) {
+                        //  Already clocked in
+                        failureAction(getMessageTag(1119));
+                        returnvalue = true;
+                    }
+                    if (emp_clockin.equals("0") && clockdir.equals(getGlobalProgTag("clockout"))) {
+                        //  Already clocked out
+                        failureAction(getMessageTag(1118));
+                        returnvalue = true;
+                    }
+                } 
+            } catch (SQLException s){
+              MainFrame.bslog(s);
+              System.out.println(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
+
+       }
+       catch (Exception e){
+       MainFrame.bslog(e);
+       }
       return returnvalue;
    }
      
@@ -473,117 +480,111 @@ public class Clock extends javax.swing.JPanel {
 
              // ok...I must have clocked in or out correctly...continue
             try{
-                Class.forName(bsmf.MainFrame.driver).newInstance();
-                bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url+bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-                try{
-                    Statement st = con.createStatement();
-                    Statement st2 = con.createStatement();
-                    ResultSet res = null;
-                    ResultSet res2 = null;
-                    char[] input = tbclocknumber.getPassword();
-                    String myid = String.valueOf(input) ;
-
-                   
-                   
-                        res = st.executeQuery("SELECT * FROM  emp_mstr where emp_nbr = " + "'" + myid + "'" + ";" );
-                        //  System.out.println("Make: " + "\t" + "MakeName: ");
-                   
+                Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            Statement st2 = con.createStatement();
+            ResultSet res2 = null;
+            try{
                     
-                    int i = 0;
-                    String clockdate = "";
-                    String clocktime = "";
-                    String timeclock_adj = "";
-                    double nbrhours = 0;
-                    boolean proceed = false;
-                    
-                    while (res.next()) {
-                        lbname.setText(res.getString("emp_lname") + "," + res.getString("emp_fname"));
-                        lbempid.setText(res.getString("emp_nbr"));
-                        java.util.Date now = new java.util.Date();
-                        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-                        DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
-                        clockdate = dfdate.format(now);
-                        clocktime = dftime.format(now);
-                        
-                        int minutes = Integer.valueOf(clocktime.substring(3,5));
-                        int hours = Integer.valueOf(clocktime.substring(0,2));
-                        double quarter = 0;
-                        String minutestring = "";
-                        String hourstring = "";
-                        
-                        lbclockdatetime.setText(clockdate +  " ...  " + clocktime);
+                char[] input = tbclocknumber.getPassword();
+                String myid = String.valueOf(input) ;
+                res = st.executeQuery("SELECT * FROM  emp_mstr where emp_nbr = " + "'" + myid + "'" + ";" );
+                
+                int i = 0;
+                String clockdate = "";
+                String clocktime = "";
+                String timeclock_adj = "";
+                double nbrhours = 0;
+                boolean proceed = false;
 
-                        // get clocktime that will be charged
-                        timeclock_adj = getclocktime(hours, minutes);
-                        proceed = true;
-                        i++;
-                     }
-                    res.close();
-                    
-                       
-                    if (proceed) {
-                        // clockin or clockout direction logic
-                        if (dddir.getSelectedItem().toString().equals(getGlobalProgTag("clockin"))) {
-                            lbstatus.setText("CLOCKED IN...")   ;
-                            st2.executeUpdate("update emp_mstr set emp_clockin = '1' where emp_nbr = " + "'" + myid + "'" +";");
+                while (res.next()) {
+                    lbname.setText(res.getString("emp_lname") + "," + res.getString("emp_fname"));
+                    lbempid.setText(res.getString("emp_nbr"));
+                    java.util.Date now = new java.util.Date();
+                    DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+                    DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
+                    clockdate = dfdate.format(now);
+                    clocktime = dftime.format(now);
 
-                            // insert time record
-                            st2.executeUpdate("insert into time_clock (emp_nbr, indate, intime, intime_adj, dept, code_id, code_orig, login ) " +
-                                "select emp_nbr, " +
-                                "'" + clockdate + "'" + "," +
-                                "'" + clocktime + "'" + "," +
-                                "'" + timeclock_adj + "'" + "," +
-                                "emp_dept, '01', '01', " +
-                                "'" + bsmf.MainFrame.userid.toString() + "'" + " from emp_mstr where emp_nbr = " + "'" + myid + "'" + ";");
+                    int minutes = Integer.valueOf(clocktime.substring(3,5));
+                    int hours = Integer.valueOf(clocktime.substring(0,2));
+                    double quarter = 0;
+                    String minutestring = "";
+                    String hourstring = "";
 
-                        } else {
-                            
-                            // OK...huge assumption here...that there is one and only one '01' timeclock record
-                            // for any employee at any given time...this should be true based on action rules defined prior
-                          // need to put logic here to redflag if more than one rec is found.
-                            
-                            
-                          //now calc the hours put in by this employee based on clock in date and time
-                            res2 = st2.executeQuery("SELECT * FROM  time_clock where code_id = '01' and emp_nbr = " + "'" + myid + "'" + ";" );
-                            Calendar clockstart = Calendar.getInstance();
-                            Calendar clockstop = Calendar.getInstance();
-                            while (res2.next()) {
-                                clockstart.set( Integer.valueOf(res2.getString("indate").substring(0,4)), Integer.valueOf(res2.getString("indate").substring(5,7)), Integer.valueOf(res2.getString("indate").substring(8,10)), Integer.valueOf(res2.getString("intime_adj").substring(0,2)), Integer.valueOf(res2.getString("intime_adj").substring(3,5)) );
-                                clockstop.set(Integer.valueOf(clockdate.substring(0,4)), Integer.valueOf(clockdate.substring(5,7)), Integer.valueOf(clockdate.substring(8,10)), Integer.valueOf(timeclock_adj.substring(0,2)), Integer.valueOf(timeclock_adj.substring(3,5)));
-                            }
-                            double quarterhour = 0;
-                            long milis1 = clockstart.getTimeInMillis();
-                            long milis2 = clockstop.getTimeInMillis();
-                            long diff = milis2 - milis1;
-                            long diffHours = diff / (60 * 60 * 1000);
-                            long diffMinutes = diff / (60 * 1000);
-                            long diffDays = diff / (24 * 60 * 60 * 1000);
-                            long diffSeconds = diff / 1000;
-                            if (diffMinutes > 0) {
-                                quarterhour = (diffMinutes / (double) 60) ;
+                    lbclockdatetime.setText(clockdate +  " ...  " + clocktime);
 
-                            }
-                            nbrhours = quarterhour;   // this is the total hours accumulated in quarter increments
+                    // get clocktime that will be charged
+                    timeclock_adj = getclocktime(hours, minutes);
+                    proceed = true;
+                    i++;
+                 }
 
-                           
-                            lbstatus.setText("CLOCKED OUT...")   ;
-                            st2.executeUpdate("update emp_mstr set emp_clockin = '0' where emp_nbr = " + "'" + myid + "'" +";");
-                            // update time record and close
-                            st2.executeUpdate("update time_clock set outdate = " +
-                                "'" + clockdate + "'" + "," +
-                                "outtime = " + "'" + clocktime + "'" + "," +
-                                "outtime_adj = " + "'" + timeclock_adj + "'" + "," +
-                                "tothrs = " + "'" + nbrhours + "'" + "," +
-                                "code_id = " + "'" + "00" + "'" +
-                                " where emp_nbr = " + "'" + myid + "'" +
-                                "AND code_id = " + "'01'" +
-                                ";");
+
+                if (proceed) {
+                    // clockin or clockout direction logic
+                    if (dddir.getSelectedItem().toString().equals(getGlobalProgTag("clockin"))) {
+                        lbstatus.setText("CLOCKED IN...")   ;
+                        st2.executeUpdate("update emp_mstr set emp_clockin = '1' where emp_nbr = " + "'" + myid + "'" +";");
+
+                        // insert time record
+                        st2.executeUpdate("insert into time_clock (emp_nbr, indate, intime, intime_adj, dept, code_id, code_orig, login ) " +
+                            "select emp_nbr, " +
+                            "'" + clockdate + "'" + "," +
+                            "'" + clocktime + "'" + "," +
+                            "'" + timeclock_adj + "'" + "," +
+                            "emp_dept, '01', '01', " +
+                            "'" + bsmf.MainFrame.userid.toString() + "'" + " from emp_mstr where emp_nbr = " + "'" + myid + "'" + ";");
+
+                    } else {
+
+                        // OK...huge assumption here...that there is one and only one '01' timeclock record
+                        // for any employee at any given time...this should be true based on action rules defined prior
+                      // need to put logic here to redflag if more than one rec is found.
+
+
+                      //now calc the hours put in by this employee based on clock in date and time
+                        res2 = st2.executeQuery("SELECT * FROM  time_clock where code_id = '01' and emp_nbr = " + "'" + myid + "'" + ";" );
+                        Calendar clockstart = Calendar.getInstance();
+                        Calendar clockstop = Calendar.getInstance();
+                        while (res2.next()) {
+                            clockstart.set( Integer.valueOf(res2.getString("indate").substring(0,4)), Integer.valueOf(res2.getString("indate").substring(5,7)), Integer.valueOf(res2.getString("indate").substring(8,10)), Integer.valueOf(res2.getString("intime_adj").substring(0,2)), Integer.valueOf(res2.getString("intime_adj").substring(3,5)) );
+                            clockstop.set(Integer.valueOf(clockdate.substring(0,4)), Integer.valueOf(clockdate.substring(5,7)), Integer.valueOf(clockdate.substring(8,10)), Integer.valueOf(timeclock_adj.substring(0,2)), Integer.valueOf(timeclock_adj.substring(3,5)));
+                        }
+                        double quarterhour = 0;
+                        long milis1 = clockstart.getTimeInMillis();
+                        long milis2 = clockstop.getTimeInMillis();
+                        long diff = milis2 - milis1;
+                        long diffHours = diff / (60 * 60 * 1000);
+                        long diffMinutes = diff / (60 * 1000);
+                        long diffDays = diff / (24 * 60 * 60 * 1000);
+                        long diffSeconds = diff / 1000;
+                        if (diffMinutes > 0) {
+                            quarterhour = (diffMinutes / (double) 60) ;
 
                         }
+                        nbrhours = quarterhour;   // this is the total hours accumulated in quarter increments
 
-                        lbimage.setIcon(new ImageIcon(getClass().getResource("/images/statusgo.png")));
-                        jTextArea1.append(lbname.getText() + "..." + lbstatus.getText() + "..." + lbclockdatetime.getText() + "...clocktime-> "  + timeclock_adj + "\n");
-                        
+
+                        lbstatus.setText("CLOCKED OUT...")   ;
+                        st2.executeUpdate("update emp_mstr set emp_clockin = '0' where emp_nbr = " + "'" + myid + "'" +";");
+                        // update time record and close
+                        st2.executeUpdate("update time_clock set outdate = " +
+                            "'" + clockdate + "'" + "," +
+                            "outtime = " + "'" + clocktime + "'" + "," +
+                            "outtime_adj = " + "'" + timeclock_adj + "'" + "," +
+                            "tothrs = " + "'" + nbrhours + "'" + "," +
+                            "code_id = " + "'" + "00" + "'" +
+                            " where emp_nbr = " + "'" + myid + "'" +
+                            "AND code_id = " + "'01'" +
+                            ";");
+
+                    }
+
+                    lbimage.setIcon(new ImageIcon(getClass().getResource("/images/statusgo.png")));
+                    jTextArea1.append(lbname.getText() + "..." + lbstatus.getText() + "..." + lbclockdatetime.getText() + "...clocktime-> "  + timeclock_adj + "\n");
+
                         // int i = res.getInt("MakeID");
                         //  String s = res.getString("MakeName");
                         //  System.out.println(i + "\t\t" + s);
@@ -591,17 +592,27 @@ public class Clock extends javax.swing.JPanel {
 
                     if (i == 0) {
                         failureAction(getMessageTag(1117));
-                    }
-                    con.close();
-
-                }
-                catch (SQLException s){
+                    } 
+                } catch (SQLException s){
                     MainFrame.bslog(s);
                    bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+                } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (res2 != null) {
+                    res2.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (st2 != null) {
+                    st2.close();
+                }
+                con.close();
                 }
 
-            }
-            catch (Exception e){
+            } catch (Exception e){
                 MainFrame.bslog(e);
             }
 
