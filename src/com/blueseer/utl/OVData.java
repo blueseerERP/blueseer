@@ -3772,13 +3772,13 @@ return myitem;
                             "'" +  ld[4] + "'" + "," +  
                             "'" +  ld[5] + "'" + "," +  
                             "'" +  ld[6] + "'" + "," +          
-                            "'" +  ld[7] + "'" + "," +  
+                            "'" +  ld[7].replace(defaultDecimalSeparator, '.') + "'" + "," +  
                             "'" +  dfdate.format(now) + "'" + "," + 
-                            "'" +  bsFormatDouble5(bsParseDouble(ld[8])).replace(defaultDecimalSeparator, '.') + "'" + "," +  
-                            "'" +  bsFormatDouble5(bsParseDouble(ld[9])).replace(defaultDecimalSeparator, '.') + "'" + "," +  
-                            "'" +  bsFormatDouble5(bsParseDouble(ld[10])).replace(defaultDecimalSeparator, '.') + "'" + "," +  
-                            "'" +  bsFormatDouble5(bsParseDouble(ld[11])).replace(defaultDecimalSeparator, '.') + "'" + "," +  
-                            "'" +  bsFormatDouble5(bsParseDouble(ld[12])).replace(defaultDecimalSeparator, '.') + "'" + "," +  
+                            "'" +  ld[8].replace(defaultDecimalSeparator, '.') + "'" + "," +  
+                            "'" +  ld[9].replace(defaultDecimalSeparator, '.') + "'" + "," +  
+                            "'" +  ld[10].replace(defaultDecimalSeparator, '.') + "'" + "," +  
+                            "'" +  ld[11].replace(defaultDecimalSeparator, '.') + "'" + "," +  
+                            "'" +  ld[12].replace(defaultDecimalSeparator, '.') + "'" + "," +  
                             "'" +  ld[13] + "'" + "," +  
                             "'" +  ld[14] + "'" + "," +  
                             "'" +  ld[15] + "'" + "," +  
@@ -3786,11 +3786,11 @@ return myitem;
                             "'" +  ld[17] + "'" + "," +  
                             "'" +  ld[18] + "'" + "," +  
                             "'" +  ld[19] + "'" + "," +  
-                            "'" +  ld[20] + "'" + "," +  
-                            "'" +  ld[21] + "'" + "," +  
-                            "'" +  ld[22] + "'" + "," +  
-                            "'" +  ld[23] + "'" + "," +  
-                            "'" +  ld[24] + "'" + "," +  
+                            "'" +  ld[20].replace(defaultDecimalSeparator, '.') + "'" + "," +
+                            "'" +  ld[21].replace(defaultDecimalSeparator, '.') + "'" + "," +  
+                            "'" +  ld[22].replace(defaultDecimalSeparator, '.') + "'" + "," +  
+                            "'" +  ld[23].replace(defaultDecimalSeparator, '.') + "'" + "," +  
+                            "'" +  ld[24].replace(defaultDecimalSeparator, '.') + "'" + "," +  
                             "'" +  ld[25] + "'" + "," +  
                             "'" +  ld[26] + "'" + "," +  
                             "'" +  ld[27] + "'" + "," + 

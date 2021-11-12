@@ -43,6 +43,7 @@ import com.blueseer.pur.purData.po_mstr;
 import com.blueseer.pur.purData.pod_mstr;
 import static com.blueseer.pur.purData.updatePOTransaction;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
+import static com.blueseer.utl.BlueSeerUtils.bsNumber;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsdate;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
@@ -59,6 +60,7 @@ import static com.blueseer.utl.BlueSeerUtils.luinput;
 import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import static com.blueseer.utl.BlueSeerUtils.lurb2;
+import static com.blueseer.utl.BlueSeerUtils.priceformat;
 import com.blueseer.utl.DTData;
 import java.awt.Color;
 import java.awt.Component;
@@ -630,12 +632,12 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeer {
                       res.getString("it_desc"), 
                       res.getString("pod_vendpart"), 
                       res.getString("pod_nbr"), 
-                      res.getString("pod_ord_qty").replace('.', defaultDecimalSeparator), 
+                      bsNumber(res.getString("pod_ord_qty")), 
                       res.getString("pod_uom"), 
-                      res.getString("pod_listprice").replace('.', defaultDecimalSeparator),
-                      res.getString("pod_disc").replace('.', defaultDecimalSeparator), 
-                      res.getString("pod_netprice").replace('.', defaultDecimalSeparator), 
-                      res.getString("pod_rcvd_qty").replace('.', defaultDecimalSeparator), 
+                      priceformat(res.getString("pod_listprice")),
+                      priceformat(res.getString("pod_disc")),
+                      priceformat(res.getString("pod_netprice")),
+                      bsNumber(res.getString("pod_rcvd_qty")),  
                       res.getString("pod_status")});
                 }
                
@@ -950,7 +952,20 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeer {
      }
     
     public boolean validateDetail() {
-        boolean canproceed = true;
+        // if user clicks on 'additem' before focuslost on each field
+       // has time to fire, focuslost will have effectively set these fields to empty upon
+       // seeing an error before this function is called
+       // ...so we check for empty to prevent lines from being added
+        
+        if (qtyshipped.getText().isEmpty()) {
+            return false;
+        }
+        if (listprice.getText().isEmpty()) {
+            return false;
+        }
+        if (discount.getText().isEmpty()) {
+            return false;
+        }
         
         if (OVData.isValidItem(ddpart.getSelectedItem().toString()) && ! OVData.isValidUOMConversion(ddpart.getSelectedItem().toString(), ddsite.getSelectedItem().toString(), dduom.getSelectedItem().toString())) {
                 bsmf.MainFrame.show(getMessageTag(1026));
@@ -962,7 +977,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeer {
                 dduom.requestFocus();
                 return false;
         }
-      return canproceed;   
+      return true;   
     }
    
     

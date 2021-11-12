@@ -379,7 +379,7 @@ public class MassLoad extends javax.swing.JPanel {
             fsr.close();
              if (proceed) {
                    if(! OVData.addItemMaster(list))
-                       m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151)};
+                       m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151, String.valueOf(i))};
                    } else {
                   m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
             }
@@ -473,7 +473,7 @@ public class MassLoad extends javax.swing.JPanel {
             fsr.close();
              if (proceed) {
                    if(! OVData.addBOMMstrRecord(list))
-                       m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151)};
+                       m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151,String.valueOf(i))};
                    } else {
                   m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
             }
@@ -559,7 +559,7 @@ public class MassLoad extends javax.swing.JPanel {
             fsr.close();
              if (proceed) {
                    if(! OVData.addGLAcctBalances(list))
-                       m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151)};
+                       m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151,String.valueOf(i))};
                    } else {
                   m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
             }
@@ -635,7 +635,7 @@ public class MassLoad extends javax.swing.JPanel {
             fsr.close();
             if (proceed) {
                    if(! OVData.addGenericCode(list))
-                       m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151)};
+                       m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151,String.valueOf(i))};
                    } else {
                   m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
             }
@@ -735,7 +735,7 @@ public class MassLoad extends javax.swing.JPanel {
             fsr.close();
             if (proceed) {
                    if(! OVData.addCustXref(list))
-                       m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151)};
+                       m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151,String.valueOf(i))};
                    } else {
                   m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
             }
@@ -807,7 +807,7 @@ public class MassLoad extends javax.swing.JPanel {
             fsr.close();
             if (proceed) {
                    if(! OVData.addCarrier(list))
-                       m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151)};
+                       m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151,String.valueOf(i))};
                    } else {
                   m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
             }
@@ -878,7 +878,7 @@ public class MassLoad extends javax.swing.JPanel {
             fsr.close();
             if (proceed) {
                    if(! EDData.addEDIPartner(list))
-                       m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151)};
+                       m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151,String.valueOf(i))};
                    } else {
                   m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
             }
@@ -963,7 +963,7 @@ public class MassLoad extends javax.swing.JPanel {
             fsr.close();
             if (proceed) {
                    if(! EDData.addEDIDocumentStructures(list))
-                       m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151)};
+                       m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151,String.valueOf(i))};
                    } else {
                   m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
             }
@@ -1054,7 +1054,7 @@ public class MassLoad extends javax.swing.JPanel {
             fsr.close();
             if (proceed) {
                    if(! EDData.addEDIMstrRecord(list))
-                       m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151)};
+                       m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151,String.valueOf(i))};
                    } else {
                   m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
             }
@@ -1153,7 +1153,7 @@ public class MassLoad extends javax.swing.JPanel {
            fsr.close();
             if (proceed) {
                    if(! OVData.addVendXref(list))
-                       m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151)};
+                       m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151,String.valueOf(i))};
                    } else {
                   m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
             }
@@ -1279,7 +1279,7 @@ public class MassLoad extends javax.swing.JPanel {
             fsr.close();
             if (proceed) {
                    if(! OVData.addInvAdjustments(list))
-                       m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151)};
+                       m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151,String.valueOf(i))};
                    } else {
                   m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
             }
@@ -1380,7 +1380,7 @@ public class MassLoad extends javax.swing.JPanel {
             fsr.close();
              if (proceed) {
                    if(! OVData.addCustPriceList(list))
-                       m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151)};
+                       m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151,String.valueOf(i))};
                    } else {
                   m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
             }
@@ -1479,7 +1479,7 @@ public class MassLoad extends javax.swing.JPanel {
             fsr.close();
              if (proceed) {
                    if(! OVData.addVendPriceList(list))
-                       m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151)};
+                       m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151,String.valueOf(i))};
                    } else {
                   m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
             }
@@ -1609,7 +1609,7 @@ public class MassLoad extends javax.swing.JPanel {
             fsr.close();
              if (proceed) {
                    if(! OVData.addVendMstr(list))
-                       m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151)};
+                       m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151,String.valueOf(i))};
                    } else {
                   m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
             }
@@ -1745,7 +1745,7 @@ public class MassLoad extends javax.swing.JPanel {
             fsr.close();
              if (proceed) {
                    if(! OVData.addCustMstrWShipTo(list))
-                       m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151)};
+                       m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151,String.valueOf(i))};
                    } else {
                   m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
             }
@@ -1848,7 +1848,7 @@ public class MassLoad extends javax.swing.JPanel {
             fsr.close();
             if (proceed) {
                    if(! OVData.addCustShipToMstr(list))
-                       m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151)};
+                       m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151,String.valueOf(i))};
                    } else {
                   m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
             }

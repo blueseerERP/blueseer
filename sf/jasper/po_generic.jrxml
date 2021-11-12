@@ -36,7 +36,7 @@
 	<field name="pod_vendpart" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="pod_ord_qty" class="java.lang.Integer">
+	<field name="pod_ord_qty" class="java.lang.Double">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="pod_netprice" class="java.math.BigDecimal">
@@ -80,9 +80,9 @@
 				<imageExpression><![CDATA[new net.sf.jasperreports.components.barbecue.BarbecueRenderer(net.sourceforge.barbecue.BarcodeFactory.createCode39($F{po_nbr}, false))]]></imageExpression>
 			</image>
 			<textField>
-				<reportElement x="312" y="0" width="198" height="36" uuid="975f85f9-9b7e-4ca4-8d30-6b26f0d0375a"/>
+				<reportElement x="312" y="0" width="243" height="36" uuid="975f85f9-9b7e-4ca4-8d30-6b26f0d0375a"/>
 				<textElement>
-					<font size="24"/>
+					<font size="18"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{jasper.po.lbltitle}]]></textFieldExpression>
 			</textField>
@@ -279,14 +279,14 @@
 				<textFieldExpression><![CDATA[$R{jasper.po.lbldesc}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="417" y="0" width="44" height="20" uuid="bb7d623b-2f6d-4eaf-a53c-820dd7fd8245"/>
+				<reportElement x="417" y="0" width="72" height="20" uuid="bb7d623b-2f6d-4eaf-a53c-820dd7fd8245"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{jasper.po.lblprice}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="489" y="0" width="66" height="20" uuid="a3580c83-cd60-4ddb-916b-5e809ac29868"/>
+				<reportElement x="489" y="0" width="78" height="20" uuid="a3580c83-cd60-4ddb-916b-5e809ac29868"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
@@ -338,7 +338,7 @@
 				<reportElement x="338" y="0" width="100" height="20" uuid="6f917151-d6d7-4a5c-b929-a77d3937c2f4"/>
 				<textFieldExpression><![CDATA[$R{jasper.po.lbltotalamount}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField pattern="¤ #,##0.00">
 				<reportElement x="438" y="0" width="100" height="20" uuid="378a8a9d-5625-4e24-8803-f36c873089fe"/>
 				<textFieldExpression><![CDATA[$V{mysum}]]></textFieldExpression>
 			</textField>

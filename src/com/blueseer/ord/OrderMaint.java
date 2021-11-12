@@ -53,6 +53,7 @@ import com.blueseer.shp.shpData;
 import static com.blueseer.shp.shpData.confirmShipperTransaction;
 import com.blueseer.shp.shpData.ship_mstr;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
+import static com.blueseer.utl.BlueSeerUtils.bsNumber;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
@@ -68,6 +69,7 @@ import static com.blueseer.utl.BlueSeerUtils.luinput;
 import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import static com.blueseer.utl.BlueSeerUtils.lurb2;
+import static com.blueseer.utl.BlueSeerUtils.priceformat;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeer;
 import java.awt.BorderLayout;
@@ -872,9 +874,18 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
                 while (res.next()) {
                     myorddetmodel.addRow(new Object[]{res.getString("sod_line"), res.getString("sod_part"),
                       res.getString("sod_custpart"), res.getString("sod_nbr"), 
-                      res.getString("sod_po"), res.getString("sod_ord_qty").replace('.', defaultDecimalSeparator), res.getString("sod_uom"), BlueSeerUtils.priceformat(res.getString("sod_listprice").replace('.', defaultDecimalSeparator)),
-                      BlueSeerUtils.priceformat(res.getString("sod_disc").replace('.', defaultDecimalSeparator)), BlueSeerUtils.priceformat(res.getString("sod_netprice").replace('.', defaultDecimalSeparator)), res.getString("sod_shipped_qty").replace('.', defaultDecimalSeparator), res.getString("sod_status"),
-                      res.getString("sod_wh"), res.getString("sod_loc"), res.getString("sod_desc"), res.getString("sod_taxamt").replace('.', defaultDecimalSeparator)
+                      res.getString("sod_po"), 
+                      bsNumber(res.getString("sod_ord_qty")), 
+                      res.getString("sod_uom"), 
+                      priceformat(res.getString("sod_listprice")),
+                      priceformat(res.getString("sod_disc")), 
+                      priceformat(res.getString("sod_netprice")), 
+                      bsNumber(res.getString("sod_shipped_qty")), 
+                      res.getString("sod_status"),
+                      res.getString("sod_wh"), 
+                      res.getString("sod_loc"), 
+                      res.getString("sod_desc"), 
+                      bsNumber(res.getString("sod_taxamt"))
                   });
                 }
                 
@@ -1733,42 +1744,20 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
     }
     
     public boolean validateDetail() {
-        /*
-        Pattern p = Pattern.compile("^[0-9]\\d*(\\.\\d+)?$");
-        Matcher m = p.matcher(listprice.getText());
-        if (!m.find() || listprice.getText() == null) {
-            bsmf.MainFrame.show(getMessageTag(1033));
-            listprice.requestFocus();
+       // if user clicks on 'additem' before focuslost on each field
+       // has time to fire, focuslost will have effectively set these fields to empty upon
+       // seeing an error before this function is called
+       // ...so we check for empty to prevent lines from being added
+        
+        if (qtyshipped.getText().isEmpty()) {
             return false;
         }
-        
-        p = Pattern.compile("^[0-9]\\d*(\\.\\d+)?$");
-        if (! discount.getText().isEmpty()) {
-            m = p.matcher(discount.getText());
-            if (!m.find()) {
-                bsmf.MainFrame.show(getMessageTag(1033));
-                discount.requestFocus();
-                return false;
-            }
-        }
-        
-        p = Pattern.compile("^[0-9]\\d*(\\.\\d+)?$");
-        m = p.matcher(netprice.getText());
-        if (!m.find() || netprice.getText() == null) {
-            bsmf.MainFrame.show(getMessageTag(1033));
-            netprice.requestFocus();
+        if (listprice.getText().isEmpty()) {
             return false;
         }
-        
-        p = Pattern.compile("^[1-9]\\d*$");
-        m = p.matcher(qtyshipped.getText());
-        if (!m.find() || qtyshipped.getText() == null) {
-            bsmf.MainFrame.show(getMessageTag(1033));
-            qtyshipped.requestFocus();
+        if (discount.getText().isEmpty()) {
             return false;
         }
-        */
-         
         
         // check unallocated qty
         if (! OVData.isOrderExceedQOHU() && bsParseDouble(qtyshipped.getText()) > invData.getItemQOHUnallocated(ddpart.getSelectedItem().toString(),ddsite.getSelectedItem().toString(),tbkey.getText())) {
