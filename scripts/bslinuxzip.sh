@@ -13,11 +13,11 @@ zip -r ../scripts/$bszip data/*
 zip -r ../scripts/$bszip edi/*
 zip -u ../scripts/$bszip images/*
 cd ../scripts
-cp bsconfig.sqlite.linux bsconfig
+cp bs.cfg.sqlite.linux bs.cfg
 zip -u $bszip ../dist/*
-zip -u $bszip bsconfig
-zip -u $bszip bsconfig.sqlite
-zip -u $bszip bsconfig.mysql
+zip -u $bszip bs.cfg
+zip -u $bszip bs.cfg.sqlite
+zip -u $bszip bs.cfg.mysql
 zip -u $bszip bslogging.properties
 zip -u $bszip .patch
 zip -u $bszip login.sh

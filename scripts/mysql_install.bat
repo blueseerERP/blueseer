@@ -30,14 +30,14 @@ set "DB=bsdb"
 
 cd %~dp0
 
-@echo "creating bsconfig file...."
-@echo DBTYPE=mysql>>bsconfig
-@echo DB=%DB%>>bsconfig
-@echo USER=bs_user>>bsconfig
-@echo PASS=bspasswd>>bsconfig
-@echo IP=%IP%>>bsconfig
-@echo PORT=3306>>bsconfig
-@echo DRIVER=com.mysql.cj.jdbc.Driver>>bsconfig
+@echo "creating bs.cfg file...."
+@echo DBTYPE=mysql>>bs.cfg
+@echo DB=%DB%>>bs.cfg
+@echo USER=bs_user>>bs.cfg
+@echo PASS=bspasswd>>bs.cfg
+@echo IP=%IP%>>bs.cfg
+@echo PORT=3306>>bs.cfg
+@echo DRIVER=com.mysql.cj.jdbc.Driver>>bs.cfg
 
 
 

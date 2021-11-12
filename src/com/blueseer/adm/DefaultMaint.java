@@ -36,7 +36,6 @@ import static com.blueseer.adm.admData.addUpdateOVMstr;
 import static com.blueseer.adm.admData.getOVMstr;
 import com.blueseer.adm.admData.ov_mstr;
 import com.blueseer.utl.BlueSeerUtils;
-import static com.blueseer.utl.BlueSeerUtils.callCurrencySet;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.IBlueSeer;
 import com.blueseer.utl.IBlueSeerc;

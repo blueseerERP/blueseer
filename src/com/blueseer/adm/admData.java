@@ -26,12 +26,16 @@ SOFTWARE.
 package com.blueseer.adm;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.bslog;
 import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -40,6 +44,12 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Currency;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.MissingResourceException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -302,6 +312,54 @@ public class admData {
         MainFrame.bslog(e);
     }
 
+    }
+    
+    public static void updateDefaultCountry(String x) {
+      Locale[] availableLocales = Locale.getAvailableLocales();
+        HashMap<String, String> map = new HashMap<String, String>();
+        for ( Locale l : availableLocales ) {
+        	if (isValidLocale(l))
+            map.put(  l.getISO3Country(), l.getCountry());
+        }  
+          if (map.get(x) != null) {
+          Locale locale = new Locale("",map.get(x));
+          Currency currency = Currency.getInstance(locale);
+          updateDefaultCurrency(currency.getCurrencyCode());
+          writeBSConfig(map.get(x));
+          } else {
+            bsmf.MainFrame.show(getMessageTag(1158));
+            System.exit(0);
+          }
+    }
+    
+    
+    
+    public static boolean isValidLocale(Locale locale) {
+      try {
+        return locale.getISO3Language() != null && locale.getISO3Country() != null;
+      }
+      catch (MissingResourceException e) {
+        return false;
+      }
+    }
+
+    public static void writeBSConfig(String x) {
+        BufferedWriter f = null;
+        try {
+            f = new BufferedWriter(new FileWriter("bs.cfg", true));
+        } catch (IOException ex) {
+            bslog(ex);
+        }
+        try {
+            f.write("COUNTRY="  + x.toUpperCase() + "\n");
+        } catch (IOException ex) {
+            bslog(ex);
+        }
+        try {
+            f.close();
+        } catch (IOException ex) {
+            bslog(ex);
+        }
     }
     
     public record site_mstr(String[] m, String site_site, String site_desc, 

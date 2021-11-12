@@ -1,0 +1,7 @@
+DBTYPE=sqlite
+DB=data\bsdb.db
+USER=bs_user
+PASS=bspasswd
+IP=localhost
+PORT=3306
+DRIVER=org.sqlite.JDBC

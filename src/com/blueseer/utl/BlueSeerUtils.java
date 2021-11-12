@@ -159,27 +159,30 @@ public class BlueSeerUtils {
         public static JRadioButton lurb5 = null;
         public static JTextField luinput = new JTextField(20);
     
-    public static void callCurrencySet() {
+    public static void callCountrySet() {
         
-        JDialog currdialog = new JDialog();
-        currdialog.setTitle(getMessageTag(1153));
-        currdialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        javax.swing.JComboBox ddcurr = new javax.swing.JComboBox<>();
+        JDialog countrydialog = new JDialog();
+        countrydialog.setTitle(getMessageTag(1153));
+        countrydialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        javax.swing.JComboBox ddcountries = new javax.swing.JComboBox<>();
         javax.swing.JButton btcommit = new javax.swing.JButton();
-        ddcurr.removeAllItems();
-        ArrayList<String> curr = OVData.getCurrlist();
-        Collections.sort(curr);
-        for (int i = 0; i < curr.size(); i++) {
-            if (curr.get(i).equals("ALL"))
+        ddcountries.removeAllItems();
+        ArrayList<String> countries = OVData.getCodeMstrValueList("country");
+      //  ArrayList<String> curr = OVData.getCurrlist();
+        Collections.sort(countries);
+        for (int i = 0; i < countries.size(); i++) {
+            if (countries.get(i).equals("ALL"))
                 continue;
-            ddcurr.addItem(curr.get(i));
+            ddcountries.addItem(countries.get(i));
         }
         
         btcommit.setText(getGlobalProgTag("commit"));
         btcommit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-              admData.updateDefaultCurrency(ddcurr.getSelectedItem().toString());
-              currdialog.dispose();
+              admData.updateDefaultCountry(OVData.getCodeMstrKeyFromCodeValue("country",ddcountries.getSelectedItem().toString()));
+              countrydialog.dispose();
+              bsmf.MainFrame.show("Restart Application");
+              System.exit(0);
             }
         });
         
@@ -191,7 +194,7 @@ public class BlueSeerUtils {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.gridx = 0;
         gbc.gridy = 0;
-        panel.add(ddcurr, gbc);
+        panel.add(ddcountries, gbc);
         
         
         gbc.gridwidth = 1;
@@ -200,13 +203,13 @@ public class BlueSeerUtils {
         panel.add(btcommit, gbc);
        
         
-        currdialog.add(panel);
-        currdialog.setPreferredSize(new Dimension(300, 200));
-        currdialog.pack();
-        currdialog.setLocationRelativeTo( null );
-        currdialog.setResizable(false);
-        currdialog.setVisible(true);
-        ddcurr.requestFocus();
+        countrydialog.add(panel);
+        countrydialog.setPreferredSize(new Dimension(300, 200));
+        countrydialog.pack();
+        countrydialog.setLocationRelativeTo( null );
+        countrydialog.setResizable(false);
+        countrydialog.setVisible(true);
+        ddcountries.requestFocus();
     } 
             
     public static void callDialog(String rb1) {
@@ -1172,4 +1175,6 @@ public class BlueSeerUtils {
         return x;
     }
     
+     
+     
 }

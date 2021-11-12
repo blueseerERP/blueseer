@@ -6,7 +6,7 @@
 #define MyAppPublisher 
 #define MyAppURL "http://www.blueseer.com/"
 #define MyAppExeName "javaw"
-#define bsconfig "bsconfig"
+#define bsconfig "bs.cfg"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
@@ -46,7 +46,7 @@ Name: "turkish"; Description: "Turkish"; Flags: exclusive
 Source: "C:\bs\blueseer\scripts\login.bat"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\bs\blueseer\scripts\bslogging.properties"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\bs\blueseer\.patch"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\bs\blueseer\scripts\bsconfig.sqlite"; DestDir: "{app}"; DestName: "{#bsconfig}"; Flags: ignoreversion
+Source: "C:\bs\blueseer\scripts\bs.cfg.sqlite"; DestDir: "{app}"; DestName: "{#bsconfig}"; Flags: ignoreversion
 Source: "C:\bs\bsmf\documentation\documentation.pdf"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\bs\blueseer\sf\data\*"; DestDir: "{app}\data"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "C:\bs\blueseer\sf\data\fr\bsdb.db"; components: french; DestDir: "{app}\data"; Flags: ignoreversion recursesubdirs createallsubdirs
@@ -90,15 +90,21 @@ function CreateLangFile(): boolean;
 var
   fileName : string;
   lines : TArrayOfString;
+  mylang : string;
+  mycountry : string;
 begin
   Result := true;
-  fileName := ExpandConstant('{app}\.lang');
-  SetArrayLength(lines, 3);
-  lines[0] := 'echo hello';
-  lines[1] := 'pause';
-  lines[2] := 'exit';
-  Result := SaveStringsToFile(filename,lines,false);
-  exit;
+  fileName := ExpandConstant('{app}\bs.cfg');
+  SetArrayLength(lines, 2);
+  mylang := 'LANGUAGE=en';
+  mycountry := 'COUNTRY=US';
+  if IsComponentSelected('french') then begin mylang := 'LANGUAGE=fr'; mycountry := 'COUNTRY=FR'; end
+  if IsComponentSelected('spanish') then begin mylang := 'LANGUAGE=es'; mycountry := 'COUNTRY=ES'; end
+  if IsComponentSelected('turkish') then begin mylang := 'LANGUAGE=tr'; mycountry := 'COUNTRY=TR'; end
+  lines[0] := mylang;
+  lines[1] := mycountry;
+  Result := SaveStringsToFile(filename,lines,true);
+  exit;     
 end;
 
 procedure CurStepChanged(CurStep: TSetupStep);

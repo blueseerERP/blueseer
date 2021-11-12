@@ -14,6 +14,7 @@
     <property name="javac17" location="${JDK17dir}/bin/javac" />
     <property name="java17" location="${JDK17dir}/bin/java" />
     <property name="lang" value="en" />
+    <property name="country" value="US" />
 
 
     <path id="build.classpath">
@@ -73,7 +74,7 @@
 	<copy file="sqlite_test.bat" todir="${test.dir}" overwrite="true"/>
 	<copy file=".patch" todir="${test.dir}" overwrite="true"/>
 	<exec dir="${test.dir}" executable="cmd">
-		<arg line="/c sqlite_test.bat ${lang}" />
+		<arg line="/c sqlite_test.bat ${lang} ${country}" />
 	</exec>
 </target>
 
@@ -104,10 +105,8 @@
 	    <fileset dir="${test.dir}/edi/maps" includes="*.jar"/>
     </path>
     <echo>running in ....${test.dir}</echo>
-    <java classname="bsmf.MainFrame" fork="true" classpathref="runtime.path" dir="${test.dir}">
+    <java classname="bsmf.MainFrame" jvm="${java17}" fork="true" classpathref="run.classpath" dir="${test.dir}">
 	    <arg value="-debug"/> 
-	    <jvmarg value="-Duser.language=en"/>
-	    <jvmarg value="-Duser.country=US"/>
 	    <jvmarg value="-Djava.util.logging.config.file=bslogging.properties"/>
         </java>
 </target>

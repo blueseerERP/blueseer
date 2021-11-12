@@ -13,13 +13,13 @@ mkdir $bs/usr/share/blueseer
 mkdir $bs/usr/bin
 
 echo "creating blueseer config file...."
-echo "DBTYPE=sqlite" >$bsshare/bsconfig
-echo "DB=data/bsdb.db" >>$bsshare/bsconfig
-echo "USER=bs_user" >>$bsshare/bsconfig
-echo "PASS=bspasswd" >>$bsshare/bsconfig
-echo "IP=localhost" >>$bsshare/bsconfig
-echo "PORT=3306" >>$bsshare/bsconfig
-echo "DRIVER=org.sqlite.JDBC" >>$bsshare/bsconfig
+echo "DBTYPE=sqlite" >$bsshare/bs.cfg
+echo "DB=data/bsdb.db" >>$bsshare/bs.cfg
+echo "USER=bs_user" >>$bsshare/bs.cfg
+echo "PASS=bspasswd" >>$bsshare/bs.cfg
+echo "IP=localhost" >>$bsshare/bs.cfg
+echo "PORT=3306" >>$bsshare/bs.cfg
+echo "DRIVER=org.sqlite.JDBC" >>$bsshare/bs.cfg
 
 cp bslogging.properties $bsshare/
 cp ../.patch $bsshare/
@@ -34,7 +34,7 @@ cp -R ../sf/images $bsshare/
 cp -R /home/vcs/jre11 $bsshare/
 
 rm -f $bs/usr/bin/blueseer
-echo "cd /usr/share/blueseer; jre11/bin/java -D\"java.util.logging.config.file=bslogging.properties\" -cp \".:dist/*\" bsmf.MainFrame" >>$bs/usr/bin/blueseer
+echo "cd /usr/share/blueseer; jre17/bin/java -D\"java.util.logging.config.file=bslogging.properties\" -cp \".:dist/*\" bsmf.MainFrame" >>$bs/usr/bin/blueseer
 
 chmod -R 0755 $bs
 chmod -R 0777 $bsshare/data

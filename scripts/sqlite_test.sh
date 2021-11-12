@@ -6,14 +6,14 @@ echo ""
 
 DB=bsdb
 
-echo "creating bsconfig file...."
-echo "DBTYPE=sqlite" >>bsconfig
-echo "DB=data/bsdb.db" >>bsconfig
-echo "USER=bs_user" >>bsconfig
-echo "PASS=bspasswd" >>bsconfig
-echo "IP=localhost" >>bsconfig
-echo "PORT=3306" >>bsconfig
-echo "DRIVER=org.sqlite.JDBC" >>bsconfig
+echo "creating bs.cfg file...."
+echo "DBTYPE=sqlite" >>bs.cfg
+echo "DB=data/bsdb.db" >>bs.cfg
+echo "USER=bs_user" >>bs.cfg
+echo "PASS=bspasswd" >>bs.cfg
+echo "IP=localhost" >>bs.cfg
+echo "PORT=3306" >>bs.cfg
+echo "DRIVER=org.sqlite.JDBC" >>bs.cfg
 
 cd data/$1
 

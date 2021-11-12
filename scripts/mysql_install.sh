@@ -11,11 +11,11 @@
 ###
 ###  The database schema can be found in data/blueseer.schema (See below 
 ###  where it attempts to create this
-###  User is a simple 'create' statement....the bsconfig file created below has 
+###  User is a simple 'create' statement....the bs.cfg file created below has 
 ###  the USER and PASS variables set with 'bs_user' and 'bsPasswd' respectively.
 ###  new versions of mysql have stricter requirements for the password.   
 ###  You should obviously change this in a production environment anyway.  If you do,
-###  make sure you change it in the bsconfig file as well...for each client user
+###  make sure you change it in the bs.cfg file as well...for each client user
 ###  NOTE!!!  newer version of MySQL set security variables by default to
 ###  prevent loading data from local directories.  You will have to adjust the 
 ###  Global variable 'local_infile' in your MySQL instance.  Something like:
@@ -50,13 +50,13 @@ export MYSQL_PWD
 echo ""
 echo ""
 echo "creating blueseer config file...."
-echo "DBTYPE=mysql" >bsconfig
-echo "DB=$DB" >>bsconfig
-echo "USER=bs_user" >>bsconfig
-echo "PASS=bsPasswd" >>bsconfig
-echo "IP=$IP" >>bsconfig
-echo "PORT=3306" >>bsconfig
-echo "DRIVER=com.mysql.cj.jdbc.Driver" >>bsconfig
+echo "DBTYPE=mysql" >bs.cfg
+echo "DB=$DB" >>bs.cfg
+echo "USER=bs_user" >>bs.cfg
+echo "PASS=bsPasswd" >>bs.cfg
+echo "IP=$IP" >>bs.cfg
+echo "PORT=3306" >>bs.cfg
+echo "DRIVER=com.mysql.cj.jdbc.Driver" >>bs.cfg
 
 cd data
 

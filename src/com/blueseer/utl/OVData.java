@@ -5346,7 +5346,63 @@ return myitem;
         return myarray;
         
     }
-      
+    
+    public static ArrayList getCodeMstrValueList(String code) {
+       ArrayList myarray = new ArrayList();
+        try{
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                res = st.executeQuery("select code_value from code_mstr where code_code = " + "'" + code + "'" + " order by code_key ;");
+               while (res.next()) {
+                    myarray.add(res.getString("code_value"));
+                    
+                }
+               
+           }
+            catch (SQLException s){
+                MainFrame.bslog(s);
+                 bsmf.MainFrame.show("SQL cannot get Code Mstr");
+            }
+            con.close();
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return myarray;
+        
+    }
+    
+    public static String getCodeMstrKeyFromCodeValue(String code, String value) {
+       String x = "";
+        try{
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                res = st.executeQuery("select code_key from code_mstr where code_code = " + "'" + code + "'" + 
+                          " and code_value = " + "'" + value + "'" + ";");
+               while (res.next()) {
+                    x = res.getString("code_key");
+                }
+           }
+            catch (SQLException s){
+                MainFrame.bslog(s);
+                 bsmf.MainFrame.show("SQL cannot get Code Mstr");
+            }
+            con.close();
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return x;
+        
+    }
+    
+    
     public static ArrayList getPriceGroupList() {
        ArrayList myarray = new ArrayList();
         try{
