@@ -33,6 +33,7 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.edi.EDI;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
@@ -100,7 +101,7 @@ public class EDData {
             } // if proceed
             catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Error while inserting...check printStackTrace");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
                 myreturn = true;
            } finally {
                if (res != null) res.close();
@@ -172,7 +173,7 @@ public class EDData {
             } // if proceed
             catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Error while inserting...check printStackTrace");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
                 myreturn = true;
            } finally {
                if (res != null) res.close();
@@ -262,7 +263,7 @@ public class EDData {
             } // if proceed
             catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Error while inserting edi_doc, edi_docdet...check printStackTrace");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
                 myreturn = true;
            } finally {
                if (res != null) res.close();
@@ -339,7 +340,7 @@ public class EDData {
             } // if proceed
             catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Error while inserting...check printStackTrace");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
                 myreturn = true;
            } finally {
                if (res != null) res.close();

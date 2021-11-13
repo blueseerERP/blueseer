@@ -33,9 +33,12 @@ import static bsmf.MainFrame.backgroundpanel;
 import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
+import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
 import static com.blueseer.utl.BlueSeerUtils.luTable;
 import static com.blueseer.utl.BlueSeerUtils.lual;
@@ -61,9 +64,13 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
@@ -90,6 +97,7 @@ public class EDIPartnerMaint extends javax.swing.JPanel implements IBlueSeer {
     
     public EDIPartnerMaint() {
         initComponents();
+        setLanguageTags(this);
     }
 
     // interface functions implemented
@@ -225,6 +233,50 @@ public class EDIPartnerMaint extends javax.swing.JPanel implements IBlueSeer {
             }
     } 
     
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+    
     public void setComponentDefaultValues() {
        isLoad = true;
         aliasmodel.setRowCount(0);
@@ -273,21 +325,21 @@ public class EDIPartnerMaint extends javax.swing.JPanel implements IBlueSeer {
                
                 if (tbkey.getText().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a code");
+                    bsmf.MainFrame.show(getMessageTag(1024));
                     tbkey.requestFocus();
                     return b;
                 }
                 
                 if (tbdesc.getText().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a description");
+                    bsmf.MainFrame.show(getMessageTag(1024));
                     tbdesc.requestFocus();
                     return b;
                 }
                 
                 if (tablealias.getRowCount() < 1) {
                     b = false;
-                    bsmf.MainFrame.show("must have at least one alias ID in table");
+                    bsmf.MainFrame.show(getMessageTag(1164));
                     tbaliasid.requestFocus();
                     return b;
                 }
@@ -515,9 +567,9 @@ public class EDIPartnerMaint extends javax.swing.JPanel implements IBlueSeer {
         luTable.setModel(luModel);
         luTable.getColumnModel().getColumn(0).setMaxWidth(50);
         if (luModel.getRowCount() < 1) {
-            ludialog.setTitle("No Records Found!");
+            ludialog.setTitle(getMessageTag(1001));
         } else {
-            ludialog.setTitle(luModel.getRowCount() + " Records Found!");
+            ludialog.setTitle(getMessageTag(1002, String.valueOf(luModel.getRowCount())));
         }
         }
         };
@@ -537,7 +589,8 @@ public class EDIPartnerMaint extends javax.swing.JPanel implements IBlueSeer {
         };
         luTable.addMouseListener(luml);
       
-        callDialog("ID", "Description"); 
+        callDialog(getClassLabelTag("lblcode", this.getClass().getSimpleName()), 
+                getClassLabelTag("lbldesc", this.getClass().getSimpleName()));
         
         
     }
@@ -577,8 +630,10 @@ public class EDIPartnerMaint extends javax.swing.JPanel implements IBlueSeer {
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Partner Maintenance"));
+        jPanel1.setName("panelmain"); // NOI18N
 
         btupdate.setText("Update");
+        btupdate.setName("btupdate"); // NOI18N
         btupdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btupdateActionPerformed(evt);
@@ -586,8 +641,10 @@ public class EDIPartnerMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Aliases Add/Delete"));
+        jPanel2.setName("panelalias"); // NOI18N
 
         jLabel3.setText("Alias ID");
+        jLabel3.setName("lblalias"); // NOI18N
 
         tablealias.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -603,8 +660,10 @@ public class EDIPartnerMaint extends javax.swing.JPanel implements IBlueSeer {
         jScrollPane1.setViewportView(tablealias);
 
         cbdefault.setText("Default?");
+        cbdefault.setName("cbdefault"); // NOI18N
 
         btdeletealias.setText("DeleteAlias");
+        btdeletealias.setName("btdeleteitem"); // NOI18N
         btdeletealias.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdeletealiasActionPerformed(evt);
@@ -612,6 +671,7 @@ public class EDIPartnerMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         btaddalias.setText("AddAlias");
+        btaddalias.setName("btadditem"); // NOI18N
         btaddalias.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddaliasActionPerformed(evt);
@@ -661,8 +721,10 @@ public class EDIPartnerMaint extends javax.swing.JPanel implements IBlueSeer {
         );
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Header"));
+        jPanel3.setName("panelheader"); // NOI18N
 
         btnew.setText("New");
+        btnew.setName("btnew"); // NOI18N
         btnew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnewActionPerformed(evt);
@@ -670,8 +732,10 @@ public class EDIPartnerMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         jLabel5.setText("Code");
+        jLabel5.setName("lblcode"); // NOI18N
 
         jLabel6.setText("Desc");
+        jLabel6.setName("lbldesc"); // NOI18N
 
         tbkey.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -680,6 +744,7 @@ public class EDIPartnerMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         btclear.setText("Clear");
+        btclear.setName("btclear"); // NOI18N
         btclear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btclearActionPerformed(evt);
@@ -736,6 +801,7 @@ public class EDIPartnerMaint extends javax.swing.JPanel implements IBlueSeer {
         );
 
         btadd.setText("Add");
+        btadd.setName("btadd"); // NOI18N
         btadd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddActionPerformed(evt);
@@ -743,6 +809,7 @@ public class EDIPartnerMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         btdelete.setText("Delete");
+        btdelete.setName("btdelete"); // NOI18N
         btdelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdeleteActionPerformed(evt);
@@ -804,7 +871,7 @@ public class EDIPartnerMaint extends javax.swing.JPanel implements IBlueSeer {
     private void btdeletealiasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeletealiasActionPerformed
        int[] rows = tablealias.getSelectedRows();
         for (int i : rows) {
-            bsmf.MainFrame.show("Removing row " + i);
+            bsmf.MainFrame.show(getMessageTag(1031,String.valueOf(i)));
             ((javax.swing.table.DefaultTableModel) tablealias.getModel()).removeRow(i);
             
         }

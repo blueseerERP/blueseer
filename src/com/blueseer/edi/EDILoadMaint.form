@@ -32,6 +32,7 @@
             <TitledBorder title="EDI Inbound Loading"/>
           </Border>
         </Property>
+        <Property name="name" type="java.lang.String" value="panelmain" noResource="true"/>
       </Properties>
 
       <Layout>
@@ -176,6 +177,7 @@
             <Component class="javax.swing.JCheckBox" name="cbtoggle">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Load Toggle"/>
+                <Property name="name" type="java.lang.String" value="cbtoggle" noResource="true"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbtoggleActionPerformed"/>
@@ -184,6 +186,7 @@
             <Component class="javax.swing.JButton" name="btProcess">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Run"/>
+                <Property name="name" type="java.lang.String" value="btrun" noResource="true"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btProcessActionPerformed"/>
@@ -192,6 +195,7 @@
             <Component class="javax.swing.JButton" name="btrefresh">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Refresh List"/>
+                <Property name="name" type="java.lang.String" value="btrefresh" noResource="true"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btrefreshActionPerformed"/>
@@ -200,6 +204,7 @@
             <Component class="javax.swing.JButton" name="btmanual">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Manual Search"/>
+                <Property name="name" type="java.lang.String" value="btsearch" noResource="true"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btmanualActionPerformed"/>
@@ -208,6 +213,7 @@
             <Component class="javax.swing.JLabel" name="jLabel1">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Files:"/>
+                <Property name="name" type="java.lang.String" value="lblcount" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="lbcount">
@@ -215,6 +221,7 @@
             <Component class="javax.swing.JCheckBox" name="cbdebug">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Debug"/>
+                <Property name="name" type="java.lang.String" value="cbdebug" noResource="true"/>
               </Properties>
             </Component>
           </SubComponents>

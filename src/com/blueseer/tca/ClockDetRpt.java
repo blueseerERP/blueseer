@@ -52,11 +52,23 @@ import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.mydialog;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
+import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import java.awt.Component;
 import java.sql.Connection;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 
 /**
  *
@@ -64,9 +76,25 @@ import javax.swing.ImageIcon;
  */
 public class ClockDetRpt extends javax.swing.JPanel {
  
-         javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object [][] {},
+         
+    javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object [][] {},
             new String [] {
-            "Select", "RecID", "EmpID", "LastName", "FirstName", "Dept", "Code", "InDate", "InTime", "InTmAdj", "OutDate", "OutTime", "OutTmAdj", "tothrs", "ispaid", "checknbr"
+            getGlobalColumnTag("select"), 
+            getGlobalColumnTag("number"), 
+            getGlobalColumnTag("empid"), 
+            getGlobalColumnTag("lastname"), 
+            getGlobalColumnTag("firstname"), 
+            getGlobalColumnTag("dept"), 
+            getGlobalColumnTag("code"), 
+            getGlobalColumnTag("indate"), 
+            getGlobalColumnTag("intime"), 
+            getGlobalColumnTag("intimeadj"), 
+            getGlobalColumnTag("outdate"), 
+            getGlobalColumnTag("outtime"), 
+            getGlobalColumnTag("outtimeadj"), 
+            getGlobalColumnTag("hours"), 
+            getGlobalColumnTag("paid"), 
+            getGlobalColumnTag("checknbr")
             })
                        {
                       @Override  
@@ -83,8 +111,53 @@ public class ClockDetRpt extends javax.swing.JPanel {
      */
     public ClockDetRpt() {
         initComponents();
+        setLanguageTags(this);
     }
 
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+    
     public void initvars(String[] arg) {
         
         cbpaid.setSelected(false);
@@ -143,15 +216,20 @@ public class ClockDetRpt extends javax.swing.JPanel {
 
         setBackground(new java.awt.Color(0, 102, 204));
 
+        jPanel1.setName("panelmain"); // NOI18N
+
         jLabel2.setText("From Date");
+        jLabel2.setName("lblfromdate"); // NOI18N
 
         dcFrom.setDateFormatString("yyyy-MM-dd");
 
         dcTo.setDateFormatString("yyyy-MM-dd");
 
         jLabel3.setText("To Date");
+        jLabel3.setName("lbltodate"); // NOI18N
 
         btRun.setText("Run");
+        btRun.setName("btrun"); // NOI18N
         btRun.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btRunActionPerformed(evt);
@@ -159,8 +237,10 @@ public class ClockDetRpt extends javax.swing.JPanel {
         });
 
         jLabel1.setText("From Employee");
+        jLabel1.setName("lblfromemployee"); // NOI18N
 
         jLabel4.setText("To Employee");
+        jLabel4.setName("lbltoemployee"); // NOI18N
 
         tablerecs.setAutoCreateRowSorter(true);
         tablerecs.setModel(new javax.swing.table.DefaultTableModel(
@@ -182,6 +262,7 @@ public class ClockDetRpt extends javax.swing.JPanel {
         jScrollPane1.setViewportView(tablerecs);
 
         btcsv.setText("CSV");
+        btcsv.setName("btcsv"); // NOI18N
         btcsv.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btcsvActionPerformed(evt);
@@ -191,14 +272,18 @@ public class ClockDetRpt extends javax.swing.JPanel {
         labelcount.setText("0");
 
         jLabel7.setText("Count");
+        jLabel7.setName("lblcount"); // NOI18N
 
         labelhours.setText("0");
 
         jLabel8.setText("Hours");
+        jLabel8.setName("lblhours"); // NOI18N
 
         cbunpaid.setText("UnPaid");
+        cbunpaid.setName("cbunpaid"); // NOI18N
 
         cbpaid.setText("Paid");
+        cbpaid.setName("cbpaid"); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -350,7 +435,7 @@ try {
                 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Cannot execute sql query for TimeClock Report");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             } finally {
                 if (res != null) {
                     res.close();

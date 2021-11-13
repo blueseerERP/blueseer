@@ -29,10 +29,13 @@ package com.blueseer.tca;
 import bsmf.MainFrame;
 import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.pass;
+import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.OVData;
+import java.awt.Component;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -44,7 +47,15 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 
 /**
  *
@@ -57,8 +68,53 @@ public class ClockApprovalMaint extends javax.swing.JPanel {
      */
     public ClockApprovalMaint() {
         initComponents();
+        setLanguageTags(this);
     }
 
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+    
     
     public void getClockRecord(String rec) {
         try{
@@ -77,7 +133,7 @@ public class ClockApprovalMaint extends javax.swing.JPanel {
         while (res.next()) {
             i++;
             if (res.getString("t.code_id").equals("01") ) {
-                bsmf.MainFrame.show("Must close record first...must clock out");
+                bsmf.MainFrame.show(getMessageTag(1159));
             } else {
             tbrecid.setText(res.getString("t.recid"));
             lblemployee.setText(res.getString("t.emp_nbr") + "  " + res.getString("e.emp_fname") + 
@@ -95,13 +151,13 @@ public class ClockApprovalMaint extends javax.swing.JPanel {
         }
 
         if (i == 0) {
-            bsmf.MainFrame.show("RecID not found");
+            bsmf.MainFrame.show(getMessageTag(1001));
         }
 
         }
       catch (SQLException s){
           MainFrame.bslog(s);
-       bsmf.MainFrame.show("Cannot Retrieve View on RecID.");
+       bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
       } finally {
                 if (res != null) {
                     res.close();
@@ -202,10 +258,13 @@ public class ClockApprovalMaint extends javax.swing.JPanel {
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Supervisor Approval / Review"));
+        jPanel1.setName("panelmain"); // NOI18N
 
         jLabel1.setText("RecordID");
+        jLabel1.setName("lblid"); // NOI18N
 
         btget.setText("Get");
+        btget.setName("btget"); // NOI18N
         btget.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btgetActionPerformed(evt);
@@ -215,16 +274,22 @@ public class ClockApprovalMaint extends javax.swing.JPanel {
         tbtothrs.setEditable(false);
 
         jLabel2.setText("InDate");
+        jLabel2.setName("lblindate"); // NOI18N
 
         jLabel4.setText("Adj InTime");
+        jLabel4.setName("lblintimeadj"); // NOI18N
 
         jLabel3.setText("InTime");
+        jLabel3.setName("lblintime"); // NOI18N
 
         jLabel7.setText("Adj OutTime");
+        jLabel7.setName("lblouttimeadj"); // NOI18N
 
         jLabel8.setText("Total Hours");
+        jLabel8.setName("lbltothours"); // NOI18N
 
         jLabel6.setText("OutTime");
+        jLabel6.setName("lblouttime"); // NOI18N
 
         tbintime.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -237,6 +302,7 @@ public class ClockApprovalMaint extends javax.swing.JPanel {
         tbouttimeadj.setEditable(false);
 
         btupdate.setText("Update");
+        btupdate.setName("btupdate"); // NOI18N
         btupdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btupdateActionPerformed(evt);
@@ -246,6 +312,7 @@ public class ClockApprovalMaint extends javax.swing.JPanel {
         tbintimeadj.setEditable(false);
 
         jLabel5.setText("OutDate");
+        jLabel5.setName("lbloutdate"); // NOI18N
 
         dcoutdate.setDateFormatString("yyyy-MM-dd");
 
@@ -256,14 +323,17 @@ public class ClockApprovalMaint extends javax.swing.JPanel {
         });
 
         jLabel9.setText("Code");
+        jLabel9.setName("lblcode"); // NOI18N
 
         tacomment.setColumns(20);
         tacomment.setRows(5);
         jScrollPane1.setViewportView(tacomment);
 
         jLabel10.setText("Comments");
+        jLabel10.setName("lblcomments"); // NOI18N
 
         btcalc.setText("calcHours");
+        btcalc.setName("btcalculate"); // NOI18N
         btcalc.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btcalcActionPerformed(evt);
@@ -406,22 +476,25 @@ public class ClockApprovalMaint extends javax.swing.JPanel {
            
            Matcher m = p.matcher(tbintime.getText().toString());
            if (! m.find()) {
-               bsmf.MainFrame.show("Invalid InTime..must be xx:xx:xx");
-               proceed = false;
+               bsmf.MainFrame.show(getMessageTag(1160));
+               tbintime.requestFocus();
+               return;
            }
             
             
                  m = p.matcher(tbouttime.getText().toString());
            if (! m.find() ) {
-               bsmf.MainFrame.show("Invalid OutTime..must be xx:xx:xx");
-               proceed = false;
+               bsmf.MainFrame.show(getMessageTag(1160));
+                tbouttime.requestFocus();
+               return;
            }
            
             p = Pattern.compile("\\d.\\d\\d");
             m = p.matcher(tbtothrs.getText().toString());
            if (! m.find()) {
-               bsmf.MainFrame.show("Invalid totHrs...must be x.xx");
-               proceed = false;
+               bsmf.MainFrame.show(getMessageTag(1161));
+                tbtothrs.requestFocus();
+               return;
            } 
            
            String comments = tacomment.getText();
@@ -445,12 +518,12 @@ public class ClockApprovalMaint extends javax.swing.JPanel {
                               " where t.recid = " + "'" + tbrecid.getText().toString() + "'" +
                               ";" );
 
-        bsmf.MainFrame.show("Updated RecID");
+        bsmf.MainFrame.show(getMessageTag(1008));
             } // if proceed
         }
       catch (SQLException s){
           MainFrame.bslog(s);
-        bsmf.MainFrame.show("SQL code does not execute.");
+        bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
       } finally {
                 if (res != null) {
                     res.close();
@@ -472,9 +545,9 @@ public class ClockApprovalMaint extends javax.swing.JPanel {
            
            Matcher m = p.matcher(tbintime.getText().toString());
            if (! m.find()) {
-               bsmf.MainFrame.show("Invalid InTime..must be xx:xx:xx");
-               proceed = false;
+               bsmf.MainFrame.show(getMessageTag(1160));
                tbintime.requestFocus();
+               return;
            }
         
         if (proceed) {
@@ -495,9 +568,9 @@ public class ClockApprovalMaint extends javax.swing.JPanel {
            
            Matcher m = p.matcher(tbouttime.getText().toString());
            if (! m.find()) {
-               bsmf.MainFrame.show("Invalid InTime..must be xx:xx:xx");
-               proceed = false;
+               bsmf.MainFrame.show(getMessageTag(1160));
                tbouttime.requestFocus();
+               return;
            }
         
         if (proceed) {

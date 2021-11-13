@@ -28,6 +28,7 @@
             <TitledBorder title="Supervisor Approval / Review"/>
           </Border>
         </Property>
+        <Property name="name" type="java.lang.String" value="panelmain" noResource="true"/>
       </Properties>
 
       <Layout>
@@ -164,11 +165,13 @@
         <Component class="javax.swing.JLabel" name="jLabel1">
           <Properties>
             <Property name="text" type="java.lang.String" value="RecordID"/>
+            <Property name="name" type="java.lang.String" value="lblid" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="btget">
           <Properties>
             <Property name="text" type="java.lang.String" value="Get"/>
+            <Property name="name" type="java.lang.String" value="btget" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btgetActionPerformed"/>
@@ -182,11 +185,13 @@
         <Component class="javax.swing.JLabel" name="jLabel2">
           <Properties>
             <Property name="text" type="java.lang.String" value="InDate"/>
+            <Property name="name" type="java.lang.String" value="lblindate" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel4">
           <Properties>
             <Property name="text" type="java.lang.String" value="Adj InTime"/>
+            <Property name="name" type="java.lang.String" value="lblintimeadj" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="tbrecid">
@@ -194,21 +199,25 @@
         <Component class="javax.swing.JLabel" name="jLabel3">
           <Properties>
             <Property name="text" type="java.lang.String" value="InTime"/>
+            <Property name="name" type="java.lang.String" value="lblintime" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel7">
           <Properties>
             <Property name="text" type="java.lang.String" value="Adj OutTime"/>
+            <Property name="name" type="java.lang.String" value="lblouttimeadj" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel8">
           <Properties>
             <Property name="text" type="java.lang.String" value="Total Hours"/>
+            <Property name="name" type="java.lang.String" value="lbltothours" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel6">
           <Properties>
             <Property name="text" type="java.lang.String" value="OutTime"/>
+            <Property name="name" type="java.lang.String" value="lblouttime" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="tbintime">
@@ -229,6 +238,7 @@
         <Component class="javax.swing.JButton" name="btupdate">
           <Properties>
             <Property name="text" type="java.lang.String" value="Update"/>
+            <Property name="name" type="java.lang.String" value="btupdate" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btupdateActionPerformed"/>
@@ -242,6 +252,7 @@
         <Component class="javax.swing.JLabel" name="jLabel5">
           <Properties>
             <Property name="text" type="java.lang.String" value="OutDate"/>
+            <Property name="name" type="java.lang.String" value="lbloutdate" noResource="true"/>
           </Properties>
         </Component>
         <Component class="com.toedter.calendar.JDateChooser" name="dcoutdate">
@@ -266,6 +277,7 @@
         <Component class="javax.swing.JLabel" name="jLabel9">
           <Properties>
             <Property name="text" type="java.lang.String" value="Code"/>
+            <Property name="name" type="java.lang.String" value="lblcode" noResource="true"/>
           </Properties>
         </Component>
         <Container class="javax.swing.JScrollPane" name="jScrollPane1">
@@ -286,11 +298,13 @@
         <Component class="javax.swing.JLabel" name="jLabel10">
           <Properties>
             <Property name="text" type="java.lang.String" value="Comments"/>
+            <Property name="name" type="java.lang.String" value="lblcomments" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="btcalc">
           <Properties>
             <Property name="text" type="java.lang.String" value="calcHours"/>
+            <Property name="name" type="java.lang.String" value="btcalculate" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btcalcActionPerformed"/>

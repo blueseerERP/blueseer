@@ -32,8 +32,11 @@ import static bsmf.MainFrame.checkperms;
 import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
+import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.EDData;
 import java.awt.Color;
 import java.awt.Component;
@@ -58,6 +61,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
@@ -89,7 +100,16 @@ public class EDILogBrowse extends javax.swing.JPanel {
 
     
      javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                    new String[]{"IdxNbr", "TradeID", "Dir", "DOCTYPE", "TimeStamp", "File", "isaCtrlNbr", "gsCtrlNbr", "stCtrlNbr"});
+                    new String[]{
+                        getGlobalColumnTag("number"), 
+                        getGlobalColumnTag("tpid"), 
+                        getGlobalColumnTag("direction"), 
+                        getGlobalColumnTag("doctype"), 
+                        getGlobalColumnTag("datetime"), 
+                        getGlobalColumnTag("file"), 
+                        getGlobalColumnTag("isanbr"), 
+                        getGlobalColumnTag("gsnbr"), 
+                        getGlobalColumnTag("stnbr")});
     
     
     class MyTableModel extends DefaultTableModel {  
@@ -140,8 +160,52 @@ public class EDILogBrowse extends javax.swing.JPanel {
      */
     public EDILogBrowse() {
         initComponents();
+        setLanguageTags(this);
     }
 
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
     
     public void initvars(String[] arg) {
         java.util.Date now = new java.util.Date();
@@ -275,7 +339,7 @@ public class EDILogBrowse extends javax.swing.JPanel {
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Sql code does not execute");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             } finally {
                 if (res != null) {
                     res.close();
@@ -325,11 +389,14 @@ public class EDILogBrowse extends javax.swing.JPanel {
         setBackground(new java.awt.Color(0, 102, 204));
         setLayout(new java.awt.BorderLayout());
 
+        jPanel4.setName("panelmain"); // NOI18N
+
         dcto.setDateFormatString("yyyy-MM-dd");
 
         dcfrom.setDateFormatString("yyyy-MM-dd");
 
         btview.setText("View");
+        btview.setName("btview"); // NOI18N
         btview.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btviewActionPerformed(evt);
@@ -337,12 +404,16 @@ public class EDILogBrowse extends javax.swing.JPanel {
         });
 
         jLabel1.setText("TP ID:");
+        jLabel1.setName("lbltpid"); // NOI18N
 
         jLabel2.setText("Doc Type:");
+        jLabel2.setName("lbldoctype"); // NOI18N
 
         jLabel3.setText("To Date:");
+        jLabel3.setName("lbltodate"); // NOI18N
 
         jLabel4.setText("From Date:");
+        jLabel4.setName("lblfromdate"); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);

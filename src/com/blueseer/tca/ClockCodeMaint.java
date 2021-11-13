@@ -28,14 +28,25 @@ package com.blueseer.tca;
 import bsmf.MainFrame;
 import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.pass;
+import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import java.awt.Component;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 
 /**
  *
@@ -48,8 +59,53 @@ public class ClockCodeMaint extends javax.swing.JPanel {
      */
     public ClockCodeMaint() {
         initComponents();
+        setLanguageTags(this);
     }
 
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+    
     
     public void initvars(String[] arg) {
         tbcode.setText("");
@@ -79,11 +135,11 @@ public class ClockCodeMaint extends javax.swing.JPanel {
                 }
                
                 if (i == 0)
-                    bsmf.MainFrame.show("No Code Mstr Record found for " + mycode );
+                    bsmf.MainFrame.show(getMessageTag(1143,mycode));
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to retrieve clock_code");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             } finally {
                 if (res != null) {
                     res.close();
@@ -122,8 +178,10 @@ public class ClockCodeMaint extends javax.swing.JPanel {
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Clock Code Maintenance"));
+        jPanel1.setName("panelmain"); // NOI18N
 
         btupdate.setText("Update");
+        btupdate.setName("btupdate"); // NOI18N
         btupdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btupdateActionPerformed(evt);
@@ -131,8 +189,10 @@ public class ClockCodeMaint extends javax.swing.JPanel {
         });
 
         jLabel1.setText("Code");
+        jLabel1.setName("lblcode"); // NOI18N
 
         btdelete.setText("Delete");
+        btdelete.setName("btdelete"); // NOI18N
         btdelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdeleteActionPerformed(evt);
@@ -140,6 +200,7 @@ public class ClockCodeMaint extends javax.swing.JPanel {
         });
 
         btadd.setText("Add");
+        btadd.setName("btadd"); // NOI18N
         btadd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddActionPerformed(evt);
@@ -147,8 +208,10 @@ public class ClockCodeMaint extends javax.swing.JPanel {
         });
 
         jLabel3.setText("Description");
+        jLabel3.setName("lbldesc"); // NOI18N
 
         btget.setText("Get");
+        btget.setName("btget"); // NOI18N
         btget.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btgetActionPerformed(evt);
@@ -156,6 +219,7 @@ public class ClockCodeMaint extends javax.swing.JPanel {
         });
 
         cbpayable.setText("Payable");
+        cbpayable.setName("cbpayable"); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -222,12 +286,14 @@ public class ClockCodeMaint extends javax.swing.JPanel {
                 // check the code field
                 if (tbcode.getText().isEmpty()) {
                     proceed = false;
-                    bsmf.MainFrame.show("Must enter a code");
+                    bsmf.MainFrame.show(getMessageTag(1024));
+                    tbcode.requestFocus();
+                    return;
                 }
                 
                 if (tbcode.getText().length() > 2) {
                     proceed = false;
-                    bsmf.MainFrame.show("Code max is 2 chars");
+                    bsmf.MainFrame.show(getMessageTag(1032,"2"));
                 }
                 
                 String payable = "0";
@@ -249,9 +315,9 @@ public class ClockCodeMaint extends javax.swing.JPanel {
                             + "'" + payable + "'"
                             + ")"
                             + ";");
-                        bsmf.MainFrame.show("Added Code");
+                        bsmf.MainFrame.show(getMessageTag(1007));
                     } else {
-                        bsmf.MainFrame.show("Code Already Exists");
+                        bsmf.MainFrame.show(getMessageTag(1014));
                     }
 
                    initvars(null);
@@ -259,7 +325,7 @@ public class ClockCodeMaint extends javax.swing.JPanel {
                 } // if proceed
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to Add to clock_code");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             } finally {
                 if (res != null) {
                     res.close();
@@ -285,12 +351,12 @@ public class ClockCodeMaint extends javax.swing.JPanel {
                 // check the code field
                 if (tbcode.getText().isEmpty()) {
                     proceed = false;
-                    bsmf.MainFrame.show("Must enter a code");
+                    bsmf.MainFrame.show(getMessageTag(1024));
                 }
                 
                 if (tbcode.getText().length() > 2) {
                     proceed = false;
-                    bsmf.MainFrame.show("Code max is 2 chars");
+                    bsmf.MainFrame.show(getMessageTag(1032,"2"));
                 }
                 
                 String payable = "0";
@@ -304,7 +370,7 @@ public class ClockCodeMaint extends javax.swing.JPanel {
                 
                 if (i == 0) {
                     proceed = false;
-                    bsmf.MainFrame.show("Code does not exist to update");
+                    bsmf.MainFrame.show(getMessageTag(1143,tbcode.getText()));
                 }
                 
                 if (proceed) {
@@ -312,13 +378,13 @@ public class ClockCodeMaint extends javax.swing.JPanel {
                             + " clc_payable = " + "'" + payable + "'"
                             + " where clc_code = " + "'" + tbcode.getText() + "'"
                             + ";");
-                    bsmf.MainFrame.show("Updated Code Value");
+                    bsmf.MainFrame.show(getMessageTag(1008));
                     initvars(null);
                 } 
          
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Problem updating clock_code");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             } finally {
                 if (res != null) {
                     res.close();
@@ -348,7 +414,7 @@ public class ClockCodeMaint extends javax.swing.JPanel {
               
                     while (res.next()) {
                        if (res.getInt("clc_syscode") > 0) {
-                           bsmf.MainFrame.show("Cannot delete this code...it is a system defined code");
+                           bsmf.MainFrame.show(getMessageTag(1046));
                            proceed = false;
                        }
                     }
@@ -358,7 +424,7 @@ public class ClockCodeMaint extends javax.swing.JPanel {
                    int i = st.executeUpdate("delete from clock_code where clc_code = " + "'" + tbcode.getText() + "'" +
                            " AND clc_syscode <> '1' " + ";");
                     if (i > 0) {
-                    bsmf.MainFrame.show("deleted code" + tbcode.getText() );
+                    bsmf.MainFrame.show(getMessageTag(1045) );
                     initvars(null);
                     }
                     
@@ -367,7 +433,7 @@ public class ClockCodeMaint extends javax.swing.JPanel {
                    
                 } catch (SQLException s) {
                     MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to Delete Code Record");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             } finally {
                 if (res != null) {
                     res.close();

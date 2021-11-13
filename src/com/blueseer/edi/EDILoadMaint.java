@@ -26,7 +26,9 @@ SOFTWARE.
 
 package com.blueseer.edi;
 
+import static bsmf.MainFrame.tags;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.EDData;
 import com.blueseer.utl.OVData;
 import java.awt.Color;
@@ -47,9 +49,15 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.SwingWorker;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -198,9 +206,55 @@ public class EDILoadMaint extends javax.swing.JPanel {
      */
     public EDILoadMaint() {
         initComponents();
+        setLanguageTags(this);
     }
 
-     public void readFile(String file, String dir) throws MalformedURLException, SmbException {
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+    
+    
+    public void readFile(String file, String dir) throws MalformedURLException, SmbException {
     tafile.setText("");
 //    File folder = new File("smb://10.17.2.55/edi");
   // File[] listOfFiles = folder.listFiles();
@@ -283,7 +337,7 @@ public class EDILoadMaint extends javax.swing.JPanel {
         
     }
     
-       public static String parseXMLsmb(SmbFile edifile) throws ParserConfigurationException, SAXException, IOException, TransformerException {
+    public static String parseXMLsmb(SmbFile edifile) throws ParserConfigurationException, SAXException, IOException, TransformerException {
         String xmlString = "";
         
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
@@ -486,6 +540,7 @@ public class EDILoadMaint extends javax.swing.JPanel {
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("EDI Inbound Loading"));
+        jPanel1.setName("panelmain"); // NOI18N
 
         tablereport.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -531,6 +586,7 @@ public class EDILoadMaint extends javax.swing.JPanel {
         );
 
         cbtoggle.setText("Load Toggle");
+        cbtoggle.setName("cbtoggle"); // NOI18N
         cbtoggle.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbtoggleActionPerformed(evt);
@@ -538,6 +594,7 @@ public class EDILoadMaint extends javax.swing.JPanel {
         });
 
         btProcess.setText("Run");
+        btProcess.setName("btrun"); // NOI18N
         btProcess.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btProcessActionPerformed(evt);
@@ -545,6 +602,7 @@ public class EDILoadMaint extends javax.swing.JPanel {
         });
 
         btrefresh.setText("Refresh List");
+        btrefresh.setName("btrefresh"); // NOI18N
         btrefresh.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btrefreshActionPerformed(evt);
@@ -552,6 +610,7 @@ public class EDILoadMaint extends javax.swing.JPanel {
         });
 
         btmanual.setText("Manual Search");
+        btmanual.setName("btsearch"); // NOI18N
         btmanual.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btmanualActionPerformed(evt);
@@ -559,8 +618,10 @@ public class EDILoadMaint extends javax.swing.JPanel {
         });
 
         jLabel1.setText("Files:");
+        jLabel1.setName("lblcount"); // NOI18N
 
         cbdebug.setText("Debug");
+        cbdebug.setName("cbdebug"); // NOI18N
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -667,16 +728,16 @@ public class EDILoadMaint extends javax.swing.JPanel {
                  }
              }
               
-            bsmf.MainFrame.show("Processed " + String.valueOf(j) + " files");
+            bsmf.MainFrame.show(getMessageTag(1121,String.valueOf(j)));
             
             getFiles();
             
        } catch (IOException ex) {
            ex.printStackTrace();
-          bsmf.MainFrame.show("ioexception");
+          bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
          
        }  catch (ClassNotFoundException ex) {
-          bsmf.MainFrame.show("classexception");
+          bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
        }
          
     }//GEN-LAST:event_btProcessActionPerformed

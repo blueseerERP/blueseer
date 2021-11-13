@@ -30,10 +30,13 @@ import bsmf.MainFrame;
 import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
+import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.awt.Color;
+import java.awt.Component;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -44,7 +47,15 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 
 /**
  *
@@ -60,8 +71,52 @@ public class ClockMaint extends javax.swing.JPanel {
      */
     public ClockMaint() {
         initComponents();
+        setLanguageTags(this);
     }
 
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
     
     
     public void enableAll() {
@@ -134,7 +189,7 @@ public class ClockMaint extends javax.swing.JPanel {
             hasRec = true;
             
             if (res.getString("code_id").equals("01") ) {
-                bsmf.MainFrame.show("Must close record first...must clock out");
+                bsmf.MainFrame.show(getMessageTag(1159));
             } else {
             lblemployee.setText(res.getString("t_emp_nbr") + "  " + res.getString("emp_fname") + 
                                "  " + res.getString("emp_lname"));
@@ -158,7 +213,7 @@ public class ClockMaint extends javax.swing.JPanel {
         }
       catch (SQLException s){
           MainFrame.bslog(s);
-       bsmf.MainFrame.show("Cannot Retrieve View on RecID.");
+       bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
       } finally {
                 if (res != null) {
                     res.close();
@@ -268,8 +323,10 @@ public class ClockMaint extends javax.swing.JPanel {
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Clock Record Maintenance"));
+        jPanel1.setName("panelmain"); // NOI18N
 
         jLabel1.setText("RecordID");
+        jLabel1.setName("lblid"); // NOI18N
 
         tbtothrs.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -278,8 +335,10 @@ public class ClockMaint extends javax.swing.JPanel {
         });
 
         jLabel2.setText("InDate");
+        jLabel2.setName("lblindate"); // NOI18N
 
         jLabel4.setText("Adj InTime");
+        jLabel4.setName("lblintimeadj"); // NOI18N
 
         tbrecid.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -288,16 +347,21 @@ public class ClockMaint extends javax.swing.JPanel {
         });
 
         jLabel3.setText("InTime");
+        jLabel3.setName("lblintime"); // NOI18N
 
         jLabel7.setText("Adj OutTime");
+        jLabel7.setName("lblouttimeadj"); // NOI18N
 
         jLabel8.setText("Total Hours");
+        jLabel8.setName("lbltothours"); // NOI18N
 
         jLabel6.setText("OutTime");
+        jLabel6.setName("lblouttime"); // NOI18N
 
         dcindate.setDateFormatString("yyyy-MM-dd");
 
         btupdate.setText("Update");
+        btupdate.setName("btupdate"); // NOI18N
         btupdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btupdateActionPerformed(evt);
@@ -305,6 +369,7 @@ public class ClockMaint extends javax.swing.JPanel {
         });
 
         jLabel5.setText("OutDate");
+        jLabel5.setName("lbloutdate"); // NOI18N
 
         dcoutdate.setDateFormatString("yyyy-MM-dd");
 
@@ -328,8 +393,10 @@ public class ClockMaint extends javax.swing.JPanel {
         });
 
         jLabel9.setText("Hour");
+        jLabel9.setName("lblhour"); // NOI18N
 
         jLabel10.setText("Minute");
+        jLabel10.setName("lblminute"); // NOI18N
 
         ddOutTimeHr.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -344,16 +411,22 @@ public class ClockMaint extends javax.swing.JPanel {
         });
 
         jLabel11.setText("Hour");
+        jLabel11.setName("lblhour"); // NOI18N
 
         jLabel12.setText("Minute");
+        jLabel12.setName("lblminute"); // NOI18N
 
         jLabel13.setText("NewInTime");
+        jLabel13.setName("lblnewintime"); // NOI18N
 
         jLabel14.setText("NewOutTime");
+        jLabel14.setName("lblnewouttime"); // NOI18N
 
         jLabel15.setText("New Tot Hours");
+        jLabel15.setName("lblnewtothours"); // NOI18N
 
         jLabel16.setText("ClockCode");
+        jLabel16.setName("lblcode"); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -537,13 +610,13 @@ public class ClockMaint extends javax.swing.JPanel {
                               " where recid = " + "'" + tbrecid.getText().toString() + "'" +
                               ";" );
         
-        bsmf.MainFrame.show("Updated RecID");
+        bsmf.MainFrame.show(getMessageTag(1008));
         initvars(new String[]{tbrecid.getText()});
             } // if proceed
         }
       catch (SQLException s){
           MainFrame.bslog(s);
-        bsmf.MainFrame.show("SQL code does not execute.");
+        bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
       } finally {
                 if (res != null) {
                     res.close();
@@ -564,7 +637,7 @@ public class ClockMaint extends javax.swing.JPanel {
         if (x.equals("error")) {
             tbtothrs.setText("");
             tbtothrs.setBackground(Color.yellow);
-            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            bsmf.MainFrame.show(getMessageTag(1000));
             tbtothrs.requestFocus();
         } else {
             tbtothrs.setText(x);

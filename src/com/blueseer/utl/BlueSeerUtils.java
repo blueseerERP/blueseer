@@ -159,6 +159,7 @@ public class BlueSeerUtils {
         public static JRadioButton lurb5 = null;
         public static JTextField luinput = new JTextField(20);
     
+    
     public static void callCountrySet() {
         
         JDialog countrydialog = new JDialog();
@@ -166,6 +167,7 @@ public class BlueSeerUtils {
         countrydialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         javax.swing.JComboBox ddcountries = new javax.swing.JComboBox<>();
         javax.swing.JButton btcommit = new javax.swing.JButton();
+        
         ddcountries.removeAllItems();
         ArrayList<String> countries = OVData.getCodeMstrValueList("country");
       //  ArrayList<String> curr = OVData.getCurrlist();
@@ -187,22 +189,22 @@ public class BlueSeerUtils {
         });
         
         JPanel panel = new JPanel();
+        /*
         panel.setLayout(new GridBagLayout());
-      
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(2,2,2,2);
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.gridx = 0;
         gbc.gridy = 0;
         panel.add(ddcountries, gbc);
-        
-        
         gbc.gridwidth = 1;
         gbc.gridx = 0;
         gbc.gridy = 1;
         panel.add(btcommit, gbc);
-       
+        */
         
+        panel.add(ddcountries);
+        panel.add(btcommit);
         countrydialog.add(panel);
         countrydialog.setPreferredSize(new Dimension(300, 200));
         countrydialog.pack();
@@ -211,7 +213,8 @@ public class BlueSeerUtils {
         countrydialog.setVisible(true);
         ddcountries.requestFocus();
     } 
-            
+    
+    
     public static void callDialog(String rb1) {
         
          if (ludialog != null) {

@@ -35,6 +35,7 @@
             <TitledBorder title="EDI Control Maintenance"/>
           </Border>
         </Property>
+        <Property name="name" type="java.lang.String" value="panelmain" noResource="true"/>
       </Properties>
 
       <Layout>
@@ -149,6 +150,7 @@
         <Component class="javax.swing.JLabel" name="jLabel2">
           <Properties>
             <Property name="text" type="java.lang.String" value="Default In Dir"/>
+            <Property name="name" type="java.lang.String" value="lblindir" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="tboutdir">
@@ -158,16 +160,19 @@
         <Component class="javax.swing.JLabel" name="jLabel1">
           <Properties>
             <Property name="text" type="java.lang.String" value="Default Out Dir"/>
+            <Property name="name" type="java.lang.String" value="lbloutdir" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel3">
           <Properties>
             <Property name="text" type="java.lang.String" value="Default Out Script"/>
+            <Property name="name" type="java.lang.String" value="lblscriptdir" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="btupdate">
           <Properties>
             <Property name="text" type="java.lang.String" value="Update"/>
+            <Property name="name" type="java.lang.String" value="btupdate" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btupdateActionPerformed"/>
@@ -178,6 +183,7 @@
         <Component class="javax.swing.JLabel" name="jLabel4">
           <Properties>
             <Property name="text" type="java.lang.String" value="Inbound Archive"/>
+            <Property name="name" type="java.lang.String" value="lblarchindir" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="tboutarch">
@@ -185,11 +191,13 @@
         <Component class="javax.swing.JLabel" name="jLabel5">
           <Properties>
             <Property name="text" type="java.lang.String" value="Outbound Archive"/>
+            <Property name="name" type="java.lang.String" value="lblarchoutdir" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JCheckBox" name="cbarchive">
           <Properties>
             <Property name="text" type="java.lang.String" value="Archive?"/>
+            <Property name="name" type="java.lang.String" value="cbarchive" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="tbbatch">
@@ -197,11 +205,13 @@
         <Component class="javax.swing.JLabel" name="jLabel7">
           <Properties>
             <Property name="text" type="java.lang.String" value="Batch Directory"/>
+            <Property name="name" type="java.lang.String" value="lblbatchdir" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JCheckBox" name="cbdelete">
           <Properties>
             <Property name="text" type="java.lang.String" value="Delete (no archive)"/>
+            <Property name="name" type="java.lang.String" value="cbdelete" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="tberrordir">
@@ -209,6 +219,7 @@
         <Component class="javax.swing.JLabel" name="jLabel8">
           <Properties>
             <Property name="text" type="java.lang.String" value="Error Directory"/>
+            <Property name="name" type="java.lang.String" value="lblerrordir" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="tbstructure">
@@ -216,6 +227,7 @@
         <Component class="javax.swing.JLabel" name="jLabel12">
           <Properties>
             <Property name="text" type="java.lang.String" value="IFS / OFS Dir"/>
+            <Property name="name" type="java.lang.String" value="lblfsdir" noResource="true"/>
           </Properties>
         </Component>
       </SubComponents>

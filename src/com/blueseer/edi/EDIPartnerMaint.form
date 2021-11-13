@@ -28,6 +28,7 @@
             <TitledBorder title="Partner Maintenance"/>
           </Border>
         </Property>
+        <Property name="name" type="java.lang.String" value="panelmain" noResource="true"/>
       </Properties>
 
       <Layout>
@@ -74,6 +75,7 @@
         <Component class="javax.swing.JButton" name="btupdate">
           <Properties>
             <Property name="text" type="java.lang.String" value="Update"/>
+            <Property name="name" type="java.lang.String" value="btupdate" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btupdateActionPerformed"/>
@@ -86,6 +88,7 @@
                 <TitledBorder title="Aliases Add/Delete"/>
               </Border>
             </Property>
+            <Property name="name" type="java.lang.String" value="panelalias" noResource="true"/>
           </Properties>
 
           <Layout>
@@ -144,6 +147,7 @@
             <Component class="javax.swing.JLabel" name="jLabel3">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Alias ID"/>
+                <Property name="name" type="java.lang.String" value="lblalias" noResource="true"/>
               </Properties>
             </Component>
             <Container class="javax.swing.JScrollPane" name="jScrollPane1">
@@ -170,11 +174,13 @@
             <Component class="javax.swing.JCheckBox" name="cbdefault">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Default?"/>
+                <Property name="name" type="java.lang.String" value="cbdefault" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JButton" name="btdeletealias">
               <Properties>
                 <Property name="text" type="java.lang.String" value="DeleteAlias"/>
+                <Property name="name" type="java.lang.String" value="btdeleteitem" noResource="true"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btdeletealiasActionPerformed"/>
@@ -185,6 +191,7 @@
             <Component class="javax.swing.JButton" name="btaddalias">
               <Properties>
                 <Property name="text" type="java.lang.String" value="AddAlias"/>
+                <Property name="name" type="java.lang.String" value="btadditem" noResource="true"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btaddaliasActionPerformed"/>
@@ -199,6 +206,7 @@
                 <TitledBorder title="Header"/>
               </Border>
             </Property>
+            <Property name="name" type="java.lang.String" value="panelheader" noResource="true"/>
           </Properties>
 
           <Layout>
@@ -257,6 +265,7 @@
             <Component class="javax.swing.JButton" name="btnew">
               <Properties>
                 <Property name="text" type="java.lang.String" value="New"/>
+                <Property name="name" type="java.lang.String" value="btnew" noResource="true"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnewActionPerformed"/>
@@ -265,11 +274,13 @@
             <Component class="javax.swing.JLabel" name="jLabel5">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Code"/>
+                <Property name="name" type="java.lang.String" value="lblcode" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel6">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Desc"/>
+                <Property name="name" type="java.lang.String" value="lbldesc" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="tbkey">
@@ -282,6 +293,7 @@
             <Component class="javax.swing.JButton" name="btclear">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Clear"/>
+                <Property name="name" type="java.lang.String" value="btclear" noResource="true"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btclearActionPerformed"/>
@@ -302,6 +314,7 @@
         <Component class="javax.swing.JButton" name="btadd">
           <Properties>
             <Property name="text" type="java.lang.String" value="Add"/>
+            <Property name="name" type="java.lang.String" value="btadd" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btaddActionPerformed"/>
@@ -310,6 +323,7 @@
         <Component class="javax.swing.JButton" name="btdelete">
           <Properties>
             <Property name="text" type="java.lang.String" value="Delete"/>
+            <Property name="name" type="java.lang.String" value="btdelete" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btdeleteActionPerformed"/>

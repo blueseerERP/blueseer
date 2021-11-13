@@ -28,15 +28,25 @@ package com.blueseer.tca;
 import bsmf.MainFrame;
 import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.pass;
+import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.utl.BlueSeerUtils;
 import com.blueseer.utl.IBlueSeerc;
+import java.awt.Component;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.SwingWorker;
 
 /**
@@ -50,8 +60,9 @@ public class ClockControl extends javax.swing.JPanel implements IBlueSeerc {
     
     public ClockControl() {
         initComponents();
+         setLanguageTags(this);
     }
-
+    
     // global variable declarations
                 boolean isLoad = false;
     
@@ -117,6 +128,50 @@ public class ClockControl extends javax.swing.JPanel implements IBlueSeerc {
        isLoad = false;
     }
     
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+    
     public String[] setAction(int i) {
         String[] m = new String[2];
         if (i > 0) {
@@ -163,9 +218,7 @@ public class ClockControl extends javax.swing.JPanel implements IBlueSeerc {
                         i++;
                     }
                      if (i == 0) {
-                     st.executeUpdate("insert into clock_ctrl values (" + "'" + scancard + "'" + ")" + ";");              
-                          bsmf.MainFrame.show("Inserting Defaults");   
-                          bsmf.MainFrame.show("Inserting Defaults");
+                     st.executeUpdate("insert into clock_ctrl values (" + "'" + scancard + "'" + ")" + ";");  
                     m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
                 } else {
                     st.executeUpdate("update clock_ctrl set " 
@@ -246,10 +299,13 @@ public class ClockControl extends javax.swing.JPanel implements IBlueSeerc {
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("TimeClock Control"));
+        jPanel1.setName("panelmain"); // NOI18N
 
         cbscancard.setText("Use ScanCard?");
+        cbscancard.setName("cbscancard"); // NOI18N
 
         btupdate.setText("Update");
+        btupdate.setName("btupdate"); // NOI18N
         btupdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btupdateActionPerformed(evt);

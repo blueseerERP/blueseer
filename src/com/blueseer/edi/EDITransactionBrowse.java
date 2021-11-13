@@ -29,10 +29,12 @@ package com.blueseer.edi;
 import bsmf.MainFrame;
 import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.pass;
+import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.utl.EDData;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.awt.Color;
 import java.awt.Component;
 import java.io.IOException;
@@ -54,7 +56,14 @@ import java.text.DecimalFormatSymbols;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.table.DefaultTableCellRenderer;
 import jcifs.smb.SmbException;
 
@@ -287,7 +296,7 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Sql code does not execute");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             } finally {
                 if (res != null) {
                     res.close();
@@ -392,7 +401,7 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Sql code does not execute");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             } finally {
                 if (res != null) {
                     res.close();
@@ -415,10 +424,55 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
      */
     
 
-public EDITransactionBrowse() {
+    public EDITransactionBrowse() {
         initComponents();
+        setLanguageTags(this);
     }
 
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+    
     public void getdetail(String comkey) {
       
          modeldetail.setNumRows(0);
@@ -450,7 +504,7 @@ public EDITransactionBrowse() {
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Unable to get browse detail");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             } finally {
                 if (res != null) {
                     res.close();
@@ -565,6 +619,7 @@ public EDITransactionBrowse() {
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("EDITranBrowse"));
+        jPanel1.setName("panelmain"); // NOI18N
 
         tablepanel.setLayout(new javax.swing.BoxLayout(tablepanel, javax.swing.BoxLayout.LINE_AXIS));
 
@@ -626,6 +681,7 @@ public EDITransactionBrowse() {
         tablepanel.add(textpanel);
 
         btdetail.setText("Hide Detail");
+        btdetail.setName("bthidedetail"); // NOI18N
         btdetail.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdetailActionPerformed(evt);
@@ -633,6 +689,7 @@ public EDITransactionBrowse() {
         });
 
         btRun.setText("Run");
+        btRun.setName("btrun"); // NOI18N
         btRun.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btRunActionPerformed(evt);
@@ -640,18 +697,23 @@ public EDITransactionBrowse() {
         });
 
         jLabel5.setText("From Date:");
+        jLabel5.setName("lblfromdate"); // NOI18N
 
         jLabel6.setText("To Date:");
+        jLabel6.setName("lbltodate"); // NOI18N
 
         dcfrom.setDateFormatString("yyyy-MM-dd");
 
         dcto.setDateFormatString("yyyy-MM-dd");
 
         jLabel3.setText("TradeID");
+        jLabel3.setName("lbltpid"); // NOI18N
 
         jLabel4.setText("DocType");
+        jLabel4.setName("lbldoctype"); // NOI18N
 
         bthidetext.setText("Hide Text");
+        bthidetext.setName("bthidetext"); // NOI18N
         bthidetext.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bthidetextActionPerformed(evt);
@@ -659,8 +721,10 @@ public EDITransactionBrowse() {
         });
 
         cbshowall.setText("Show Entire File");
+        cbshowall.setName("cbshowentire"); // NOI18N
 
         rbFileLog.setText("FileLogView");
+        rbFileLog.setName("cbfilelog"); // NOI18N
         rbFileLog.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 rbFileLogActionPerformed(evt);
@@ -668,6 +732,7 @@ public EDITransactionBrowse() {
         });
 
         rbDocLog.setText("DocLogView");
+        rbDocLog.setName("cbdoclog"); // NOI18N
         rbDocLog.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 rbDocLogActionPerformed(evt);
@@ -681,10 +746,13 @@ public EDITransactionBrowse() {
         });
 
         jLabel1.setText("SegDelim (int)");
+        jLabel1.setName("lblsegdelim"); // NOI18N
 
         jLabel7.setText("Reference");
+        jLabel7.setName("lblref"); // NOI18N
 
         btreprocess.setText("Reprocess");
+        btreprocess.setName("btreprocess"); // NOI18N
         btreprocess.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btreprocessActionPerformed(evt);
@@ -777,12 +845,14 @@ public EDITransactionBrowse() {
         );
 
         jLabel8.setText("Total Errors:");
+        jLabel8.setName("lbltotalerrors"); // NOI18N
 
         tbtoterrors.setText("0");
 
         tbtot.setText("0");
 
         jLabel11.setText("Total Transactions:");
+        jLabel11.setName("lbltotaltrans"); // NOI18N
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -1065,7 +1135,7 @@ public EDITransactionBrowse() {
         
         int[] rows = tablereport.getSelectedRows();
         if (rows.length > 1) {
-            bsmf.MainFrame.show("Can only reprocess one at a time");
+            bsmf.MainFrame.show(getMessageTag(1162));
             return;
         }
         for (int i : rows) {
@@ -1075,7 +1145,8 @@ public EDITransactionBrowse() {
                     try {
                         batch = EDData.getEDIBatchDir() + "/" + batch; 
                        String[] m = EDI.processFile(batch, "", "", "", false, true, Integer.valueOf(tablereport.getValueAt(i, 2).toString()), Integer.valueOf(tablereport.getValueAt(i, 1).toString()));
-                       bsmf.MainFrame.show("reprocess complete: " + m[0] + "/" + m[1]);
+                       String result = m[0] + " of " + m[1];
+                       bsmf.MainFrame.show(getMessageTag(1163,result));
                     } catch (IOException ex) {
                         MainFrame.bslog(ex);
                     } catch (ClassNotFoundException ex) {

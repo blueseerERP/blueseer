@@ -28,17 +28,27 @@ package com.blueseer.edi;
 import bsmf.MainFrame;
 import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.pass;
+import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.OVData;
+import java.awt.Component;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 
 /**
  *
@@ -49,10 +59,57 @@ public class EDIControl extends javax.swing.JPanel {
     /**
      * Creates new form EDIControlPanel
      */
+    
     public EDIControl() {
         initComponents();
+        setLanguageTags(this);
     }
 
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+    
+    
     public void copyPartnerDoc(String fromid, String fromdoc, String fromsndgs, String fromrcvgs, String toid, String tosndgs, String torcvgs) {
          try {
             Connection con = DriverManager.getConnection(url + db, user, pass);
@@ -77,9 +134,9 @@ public class EDIControl extends javax.swing.JPanel {
                             " and em.edi_doc = " + "'" + fromdoc + "'" +
                             " and em.edi_sndgs = " + "'" + fromsndgs + "'" +
                             " and em.edi_rcvgs = " + "'" + fromrcvgs + "'");
-                    bsmf.MainFrame.show("Copy Complete");
+                    bsmf.MainFrame.show(getMessageTag(1125));
                     } else {
-                    bsmf.MainFrame.show("Record already exists with that Partner and DocType");    
+                    bsmf.MainFrame.show(getMessageTag(1014));    
                     }
                     
             } catch (SQLException s) {
@@ -124,7 +181,7 @@ public class EDIControl extends javax.swing.JPanel {
                 }
                
                 if (i == 0)
-                    bsmf.MainFrame.show("No EDI Ctrl Record found");
+                    bsmf.MainFrame.show(getMessageTag(1001));
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
@@ -184,14 +241,19 @@ public class EDIControl extends javax.swing.JPanel {
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("EDI Control Maintenance"));
+        jPanel1.setName("panelmain"); // NOI18N
 
         jLabel2.setText("Default In Dir");
+        jLabel2.setName("lblindir"); // NOI18N
 
         jLabel1.setText("Default Out Dir");
+        jLabel1.setName("lbloutdir"); // NOI18N
 
         jLabel3.setText("Default Out Script");
+        jLabel3.setName("lblscriptdir"); // NOI18N
 
         btupdate.setText("Update");
+        btupdate.setName("btupdate"); // NOI18N
         btupdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btupdateActionPerformed(evt);
@@ -199,18 +261,25 @@ public class EDIControl extends javax.swing.JPanel {
         });
 
         jLabel4.setText("Inbound Archive");
+        jLabel4.setName("lblarchindir"); // NOI18N
 
         jLabel5.setText("Outbound Archive");
+        jLabel5.setName("lblarchoutdir"); // NOI18N
 
         cbarchive.setText("Archive?");
+        cbarchive.setName("cbarchive"); // NOI18N
 
         jLabel7.setText("Batch Directory");
+        jLabel7.setName("lblbatchdir"); // NOI18N
 
         cbdelete.setText("Delete (no archive)");
+        cbdelete.setName("cbdelete"); // NOI18N
 
         jLabel8.setText("Error Directory");
+        jLabel8.setName("lblerrordir"); // NOI18N
 
         jLabel12.setText("IFS / OFS Dir");
+        jLabel12.setName("lblfsdir"); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -327,7 +396,7 @@ public class EDIControl extends javax.swing.JPanel {
                             + "'" + BlueSeerUtils.boolToInt(cbarchive.isSelected()) + "'" + ","      
                             + "'" + BlueSeerUtils.boolToInt(cbdelete.isSelected()) + "'"        
                             + ") ;");              
-                          bsmf.MainFrame.show("Inserting Defaults");
+                          bsmf.MainFrame.show(getMessageTag(1007));
                 } else {
                     st.executeUpdate("update edi_ctrl set " 
                             + "edic_outdir = " + "'" + tboutdir.getText().replace("\\","\\\\") + "'" + ","
@@ -340,7 +409,7 @@ public class EDIControl extends javax.swing.JPanel {
                             + "edic_delete = " + "'" + BlueSeerUtils.boolToInt(cbdelete.isSelected()) + "'" + ","         
                             + "edic_archyesno = " + "'" + BlueSeerUtils.boolToInt(cbarchive.isSelected()) + "'" + "," 
                             + "edic_outftp = " + "'" + tboutscript.getText() + "'" + ";");   
-                    bsmf.MainFrame.show("Updated Defaults");
+                    bsmf.MainFrame.show(getMessageTag(1008));
                 }
               
             } catch (SQLException s) {

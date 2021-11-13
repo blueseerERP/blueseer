@@ -1328,7 +1328,7 @@ public class OVData {
                 }
 
             } catch (SQLException s) {
-                bsmf.MainFrame.show("SQL cannot get Bank list");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             } finally {
                 if (res != null) {
                     res.close();
@@ -1870,7 +1870,7 @@ return myitem;
             } // if proceed
             catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Error while inserting...check printStackTrace");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             } finally {
                 if (res != null) {
                     res.close();
@@ -1981,7 +1981,7 @@ return myitem;
             } // if proceed
             catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Error while inserting...check printStackTrace");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
                 myreturn = true;
             } finally {
                 if (res != null) {
@@ -2050,7 +2050,7 @@ return myitem;
             } // if proceed
             catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Error while inserting...check printStackTrace");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
                 myreturn = true;
             } finally {
                 if (res != null) {
@@ -2298,7 +2298,7 @@ return myitem;
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("SQL cannot get Tax Master");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             } finally {
                 if (res != null) {
                     res.close();
@@ -2338,7 +2338,7 @@ return myitem;
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("SQL cannot get Tax Master info for cust");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             } finally {
                 if (res != null) {
                     res.close();
@@ -2378,7 +2378,7 @@ return myitem;
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("SQL cannot get Tax Master info for cust");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             } finally {
                 if (res != null) {
                     res.close();
@@ -2420,7 +2420,7 @@ return myitem;
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("SQL cannot get Tax Master info for item");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             } finally {
                 if (res != null) {
                     res.close();
@@ -2459,7 +2459,7 @@ return myitem;
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("SQL cannot get Tax Master info for cust");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             } finally {
                 if (res != null) {
                     res.close();
@@ -2498,7 +2498,7 @@ return myitem;
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("SQL cannot get Tax Master info for cust");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             } finally {
                 if (res != null) {
                     res.close();
@@ -2545,7 +2545,7 @@ return myitem;
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("SQL cannot get Tax Amount for cust");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             } finally {
                 if (res != null) {
                     res.close();
@@ -2591,7 +2591,7 @@ return myitem;
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("SQL cannot get Tax Amount for cust");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             } finally {
                 if (res != null) {
                     res.close();
@@ -2637,7 +2637,7 @@ return myitem;
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("SQL cannot get Tax Amount for cust");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             } finally {
                 if (res != null) {
                     res.close();
@@ -2683,7 +2683,7 @@ return myitem;
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("SQL cannot get Tax Amount for cust");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             } finally {
                 if (res != null) {
                     res.close();
@@ -3805,7 +3805,7 @@ return myitem;
             } // if proceed
             catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Error while inserting...check printStackTrace");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
                 myreturn = true;
           } finally {
                if (res != null) res.close();
@@ -3886,7 +3886,7 @@ return myitem;
             } // if proceed
             catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Error while inserting...check printStackTrace");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
                 myreturn = true;
            } finally {
                if (res != null) res.close();
@@ -3937,7 +3937,7 @@ return myitem;
             } // if proceed
             catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Error while inserting...check printStackTrace");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
                 myreturn = true;
            } finally {
                if (res != null) res.close();
@@ -3996,7 +3996,7 @@ return myitem;
             } // if proceed
             catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Error while inserting...check printStackTrace");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
                 myreturn = true;
            } finally {
                if (res != null) res.close();
@@ -4056,7 +4056,7 @@ return myitem;
             } // if proceed
             catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Error while inserting...check printStackTrace");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
                 myreturn = true;
             } finally {
                 if (res != null) {
@@ -4121,7 +4121,7 @@ return myitem;
             } // if proceed
             catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Error while inserting...check printStackTrace");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
                 myreturn = true;
            } finally {
                if (res != null) res.close();
@@ -4179,7 +4179,7 @@ return myitem;
             } // if proceed
             catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Error while inserting...check printStackTrace");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
                 myreturn = true;
            } finally {
                if (res != null) res.close();
@@ -4226,7 +4226,7 @@ return myitem;
             }
             catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Error while inserting...check printStackTrace");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
                 myreturn = true;
             }
             con.close();
@@ -4290,7 +4290,7 @@ return myitem;
         if (! isError) {
             isError = OVData.UpdateInventoryDiscrete(ld[1], ld[2], ld[3], ld[11], ld[12], "", qty); 
         } else {
-            bsmf.MainFrame.show("Error during TRHistIssDiscrete of MassLoad");
+            bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
         }
         
        
@@ -4312,7 +4312,7 @@ return myitem;
             }
             catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Error while inserting...check printStackTrace");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
                 myreturn = true;
             }
             con.close();
@@ -4371,7 +4371,7 @@ return myitem;
             } // if proceed
             catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Error while inserting...check printStackTrace");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
                 myreturn = true;
             } finally {
                if (res != null) res.close();
@@ -4432,7 +4432,7 @@ return myitem;
             } // if proceed
             catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Error while inserting...check printStackTrace");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
                 myreturn = true;
             } finally {
                if (res != null) res.close();
@@ -4512,7 +4512,7 @@ return myitem;
             } // if proceed
             catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Error while inserting...check printStackTrace");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
                 myreturn = true;
             } finally {
                 if (res != null) {
@@ -4552,7 +4552,7 @@ return myitem;
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Cannot retrieve pbm_mstr");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             } finally {
                 if (res != null) {
                     res.close();
@@ -4686,7 +4686,7 @@ return myitem;
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("Cannot retrieve pbmmstr");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             } finally {
                 if (res != null) {
                     res.close();
@@ -4912,7 +4912,7 @@ return myitem;
        }
         catch (SQLException s){
             MainFrame.bslog(s);
-            bsmf.MainFrame.show("Cannot process wip_iss_mtl_gl");
+            bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
         } finally {
                if (res != null) res.close();
                if (st != null) st.close();
@@ -5019,7 +5019,7 @@ return myitem;
        }
         catch (SQLException s){
             MainFrame.bslog(s);
-            bsmf.MainFrame.show("Cannot process " + "wip_iss_mtl_gl_unreported");
+            bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
         } finally {
                if (res != null) res.close();
                if (st != null) st.close();
@@ -5145,7 +5145,7 @@ return myitem;
        }
         catch (SQLException s){
             MainFrame.bslog(s);
-             bsmf.MainFrame.show("Cannot process wip_iss_op_cost_gl");
+             bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
         } finally {
                if (res != null) res.close();
                if (st != null) st.close();
@@ -5276,7 +5276,7 @@ return myitem;
        }
         catch (SQLException s){
             MainFrame.bslog(s);
-             bsmf.MainFrame.show("cannot process wip_iss_op_cost_gl_unreported");
+             bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
         } finally {
                if (res != null) res.close();
                if (st != null) st.close();
@@ -5336,7 +5336,7 @@ return myitem;
            }
             catch (SQLException s){
                 MainFrame.bslog(s);
-                 bsmf.MainFrame.show("SQL cannot get Code Mstr");
+                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             con.close();
         }
@@ -5364,7 +5364,7 @@ return myitem;
            }
             catch (SQLException s){
                 MainFrame.bslog(s);
-                 bsmf.MainFrame.show("SQL cannot get Code Mstr");
+                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             con.close();
         }
@@ -5391,7 +5391,7 @@ return myitem;
            }
             catch (SQLException s){
                 MainFrame.bslog(s);
-                 bsmf.MainFrame.show("SQL cannot get Code Mstr");
+                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             con.close();
         }
@@ -5445,7 +5445,7 @@ return myitem;
 
            }
             catch (SQLException s){
-                 bsmf.MainFrame.show("SQL cannot get Price Code from Cust Mstr");
+                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             con.close();
         }
@@ -5471,7 +5471,7 @@ return myitem;
 
            }
             catch (SQLException s){
-                 bsmf.MainFrame.show("SQL cannot get Price Code from Vend Mstr");
+                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             con.close();
         }
@@ -5780,7 +5780,7 @@ return myitem;
            }
             catch (SQLException s){
                 MainFrame.bslog(s);
-                 bsmf.MainFrame.show("SQL cannot get CodeValueByCodeKey");
+                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             con.close();
         }
@@ -6588,7 +6588,7 @@ return myreturn;
 
        }
         catch (SQLException s){
-             bsmf.MainFrame.show("SQL cannot get site from siteu_mstr");
+             bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
         }
         con.close();
     }
@@ -6862,7 +6862,7 @@ return myreturn;
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("SQL cannot get Tax default account info");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             } finally {
                 if (res != null) {
                     res.close();
@@ -6920,7 +6920,7 @@ return myreturn;
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("SQL cannot get Tax default CC info");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             } finally {
                 if (res != null) {
                     res.close();
@@ -7099,7 +7099,7 @@ return outvalue;
 
        }
         catch (SQLException s){
-             bsmf.MainFrame.show("SQL cannot get prodline from item");
+             bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
         }
         con.close();
     }
@@ -7331,7 +7331,7 @@ return outvalue;
            }
             catch (SQLException s){
                 MainFrame.bslog(s);
-                 bsmf.MainFrame.show("SQL cannot get site list");
+                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             con.close();
         }
@@ -7368,7 +7368,7 @@ return outvalue;
            }
             catch (SQLException s){
                 MainFrame.bslog(s);
-                 bsmf.MainFrame.show("SQL cannot get site list");
+                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             con.close();
         }
@@ -7415,7 +7415,7 @@ return outvalue;
            }
             catch (SQLException s){
                 MainFrame.bslog(s);
-                 bsmf.MainFrame.show("SQL cannot get site list");
+                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             con.close();
         }
@@ -7443,7 +7443,7 @@ return outvalue;
            }
             catch (SQLException s){
                 MainFrame.bslog(s);
-                 bsmf.MainFrame.show("SQL cannot get site list");
+                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             con.close();
         }
@@ -7471,7 +7471,7 @@ return outvalue;
            }
             catch (SQLException s){
                 MainFrame.bslog(s);
-                 bsmf.MainFrame.show("SQL cannot get site list");
+                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             con.close();
         }
@@ -7499,7 +7499,7 @@ return outvalue;
            }
             catch (SQLException s){
                 MainFrame.bslog(s);
-                 bsmf.MainFrame.show("SQL cannot get site list");
+                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             con.close();
         }
@@ -7527,7 +7527,7 @@ return outvalue;
            }
             catch (SQLException s){
                 MainFrame.bslog(s);
-                 bsmf.MainFrame.show("SQL cannot get uom list");
+                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             con.close();
         }
@@ -7731,7 +7731,7 @@ return outvalue;
        }
         catch (SQLException s){
             MainFrame.bslog(s);
-             bsmf.MainFrame.show("SQL cannot get location list");
+             bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
         }
         con.close();
     }
@@ -7761,7 +7761,7 @@ return outvalue;
        }
         catch (SQLException s){
             MainFrame.bslog(s);
-             bsmf.MainFrame.show("SQL cannot get location list by warehouse");
+             bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
         }
         con.close();
     }
@@ -7789,7 +7789,7 @@ return outvalue;
            }
             catch (SQLException s){
                 MainFrame.bslog(s);
-                 bsmf.MainFrame.show("SQL cannot get warehouse list");
+                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             con.close();
         }
@@ -7854,7 +7854,7 @@ return outvalue;
                
            }
             catch (SQLException s){
-                 bsmf.MainFrame.show("SQL cannot get prod code list");
+                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             con.close();
         }
@@ -7881,7 +7881,7 @@ return outvalue;
 
        }
         catch (SQLException s){
-             bsmf.MainFrame.show("SQL cannot get pm code from item");
+             bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
         }
         con.close();
     }
@@ -9027,7 +9027,7 @@ try{
 
    }
     catch (SQLException s){
-         bsmf.MainFrame.show("SQL cannot get WorkFlow Op");
+         bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
     }
     con.close();
 }
@@ -9517,7 +9517,7 @@ return myarray;
        }
         catch (SQLException s){
             MainFrame.bslog(s);
-             bsmf.MainFrame.show("Cannot roll cost");
+             bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
         }
         con.close();
     }
@@ -9621,7 +9621,7 @@ return myarray;
        }
         catch (SQLException s){
             MainFrame.bslog(s);
-             bsmf.MainFrame.show("Cannot simulate cost");
+             bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
         }
         con.close();
     }
@@ -11186,7 +11186,7 @@ return mystring;
              } catch (SQLException s) {
                 // con.rollback();
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("cannot process loadTranHistByTable");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
         con.close();
         } catch (Exception e) {
@@ -11294,7 +11294,7 @@ return mystring;
                
            }
             catch (SQLException s){
-                 bsmf.MainFrame.show("SQL cannot get AcctMstr List");
+                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             con.close();
         }
@@ -11322,7 +11322,7 @@ return mystring;
                
            }
             catch (SQLException s){
-                 bsmf.MainFrame.show("SQL cannot get AcctMstr List");
+                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             con.close();
         }
@@ -11350,7 +11350,7 @@ return mystring;
 
        }
         catch (SQLException s){
-             bsmf.MainFrame.show("SQL cannot get AcctMstr List");
+             bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
         }
         con.close();
     }
@@ -11378,7 +11378,7 @@ return mystring;
 
        }
         catch (SQLException s){
-             bsmf.MainFrame.show("SQL cannot get AcctMstr List");
+             bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
         }
         con.close();
     }
@@ -11618,7 +11618,7 @@ return mystring;
 
        }
         catch (SQLException s){
-             bsmf.MainFrame.show("SQL cannot get AcctMstr List");
+             bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
         }
         con.close();
     }
@@ -11647,7 +11647,7 @@ return mystring;
 
        }
         catch (SQLException s){
-             bsmf.MainFrame.show("SQL cannot get AcctMstr List");
+             bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
         }
         con.close();
     }
@@ -11685,7 +11685,7 @@ return mystring;
 
        }
         catch (SQLException s){
-             bsmf.MainFrame.show("SQL cannot get AcctMstr List");
+             bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
         }
         con.close();
     }
@@ -11713,7 +11713,7 @@ return mystring;
 
        }
         catch (SQLException s){
-             bsmf.MainFrame.show("SQL cannot get AcctMstr Type");
+             bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
         }
         con.close();
     }
@@ -11741,7 +11741,7 @@ return mystring;
 
        }
         catch (SQLException s){
-             bsmf.MainFrame.show("SQL cannot get AcctMstr Desc");
+             bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
         }
         con.close();
     }
@@ -11769,7 +11769,7 @@ return mystring;
 
        }
         catch (SQLException s){
-             bsmf.MainFrame.show("SQL cannot get Dept/CC List");
+             bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
         }
         con.close();
     }
@@ -11925,7 +11925,7 @@ return mystring;
 
        }
         catch (SQLException s){
-             bsmf.MainFrame.show("Cannot retrieve gl_cal info");
+             bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
         }
         con.close();
     }
@@ -12123,7 +12123,7 @@ return mystring;
                
            }
             catch (SQLException s){
-                 bsmf.MainFrame.show("Cannot retrieve acb_mstr info");
+                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             con.close();
         }
@@ -12273,7 +12273,7 @@ return mystring;
 
        }
         catch (SQLException s){
-             bsmf.MainFrame.show("Cannot retrieve acb_mstr info");
+             bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
         }
         con.close();
     }
@@ -12358,7 +12358,7 @@ return mystring;
 
        }
         catch (SQLException s){
-             bsmf.MainFrame.show("Cannot retrieve open order list");
+             bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
         }
         con.close();
     }
@@ -12387,7 +12387,7 @@ return mystring;
        }
         catch (SQLException s){
             MainFrame.bslog(s);
-             bsmf.MainFrame.show("Cannot retrieve glic_def info");
+             bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
         }
         con.close();
     }
@@ -12415,7 +12415,7 @@ return mystring;
 
        }
         catch (SQLException s){
-             bsmf.MainFrame.show("Cannot retrieve glic_def info");
+             bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
         }
         con.close();
     }
@@ -12443,7 +12443,7 @@ return mystring;
 
        }
         catch (SQLException s){
-             bsmf.MainFrame.show("Cannot retrieve glic_def info");
+             bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
         }
         con.close();
     }
@@ -12471,7 +12471,7 @@ return mystring;
 
        }
         catch (SQLException s){
-             bsmf.MainFrame.show("Cannot retrieve glic_def info");
+             bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
         }
         con.close();
     }
@@ -12500,7 +12500,7 @@ return mystring;
 
        }
         catch (SQLException s){
-             bsmf.MainFrame.show("Cannot retrieve glic_accts info");
+             bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
         }
         con.close();
     }
@@ -12533,7 +12533,7 @@ return mystring;
 
        }
         catch (SQLException s){
-             bsmf.MainFrame.show("Cannot retrieve glic_accts info");
+             bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
         }
         con.close();
     }
@@ -12567,7 +12567,7 @@ return mystring;
 
        }
         catch (SQLException s){
-             bsmf.MainFrame.show("Cannot retrieve glic_accts info");
+             bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
         }
         con.close();
     }
@@ -13271,7 +13271,7 @@ return myarray;
                
                
             } catch (SQLException s) {
-               // bsmf.MainFrame.show("Cannot update acb_mstr");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             con.close();
            
@@ -13374,7 +13374,7 @@ return myarray;
 
         } catch (SQLException s) {
             MainFrame.bslog(s);
-           // bsmf.MainFrame.show("Cannot update acb_mstr");
+            bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
         }
         con.close();
 
@@ -14798,7 +14798,7 @@ return myarray;
              
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("error in sourcing");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             } finally {
             if (res != null) {
                 res.close();
@@ -14864,7 +14864,7 @@ return myarray;
              
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show("error in sourcing");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             } finally {
             if (res != null) {
                 res.close();
@@ -14927,7 +14927,7 @@ return myarray;
 
         } catch (SQLException s) {
             MainFrame.bslog(s);
-            bsmf.MainFrame.show("error in sourcing");
+            bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
         } finally {
             if (res != null) {
                 res.close();
@@ -14994,7 +14994,7 @@ return myarray;
               }
            } // if proceed
         } catch (SQLException s) {
-            bsmf.MainFrame.show("unable to confirm");
+            bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
         } finally {
             if (res != null) {
                 res.close();
@@ -15400,7 +15400,7 @@ return myarray;
                
            }
             catch (SQLException s){
-                 bsmf.MainFrame.show("SQL cannot get zebra printer list");
+                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             con.close();
         }
@@ -15431,7 +15431,7 @@ return myarray;
            }
             catch (SQLException s){
                 s.printStackTrace();
-                 bsmf.MainFrame.show("SQL cannot get  printer ip");
+                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             con.close();
         }
@@ -17691,7 +17691,7 @@ MainFrame.bslog(e);
 
        }
         catch (SQLException s){
-             bsmf.MainFrame.show("SQL cannot get Master Task List");
+             bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
         }
         con.close();
     }
@@ -17992,7 +17992,7 @@ MainFrame.bslog(e);
                
            }
             catch (SQLException s){
-                 bsmf.MainFrame.show("SQL cannot get label file list");
+                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             con.close();
         }
@@ -18864,7 +18864,7 @@ MainFrame.bslog(e);
 
             } catch (SQLException s) {
                 s.printStackTrace();
-                bsmf.MainFrame.show("Unable to retrieve fct_mstr");
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             con.close();
         } catch (Exception e) {
@@ -19317,7 +19317,7 @@ return mylist;
                
            }
             catch (SQLException s){
-                 bsmf.MainFrame.show("cannot autoclock");
+                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             }
             con.close();
         }

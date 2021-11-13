@@ -25,9 +25,20 @@ SOFTWARE.
  */
 package com.blueseer.tca;
 
+import static bsmf.MainFrame.tags;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.OVData;
+import java.awt.Component;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 
 /**
  *
@@ -40,8 +51,53 @@ public class ClockAutoMaint extends javax.swing.JPanel {
      */
     public ClockAutoMaint() {
         initComponents();
+        setLanguageTags(this);
     }
 
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
+    
     public void initvars(String[] arg) {
         
     }
@@ -63,10 +119,13 @@ public class ClockAutoMaint extends javax.swing.JPanel {
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Auto Clock Maintenance"));
+        jPanel1.setName("panelmain"); // NOI18N
 
         jLabel1.setText("Number of Days Back");
+        jLabel1.setName("lbldays"); // NOI18N
 
         btsubmit.setText("Submit");
+        btsubmit.setName("btsubmit"); // NOI18N
         btsubmit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btsubmitActionPerformed(evt);
@@ -110,7 +169,7 @@ public class ClockAutoMaint extends javax.swing.JPanel {
        Pattern p = Pattern.compile("^[0-9]\\d*$");
         Matcher m = p.matcher(tbdays.getText());
         if (!m.find() || tbdays.getText() == null) {
-            bsmf.MainFrame.show("Invalid Number of Days...must be an integer");
+            bsmf.MainFrame.show(getMessageTag(1028));
             return;
         } else {
             days = Integer.valueOf(tbdays.getText());
@@ -119,7 +178,7 @@ public class ClockAutoMaint extends javax.swing.JPanel {
         days = (-1 * days);
         
         OVData.autoclock(days);
-        bsmf.MainFrame.show("clock complete");
+        bsmf.MainFrame.show(getMessageTag(1125));
     }//GEN-LAST:event_btsubmitActionPerformed
 
 
