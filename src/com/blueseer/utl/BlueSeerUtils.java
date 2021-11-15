@@ -183,7 +183,7 @@ public class BlueSeerUtils {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
               admData.updateDefaultCountry(OVData.getCodeMstrKeyFromCodeValue("country",ddcountries.getSelectedItem().toString()));
               countrydialog.dispose();
-              bsmf.MainFrame.show("Restart Application");
+              bsmf.MainFrame.show(getMessageTag(1165));
               System.exit(0);
             }
         });

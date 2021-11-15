@@ -1,41 +1,42 @@
-CusRptGroup,Customer Addr Info By ID,custAddrInfoByRange,0,L6
-CusRptGroup,Customer Phone Email By ID,custPhoneEmailByRange,1,P4
-CusRptGroup,Customer Finance setup By ID,custFinanceInfoByRange,2,L8
-CusRptGroup,Customer Shipto list By cust,custShipTosByRange,3,L8
-CusRptGroup,Customer Total Sales By Range,custTotalSalesByRange,4,P5C
-CusRptGroup,Customer Item Xref By cust,custXrefByRange,5,L8
-OrdRptGroup,Orders By Due Date Range,ordersDueDateByRange,0,L8C
-OrdRptGroup,Orders By Order Date Range,ordersOrdDateByRange,1,L8C
-OrdRptGroup,Orders By Cust/Date Range,ordersCustDateByRange,2,L8C
-OrdRptGroup,Open Orders By Cust,ordersOpenByCust,3,L8C
-OrdRptGroup,Open Orders Detail By Cust,ordersOpenDetailByCust,4,L8
-OrdRptGroup,Orders OnHold By Cust,ordersOnHoldByCust,5,L8C
-OrdRptGroup,Order Shipments By PO,ordersShippedDetailByPO,6,L8
-InvRptGroup,Item Info By Item Range,iteminfoByItemRange,0,L2
-InvRptGroup,Item Info By ProdLine Range,itemByProdLineRange,1,L2
-InvRptGroup,Item Costs By Item Range,itemCostsRange,2,L8
-InvRptGroup,Item Cust Price By Item,itemCustPriceRange,3,L8
-InvRptGroup,Item Inventory By Item,itemInventoryRange,4,L7
-InvRptGroup,Item QOH By Item,itemQOHRange,5,L6
-InvRptGroup,Order Allocations By Item,itemAllocatedToOrder,6,L7
-VenRptGroup,Vendor Master By Vend Code,vendAddrInfoByRange,0,L8
-VenRptGroup,Vendor Contact Info By Code,vendPhoneEmailByRange,1,L8
-VenRptGroup,Vendor Finance Info By Code,vendFinanceInfoByRange,2,L8
-VenRptGroup,Vendor Total Purchases By Code/Date,vendTotalPurchasesByRange,3,L8
-PurRptGroup,POs By PO Date,poByOrdDateRange,0,L8
-PurRptGroup,POs By Vendor,poByVendRange,1,L8
-PurRptGroup,POs By Vend / PO Date,poByVendOrdDateRange,2,L8
-PurRptGroup,POs By PO Detail By Vend,poDetailByVendRange,3,L8
-ARRptGroup,AR Entries by Customer,AREntriesByCust,0,L2
-ARRptGroup,AR Aging by Customer,ARAgingByCust,1,L7
-ARRptGroup,AR Aging Detail by Customer,ARAgingDetailByCust,2,L2
-ARRptGroup,AR Payments by Customer Date,ARPaymentsByCustDate,3,L8
-APRptGroup,AP Entries by APNbr,apByNbrRange,0,L11
-APRptGroup,AP Entries by Vendor,apByVendorRange,1,L11
-HRRptGroup,Employees Report by EmpNbr,employeeByEmpNbr,0,L8
-ShpRptGroup,Shippers by ShipDate Range,shippersByShipDateRange,0,L11
-ShpRptGroup,Shippers by Number Range,shippersByShipNbrRange,1,L11
-ShpRptGroup,Shippers by Customer Date Range,shippersByCustDateRange,2,L11
-ShpRptGroup,Shipper Detail by Customer Date,shipperDetailByCustDateRange,3,L8
-SchRptGroup,Plan Orders By Item,planOrdersByItem,0,L11
-SchRptGroup,Plan Orders By Sales Order,planOrdersBySalesOrder,1,L11
+﻿CusRptGroup,Kimliğe Göre Müşteri Adres Bilgileri,custAddrInfoByRange,0,L6
+CusRptGroup,Kimliğe Göre Müşteri Telefonu E-postası,custPhoneEmailByRange,1,P4
+CusRptGroup,Kimliğe göre Müşteri Finans kurulumu,custFinanceInfoByRange,2,L8
+CusRptGroup,Müşteri Gönderi listesi Müşteriye göre,custShipTosByRange,3,L8
+CusRptGroup,Aralığa Göre Müşteri Toplam Satışları,custTotalSalesByRange,4,P5C
+CusRptGroup,Müşteri Öğesi Xref Müşteriye göre,custXrefByRange,5,L8
+OrdRptGroup,Son Tarih Aralığına Göre Siparişler,ordersDueDateByRange,0,L8C
+OrdRptGroup,Sipariş Tarih Aralığına Göre Siparişler,ordersOrdDateByRange,1,L8C
+OrdRptGroup,Müşteri/Tarih Aralığına Göre Siparişler,ordersCustDateByRange,2,L8C
+OrdRptGroup,Müşteriye Göre Açık Siparişler,ordersOpenByCust,3,L8C
+OrdRptGroup,Müşteriye Göre Açık Sipariş Detayı,ordersOpenDetailByCust,4,L8
+OrdRptGroup,Müşteri Tarafından Bekletilen Siparişler,ordersOnHoldByCust,5,L8C
+OrdRptGroup,Gönderileri PO Tarafından Sipariş Edin,ordersShippedDetailByPO,6,L8
+InvRptGroup,Ürün Aralığına Göre Ürün Bilgisi,iteminfoByItemRange,0,L2
+InvRptGroup,Ürün Bilgisi ProdLine Aralığına Göre,itemByProdLineRange,1,L2
+InvRptGroup,Ürün Aralığına Göre Ürün Maliyetleri,itemCostsRange,2,L8
+InvRptGroup,Ürüne Göre Özel Fiyat,itemCustPriceRange,3,L8
+InvRptGroup,Öğeye Göre Öğe Envanteri,itemInventoryRange,4,L7
+InvRptGroup,Öğe QOH Öğeye Göre,itemQOHRange,5,L6
+InvRptGroup,Öğeye Göre Tahsisleri Sırala,itemAllocatedToOrder,6,L7
+VenRptGroup,Satıcı Koduna Göre Satıcı Yöneticisi,vendAddrInfoByRange,0,L8
+VenRptGroup,Kodla Satıcı İletişim Bilgileri,vendPhoneEmailByRange,1,L8
+VenRptGroup,Kodla Satıcı Finansman Bilgileri,vendFinanceInfoByRange,2,L8
+VenRptGroup,Kod/Tarihe Göre Satıcı Toplam Alımları,vendTotalPurchasesByRange,3,L8
+PurRptGroup,PO Tarihine Göre PO'lar,poByOrdDateRange,0,L8
+PurRptGroup,Satıcıya Göre PO'lar,poByVendRange,1,L8
+PurRptGroup,Vend / PO Tarihine Göre PO'lar,poByVendOrdDateRange,2,L8
+PurRptGroup,Satıcıya Göre PO Detayı,poDetailByVendRange,3,L8
+ARRptGroup,Müşteriye Göre AR Girişleri,AREntriesByCust,0,L2
+ARRptGroup,Müşteriye Göre AR Yaşlandırma,ARAgingByCust,1,L7
+ARRptGroup,Müşteriye Göre AR Yaşlandırma Ayrıntısı,ARAgingDetailByCust,2,L2
+ARRptGroup,Müşteri Tarihine Göre AR Ödemeleri,ARPaymentsByCustDate,3,L8
+APRptGroup,APNbr tarafından AP Girişleri,apByNbrRange,0,L11
+APRptGroup,Satıcıya Göre AP Girişleri,apByVendorRange,1,L11
+HRRptGroup,EmpNbr tarafından Çalışan Raporu,employeeByEmpNbr,0,L8
+ShpRptGroup,ShipDate Aralığına göre Göndericiler,shippersByShipDateRange,0,L11
+ShpRptGroup,Numara Aralığına Göre Göndericiler,shippersByShipNbrRange,1,L11
+ShpRptGroup,Müşteri Tarih Aralığına Göre Göndericiler,shippersByCustDateRange,2,L11
+ShpRptGroup,Müşteri Tarihine Göre Gönderici Detayı,shipperDetailByCustDateRange,3,L8
+ShpRptGroup,Satınalma Siparişine Göre Gönderici Detayı,shipperDetailByPO,4,L8
+SchRptGroup,Siparişleri Ürüne Göre Planla,planOrdersByItem,0,L11
+SchRptGroup,Siparişleri Satış Siparişine Göre Planla,planOrdersBySalesOrder,1,L11

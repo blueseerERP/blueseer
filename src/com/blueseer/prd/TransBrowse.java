@@ -385,7 +385,7 @@ public class TransBrowse extends javax.swing.JPanel {
                             .addComponent(jLabel1)
                             .addComponent(jLabel2))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(dcto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel3)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -413,8 +413,7 @@ public class TransBrowse extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRunActionPerformed
-
-    
+ 
 try {
             Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
@@ -438,28 +437,10 @@ try {
                 } else {
                     topart = tbtopart.getText();
                 }
-             
-         
-               //  ScrapReportPanel.MyTableModel mymodel = new ScrapReportPanel.MyTableModel(new Object[][]{},
-               //         new String[]{"Acct", "Description", "Amt"});
-               // tablescrap.setModel(mymodel);
-               
-                   
-                   
-                   
+            
                 mymodel.setNumRows(0);
                 tabletrans.setModel(mymodel);
-             /*
-                tabletrans.getColumnModel().getColumn(0).setCellRenderer(new TransBrowsePanel.SomeRenderer());  
-                Enumeration<TableColumn> en = tabletrans.getColumnModel().getColumns();
-                 while (en.hasMoreElements()) {
-                     TableColumn tc = en.nextElement();
-                     tc.setCellRenderer(new TransBrowsePanel.SomeRenderer());
-                 }
-                     */
-                // TableColumnModel tcm = tablescrap.getColumnModel();
-               // tcm.getColumn(3).setCellRenderer(MainFrame.NumberRenderer.getCurrencyRenderer());  
-                
+            
                  DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
 
                  if (ddtype.getSelectedItem().toString().equals("ALL")) {    

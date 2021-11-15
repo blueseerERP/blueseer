@@ -807,6 +807,110 @@ public class ShpRptPicker extends javax.swing.JPanel {
                
     }
     
+    /* Shipper Detail by Purchase Order */
+    public void shipperDetailByPO (boolean input) {
+        
+        if (input) { // input...draw variable input panel
+           resetVariables();
+           hidePanels();
+           showPanels(new String[]{"tb1"});
+           lbkey1.setText(getClassLabelTag("lblfrompo", this.getClass().getSimpleName()));
+           lbkey2.setText(getClassLabelTag("lbltopo", this.getClass().getSimpleName()));
+          
+         } else { // output...fill report
+            // collect variables from input
+            String frompo = tbkey1.getText();
+            String topo = tbkey2.getText();
+          // cleanup variables
+          
+            if (frompo.isEmpty()) {
+                  frompo = bsmf.MainFrame.lowchar;
+            }
+            if (topo.isEmpty()) {
+                  topo = bsmf.MainFrame.hichar;
+            }
+          
+            
+            // create and fill tablemodel
+            // column 1 is always 'select' and always type ImageIcon
+            // the remaining columns are whatever you require
+             javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+              new String[]{getGlobalColumnTag("select"), 
+                  getGlobalColumnTag("shipper"), 
+                  getGlobalColumnTag("code"), 
+                  getGlobalColumnTag("name"), 
+                  getGlobalColumnTag("shipdate"),
+                  getGlobalColumnTag("po"), 
+                  getGlobalColumnTag("item"), 
+                  getGlobalColumnTag("qty"), 
+                  getGlobalColumnTag("netprice")})
+             {
+              @Override  
+              public Class getColumnClass(int col) {  
+                if (col == 0)       
+                    return ImageIcon.class; 
+                else return String.class;  //other columns accept String values  
+              }  
+                }; 
+            
+      try{
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{   
+                   res = st.executeQuery("SELECT sh_id, sh_cust, cm_name, " +
+                        " sh_shipdate, sh_type, sh_site, shd_po, " +
+                        " shd_part, shd_qty, shd_netprice from ship_mstr " +
+                        " inner join ship_det " +
+                        " on shd_id = sh_id " +
+                        " inner join cm_mstr on cm_code = sh_cust " +
+                        " where shd_po >= " + "'" + frompo + "'" +
+                        " and shd_po <= " + "'" + topo + "'" +
+                        " order by sh_id;");
+
+                while (res.next()) {
+                    mymodel.addRow(new Object[]{ 
+                        BlueSeerUtils.clickflag,  // imageicon always column 1
+                        res.getString("sh_id"), 
+                        res.getString("sh_cust"), 
+                        res.getString("cm_name"),
+                        res.getString("sh_shipdate"),
+                        res.getString("shd_po"),
+                        res.getString("shd_part"),
+                        res.getString("shd_qty"),
+                        res.getString("shd_netprice")
+                            });
+                }
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+              } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+            
+        }
+      
+      // now assign tablemodel to table
+            tablereport.setModel(mymodel);
+            tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
+            Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
+              while (en.hasMoreElements()) {
+                 TableColumn tc = en.nextElement();
+                 if (mymodel.getColumnClass(tc.getModelIndex()).getSimpleName().equals("ImageIcon")) {
+                     continue;
+                 }
+                 tc.setCellRenderer(new ShpRptPicker.renderer1());
+             }
+        } // else run report
+               
+    }
+    
+    
     /* CUSTOM FUNCTIONS END */
     
     /**
