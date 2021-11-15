@@ -12,7 +12,9 @@
 	    value="dist/" />
     <property name="JDK17dir" location="C:\java\jdk-17" />
     <property name="javac17" location="${JDK17dir}/bin/javac" />
+    <property name="javaclinux" location="/opt/jdk-17/bin/javac" />
     <property name="java17" location="${JDK17dir}/bin/java" />
+    <property name="java17l" location="/opt/jdk-17/bin/java" />
     <property name="lang" value="en" />
     <property name="country" value="US" />
 
@@ -48,6 +50,10 @@
     </target>
     <target name="compile" depends="clean, makedir">
         <javac  srcdir="${src.dir}" destdir="${build.dir}" classpathref="build.classpath" includeantruntime="false" debug="true">
+        </javac>
+    </target>
+    <target name="compilelinux" depends="clean, makedir">
+	    <javac  executable="${javaclinux}" fork="yes" srcdir="${src.dir}" destdir="${build.dir}" classpathref="build.classpath" includeantruntime="false" debug="true">
         </javac>
     </target>
 
@@ -125,6 +131,18 @@
 	    <jvmarg value="-Djava.util.logging.config.file=bslogging.properties"/>
         </java>
 </target>
+<target name="runl">
+    <path id="runtime.path">
+	    <fileset dir="../dist" includes="*.jar"/>
+	    <!--  <fileset dir="../lib" includes="*.jar"/> -->
+	    <fileset dir="${test.dir}/edi/maps" includes="*.jar"/>
+    </path>
+    <echo>running in ....${test.dir}</echo>
+    <java classname="bsmf.MainFrame" jvm="${java17l}" fork="true" classpathref="run.classpath" dir="${test.dir}">
+	    <arg value="-debug"/> 
+	    <jvmarg value="-Djava.util.logging.config.file=bslogging.properties"/>
+        </java>
+</target>
  <target name="print-classpath">
 	<pathconvert property="classpathInName" refid="run.classpath" />
 	<echo>Classpath is ${classpathInName}</echo>
@@ -132,6 +150,9 @@
 
 
     <target name="main" depends="compile, jar">
+        <description>Main target</description>
+    </target>
+    <target name="mainl" depends="compilelinux, jar">
         <description>Main target</description>
     </target>
     <target name="main17" depends="compile17, jar">

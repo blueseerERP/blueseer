@@ -31,7 +31,7 @@ cp patch_install.bat $patchdir\
 cp patch_install.sh $patchdir\
 cp ..\sf\patches\patch_instructions.pdf $patchdir\
 cp ..\dist\blueseer.jar $patchdir\
-cp ..\dist\bsmf.jar $patchdir\
+cp ..\lib\bsmf.jar $patchdir\
 cp ..\sf\jasper $patchdir\ -recurse
 cp ..\sf\zebra $patchdir\ -recurse
 compress-archive -force -path $patchdir -destinationpath $wip\$patchzip

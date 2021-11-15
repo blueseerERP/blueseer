@@ -5,3 +5,5 @@ PASS=bspasswd
 IP=localhost
 PORT=3306
 DRIVER=org.sqlite.JDBC
+LANGUAGE=en
+COUNTRY=US
