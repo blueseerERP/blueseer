@@ -37,6 +37,8 @@ import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
 import static com.blueseer.utl.BlueSeerUtils.luTable;
 import static com.blueseer.utl.BlueSeerUtils.lual;
@@ -326,21 +328,21 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
                
                 if (tbkey.getText().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a code");
+                    bsmf.MainFrame.show(getMessageTag(1024));
                     tbkey.requestFocus();
                     return b;
                 }
                 
                 if (tbdesc.getText().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show("must enter a description");
+                    bsmf.MainFrame.show(getMessageTag(1024));
                     tbdesc.requestFocus();
                     return b;
                 }
                 
                 if (tablerole.getRowCount() < 1) {
                     b = false;
-                    bsmf.MainFrame.show("must have at least one rule in table");
+                    bsmf.MainFrame.show(getMessageTag(1164));
                     ddrole.requestFocus();
                     return b;
                 }
@@ -617,9 +619,9 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
         luTable.setModel(luModel);
         luTable.getColumnModel().getColumn(0).setMaxWidth(50);
         if (luModel.getRowCount() < 1) {
-            ludialog.setTitle("No Records Found!");
+            ludialog.setTitle(getMessageTag(1001));
         } else {
-            ludialog.setTitle(luModel.getRowCount() + " Records Found!");
+            ludialog.setTitle(getMessageTag(1002, String.valueOf(luModel.getRowCount())));
         }
         }
         };
@@ -639,8 +641,8 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
         };
         luTable.addMouseListener(luml);
       
-        callDialog("RulesID", "Description"); 
-        
+        callDialog(getClassLabelTag("lblcode", this.getClass().getSimpleName()), 
+                getClassLabelTag("lbldesc", this.getClass().getSimpleName()));
         
     }
 
@@ -706,8 +708,10 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("EDI Document Maintenance"));
+        jPanel1.setName("panelmain"); // NOI18N
 
         btupdate.setText("Update");
+        btupdate.setName("btupdate"); // NOI18N
         btupdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btupdateActionPerformed(evt);
@@ -715,6 +719,7 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Rules"));
+        jPanel2.setName("panelrules"); // NOI18N
 
         tablerole.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -730,8 +735,10 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
         jScrollPane1.setViewportView(tablerole);
 
         cbenableddet.setText("Enabled?");
+        cbenableddet.setName("cbenabled"); // NOI18N
 
         btdeleteelement.setText("DeleteElement");
+        btdeleteelement.setName("btdeleteitem"); // NOI18N
         btdeleteelement.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdeleteelementActionPerformed(evt);
@@ -739,6 +746,7 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         btaddelement.setText("AddElement");
+        btaddelement.setName("btadditem"); // NOI18N
         btaddelement.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddelementActionPerformed(evt);
@@ -746,28 +754,37 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         jLabel4.setText("Role");
+        jLabel4.setName("lblrole"); // NOI18N
 
         ddrectype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "fixed", "regex" }));
 
         jLabel7.setText("RecordType");
+        jLabel7.setName("lblrecordtype"); // NOI18N
 
         ddrole.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "data", "selection" }));
 
         ddvaluetype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "constant", "variable" }));
 
         jLabel11.setText("ValueType");
+        jLabel11.setName("lblvaluetype"); // NOI18N
 
         jLabel3.setText("Row");
+        jLabel3.setName("lblrow"); // NOI18N
 
         jLabel12.setText("Column");
+        jLabel12.setName("lblcolumn"); // NOI18N
 
         jLabel13.setText("Length");
+        jLabel13.setName("lbllength"); // NOI18N
 
         jLabel14.setText("Regex");
+        jLabel14.setName("lblregex"); // NOI18N
 
         jLabel15.setText("Value");
+        jLabel15.setName("lblvalue"); // NOI18N
 
         jLabel16.setText("Tag");
+        jLabel16.setName("lbltag"); // NOI18N
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -861,8 +878,10 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
         );
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Document Header Maintenance"));
+        jPanel3.setName("panelheader"); // NOI18N
 
         btnew.setText("New");
+        btnew.setName("btnew"); // NOI18N
         btnew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnewActionPerformed(evt);
@@ -870,8 +889,10 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         jLabel5.setText("Code");
+        jLabel5.setName("lblcode"); // NOI18N
 
         jLabel6.setText("Desc");
+        jLabel6.setName("lbldesc"); // NOI18N
 
         tbkey.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -880,6 +901,7 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         btclear.setText("Clear");
+        btclear.setName("btclear"); // NOI18N
         btclear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btclearActionPerformed(evt);
@@ -894,16 +916,22 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         jLabel1.setText("Type");
+        jLabel1.setName("lbltype"); // NOI18N
 
         jLabel2.setText("SubType");
+        jLabel2.setName("lblsubtype"); // NOI18N
 
         jLabel8.setText("SegDelimiter");
+        jLabel8.setName("lblsegdelim"); // NOI18N
 
         jLabel9.setText("Prioirity");
+        jLabel9.setName("lblpriority"); // NOI18N
 
         cbenabledhdr.setText("Enabled");
+        cbenabledhdr.setName("cbenabled"); // NOI18N
 
         jLabel10.setText("LandMark");
+        jLabel10.setName("lbllandmark"); // NOI18N
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -984,6 +1012,7 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
         );
 
         btadd.setText("Add");
+        btadd.setName("btadd"); // NOI18N
         btadd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddActionPerformed(evt);
@@ -991,6 +1020,7 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         btdelete.setText("Delete");
+        btdelete.setName("btdelete"); // NOI18N
         btdelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdeleteActionPerformed(evt);
@@ -1048,13 +1078,16 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
     private void btaddelementActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddelementActionPerformed
         
        if (! BlueSeerUtils.isParsableToInt(tbrow.getText())) {
-          bsmf.MainFrame.show("row value must be an integer"); 
+          bsmf.MainFrame.show(getMessageTag(1028)); 
+          return;
        }
        if (! BlueSeerUtils.isParsableToInt(tbcolumn.getText())) {
-          bsmf.MainFrame.show("column value must be an integer"); 
+          bsmf.MainFrame.show(getMessageTag(1028)); 
+          return;
        }
        if (! BlueSeerUtils.isParsableToInt(tblength.getText())) {
-          bsmf.MainFrame.show("length value must be an integer"); 
+          bsmf.MainFrame.show(getMessageTag(1028)); 
+          return;
        }
         //"Role", "RecordType", "ValueType", "Row", "Column", "Length", "Regex", "Value", "Tag", "Enabled"
         rulemodel.addRow(new Object[]{ ddrole.getSelectedItem().toString(), 
@@ -1069,7 +1102,7 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
     private void btdeleteelementActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteelementActionPerformed
        int[] rows = tablerole.getSelectedRows();
         for (int i : rows) {
-            bsmf.MainFrame.show("Removing row " + i);
+            bsmf.MainFrame.show(getMessageTag(1031,String.valueOf(i)));
             ((javax.swing.table.DefaultTableModel) tablerole.getModel()).removeRow(i);
             
         }

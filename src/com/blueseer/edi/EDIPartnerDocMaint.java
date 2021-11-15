@@ -37,6 +37,7 @@ import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
 import static com.blueseer.utl.BlueSeerUtils.luTable;
@@ -356,9 +357,9 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
         luTable.setModel(luModel);
         luTable.getColumnModel().getColumn(0).setMaxWidth(50);
         if (luModel.getRowCount() < 1) {
-            ludialog.setTitle("No Records Found!");
+            ludialog.setTitle(getMessageTag(1001));
         } else {
-            ludialog.setTitle(luModel.getRowCount() + " Records Found!");
+            ludialog.setTitle(getMessageTag(1002, String.valueOf(luModel.getRowCount())));
         }
         }
         };
@@ -378,8 +379,10 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
         };
         luTable.addMouseListener(luml);
       
-        callDialog("ID", "DocType", "SndID"); 
-        
+       
+        callDialog(getClassLabelTag("lblcode", this.getClass().getSimpleName()), 
+                getClassLabelTag("lbldoctype", this.getClass().getSimpleName()),
+                getClassLabelTag("lblsndisa", this.getClass().getSimpleName()));
         
     }
 
@@ -455,8 +458,10 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
         setBackground(new java.awt.Color(0, 102, 204));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Partner Transaction Maintenance"));
+        jPanel1.setName("panelmain"); // NOI18N
 
         btdelete.setText("delete");
+        btdelete.setName("btdelete"); // NOI18N
         btdelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdeleteActionPerformed(evt);
@@ -464,6 +469,7 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
         });
 
         btadd.setText("add");
+        btadd.setName("btadd"); // NOI18N
         btadd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddActionPerformed(evt);
@@ -471,6 +477,7 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
         });
 
         btupdate.setText("update");
+        btupdate.setName("btupdate"); // NOI18N
         btupdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btupdateActionPerformed(evt);
@@ -478,24 +485,34 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
         });
 
         jLabel3.setText("DocType");
+        jLabel3.setName("lbldoctype"); // NOI18N
 
         jLabel6.setText("Rcv Q");
+        jLabel6.setName("lblrcvq"); // NOI18N
 
         jLabel5.setText("Code:");
+        jLabel5.setName("lblcode"); // NOI18N
 
         jLabel15.setText("Snd GS");
+        jLabel15.setName("lblsndgs"); // NOI18N
 
         jLabel7.setText("Rcv GS");
+        jLabel7.setName("lblrcvgs"); // NOI18N
 
         jLabel1.setText("Rcv ISA");
+        jLabel1.setName("lblrcvisa"); // NOI18N
 
         jLabel13.setText("Snd ISA");
+        jLabel13.setName("lblsndisa"); // NOI18N
 
         jLabel9.setText("Map");
+        jLabel9.setName("lblmap"); // NOI18N
 
         jLabel16.setText("Snd Q");
+        jLabel16.setName("lblsndq"); // NOI18N
 
         btnew.setText("New");
+        btnew.setName("btnew"); // NOI18N
         btnew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnewActionPerformed(evt);
@@ -603,12 +620,16 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
         );
 
         jLabel11.setText("Sub Sep");
+        jLabel11.setName("lblsubsep"); // NOI18N
 
         jLabel17.setText("Version");
+        jLabel17.setName("lblversion"); // NOI18N
 
         jLabel18.setText("SupplierCode");
+        jLabel18.setName("lblsuppcode"); // NOI18N
 
         jLabel14.setText("FilePath");
+        jLabel14.setName("lblfilepath"); // NOI18N
 
         tbelement.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -623,8 +644,10 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
         });
 
         jLabel4.setText("Elem Sep");
+        jLabel4.setName("lblelemsep"); // NOI18N
 
         jLabel10.setText("Seg Sep");
+        jLabel10.setName("lblsegsep"); // NOI18N
 
         tbsub.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -633,20 +656,27 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
         });
 
         jLabel12.setText("Prefix");
+        jLabel12.setName("lblprefix"); // NOI18N
 
         lblsuffix.setText("Suffix");
+        lblsuffix.setName("lblsuffix"); // NOI18N
 
         cbfa.setText("Functional Acknowledgement?");
+        cbfa.setName("cbfunctional"); // NOI18N
 
         ddoutfiletype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "FF", "X12" }));
 
         jLabel2.setText("outDocType");
+        jLabel2.setName("lbloutdoctype"); // NOI18N
 
         jLabel8.setText("outFileType");
+        jLabel8.setName("lbloutfiletype"); // NOI18N
 
         jLabel19.setText("IFS File");
+        jLabel19.setName("lblifs"); // NOI18N
 
         jLabel20.setText("OFS File");
+        jLabel20.setName("lblofs"); // NOI18N
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -681,12 +711,10 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
                     .addComponent(tbversion, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tbfilepath, javax.swing.GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
                     .addComponent(tbelement, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(tbfilesuffix, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 83, Short.MAX_VALUE)
-                        .addComponent(tbfileprefix, javax.swing.GroupLayout.Alignment.LEADING))
-                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(ddoutdoctype, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(tbsupplier, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE))
+                    .addComponent(tbfilesuffix, javax.swing.GroupLayout.DEFAULT_SIZE, 83, Short.MAX_VALUE)
+                    .addComponent(tbfileprefix)
+                    .addComponent(ddoutdoctype, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(tbsupplier, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE)
                     .addComponent(ddoutfiletype, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tbIFS))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -868,12 +896,14 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
                 // check the site field
                 if (tbkey.getText().isEmpty()) {
                     proceed = false;
-                    bsmf.MainFrame.show("Must enter a TP ID");
+                    bsmf.MainFrame.show(getMessageTag(1024));
+                    tbkey.requestFocus();
                     return;
                 }
                 if (tbmap.getText().isEmpty()) {
                     proceed = false;
-                    bsmf.MainFrame.show("Must enter a map name for outbound type");
+                    bsmf.MainFrame.show(getMessageTag(1024));
+                    tbmap.requestFocus();
                     return;
                 }
                
@@ -925,9 +955,9 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
                                 + "'" + fa + "'"
                             + ")"
                             + ";");
-                        bsmf.MainFrame.show("Added EDI Cust Record");
+                        bsmf.MainFrame.show(getMessageTag(1007));
                     } else {
-                        bsmf.MainFrame.show("Code/ISA/Doc/Dir Already Exists");
+                        bsmf.MainFrame.show(getMessageTag(1014));
                     }
 
                    initvars(null);
@@ -962,18 +992,21 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
                 // check the code field
                if (tbkey.getText().isEmpty()) {
                     proceed = false;
-                    bsmf.MainFrame.show("Must enter a TP ID");
+                    bsmf.MainFrame.show(getMessageTag(1024));
+                    tbkey.requestFocus();
                     return;
                 }
                
                 if (tbmap.getText().isEmpty() && ! dddoc.getSelectedItem().toString().equals("997")) {
                     proceed = false;
-                    bsmf.MainFrame.show("Must enter a map name");
+                    bsmf.MainFrame.show(getMessageTag(1024));
+                    tbmap.requestFocus();
                     return;
                 }
                 if (! isFile(tbmap.getText()) && ! dddoc.getSelectedItem().toString().equals("997")) {
                     proceed = false;
-                    bsmf.MainFrame.show("Map does not exist");
+                    bsmf.MainFrame.show(getMessageTag(1145,tbmap.getText()));
+                    tbmap.requestFocus();
                     return;
                 }
                 
@@ -1010,7 +1043,7 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
                             + " AND edi_rcvgs = " + "'" + tbrcvgs.getText() + "'"
                             + " AND edi_sndgs = " + "'" + tbsndgs.getText() + "'"        
                             + ";");
-                    bsmf.MainFrame.show("Updated EDI Master");
+                    bsmf.MainFrame.show(getMessageTag(1008));
                     initvars(null);
                 } 
          
@@ -1047,7 +1080,7 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
                                             " and edi_rcvgs = " + "'" + tbrcvgs.getText() + "'" +        
                                             ";");
                     if (i > 0) {
-                    bsmf.MainFrame.show("deleted code " + tbkey.getText() + "/" + dddoc.getSelectedItem().toString() + "/" + tbsndgs.getText() + "/" + tbrcvgs.getText() );
+                    bsmf.MainFrame.show(getMessageTag(1031, tbkey.getText() + "/" + dddoc.getSelectedItem().toString() + "/" + tbsndgs.getText() + "/" + tbrcvgs.getText()));
                     initvars(null);
                     }
                 } catch (SQLException s) {
@@ -1079,7 +1112,7 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
         if (x.equals("error")) {
             tbelement.setText("");
             tbelement.setBackground(Color.yellow);
-            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            bsmf.MainFrame.show(getMessageTag(1000));
             tbelement.requestFocus();
         } else {
             tbelement.setText(x);
@@ -1092,7 +1125,7 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
         if (x.equals("error")) {
             tbsegment.setText("");
             tbsegment.setBackground(Color.yellow);
-            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            bsmf.MainFrame.show(getMessageTag(1000));
             tbsegment.requestFocus();
         } else {
             tbsegment.setText(x);
@@ -1105,7 +1138,7 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
         if (x.equals("error")) {
             tbsub.setText("");
             tbsub.setBackground(Color.yellow);
-            bsmf.MainFrame.show("Non-Numeric character in textbox");
+            bsmf.MainFrame.show(getMessageTag(1000));
             tbsub.requestFocus();
         } else {
             tbsub.setText(x);
@@ -1130,9 +1163,9 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
         
         if (listAttributes.isSelectionEmpty()) {
             proceed = false;
-            bsmf.MainFrame.show("nothing is selected");
+            bsmf.MainFrame.show(getMessageTag(1029));
         } else {
-           proceed = bsmf.MainFrame.warn("Are you sure?");
+           proceed = bsmf.MainFrame.warn(getMessageTag(1004));
         }
         if (proceed) {
             String[] z = listAttributes.getSelectedValue().toString().split(":");
@@ -1148,7 +1181,7 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
                                             " and exa_key = " + "'" + z[0].toString() + "'" +
                                              ";");
                     if (i > 0) {
-                    bsmf.MainFrame.show("deleted code " + listAttributes.getSelectedValue().toString());
+                    bsmf.MainFrame.show(getMessageTag(1031,listAttributes.getSelectedValue().toString()));
                     getAttributes(tbsndgs.getText(), tbrcvgs.getText(), dddoc.getSelectedItem().toString());
                     }
                 } catch (SQLException s) {

@@ -32,6 +32,7 @@
             <TitledBorder title="Partner Transaction Maintenance"/>
           </Border>
         </Property>
+        <Property name="name" type="java.lang.String" value="panelmain" noResource="true"/>
       </Properties>
 
       <Layout>
@@ -89,6 +90,7 @@
         <Component class="javax.swing.JButton" name="btdelete">
           <Properties>
             <Property name="text" type="java.lang.String" value="delete"/>
+            <Property name="name" type="java.lang.String" value="btdelete" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btdeleteActionPerformed"/>
@@ -97,6 +99,7 @@
         <Component class="javax.swing.JButton" name="btadd">
           <Properties>
             <Property name="text" type="java.lang.String" value="add"/>
+            <Property name="name" type="java.lang.String" value="btadd" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btaddActionPerformed"/>
@@ -105,6 +108,7 @@
         <Component class="javax.swing.JButton" name="btupdate">
           <Properties>
             <Property name="text" type="java.lang.String" value="update"/>
+            <Property name="name" type="java.lang.String" value="btupdate" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btupdateActionPerformed"/>
@@ -237,6 +241,7 @@
             <Component class="javax.swing.JLabel" name="jLabel3">
               <Properties>
                 <Property name="text" type="java.lang.String" value="DocType"/>
+                <Property name="name" type="java.lang.String" value="lbldoctype" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="tbkey">
@@ -244,11 +249,13 @@
             <Component class="javax.swing.JLabel" name="jLabel6">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Rcv Q"/>
+                <Property name="name" type="java.lang.String" value="lblrcvq" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel5">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Code:"/>
+                <Property name="name" type="java.lang.String" value="lblcode" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="tbrcvgs">
@@ -256,11 +263,13 @@
             <Component class="javax.swing.JLabel" name="jLabel15">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Snd GS"/>
+                <Property name="name" type="java.lang.String" value="lblsndgs" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel7">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Rcv GS"/>
+                <Property name="name" type="java.lang.String" value="lblrcvgs" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="tbrcvq">
@@ -268,11 +277,13 @@
             <Component class="javax.swing.JLabel" name="jLabel1">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Rcv ISA"/>
+                <Property name="name" type="java.lang.String" value="lblrcvisa" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel13">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Snd ISA"/>
+                <Property name="name" type="java.lang.String" value="lblsndisa" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="tbsndisa">
@@ -280,11 +291,13 @@
             <Component class="javax.swing.JLabel" name="jLabel9">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Map"/>
+                <Property name="name" type="java.lang.String" value="lblmap" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel16">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Snd Q"/>
+                <Property name="name" type="java.lang.String" value="lblsndq" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="tbsndq">
@@ -294,6 +307,7 @@
             <Component class="javax.swing.JButton" name="btnew">
               <Properties>
                 <Property name="text" type="java.lang.String" value="New"/>
+                <Property name="name" type="java.lang.String" value="btnew" noResource="true"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnewActionPerformed"/>
@@ -464,6 +478,7 @@
             <Component class="javax.swing.JLabel" name="jLabel11">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Sub Sep"/>
+                <Property name="name" type="java.lang.String" value="lblsubsep" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="tbfilepath">
@@ -471,16 +486,19 @@
             <Component class="javax.swing.JLabel" name="jLabel17">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Version"/>
+                <Property name="name" type="java.lang.String" value="lblversion" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel18">
               <Properties>
                 <Property name="text" type="java.lang.String" value="SupplierCode"/>
+                <Property name="name" type="java.lang.String" value="lblsuppcode" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel14">
               <Properties>
                 <Property name="text" type="java.lang.String" value="FilePath"/>
+                <Property name="name" type="java.lang.String" value="lblfilepath" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="tbsupplier">
@@ -500,6 +518,7 @@
             <Component class="javax.swing.JLabel" name="jLabel4">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Elem Sep"/>
+                <Property name="name" type="java.lang.String" value="lblelemsep" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="tbversion">
@@ -509,6 +528,7 @@
             <Component class="javax.swing.JLabel" name="jLabel10">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Seg Sep"/>
+                <Property name="name" type="java.lang.String" value="lblsegsep" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="tbsub">
@@ -519,16 +539,19 @@
             <Component class="javax.swing.JLabel" name="jLabel12">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Prefix"/>
+                <Property name="name" type="java.lang.String" value="lblprefix" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="lblsuffix">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Suffix"/>
+                <Property name="name" type="java.lang.String" value="lblsuffix" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JCheckBox" name="cbfa">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Functional Acknowledgement?"/>
+                <Property name="name" type="java.lang.String" value="cbfunctional" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JComboBox" name="ddoutdoctype">
@@ -557,11 +580,13 @@
             <Component class="javax.swing.JLabel" name="jLabel2">
               <Properties>
                 <Property name="text" type="java.lang.String" value="outDocType"/>
+                <Property name="name" type="java.lang.String" value="lbloutdoctype" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel8">
               <Properties>
                 <Property name="text" type="java.lang.String" value="outFileType"/>
+                <Property name="name" type="java.lang.String" value="lbloutfiletype" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="tbIFS">
@@ -571,11 +596,13 @@
             <Component class="javax.swing.JLabel" name="jLabel19">
               <Properties>
                 <Property name="text" type="java.lang.String" value="IFS File"/>
+                <Property name="name" type="java.lang.String" value="lblifs" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel20">
               <Properties>
                 <Property name="text" type="java.lang.String" value="OFS File"/>
+                <Property name="name" type="java.lang.String" value="lblofs" noResource="true"/>
               </Properties>
             </Component>
           </SubComponents>
