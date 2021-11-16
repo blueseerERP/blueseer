@@ -87,7 +87,7 @@ mysql -e "grant select,insert,delete,update on bsdb.* to 'bs_user'@'%';"  -u $RO
 mysql --local-infile=1 $DB -u $ROOT  <blueseer.schema 
 
 echo "Loading some data....."
-cd en
+cd $LANG
 mysql --local-infile=1 $DB -u $ROOT <sq_mysql.txt
 cd ..
 
