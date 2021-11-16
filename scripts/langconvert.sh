@@ -80,7 +80,7 @@ while IFS= read -r line; do
 		vDBTYPE=$line
 	fi
 	if [[ $line == DB=* ]] ; then
-		vDB="DB=data/" + $LANG + "/bsdb.db"
+		vDB="DB=data/$LANG/bsdb.db"
 	fi
 	if [[ $line == USER* ]] ; then
 		vUSER=$line

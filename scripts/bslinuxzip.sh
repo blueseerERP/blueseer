@@ -22,6 +22,7 @@ zip -u $bszip bslogging.properties
 zip -u $bszip .patch
 zip -u $bszip login.sh
 zip -u $bszip mysql_install.sh
+zip -u $bszip langconvert.sh
 zip -u $bszip controlM.sh
 cd /home/vcs
 zip -ru $bsdir/$bszip jre17/*
