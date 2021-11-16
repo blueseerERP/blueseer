@@ -22,29 +22,37 @@
 ###  'show global variables like 'local_infile';
 ###  'set global local_infile = 'ON';
 
-defaulthost=localhost
 defaultlang=en
 
-echo ''
-echo ''
-echo ''
-echo "NOTE: This script file loads data from files in the data dir into "
-echo "your MySQL instance.  Newer versions of MySQL have a security  "
-echo "feature which disables loading using 'local data infile'.  "
-echo "You may need to ensure this is enabled before loading the data. "
-echo "Read the comments in this script for determining this setting "
-echo ""
-echo ""
-echo ""
-echo -n "Enter the IP addr of database server: 'localhost' default=localhost: "
-read IP
+while IFS= read -r line; do
+	if [[ $line == DBTYPE* ]] ; then
+		vDBTYPE=$line
+	fi
+	if [[ $line == DB=* ]] ; then
+		vDB=$line
+	fi
+	if [[ $line == USER* ]] ; then
+		vUSER=$line
+	fi
+	if [[ $line == PASS* ]] ; then
+		vPASS=$line
+	fi
+	if [[ $line == PORT* ]] ; then
+		vPORT=$line
+	fi
+	if [[ $line == IP* ]] ; then
+		vIP=$line
+	fi
+	if [[ $line == DRIVER* ]] ; then
+		vDRIVER=$line
+	fi
+done < bs.cfg
 
-if [[ "$IP" == "" ]]; then
-	IP=$defaulthost
-fi
-
-echo -n "Enter the administrator password for the MySQL Database: "
-read PASS
+echo ''
+echo ''
+echo ''
+echo "NOTE: This script will convert the bs.cfg file to the language option you select"
+echo ""
 echo ""
 echo ""
 echo "choose your two character language code from the options below..."
@@ -80,6 +88,15 @@ fi
 if [[ "$LANG" == "tr" ]]; then
 	COUNTRY="TR"
 fi
+if [[ "$LANG" == "pt" ]]; then
+	COUNTRY="PT"
+fi
+if [[ "$LANG" == "ru" ]]; then
+	COUNTRY="RU"
+fi
+if [[ "$LANG" == "de" ]]; then
+	COUNTRY="DE"
+fi
 
 
 ROOT=root
@@ -91,55 +108,15 @@ export MYSQL_PWD
 echo ""
 echo ""
 echo "creating blueseer config file...."
-echo "DBTYPE=mysql" >bs.cfg
-echo "DB=$DB" >>bs.cfg
-echo "USER=bs_user" >>bs.cfg
-echo "PASS=bsPasswd" >>bs.cfg
-echo "IP=$IP" >>bs.cfg
-echo "PORT=3306" >>bs.cfg
-echo "DRIVER=com.mysql.cj.jdbc.Driver" >>bs.cfg
+echo vDBTYPE >bs.cfg
+echo vDB >>bs.cfg
+echo vUSER >>bs.cfg
+echo vPASS >>bs.cfg
+echo vIP >>bs.cfg
+echo vPORT >>bs.cfg
+echo vDRIVER >>bs.cfg
 echo "LANGUAGE=$LANG" >>bs.cfg
 echo "COUNTRY=$COUNTRY" >>bs.cfg
 
-cd data
-
-echo "creating database schema...."
-mysql -e "drop database if exists $DB;" -u $ROOT  
-mysql -e "create database if not exists $DB character set utf8mb4 collate utf8mb4_unicode_ci;" -u $ROOT  
-mysql -e "drop user if exists 'bs_user'@'%' ;" -u $ROOT 
-mysql -e "create user if not exists 'bs_user'@'%' identified by 'bsPasswd';" -u $ROOT
-mysql -e "grant select,insert,delete,update on bsdb.* to 'bs_user'@'%';"  -u $ROOT
-
-#  The next line loads the database and table definitions
-mysql --local-infile=1 $DB -u $ROOT  <blueseer.schema 
-
-echo "Loading some data....."
-cd $LANG
-mysql --local-infile=1 $DB -u $ROOT <sq_mysql.txt
-cd ..
-
-
-
-echo 'Finished install!   '
+echo 'conversion of bs.cfg complete...'
 echo ''
-echo ''
-echo ''
-echo ''
-echo ''
-echo 'you can launch by running ./login.sh in the parent directory'
-echo 'you may have to set perms to 755 on login.sh'
-echo ''
-echo ''
-echo 'Optionally...you can launch by typing the following at the command line: '
-echo 'NOTE:  make sure you are in the parent blueseer directory!! '
-echo ''
-echo ''
-echo 'jre17/bin/java -cp ".:dist/*" bsmf.MainFrame'
-echo ''
-echo ''
-echo 'NOTE:'
-echo 'login and password are admin and admin respectively'
-echo ''
-echo ''
-
-unset MYSQL_PWD
