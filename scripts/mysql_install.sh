@@ -40,6 +40,20 @@ read IP
 
 echo -n "Enter the administrator password for the MySQL Database: "
 read PASS
+echo -n "Enter the language code (en, es, fr, tr): "
+read LANG
+
+COUNTRY="US"
+if [[ "$LANG" == "es" ]]; then
+	COUNTRY="ES"
+fi
+if [[ "$LANG" == "fr" ]]; then
+	COUNTRY="FR"
+fi
+if [[ "$LANG" == "tr" ]]; then
+	COUNTRY="TR"
+fi
+
 
 ROOT=root
 DB=bsdb
@@ -57,6 +71,8 @@ echo "PASS=bsPasswd" >>bs.cfg
 echo "IP=$IP" >>bs.cfg
 echo "PORT=3306" >>bs.cfg
 echo "DRIVER=com.mysql.cj.jdbc.Driver" >>bs.cfg
+echo "LANGUAGE=$LANG" >>bs.cfg
+echo "COUNTRY=$COUNTRY" >>bs.cfg
 
 cd data
 
@@ -71,7 +87,9 @@ mysql -e "grant select,insert,delete,update on bsdb.* to 'bs_user'@'%';"  -u $RO
 mysql --local-infile=1 $DB -u $ROOT  <blueseer.schema 
 
 echo "Loading some data....."
+cd en
 mysql --local-infile=1 $DB -u $ROOT <sq_mysql.txt
+cd ..
 
 
 
@@ -89,7 +107,7 @@ echo 'Optionally...you can launch by typing the following at the command line: '
 echo 'NOTE:  make sure you are in the parent blueseer directory!! '
 echo ''
 echo ''
-echo 'jre11/bin/java -cp ".:dist/*" bsmf.MainFrame'
+echo 'jre17/bin/java -cp ".:dist/*" bsmf.MainFrame'
 echo ''
 echo ''
 echo 'NOTE:'
