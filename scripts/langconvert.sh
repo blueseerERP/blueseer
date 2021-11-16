@@ -24,29 +24,6 @@
 
 defaultlang=en
 
-while IFS= read -r line; do
-	if [[ $line == DBTYPE* ]] ; then
-		vDBTYPE=$line
-	fi
-	if [[ $line == DB=* ]] ; then
-		vDB=$line
-	fi
-	if [[ $line == USER* ]] ; then
-		vUSER=$line
-	fi
-	if [[ $line == PASS* ]] ; then
-		vPASS=$line
-	fi
-	if [[ $line == PORT* ]] ; then
-		vPORT=$line
-	fi
-	if [[ $line == IP* ]] ; then
-		vIP=$line
-	fi
-	if [[ $line == DRIVER* ]] ; then
-		vDRIVER=$line
-	fi
-done < bs.cfg
 
 echo ''
 echo ''
@@ -98,23 +75,41 @@ if [[ "$LANG" == "de" ]]; then
 	COUNTRY="DE"
 fi
 
+while IFS= read -r line; do
+	if [[ $line == DBTYPE* ]] ; then
+		vDBTYPE=$line
+	fi
+	if [[ $line == DB=* ]] ; then
+		vDB="DB=data/" + $LANG + "/bsdb.db"
+	fi
+	if [[ $line == USER* ]] ; then
+		vUSER=$line
+	fi
+	if [[ $line == PASS* ]] ; then
+		vPASS=$line
+	fi
+	if [[ $line == PORT* ]] ; then
+		vPORT=$line
+	fi
+	if [[ $line == IP* ]] ; then
+		vIP=$line
+	fi
+	if [[ $line == DRIVER* ]] ; then
+		vDRIVER=$line
+	fi
+done < bs.cfg
 
-ROOT=root
-DB=bsdb
-
-MYSQL_PWD=$PASS
-export MYSQL_PWD
 
 echo ""
 echo ""
 echo "creating blueseer config file...."
-echo vDBTYPE >bs.cfg
-echo vDB >>bs.cfg
-echo vUSER >>bs.cfg
-echo vPASS >>bs.cfg
-echo vIP >>bs.cfg
-echo vPORT >>bs.cfg
-echo vDRIVER >>bs.cfg
+echo $vDBTYPE >bs.cfg
+echo $vDB >>bs.cfg
+echo $vUSER >>bs.cfg
+echo $vPASS >>bs.cfg
+echo $vIP >>bs.cfg
+echo $vPORT >>bs.cfg
+echo $vDRIVER >>bs.cfg
 echo "LANGUAGE=$LANG" >>bs.cfg
 echo "COUNTRY=$COUNTRY" >>bs.cfg
 
