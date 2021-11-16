@@ -1,4 +1,4 @@
-﻿CustomerMenu,CustMaint,1,JMenuItem,Müşteri Bakımı,,,,1,1
+CustomerMenu,CustMaint,1,JMenuItem,Müşteri Bakımı,,,,1,1
 CustomerMenu,CustReport1,2,JMenuItem,Müşteri Gözat,,1,,1,1
 CustomerMenu,CustXrefMaint,3,JMenuItem,Müşteri Xref Bakımı,,,,1,1
 CustomerMenu,CustXrefBrowse,4,JMenuItem,Müşteri Xref Gözat,,,,1,1

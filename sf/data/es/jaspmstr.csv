@@ -1,4 +1,4 @@
-﻿CusRptGroup,Información de la dirección del cliente por ID,custAddrInfoByRange,0,L6
+CusRptGroup,Información de la dirección del cliente por ID,custAddrInfoByRange,0,L6
 CusRptGroup,Teléfono del cliente Correo electrónico por ID,custPhoneEmailByRange,1,P4
 CusRptGroup,Configuración de finanzas del cliente por ID,custFinanceInfoByRange,2,L8
 CusRptGroup,Lista de Shipto del cliente por cust,custShipTosByRange,3,L8

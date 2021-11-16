@@ -1,4 +1,4 @@
-﻿CusRptGroup,Kimliğe Göre Müşteri Adres Bilgileri,custAddrInfoByRange,0,L6
+CusRptGroup,Kimliğe Göre Müşteri Adres Bilgileri,custAddrInfoByRange,0,L6
 CusRptGroup,Kimliğe Göre Müşteri Telefonu E-postası,custPhoneEmailByRange,1,P4
 CusRptGroup,Kimliğe göre Müşteri Finans kurulumu,custFinanceInfoByRange,2,L8
 CusRptGroup,Müşteri Gönderi listesi Müşteriye göre,custShipTosByRange,3,L8
