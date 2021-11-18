@@ -227,7 +227,9 @@ public class InventoryCtrl extends javax.swing.JPanel implements IBlueSeerc {
                             "'" + BlueSeerUtils.boolToInt(cbmultiplan.isSelected()) + "'" +  "," +
                             "'" + BlueSeerUtils.boolToInt(cbdemdtoplan.isSelected()) + "'" + "," +
                             "'" + BlueSeerUtils.boolToInt(cbprintsubticket.isSelected()) + "'" + "," +
-                            "'" + BlueSeerUtils.boolToInt(cbautoitem.isSelected()) + "'" +
+                            "'" + BlueSeerUtils.boolToInt(cbautoitem.isSelected()) + "'" + "," +
+                            "'" + BlueSeerUtils.boolToInt(cbserialize.isSelected()) + "'" +
+                            
                             ")"  + ";");              
                           bsmf.MainFrame.show(getMessageTag(1065));
                     m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
@@ -236,7 +238,8 @@ public class InventoryCtrl extends javax.swing.JPanel implements IBlueSeerc {
                             " planmultiscan = " + "'" + BlueSeerUtils.boolToInt(cbmultiplan.isSelected()) + "'" + "," +
                             " printsubticket = " + "'" + BlueSeerUtils.boolToInt(cbprintsubticket.isSelected()) + "'" + "," +
                             " demdtoplan = " + "'" + BlueSeerUtils.boolToInt(cbdemdtoplan.isSelected()) + "'"  + "," + 
-                            " autoitem = " + "'" + BlueSeerUtils.boolToInt(cbautoitem.isSelected()) + "'"  +
+                            " autoitem = " + "'" + BlueSeerUtils.boolToInt(cbautoitem.isSelected()) + "'"  + "," + 
+                            " serialize = " + "'" + BlueSeerUtils.boolToInt(cbserialize.isSelected()) + "'"  +        
                             ";");   
                     m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
                 }
@@ -277,6 +280,8 @@ public class InventoryCtrl extends javax.swing.JPanel implements IBlueSeerc {
                         cbdemdtoplan.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("demdtoplan")));   
                         cbprintsubticket.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("printsubticket"))); 
                         cbautoitem.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("autoitem")));
+                        cbserialize.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("serialize"))); 
+                        
                     }
                
                 // set Action if Record found (i > 0)
@@ -315,6 +320,7 @@ public class InventoryCtrl extends javax.swing.JPanel implements IBlueSeerc {
         cbmultiplan = new javax.swing.JCheckBox();
         cbprintsubticket = new javax.swing.JCheckBox();
         cbautoitem = new javax.swing.JCheckBox();
+        cbserialize = new javax.swing.JCheckBox();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -341,28 +347,28 @@ public class InventoryCtrl extends javax.swing.JPanel implements IBlueSeerc {
         cbautoitem.setText("Auto Item Number Assignment?");
         cbautoitem.setName("cbautoitem"); // NOI18N
 
+        cbserialize.setText("Serialize Inventory?");
+        cbserialize.setName("cbserialize"); // NOI18N
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(53, 53, 53)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cbdemdtoplan)
-                            .addComponent(cbmultiplan)
-                            .addComponent(cbprintsubticket)
-                            .addComponent(cbautoitem)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(189, 189, 189)
-                        .addComponent(btupdate)))
-                .addGap(113, 113, 113))
+                    .addComponent(cbdemdtoplan)
+                    .addComponent(cbmultiplan)
+                    .addComponent(cbprintsubticket)
+                    .addComponent(cbautoitem)
+                    .addComponent(cbserialize)
+                    .addComponent(btupdate))
+                .addContainerGap(119, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(46, 46, 46)
+                .addContainerGap()
                 .addComponent(cbdemdtoplan)
                 .addGap(18, 18, 18)
                 .addComponent(cbmultiplan)
@@ -370,9 +376,11 @@ public class InventoryCtrl extends javax.swing.JPanel implements IBlueSeerc {
                 .addComponent(cbprintsubticket)
                 .addGap(18, 18, 18)
                 .addComponent(cbautoitem)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(cbserialize)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
                 .addComponent(btupdate)
-                .addGap(34, 34, 34))
+                .addGap(20, 20, 20))
         );
 
         add(jPanel1);
@@ -392,6 +400,7 @@ public class InventoryCtrl extends javax.swing.JPanel implements IBlueSeerc {
     private javax.swing.JCheckBox cbdemdtoplan;
     private javax.swing.JCheckBox cbmultiplan;
     private javax.swing.JCheckBox cbprintsubticket;
+    private javax.swing.JCheckBox cbserialize;
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
 }

@@ -538,7 +538,7 @@ public class shpData {
         st.close();
    }
 
-    public static void _updateInventoryFromShipper(String shipper, Connection bscon) throws SQLException {
+    public static void _updateInventoryFromShipperOld(String shipper, Connection bscon) throws SQLException {
    
             Statement st = bscon.createStatement();
             Statement st2 = bscon.createStatement();
@@ -654,6 +654,127 @@ public class shpData {
                 }
      }
 
+    public static void _updateInventoryFromShipper(String shipper, Connection bscon) throws SQLException {
+   
+            Statement st = bscon.createStatement();
+            Statement st2 = bscon.createStatement();
+            ResultSet res;
+
+           java.util.Date now = new java.util.Date();
+            DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+            String mydate = dfdate.format(now);
+                String item = "";
+                double qty = 0;
+                String uom = "";
+                double baseqty = 0;
+                String loc = "";
+                String wh = "";
+                String site = "";
+                String serial = "";
+                String expire = "";
+                double sum = 0;
+                boolean serialized = false;
+                int i = 0;
+                  res = st.executeQuery("select sh_site, shd_part, shd_qty, shd_uom, shd_loc, shd_wh, shd_site, shd_serial, it_loc, it_wh, it_code " +
+                          " from ship_det inner join ship_mstr on sh_id = shd_id  " +
+                          " left outer join item_mstr on it_item = shd_part " +
+                          " where shd_id = " + "'" + shipper + "'" +";");
+                ArrayList<String[]> list = new ArrayList<String[]>();
+                while (res.next()) {
+                    String[] x = new String[10];
+                    i = 0;
+                    x[0] = res.getString("shd_part");
+                    x[1] = res.getString("shd_qty");
+                    x[2] = res.getString("shd_uom");
+                    x[3] = res.getString("shd_loc");
+                    x[4] = res.getString("shd_wh");
+                    x[5] = res.getString("sh_site");
+                    x[6] = res.getString("shd_serial");
+                    x[7] = res.getString("it_loc");
+                    x[8] = res.getString("it_wh");
+                    x[9] = res.getString("it_code");
+                    baseqty = OVData.getUOMBaseQty(x[0], x[5], x[2], Double.valueOf(x[1]));
+                    if (x[3].isEmpty()) {x[3] = x[7];} // if no loc in shipper...use item default loc
+                    if (x[4].isEmpty()) {x[4] = x[8];} // if no wh in shipper...use item default wh
+                    if (! x[9].equals("S")) {  // no service items
+                     list.add(x);
+                    }
+                }
+                res.close();
+                
+                for (String[] sd : list) {
+                    item = sd[0];
+                    uom = sd[2];
+                    loc = sd[3];
+                    wh = sd[4];
+                    site = sd[5];
+                    serial = sd[6];
+                    // if not serialized...pull from non-serialized inventory... in_serial = ""
+                    // check for serialized inventory flag...if not...prevent serial from entry into in_mstr
+                    
+                    if (! OVData.isInvCtrlSerialize()) {
+                        serialized = false;
+                        serial = "";
+                        expire = "";
+                    } else {
+                        serialized = true;
+                    }
+                    int z = 0;
+                    double qoh = 0.00;
+                  
+                    if (! serialized) {  // if not serialized
+                   OVData._updateNonSerializedInventory(bscon, item, site, wh, loc, (-1 * baseqty), mydate);
+                   } else { // must be serialized...relieve oldest inventory first by serial / expire
+                    res = st.executeQuery("select in_qoh, in_serial from in_mstr where "
+                            + " in_part = " + "'" + item + "'" 
+                            + " and in_loc = " + "'" + loc + "'"
+                            + " and in_wh = " + "'" + wh + "'"
+                            + " and in_site = " + "'" + site + "'"    
+                            + " order by in_expire asc ;");
+                    ArrayList<String[]> serialinventory = new ArrayList<String[]>();
+                    while (res.next()) {
+                        z++;
+                        serialinventory.add(new String[]{res.getString("in_serial"), res.getString("in_qoh")});
+                    }
+                    res.close();
+                    double remaining = baseqty;
+                    for (String[] s : serialinventory) {
+                        if (remaining == 0) break;
+                        if (Double.valueOf(s[1]) <= remaining) {
+                            remaining = remaining - Double.valueOf(s[1]);
+                            // delete serial in_mstr record
+                            st2.executeUpdate("delete from in_mstr where " 
+                            + " in_part = " + "'" + item + "'" 
+                            + " and in_loc = " + "'" + loc + "'"
+                            + " and in_wh = " + "'" + wh + "'"
+                            + " and in_site = " + "'" + site + "'"
+                            + " and in_serial = " + "'" + s[0] + "'"             
+                            + ";");
+                        } else {
+                            // update serial in_mstr with Double.valueOf(s[1]) - remaining
+                            sum = Double.valueOf(s[1]) - remaining;
+                            st2.executeUpdate("update in_mstr "
+                            + " set in_qoh = " + "'" + sum + "'" + "," +
+                              " in_date = " + "'" + mydate + "'"
+                            + " where in_part = " + "'" + item + "'" 
+                            + " and in_loc = " + "'" + loc + "'"
+                            + " and in_wh = " + "'" + wh + "'"
+                            + " and in_site = " + "'" + site + "'"
+                            + " and in_serial = " + "'" + s[0] + "'"             
+                            + ";");
+                            remaining = 0;
+                            break;
+                        }
+                    }
+                    if (remaining > 0) {
+                        // no inventory to remove
+                        OVData._updateNonSerializedInventory(bscon, item, site, wh, loc, (-1 * remaining), mydate);
+                    }
+                   } //  serialized logic
+                } // for each ship_det
+     }
+
+    
     public static void _addTranMstrShipper(String shipper, Date effdate, Connection bscon) throws SQLException {
            
         Statement st = bscon.createStatement();

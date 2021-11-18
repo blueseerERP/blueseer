@@ -765,7 +765,8 @@ CREATE TABLE IF NOT EXISTS `inv_ctrl` (
   `planmultiscan` tinyint(1) NOT NULL DEFAULT '0',
   `demdtoplan` tinyint(1) NOT NULL DEFAULT '0',
   `printsubticket` tinyint(1) NOT NULL DEFAULT '0',
-  `autoitem` tinyint(1) NOT NULL DEFAULT '0'
+  `autoitem` tinyint(1) NOT NULL DEFAULT '0',
+  `serialize` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `item_cost` (
   `itc_item` varchar(20) NOT NULL  DEFAULT '',

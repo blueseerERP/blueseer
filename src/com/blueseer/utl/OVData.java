@@ -10047,8 +10047,13 @@ return mystring;
                 return false;
             }
 
+            // check for serialized inventory flag...if not...prevent serial from entry into in_mstr
+            if (! OVData.isInvCtrlSerialize()) {
+                serial = "";
+                expire = "";
+            }
 
-             double sum = 0.00;
+                    double sum = 0.00;
 
                     // check if in_mstr record exists for this part, loc, wh, site, serial, expire combo
                     // if not add it
@@ -10170,6 +10175,9 @@ return mystring;
                     if (i == 0) {
                         continue;
                     }
+                    
+           
+                    
                     // check if in_mstr record exists for this part,loc,site combo
                     // if not add it
                     nres = st2.executeQuery("select in_qoh from in_mstr where "
@@ -10224,7 +10232,6 @@ return mystring;
        if (nres != null) {nres.close();}
 
      }
-
    
     public static boolean UpdateInventoryFromShipperRV(String shipper) {
           boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
@@ -10276,6 +10283,11 @@ return mystring;
                     uom = res.getString("shd_uom");
                     serial = res.getString("shd_serial");
                     baseqty = OVData.getUOMBaseQty(part, site, uom, qty);
+                    // check for serialized inventory flag...if not...prevent serial from entry into in_mstr
+                    if (! OVData.isInvCtrlSerialize()) {
+                        serial = "";
+                        expire = "";
+                    }
 
                     // reverse quantity
                     baseqty = -1 * baseqty;
@@ -10299,6 +10311,7 @@ return mystring;
                         continue;
                     }
 
+                    
 
                     // check if in_mstr record exists for this part,loc,site combo
                     // if not add it
@@ -10390,7 +10403,7 @@ return mystring;
                 String wh = "";
                 String site = "";
                 String serial = "";
-                String expire = "";
+                String expire = mydate;
                 double sum = 0.00;
                 String uom = "";
 
@@ -10407,6 +10420,12 @@ return mystring;
                     serial = res.getString("rvd_serial");
                     baseqty = OVData.getUOMBaseQty(part, site, uom, qty);
 
+                    // check for serialized inventory flag...if not...prevent serial from entry into in_mstr
+                    if (! OVData.isInvCtrlSerialize()) {
+                        serial = "";
+                        expire = "";
+                    }
+                    
                     // check if in_mstr record exists for this part,loc,site combo
                     // if not add it
                     nres = st2.executeQuery("select in_qoh from in_mstr where "
@@ -10471,6 +10490,57 @@ return mystring;
     return myerror;
 
      }
+    
+    public static void _updateNonSerializedInventory(Connection bscon, String item, String site, String wh, String loc, double baseqty, String date) throws SQLException {
+       
+            Statement st = bscon.createStatement();
+            Statement st2 = bscon.createStatement();
+            ResultSet res = null;
+            int z = 0;
+            double qoh = 0;
+            double sum = 0;
+          
+                res = st.executeQuery("select in_qoh from in_mstr where "
+                            + " in_part = " + "'" + item + "'" 
+                            + " and in_loc = " + "'" + loc + "'"
+                            + " and in_wh = " + "'" + wh + "'"
+                            + " and in_site = " + "'" + site + "'"    
+                            + ";");
+
+                    while (res.next()) {
+                        z++;
+                        qoh = bsParseDouble(res.getString("in_qoh"));
+                    }
+                    res.close();
+                    st.close();
+                    if (z == 0) {
+                     st2.executeUpdate("insert into in_mstr "
+                            + "(in_site, in_part, in_loc, in_wh, in_serial, in_expire, in_qoh, in_date ) "
+                            + " values ( " 
+                            + "'" + site + "'" + ","
+                            + "'" + item + "'" + ","
+                            + "'" + loc + "'" + ","
+                            + "'" + wh + "'" + ","
+                            + "''" + "," // serial = ''   
+                            + "''" + ","   // expire = ''
+                            + "'" + baseqty + "'" + ","
+                            + "'" + date + "'"
+                            + ")"
+                            + ";");
+
+                    }  else {
+                         st2.executeUpdate("update in_mstr "
+                            + " set in_qoh = " + "'" + (qoh + baseqty) + "'" + "," +
+                              " in_date = " + "'" + date + "'"
+                            + " where in_part = " + "'" + item + "'" 
+                            + " and in_loc = " + "'" + loc + "'"
+                            + " and in_wh = " + "'" + wh + "'"
+                            + " and in_site = " + "'" + site + "'"        
+                            + ";");
+                    }
+                    st2.close();
+         
+    }
     /* end of inventory related functions */
 
 
@@ -17409,6 +17479,33 @@ MainFrame.bslog(e);
       return myreturn;
   }
 
+    public static boolean isInvCtrlSerialize() {
+   boolean myreturn = false;
+    try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+            res = st.executeQuery("select serialize from inv_ctrl;");
+           while (res.next()) {
+               myreturn = res.getBoolean("serialize");
+           }
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myreturn;
+
+}
+
+    
     public static boolean isInvCtrlPlanMultiScan() {
    boolean myreturn = false;
     try{

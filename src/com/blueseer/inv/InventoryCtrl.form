@@ -35,29 +35,23 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
+                  <EmptySpace min="53" pref="53" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="1" attributes="0">
-                          <EmptySpace max="32767" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="cbdemdtoplan" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="cbmultiplan" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="cbprintsubticket" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="cbautoitem" alignment="0" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                      </Group>
-                      <Group type="102" attributes="0">
-                          <EmptySpace min="189" pref="189" max="-2" attributes="0"/>
-                          <Component id="btupdate" min="-2" max="-2" attributes="0"/>
-                      </Group>
+                      <Component id="cbdemdtoplan" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="cbmultiplan" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="cbprintsubticket" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="cbautoitem" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="cbserialize" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="btupdate" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace min="113" pref="113" max="-2" attributes="0"/>
+                  <EmptySpace pref="119" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace min="-2" pref="46" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Component id="cbdemdtoplan" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="cbmultiplan" min="-2" max="-2" attributes="0"/>
@@ -65,9 +59,11 @@
                   <Component id="cbprintsubticket" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="cbautoitem" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="27" max="32767" attributes="0"/>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <Component id="cbserialize" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace pref="39" max="32767" attributes="0"/>
                   <Component id="btupdate" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -104,6 +100,12 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Auto Item Number Assignment?"/>
             <Property name="name" type="java.lang.String" value="cbautoitem" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JCheckBox" name="cbserialize">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Serialize Inventory?"/>
+            <Property name="name" type="java.lang.String" value="cbserialize" noResource="true"/>
           </Properties>
         </Component>
       </SubComponents>
