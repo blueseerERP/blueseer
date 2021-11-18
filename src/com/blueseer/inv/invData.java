@@ -91,8 +91,8 @@ public class invData {
                         + "it_sell_price, it_pur_price, it_ovh_cost, it_out_cost, it_mtl_cost, it_code, it_type, it_group, "
                         + "it_prodline, it_drawing, it_rev, it_custrev, it_wh, it_loc, it_site, it_comments, "
                         + "it_status, it_uom, it_net_wt, it_ship_wt, it_cont, it_contqty, "
-                        + "it_leadtime, it_safestock, it_minordqty, it_mrp, it_sched, it_plan, it_wf, it_taxcode, it_createdate, it_expire, it_expiredays ) "
-                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
+                        + "it_leadtime, it_safestock, it_minordqty, it_mrp, it_sched, it_plan, it_wf, it_taxcode, it_createdate, it_expire, it_expiredays, it_phantom ) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
        
             PreparedStatement ps = con.prepareStatement(sqlSelect);
             ps.setString(1, x.it_item);
@@ -135,6 +135,7 @@ public class invData {
             psi.setString(34, x.it_createdate);
             psi.setString(35, x.it_expire);
             psi.setString(36, x.it_expiredays);
+            psi.setString(37, x.it_phantom);
             rows = psi.executeUpdate();
             } 
             ps.close();
@@ -179,10 +180,10 @@ public class invData {
                 "it_prodline = ?, it_drawing = ?, it_rev = ?, it_custrev = ?, it_wh = ?, it_loc = ?, it_site = ?, it_comments = ?, " +
                 "it_status = ?, it_uom = ?, it_net_wt = ?, it_ship_wt = ?, it_cont = ?, it_contqty = ?, " +
                 "it_leadtime = ?, it_safestock = ?, it_minordqty = ?, it_mrp = ?, it_sched = ?, it_plan = ?, it_wf = ?, it_taxcode = ?, it_createdate = ?, " +
-                "it_expire = ?, it_expiredays = ? " +
+                "it_expire = ?, it_expiredays = ?, it_phantom = ? " +
                 " where it_item = ? ; ";
         PreparedStatement psu = con.prepareStatement(sql);
-        psu.setString(36, x.it_item);
+        psu.setString(37, x.it_item);
             psu.setString(1, x.it_desc);
             psu.setString(2, x.it_lotsize);
             psu.setString(3, x.it_sell_price);
@@ -218,6 +219,7 @@ public class invData {
             psu.setString(33, x.it_createdate);
             psu.setString(34, x.it_expire);
             psu.setString(35, x.it_expiredays);
+            psu.setString(36, x.it_phantom);
             rows = psu.executeUpdate();
             psu.close();
         return rows;
@@ -310,7 +312,7 @@ public class invData {
                     res.getString("it_loc"), res.getString("it_site"), res.getString("it_comments"), res.getString("it_status"), res.getString("it_uom"),
                     res.getString("it_net_wt").replace('.',defaultDecimalSeparator), res.getString("it_ship_wt").replace('.',defaultDecimalSeparator), res.getString("it_cont"), res.getString("it_contqty").replace('.',defaultDecimalSeparator), 
                     res.getString("it_leadtime").replace('.',defaultDecimalSeparator), res.getString("it_safestock").replace('.',defaultDecimalSeparator), res.getString("it_minordqty").replace('.',defaultDecimalSeparator), res.getString("it_mrp"), 
-                    res.getString("it_sched"), res.getString("it_plan"), res.getString("it_wf"), res.getString("it_taxcode"), res.getString("it_createdate"), res.getString("it_expire"), res.getString("it_expiredays")
+                    res.getString("it_sched"), res.getString("it_plan"), res.getString("it_wf"), res.getString("it_taxcode"), res.getString("it_createdate"), res.getString("it_expire"), res.getString("it_expiredays"), res.getString("it_phantom")
         );
                     }
                 }
@@ -2036,6 +2038,47 @@ public class invData {
 
         }
 
+    public static ArrayList<String[]> getBOMsByItemSite(String item) {
+               ArrayList<String[]> mylist = new ArrayList<String[]>();
+               String[] myarray = new String[]{"",""};
+             try{
+                Class.forName(driver).newInstance();
+                Connection con = DriverManager.getConnection(url + db, user, pass);
+                Statement st = con.createStatement();
+                    ResultSet res = null;
+                try{
+                   
+
+                    res = st.executeQuery("select bom_id, bom_primary from bom_mstr "
+                            + " where bom_item = " + "'" + item + "'" 
+                            + " and bom_enabled = '1' " + ";" ); 
+                   while (res.next()) {
+                    myarray[0] = res.getString("bom_id");
+                    myarray[1] = res.getString("bom_primary");
+                    mylist.add(myarray);
+
+                    }
+
+               }
+                catch (SQLException s){
+                     MainFrame.bslog(s);
+                } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+          }
+            }
+            catch (Exception e){
+                MainFrame.bslog(e);
+            }
+            return mylist;
+
+        }
+
 
     public static double getItemOperationalCost(String item, String set, String site) {
     double cost = 0; 
@@ -2929,12 +2972,12 @@ public class invData {
         String it_net_wt, String it_ship_wt, String it_cont, String it_contqty,
         String it_leadtime, String it_safestock, String it_minordqty, String it_mrp,
         String it_sched, String it_plan, String it_wf, String it_taxcode, String it_createdate,
-        String it_expire, String it_expiredays) {
+        String it_expire, String it_expiredays, String it_phantom) {
         public item_mstr(String[] m) {
             this(m, "", "", "", "", "", "", "", "", "", "",
                     "", "", "", "", "", "", "", "", "", "",
                     "", "", "", "", "", "", "", "", "", "",
-                    "", "", "", "", "", "");
+                    "", "", "", "", "", "", "");
         }
     }
     

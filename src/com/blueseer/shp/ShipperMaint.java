@@ -139,7 +139,8 @@ public class ShipperMaint extends javax.swing.JPanel {
                 getGlobalColumnTag("listprice"), 
                 getGlobalColumnTag("tax"), 
                 getGlobalColumnTag("cont"), 
-                getGlobalColumnTag("serial")
+                getGlobalColumnTag("serial"),
+                getGlobalColumnTag("bom")
             });
     
   
@@ -643,7 +644,8 @@ public class ShipperMaint extends javax.swing.JPanel {
                       res.getString("shd_listprice").replace('.', defaultDecimalSeparator),
                       res.getString("shd_taxamt").replace('.', defaultDecimalSeparator),
                       res.getString("shd_serial"),
-                      res.getString("shd_cont")
+                      res.getString("shd_cont"),
+                      res.getString("shd_bom")
                   });
                 
                 }
@@ -925,6 +927,10 @@ public class ShipperMaint extends javax.swing.JPanel {
                 tbprice.setText("");
                 dduom.setSelectedIndex(0);
                 ddcont.setSelectedIndex(0);
+                
+                ddbom.removeAllItems();
+                
+                
                 res = st.executeQuery("select * from sod_det " + 
                         " inner join item_mstr on it_item = sod_part "  +
                         " where sod_nbr = " + "'" + nbr + "'" +
@@ -943,6 +949,14 @@ public class ShipperMaint extends javax.swing.JPanel {
                 tbcontqty.setText(res.getString("it_contqty"));
                 }
                 
+                ddbom.insertItemAt("", 0);
+                ddbom.setSelectedIndex(0);
+                ArrayList<String[]> boms = invData.getBOMsByItemSite(tbitem.getText());
+                for (String[] wh : boms) {
+                    ddbom.addItem(wh[0]);
+                        if (wh[1].equals("1"))
+                        ddbom.setSelectedItem(wh[0]);
+                }
             
             } catch (SQLException s) {
                 MainFrame.bslog(s);
@@ -1043,7 +1057,8 @@ public class ShipperMaint extends javax.swing.JPanel {
                          res.getString("sod_listprice"),
                          res.getString("sod_taxamt"),
                          "", // cont
-                         ""  // serialno
+                         "",  // serialno
+                         res.getString("sod_bom")
                          
                      });
                     }
@@ -1303,7 +1318,9 @@ public class ShipperMaint extends javax.swing.JPanel {
                 tabledetail.getValueAt(j, 13).toString().replace(defaultDecimalSeparator, '.'),
                 "",
                 tabledetail.getValueAt(j, 14).toString(),     
-                ddsite.getSelectedItem().toString());
+                ddsite.getSelectedItem().toString(),
+                "" // bom
+                );
         list.add(x);
         }      
         return list;        
@@ -1403,6 +1420,8 @@ public class ShipperMaint extends javax.swing.JPanel {
         ddwh = new javax.swing.JComboBox<>();
         jLabel45 = new javax.swing.JLabel();
         ddloc = new javax.swing.JComboBox<>();
+        ddbom = new javax.swing.JComboBox<>();
+        jLabel12 = new javax.swing.JLabel();
         jScrollPane7 = new javax.swing.JScrollPane();
         tabledetail = new javax.swing.JTable();
         jLabel3 = new javax.swing.JLabel();
@@ -1990,6 +2009,9 @@ public class ShipperMaint extends javax.swing.JPanel {
         jLabel45.setText("Warehouse");
         jLabel45.setName("lblwh"); // NOI18N
 
+        jLabel12.setText("BOM");
+        jLabel12.setName("lblbom"); // NOI18N
+
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
         jPanel7Layout.setHorizontalGroup(
@@ -1998,11 +2020,13 @@ public class ShipperMaint extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel45, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel46, javax.swing.GroupLayout.Alignment.TRAILING))
+                    .addComponent(jLabel46, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel12, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(ddwh, 0, 76, Short.MAX_VALUE)
-                    .addComponent(ddloc, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(ddloc, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(ddbom, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel7Layout.setVerticalGroup(
@@ -2016,7 +2040,11 @@ public class ShipperMaint extends javax.swing.JPanel {
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ddloc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel46))
-                .addGap(48, 48, 48))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ddbom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel12))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
@@ -2075,7 +2103,7 @@ public class ShipperMaint extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btdelitem)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 213, Short.MAX_VALUE)
+            .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, 213, Short.MAX_VALUE)
         );
 
         tabledetail.setModel(new javax.swing.table.DefaultTableModel(
@@ -2214,7 +2242,8 @@ public class ShipperMaint extends javax.swing.JPanel {
                 tbprice.getText(), 
                 "0",  // matltax 
                 ddcont.getSelectedItem().toString(),
-                tbserial.getText()
+                tbserial.getText(),
+                ddbom.getSelectedItem().toString()
             });
             } else {
                    for (int x = 0; x < nbrOfContainers; x++) {
@@ -2232,7 +2261,8 @@ public class ShipperMaint extends javax.swing.JPanel {
                     tbprice.getText(), 
                     "0",  // matltax 
                     ddcont.getSelectedItem().toString(),
-                    tbserial.getText()
+                    tbserial.getText(),
+                    ddbom.getSelectedItem().toString()
                 }); 
                 }
                    // now add extra if remainder greater than zero
@@ -2251,7 +2281,8 @@ public class ShipperMaint extends javax.swing.JPanel {
                     tbprice.getText(), 
                     "0",  // matltax 
                     ddcont.getSelectedItem().toString(),
-                    tbserial.getText()
+                    tbserial.getText(),
+                    ddbom.getSelectedItem().toString()
                 });    
                    }
             }
@@ -2517,6 +2548,7 @@ public class ShipperMaint extends javax.swing.JPanel {
     private javax.swing.JCheckBox cbexplode;
     private com.toedter.calendar.JDateChooser dcshipdate;
     private javax.swing.JComboBox<String> ddbillto;
+    private javax.swing.JComboBox<String> ddbom;
     private javax.swing.JComboBox<String> ddcont;
     private javax.swing.JComboBox<String> ddloc;
     private javax.swing.JComboBox<String> ddorder;
@@ -2529,6 +2561,7 @@ public class ShipperMaint extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel104;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel25;

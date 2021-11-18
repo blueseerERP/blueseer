@@ -284,14 +284,14 @@ public class ordData {
                 "sod_po = ?, sod_ord_qty = ?, sod_uom = ?, sod_all_qty = ?, " +
                 " sod_listprice = ?, sod_disc = ?, sod_netprice = ?, sod_ord_date = ?, " +
                 "sod_due_date = ?, sod_shipped_qty = ?, sod_status = ?, sod_wh = ?, sod_loc = ?, " +
-                " sod_desc = ?, sod_taxamt = ?, sod_site = ? " +
+                " sod_desc = ?, sod_taxamt = ?, sod_site = ?, sod_bom = ? " +
                  " where sod_nbr = ? and sod_line = ? ; ";
         String sqlInsert = "insert into sod_det (sod_nbr, sod_line, sod_part, sod_custpart, " 
                         + "sod_po, sod_ord_qty, sod_uom, sod_all_qty, " 
                         + "sod_listprice, sod_disc, sod_netprice, sod_ord_date, sod_due_date, " 
                         + "sod_shipped_qty, sod_status, sod_wh, sod_loc, "
-                        + "sod_desc, sod_taxamt, sod_site ) "
-                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
+                        + "sod_desc, sod_taxamt, sod_site, sod_bom ) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
         ps = con.prepareStatement(sqlSelect); 
         ps.setString(1, x.sod_nbr);
         ps.setString(2, x.sod_line);
@@ -318,11 +318,12 @@ public class ordData {
             ps.setString(18, x.sod_desc);
             ps.setString(19, x.sod_taxamt);
             ps.setString(20, x.sod_site);
+            ps.setString(21, x.sod_bom);
             rows = ps.executeUpdate();
         } else {    // update
          ps = con.prepareStatement(sqlUpdate) ;
-            ps.setString(19, x.sod_nbr);
-            ps.setString(20, x.sod_line);
+            ps.setString(20, x.sod_nbr);
+            ps.setString(21, x.sod_line);
             ps.setString(1, x.sod_part);
             ps.setString(2, x.sod_custpart);
             ps.setString(3, x.sod_po);
@@ -341,6 +342,7 @@ public class ordData {
             ps.setString(16, x.sod_desc);
             ps.setString(17, x.sod_taxamt);
             ps.setString(18, x.sod_site);
+            ps.setString(19, x.sod_bom);
             rows = ps.executeUpdate();
         }
             
@@ -586,8 +588,8 @@ public class ordData {
                         + "sod_po, sod_ord_qty, sod_uom, sod_all_qty, " 
                         + "sod_listprice, sod_disc, sod_netprice, sod_ord_date, sod_due_date, " 
                         + "sod_shipped_qty, sod_status, sod_wh, sod_loc, "
-                        + "sod_desc, sod_taxamt, sod_site ) "
-                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
+                        + "sod_desc, sod_taxamt, sod_site, sod_bom ) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
        
           ps = con.prepareStatement(sqlSelect); 
           ps.setString(1, x.sod_nbr);
@@ -615,6 +617,7 @@ public class ordData {
             ps.setString(18, x.sod_desc);
             ps.setString(19, x.sod_taxamt);
             ps.setString(20, x.sod_site);
+            ps.setString(21, x.sod_bom);
             rows = ps.executeUpdate();
             } 
             return rows;
@@ -1276,10 +1279,11 @@ public class ordData {
         String sod_po, String sod_ord_qty, String sod_uom, String sod_all_qty, 
         String sod_listprice, String sod_disc, String sod_netprice, String sod_ord_date, 
         String sod_due_date, String sod_shipped_qty, String sod_status, String sod_wh, 
-        String sod_loc, String sod_desc, String sod_taxamt, String sod_site) {
+        String sod_loc, String sod_desc, String sod_taxamt, String sod_site, String sod_bom) {
         public sod_det(String[] m) {
             this (m, "", "", "", "", "", "", "", "", "", "",
-                    "", "", "", "", "", "", "", "", "", "");
+                    "", "", "", "", "", "", "", "", "", "",
+                    "" );
         }
     }
     

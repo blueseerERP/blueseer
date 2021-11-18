@@ -40,6 +40,7 @@ import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDoubleUS;
 import static com.blueseer.utl.BlueSeerUtils.currformatDoubleUS;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.OVData;
 import static com.blueseer.utl.OVData.AREntry;
 import java.sql.DriverManager;
@@ -107,8 +108,8 @@ public class shpData {
         int rows = 0;
         String sqlSelect = "select * from ship_det where shd_id = ? and shd_line = ?";
         String sqlInsert = "insert into ship_det (shd_id, shd_line, shd_part, shd_so, shd_soline, shd_date, shd_po, shd_qty,"
-                        + "shd_netprice, shd_disc, shd_listprice, shd_desc, shd_wh, shd_loc, shd_taxamt, shd_cont, shd_serial, shd_site  ) "
-                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
+                        + "shd_netprice, shd_disc, shd_listprice, shd_desc, shd_wh, shd_loc, shd_taxamt, shd_cont, shd_serial, shd_site, shd_bom  ) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
        
           ps = con.prepareStatement(sqlSelect); 
           ps.setString(1, x.shd_id);
@@ -134,6 +135,7 @@ public class shpData {
             ps.setString(16, x.shd_cont);
             ps.setString(17, x.shd_serial);
             ps.setString(18, x.shd_site);
+            ps.setString(19, x.shd_bom);
             rows = ps.executeUpdate();
             } 
             return rows;
@@ -234,12 +236,12 @@ public class shpData {
             // if type.equals("cash")....no order to update
            
             bscon.commit();
-            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+            m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1125)};
         } catch (SQLException s) {
              MainFrame.bslog(s);
              try {
                  bscon.rollback();
-                 m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordError};
+                 m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};
              } catch (SQLException rb) {
                  MainFrame.bslog(rb);
              }
@@ -296,13 +298,13 @@ public class shpData {
                 "shd_soline = ?, shd_date = ?, shd_po = ?, shd_qty = ?, " +
                 " shd_netprice = ?, shd_disc = ?, shd_listprice = ?, shd_desc = ?, " +
                 "shd_wh = ?, shd_loc = ?, shd_taxamt = ?, shd_cont = ?, shd_serial = ?, " +
-                " shd_site = ?" +
+                " shd_site = ?, shd_bom = ?" +
                  " where shd_id = ? and shd_line = ? ; ";
         String sqlInsert = "insert into ship_det (shd_id, shd_line, shd_part, shd_so, shd_soline, " 
                         + " shd_date, shd_po, shd_qty,"
                         + "shd_netprice, shd_disc, shd_listprice, shd_desc, shd_wh, "
-                        + " shd_loc, shd_taxamt, shd_cont, shd_serial, shd_site  ) "
-                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); ";
+                        + " shd_loc, shd_taxamt, shd_cont, shd_serial, shd_site, shd_bom  ) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); ";
         ps = con.prepareStatement(sqlSelect); 
         ps.setString(1, x.shd_id);
         ps.setString(2, x.shd_line);
@@ -327,11 +329,12 @@ public class shpData {
             ps.setString(16, x.shd_cont);
             ps.setString(17, x.shd_serial);
             ps.setString(18, x.shd_site); 
+            ps.setString(19, x.shd_bom); 
             rows = ps.executeUpdate();
         } else {    // update
          ps = con.prepareStatement(sqlUpdate) ;
-            ps.setString(17, x.shd_id);
-            ps.setString(18, x.shd_line);
+            ps.setString(18, x.shd_id);
+            ps.setString(19, x.shd_line);
             ps.setString(1, x.shd_part);
             ps.setString(2, x.shd_so);
             ps.setString(3, x.shd_soline);
@@ -348,6 +351,7 @@ public class shpData {
             ps.setString(14, x.shd_cont);
             ps.setString(15, x.shd_serial);
             ps.setString(16, x.shd_site); 
+            ps.setString(17, x.shd_bom);
             rows = ps.executeUpdate();
         }
             
@@ -490,7 +494,9 @@ public class shpData {
                   "", // cont
                   "", // ref
                   "", // serial
-                  site );
+                  site,
+                  "" // bom
+                  );
           list.add(x);
         }
         return list;
@@ -522,7 +528,9 @@ public class shpData {
                   "", // cont
                   "", // ref
                   "", // serial
-                  site );
+                  site,
+                  "" // bom
+                  );
           list.add(x);
         }
         return list;
@@ -696,7 +704,7 @@ public class shpData {
                     baseqty = OVData.getUOMBaseQty(x[0], x[5], x[2], Double.valueOf(x[1]));
                     if (x[3].isEmpty()) {x[3] = x[7];} // if no loc in shipper...use item default loc
                     if (x[4].isEmpty()) {x[4] = x[8];} // if no wh in shipper...use item default wh
-                    if (! x[9].equals("S")) {  // no service items
+                    if (x[9] != null && ! x[9].equals("S")) {  // no service items
                      list.add(x);
                     }
                 }
@@ -1898,11 +1906,11 @@ public class shpData {
         String shd_soline, String shd_date, String shd_po, String shd_qty, String shd_uom, String shd_curr,
         String shd_netprice, String shd_disc, String shd_listprice, String shd_desc, 
         String shd_wh, String shd_loc, String shd_taxamt, String shd_cont, String shd_ref,
-        String shd_serial, String shd_site) {
+        String shd_serial, String shd_site, String shd_bom) {
         public ship_det(String[] m) {
             this(m, "", "", "", "", "", "", "", "", "", "",
                     "", "", "", "", "", "", "", "", "", "",
-                    "", ""
+                    "", "", ""
             );
         }
     }

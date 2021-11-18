@@ -832,8 +832,9 @@ CREATE TABLE IF NOT EXISTS `item_mstr` (
   `it_cont` varchar(30) NOT NULL DEFAULT '',
   `it_contqty` int(8) NOT NULL DEFAULT '0',
   `it_expire` varchar(10) NOT NULL DEFAULT '',
-  `it_expiredays` int(4) NOT NULL DEFAULT '0' ) 
-ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `it_expiredays` int(4) NOT NULL DEFAULT '0', 
+  `it_phantom` tinyint(1) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `itemr_cost` (
   `itr_item` varchar(20) NOT NULL,
   `itr_site` varchar(10)  NOT NULL DEFAULT '',
@@ -938,6 +939,13 @@ CREATE TABLE IF NOT EXISTS `ov_mstr` (
   `ov_currency` varchar(3)  NOT NULL DEFAULT '',
   `ov_labelprinter` varchar(20)  NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `bom_mstr` (
+  `bom_id` varchar(30)  NOT NULL DEFAULT '',
+  `bom_desc` varchar(100)  NOT NULL DEFAULT '',
+  `bom_item` varchar(30)  NOT NULL DEFAULT '',
+  `bom_enabled` tinyint(1) NOT NULL DEFAULT '0',
+  `bom_primary` tinyint(1)  NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `pbm_mstr` (
   `ps_parent` varchar(18) NOT NULL  DEFAULT '',
   `ps_child` varchar(18) NOT NULL  DEFAULT '',
@@ -948,7 +956,9 @@ CREATE TABLE IF NOT EXISTS `pbm_mstr` (
   `ps_sequence` int(4)  NOT NULL DEFAULT '0',
   `ps_userid` varchar(8)  NOT NULL DEFAULT '',
   `ps_misc1` varchar(30)  NOT NULL DEFAULT '',
-  `ps_ref` varchar(30) NOT NULL  DEFAULT '') ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `ps_ref` varchar(30) NOT NULL  DEFAULT '',
+  `ps_bom` varchar(30) NOT NULL  DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `perm_mstr` (
   `perm_user` varchar(30) NOT NULL  DEFAULT '',
   `perm_menu` varchar(60) NOT NULL  DEFAULT '') ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -1281,7 +1291,8 @@ CREATE TABLE IF NOT EXISTS `ship_det` (
   `shd_sku` varchar(30) NOT NULL  DEFAULT '',
   `shd_desc` varchar(50) NOT NULL  DEFAULT '',
   `shd_uom` varchar(3) NOT NULL  DEFAULT '',
-  `shd_cont` varchar(30) NOT NULL  DEFAULT ''
+  `shd_cont` varchar(30) NOT NULL  DEFAULT '',
+  `shd_bom` varchar(30) NOT NULL  DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `dod_mstr` (
   `dod_id` int(11) NOT NULL  DEFAULT '0',
@@ -1601,7 +1612,8 @@ CREATE TABLE IF NOT EXISTS `sod_det` (
   `sod_site` varchar(10)  NOT NULL DEFAULT '',
   `sod_wh` varchar(10)  NOT NULL DEFAULT '',
   `sod_loc` varchar(20) NOT NULL  DEFAULT '',
-  `sod_all_qty` int(8) NOT NULL  DEFAULT '0'
+  `sod_all_qty` int(8) NOT NULL  DEFAULT '0',
+  `sod_bom` varchar(30) NOT NULL  DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `sod_tax` (
   `sodt_nbr` varchar(8) NOT NULL,
@@ -1734,7 +1746,8 @@ CREATE TABLE IF NOT EXISTS `tran_mstr` (
   `tr_pack_date` date  DEFAULT NULL,
   `tr_assy_date` date  DEFAULT NULL,
   `tr_uom` varchar(3)  DEFAULT NULL,
-  `tr_base_qty` decimal(14,5)  DEFAULT '0.00000' 
+  `tr_base_qty` decimal(14,5)  DEFAULT '0.00000',
+  `tr_bom` tinyint(1) NOT NULL DEFAULT '0' 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `user_mstr` (
   `user_id` varchar(10) NOT NULL  DEFAULT '',

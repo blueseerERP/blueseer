@@ -589,7 +589,7 @@
                                       </Group>
                                       <EmptySpace max="32767" attributes="0"/>
                                       <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="cbaltbom" min="-2" max="-2" attributes="0"/>
+                                          <Component id="cbphantom" min="-2" max="-2" attributes="0"/>
                                           <Component id="cbplan" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
@@ -711,7 +711,7 @@
                                       <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="3" attributes="0">
                                           <Component id="cbschedule" alignment="3" min="-2" max="-2" attributes="0"/>
-                                          <Component id="cbaltbom" alignment="3" min="-2" max="-2" attributes="0"/>
+                                          <Component id="cbphantom" alignment="3" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                                   </Group>
@@ -884,10 +884,10 @@
                         <Property name="name" type="java.lang.String" value="cbsched" noResource="true"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JCheckBox" name="cbaltbom">
+                    <Component class="javax.swing.JCheckBox" name="cbphantom">
                       <Properties>
-                        <Property name="text" type="java.lang.String" value="Alt BOM"/>
-                        <Property name="name" type="java.lang.String" value="cbaltbom" noResource="true"/>
+                        <Property name="text" type="java.lang.String" value="Phantom"/>
+                        <Property name="name" type="java.lang.String" value="cbphantom" noResource="true"/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JTextField" name="tbqtyoh">

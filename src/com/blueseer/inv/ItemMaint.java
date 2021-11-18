@@ -133,6 +133,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
                         getGlobalColumnTag("location"), 
                         getGlobalColumnTag("warehouse"), 
                         getGlobalColumnTag("qty"), 
+                        getGlobalColumnTag("serial"),
                         getGlobalColumnTag("date")});
     
     
@@ -360,7 +361,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
        cbplan.setSelected(false);
        cbmrp.setSelected(false);
        cbschedule.setSelected(false);
-       cbaltbom.setSelected(false);
+       cbphantom.setSelected(false);
        tbqtyoh.setText("");
        tbqtyoh.setEditable(false);
        comments.setText("");
@@ -595,6 +596,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
         cbmrp.setSelected(BlueSeerUtils.ConvertStringToBool(x.it_mrp()));
         cbplan.setSelected(BlueSeerUtils.ConvertStringToBool(x.it_plan()));
         cbschedule.setSelected(BlueSeerUtils.ConvertStringToBool(x.it_sched())); 
+        cbphantom.setSelected(BlueSeerUtils.ConvertStringToBool(x.it_phantom())); 
         tblotsize.setText(x.it_lotsize());
         tbsellprice.setText(currformat(x.it_sell_price()));
         tbpurchprice.setText(currformat(x.it_pur_price()));
@@ -651,7 +653,8 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 ddtax.getSelectedItem().toString(),
                 bsmf.MainFrame.dfdate.format(new Date()),
                 expire,
-                bsformat("d", tbexpiredays.getText(), "0").replace(defaultDecimalSeparator, '.')
+                bsformat("d", tbexpiredays.getText(), "0").replace(defaultDecimalSeparator, '.'),
+                BlueSeerUtils.boolToString(cbphantom.isSelected())
                 );
         return x;
     }
@@ -795,7 +798,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 //          ReportPanel.TableReport.getColumn("CallID").setCellEditor(
                     //       new ButtonEditor(new JCheckBox()));
 
-               res = st.executeQuery("SELECT in_site, in_wh, in_loc, in_qoh, in_date  " +
+               res = st.executeQuery("SELECT in_site, in_wh, in_loc, in_qoh, in_serial, in_date  " +
                         " FROM  in_mstr  " +
                         " where in_part = " + "'" + parentpart + "'" + 
                         " order by in_wh, in_loc ;");
@@ -808,6 +811,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
                                 res.getString("in_loc"),
                                 res.getString("in_wh"),
                                 res.getInt("in_qoh"),
+                                res.getString("in_serial"),
                                 res.getString("in_date")
                             });
               
@@ -1010,7 +1014,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
         tbmtlcost = new javax.swing.JTextField();
         jLabel75 = new javax.swing.JLabel();
         cbschedule = new javax.swing.JCheckBox();
-        cbaltbom = new javax.swing.JCheckBox();
+        cbphantom = new javax.swing.JCheckBox();
         tbqtyoh = new javax.swing.JTextField();
         jLabel77 = new javax.swing.JLabel();
         ddtax = new javax.swing.JComboBox<>();
@@ -1429,8 +1433,8 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
         cbschedule.setText("Scheduled?");
         cbschedule.setName("cbsched"); // NOI18N
 
-        cbaltbom.setText("Alt BOM");
-        cbaltbom.setName("cbaltbom"); // NOI18N
+        cbphantom.setText("Phantom");
+        cbphantom.setName("cbphantom"); // NOI18N
 
         jLabel77.setText("QtyOnHand");
         jLabel77.setName("lblqoh"); // NOI18N
@@ -1566,7 +1570,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
                             .addComponent(cbschedule))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cbaltbom)
+                            .addComponent(cbphantom)
                             .addComponent(cbplan)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1664,7 +1668,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
                         .addGap(3, 3, 3)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(cbschedule)
-                            .addComponent(cbaltbom))
+                            .addComponent(cbphantom))
                         .addGap(0, 0, Short.MAX_VALUE))))
         );
 
@@ -1793,7 +1797,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE))
+                    .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -2513,9 +2517,9 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
     private javax.swing.JButton btprintlabel;
     private javax.swing.JButton btstandard;
     private javax.swing.JButton btupdate;
-    private javax.swing.JCheckBox cbaltbom;
     private javax.swing.JCheckBox cbdefault;
     private javax.swing.JCheckBox cbmrp;
+    private javax.swing.JCheckBox cbphantom;
     private javax.swing.JCheckBox cbplan;
     private javax.swing.JCheckBox cbschedule;
     private javax.swing.JTextArea comments;

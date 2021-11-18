@@ -193,23 +193,26 @@ public class InventoryMaint extends javax.swing.JPanel {
              
          }
     
-    public void initvars(String[] arg) {
-        
-        ddtype.requestFocus();
-       
-        
+    public void clearVariables() {
         java.util.Date now = new java.util.Date();
        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
         dcdate.setDate(now);
-       
+        dcexpire.setDate(null);
         tbpart.setText("");
         tbqty.setText("");
         tbref.setText("");
         tbrmks.setText("");
         tblotserial.setText("");
-        
         tbpart.setBackground(Color.white);
         tbqty.setBackground(Color.white);
+        ddwh.setSelectedIndex(0);
+        ddloc.setSelectedIndex(0);
+        
+    }
+    
+    public void initvars(String[] arg) {
+        
+        ddtype.requestFocus();
         
         ArrayList<String> wh = new ArrayList();
         ddwh.removeAllItems();
@@ -217,6 +220,7 @@ public class InventoryMaint extends javax.swing.JPanel {
         for (String code : wh) {
             ddwh.addItem(code);
         }
+        ddwh.insertItemAt("", 0);
         
        
          ArrayList<String> mylist = new ArrayList();
@@ -227,6 +231,7 @@ public class InventoryMaint extends javax.swing.JPanel {
             ddloc.addItem(code);
          }
         }
+        ddloc.insertItemAt("", 0);
         
         
         
@@ -250,6 +255,8 @@ public class InventoryMaint extends javax.swing.JPanel {
         for (String code : ccs) {
             ddcc.addItem(code);
         }
+        
+        clearVariables();
     }
     
     public void lookUpFrameItemDesc() {
@@ -711,12 +718,14 @@ public class InventoryMaint extends javax.swing.JPanel {
                         dfdate.format(dcdate.getDate()), (cost * Double.valueOf(tbqty.getText())), (cost * Double.valueOf(tbqty.getText())), basecurr, basecurr, tbref.getText() , site, type, tbrmks.getText());
             }
         } else {
-          bsmf.MainFrame.show(getMessageTag(1010, "UpdateInventoryDiscrete"));  
+          bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));  
         }
-        if (! isError)
+        if (! isError) {
             bsmf.MainFrame.show(getMessageTag(1065));
-            else
-            bsmf.MainFrame.show(getMessageTag(1010, "glentry"));
+            clearVariables();
+        } else {
+            bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+        }
         
         } // proceed
         
@@ -755,6 +764,7 @@ public class InventoryMaint extends javax.swing.JPanel {
              for (String lc : loc) {
                 ddloc.addItem(lc);
              }
+             ddloc.insertItemAt("", 0);
         }
     }//GEN-LAST:event_ddwhActionPerformed
 

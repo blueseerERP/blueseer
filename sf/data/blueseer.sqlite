@@ -996,7 +996,8 @@ CREATE TABLE "item_mstr" (
   "it_cont" varchar(30) NOT NULL DEFAULT '',
   "it_contqty" int(8) COLLATE NOCASE DEFAULT '0',
   "it_expire" varchar(10) COLLATE NOCASE DEFAULT '',
-  "it_expiredays" int(4) COLLATE NOCASE DEFAULT '0');
+  "it_expiredays" int(4) COLLATE NOCASE DEFAULT '0',
+  "it_phantom" tinyint(1) NOT NULL DEFAULT '0');
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -1128,6 +1129,16 @@ CREATE TABLE "ov_mstr" (
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
+CREATE TABLE "bom_mstr" (
+  "bom_id" varchar(30) COLLATE NOCASE DEFAULT '',
+  "bom_desc" varchar(100) COLLATE NOCASE DEFAULT '',
+  "bom_item" varchar(30) COLLATE NOCASE DEFAULT '',
+  "bom_enabled" tinyint(1) NOT NULL DEFAULT '0',
+  "bom_primary" tinyint(1) NOT NULL DEFAULT '0'
+);
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "pbm_mstr" (
   "ps_parent" varchar(18) NOT NULL COLLATE NOCASE DEFAULT '',
   "ps_child" varchar(18) NOT NULL COLLATE NOCASE DEFAULT '',
@@ -1138,7 +1149,9 @@ CREATE TABLE "pbm_mstr" (
   "ps_sequence" int(4) COLLATE NOCASE DEFAULT '',
   "ps_userid" varchar(8) COLLATE NOCASE DEFAULT '',
   "ps_misc1" varchar(30) COLLATE NOCASE DEFAULT '',
-  "ps_ref" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '');
+  "ps_ref" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "ps_bom" varchar(30) NOT NULL COLLATE NOCASE DEFAULT ''
+);
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -1572,7 +1585,8 @@ CREATE TABLE "ship_det" (
   "shd_sku" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "shd_desc" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
   "shd_uom" varchar(3) NOT NULL COLLATE NOCASE DEFAULT '',
-  "shd_cont" varchar(30) NOT NULL COLLATE NOCASE DEFAULT ''
+  "shd_cont" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "shd_bom" varchar(30) NOT NULL COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -1896,7 +1910,8 @@ CREATE TABLE "sod_det" (
   "sod_site" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
   "sod_wh" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
   "sod_loc" varchar(20) NOT NULL COLLATE NOCASE DEFAULT '',
-  "sod_all_qty" int(8) NOT NULL COLLATE NOCASE DEFAULT '0'
+  "sod_all_qty" int(8) NOT NULL COLLATE NOCASE DEFAULT '0',
+  "sod_bom" varchar(30) NOT NULL COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -2173,7 +2188,8 @@ CREATE TABLE "tran_mstr" (
   "tr_pack_date" date COLLATE NOCASE DEFAULT '',
   "tr_assy_date" date COLLATE NOCASE DEFAULT '',
   "tr_uom" varchar(3) COLLATE NOCASE DEFAULT '',
-  "tr_base_qty" decimal(14,5) COLLATE NOCASE DEFAULT '0.00000'
+  "tr_base_qty" decimal(14,5) COLLATE NOCASE DEFAULT '0.00000',
+  "tr_bom" varchar(30) COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
