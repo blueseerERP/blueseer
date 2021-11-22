@@ -325,15 +325,22 @@ public class invData {
         return r;
     }
     
-    public static String[] addBOM(pbm_mstr x) {
+    public static String[] addPBM(pbm_mstr x, bom_mstr y, boolean addBomID) {
         String[] m = new String[2];
         if (x == null) {
             return new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordError};
         }
         Connection con = null;
+        int rows = 0;
         try { 
             con = DriverManager.getConnection(url + db, user, pass);
-            int rows = _addBOM(x, con);  
+            if (addBomID) {
+             rows = _addBomMstr(y, con);   
+            }
+            
+            if (rows > 0)
+             rows = _addPBM(x, con);
+            
             if (rows > 0) {
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
             } else {
@@ -354,17 +361,18 @@ public class invData {
     return m;
     }
     
-    private static int _addBOM(pbm_mstr x, Connection con) throws SQLException {
+    private static int _addPBM(pbm_mstr x, Connection con) throws SQLException {
         int rows = 0;
-        String sqlSelect = "select * from pbm_mstr where ps_parent = ? and ps_child = ? and ps_op = ?";
+        String sqlSelect = "select * from pbm_mstr where ps_parent = ? and ps_child = ? and ps_op = ? and ps_bom = ?";
         String sqlInsert = "insert into pbm_mstr (ps_parent, ps_child, ps_qty_per, " 
-                        + "ps_op, ps_ref, ps_type ) "
-                        + " values (?,?,?,?,?,?); "; 
+                        + "ps_op, ps_ref, ps_type, ps_bom ) "
+                        + " values (?,?,?,?,?,?,?); "; 
        
             PreparedStatement ps = con.prepareStatement(sqlSelect);
             ps.setString(1, x.ps_parent);
             ps.setString(2, x.ps_child);
             ps.setString(3, x.ps_op);
+            ps.setString(4, x.ps_bom);
             ResultSet res = ps.executeQuery();
             PreparedStatement psi = con.prepareStatement(sqlInsert);  
             if (! res.isBeforeFirst()) {
@@ -374,6 +382,7 @@ public class invData {
             psi.setString(4, x.ps_op);
             psi.setString(5, x.ps_ref);
             psi.setString(6, x.ps_type);
+            psi.setString(7, x.ps_bom);
             rows = psi.executeUpdate();
             } 
             ps.close();
@@ -382,15 +391,57 @@ public class invData {
         return rows;
     }
     
-    public static String[] updateBOM(pbm_mstr x) {
+    private static int _addBomMstr(bom_mstr x, Connection con) throws SQLException {
+        int rows = 0;
+        
+        
+        
+        String sqlSelect = "select * from bom_mstr where bom_id = ? and bom_item = ?;";
+        String sqlInsert = "insert into bom_mstr (bom_id, bom_desc, bom_item, " 
+                        + "bom_enabled, bom_primary ) "
+                        + " values (?,?,?,?,?); "; 
+       
+            PreparedStatement ps = con.prepareStatement(sqlSelect);
+            ps.setString(1, x.bom_id);
+            ps.setString(2, x.bom_item);
+            ResultSet res = ps.executeQuery();
+            PreparedStatement psi = con.prepareStatement(sqlInsert);  
+            if (! res.isBeforeFirst()) {
+                // if bom_primary is true...then must reset all other bom_mstr records for this item as false
+                String sqlReset = "update bom_mstr set bom_primary = '0' where bom_item = ?;";
+                if (x.bom_primary.equals("1")) {
+                    PreparedStatement psr = con.prepareStatement(sqlReset); 
+                    psr.setString(1, x.bom_item);
+                    rows = psr.executeUpdate();
+                    psr.close();
+                }
+            psi.setString(1, x.bom_id);
+            psi.setString(2, x.bom_desc);
+            psi.setString(3, x.bom_item);
+            psi.setString(4, x.bom_enabled);
+            psi.setString(5, x.bom_primary);
+            rows = psi.executeUpdate();
+            } 
+            ps.close();
+            psi.close();
+            res.close();
+        return rows;
+    }
+    
+    
+    public static String[] updatePBM(pbm_mstr x, bom_mstr y) {
         String[] m = new String[2];
         if (x == null) {
             return new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordError};
         }
         Connection con = null;
+        int rows = 0;
         try { 
             con = DriverManager.getConnection(url + db, user, pass);
-            int rows = _updateBOM(x, con);  
+            _updateBomMstr(y, con); // the bom_mstr gets updated every time a component is updated
+                                    // where a change to bom_mstr has occurred or not
+            
+            rows = _updatePBM(x, con); 
             if (rows > 0) {
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
             } else {
@@ -411,24 +462,52 @@ public class invData {
     return m;
     }
     
-    private static int _updateBOM(pbm_mstr x, Connection con) throws SQLException {
+    private static int _updatePBM(pbm_mstr x, Connection con) throws SQLException {
         int rows = 0;
         String sqlUpdate = "update pbm_mstr set ps_qty_per = ?, " 
                         + "ps_ref = ?, ps_type = ? "
-                        + " where ps_parent = ? and ps_child = ? and ps_op = ?; ";
+                        + " where ps_parent = ? and ps_child = ? and ps_op = ? and ps_bom = ? ";
             PreparedStatement psu = con.prepareStatement(sqlUpdate); 
-            psu.setString(4, x.ps_parent);
-            psu.setString(5, x.ps_child);
             psu.setString(1, x.ps_qty_per);
-            psu.setString(6, x.ps_op);
             psu.setString(2, x.ps_ref);
             psu.setString(3, x.ps_type);
+            psu.setString(4, x.ps_parent);
+            psu.setString(5, x.ps_child);
+            psu.setString(6, x.ps_op);
+            psu.setString(7, x.ps_bom);
             rows = psu.executeUpdate();
             psu.close();
         return rows;
     }
     
-    public static String[] deleteBOM(pbm_mstr x) {
+    private static int _updateBomMstr(bom_mstr x, Connection con) throws SQLException {
+        int rows = 0;
+        // if bom_primary is true...then must reset all other bom_mstr records for this item as false
+        String sqlReset = "update bom_mstr set bom_primary = '0' where bom_item = ?;";
+        
+        if (x.bom_primary.equals("1")) {
+            PreparedStatement psr = con.prepareStatement(sqlReset); 
+            psr.setString(1, x.bom_item);
+            rows = psr.executeUpdate();
+            psr.close();
+        }
+        
+        String sqlUpdate = "update bom_mstr set bom_desc = ?, " 
+                        + "bom_enabled = ?, bom_primary = ? "
+                        + " where bom_id = ? and bom_item = ? ";
+            PreparedStatement psu = con.prepareStatement(sqlUpdate); 
+            psu.setString(1, x.bom_desc);
+            psu.setString(2, x.bom_enabled);
+            psu.setString(3, x.bom_primary);
+            psu.setString(4, x.bom_id);
+            psu.setString(5, x.bom_item);
+            rows = psu.executeUpdate();
+            psu.close();
+        return rows;
+    }
+    
+    
+    public static String[] deletePBM(pbm_mstr x) {
         String[] m = new String[2];
         if (x == null) {
             return new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordError};
@@ -436,7 +515,7 @@ public class invData {
         Connection con = null;
         try { 
             con = DriverManager.getConnection(url + db, user, pass);
-            _deleteBOM(x, con);  
+            _deletePBM(x, con);  
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
         } catch (SQLException s) {
              MainFrame.bslog(s);
@@ -453,17 +532,29 @@ public class invData {
     return m;
     }
     
-    private static void _deleteBOM(pbm_mstr x, Connection con) throws SQLException { 
+    private static void _deletePBM(pbm_mstr x, Connection con) throws SQLException { 
         PreparedStatement ps = null;   
-        String sql = "delete from pbm_mstr where ps_parent = ? and ps_child = ? and ps_op = ? ; ";
+        String sql = "delete from pbm_mstr where ps_parent = ? and ps_child = ? and ps_op = ? and ps_bom = ? ; ";
         ps = con.prepareStatement(sql);
         ps.setString(1, x.ps_parent);
         ps.setString(2, x.ps_child);
         ps.setString(3, x.ps_op);
+        ps.setString(4, x.ps_bom);
         ps.executeUpdate();
         
         ps.close();
     }
+    
+    private static void _deleteBomMstr(bom_mstr x, Connection con) throws SQLException { 
+        PreparedStatement ps = null;   
+        String sql = "delete from bom_mstr where bom_id = ? and bom_item = ?;";
+        ps = con.prepareStatement(sql);
+        ps.setString(1, x.bom_id);
+        ps.setString(2, x.bom_item);
+        ps.executeUpdate();
+        ps.close();
+    }
+    
     
     public static String[] addWorkCenterMstr(wc_mstr x) {
         String[] m = new String[2];
@@ -803,6 +894,7 @@ public class invData {
         return m;
     }
 
+   
 
     /* misc functions */
     public static ArrayList getItemListFromCustCode(String cust) {
@@ -2983,9 +3075,16 @@ public class invData {
     
     
     public record pbm_mstr(String[] m, String ps_parent, String ps_child,
-        String ps_qty_per, String ps_op, String ps_ref, String ps_type) {
+        String ps_qty_per, String ps_op, String ps_ref, String ps_type, String ps_bom) {
         public pbm_mstr(String[] m) {
-            this(m, "", "", "", "", "", "");
+            this(m, "", "", "", "", "", "", "");
+        }
+    }
+    
+    public record bom_mstr(String[] m, String bom_id, String bom_desc,
+        String bom_item, String bom_enabled, String bom_primary) {
+        public bom_mstr(String[] m) {
+            this(m, "", "", "", "", "");
         }
     }
     

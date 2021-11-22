@@ -35,10 +35,11 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
-import static com.blueseer.inv.invData.addBOM;
-import static com.blueseer.inv.invData.deleteBOM;
+import static com.blueseer.inv.invData.addPBM;
+import com.blueseer.inv.invData.bom_mstr;
+import static com.blueseer.inv.invData.deletePBM;
 import com.blueseer.inv.invData.pbm_mstr;
-import static com.blueseer.inv.invData.updateBOM;
+import static com.blueseer.inv.invData.updatePBM;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble5;
@@ -106,6 +107,9 @@ public class BOMMaint extends javax.swing.JPanel {
                 boolean isLoad = false;
                 String site = "";
                 String parent = "";
+                String BomID = "";
+                boolean bomexist = false;
+                boolean newbomid = false;
                 
      javax.swing.table.DefaultTableModel matlmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                     new String[]{
@@ -308,9 +312,19 @@ public class BOMMaint extends javax.swing.JPanel {
     
     public void setComponentDefaultValues() {
        isLoad = true; 
+       bomexist = false;
+       newbomid = false;
+       site = "";
+       parent = "";
+       
        tbkey.setText("");
        tbkey.setEditable(true);
        tbkey.setForeground(Color.black);    
+       
+       tbbomid.setText("");
+       tbbomdesc.setText("");
+       cbdefault.setSelected(false);
+       cbenabled.setSelected(false);
        tbparentcostCUR.setBackground(Color.white); 
        tbparentcostSTD.setBackground(Color.white);
        
@@ -379,20 +393,27 @@ public class BOMMaint extends javax.swing.JPanel {
         setPanelComponentState(this, true);
         btdelete.setEnabled(false);
         btupdate.setEnabled(false);
+        btadd.setEnabled(false);
         if (i > 0) {
             m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess}; 
            tbkey.setEditable(false);
            tbkey.setForeground(Color.blue);
            btlookupbom.setEnabled(true);
+           btadd.setEnabled(true);
+           bomexist = true;
         } else if (i == 0) {
            m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1146)};  // no bom found
                    tbkey.setForeground(Color.red); 
                    btlookupbom.setEnabled(false);
+                   btadd.setEnabled(false);
+                   bomexist = false;
         } else {
             m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1147)}; // no routing found
                     tbkey.setEditable(true);
                     tbkey.setForeground(Color.red); 
                     btlookupbom.setEnabled(false);
+                    btadd.setEnabled(false);
+                    bomexist = false;
         }
         return m;
     }
@@ -400,54 +421,77 @@ public class BOMMaint extends javax.swing.JPanel {
     public boolean validateInput(String x) {
         boolean b = true;
                
-         if (tbqtyper.getText().isEmpty()) {
+        
+
+        if (tbkey.getText().isEmpty()) {
+            b = false;
+            bsmf.MainFrame.show(getMessageTag(1024, tbkey.getName()));
+            tbkey.requestFocus();
+            return b;
+        }
+        
+        if (tbbomid.getText().isEmpty()) {
+            b = false;
+            bsmf.MainFrame.show(getMessageTag(1024, tbkey.getName()));
+            tbbomid.requestFocus();
+            return b;
+        }
+        
+        if (tbqtyper.getText().isEmpty()) {
                     b = false;
                     bsmf.MainFrame.show(getMessageTag(1024, tbqtyper.getName()));
                     tbqtyper.requestFocus();
                     return b;
-                }
-                
-                 if (tbkey.getText().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1024, tbkey.getName()));
-                    tbkey.requestFocus();
-                    return b;
-                }
-                 
-                if (! OVData.isValidItem(tbkey.getText())) {
-                    b = false;
-                    tbkey.requestFocus();
-                    return b;
-                }
-                
-                 if (ddcomp.getSelectedItem() == null) {
-                   b = false;
-                   bsmf.MainFrame.show(getMessageTag(1026, ddcomp.getName()));
-                   ddcomp.requestFocus();
-                   return b;
-               } 
-                 
-                if (! OVData.isValidItem(ddcomp.getSelectedItem().toString())) {
-                    b = false;
-                    ddcomp.requestFocus();
-                    bsmf.MainFrame.show(getMessageTag(1026, ddcomp.getName()));
-                    return b;
-                }
-                
-               
-               if (ddop.getSelectedItem() == null) {
-                   b = false;
-                   bsmf.MainFrame.show(getMessageTag(1026, ddop.getName()));
-                   ddop.requestFocus();
-                   return b;
-               } 
-               
-               if (ddcomp.getSelectedItem().toString().toLowerCase().equals(tbkey.getText().toLowerCase())) {
-                   b = false;
-                   bsmf.MainFrame.show(getMessageTag(1069));
-                   ddcomp.requestFocus();
-                   return b;
-               } 
+        }
+
+        if (! OVData.isValidItem(tbkey.getText())) {
+            b = false;
+            tbkey.requestFocus();
+            return b;
+        }
+        
+        if (OVData.getDefaultBomID(tbkey.getText()).isEmpty() && ! cbdefault.isSelected()) {
+            b = false;
+            bsmf.MainFrame.show(getMessageTag(1166));
+            cbdefault.requestFocus();
+            return b;
+        }
+        
+        if (OVData.getDefaultBomID(tbkey.getText()).equals(tbbomid.getText()) && ! cbdefault.isSelected()) {
+            b = false;
+            bsmf.MainFrame.show(getMessageTag(1168));
+            cbdefault.requestFocus();
+            return b;
+        }
+
+        if (ddcomp.getSelectedItem() == null) {
+           b = false;
+           bsmf.MainFrame.show(getMessageTag(1026, ddcomp.getName()));
+           ddcomp.requestFocus();
+           return b;
+       } 
+
+        if (! OVData.isValidItem(ddcomp.getSelectedItem().toString())) {
+            b = false;
+            ddcomp.requestFocus();
+            bsmf.MainFrame.show(getMessageTag(1026, ddcomp.getName()));
+            return b;
+        }
+
+
+        if (ddop.getSelectedItem() == null) {
+           b = false;
+           bsmf.MainFrame.show(getMessageTag(1026, ddop.getName()));
+           ddop.requestFocus();
+           return b;
+        } 
+
+        if (ddcomp.getSelectedItem().toString().toLowerCase().equals(tbkey.getText().toLowerCase())) {
+           b = false;
+           bsmf.MainFrame.show(getMessageTag(1069));
+           ddcomp.requestFocus();
+           return b;
+        } 
                
         return b;
     }
@@ -478,8 +522,16 @@ public class BOMMaint extends javax.swing.JPanel {
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
-                res = st.executeQuery("select * from pbm_mstr where ps_parent = " + "'" + x[0] + "'" + ";");
+                
+                // lets first determine if there are any BOMs default or alternates
+                BomID = OVData.getDefaultBomID(x[0]);
+                
+                res = st.executeQuery("select * from bom_mstr " +
+                        " where bom_item = " + "'" + x[0] + "'" +
+                        " and bom_id = " + "'" + BomID + "'" + ";");
                 while (res.next()) {
+                    cbdefault.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("bom_primary")));
+                    cbenabled.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("bom_enabled")));
                     i++;
                 }
                 res.close();
@@ -492,8 +544,9 @@ public class BOMMaint extends javax.swing.JPanel {
                   site = OVData.getDefaultSite();
                   parent = x[0];
                   tblotsize.setText(invData.getItemLotSize(x[0]));
-                  getComponents(x[0]);
-                  bind_tree(x[0]);
+                  tbbomid.setText(BomID);
+                  getComponents(x[0], BomID);
+                  bind_tree(x[0], BomID);
                   callSimulateCost();
                   getCostSets(x[0]);
                   ddcomp.removeItem(tbkey.getText());  // remove parent from component list
@@ -526,9 +579,9 @@ public class BOMMaint extends javax.swing.JPanel {
     
     public String[] addRecord(String[] x) {
         String[] m = new String[2];
-        m = addBOM(createRecord());
-        bind_tree(tbkey.getText());
-        getComponents(tbkey.getText());
+        m = addPBM(createRecord(), createRecordBomMstr(), true);
+        bind_tree(tbkey.getText(), tbbomid.getText());
+        getComponents(tbkey.getText(), tbbomid.getText());
         callSimulateCost();
         getCostSets(tbkey.getText().toString());
         return m;
@@ -536,9 +589,9 @@ public class BOMMaint extends javax.swing.JPanel {
     
     public String[] updateRecord(String[] x) {
      String[] m = new String[2];
-        m = updateBOM(createRecord());
-        bind_tree(tbkey.getText());
-        getComponents(tbkey.getText());
+        m = updatePBM(createRecord(), createRecordBomMstr());
+        bind_tree(tbkey.getText(), tbbomid.getText());
+        getComponents(tbkey.getText(), tbbomid.getText());
         callSimulateCost();
         getCostSets(tbkey.getText().toString());
         return m;
@@ -553,8 +606,7 @@ public class BOMMaint extends javax.swing.JPanel {
        comp = (DefaultMutableTreeNode)o;
       }
       if (proceed && comp != null) {
-         m = deleteBOM(createRecord(comp.toString())); 
-         // initvars(null);
+         m = deletePBM(createRecord(comp.toString())); 
         } else {
            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
         }
@@ -567,7 +619,7 @@ public class BOMMaint extends javax.swing.JPanel {
                 bsformat("d", tbqtyper.getText(), "0").replace(defaultDecimalSeparator, '.'),
                 ddop.getSelectedItem().toString(),
                 tbref.getText(),
-                tbcomptype.getText());
+                tbcomptype.getText(), tbbomid.getText());
         return x;
     } 
     
@@ -577,7 +629,16 @@ public class BOMMaint extends javax.swing.JPanel {
                 bsformat("d", tbqtyper.getText(), "0").replace(defaultDecimalSeparator, '.'),
                 ddop.getSelectedItem().toString(),
                 tbref.getText(),
-                tbcomptype.getText());
+                tbcomptype.getText(), tbbomid.getText());
+        return x;
+    } 
+    
+    public bom_mstr createRecordBomMstr() {
+        bom_mstr x = new bom_mstr(null, tbbomid.getText(),
+                tbbomdesc.getText(),
+                tbkey.getText(),
+                BlueSeerUtils.boolToString(cbenabled.isSelected()),
+                BlueSeerUtils.boolToString(cbdefault.isSelected()));
         return x;
     } 
     
@@ -611,7 +672,7 @@ public class BOMMaint extends javax.swing.JPanel {
                 int column = target.getSelectedColumn();
                 if ( column == 0) {
                 ludialog.dispose();
-                initvars(new String[]{target.getValueAt(row,1).toString(), target.getValueAt(row,2).toString()});
+                initvars(new String[]{target.getValueAt(row,1).toString()});
                 }
             }
         };
@@ -757,7 +818,7 @@ public class BOMMaint extends javax.swing.JPanel {
 
 }
     
-    public void getComponents(String parent) {
+    public void getComponents(String parent, String bomid) {
         
          
        String site = invData.getItemSite(parent);
@@ -784,6 +845,7 @@ public class BOMMaint extends javax.swing.JPanel {
                         " FROM  pbm_mstr  " +
                         " left outer join item_cost on itc_item = ps_child and itc_set = 'standard' and itc_site = " + "'" + site + "'" +
                         " where ps_parent = " + "'" + parent + "'" + 
+                        " and ps_bom = " + "'" + bomid + "'" +        
                         " order by ps_child ;");
 
                 while (res.next()) {
@@ -866,7 +928,7 @@ public class BOMMaint extends javax.swing.JPanel {
     }
    
     
-    public void setcomponentattributes(String parent, String component, String op) {
+    public void setcomponentattributes(String parent, String component, String op, String bomid) {
        
           tbqtyper.setText("");
           tbref.setText("");
@@ -886,6 +948,7 @@ public class BOMMaint extends javax.swing.JPanel {
                    " where ps_parent = " + "'" + parent + "'" + 
                    " AND ps_child = " + "'" + component + "'" + 
                    " AND ps_op = " + "'" + op + "'" +
+                   " AND ps_bom = " + "'" + bomid + "'" +        
                    ";");
                     i = 0;
                     while (res.next()) {
@@ -938,11 +1001,11 @@ public class BOMMaint extends javax.swing.JPanel {
         
     }
     
-    public void bind_tree(String parentpart) {
+    public void bind_tree(String parentpart, String bomid) {
       //  jTree1.setModel(null);
        
        // DefaultMutableTreeNode mynode = OVData.get_nodes_without_op(parentpart);
-       DefaultMutableTreeNode mynode = OVData.get_op_nodes_experimental(parentpart);
+       DefaultMutableTreeNode mynode = OVData.get_op_nodes_experimental(parentpart, bomid);
       
        DefaultTreeModel model = (DefaultTreeModel)jTree1.getModel();
         model.setRoot(mynode);
@@ -1443,6 +1506,11 @@ public class BOMMaint extends javax.swing.JPanel {
         });
 
         btnewbom.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/add.png"))); // NOI18N
+        btnewbom.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnewbomActionPerformed(evt);
+            }
+        });
 
         cbdefault.setText("default");
 
@@ -1529,20 +1597,15 @@ public class BOMMaint extends javax.swing.JPanel {
                             .addComponent(btclear))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                            .addComponent(jLabel7)
-                                            .addComponent(tbbomid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addComponent(btlookupbom))
-                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(cbdefault)
-                                        .addComponent(cbenabled)))
-                                .addGap(8, 8, 8))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addComponent(btnewbom, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
+                            .addComponent(btlookupbom)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(cbdefault)
+                                .addComponent(cbenabled))
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(tbbomid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel7))
+                            .addComponent(btnewbom, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -1741,7 +1804,7 @@ public class BOMMaint extends javax.swing.JPanel {
         if (parent != null && (level((TreeNode)jTree1.getModel().getRoot(), (TreeNode)o) == 2) ) {
            btupdate.setEnabled(true);
            btdelete.setEnabled(true);
-           setcomponentattributes(tbkey.getText(), node.toString(), parent.toString());
+           setcomponentattributes(tbkey.getText(), node.toString(), parent.toString(), tbbomid.getText());
         } else {
            btupdate.setEnabled(false);
            btdelete.setEnabled(false); 
@@ -1912,6 +1975,25 @@ public class BOMMaint extends javax.swing.JPanel {
     private void btlookupbomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btlookupbomActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btlookupbomActionPerformed
+
+    private void btnewbomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewbomActionPerformed
+        newbomid = true;
+        btnewbom.setEnabled(false);
+        btlookupbom.setEnabled(false);
+        btadd.setEnabled(true);
+        if (! bomexist) {
+            // must be first BOM...use item number as default bom id
+            tbbomid.setText(tbkey.getText());
+            cbdefault.setSelected(true);
+            cbenabled.setSelected(true);
+        } else {
+            tbbomid.setText("");
+            cbenabled.setSelected(true);
+            cbdefault.setSelected(false);
+            bsmf.MainFrame.show(getMessageTag(1167));
+            tbbomid.requestFocus();
+        }
+    }//GEN-LAST:event_btnewbomActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

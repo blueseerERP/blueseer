@@ -3010,6 +3010,7 @@ return myitem;
             try {
 
                 res = st.executeQuery("select ps_child from pbm_mstr "
+                        + " inner join bom_mstr on bom_item = ps_parent and bom_primary = '1' "
                         + " where ps_parent = " + "'" + mypart.toString() + "'"
                         + " AND ps_op <> '0' ;");
                 while (res.next()) {
@@ -3054,6 +3055,7 @@ return myitem;
                 for (String myitem : myarray) {
                     i = 0;
                     res = st.executeQuery("select ps_child from pbm_mstr "
+                            + " inner join bom_mstr on bom_id = ps_bom and bom_primary = '1' "
                             + " where ps_child = " + "'" + myitem.toString() + "'" + " limit 1 ;");
                     while (res.next()) {
                         i++;
@@ -3105,6 +3107,7 @@ return myitem;
                 for (String myitem : myarray) {
                     i = 0;
                     res = st.executeQuery("select ps_child from pbm_mstr "
+                            + " inner join bom_mstr on bom_id = ps_bom and bom_primary = '1' "
                             + " where ps_child = " + "'" + myitem.toString() + "'" + " limit 1 ;");
                     while (res.next()) {
                         i++;
@@ -3146,7 +3149,9 @@ return myitem;
             try {
 
                 int i = 0;
-                res = st.executeQuery("select ps_child from pbm_mstr inner join item_mstr on it_item = ps_parent where it_level = " + "'" + level + "'" + ";");
+                res = st.executeQuery("select ps_child from pbm_mstr " +
+                        " inner join bom_mstr on bom_id = ps_bom and bom_primary = '1' "  +
+                        " inner join item_mstr on it_item = ps_parent where it_level = " + "'" + level + "'" + ";");
                 while (res.next()) {
                     myarray.add(res.getString("ps_child"));
                 }
@@ -3219,7 +3224,9 @@ return myitem;
                 st.executeUpdate(
                         "insert into mrp_mstr (mrp_part, mrp_qty, mrp_date, mrp_type, mrp_site) "
                         + " select ps_child, sum(mrp_qty * ps_qty_per) as sum, mrp_date, 'derived', " + "'" + site + "'" + " from mrp_mstr "
-                        + " inner join pbm_mstr on ps_parent = mrp_part  inner join item_mstr on it_item = ps_parent "
+                        + " inner join pbm_mstr on ps_parent = mrp_part "
+                        + " inner join bom_mstr on bom_id = ps_bom and bom_primary = '1' "        
+                        + " inner join item_mstr on it_item = ps_parent "
                         + " where it_mrp = '1' and it_level = " + "'" + level + "'"
                         + " AND ps_child >= " + "'" + fromitem + "'"
                         + " AND ps_child <= " + "'" + toitem + "'"
@@ -3342,7 +3349,7 @@ return myitem;
        return mynode;
       }
       
-    public static DefaultMutableTreeNode get_op_nodes_experimental(String mypart)  {  
+    public static DefaultMutableTreeNode get_op_nodes_experimental(String mypart, String mybom)  {  
        DefaultMutableTreeNode mynode = new DefaultMutableTreeNode(mypart);
        ArrayList<String> myops = new ArrayList<String>();
         //myops = OVData.getItemRoutingOPs(mypart);  //based on itr_cost
@@ -3352,13 +3359,13 @@ return myitem;
           //  mynode.add(thisop);
             DefaultMutableTreeNode opnode = new DefaultMutableTreeNode(myvalue);
             
-            opnode = OVData.get_nodes_by_op_detail_experimental(mypart, mypart, myvalue);
+            opnode = OVData.get_nodes_by_op_detail_experimental(mypart, mypart, myvalue, mybom);
             mynode.add(opnode);
         }
        return mynode;
       }
       
-    public static DefaultMutableTreeNode get_nodes_by_op_detail_experimental(String root, String mypart, String myop)  {
+    public static DefaultMutableTreeNode get_nodes_by_op_detail_experimental(String root, String mypart, String myop, String mybom)  {
         //  bsmf.MainFrame.show(root + "/" + mypart + "/" + myop);
         String myroot = "";
             if (root.toLowerCase().equals(mypart.toLowerCase()))
@@ -3369,7 +3376,7 @@ return myitem;
          
         
         ArrayList<String> mylist = new ArrayList<String>();
-        mylist = OVData.getpsmstrlistbyop(mypart, myop);
+        mylist = OVData.getpsmstrlistbyop(mypart, myop, mybom);
      //   mylist = OVData.getpsmstrlist(newpart[0]);
         for ( String myvalue : mylist) {
             String[] value = myvalue.toUpperCase().split(",");
@@ -3377,7 +3384,7 @@ return myitem;
                
                   if (value[2].toUpperCase().compareTo("M") == 0) {
                     DefaultMutableTreeNode mfgnode = new DefaultMutableTreeNode();   
-                    mfgnode = get_op_nodes_experimental(value[1]);
+                    mfgnode = get_op_nodes_experimental(value[1], mybom);
                     mynode.add(mfgnode);
                   } else {
                   DefaultMutableTreeNode childnode = new DefaultMutableTreeNode(value[1]);   
@@ -3438,7 +3445,7 @@ return myitem;
         return mynode;
      }
       
-    public static DefaultMutableTreeNode get_op_nodes(String mypart)  {  
+    public static DefaultMutableTreeNode get_op_nodes(String mypart, String mybom)  {  
        DefaultMutableTreeNode mynode = new DefaultMutableTreeNode(mypart);
        ArrayList<String> myops = new ArrayList<String>();
         myops = invData.getItemRoutingOPs(mypart);
@@ -3447,7 +3454,7 @@ return myitem;
           //  mynode.add(thisop);
             DefaultMutableTreeNode opnode = new DefaultMutableTreeNode(myvalue);
             
-            opnode = OVData.get_nodes_by_op_stripped(mypart, mypart, myvalue);
+            opnode = OVData.get_nodes_by_op_stripped(mypart, mypart, myvalue, mybom);
             mynode.add(opnode);
         }
        return mynode;
@@ -3483,7 +3490,7 @@ return myitem;
         return mynode;
      }
        
-    public static DefaultMutableTreeNode get_nodes_by_op_stripped(String root, String mypart, String myop)  {
+    public static DefaultMutableTreeNode get_nodes_by_op_stripped(String root, String mypart, String myop, String mybom)  {
         String myroot = "";
             if (root.toLowerCase().equals(mypart.toLowerCase()))
             myroot = myop;
@@ -3493,7 +3500,7 @@ return myitem;
          
         
         ArrayList<String> mylist = new ArrayList<String>();
-        mylist = OVData.getpsmstrlistbyop(mypart, myop);
+        mylist = OVData.getpsmstrlistbyop(mypart, myop, mybom);
      //   mylist = OVData.getpsmstrlist(newpart[0]);
         for ( String myvalue : mylist) {
             String[] value = myvalue.toUpperCase().split(",");
@@ -3501,7 +3508,7 @@ return myitem;
                
                   if (value[2].toUpperCase().compareTo("M") == 0) {
                     DefaultMutableTreeNode mfgnode = new DefaultMutableTreeNode();   
-                    mfgnode = get_nodes_by_op_stripped(root, value[1] ,myop);
+                    mfgnode = get_nodes_by_op_stripped(root, value[1] ,myop, mybom);
                     mynode.add(mfgnode);
                   } else {
                   DefaultMutableTreeNode childnode = new DefaultMutableTreeNode(value[1]);   
@@ -3525,6 +3532,7 @@ return myitem;
             try {
 
                 res = st.executeQuery("select ps_parent, ps_child, ps_type, ps_qty_per, it_desc, itc_total, ps_op from pbm_mstr "
+                        + " inner join bom_mstr on bom_id = ps_bom and bom_primary = '1' "
                         + " inner join item_mstr on it_item = ps_child "
                         + " inner join  item_cost on itc_item = it_item and itc_set = 'standard' "
                         + " where ps_parent = " + "'" + mypart.toString() + "';");
@@ -3569,7 +3577,9 @@ return myitem;
             ResultSet res = null;
             try {
 
-                res = st.executeQuery("select ps_child, ps_type from pbm_mstr where ps_parent = " + "'" + mypart + "'" + ";");
+                res = st.executeQuery("select ps_child, ps_type from pbm_mstr " +
+                        " inner join bom_mstr on bom_id = ps_bom and bom_primary = '1' " +
+                        " where ps_parent = " + "'" + mypart + "'" + ";");
                 while (res.next()) {
                     myarray.add(res.getString("ps_child") + "," + res.getString("ps_type"));
                 }
@@ -3605,6 +3615,7 @@ return myitem;
             try {
 
                 res = st.executeQuery("select ps_parent, ps_child, ps_type, ps_op from pbm_mstr "
+                        + " inner join bom_mstr on bom_id = ps_bom and bom_primary = '1' "
                         + " where ps_parent = " + "'" + mypart.toString() + "';");
                 while (res.next()) {
                     mystring = res.getString("ps_parent") + ","
@@ -3635,7 +3646,7 @@ return myitem;
 
     }
 
-    public static ArrayList getpsmstrlistbyop(String mypart, String myop) {
+    public static ArrayList getpsmstrlistbyop(String mypart, String myop, String mybom) {
         ArrayList myarray = new ArrayList();
         String mystring = "";
         try {
@@ -3646,9 +3657,12 @@ return myitem;
             try {
 
                 res = st.executeQuery("select ps_parent, ps_child, ps_type, ps_qty_per, it_desc from pbm_mstr "
+                        + " inner join bom_mstr on bom_id = ps_bom and bom_primary = '1' "
                         + " inner join item_mstr on it_item = ps_child "
                         + " where ps_parent = " + "'" + mypart.toString() + "'"
-                        + " and ps_op = " + "'" + myop.toString() + "'" + ";");
+                        + " and ps_op = " + "'" + myop.toString() + "'" 
+                        + " and ps_bom = " + "'" + mybom.toString() + "'"         
+                        + ";");
                 while (res.next()) {
                     mystring = res.getString("ps_parent") + ","
                             + res.getString("ps_child") + ","
@@ -3690,6 +3704,7 @@ return myitem;
             ResultSet res = null;
             try {
                 res = st.executeQuery("select ps_parent, ps_child, ps_type, ps_qty_per, it_desc, itc_total from pbm_mstr "
+                        + " inner join bom_mstr on bom_id = ps_bom and bom_primary = '1' "
                         + " inner join item_mstr on it_item = ps_child "
                         + " inner join  item_cost on itc_item = it_item and itc_set = 'standard' "
                         + " where ps_parent = " + "'" + mypart.toString() + "'"
@@ -3723,6 +3738,239 @@ return myitem;
             MainFrame.bslog(e);
         }
         return myarray;
+
+    }
+ 
+    public static ArrayList getpsmstrparents(String mypart) {
+        ArrayList myarray = new ArrayList();
+        String mystring = "";
+        try {
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+                res = st.executeQuery("select ps_parent from pbm_mstr "
+                        + " inner join bom_mstr on bom_id = ps_bom and bom_primary = '1' "
+                        + " where ps_child = " + "'" + mypart.toString() + "';");
+                // res = st.executeQuery("select ps_parent from pbm_mstr " +
+                //            " where ps_child = " + "'" + mypart.toString() + "';" );
+                while (res.next()) {
+                    mystring = res.getString("ps_parent");
+                    myarray.add(mystring);
+                }
+
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return myarray;
+
+    }
+
+    public static ArrayList getpsmstrparents2(String mypart) {
+
+        ArrayList<String> myarray1 = new ArrayList<String>();
+        ArrayList<String> myarray2 = new ArrayList<String>();
+        ArrayList<String> myarray3 = new ArrayList<String>();
+        ArrayList<String> myarray4 = new ArrayList<String>();
+        ArrayList<String> myarray5 = new ArrayList<String>();
+
+        ArrayList fg = new ArrayList();
+        String mystring = "";
+        try {
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+                res = st.executeQuery("select ps_parent, it_type from pbm_mstr "
+                        + " inner join bom_mstr on bom_id = ps_bom and bom_primary = '1' "
+                        + " inner join item_mstr on it_item = ps_parent "
+                        + " where ps_child = " + "'" + mypart.toString() + "';");
+                // res = st.executeQuery("select ps_parent from pbm_mstr " +
+                //            " where ps_child = " + "'" + mypart.toString() + "';" );
+                while (res.next()) {
+                    if (res.getString("it_type").compareTo("FG") == 0) {
+                        fg.add(res.getString("ps_parent").toString());
+                    } else {
+                        myarray1.add(res.getString("ps_parent").toString());
+                    }
+                }
+                //    bsmf.MainFrame.show("firstpass=" + String.valueOf(myarray1.size()));
+                // let's loop through first parent level and see if more parents
+                for (String myvalue : myarray1) {
+                    res = st.executeQuery("select ps_parent, it_type from pbm_mstr "
+                            + " inner join bom_mstr on bom_id = ps_bom and bom_primary = '1' "
+                            + " inner join item_mstr on it_item = ps_parent "
+                            + " where ps_child = " + "'" + myvalue.toString() + "';");
+                    // res = st.executeQuery("select ps_parent from pbm_mstr " +
+                    //            " where ps_child = " + "'" + mypart.toString() + "';" );
+                    while (res.next()) {
+                        if (res.getString("it_type").compareTo("FG") == 0) {
+                            fg.add(res.getString("ps_parent").toString());
+                        } else {
+                            myarray2.add(res.getString("ps_parent").toString());
+                        }
+                    }
+                }
+                //    bsmf.MainFrame.show("array1" + String.valueOf(myarray1.size()));
+                myarray1.clear();
+                // let's loop through second parent level and see if more parents
+                for (String myvalue : myarray2) {
+                    res = st.executeQuery("select ps_parent, it_type from pbm_mstr "
+                            + " inner join bom_mstr on bom_id = ps_bom and bom_primary = '1' "
+                            + " inner join item_mstr on it_item = ps_parent "
+                            + " where ps_child = " + "'" + myvalue.toString() + "';");
+                    // res = st.executeQuery("select ps_parent from pbm_mstr " +
+                    //            " where ps_child = " + "'" + mypart.toString() + "';" );
+                    while (res.next()) {
+                        if (res.getString("it_type").compareTo("FG") == 0) {
+                            fg.add(res.getString("ps_parent").toString());
+                        } else {
+                            myarray3.add(res.getString("ps_parent").toString());
+                        }
+                    }
+                }
+                //   bsmf.MainFrame.show("array2" + String.valueOf(myarray2.size()));
+                myarray2.clear();
+                // let's loop through third parent level and see if more parents
+                for (String myvalue : myarray3) {
+                    res = st.executeQuery("select ps_parent, it_type from pbm_mstr "
+                            + " inner join bom_mstr on bom_id = ps_bom and bom_primary = '1' "
+                            + " inner join item_mstr on it_item = ps_parent "
+                            + " where ps_child = " + "'" + myvalue.toString() + "';");
+                    // res = st.executeQuery("select ps_parent from pbm_mstr " +
+                    //            " where ps_child = " + "'" + mypart.toString() + "';" );
+                    while (res.next()) {
+                        if (res.getString("it_type").compareTo("FG") == 0) {
+                            fg.add(res.getString("ps_parent").toString());
+                        } else {
+                            myarray4.add(res.getString("ps_parent").toString());
+                        }
+                    }
+                }
+                //      bsmf.MainFrame.show("array3" + String.valueOf(myarray3.size()));
+                myarray3.clear();
+                // let's loop through fourth parent level and see if more parents
+                for (String myvalue : myarray4) {
+                    res = st.executeQuery("select ps_parent, it_type from pbm_mstr "
+                            + " inner join bom_mstr on bom_id = ps_bom and bom_primary = '1' "
+                            + " inner join item_mstr on it_item = ps_parent "
+                            + " where ps_child = " + "'" + myvalue.toString() + "';");
+                    // res = st.executeQuery("select ps_parent from pbm_mstr " +
+                    //            " where ps_child = " + "'" + mypart.toString() + "';" );
+                    while (res.next()) {
+                        if (res.getString("it_type").compareTo("FG") == 0) {
+                            fg.add(res.getString("ps_parent").toString());
+                        } else {
+                            myarray5.add(res.getString("ps_parent").toString());
+                        }
+                    }
+                }
+                //          bsmf.MainFrame.show("array4" + String.valueOf(myarray4.size()));
+                myarray4.clear();
+                // let's loop through fifth parent level and see if more parents
+                for (String myvalue : myarray5) {
+                    res = st.executeQuery("select ps_parent, it_type from pbm_mstr "
+                            + " inner join bom_mstr on bom_id = ps_bom and bom_primary = '1' "
+                            + " inner join item_mstr on it_item = ps_parent "
+                            + " where ps_child = " + "'" + myvalue.toString() + "';");
+                    // res = st.executeQuery("select ps_parent from pbm_mstr " +
+                    //            " where ps_child = " + "'" + mypart.toString() + "';" );
+                    while (res.next()) {
+                        if (res.getString("it_type").compareTo("FG") == 0) {
+                            fg.add(res.getString("ps_parent").toString());
+                        }
+                    }
+                }
+                myarray5.clear();
+
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return fg;
+
+    }
+
+    public static String getDefaultBomID(String item) {
+       String x = "";
+       int i = 0;
+       ArrayList<String> boms = new ArrayList<String>();
+        try {
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+                res = st.executeQuery("select distinct ps_bom from pbm_mstr "
+                        + " where ps_parent = " + "'" + item + "';");
+                while (res.next()) {
+                    i++;
+                  boms.add(res.getString("ps_bom")); 
+                }
+                res.close();
+                if (i == 0) {
+                    return "";
+                } else {
+                    for (String s : boms) {
+                        res = st.executeQuery("select bom_id from bom_mstr "
+                        + " where bom_id = " + "'" + s + "'" +
+                          " and bom_primary = '1' " + ";");
+                        while (res.next()) {
+                           x = res.getString("bom_id");
+                        } 
+                    }
+                }
+
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return x;
 
     }
 
@@ -4021,14 +4269,15 @@ return myitem;
                 int i = 0;
                 String[] ld = null;
 
-                // now loop through comma delimited list and insert into item master table
-                // skip if already in table.....keys are cust (cup_cust) and custitem (cup_citem)
+             
                 for (String rec : list) {
                     ld = rec.split(":", -1);
 
                     res = st.executeQuery("select ps_parent from pbm_mstr where "
                             + " ps_parent = " + "'" + ld[0] + "'"
                             + " AND ps_child = " + "'" + ld[1] + "'"
+                            + " AND ps_op = " + "'" + ld[5] + "'"
+                            + " AND ps_bom = " + "'" + ld[10] + "'"        
                             + ";");
                     int j = 0;
                     while (res.next()) {
@@ -4037,7 +4286,7 @@ return myitem;
 
                     if (j == 0) {
                         st.executeUpdate(" insert into pbm_mstr "
-                                + "(ps_parent, ps_child, ps_type, ps_qty_per, ps_desc, ps_op, ps_sequence, ps_userid, ps_misc1, ps_ref ) "
+                                + "(ps_parent, ps_child, ps_type, ps_qty_per, ps_desc, ps_op, ps_sequence, ps_userid, ps_misc1, ps_ref, ps_bom ) "
                                 + " values ( "
                                 + "'" + ld[0] + "'" + ","
                                 + "'" + ld[1] + "'" + ","
@@ -4048,7 +4297,8 @@ return myitem;
                                 + "'" + ld[6] + "'" + ","
                                 + "'" + ld[7] + "'" + ","
                                 + "'" + ld[8] + "'" + ","
-                                + "'" + ld[9] + "'"
+                                + "'" + ld[9] + "'" + ","
+                                + "'" + ld[10] + "'"        
                                 + ");"
                         );
                     }
@@ -4531,180 +4781,6 @@ return myitem;
         return myreturn;
     }
 
-    public static ArrayList getpsmstrparents(String mypart) {
-        ArrayList myarray = new ArrayList();
-        String mystring = "";
-        try {
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-
-                res = st.executeQuery("select ps_parent from pbm_mstr "
-                        + " where ps_child = " + "'" + mypart.toString() + "';");
-                // res = st.executeQuery("select ps_parent from pbm_mstr " +
-                //            " where ps_child = " + "'" + mypart.toString() + "';" );
-                while (res.next()) {
-                    mystring = res.getString("ps_parent");
-                    myarray.add(mystring);
-                }
-
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                if (con != null) {
-                    con.close();
-                }
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-        return myarray;
-
-    }
-
-    public static ArrayList getpsmstrparents2(String mypart) {
-
-        ArrayList<String> myarray1 = new ArrayList<String>();
-        ArrayList<String> myarray2 = new ArrayList<String>();
-        ArrayList<String> myarray3 = new ArrayList<String>();
-        ArrayList<String> myarray4 = new ArrayList<String>();
-        ArrayList<String> myarray5 = new ArrayList<String>();
-
-        ArrayList fg = new ArrayList();
-        String mystring = "";
-        try {
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-
-                res = st.executeQuery("select ps_parent, it_type from pbm_mstr "
-                        + " inner join item_mstr on it_item = ps_parent "
-                        + " where ps_child = " + "'" + mypart.toString() + "';");
-                // res = st.executeQuery("select ps_parent from pbm_mstr " +
-                //            " where ps_child = " + "'" + mypart.toString() + "';" );
-                while (res.next()) {
-                    if (res.getString("it_type").compareTo("FG") == 0) {
-                        fg.add(res.getString("ps_parent").toString());
-                    } else {
-                        myarray1.add(res.getString("ps_parent").toString());
-                    }
-                }
-                //    bsmf.MainFrame.show("firstpass=" + String.valueOf(myarray1.size()));
-                // let's loop through first parent level and see if more parents
-                for (String myvalue : myarray1) {
-                    res = st.executeQuery("select ps_parent, it_type from pbm_mstr "
-                            + " inner join item_mstr on it_item = ps_parent "
-                            + " where ps_child = " + "'" + myvalue.toString() + "';");
-                    // res = st.executeQuery("select ps_parent from pbm_mstr " +
-                    //            " where ps_child = " + "'" + mypart.toString() + "';" );
-                    while (res.next()) {
-                        if (res.getString("it_type").compareTo("FG") == 0) {
-                            fg.add(res.getString("ps_parent").toString());
-                        } else {
-                            myarray2.add(res.getString("ps_parent").toString());
-                        }
-                    }
-                }
-                //    bsmf.MainFrame.show("array1" + String.valueOf(myarray1.size()));
-                myarray1.clear();
-                // let's loop through second parent level and see if more parents
-                for (String myvalue : myarray2) {
-                    res = st.executeQuery("select ps_parent, it_type from pbm_mstr "
-                            + " inner join item_mstr on it_item = ps_parent "
-                            + " where ps_child = " + "'" + myvalue.toString() + "';");
-                    // res = st.executeQuery("select ps_parent from pbm_mstr " +
-                    //            " where ps_child = " + "'" + mypart.toString() + "';" );
-                    while (res.next()) {
-                        if (res.getString("it_type").compareTo("FG") == 0) {
-                            fg.add(res.getString("ps_parent").toString());
-                        } else {
-                            myarray3.add(res.getString("ps_parent").toString());
-                        }
-                    }
-                }
-                //   bsmf.MainFrame.show("array2" + String.valueOf(myarray2.size()));
-                myarray2.clear();
-                // let's loop through third parent level and see if more parents
-                for (String myvalue : myarray3) {
-                    res = st.executeQuery("select ps_parent, it_type from pbm_mstr "
-                            + " inner join item_mstr on it_item = ps_parent "
-                            + " where ps_child = " + "'" + myvalue.toString() + "';");
-                    // res = st.executeQuery("select ps_parent from pbm_mstr " +
-                    //            " where ps_child = " + "'" + mypart.toString() + "';" );
-                    while (res.next()) {
-                        if (res.getString("it_type").compareTo("FG") == 0) {
-                            fg.add(res.getString("ps_parent").toString());
-                        } else {
-                            myarray4.add(res.getString("ps_parent").toString());
-                        }
-                    }
-                }
-                //      bsmf.MainFrame.show("array3" + String.valueOf(myarray3.size()));
-                myarray3.clear();
-                // let's loop through fourth parent level and see if more parents
-                for (String myvalue : myarray4) {
-                    res = st.executeQuery("select ps_parent, it_type from pbm_mstr "
-                            + " inner join item_mstr on it_item = ps_parent "
-                            + " where ps_child = " + "'" + myvalue.toString() + "';");
-                    // res = st.executeQuery("select ps_parent from pbm_mstr " +
-                    //            " where ps_child = " + "'" + mypart.toString() + "';" );
-                    while (res.next()) {
-                        if (res.getString("it_type").compareTo("FG") == 0) {
-                            fg.add(res.getString("ps_parent").toString());
-                        } else {
-                            myarray5.add(res.getString("ps_parent").toString());
-                        }
-                    }
-                }
-                //          bsmf.MainFrame.show("array4" + String.valueOf(myarray4.size()));
-                myarray4.clear();
-                // let's loop through fifth parent level and see if more parents
-                for (String myvalue : myarray5) {
-                    res = st.executeQuery("select ps_parent, it_type from pbm_mstr "
-                            + " inner join item_mstr on it_item = ps_parent "
-                            + " where ps_child = " + "'" + myvalue.toString() + "';");
-                    // res = st.executeQuery("select ps_parent from pbm_mstr " +
-                    //            " where ps_child = " + "'" + mypart.toString() + "';" );
-                    while (res.next()) {
-                        if (res.getString("it_type").compareTo("FG") == 0) {
-                            fg.add(res.getString("ps_parent").toString());
-                        }
-                    }
-                }
-                myarray5.clear();
-
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                if (con != null) {
-                    con.close();
-                }
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-        return fg;
-
-    }
-
     
     
         
@@ -4841,7 +4917,9 @@ return myitem;
                 }
            } else {
            res = st.executeQuery("select ps_child, ps_qty_per, it_loc, it_wh, itc_total, pl_inventory, pl_line " +
-                   " from pbm_mstr inner join item_mstr on it_item = ps_child " + 
+                   " from pbm_mstr " +
+                   " inner join bom_mstr on bom_id = ps_bom and bom_primary = '1' " +
+                   " inner join item_mstr on it_item = ps_child " + 
                    " inner join pl_mstr on pl_line = it_prodline " +
                    " inner join item_cost on itc_item = ps_child and itc_set = 'standard' where ps_parent = " + "'" + part.toString() + "'" +
                    " AND ps_op = " + "'" + op + "'" );
@@ -4980,7 +5058,9 @@ return myitem;
 
            /* now lets get the components of this item and write cost to GL */
            res = st.executeQuery("select ps_child, it_loc, it_wh, ps_qty_per, itc_total, pl_inventory, pl_line " +
-                   " from pbm_mstr inner join item_mstr on it_item = ps_child " + 
+                   " from pbm_mstr " +
+                   " inner join bom_mstr on bom_id = ps_bom and bom_primary = '1' " +
+                   " inner join item_mstr on it_item = ps_child " + 
                    " inner join pl_mstr on pl_line = it_prodline " +
                    " inner join item_cost on itc_item = ps_child and itc_set = 'standard' where ps_parent = " + "'" + part.toString() + "'" +
                    " AND ps_op = " + "'" + op + "'" );
@@ -9479,6 +9559,7 @@ return myarray;
 
                // now do the matl for this operation
                        res2 = st2.executeQuery("select ps_qty_per, itc_total from pbm_mstr " + 
+                            " inner join bom_mstr on bom_id = ps_bom and bom_primary = '1' " +
                             " inner join item_cost on ps_child = itc_item and itc_set = 'standard' " +
                             " where ps_parent = " + "'" + part + "'" +
                             " AND ps_op = " + "'" + op + "'" + ";");
@@ -9606,6 +9687,7 @@ return myarray;
                if (doMatl) {
                // now do the matl for this operation
                res2 = st2.executeQuery("select ps_qty_per, itc_total from pbm_mstr " + 
+                    " inner join bom_mstr on bom_id = ps_bom and bom_primary = '1' " +   
                     " inner join item_cost on ps_child = itc_item and itc_set = 'standard' " +
                     " where ps_parent = " + "'" + item + "'" +
                     " AND ps_op = " + "'" + op + "'" + ";");

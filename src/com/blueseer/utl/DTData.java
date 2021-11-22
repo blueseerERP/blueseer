@@ -4882,7 +4882,8 @@ public class DTData {
         ResultSet res = null;
         try{
           res = st.executeQuery("SELECT it_item, it_wf, ps_op, ps_child FROM item_mstr " +
-                    " inner join pbm_mstr on ps_parent = it_item " +
+                    " inner join bom_mstr on bom_item = it_item and bom_primary = '1' " +
+                    " inner join pbm_mstr on ps_parent = bom_item and ps_bom = bom_id " +
                     " where it_code = 'M' order by it_item ;");
 
             while (res.next()) {
