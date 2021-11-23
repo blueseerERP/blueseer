@@ -930,7 +930,7 @@ public class ShipperMaint extends javax.swing.JPanel {
                 
                 ddbom.removeAllItems();
                 
-                
+                String bom = "";
                 res = st.executeQuery("select * from sod_det " + 
                         " inner join item_mstr on it_item = sod_part "  +
                         " where sod_nbr = " + "'" + nbr + "'" +
@@ -947,16 +947,17 @@ public class ShipperMaint extends javax.swing.JPanel {
                 dduom.setSelectedItem(res.getString("sod_uom"));
                 ddcont.setSelectedItem(res.getString("it_cont"));
                 tbcontqty.setText(res.getString("it_contqty"));
+                bom = res.getString("sod_bom");
                 }
                 
                 ddbom.insertItemAt("", 0);
                 ddbom.setSelectedIndex(0);
                 ArrayList<String[]> boms = invData.getBOMsByItemSite(tbitem.getText());
                 for (String[] wh : boms) {
-                    ddbom.addItem(wh[0]);
-                        if (wh[1].equals("1"))
-                        ddbom.setSelectedItem(wh[0]);
+                ddbom.addItem(wh[0]);
                 }
+                if (! bom.isEmpty())
+                ddbom.setSelectedItem(bom);
             
             } catch (SQLException s) {
                 MainFrame.bslog(s);
@@ -1319,7 +1320,7 @@ public class ShipperMaint extends javax.swing.JPanel {
                 "",
                 tabledetail.getValueAt(j, 14).toString(),     
                 ddsite.getSelectedItem().toString(),
-                "" // bom
+                tabledetail.getValueAt(j, 15).toString() // bom
                 );
         list.add(x);
         }      
