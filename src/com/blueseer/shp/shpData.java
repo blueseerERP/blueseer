@@ -495,7 +495,7 @@ public class shpData {
                   "", // ref
                   "", // serial
                   site,
-                  "" // bom
+                  d[16] // bom
                   );
           list.add(x);
         }
@@ -683,13 +683,13 @@ public class shpData {
                 double sum = 0;
                 boolean serialized = false;
                 int i = 0;
-                  res = st.executeQuery("select sh_site, shd_part, shd_qty, shd_uom, shd_loc, shd_wh, shd_site, shd_serial, it_loc, it_wh, it_code " +
+                  res = st.executeQuery("select sh_site, shd_part, shd_qty, shd_uom, shd_loc, shd_wh, shd_site, shd_serial, shd_bom, it_loc, it_wh, it_code, it_phantom " +
                           " from ship_det inner join ship_mstr on sh_id = shd_id  " +
                           " left outer join item_mstr on it_item = shd_part " +
                           " where shd_id = " + "'" + shipper + "'" +";");
                 ArrayList<String[]> list = new ArrayList<String[]>();
                 while (res.next()) {
-                    String[] x = new String[10];
+                    String[] x = new String[12];
                     i = 0;
                     x[0] = res.getString("shd_part");
                     x[1] = res.getString("shd_qty");
@@ -701,6 +701,8 @@ public class shpData {
                     x[7] = res.getString("it_loc");
                     x[8] = res.getString("it_wh");
                     x[9] = res.getString("it_code");
+                    x[10] = res.getString("it_phantom");
+                    x[11] = res.getString("shd_bom");
                     baseqty = OVData.getUOMBaseQty(x[0], x[5], x[2], Double.valueOf(x[1]));
                     if (x[3].isEmpty()) {x[3] = x[7];} // if no loc in shipper...use item default loc
                     if (x[4].isEmpty()) {x[4] = x[8];} // if no wh in shipper...use item default wh
@@ -710,7 +712,24 @@ public class shpData {
                 }
                 res.close();
                 
+                // lets wash out phantoms and add BOM to new ArrayList
+                ArrayList<String[]> newlist = new ArrayList<String[]>();
                 for (String[] sd : list) {
+                    if (sd[10].equals("1")) {
+                        String[] x = new String[12];
+                        ArrayList<String> bom = OVData.getBOM(sd[0], sd[11]);
+                        for (String b : bom) {
+                            x = sd;
+                            x[0] = b;
+                            newlist.add(x);
+                        }
+                    } else {
+                        newlist.add(sd);
+                    }
+                }
+                
+                for (String[] sd : newlist) {
+                                        
                     item = sd[0];
                     uom = sd[2];
                     loc = sd[3];

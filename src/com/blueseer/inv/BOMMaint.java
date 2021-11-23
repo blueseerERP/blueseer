@@ -606,7 +606,7 @@ public class BOMMaint extends javax.swing.JPanel {
        comp = (DefaultMutableTreeNode)o;
       }
       if (proceed && comp != null) {
-         m = deletePBM(createRecord(comp.toString())); 
+         m = deletePBM(createRecord(comp.toString()), createRecordBomMstr(), OVData.getBomPbmCount(BomID)); 
         } else {
            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
         }
@@ -678,7 +678,7 @@ public class BOMMaint extends javax.swing.JPanel {
         };
         luTable.addMouseListener(luml);
       
-        callDialog(getClassLabelTag("lblitem", this.getClass().getSimpleName()), getClassLabelTag("lblitemdesc", this.getClass().getSimpleName())); 
+        callDialog(getClassLabelTag("lblitem", this.getClass().getSimpleName()), getGlobalColumnTag("description")); 
         
         
         
@@ -1005,7 +1005,7 @@ public class BOMMaint extends javax.swing.JPanel {
       //  jTree1.setModel(null);
        
        // DefaultMutableTreeNode mynode = OVData.get_nodes_without_op(parentpart);
-       DefaultMutableTreeNode mynode = OVData.get_op_nodes_experimental(parentpart, bomid);
+       DefaultMutableTreeNode mynode = OVData.get_op_nodes_experimental(parentpart);
       
        DefaultTreeModel model = (DefaultTreeModel)jTree1.getModel();
         model.setRoot(mynode);
@@ -1596,15 +1596,15 @@ public class BOMMaint extends javax.swing.JPanel {
                             .addComponent(btlookup)
                             .addComponent(btclear))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btlookupbom)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(btlookupbom, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(cbdefault)
                                 .addComponent(cbenabled))
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(tbbomid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jLabel7))
-                            .addComponent(btnewbom, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(btnewbom, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel1Layout.createSequentialGroup()

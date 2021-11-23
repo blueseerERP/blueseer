@@ -507,7 +507,7 @@ public class invData {
     }
     
     
-    public static String[] deletePBM(pbm_mstr x) {
+    public static String[] deletePBM(pbm_mstr x, bom_mstr y, int pbmRecsRemaining) {
         String[] m = new String[2];
         if (x == null) {
             return new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordError};
@@ -515,6 +515,9 @@ public class invData {
         Connection con = null;
         try { 
             con = DriverManager.getConnection(url + db, user, pass);
+            if (pbmRecsRemaining == 1) { // if only 1 pbm_mstr remaining for this bom id...delete bom id
+                _deleteBomMstr(y, con);                
+            }
             _deletePBM(x, con);  
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
         } catch (SQLException s) {
@@ -2132,7 +2135,6 @@ public class invData {
 
     public static ArrayList<String[]> getBOMsByItemSite(String item) {
                ArrayList<String[]> mylist = new ArrayList<String[]>();
-               String[] myarray = new String[]{"",""};
              try{
                 Class.forName(driver).newInstance();
                 Connection con = DriverManager.getConnection(url + db, user, pass);
@@ -2143,12 +2145,9 @@ public class invData {
 
                     res = st.executeQuery("select bom_id, bom_primary from bom_mstr "
                             + " where bom_item = " + "'" + item + "'" 
-                            + " and bom_enabled = '1' " + ";" ); 
+                            + " and bom_enabled = '1' " + " order by bom_primary desc ;" ); 
                    while (res.next()) {
-                    myarray[0] = res.getString("bom_id");
-                    myarray[1] = res.getString("bom_primary");
-                    mylist.add(myarray);
-
+                    mylist.add(new String[]{res.getString("bom_id"),res.getString("bom_primary")});
                     }
 
                }

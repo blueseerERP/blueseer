@@ -3349,7 +3349,7 @@ return myitem;
        return mynode;
       }
       
-    public static DefaultMutableTreeNode get_op_nodes_experimental(String mypart, String mybom)  {  
+    public static DefaultMutableTreeNode get_op_nodes_experimental(String mypart)  {  
        DefaultMutableTreeNode mynode = new DefaultMutableTreeNode(mypart);
        ArrayList<String> myops = new ArrayList<String>();
         //myops = OVData.getItemRoutingOPs(mypart);  //based on itr_cost
@@ -3359,13 +3359,13 @@ return myitem;
           //  mynode.add(thisop);
             DefaultMutableTreeNode opnode = new DefaultMutableTreeNode(myvalue);
             
-            opnode = OVData.get_nodes_by_op_detail_experimental(mypart, mypart, myvalue, mybom);
+            opnode = OVData.get_nodes_by_op_detail_experimental(mypart, mypart, myvalue);
             mynode.add(opnode);
         }
        return mynode;
       }
       
-    public static DefaultMutableTreeNode get_nodes_by_op_detail_experimental(String root, String mypart, String myop, String mybom)  {
+    public static DefaultMutableTreeNode get_nodes_by_op_detail_experimental(String root, String mypart, String myop)  {
         //  bsmf.MainFrame.show(root + "/" + mypart + "/" + myop);
         String myroot = "";
             if (root.toLowerCase().equals(mypart.toLowerCase()))
@@ -3376,7 +3376,7 @@ return myitem;
          
         
         ArrayList<String> mylist = new ArrayList<String>();
-        mylist = OVData.getpsmstrlistbyop(mypart, myop, mybom);
+        mylist = OVData.getpsmstrlistbyop(mypart, myop);
      //   mylist = OVData.getpsmstrlist(newpart[0]);
         for ( String myvalue : mylist) {
             String[] value = myvalue.toUpperCase().split(",");
@@ -3384,7 +3384,7 @@ return myitem;
                
                   if (value[2].toUpperCase().compareTo("M") == 0) {
                     DefaultMutableTreeNode mfgnode = new DefaultMutableTreeNode();   
-                    mfgnode = get_op_nodes_experimental(value[1], mybom);
+                    mfgnode = get_op_nodes_experimental(value[1]);
                     mynode.add(mfgnode);
                   } else {
                   DefaultMutableTreeNode childnode = new DefaultMutableTreeNode(value[1]);   
@@ -3454,7 +3454,7 @@ return myitem;
           //  mynode.add(thisop);
             DefaultMutableTreeNode opnode = new DefaultMutableTreeNode(myvalue);
             
-            opnode = OVData.get_nodes_by_op_stripped(mypart, mypart, myvalue, mybom);
+            opnode = OVData.get_nodes_by_op_stripped(mypart, mypart, myvalue);
             mynode.add(opnode);
         }
        return mynode;
@@ -3490,7 +3490,7 @@ return myitem;
         return mynode;
      }
        
-    public static DefaultMutableTreeNode get_nodes_by_op_stripped(String root, String mypart, String myop, String mybom)  {
+    public static DefaultMutableTreeNode get_nodes_by_op_stripped(String root, String mypart, String myop)  {
         String myroot = "";
             if (root.toLowerCase().equals(mypart.toLowerCase()))
             myroot = myop;
@@ -3500,7 +3500,7 @@ return myitem;
          
         
         ArrayList<String> mylist = new ArrayList<String>();
-        mylist = OVData.getpsmstrlistbyop(mypart, myop, mybom);
+        mylist = OVData.getpsmstrlistbyop(mypart, myop);
      //   mylist = OVData.getpsmstrlist(newpart[0]);
         for ( String myvalue : mylist) {
             String[] value = myvalue.toUpperCase().split(",");
@@ -3508,7 +3508,7 @@ return myitem;
                
                   if (value[2].toUpperCase().compareTo("M") == 0) {
                     DefaultMutableTreeNode mfgnode = new DefaultMutableTreeNode();   
-                    mfgnode = get_nodes_by_op_stripped(root, value[1] ,myop, mybom);
+                    mfgnode = get_nodes_by_op_stripped(root, value[1] ,myop);
                     mynode.add(mfgnode);
                   } else {
                   DefaultMutableTreeNode childnode = new DefaultMutableTreeNode(value[1]);   
@@ -3646,7 +3646,7 @@ return myitem;
 
     }
 
-    public static ArrayList getpsmstrlistbyop(String mypart, String myop, String mybom) {
+    public static ArrayList getpsmstrlistbyop(String mypart, String myop) {
         ArrayList myarray = new ArrayList();
         String mystring = "";
         try {
@@ -3660,8 +3660,7 @@ return myitem;
                         + " inner join bom_mstr on bom_id = ps_bom and bom_primary = '1' "
                         + " inner join item_mstr on it_item = ps_child "
                         + " where ps_parent = " + "'" + mypart.toString() + "'"
-                        + " and ps_op = " + "'" + myop.toString() + "'" 
-                        + " and ps_bom = " + "'" + mybom.toString() + "'"         
+                        + " and ps_op = " + "'" + myop.toString() + "'"       
                         + ";");
                 while (res.next()) {
                     mystring = res.getString("ps_parent") + ","
@@ -3971,6 +3970,78 @@ return myitem;
             MainFrame.bslog(e);
         }
         return x;
+
+    }
+
+    public static int getBomPbmCount(String bomid) {
+       int x = 0;
+        try {
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+                res = st.executeQuery("select * from pbm_mstr "
+                        + " inner join bom_mstr on bom_id = ps_bom "
+                        + " where ps_bom = " + "'" + bomid + "';");
+                while (res.next()) {
+                    x++;
+                }
+
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return x;
+
+    }
+
+    public static ArrayList<String> getBOM(String item, String bomid) {
+        ArrayList myarray = new ArrayList();
+        try {
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+                res = st.executeQuery("select ps_child from pbm_mstr " +
+                        " inner join bom_mstr on bom_id = ps_bom " +
+                        " where ps_parent = " + "'" + item + "'" + 
+                        " and ps_bom = " + "'" + bomid + "'" +
+                        ";");
+                while (res.next()) {
+                    myarray.add(res.getString("ps_child"));
+                }
+
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return myarray;
 
     }
 

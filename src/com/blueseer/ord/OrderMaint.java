@@ -1002,7 +1002,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
                 orddet.getValueAt(j, 14).toString(),  
                 orddet.getValueAt(j, 15).toString().replace(defaultDecimalSeparator, '.'), 
                 ddsite.getSelectedItem().toString(),  
-                ddbom.getSelectedItem().toString()        
+                orddet.getValueAt(j, 16).toString()        
                 );  
                 list.add(x);
             }    
@@ -1494,12 +1494,10 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
             // do BOM alternates
             ddbom.removeAllItems();
             ddbom.insertItemAt("", 0);
-            ddbom.setSelectedIndex(0);
+            //ddbom.setSelectedIndex(0);
             ArrayList<String[]> boms = invData.getBOMsByItemSite(ddpart.getSelectedItem().toString());
             for (String[] wh : boms) {
                 ddbom.addItem(wh[0]);
-                    if (wh[1].equals("1"))
-                    ddbom.setSelectedItem(wh[0]);
             }
              
             
@@ -1812,7 +1810,8 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
                  orddet.getValueAt(j, 12).toString(),
                  orddet.getValueAt(j, 13).toString(),
                  orddet.getValueAt(j, 14).toString(),
-                 orddet.getValueAt(j, 15).toString()};
+                 orddet.getValueAt(j, 15).toString(),
+                 orddet.getValueAt(j, 16).toString()};
              list.add(s);
          }
         
@@ -3128,7 +3127,8 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
                 discount.getText(), netprice.getText(), 
                 "0", getGlobalProgTag("open"),
                 ddwh.getSelectedItem().toString(), ddloc.getSelectedItem().toString(), tbdesc.getText(), 
-                String.valueOf(OVData.getTaxAmtApplicableByItem(ddpart.getSelectedItem().toString(), (np * qty) ))
+                String.valueOf(OVData.getTaxAmtApplicableByItem(ddpart.getSelectedItem().toString(), (np * qty) )),
+                ddbom.getSelectedItem().toString()
             });
             
             // lets collect tax elements for each item
@@ -3613,6 +3613,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
                 orddet.setValueAt(tbdesc.getText(), i, 14);
                 orddet.setValueAt(ddwh.getSelectedItem().toString(), i, 12);
                 orddet.setValueAt(ddloc.getSelectedItem().toString(), i, 13);
+                orddet.setValueAt(ddbom.getSelectedItem().toString(), i, 16);
                 
                 refreshDisplayTotals();         
                 listprice.setText("");
