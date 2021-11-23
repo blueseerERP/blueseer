@@ -526,6 +526,11 @@ public class BOMMaint extends javax.swing.JPanel {
                 // lets first determine if there are any BOMs default or alternates
                 BomID = OVData.getDefaultBomID(x[0]);
                 
+                // override with 2nd parameter from lookupUPBOM when we know exactly which BOM ID we want
+                if (x.length > 1 && ! x[1].isEmpty()) {
+                 BomID = x[1];
+                }
+                
                 res = st.executeQuery("select * from bom_mstr " +
                         " where bom_item = " + "'" + x[0] + "'" +
                         " and bom_id = " + "'" + BomID + "'" + ";");
@@ -684,6 +689,48 @@ public class BOMMaint extends javax.swing.JPanel {
         
     }
 
+    public void lookUpFrameBOM() {
+        
+        luinput.removeActionListener(lual);
+        lual = new ActionListener() {
+        public void actionPerformed(ActionEvent event) {
+        if (lurb1.isSelected()) {  
+         luModel = DTData.getBomBrowseUtil(luinput.getText(),0, "bom_id", tbkey.getText());
+        } else {
+         luModel = DTData.getBomBrowseUtil(luinput.getText(),0, "bom_desc", tbkey.getText());   
+        }
+        luTable.setModel(luModel);
+        luTable.getColumnModel().getColumn(0).setMaxWidth(50);
+        if (luModel.getRowCount() < 1) {
+            ludialog.setTitle(getMessageTag(1001));
+        } else {
+            ludialog.setTitle(getMessageTag(1002, String.valueOf(luModel.getRowCount())));
+        }
+        }
+        };
+        luinput.addActionListener(lual);
+        
+        luTable.removeMouseListener(luml);
+        luml = new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                JTable target = (JTable)e.getSource();
+                int row = target.getSelectedRow();
+                int column = target.getSelectedColumn();
+                if ( column == 0) {
+                ludialog.dispose();
+                initvars(new String[]{tbkey.getText(),target.getValueAt(row,1).toString()});
+                }
+            }
+        };
+        luTable.addMouseListener(luml);
+      
+        callDialog(getClassLabelTag("lblbomid", this.getClass().getSimpleName()), getClassLabelTag("lblbomdesc", this.getClass().getSimpleName())); 
+        
+        
+        
+    }
+
+    
     public void getCostSets(String parent) {
        
         tbparentcostSTD.setText(String.valueOf(bsFormatDouble5(invData.getItemCost(parent, "STANDARD", OVData.getDefaultSite()))));
@@ -1005,7 +1052,7 @@ public class BOMMaint extends javax.swing.JPanel {
       //  jTree1.setModel(null);
        
        // DefaultMutableTreeNode mynode = OVData.get_nodes_without_op(parentpart);
-       DefaultMutableTreeNode mynode = OVData.get_op_nodes_experimental(parentpart);
+       DefaultMutableTreeNode mynode = OVData.get_op_nodes_new(parentpart, bomid);
       
        DefaultTreeModel model = (DefaultTreeModel)jTree1.getModel();
         model.setRoot(mynode);
@@ -1973,7 +2020,7 @@ public class BOMMaint extends javax.swing.JPanel {
     }//GEN-LAST:event_btlookupActionPerformed
 
     private void btlookupbomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btlookupbomActionPerformed
-        // TODO add your handling code here:
+        lookUpFrameBOM();
     }//GEN-LAST:event_btlookupbomActionPerformed
 
     private void btnewbomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewbomActionPerformed

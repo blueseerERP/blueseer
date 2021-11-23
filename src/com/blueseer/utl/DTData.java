@@ -650,6 +650,67 @@ public class DTData {
         
          } 
     
+    public static DefaultTableModel getBomBrowseUtil( String str, int state, String myfield, String item) {
+        javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("description"), getGlobalColumnTag("item"), getGlobalColumnTag("enabled"), getGlobalColumnTag("default"), })
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
+              
+        try{
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                if (state == 1) { // begins
+                    res = st.executeQuery("SELECT *  " +
+                        " FROM  bom_mstr where " + myfield + " like " + "'" + str + "%'" +
+                        " and bom_item = " + "'" + item + "'" +        
+                        " order by bom_id ;");
+                }
+                if (state == 2) { // ends
+                    res = st.executeQuery("SELECT * " +
+                        " FROM  bom_mstr where " + myfield + " like " + "'%" + str + "'" +
+                        " and bom_item = " + "'" + item + "'" +
+                        " order by bom_id ;");
+                }
+                 if (state == 0) { // match
+                 res = st.executeQuery("SELECT *  " +
+                        " FROM  bom_mstr where " + myfield + " like " + "'%" + str + "%'" +
+                        " and bom_item = " + "'" + item + "'" +
+                        " order by bom_id ;");
+                 }
+                    while (res.next()) {
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("bom_id"),
+                                   res.getString("bom_desc"),
+                                   res.getString("bom_item"),
+                                   res.getString("bom_enabled"),
+                                   res.getString("bom_primary")
+                        });
+                    }
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+            
+        }
+        return mymodel;
+        
+         } 
+    
     public static DefaultTableModel getVendBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("code"), getGlobalColumnTag("name"), getGlobalColumnTag("addr1"), getGlobalColumnTag("city"), getGlobalColumnTag("state"), getGlobalColumnTag("zip"), getGlobalColumnTag("country")})
