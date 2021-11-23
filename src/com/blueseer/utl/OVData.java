@@ -3583,13 +3583,13 @@ return myitem;
                         + " inner join bom_mstr on bom_id = ps_bom and bom_primary = '1' "
                         + " inner join item_mstr on it_item = ps_child "
                         + " inner join  item_cost on itc_item = it_item and itc_set = 'standard' "
-                        + " where ps_parent = " + "'" + mypart.toString() + "';");
+                        + " where ps_parent = " + "'" + mypart.toString() + "'" + ";");
                 while (res.next()) {
                     mystring = res.getString("ps_parent") + ","
                             + res.getString("ps_child") + ","
                             + res.getString("ps_type") + ","
                             + res.getString("ps_qty_per") + ","
-                            + res.getString("it_desc").replace(",","") + ","
+                            + res.getString("it_desc") + ","
                             + res.getString("itc_total") + ","
                             + res.getString("ps_op");
 
@@ -3615,6 +3615,54 @@ return myitem;
 
     }
 
+    public static ArrayList getpsmstrlist(String mypart, String bom) {
+        ArrayList myarray = new ArrayList();
+        String mystring = "";
+        try {
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+                res = st.executeQuery("select ps_parent, ps_child, ps_type, ps_qty_per, it_desc, itc_total, ps_op from pbm_mstr "
+                        + " inner join bom_mstr on bom_id = ps_bom  "
+                        + " inner join item_mstr on it_item = ps_child "
+                        + " inner join  item_cost on itc_item = it_item and itc_set = 'standard' "
+                        + " where ps_parent = " + "'" + mypart + "'"
+                        + " and ps_bom = " + "'" + bom + "'" + ";");
+                while (res.next()) {
+                    mystring = res.getString("ps_parent") + ","
+                            + res.getString("ps_child") + ","
+                            + res.getString("ps_type") + ","
+                            + res.getString("ps_qty_per") + ","
+                            + res.getString("it_desc") + ","
+                            + res.getString("itc_total") + ","
+                            + res.getString("ps_op");
+
+                    myarray.add(mystring);
+
+                }
+
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return myarray;
+
+    }
+
+    
     public static ArrayList getPsMstrCompOpOnly(String mypart) {
         ArrayList myarray = new ArrayList();
         String mystring = "";
@@ -5003,7 +5051,7 @@ return myitem;
     }
     }        
 
-    public static void wip_iss_mtl_gl(String part, String op, String csite, Double qty, String date, String cref, String ctype, String cdesc, String serial, String userid, String program) {
+    public static void wip_iss_mtl_gl(String part, String op, String csite, Double qty, String date, String cref, String ctype, String cdesc, String serial, String userid, String program, String bom) {
 
     try{
 
@@ -5086,11 +5134,12 @@ return myitem;
            } else {
            res = st.executeQuery("select ps_child, ps_qty_per, it_loc, it_wh, itc_total, pl_inventory, pl_line " +
                    " from pbm_mstr " +
-                   " inner join bom_mstr on bom_id = ps_bom and bom_primary = '1' " +
+                   " inner join bom_mstr on bom_id = ps_bom  " +
                    " inner join item_mstr on it_item = ps_child " + 
                    " inner join pl_mstr on pl_line = it_prodline " +
-                   " inner join item_cost on itc_item = ps_child and itc_set = 'standard' where ps_parent = " + "'" + part.toString() + "'" +
-                   " AND ps_op = " + "'" + op + "'" );
+                   " inner join item_cost on itc_item = ps_child and itc_set = 'standard' where ps_parent = " + "'" + part + "'" +
+                   " AND ps_op = " + "'" + op + "'" +
+                   " AND ps_bom = " + "'" + bom + "'" );
            while (res.next()) {
                acct_cr.add(res.getString("pl_inventory"));
                 acct_dr.add(par_acct_dr);
@@ -5151,7 +5200,7 @@ return myitem;
             res.close();
 
             for ( String myvalue : myops) {
-                wip_iss_mtl_gl_unreported(part, myvalue, csite, qty, date, cref, ctype, cdesc, serial, userid, program);
+                wip_iss_mtl_gl_unreported(part, myvalue, csite, qty, date, cref, ctype, cdesc, serial, userid, program, bom);
             }
 
            } // if pmcode "M"
@@ -5172,7 +5221,7 @@ return myitem;
 
     }
 
-    public static void wip_iss_mtl_gl_unreported(String part, String op, String csite, Double qty, String date, String cref, String ctype, String cdesc, String serial, String userid, String program) {
+    public static void wip_iss_mtl_gl_unreported(String part, String op, String csite, Double qty, String date, String cref, String ctype, String cdesc, String serial, String userid, String program, String bom) {
 
 
     try{
@@ -5227,11 +5276,12 @@ return myitem;
            /* now lets get the components of this item and write cost to GL */
            res = st.executeQuery("select ps_child, it_loc, it_wh, ps_qty_per, itc_total, pl_inventory, pl_line " +
                    " from pbm_mstr " +
-                   " inner join bom_mstr on bom_id = ps_bom and bom_primary = '1' " +
+                   " inner join bom_mstr on bom_id = ps_bom  " +
                    " inner join item_mstr on it_item = ps_child " + 
                    " inner join pl_mstr on pl_line = it_prodline " +
                    " inner join item_cost on itc_item = ps_child and itc_set = 'standard' where ps_parent = " + "'" + part.toString() + "'" +
-                   " AND ps_op = " + "'" + op + "'" );
+                   " AND ps_op = " + "'" + op + "'" +
+                   " AND ps_bom = " + "'" + bom + "'" );
            while (res.next()) {
                acct_cr.add(res.getString("pl_inventory"));
                cc_cr.add(res.getString("pl_line"));
@@ -9553,7 +9603,7 @@ return myarray;
     public static void setStandardCosts(String site, String item) {
         calcCost cur = new calcCost();
          ArrayList<Double> costcur = new ArrayList<Double>();
-        costcur = cur.getTotalCostElements(item);
+        costcur = cur.getTotalCostElements(item, ""); // assume default bom
         Double totalcost = 0.00;
         for (Double d : costcur) {
            totalcost += d;
@@ -11185,6 +11235,7 @@ return mystring;
           16=expiredate
           17=program
           18=warehouse
+          19=bom
           
           */
           
@@ -11228,6 +11279,7 @@ return mystring;
                 String _assydate = "";
                 String _expiredate = "";
                 String _program = "";
+                String _bom = "";
                 
                 // added later
                 Double _baseqty = 0.00;
@@ -11241,7 +11293,7 @@ return mystring;
               _qty = bsParseDouble(mytable.getValueAt(i, 3).toString());
               _date = mytable.getValueAt(i, 4).toString();
               _loc = mytable.getValueAt(i, 5).toString();
-              _wh = mytable.getValueAt(i, 17).toString();
+              _wh = mytable.getValueAt(i, 18).toString();
               _serial = mytable.getValueAt(i, 6).toString();
               _ref = mytable.getValueAt(i, 7).toString();
               _site = mytable.getValueAt(i, 8).toString();
@@ -11254,6 +11306,7 @@ return mystring;
                _assydate = mytable.getValueAt(i, 15).toString();
                _expiredate = mytable.getValueAt(i, 16).toString();
                _program = mytable.getValueAt(i,17).toString();
+               _bom = mytable.getValueAt(i,19).toString();
                // defaults to baseqty
                _baseqty = _qty;
                _uom = OVData.getUOMFromItemSite(_part, _site);
@@ -11280,10 +11333,12 @@ return mystring;
               if (invData.getItemCode(_part).toString().equals("P")) {
                   opcost = invData.getItemCost(_part, "standard", _site);
               }
-              /* now lets filter the type and hit the appropriate conditional followup */
+              
                           
-              
-              
+            if (_bom.isEmpty()) {
+                _bom = OVData.getDefaultBomID(_part);
+            }  
+              /* now lets filter the type and hit the appropriate conditional followup */
            if (_type == "ISS-WIP") {
                   /* let's first load the tran_hist */
                   
@@ -11299,7 +11354,7 @@ return mystring;
               if (dbtype.equals("sqlite")) {    
               st.executeUpdate("insert into tran_mstr "
                         + "(tr_part, tr_type, tr_op, tr_qty, tr_base_qty, tr_uom, tr_cost, tr_eff_date, tr_loc, tr_wh, "
-                        + "tr_serial, tr_ref, tr_site, tr_userid, tr_prodline, tr_export, tr_expire, tr_actcell, tr_rmks, tr_pack, tr_assy_date, tr_pack_date, tr_ent_date, tr_program )"
+                        + "tr_serial, tr_ref, tr_site, tr_userid, tr_prodline, tr_export, tr_expire, tr_actcell, tr_rmks, tr_pack, tr_assy_date, tr_pack_date, tr_ent_date, tr_program, tr_bom )"
                         + " values ( " + "'" + _part + "'" + ","
                         + "'" + temptype + "'" + ","
                         + "'" + _op + "'" + ","
@@ -11323,13 +11378,14 @@ return mystring;
                         +  _assydate + ","
                         +  _packdate + ","
                         + "'" + today + "'" + ","
-                      + "'" + _program + "'"
+                      + "'" + _program + "'" + ","
+                      + "'" + _bom + "'"        
                         + ")"
                         + ";");
               } else {
                   st.executeUpdate("insert into tran_mstr "
                         + "(tr_part, tr_type, tr_op, tr_qty, tr_base_qty, tr_uom, tr_cost, tr_eff_date, tr_loc, tr_wh, "
-                        + "tr_serial, tr_ref, tr_site, tr_userid, tr_prodline, tr_export, tr_expire, tr_actcell, tr_rmks, tr_pack, tr_assy_date, tr_pack_date, tr_ent_date, tr_program )"
+                        + "tr_serial, tr_ref, tr_site, tr_userid, tr_prodline, tr_export, tr_expire, tr_actcell, tr_rmks, tr_pack, tr_assy_date, tr_pack_date, tr_ent_date, tr_program, tr_bom )"
                         + " values ( " + "'" + _part + "'" + ","
                         + "'" + temptype + "'" + ","
                         + "'" + _op + "'" + ","
@@ -11353,7 +11409,8 @@ return mystring;
                         +  _assydate + ","
                         +  _packdate + ","
                         + "'" + today + "'" + ","
-                      + "'" + _program + "'"
+                        + "'" + _program + "'" + ","
+                        + "'" + _bom + "'"
                         + ")"
                         + ";", Statement.RETURN_GENERATED_KEYS);
               }
@@ -11365,7 +11422,7 @@ return mystring;
                   /* we need to consume material component inventory
                    and gl cost of this item through all unreported operations since last 
                   reported Operation */
-                  wip_iss_mtl_gl(_part, _op, _site, _qty, _date, mytrkey, _type, mytrkey, _serial, _userid, _program);
+                  wip_iss_mtl_gl(_part, _op, _site, _qty, _date, mytrkey, _type, mytrkey, _serial, _userid, _program, _bom);
                   
                   wip_iss_op_cost_gl(_part, _op, _site, _qty, _date, mytrkey, _type, mytrkey);
                   
@@ -11387,7 +11444,7 @@ return mystring;
               if (dbtype.equals("sqlite")) {         
               st.executeUpdate("insert into tran_mstr "
                         + "(tr_part, tr_type, tr_op, tr_qty, tr_base_qty, tr_uom, tr_cost, tr_eff_date, tr_loc, "
-                        + "tr_serial, tr_ref, tr_site, tr_userid, tr_prodline, tr_export, tr_actcell, tr_rmks, tr_pack, tr_assy_date, tr_pack_date, tr_ent_date, tr_program )"
+                        + "tr_serial, tr_ref, tr_site, tr_userid, tr_prodline, tr_export, tr_actcell, tr_rmks, tr_pack, tr_assy_date, tr_pack_date, tr_ent_date, tr_program, tr_bom )"
                         + " values ( " + "'" + _part + "'" + ","
                         + "'" + _type + "'" + ","
                         + "'" + _op + "'" + ","
@@ -11409,13 +11466,14 @@ return mystring;
                         +  _assydate  + ","
                         +  _packdate  + ","
                         + "'" + today + "'" + ","
-                        + "'" + _program + "'"
+                        + "'" + _program + "'" + ","
+                        + "'" + _bom + "'"
                         + ")"
                         + ";");
               } else {
                  st.executeUpdate("insert into tran_mstr "
                         + "(tr_part, tr_type, tr_op, tr_qty, tr_base_qty, tr_uom, tr_cost, tr_eff_date, tr_loc, "
-                        + "tr_serial, tr_ref, tr_site, tr_userid, tr_prodline, tr_export, tr_actcell, tr_rmks, tr_pack, tr_assy_date, tr_pack_date, tr_ent_date, tr_program )"
+                        + "tr_serial, tr_ref, tr_site, tr_userid, tr_prodline, tr_export, tr_actcell, tr_rmks, tr_pack, tr_assy_date, tr_pack_date, tr_ent_date, tr_program, tr_bom )"
                         + " values ( " + "'" + _part + "'" + ","
                         + "'" + _type + "'" + ","
                         + "'" + _op + "'" + ","
@@ -11437,7 +11495,8 @@ return mystring;
                         +  _assydate  + ","
                         +  _packdate  + ","
                         + "'" + today + "'" + ","
-                        + "'" + _program + "'"
+                        + "'" + _program + "'" + ","
+                        + "'" + _bom + "'"
                         + ")"
                         + ";", Statement.RETURN_GENERATED_KEYS); 
               }
@@ -11449,7 +11508,7 @@ return mystring;
                   /* we need to consume material component inventory
                    and gl cost of this item through all unreported operations since last 
                   reported Operation */
-                  wip_iss_mtl_gl(_part, _op, _site, _qty, _date, mytrkey, _type, mytrkey, _serial, _userid, _program);
+                  wip_iss_mtl_gl(_part, _op, _site, _qty, _date, mytrkey, _type, mytrkey, _serial, _userid, _program, _bom);
                   wip_iss_op_cost_gl(_part, _op, _site, _qty, _date, mytrkey, _type, mytrkey);
                   
                   
@@ -11460,7 +11519,7 @@ return mystring;
                   
               st.executeUpdate("insert into tran_mstr "
                         + "(tr_part, tr_type, tr_op, tr_qty, tr_base_qty, tr_uom, tr_cost, tr_eff_date, tr_loc, "
-                        + "tr_serial, tr_ref, tr_site, tr_userid, tr_prodline, tr_export, tr_actcell, tr_rmks, tr_pack, tr_assy_date, tr_pack_date, tr_ent_date, tr_program )"
+                        + "tr_serial, tr_ref, tr_site, tr_userid, tr_prodline, tr_export, tr_actcell, tr_rmks, tr_pack, tr_assy_date, tr_pack_date, tr_ent_date, tr_program, tr_bom )"
                         + " values ( " + "'" + _part + "'" + ","
                         + "'" + _type + "'" + ","
                         + "'" + _op + "'" + ","
@@ -11482,7 +11541,8 @@ return mystring;
                         +  _assydate  + ","
                         +  _packdate  + ","
                         + "'" + today + "'" + ","
-                        + "'" + _program + "'"
+                        + "'" + _program + "'" + ","
+                        + "'" + _bom + "'"
                         + ")"
                         + ";", Statement.RETURN_GENERATED_KEYS);
               ResultSet rs = st.getGeneratedKeys();
@@ -11493,7 +11553,7 @@ return mystring;
                   /* we need to consume material component inventory
                    and gl cost of this item through all unreported operations since last 
                   reported Operation */
-                  wip_iss_mtl_gl(_part, _op, _site, _qty, _date, mytrkey, _type, mytrkey, _serial, _userid, _program);
+                  wip_iss_mtl_gl(_part, _op, _site, _qty, _date, mytrkey, _type, mytrkey, _serial, _userid, _program, _bom);
                   wip_iss_op_cost_gl(_part, _op, _site, _qty, _date, mytrkey, _type, mytrkey);
                   
                   
@@ -16593,7 +16653,7 @@ return myarray;
         }
     }    
         
-    public static void printBOMJasper(String item) {
+    public static void printBOMJasper(String item, String bom, String matcost, String opcost, String curcost) {
         try{
              
             try (Connection con = DriverManager.getConnection(url + db, user, pass)) {
@@ -16613,6 +16673,10 @@ return myarray;
                 hm.put("REPORT_TITLE", "BOM RPT");    
                 
                 hm.put("myid",  item);
+                hm.put("mybom",  bom);
+                hm.put("matcost",  matcost);
+                hm.put("opcost",  opcost);
+                hm.put("curcost",  curcost);
                 hm.put("imagepath", imagepath);
                 hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
                // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_part, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");

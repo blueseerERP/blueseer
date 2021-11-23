@@ -394,6 +394,7 @@ public class BOMMaint extends javax.swing.JPanel {
         btdelete.setEnabled(false);
         btupdate.setEnabled(false);
         btadd.setEnabled(false);
+        tbbomid.setEnabled(false);
         if (i > 0) {
             m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess}; 
            tbkey.setEditable(false);
@@ -401,6 +402,7 @@ public class BOMMaint extends javax.swing.JPanel {
            btlookupbom.setEnabled(true);
            btadd.setEnabled(true);
            bomexist = true;
+          
         } else if (i == 0) {
            m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1146)};  // no bom found
                    tbkey.setForeground(Color.red); 
@@ -537,6 +539,7 @@ public class BOMMaint extends javax.swing.JPanel {
                 while (res.next()) {
                     cbdefault.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("bom_primary")));
                     cbenabled.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("bom_enabled")));
+                    tbbomdesc.setText(res.getString("bom_desc"));
                     i++;
                 }
                 res.close();
@@ -738,7 +741,7 @@ public class BOMMaint extends javax.swing.JPanel {
         calcCost cur = new calcCost();
        
         ArrayList<Double> costlist = new ArrayList<Double>();
-        costlist = cur.getTotalCost(parent);
+        costlist = cur.getTotalCost(parent, tbbomid.getText());
       //  double current = costlist.get(0) + costlist.get(1) + costlist.get(2) + costlist.get(3) + costlist.get(4);
         tbparentcostCUR.setText(bsFormatDouble5(costlist.get(0) + costlist.get(1) + costlist.get(2) + costlist.get(3) + costlist.get(4)));
         tbtotoperational.setText(bsFormatDouble5(costlist.get(1) + costlist.get(2) + costlist.get(3) + costlist.get(4)));
@@ -1463,7 +1466,7 @@ public class BOMMaint extends javax.swing.JPanel {
         jLabel26.setText("Sim Oper:");
         jLabel26.setName("lblsimoper"); // NOI18N
 
-        jLabel21.setText("Standard Cost:");
+        jLabel21.setText("Default BOM:");
         jLabel21.setName("lblstandardcost"); // NOI18N
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
@@ -1607,7 +1610,7 @@ public class BOMMaint extends javax.swing.JPanel {
                         .addComponent(cbdefault)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cbenabled)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -1709,7 +1712,7 @@ public class BOMMaint extends javax.swing.JPanel {
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 322, Short.MAX_VALUE)
+            .addGap(0, 323, Short.MAX_VALUE)
             .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE))
         );
@@ -1725,9 +1728,9 @@ public class BOMMaint extends javax.swing.JPanel {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(0, 12, Short.MAX_VALUE)
+                .addGap(0, 13, Short.MAX_VALUE)
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
                 .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -1891,7 +1894,7 @@ public class BOMMaint extends javax.swing.JPanel {
 
     private void btpdfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btpdfActionPerformed
        if (! tbkey.getText().isEmpty())
-        OVData.printBOMJasper(tbkey.getText());
+        OVData.printBOMJasper(tbkey.getText(), tbbomid.getText(), tbtotmaterial.getText(), tbtotoperational.getText(), tbparentcostCUR.getText()); 
     }//GEN-LAST:event_btpdfActionPerformed
 
     private void ddcompActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddcompActionPerformed
@@ -2028,6 +2031,7 @@ public class BOMMaint extends javax.swing.JPanel {
         btnewbom.setEnabled(false);
         btlookupbom.setEnabled(false);
         btadd.setEnabled(true);
+        tbbomid.setEnabled(true);
         if (! bomexist) {
             // must be first BOM...use item number as default bom id
             tbbomid.setText(tbkey.getText());

@@ -61,12 +61,12 @@ public class calcCost {
          public double loweroutcost = 0;
          public double upperoutcost = 0;
          
-         public Double getMtlCost(String part) {
+    public Double getMtlCost(String part) {
              getMtlCostRecursive(part,1);
              return mtlcost;
          }
          
-         public Double getLbrCost(String part) {
+    public Double getLbrCost(String part) {
              lastlevel = 0;
              thisparent = 1;
              parentqty = 1;
@@ -74,7 +74,7 @@ public class calcCost {
              return lbrcost;
          }         
          
-          public Double getBdnCost(String part) {
+    public Double getBdnCost(String part) {
              lastlevel = 0;
              thisparent = 1;
              parentqty = 1;
@@ -82,7 +82,7 @@ public class calcCost {
              return bdncost;
          }        
           
-           public Double getOvhCost(String part) {
+    public Double getOvhCost(String part) {
              lastlevel = 0;
              thisparent = 1;
              parentqty = 1;
@@ -90,7 +90,7 @@ public class calcCost {
              return ovhcost;
          }        
            
-            public Double getOutCost(String part) {
+    public Double getOutCost(String part) {
                 lastlevel = 0;
              thisparent = 1;
              parentqty = 1;
@@ -98,9 +98,9 @@ public class calcCost {
              return outcost;
          }        
          
-           public ArrayList getTotalCost(String part) {
+    public ArrayList getTotalCost(String part, String bom) {
              ArrayList mylist = new ArrayList();
-             getTotalCostRecursive(part,1);
+             getTotalCostRecursive(part,1,bom);
              mylist.add(lowermtlcost + uppermtlcost);
              mylist.add(lowerlbrcost + upperlbrcost);
              mylist.add(lowerbdncost + upperbdncost);
@@ -110,10 +110,10 @@ public class calcCost {
          }
            
            
-              public ArrayList getTotalCostElements(String part) {
+    public ArrayList getTotalCostElements(String part, String bom) {
                   
              ArrayList mylist = new ArrayList();
-             getTotalCostRecursive(part,1);
+             getTotalCostRecursive(part,1,bom);
             // getLbrCost(part);
           //   getBdnCost(part);
              mylist.add(lowermtlcost);
@@ -129,9 +129,9 @@ public class calcCost {
              return mylist;
          }
            
-            public ArrayList getTotalLowerCost(String part) {
+    public ArrayList getTotalLowerCost(String part, String bom) {
              ArrayList mylist = new ArrayList();
-             getTotalCostRecursive(part,1);
+             getTotalCostRecursive(part,1, bom);
             // getLbrCost(part);
           //   getBdnCost(part);
              mylist.add(lowermtlcost);
@@ -142,9 +142,9 @@ public class calcCost {
              return mylist;
          }
             
-             public ArrayList getTotalUpperCost(String part) {
+    public ArrayList getTotalUpperCost(String part, String bom) {
              ArrayList mylist = new ArrayList();
-             getTotalCostRecursive(part,1);
+             getTotalCostRecursive(part,1, bom);
             // getLbrCost(part);
           //   getBdnCost(part);
              mylist.add(uppermtlcost);
@@ -155,13 +155,16 @@ public class calcCost {
              return mylist;
          }
             
-           public void getTotalCostRecursive(String mypart, double perqty)  {
+    public void getTotalCostRecursive(String mypart, double perqty, String bom)  {
         lastlevel++;
        
         String[] newpart = mypart.split("___");
         ArrayList<String> mylist = new ArrayList<String>();
-        mylist = OVData.getpsmstrlist(newpart[0]);
-       
+        if (lastlevel == 1 && ! bom.isEmpty()) {
+        mylist = OVData.getpsmstrlist(newpart[0], bom);
+        } else {
+        mylist = OVData.getpsmstrlist(newpart[0]);    
+        }
         if (lastlevel > 1) {
                     thisovhcost = (parentqty * invData.getItemOvhCost(mypart));
                     ovhcost = ovhcost + thisovhcost;
@@ -207,7 +210,7 @@ public class calcCost {
                   if (value[2].toUpperCase().compareTo("M") == 0) {
                     parentqty = thisparent * Double.valueOf(value[3]);
                     lastlevel++;
-                    getTotalCostRecursive(value[1] + "___" + value[4] + "___" + value[3], parentqty);
+                    getTotalCostRecursive(value[1] + "___" + value[4] + "___" + value[3], parentqty, "");
                     lastlevel--;
                   } else {
                   parentqty = thisparent * Double.valueOf(value[3]);
@@ -229,7 +232,7 @@ public class calcCost {
          loweroutcost = outcost;
      }
            
-           public void getMtlCostRecursive(String mypart, double perqty)  {
+    public void getMtlCostRecursive(String mypart, double perqty)  {
         lastlevel++;
        
         String[] newpart = mypart.split("___");
@@ -265,25 +268,22 @@ public class calcCost {
         
      }
           
-           public void getLbrCostRecursive(String mypart)  {
-        ArrayList<String> mylist = OVData.getpsmstrlist(mypart);
-          thislbrcost = OVData.getLaborAllOps(mypart);
-          lbrcost = lbrcost + thislbrcost;
-          //MainFrame.show(mypart + " / " + thislbrcost +  " / " + lbrcost);
-        for ( String myvalue : mylist) {
-            String[] value = myvalue.toUpperCase().split(",");
-              if (value[0].toUpperCase().compareTo(mypart.toUpperCase().toString()) == 0) {
-                  if (value[2].toUpperCase().compareTo("M") == 0) {
-                    getLbrCostRecursive(value[1]);
-                  }
-              } 
-        
-        }
-       
-        
-     }
+    public void getLbrCostRecursive(String mypart)  {
+            ArrayList<String> mylist = OVData.getpsmstrlist(mypart);
+              thislbrcost = OVData.getLaborAllOps(mypart);
+              lbrcost = lbrcost + thislbrcost;
+              //MainFrame.show(mypart + " / " + thislbrcost +  " / " + lbrcost);
+            for ( String myvalue : mylist) {
+                String[] value = myvalue.toUpperCase().split(",");
+                  if (value[0].toUpperCase().compareTo(mypart.toUpperCase().toString()) == 0) {
+                      if (value[2].toUpperCase().compareTo("M") == 0) {
+                        getLbrCostRecursive(value[1]);
+                      }
+                  } 
+            }
+    }
            
-           public void getBdnCostRecursive(String mypart)  {
+    public void getBdnCostRecursive(String mypart)  {
         ArrayList<String> mylist = OVData.getpsmstrlist(mypart);
           thisbdncost = OVData.getBurdenAllOps(mypart);
           bdncost = bdncost + thisbdncost;
@@ -295,13 +295,10 @@ public class calcCost {
                     getBdnCostRecursive(value[1]);
                   }
               } 
-        
         }
-       
-        
-     }
+    }
            
-           public void getOvhCostRecursive(String mypart, double perqty)  {
+    public void getOvhCostRecursive(String mypart, double perqty)  {
         lastlevel++;
        
         String[] newpart = mypart.split("___");
@@ -344,9 +341,9 @@ public class calcCost {
         }
         lastlevel--;
         
-     }
+    }
            
-           public void getOutCostRecursive(String mypart, double perqty)  {
+    public void getOutCostRecursive(String mypart, double perqty)  {
         lastlevel++;
        
         String[] newpart = mypart.split("___");
@@ -389,7 +386,7 @@ public class calcCost {
         }
         lastlevel--;
         
-     }
+    }
        
     
     

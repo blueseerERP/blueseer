@@ -746,7 +746,7 @@ public class InvRptPicker extends javax.swing.JPanel {
                
     }
    
-     /* Item Inventory range */
+    /* Item Inventory range */
     public void itemInventoryRange (boolean input) {
         
         if (input) { // input...draw variable input panel

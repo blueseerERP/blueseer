@@ -15,6 +15,10 @@
 	<parameter name="imagepath" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
+	<parameter name="mybom" class="java.lang.String"/>
+	<parameter name="curcost" class="java.lang.String"/>
+	<parameter name="matcost" class="java.lang.String"/>
+	<parameter name="opcost" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[select ps_parent, ps_child,  ps_op, ps_qty_per, ps_ref, 
 p.it_desc, 
@@ -28,11 +32,13 @@ ir.itr_lbr_top,
 ir.itr_ovh_top,
 ir.itr_out_top,
 ir.itr_total
-from pbm_mstr inner join item_mstr p on p.it_item = ps_parent 
+from pbm_mstr
+inner join bom_mstr on bom_id = ps_bom and bom_item = ps_parent
+inner join item_mstr p on p.it_item = bom_item 
 inner join item_mstr c on c.it_item = ps_child 
 inner join item_cost ic on ic.itc_item = ps_child and ic.itc_set = 'standard'  
-inner join itemr_cost ir on ir.itr_item = ps_parent and ir.itr_set = 'standard'  
-where ps_parent  =  $P{myid};]]>
+inner join itemr_cost ir on ir.itr_item = ps_parent and ir.itr_set = 'standard' and ir.itr_routing = p.it_wf  
+where ps_parent  =  $P{myid} and ps_bom = $P{mybom};]]>
 	</queryString>
 	<field name="ps_parent" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="ps_parent"/>
@@ -141,11 +147,11 @@ where ps_parent  =  $P{myid};]]>
 			<textField>
 				<reportElement x="11" y="56" width="80" height="19" uuid="407272ca-6ecb-4d69-9f43-89d1758070d8"/>
 				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$R{jasper.bom.lbloperation}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{jasper.bom.lblopcost}]]></textFieldExpression>
 			</textField>
 			<textField pattern="¤ ###0.00###">
 				<reportElement x="100" y="56" width="62" height="16" uuid="bf1434d6-06cf-42c0-8a62-1cd1f6dd66e3"/>
-				<textFieldExpression><![CDATA[$F{itr_bdn_top} + $F{itr_lbr_top} + $F{itr_ovh_top} + $F{itr_out_top}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{opcost}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="10" y="78" width="80" height="19" uuid="df06f1d5-545b-4501-b0d1-25f4531a6365"/>
@@ -154,7 +160,7 @@ where ps_parent  =  $P{myid};]]>
 			</textField>
 			<textField pattern="¤ ###0.00###">
 				<reportElement x="101" y="78" width="62" height="16" uuid="c7e8159d-aa08-4ef1-92e0-695c54ca9a96"/>
-				<textFieldExpression><![CDATA[$F{itr_mtl_top} + $F{itr_mtl_low}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{matcost}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="11" y="100" width="80" height="19" uuid="ba68d7da-86fb-4df5-a6e9-ecc1a8b4bc6e"/>
@@ -163,7 +169,7 @@ where ps_parent  =  $P{myid};]]>
 			</textField>
 			<textField pattern="¤ ###0.00###">
 				<reportElement x="100" y="100" width="62" height="16" uuid="2f29b36f-1c37-43f1-a0f2-43cf87ff7db0"/>
-				<textFieldExpression><![CDATA[$F{itr_total}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{curcost}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>

@@ -205,7 +205,7 @@ public class CostRollMaint extends javax.swing.JPanel {
         calcCost cur = new calcCost();
         
         ArrayList<Double> costcur = new ArrayList<Double>();
-        costcur = cur.getTotalCostElements(tbitem.getText());
+        costcur = cur.getTotalCostElements(tbitem.getText(),""); // assume default bom
         
         double stdmtllow = costs.get(0);
         double stdlbrlow = costs.get(1);

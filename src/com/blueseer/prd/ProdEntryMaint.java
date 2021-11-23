@@ -71,7 +71,7 @@ public class ProdEntryMaint extends javax.swing.JPanel {
     // table model must be 16 fields in length
      javax.swing.table.DefaultTableModel transmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
-                "Part", "Type", "Operation", "Qty", "Date", "Location", "SerialNo", "Reference", "Site", "Userid", "ProdLine", "AssyCell", "Rmks", "PackCell", "PackDate", "AssyDate", "ExpireDate", "Program", "WH"
+                "Part", "Type", "Operation", "Qty", "Date", "Location", "SerialNo", "Reference", "Site", "Userid", "ProdLine", "AssyCell", "Rmks", "PackCell", "PackDate", "AssyDate", "ExpireDate", "Program", "WH", "BOM"
             });
     
     javax.swing.JTable transtable = new javax.swing.JTable();
@@ -147,9 +147,24 @@ public class ProdEntryMaint extends javax.swing.JPanel {
             for (int i = 0; i < myops.size(); i++) {
                 ddop.addItem(myops.get(i));
             }
-              if (ddop.getItemCount() <= 0) {
-                ddop.addItem("0");
-              }
+            if (ddop.getItemCount() <= 0) {
+            ddop.addItem("0");
+            }
+            ddbom.removeAllItems();
+            ddbom.insertItemAt("", 0);
+            String primary = "";
+            ArrayList<String[]> boms = invData.getBOMsByItemSite(tbpart.getText());
+            for (String[] wh : boms) {
+                ddbom.addItem(wh[0]);
+                if (wh[1].equals("1")) {
+                    primary = wh[0];
+                }
+            }
+            if (! primary.isEmpty()) {
+            ddbom.setSelectedItem(primary);
+            } else {
+            ddbom.setSelectedIndex(0);
+            }
            }
         }
     }
@@ -169,6 +184,7 @@ public class ProdEntryMaint extends javax.swing.JPanel {
         tbreference.setText("");
         tbserialno.setText("");
         tbqty.setText("");
+        ddbom.removeAllItems();
     }
    
     public void lookUpFrameItemDesc() {
@@ -247,6 +263,8 @@ public class ProdEntryMaint extends javax.swing.JPanel {
         dcexpire = new com.toedter.calendar.JDateChooser();
         jLabel3 = new javax.swing.JLabel();
         btLookUpItemDesc = new javax.swing.JButton();
+        ddbom = new javax.swing.JComboBox<>();
+        jLabel7 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -307,6 +325,9 @@ public class ProdEntryMaint extends javax.swing.JPanel {
             }
         });
 
+        jLabel7.setText("BOM");
+        jLabel7.setName("lblbom"); // NOI18N
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -324,7 +345,8 @@ public class ProdEntryMaint extends javax.swing.JPanel {
                             .addComponent(jLabel5)
                             .addComponent(jLabel8)
                             .addComponent(jLabel9)
-                            .addComponent(jLabel3))
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel7))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(tbreference)
@@ -339,7 +361,8 @@ public class ProdEntryMaint extends javax.swing.JPanel {
                                     .addComponent(ddop, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(tbqty, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(dcexpire, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(dcdate, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(dcdate, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(ddbom, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(0, 15, Short.MAX_VALUE))))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -371,6 +394,10 @@ public class ProdEntryMaint extends javax.swing.JPanel {
                                 .addComponent(tbpart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jLabel4))
                             .addComponent(btLookUpItemDesc))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(ddbom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel7))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(ddop, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -450,7 +477,9 @@ public class ProdEntryMaint extends javax.swing.JPanel {
                 "",  // assydate
                 expire, // expiredate
                 "ProdEntryMaint", 
-                wh });
+                wh,
+                ddbom.getSelectedItem().toString()
+                });
         }
         // now let's load transaction
         if (! OVData.loadTranHistByTable(transtable)) {
@@ -482,6 +511,7 @@ public class ProdEntryMaint extends javax.swing.JPanel {
     private javax.swing.JButton btsubmit;
     private com.toedter.calendar.JDateChooser dcdate;
     private com.toedter.calendar.JDateChooser dcexpire;
+    private javax.swing.JComboBox<String> ddbom;
     private javax.swing.JComboBox ddop;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -490,6 +520,7 @@ public class ProdEntryMaint extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;

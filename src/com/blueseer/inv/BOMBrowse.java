@@ -97,6 +97,7 @@ public class BOMBrowse extends javax.swing.JPanel {
      MyTableModel mymodel = new BOMBrowse.MyTableModel(new Object[][]{},
                         new String[]{
                             getGlobalColumnTag("select"), 
+                            getGlobalColumnTag("bom"),
                             getGlobalColumnTag("item"), 
                             getGlobalColumnTag("description"), 
                             getGlobalColumnTag("operation"), 
@@ -222,16 +223,12 @@ public class BOMBrowse extends javax.swing.JPanel {
     
     public void initvars(String[] arg) {
         mymodel.setRowCount(0);
-         java.util.Date now = new java.util.Date();
-       
-         
-         tableorder.getTableHeader().setReorderingAllowed(false);
-         
-        
-         
-          ddfromitem.removeAllItems();
-         ddtoitem.removeAllItems(); 
-         ArrayList items = invData.getItemMasterAlllist();
+        java.util.Date now = new java.util.Date();
+        tableorder.getTableHeader().setReorderingAllowed(false);
+        ddfromitem.removeAllItems();
+        ddtoitem.removeAllItems(); 
+        cbdefault.setSelected(true);
+        ArrayList items = invData.getItemMasterAlllist();
         for (int i = 0; i < items.size(); i++) {
             ddfromitem.addItem(items.get(i));
         }
@@ -264,6 +261,7 @@ public class BOMBrowse extends javax.swing.JPanel {
         ddtoitem = new javax.swing.JComboBox();
         tbprint = new javax.swing.JButton();
         btcsv = new javax.swing.JButton();
+        cbdefault = new javax.swing.JCheckBox();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -318,6 +316,8 @@ public class BOMBrowse extends javax.swing.JPanel {
             }
         });
 
+        cbdefault.setText("Default BOM");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -337,7 +337,9 @@ public class BOMBrowse extends javax.swing.JPanel {
                 .addComponent(tbprint)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btcsv)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 711, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(cbdefault)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 640, Short.MAX_VALUE)
                 .addComponent(jLabel7)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(labelcount, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -355,7 +357,8 @@ public class BOMBrowse extends javax.swing.JPanel {
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btRun)
                         .addComponent(tbprint)
-                        .addComponent(btcsv))
+                        .addComponent(btcsv)
+                        .addComponent(cbdefault))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(ddfromitem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -365,24 +368,18 @@ public class BOMBrowse extends javax.swing.JPanel {
                             .addComponent(ddtoitem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel4))))
                 .addGap(31, 31, 31)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 507, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 529, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -419,7 +416,7 @@ public class BOMBrowse extends javax.swing.JPanel {
         if ( col == 0) {
             if (! checkperms("BOMMaint")) { return; }
             //  bsmf.MainFrame.itemmastmaintpanel.initvars(tablescrap.getValueAt(row, col).toString());
-            reinitpanels("BOMMaint",  true, new String[] {tableorder.getValueAt(row, 1).toString()});
+            reinitpanels("BOMMaint",  true, new String[] {tableorder.getValueAt(row, 1).toString(), tableorder.getValueAt(row, 2).toString()});
         }
     }//GEN-LAST:event_tableorderMouseClicked
 
@@ -470,19 +467,31 @@ public class BOMBrowse extends javax.swing.JPanel {
                 tableorder.getColumnModel().getColumn(0).setMaxWidth(100);
 
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-
-                res = st.executeQuery("SELECT ps_parent, it_desc, ps_op, ps_child, ps_qty_per, ps_ref " +
-                    " FROM  pbm_mstr inner join item_mstr on it_item = ps_parent " +
+                
+                if (cbdefault.isSelected()) {
+                 res = st.executeQuery("SELECT ps_parent, ps_bom, it_desc, ps_op, ps_child, ps_qty_per, ps_ref " +
+                    " FROM  pbm_mstr " +
+                    " inner join bom_mstr on bom_id = ps_bom and bom_primary = '1' " +     
+                    " inner join item_mstr on it_item = ps_parent " +
+                    " where ps_parent >= " + "'" + fromitem + "'" +
+                    " AND ps_parent <= " + "'" + toitem + "'" +
+                    " order by ps_parent, ps_op ;");   
+                } else {
+                res = st.executeQuery("SELECT ps_parent, ps_bom, it_desc, ps_op, ps_child, ps_qty_per, ps_ref " +
+                    " FROM  pbm_mstr " +
+                    " inner join bom_mstr on bom_id = ps_bom " +     
+                    " inner join item_mstr on it_item = ps_parent " +
                     " where ps_parent >= " + "'" + fromitem + "'" +
                     " AND ps_parent <= " + "'" + toitem + "'" +
                     " order by ps_parent, ps_op ;");
-
+                }
                 while (res.next()) {
                    
                     i++;
                     mymodel.addRow(new Object[]{
                         BlueSeerUtils.clickflag,
                         res.getString("ps_parent"),
+                        res.getString("ps_bom"), 
                         res.getString("it_desc"),
                         res.getString("ps_op"),
                         res.getString("ps_child"),
@@ -515,6 +524,7 @@ public class BOMBrowse extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btRun;
     private javax.swing.JButton btcsv;
+    private javax.swing.JCheckBox cbdefault;
     private javax.swing.JComboBox ddfromitem;
     private javax.swing.JComboBox ddtoitem;
     private javax.swing.JLabel jLabel1;

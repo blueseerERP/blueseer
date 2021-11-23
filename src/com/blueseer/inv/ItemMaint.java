@@ -839,7 +839,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
     public void getcurrentcost(String parentpart) {
         calcCost cur = new calcCost();
         ArrayList<Double> costlist = new ArrayList<Double>();
-        costlist = cur.getTotalCost(tbkey.getText());
+        costlist = cur.getTotalCost(tbkey.getText(), ""); // assume default bom
      tbmtlcur.setText(currformatDouble(costlist.get(0)));
      tblbrcur.setText(currformatDouble(costlist.get(1)));
      tbbdncur.setText(currformatDouble(costlist.get(2)));

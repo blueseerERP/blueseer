@@ -52,6 +52,7 @@
                                   <Component id="jLabel8" alignment="1" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel9" alignment="1" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
@@ -69,6 +70,7 @@
                                           <Component id="tbqty" min="-2" pref="94" max="-2" attributes="0"/>
                                           <Component id="dcexpire" alignment="0" min="-2" pref="164" max="-2" attributes="0"/>
                                           <Component id="dcdate" min="-2" pref="161" max="-2" attributes="0"/>
+                                          <Component id="ddbom" alignment="0" min="-2" pref="129" max="-2" attributes="0"/>
                                       </Group>
                                       <EmptySpace min="0" pref="15" max="32767" attributes="0"/>
                                   </Group>
@@ -112,6 +114,11 @@
                                       <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <Component id="btLookUpItemDesc" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="ddbom" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel7" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
@@ -253,6 +260,22 @@
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btLookUpItemDescActionPerformed"/>
               </Events>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="ddbom">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="0"/>
+                </Property>
+              </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+              </AuxValues>
+            </Component>
+            <Component class="javax.swing.JLabel" name="jLabel7">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="BOM"/>
+                <Property name="name" type="java.lang.String" value="lblbom" noResource="true"/>
+              </Properties>
             </Component>
           </SubComponents>
         </Container>

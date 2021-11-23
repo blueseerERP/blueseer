@@ -530,7 +530,7 @@ public class WorkOrdServ extends HttpServlet {
          JTable mytable = new JTable();
             javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
-                "Part", "Type", "Operation", "Qty", "Date", "Location", "SerialNo", "Reference", "Site", "Userid", "ProdLine", "AssyCell", "Rmks", "PackCell", "PackDate", "AssyDate", "ExpireDate", "Program", "Warehouse"
+                "Part", "Type", "Operation", "Qty", "Date", "Location", "SerialNo", "Reference", "Site", "Userid", "ProdLine", "AssyCell", "Rmks", "PackCell", "PackDate", "AssyDate", "ExpireDate", "Program", "Warehouse", "BOM"
             });
         
         // read xml and convert to DOM
@@ -639,7 +639,8 @@ public class WorkOrdServ extends HttpServlet {
                 "", // assembly date
                 det[10], // expiredate
                 "WorkOrdServ", // program
-                det[9] // warehouse
+                det[9], // warehouse
+                "" // bom
             });
             mytable.setModel(mymodel);
         // load tran table and create pland_mstr
@@ -762,7 +763,8 @@ public class WorkOrdServ extends HttpServlet {
                 "", // assembly date
                 det[10], // expire date
                 "WorkOrdServ", // program
-                det[9] // warehouse
+                det[9], // warehouse
+                "" // bom
             });
             mytable.setModel(mymodel);
         // load tran table and create pland_mstr

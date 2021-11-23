@@ -45,9 +45,9 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
-                  <EmptySpace min="0" pref="12" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="13" max="32767" attributes="0"/>
                   <Component id="jPanel1" max="32767" attributes="0"/>
-                  <EmptySpace pref="11" max="32767" attributes="0"/>
+                  <EmptySpace pref="15" max="32767" attributes="0"/>
                   <Component id="jPanel3" max="32767" attributes="0"/>
               </Group>
           </Group>
@@ -119,7 +119,7 @@
                               <Component id="cbenabled" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace pref="7" max="32767" attributes="0"/>
+                      <EmptySpace pref="8" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="jPanel5" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="jPanel6" min="-2" max="-2" attributes="0"/>
@@ -785,7 +785,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel21">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Standard Cost:"/>
+                    <Property name="text" type="java.lang.String" value="Default BOM:"/>
                     <Property name="name" type="java.lang.String" value="lblstandardcost" noResource="true"/>
                   </Properties>
                 </Component>
@@ -853,7 +853,7 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="322" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="323" max="32767" attributes="0"/>
                   <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
                       <Component id="jScrollPane1" alignment="1" pref="169" max="32767" attributes="0"/>
                   </Group>
