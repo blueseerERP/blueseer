@@ -103,7 +103,7 @@ public class CostRollMaint extends javax.swing.JPanel {
                 getGlobalColumnTag("setuprate"), 
                 getGlobalColumnTag("laborrate"), 
                 getGlobalColumnTag("burdenrate"), 
-                getGlobalColumnTag("setuphrs"), 
+                getGlobalColumnTag("setuphours"), 
                 getGlobalColumnTag("runhours"), 
                 getGlobalColumnTag("lotsize"), 
                 getGlobalColumnTag("rollcost"), 

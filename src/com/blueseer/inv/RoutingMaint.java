@@ -279,7 +279,7 @@ public class RoutingMaint extends javax.swing.JPanel implements IBlueSeer {
         tbopdesc.setText("");
         tbrunhoursinverted.setText("0");
        
-        tbrunhours.setText("");
+        tbrunhours.setText("0");
         tbsetuphours.setText("0");
         cbmilestone.setSelected(false);
         
