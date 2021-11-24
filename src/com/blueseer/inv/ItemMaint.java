@@ -866,7 +866,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
       //  DefaultMutableTreeNode mynode = get_nodes(parentpart);
           DefaultMutableTreeNode mynode = new DefaultMutableTreeNode(parentpart);
           ArrayList<String> myops = new ArrayList<String>();
-          myops = OVData.getOperationsByPart(parentpart);
+          myops = OVData.getOperationsByItem(parentpart);
           for (String myop : myops) {
               mynode.add(get_nodes_by_op(parentpart, myop));
           }

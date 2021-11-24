@@ -188,7 +188,7 @@ public class Generic850i extends com.blueseer.edi.EDIMap {
                       e.setDetItem(i,part);
                   } else {
                       e.setDetItem(i,part);
-                      uom = OVData.getUOMByPart(part);
+                      uom = OVData.getUOMByItem(part);
                       e.setDetUOM(i,uom);
 
 

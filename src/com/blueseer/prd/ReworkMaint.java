@@ -580,8 +580,8 @@ public class ReworkMaint extends javax.swing.JPanel {
          if (! tbpart.getText().isEmpty()) {
          
              if (OVData.isValidItem(tbpart.getText().toString())  ) {
-                  pmcode.setText(OVData.getPMCodeByPart(tbpart.getText().toString()));
-                  ArrayList myops = OVData.getOperationsByPart(tbpart.getText().toString());
+                  pmcode.setText(OVData.getPMCodeByItem(tbpart.getText().toString()));
+                  ArrayList myops = OVData.getOperationsByItem(tbpart.getText().toString());
                   for (int i = 0; i < myops.size(); i++) {
                   ddop.addItem(myops.get(i));
                   }

@@ -1035,7 +1035,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeer {
             netprice.setText("0");
             qtyshipped.setText("0");
             tbdesc.setText(invData.getItemDesc(ddpart.getSelectedItem().toString()));
-            vendnumber.setText(OVData.getVendPartFromPart(ddvend.getSelectedItem().toString(),ddpart.getSelectedItem().toString()));
+            vendnumber.setText(OVData.getVendItemFromItem(ddvend.getSelectedItem().toString(),ddpart.getSelectedItem().toString()));
             dduom.setSelectedItem(OVData.getUOMFromItemSite(ddpart.getSelectedItem().toString(), ddsite.getSelectedItem().toString()));
             ddpart.setForeground(Color.blue);
             vendnumber.setForeground(Color.blue);

@@ -110,7 +110,7 @@ public class GenericCSVi {
                 e.get(i).setDetQty(i,segarr[15]);
                  part = invData.getItemFromCustCItem("", segarr[14]);  // SAI J5R00001...does not have xref tied to billto...tied to blank billto
                   e.get(i).setDetItem(i,part);
-                  uom = OVData.getUOMByPart(part);
+                  uom = OVData.getUOMByItem(part);
                   e.get(i).setDetUOM(i,uom); 
                 listprice = invData.getItemPriceFromCust(billto, part, uom, cusData.getCustCurrency(billto));
                   e.get(i).setDetListPrice(i,df.format(listprice));
@@ -131,7 +131,7 @@ public class GenericCSVi {
                 e.get(i).setDetQty(i,segarr[15]);
                  part = invData.getItemFromCustCItem(billto, segarr[14]);
                   e.get(i).setDetItem(i,part);
-                  uom = OVData.getUOMByPart(part);
+                  uom = OVData.getUOMByItem(part);
                   e.get(i).setDetUOM(i,uom); 
                 listprice = invData.getItemPriceFromCust(billto, part, uom, cusData.getCustCurrency(billto));
                   e.get(i).setDetListPrice(i,df.format(listprice));

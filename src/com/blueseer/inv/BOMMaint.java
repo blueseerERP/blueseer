@@ -841,7 +841,7 @@ public class BOMMaint extends javax.swing.JPanel {
     public void getOPs(String parent) {
         ddop.removeAllItems();
          ArrayList<String> ops = new ArrayList<String>();
-              ops = OVData.getOperationsByPart(parent);
+              ops = OVData.getOperationsByItem(parent);
                for (int i = 0; i < ops.size(); i++) {
                 ddop.addItem(ops.get(i));
                }

@@ -962,7 +962,7 @@ public class CostRollMaint extends javax.swing.JPanel {
                 String perms = "";
                 double itrcost = 0.00;
                 String routing = invData.getItemRouting(tbitem.getText());
-                ArrayList<String> ops = OVData.getOperationsByPart(tbitem.getText());
+                ArrayList<String> ops = OVData.getOperationsByItem(tbitem.getText());
                 // lets do item_cost first 
                 res = st.executeQuery("SELECT itc_item FROM  item_cost where itc_item = " + "'" + tbitem.getText() + "'" + ";");
                     while (res.next()) {

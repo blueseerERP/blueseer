@@ -493,7 +493,7 @@ public class BackFlushMaint extends javax.swing.JPanel {
            tbpart.setForeground(Color.red);
        } else {
            tbpart.setForeground(Color.black);
-        ArrayList myops = OVData.getOperationsByPart(tbpart.getText());
+        ArrayList myops = OVData.getOperationsByItem(tbpart.getText());
         for (int i = 0; i < myops.size(); i++) {
             ddop.addItem(myops.get(i));
         }

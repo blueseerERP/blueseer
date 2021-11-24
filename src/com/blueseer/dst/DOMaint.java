@@ -923,7 +923,7 @@ public class DOMaint extends javax.swing.JPanel {
 
     private void ddpartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddpartActionPerformed
          if (ddpart.getSelectedItem() != null)
-        dduom.setSelectedItem(OVData.getUOMByPart(ddpart.getSelectedItem().toString()));
+        dduom.setSelectedItem(OVData.getUOMByItem(ddpart.getSelectedItem().toString()));
     }//GEN-LAST:event_ddpartActionPerformed
 
     private void btdelitemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdelitemActionPerformed

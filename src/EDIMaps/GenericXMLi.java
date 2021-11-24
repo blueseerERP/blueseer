@@ -136,7 +136,7 @@ public class GenericXMLi {
               
               part = invData.getItemFromCustCItem(billto, eElement.getElementsByTagName("partnumber").item(0).getTextContent());  
                   e.get(i).setDetItem(i,part);
-                  uom = OVData.getUOMByPart(part);
+                  uom = OVData.getUOMByItem(part);
                   e.get(i).setDetUOM(i,uom); 
                 listprice = invData.getItemPriceFromCust(billto, part, uom, cusData.getCustCurrency(billto));
                   e.get(i).setDetListPrice(i,df.format(listprice));

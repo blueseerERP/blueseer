@@ -166,7 +166,7 @@ String sitecitystatezip = "";
         
         if (OVData.isPlan(scan)) {
        tbqty.setText(String.valueOf(OVData.getPlanSchedQty(scan)));
-       partlabel.setText(OVData.getPlanPart(scan));
+       partlabel.setText(OVData.getPlanItem(scan));
        partlabel.setForeground(Color.blue);
        ddop.removeAllItems();
        ArrayList mylist = invData.getItemRoutingOPs(partlabel.getText());

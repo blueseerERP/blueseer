@@ -812,7 +812,7 @@ public class OVData {
         }
     }
 
-    public static void addItemCostRec(String part, String site, String set, Double mtl, Double ovh, Double out, Double tot) {
+    public static void addItemCostRec(String item, String site, String set, Double mtl, Double ovh, Double out, Double tot) {
         try {
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
@@ -821,7 +821,7 @@ public class OVData {
             try {
  
                 int i = 0;   
-                res = st.executeQuery("SELECT itc_item FROM item_cost where itc_item = " + "'" + part + "'"
+                res = st.executeQuery("SELECT itc_item FROM item_cost where itc_item = " + "'" + item + "'"
                         + " AND itc_set = " + "'" + set + "'"
                         + " AND itc_site = " + "'" + site + "'" + ";");
                 while (res.next()) {
@@ -830,7 +830,7 @@ public class OVData {
 
                 if (i == 0) {
                     st.executeUpdate("insert into item_cost (itc_item, itc_set, itc_site, itc_mtl_top, itc_ovh_top, itc_out_top, itc_total) values ( "
-                            + "'" + part + "'" + ","
+                            + "'" + item + "'" + ","
                             + "'" + set + "'" + ","
                             + "'" + site + "'" + ","
                             + "'" + mtl + "'" + ","
@@ -1624,7 +1624,7 @@ return myitem;
 
 }
 
-    public static String getVendPartFromPart(String vend, String part) {
+    public static String getVendItemFromItem(String vend, String item) {
    String mystring = "";
     try{
 
@@ -1635,7 +1635,7 @@ return myitem;
         try{
             
             res = st.executeQuery("select vdp_vitem from vdp_mstr where vdp_vend = " + "'" + vend + "'" + 
-                                  " AND vdp_item = " + "'" + part + "'" + ";");
+                                  " AND vdp_item = " + "'" + item + "'" + ";");
            while (res.next()) {
                mystring = res.getString("vdp_vitem");
 
@@ -2201,9 +2201,7 @@ return myitem;
                 if (st != null) {
                     st.close();
                 }
-                if (con != null) {
-                    con.close();
-                }
+                con.close();
             }
         } catch (Exception e) {
             MainFrame.bslog(e);
@@ -5002,7 +5000,7 @@ return myitem;
         
               
                
-    public static void wip_to_fg(String part, String site, Double cost, String date, String ref, String type, String desc) {
+    public static void wip_to_fg(String item, String site, Double cost, String date, String ref, String type, String desc) {
         try{
 
 
@@ -5026,7 +5024,7 @@ return myitem;
             res = st.executeQuery("select pl_wip, pl_line, pl_inventory " +
                    " from item_mstr " +
                    " inner join pl_mstr on pl_line = it_prodline " +
-                   " where it_item = " + "'" + part.toString() + "'" + ";");
+                   " where it_item = " + "'" + item + "'" + ";");
              while (res.next()) {
                  acct_dr = res.getString("pl_inventory");
                  cc_dr = res.getString("pl_line");
@@ -5051,7 +5049,7 @@ return myitem;
     }
     }        
 
-    public static void wip_iss_mtl_gl(String part, String op, String csite, Double qty, String date, String cref, String ctype, String cdesc, String serial, String userid, String program, String bom) {
+    public static void wip_iss_mtl_gl(String item, String op, String csite, Double qty, String date, String cref, String ctype, String cdesc, String serial, String userid, String program, String bom) {
 
     try{
 
@@ -5099,7 +5097,7 @@ return myitem;
             res = st.executeQuery("select pl_wip, pl_line, it_code " +
                    " from item_mstr " +
                    " inner join pl_mstr on pl_line = it_prodline " +
-                   " where it_item = " + "'" + part.toString() + "'" + ";");
+                   " where it_item = " + "'" + item + "'" + ";");
              while (res.next()) {
                par_acct_dr = res.getString("pl_wip");
                par_cc_dr = res.getString("pl_line"); 
@@ -5113,7 +5111,7 @@ return myitem;
                 res = st.executeQuery("select  itc_total, pl_scrap, pl_line, pl_inventory " +
                    " from item_mstr  " + 
                    " inner join pl_mstr on pl_line = it_prodline " +
-                   " inner join item_cost on itc_item = it_item and itc_set = 'standard' where it_item = " + "'" + part.toString() + "'" + ";"
+                   " inner join item_cost on itc_item = it_item and itc_set = 'standard' where it_item = " + "'" + item + "'" + ";"
                     );
                 while (res.next()) {
                 acct_cr.add(res.getString("pl_inventory"));
@@ -5137,7 +5135,7 @@ return myitem;
                    " inner join bom_mstr on bom_id = ps_bom  " +
                    " inner join item_mstr on it_item = ps_child " + 
                    " inner join pl_mstr on pl_line = it_prodline " +
-                   " inner join item_cost on itc_item = ps_child and itc_set = 'standard' where ps_parent = " + "'" + part + "'" +
+                   " inner join item_cost on itc_item = ps_child and itc_set = 'standard' where ps_parent = " + "'" + item + "'" +
                    " AND ps_op = " + "'" + op + "'" +
                    " AND ps_bom = " + "'" + bom + "'" );
            while (res.next()) {
@@ -5154,11 +5152,6 @@ return myitem;
                 loc.add(res.getString("it_loc"));
                 wh.add(res.getString("it_wh"));
                 qtyper.add(res.getDouble("ps_qty_per"));
-
-        //       Date effdate, String part, int qty, String type, double price, double cost, String site, 
-       //   String loc, String cust, String nbr, String order, int line, String po, String terms, String lot, String rmks, 
-      //    String ref, String acct, String cc, String jobnbr, String serial, String program, String userid
-
            }
            res.close();
 
@@ -5174,7 +5167,7 @@ return myitem;
                    tranhisttype = ctype;
                }
                OVData.TRHistIssDiscrete(BlueSeerUtils.mysqlDateFormat.parse(date), child.get(j).toString(), (-1 * qty), op, tranhisttype, 0, 0, csite, 
-                       loc.get(j).toString(), wh.get(j).toString(), expire, "", "", part + ":" + op, 0, "", "", "", cref, "", "", "", "", serial, program, userid);
+                       loc.get(j).toString(), wh.get(j).toString(), expire, "", "", item + ":" + op, 0, "", "", "", cref, "", "", "", "", serial, program, userid);
 
                // update inventory
                OVData.UpdateInventoryDiscrete(child.get(j).toString(), csite, loc.get(j).toString(), wh.get(j).toString(), "", "", bsParseDouble(qtyper.get(j).toString()) * qty * -1);    
@@ -5191,7 +5184,7 @@ return myitem;
 
            res = st.executeQuery("select wf_op " +
                    " from wf_mstr inner join item_mstr on wf_id = it_wf " + 
-                   " where it_item = " + "'" + part.toString() + "'" +
+                   " where it_item = " + "'" + item + "'" +
                    " AND wf_op < " + "'" + op + "'" + " AND " +
                    " wf_assert = 0 order by wf_op desc ");
             while (res.next()) {
@@ -5200,7 +5193,7 @@ return myitem;
             res.close();
 
             for ( String myvalue : myops) {
-                wip_iss_mtl_gl_unreported(part, myvalue, csite, qty, date, cref, ctype, cdesc, serial, userid, program, bom);
+                wip_iss_mtl_gl_unreported(item, myvalue, csite, qty, date, cref, ctype, cdesc, serial, userid, program, bom);
             }
 
            } // if pmcode "M"
@@ -5221,7 +5214,7 @@ return myitem;
 
     }
 
-    public static void wip_iss_mtl_gl_unreported(String part, String op, String csite, Double qty, String date, String cref, String ctype, String cdesc, String serial, String userid, String program, String bom) {
+    public static void wip_iss_mtl_gl_unreported(String item, String op, String csite, Double qty, String date, String cref, String ctype, String cdesc, String serial, String userid, String program, String bom) {
 
 
     try{
@@ -5265,7 +5258,7 @@ return myitem;
             res = st.executeQuery("select pl_wip, pl_line " +
                    " from item_mstr " +
                    " inner join pl_mstr on pl_line = it_prodline " +
-                   " where it_item = " + "'" + part.toString() + "'" + ";");
+                   " where it_item = " + "'" + item + "'" + ";");
              while (res.next()) {
                  par_acct_dr = res.getString("pl_wip");
                  par_cc_dr = res.getString("pl_line");
@@ -5279,7 +5272,7 @@ return myitem;
                    " inner join bom_mstr on bom_id = ps_bom  " +
                    " inner join item_mstr on it_item = ps_child " + 
                    " inner join pl_mstr on pl_line = it_prodline " +
-                   " inner join item_cost on itc_item = ps_child and itc_set = 'standard' where ps_parent = " + "'" + part.toString() + "'" +
+                   " inner join item_cost on itc_item = ps_child and itc_set = 'standard' where ps_parent = " + "'" + item + "'" +
                    " AND ps_op = " + "'" + op + "'" +
                    " AND ps_bom = " + "'" + bom + "'" );
            while (res.next()) {
@@ -5306,7 +5299,7 @@ return myitem;
 
                // process tran_hist
                OVData.TRHistIssDiscrete(BlueSeerUtils.mysqlDateFormat.parse(date), child.get(j).toString(), (-1 * qty), op, "ISS-WIP", 0, 0, csite, 
-                       loc.get(j).toString(), wh.get(j).toString(), expire, "", "", part + ":" + op, 0, "", "", "", cref, "", "", "", "", serial, program, userid);
+                       loc.get(j).toString(), wh.get(j).toString(), expire, "", "", item + ":" + op, 0, "", "", "", cref, "", "", "", "", serial, program, userid);
 
                // update inventory
                OVData.UpdateInventoryDiscrete(child.get(j).toString(), csite, loc.get(j).toString(), wh.get(j).toString(), "", "", bsParseDouble(qtyper.get(j).toString()) * qty * -1);    
@@ -5331,7 +5324,7 @@ return myitem;
 
     }
 
-    public static void wip_iss_op_cost_gl(String part, String cop, String site, Double qty, String date, String ref, String type, String desc) {
+    public static void wip_iss_op_cost_gl(String item, String cop, String site, Double qty, String date, String ref, String type, String desc) {
 
     ArrayList myarray = new ArrayList();
     double cost = 0.00;
@@ -5366,7 +5359,7 @@ return myitem;
             res = st.executeQuery("select wf_assert " +
                    " from wf_mstr " +
                    " inner join item_mstr on it_wf = wf_id " +
-                   " where it_item = " + "'" + part.toString() + "'" + ";");
+                   " where it_item = " + "'" + item + "'" + ";");
              while (res.next()) {
                if (res.getBoolean("wf_assert")) {
                    isReportable = true;
@@ -5377,7 +5370,7 @@ return myitem;
             res = st.executeQuery("select pl_wip, pl_line " +
                    " from item_mstr " +
                    " inner join pl_mstr on pl_line = it_prodline " +
-                   " where it_item = " + "'" + part.toString() + "'" + ";");
+                   " where it_item = " + "'" + item + "'" + ";");
              while (res.next()) {
                acct_dr = res.getString("pl_wip");
                cc_dr = res.getString("pl_line"); 
@@ -5389,7 +5382,7 @@ return myitem;
                    " from item_mstr inner join wf_mstr on it_wf = wf_id " + 
                    " inner join wc_mstr on wc_cell = wf_cell " +
                    " inner join dept_mstr on dept_id = wc_cc " +
-                   " where it_item = " + "'" + part.toString() + "'" +
+                   " where it_item = " + "'" + item + "'" +
                    " AND wf_op = " + "'" + cop + "'" );
            while (res.next()) {
                lbracct = res.getString("dept_lbr_acct");
@@ -5400,21 +5393,21 @@ return myitem;
             }
            res.close();
            /* Lets do Labor */
-          actcost = (getLaborWithOutSetup(part, cop) * qty);  // used to use actual cost
-          cost = invData.getItemLbrCost(part, cop, site, "standard") * qty;  // let's use standard cost to hit the GL
+          actcost = (getLaborWithOutSetup(item, cop) * qty);  // used to use actual cost
+          cost = invData.getItemLbrCost(item, cop, site, "standard") * qty;  // let's use standard cost to hit the GL
 
            acct_cr = lbracct;
            cc_cr = cc;
-           desc = part + " - lbr op " + cop;
+           desc = item + " - lbr op " + cop;
          //  bsmf.MainFrame.show(desc + "/" + String.valueOf(cost) + "/" + String.valueOf(actcost));
            fglData.glEntry(acct_cr, cc_cr, acct_dr, cc_dr, date, cost, cost, curr, basecurr, ref, site, type, desc);  // post lbr entry
            fglData.glEntry(lbrvaracct, cc_cr, acct_dr, cc_dr, date, (cost - actcost), (cost - actcost), curr, basecurr, ref, site, type, desc);  // post lbr variance entry
            /* Lets do Burden */
-           actcost = (getBurdenWithOutSetup(part, cop) * qty);
-           cost = invData.getItemBdnCost(part, cop, site, "standard") * qty;  // let's use standard cost to hit the GL
+           actcost = (getBurdenWithOutSetup(item, cop) * qty);
+           cost = invData.getItemBdnCost(item, cop, site, "standard") * qty;  // let's use standard cost to hit the GL
            acct_cr = bdnacct;
            cc_cr = cc;
-           desc = part + " - bdn op " + cop;
+           desc = item + " - bdn op " + cop;
            fglData.glEntry(acct_cr, cc_cr, acct_dr, cc_dr, date, cost, cost, curr, basecurr, ref, site, type, desc); // post bdn entry
            fglData.glEntry(bdnvaracct, cc_cr, acct_dr, cc_dr, date, (cost - actcost), (cost - actcost), curr, basecurr, ref, site, type, desc); // post bdn variance entry
 
@@ -5428,7 +5421,7 @@ return myitem;
 
            res = st.executeQuery("select wf_op " +
                    " from wf_mstr inner join item_mstr on wf_id = it_wf " + 
-                   " where it_item = " + "'" + part.toString() + "'" +
+                   " where it_item = " + "'" + item + "'" +
                    " AND wf_op < " + "'" + cop + "'" + " AND " +
                    " wf_assert = 0 order by wf_op desc ");
             while (res.next()) {
@@ -5436,7 +5429,7 @@ return myitem;
             }
 
              for (int j = 0; j < op.size(); j++) {
-                 wip_iss_op_cost_gl_unreported(part, op.get(j).toString(), site, qty, date, ref, type, desc);
+                 wip_iss_op_cost_gl_unreported(item, op.get(j).toString(), site, qty, date, ref, type, desc);
              }
 
 
@@ -5457,7 +5450,7 @@ return myitem;
 
     }
 
-    public static void wip_iss_op_cost_gl_unreported(String part, String op, String csite, Double qty, String date, String cref, String ctype, String cdesc) {
+    public static void wip_iss_op_cost_gl_unreported(String item, String op, String csite, Double qty, String date, String cref, String ctype, String cdesc) {
     try{
                 ArrayList acct_cr_lbr = new ArrayList();
                 ArrayList acct_cr_lbrvar = new ArrayList();
@@ -5506,7 +5499,7 @@ return myitem;
             res = st.executeQuery("select wf_assert " +
                    " from wf_mstr " +
                    " inner join item_mstr on it_wf = wf_id " +
-                   " where it_item = " + "'" + part.toString() + "'" + ";");
+                   " where it_item = " + "'" + item + "'" + ";");
              while (res.next()) {
                if (res.getBoolean("wf_assert")) {
                    isReportable = true;
@@ -5517,7 +5510,7 @@ return myitem;
             res = st.executeQuery("select pl_wip, pl_line " +
                    " from item_mstr " +
                    " inner join pl_mstr on pl_line = it_prodline " +
-                   " where it_item = " + "'" + part.toString() + "'" + ";");
+                   " where it_item = " + "'" + item + "'" + ";");
              while (res.next()) {
                par_acct_dr = res.getString("pl_wip");
                par_cc_dr = res.getString("pl_line"); 
@@ -5529,7 +5522,7 @@ return myitem;
                    " from item_mstr inner join wf_mstr on it_wf = wf_id " + 
                    " inner join wc_mstr on wc_cell = wf_cell " +
                    " inner join dept_mstr on dept_id = wc_cc " +
-                   " where it_item = " + "'" + part.toString() + "'" +
+                   " where it_item = " + "'" + item + "'" +
                    " AND wf_op = " + "'" + op + "'" );
            while (res.next()) {
 
@@ -5540,15 +5533,15 @@ return myitem;
                cc_cr.add(res.getString("wc_cc"));
                 acct_dr.add(par_acct_dr);
                 cc_dr.add(par_cc_dr);
-              actcost_lbr.add(getLaborWithOutSetup(part, op) * qty);
-              cost_lbr.add(invData.getItemLbrCost(part, op, thissite, "standard") * qty);
-              actcost_bdn.add(getBurdenWithOutSetup(part, op) * qty);
-              cost_bdn.add(invData.getItemBdnCost(part, op, thissite, "standard") * qty); 
+              actcost_lbr.add(getLaborWithOutSetup(item, op) * qty);
+              cost_lbr.add(invData.getItemLbrCost(item, op, thissite, "standard") * qty);
+              actcost_bdn.add(getBurdenWithOutSetup(item, op) * qty);
+              cost_bdn.add(invData.getItemBdnCost(item, op, thissite, "standard") * qty); 
              site.add(thissite);
                 ref.add(thisref);
                 type.add(thistype);
-                desc_lbr.add(part + " - lbr op " + op);
-                desc_bdn.add(part + " - bdn op " + op);
+                desc_lbr.add(item + " - lbr op " + op);
+                desc_bdn.add(item + " - bdn op " + op);
                // child.add(res.getString("ps_child"));
               //  loc.add(res.getString("it_loc"));
             //   qtyper.add(res.getDouble("ps_qty_per"));
@@ -5904,7 +5897,7 @@ return myitem;
 }
 
     
-    public static Boolean isValidCustPriceRecordExists(String entity, String part, String uom, String curr) {
+    public static Boolean isValidCustPriceRecordExists(String entity, String item, String uom, String curr) {
        
        // type is either 'c' for customer price or 'v' for vendor price      
              
@@ -5927,7 +5920,7 @@ return myitem;
                      }
 
                     res = st.executeQuery("select cpr_price from cpr_mstr where cpr_cust = " + "'" + entity + "'" + 
-                                          " AND cpr_item = " + "'" + part + "'" +
+                                          " AND cpr_item = " + "'" + item + "'" +
                                           " AND cpr_uom = " + "'" + uom + "'" +
                                           " AND cpr_curr = " + "'" + curr + "'" +
                                           " AND cpr_type = 'LIST' "+ ";");
@@ -5949,7 +5942,7 @@ return myitem;
         
     }
     
-    public static Boolean isValidVendPriceRecordExists(String entity, String part, String uom, String curr) {
+    public static Boolean isValidVendPriceRecordExists(String entity, String item, String uom, String curr) {
        
        // type is either 'c' for customer price or 'v' for vendor price      
              
@@ -5972,7 +5965,7 @@ return myitem;
                      }
 
                     res = st.executeQuery("select vpr_price from vpr_mstr where vpr_vend = " + "'" + entity + "'" + 
-                                      " AND vpr_item = " + "'" + part + "'" +
+                                      " AND vpr_item = " + "'" + item + "'" +
                                       " AND vpr_uom = " + "'" + uom + "'" +
                                       " AND vpr_curr = " + "'" + curr + "'" +        
                                       " AND vpr_type = 'LIST' "+ ";");
@@ -7859,7 +7852,7 @@ return outvalue;
         
     }
            
-    public static String getLocationByPart(String part) {
+    public static String getLocationByItem(String item) {
       String myloc = "";
      try{
 
@@ -7868,7 +7861,7 @@ return outvalue;
             ResultSet res = null;
             try {
 
-            res = st.executeQuery("select it_loc from item_mstr where it_item = " + "'" + part + "'" + ";" );
+            res = st.executeQuery("select it_loc from item_mstr where it_item = " + "'" + item + "'" + ";" );
            while (res.next()) {
             myloc = res.getString("it_loc");                    
             }
@@ -7886,7 +7879,7 @@ return outvalue;
 
 }
 
-    public static String[] getTopLocationAndWHByQTY(String part, String site) {
+    public static String[] getTopLocationAndWHByQTY(String item, String site) {
       String[] myloc = new String[2];
      try{
 
@@ -7896,7 +7889,7 @@ return outvalue;
             try {
 
             // first get the default wh and loc for this item and site in case below optimum item and site return nothing.
-             res = st.executeQuery("select it_loc, it_wh from item_mstr where it_item = " + "'" + part + "'" + 
+             res = st.executeQuery("select it_loc, it_wh from item_mstr where it_item = " + "'" + item + "'" + 
                     " AND it_site = " + "'" + site + "'" +
                     " ;" );
            while (res.next()) {
@@ -7905,7 +7898,7 @@ return outvalue;
             }
 
             // now overwrite with optimum wh and loc with highest qoh
-            res = st.executeQuery("select in_loc, in_wh from in_mstr where in_part = " + "'" + part + "'" + 
+            res = st.executeQuery("select in_loc, in_wh from in_mstr where in_part = " + "'" + item + "'" + 
                     " AND in_site = " + "'" + site + "'" +
                     " order by in_qoh desc limit 1;" );
            while (res.next()) {
@@ -7926,7 +7919,7 @@ return outvalue;
 
 }
 
-    public static Double getTopQtyLocationByPart(String part, String site) {
+    public static Double getTopQtyLocationByItem(String item, String site) {
       Double qty = 0.00;
      try{
 
@@ -7935,7 +7928,7 @@ return outvalue;
             ResultSet res = null;
             try {
 
-            res = st.executeQuery("select in_qoh from in_mstr where in_part = " + "'" + part + "'" + 
+            res = st.executeQuery("select in_qoh from in_mstr where in_part = " + "'" + item + "'" + 
                     " AND in_site = " + "'" + site + "'" +
                     " order by in_qoh desc limit 1;" );
            while (res.next()) {
@@ -7954,7 +7947,7 @@ return outvalue;
     return qty;
 }
 
-    public static String getUOMByPart(String part) {
+    public static String getUOMByItem(String item) {
       String myuom = "";
      try{
 
@@ -7963,7 +7956,7 @@ return outvalue;
             ResultSet res = null;
             try {
 
-            res = st.executeQuery("select it_uom from item_mstr where it_item = " + "'" + part + "'" + ";" );
+            res = st.executeQuery("select it_uom from item_mstr where it_item = " + "'" + item + "'" + ";" );
            while (res.next()) {
             myuom = res.getString("it_uom");                    
             }
@@ -7981,7 +7974,7 @@ return outvalue;
 
 }
 
-    public static String getWarehouseByPart(String part) {
+    public static String getWarehouseByItem(String item) {
       String myloc = "";
      try{
 
@@ -7990,7 +7983,7 @@ return outvalue;
             ResultSet res = null;
             try {
 
-            res = st.executeQuery("select it_wh from item_mstr where it_item = " + "'" + part + "'" + ";" );
+            res = st.executeQuery("select it_wh from item_mstr where it_item = " + "'" + item + "'" + ";" );
            while (res.next()) {
             myloc = res.getString("it_wh");                    
             }
@@ -8159,7 +8152,7 @@ return outvalue;
         
     }
       
-    public static String getPMCodeByPart(String mypart) {
+    public static String getPMCodeByItem(String mypart) {
        String myitem = "";
      try{
 
@@ -9363,7 +9356,7 @@ return myarray;
       return myshift;
   }
 
-    public static ArrayList getOperationsByPart(String mypart) {
+    public static ArrayList getOperationsByItem(String mypart) {
    ArrayList myarray = new ArrayList();
     try{
 
@@ -9390,7 +9383,7 @@ return myarray;
 
 }
 
-    public static int getFirstOpByPart(String mypart) {
+    public static int getFirstOpByItem(String mypart) {
        int myreturn = -1;
     try{
 
@@ -9419,7 +9412,7 @@ return myarray;
 
 }
 
-    public static int getLastOpByPart(String mypart) {
+    public static int getLastOpByItem(String mypart) {
        int myreturn = -1;
     try{
 
@@ -9449,7 +9442,7 @@ return myarray;
 }
 
 
-    public static Double getLaborWithOutSetup(String part, String op) {
+    public static Double getLaborWithOutSetup(String item, String op) {
 
          Double labor = 0.0;
 
@@ -9463,7 +9456,7 @@ return myarray;
             res = st.executeQuery("select it_lotsize, wc_run_crew, wf_run_hours, wf_setup_hours, wc_run_rate, wc_setup_rate, wc_bdn_rate from wf_mstr " + 
                     " inner join item_mstr on it_wf = wf_id " + 
                     " inner join wc_mstr on wc_cell = wf_cell " +
-                    " where it_item = " + "'" + part + "'" +
+                    " where it_item = " + "'" + item + "'" +
                     " AND wf_op = " + "'" + op + "'" + ";");
            while (res.next()) {
                 labor += (res.getDouble("wc_run_rate") * res.getDouble("wf_run_hours") * res.getDouble("wc_run_crew"));
@@ -9482,7 +9475,7 @@ return myarray;
 
      }
 
-    public static Double getLaborAllOps(String part) {
+    public static Double getLaborAllOps(String item) {
 
          Double labor = 0.0;
          try{
@@ -9495,7 +9488,7 @@ return myarray;
             res = st.executeQuery("select it_lotsize, wf_run_hours, wc_setup_rate, wf_setup_hours, wc_run_rate, wc_run_crew from wf_mstr " + 
                     " inner join item_mstr on it_wf = wf_id " + 
                     " inner join wc_mstr on wc_cell = wf_cell  " +
-                    " where it_item = " + "'" + part + "'" + ";");
+                    " where it_item = " + "'" + item + "'" + ";");
            while (res.next()) {
 
             if (res.getDouble("it_lotsize") == 0) {
@@ -9524,7 +9517,7 @@ return myarray;
 
      }
 
-    public static Double getBurdenAllOps(String part) {
+    public static Double getBurdenAllOps(String item) {
 
          Double burden = 0.0;
 
@@ -9538,7 +9531,7 @@ return myarray;
             res = st.executeQuery("select it_lotsize, wf_run_hours, wc_setup_rate, wf_setup_hours, wc_bdn_rate, wc_run_crew from wf_mstr " + 
                     " inner join item_mstr on it_wf = wf_id " + 
                     " inner join wc_mstr on wc_cell = wf_cell  " +
-                    " where it_item = " + "'" + part + "'" + ";");
+                    " where it_item = " + "'" + item + "'" + ";");
            while (res.next()) {
             if (res.getDouble("it_lotsize") == 0) {
                 burden += ( ((res.getDouble("wc_bdn_rate") * res.getDouble("wf_setup_hours"))  ) +
@@ -9563,7 +9556,7 @@ return myarray;
 
      }
 
-    public static Double getBurdenWithOutSetup(String part, String op) {
+    public static Double getBurdenWithOutSetup(String item, String op) {
 
          Double burden = 0.0;
           try{
@@ -9576,7 +9569,7 @@ return myarray;
             res = st.executeQuery("select it_lotsize, wc_run_crew, wf_run_hours, wf_setup_hours, wc_run_rate, wc_setup_rate, wc_bdn_rate from wf_mstr " + 
                     " inner join item_mstr on it_wf = wf_id " + 
                     " inner join wc_mstr on wc_cell = wf_cell " +
-                    " where it_item = " + "'" + part + "'" +
+                    " where it_item = " + "'" + item + "'" +
                     " AND wf_op = " + "'" + op + "'" + ";");
            while (res.next()) {
                  burden += (res.getDouble("wc_bdn_rate") * res.getDouble("wf_run_hours") );
@@ -9617,7 +9610,7 @@ return myarray;
             String perms = "";
             double itrcost = 0.00;
             String routing = invData.getItemRouting(item);
-            ArrayList<String> ops = OVData.getOperationsByPart(item);
+            ArrayList<String> ops = OVData.getOperationsByItem(item);
             // lets do item_cost first 
             res = st.executeQuery("SELECT itc_item FROM  item_cost where itc_item = " + "'" + item + "'" + ";");
                 while (res.next()) {
@@ -9697,7 +9690,7 @@ return myarray;
     }  
     }
 
-    public static ArrayList rollCost(String part) {
+    public static ArrayList rollCost(String item) {
          ArrayList<String> myarray = new ArrayList<String>();
          String mystring = "";
          Double labor = 0.0;
@@ -9726,7 +9719,7 @@ return myarray;
             ResultSet res2 = null;
 
             // lets first get standard cost of this item for comparison
-            res = st.executeQuery("select itc_total from item_cost where itc_set = 'standard' and itc_item = " + "'" + part + "';" );
+            res = st.executeQuery("select itc_total from item_cost where itc_set = 'standard' and itc_item = " + "'" + item + "';" );
              while (res.next()) {
              stdcost = res.getString("itc_total");
              }
@@ -9737,7 +9730,7 @@ return myarray;
                     " from wf_mstr inner join item_mstr on it_wf = wf_id " + 
                     " inner join wc_mstr on wc_cell = wf_cell  " + 
                     " left outer join itemr_cost on itr_item = it_item and itr_routing = item_mstr.it_wf and itr_op = wf_op " +
-                    " where it_item = " + "'" + part + "'" + 
+                    " where it_item = " + "'" + item + "'" + 
                     " order by wf_op; " );
            int i = 0;         
            while (res.next()) {
@@ -9775,7 +9768,7 @@ return myarray;
                        res2 = st2.executeQuery("select ps_qty_per, itc_total from pbm_mstr " + 
                             " inner join bom_mstr on bom_id = ps_bom and bom_primary = '1' " +
                             " inner join item_cost on ps_child = itc_item and itc_set = 'standard' " +
-                            " where ps_parent = " + "'" + part + "'" +
+                            " where ps_parent = " + "'" + item + "'" +
                             " AND ps_op = " + "'" + op + "'" + ";");
                         while (res2.next()) {
                         material += ( res2.getDouble("itc_total") * res2.getDouble("ps_qty_per") );
@@ -9784,7 +9777,7 @@ return myarray;
                        }
                         total = labor + burden + material + ovh + outside;
            mystring = 
-                   part + "," +
+                   item + "," +
                    op + "," +
                    cell + "," +
                    "" + "," +   // used to be machine
@@ -10320,7 +10313,7 @@ return mystring;
   
     /* start of inventory related functions */
                 
-    public static boolean UpdateInventoryDiscrete(String part, String site, String loc, String wh, String serial, String expire, Double qty) {
+    public static boolean UpdateInventoryDiscrete(String item, String site, String loc, String wh, String serial, String expire, Double qty) {
           boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
     try{
 
@@ -10338,7 +10331,7 @@ return mystring;
             String mydate = dfdate.format(now);
 
             // Skip item code "S" when adjusting inventory -- service item
-            String itemcode = invData.getItemCode(part);
+            String itemcode = invData.getItemCode(item);
             if (itemcode.equals("S")) {  
                 return false;
             }
@@ -10354,7 +10347,7 @@ return mystring;
                     // check if in_mstr record exists for this part, loc, wh, site, serial, expire combo
                     // if not add it
                     nres = st2.executeQuery("select in_qoh from in_mstr where "
-                            + " in_part = " + "'" + part + "'" 
+                            + " in_part = " + "'" + item + "'" 
                             + " and in_loc = " + "'" + loc + "'"
                             + " and in_wh = " + "'" + wh + "'"
                             + " and in_site = " + "'" + site + "'"
@@ -10375,7 +10368,7 @@ return mystring;
                             + "(in_site, in_part, in_loc, in_wh, in_serial, in_expire, in_qoh, in_date ) "
                             + " values ( " 
                             + "'" + site + "'" + ","
-                            + "'" + part + "'" + ","
+                            + "'" + item + "'" + ","
                             + "'" + loc + "'" + ","
                             + "'" + wh + "'" + ","
                             + "'" + serial + "'" + ","
@@ -10391,7 +10384,7 @@ return mystring;
                          st3.executeUpdate("update in_mstr "
                             + " set in_qoh = " + "'" + sum + "'" + "," +
                               " in_date = " + "'" + mydate + "'"
-                            + " where in_part = " + "'" + part + "'" 
+                            + " where in_part = " + "'" + item + "'" 
                             + " and in_loc = " + "'" + loc + "'"
                             + " and in_wh = " + "'" + wh + "'"
                             + " and in_site = " + "'" + site + "'"
@@ -10432,7 +10425,7 @@ return mystring;
             String mydate = dfdate.format(now);
 
 
-                String part = "";
+                String item = "";
                 double qty = 0;
                 String loc = "";
                 String wh = "";
@@ -10443,7 +10436,7 @@ return mystring;
                           " where posd_nbr = " + "'" + nbr + "'" +";");
                 while (res.next()) {
                     i = 0;
-                    part = res.getString("posd_item");
+                    item = res.getString("posd_item");
 
                     if (isVoid) {
                     qty = (-1 * res.getDouble("posd_qty"));
@@ -10455,7 +10448,7 @@ return mystring;
                     // lets determine if this is a legitimate item or a misc item...do not inventory misc items
                     res2 = st4.executeQuery("select it_item, it_loc, it_code " +
                           " from  item_mstr  " +
-                          " where it_item = " + "'" + part + "'" +";");
+                          " where it_item = " + "'" + item + "'" +";");
 
                     while (res2.next()) {
                         // continue if service item
@@ -10477,7 +10470,7 @@ return mystring;
                     // check if in_mstr record exists for this part,loc,site combo
                     // if not add it
                     nres = st2.executeQuery("select in_qoh from in_mstr where "
-                            + " in_part = " + "'" + part + "'" 
+                            + " in_part = " + "'" + item + "'" 
                             + " and in_loc = " + "'" + loc + "'"
                             + " and in_wh = " + "'" + wh + "'"
                             + " and in_site = " + "'" + site + "'"
@@ -10498,7 +10491,7 @@ return mystring;
                             + "(in_site, in_part, in_loc, in_wh, in_qoh, in_date ) "
                             + " values ( " 
                             + "'" + site + "'" + ","
-                            + "'" + part + "'" + ","
+                            + "'" + item + "'" + ","
                             + "'" + loc + "'" + ","
                             + "'" + wh + "'" + ","
                             + "'" + sum + "'" + ","
@@ -10512,7 +10505,7 @@ return mystring;
                          st3.executeUpdate("update in_mstr "
                             + " set in_qoh = " + "'" + sum + "'" + "," +
                               " in_date = " + "'" + mydate + "'"
-                            + " where in_part = " + "'" + part + "'" 
+                            + " where in_part = " + "'" + item + "'" 
                             + " and in_loc = " + "'" + loc + "'"
                             + " and in_wh = " + "'" + wh + "'"
                             + " and in_site = " + "'" + site + "'"
@@ -10549,7 +10542,7 @@ return mystring;
             String mydate = dfdate.format(now);
 
 
-                String part = "";
+                String item = "";
                 double qty = 0;
                 double baseqty = 0;
                 String uom = "";
@@ -10571,14 +10564,14 @@ return mystring;
                 while (res.next()) {
 
                     i = 0;
-                    part = res.getString("shd_part");
+                    item = res.getString("shd_part");
                     qty = res.getDouble("shd_qty");
                     loc = res.getString("shd_loc");
                     wh = res.getString("shd_wh");
                     site = res.getString("sh_site");
                     uom = res.getString("shd_uom");
                     serial = res.getString("shd_serial");
-                    baseqty = OVData.getUOMBaseQty(part, site, uom, qty);
+                    baseqty = OVData.getUOMBaseQty(item, site, uom, qty);
                     // check for serialized inventory flag...if not...prevent serial from entry into in_mstr
                     if (! OVData.isInvCtrlSerialize()) {
                         serial = "";
@@ -10591,7 +10584,7 @@ return mystring;
                     // lets determine if this is a legitimate item or a misc item...do not inventory misc items
                     res2 = st4.executeQuery("select it_item, it_loc, it_wh " +
                           " from  item_mstr  " +
-                          " where it_item = " + "'" + part + "'" +";");
+                          " where it_item = " + "'" + item + "'" +";");
 
                     while (res2.next()) {
                         i++;
@@ -10612,7 +10605,7 @@ return mystring;
                     // check if in_mstr record exists for this part,loc,site combo
                     // if not add it
                     nres = st2.executeQuery("select in_qoh from in_mstr where "
-                            + " in_part = " + "'" + part + "'" 
+                            + " in_part = " + "'" + item + "'" 
                             + " and in_loc = " + "'" + loc + "'"
                             + " and in_wh = " + "'" + wh + "'"
                             + " and in_site = " + "'" + site + "'"
@@ -10634,7 +10627,7 @@ return mystring;
                             + "(in_site, in_part, in_loc, in_wh, in_serial, in_expire, in_qoh, in_date ) "
                             + " values ( " 
                             + "'" + site + "'" + ","
-                            + "'" + part + "'" + ","
+                            + "'" + item + "'" + ","
                             + "'" + loc + "'" + ","
                             + "'" + wh + "'" + ","
                             + "'" + serial + "'" + ","
@@ -10650,7 +10643,7 @@ return mystring;
                          st3.executeUpdate("update in_mstr "
                             + " set in_qoh = " + "'" + sum + "'" + "," +
                               " in_date = " + "'" + mydate + "'"
-                            + " where in_part = " + "'" + part + "'" 
+                            + " where in_part = " + "'" + item + "'" 
                             + " and in_loc = " + "'" + loc + "'"
                             + " and in_wh = " + "'" + wh + "'"
                             + " and in_site = " + "'" + site + "'"
@@ -10692,7 +10685,7 @@ return mystring;
             String mydate = dfdate.format(now);
 
 
-                String part = "";
+                String item = "";
                 double qty = 0.00;
                 double baseqty = 0.00;
                 String loc = "";
@@ -10707,14 +10700,14 @@ return mystring;
 
                   res = st.executeQuery("select * from recv_det where rvd_id = " + "'" + receiver + "'" +";");
                 while (res.next()) {
-                    part = res.getString("rvd_part");
+                    item = res.getString("rvd_part");
                     qty = res.getDouble("rvd_qty");
                     loc = res.getString("rvd_loc");
                     wh = res.getString("rvd_wh");
                     site = res.getString("rvd_site");
                     uom = res.getString("rvd_uom"); 
                     serial = res.getString("rvd_serial");
-                    baseqty = OVData.getUOMBaseQty(part, site, uom, qty);
+                    baseqty = OVData.getUOMBaseQty(item, site, uom, qty);
 
                     // check for serialized inventory flag...if not...prevent serial from entry into in_mstr
                     if (! OVData.isInvCtrlSerialize()) {
@@ -10725,7 +10718,7 @@ return mystring;
                     // check if in_mstr record exists for this part,loc,site combo
                     // if not add it
                     nres = st2.executeQuery("select in_qoh from in_mstr where "
-                            + " in_part = " + "'" + part + "'" 
+                            + " in_part = " + "'" + item + "'" 
                             + " and in_loc = " + "'" + loc + "'"
                             + " and in_wh = " + "'" + wh + "'"
                             + " and in_site = " + "'" + site + "'"
@@ -10746,7 +10739,7 @@ return mystring;
                             + "(in_site, in_part, in_loc, in_wh, in_serial, in_expire, in_qoh, in_date ) "
                             + " values ( " 
                             + "'" + site + "'" + ","
-                            + "'" + part + "'" + ","
+                            + "'" + item + "'" + ","
                             + "'" + loc + "'" + ","
                             + "'" + wh + "'" + ","
                             + "'" + serial + "'" + ","
@@ -10762,7 +10755,7 @@ return mystring;
                          st3.executeUpdate("update in_mstr "
                             + " set in_qoh = " + "'" + sum + "'" + "," +
                               " in_date = " + "'" + mydate + "'"
-                            + " where in_part = " + "'" + part + "'" 
+                            + " where in_part = " + "'" + item + "'" 
                             + " and in_loc = " + "'" + loc + "'"
                             + " and in_wh = " + "'" + wh + "'"
                             + " and in_site = " + "'" + site + "'"
@@ -10911,7 +10904,7 @@ return mystring;
                 String type = "";
                 String jobnbr = "";
                 String serial = "";
-                String part = "";
+                String item = "";
                 String uom = "";
                 double qty = 0.00;
                 double baseqty = 0.00;
@@ -10940,7 +10933,7 @@ return mystring;
 
                 res = st.executeQuery("select * from recv_det left outer join item_cost on itc_set = 'standard' and itc_item = rvd_part where rvd_id = " + "'" + receiver + "'" +";");
                 while (res.next()) {
-                    part = res.getString("rvd_part");
+                    item = res.getString("rvd_part");
                     qty = res.getDouble("rvd_qty");
                     order = res.getString("rvd_po");
                     po = res.getString("rvd_po");
@@ -10952,7 +10945,7 @@ return mystring;
                     price = res.getDouble("rvd_netprice");
                     cost = res.getDouble("itc_total");
                     uom = res.getString("rvd_uom");
-                    baseqty = OVData.getUOMBaseQty(part, site, uom, qty);
+                    baseqty = OVData.getUOMBaseQty(item, site, uom, qty);
 
             st2.executeUpdate("insert into tran_mstr "
                             + "(tr_site, tr_part, tr_qty, tr_base_qty, tr_uom, tr_ent_date, tr_eff_date, "
@@ -10961,7 +10954,7 @@ return mystring;
                             + " tr_order, tr_line, tr_po, tr_price, tr_cost, tr_terms ) "
                             + " values ( " 
                             + "'" + site + "'" + ","
-                            + "'" + part + "'" + ","
+                            + "'" + item + "'" + ","
                             + "'" + qty + "'" + ","
                             + "'" + baseqty + "'" + ","
                             + "'" + uom + "'" + ","        
@@ -11022,7 +11015,7 @@ return mystring;
                     String type = "ISS-SALES";
                     String jobnbr = "";
                     String serial = "";
-                    String part = "";
+                    String item = "";
                     double qty = 0;
                     double baseqty = 0;  // UOM conversion not applicable 
                     double price = 0.00;
@@ -11038,14 +11031,14 @@ return mystring;
                    
                     res = st.executeQuery("select * from pos_det where posd_nbr = " + "'" + nbr + "'" +";");
                     while (res.next()) {
-                        part = res.getString("posd_item");
+                        item = res.getString("posd_item");
                         if (isVoid) {
                         qty = (-1 * res.getDouble("posd_qty"));
                         } else {
                         qty = res.getDouble("posd_qty");    
                         }
                         baseqty = qty;
-                        uom = OVData.getUOMFromItemSite(part, site);  //always base uom for POS program
+                        uom = OVData.getUOMFromItemSite(item, site);  //always base uom for POS program
                         
                 st2.executeUpdate("insert into tran_mstr "
                                 + "(tr_site, tr_part, tr_qty, tr_base_qty, tr_uom, tr_ent_date, tr_eff_date, "
@@ -11054,7 +11047,7 @@ return mystring;
                                 + " tr_order, tr_line, tr_po, tr_price, tr_cost, tr_terms ) "
                                 + " values ( " 
                                 + "'" + site + "'" + ","
-                                + "'" + part + "'" + ","
+                                + "'" + item + "'" + ","
                                 + "'" + qty + "'" + ","
                                 + "'" + baseqty + "'" + ","
                                 + "'" + uom + "'" + ","        
@@ -11113,7 +11106,7 @@ return mystring;
                     String type = "";
                     String jobnbr = "";
                     String serial = "";
-                    String part = "";
+                    String item = "";
                     String uom = "";
                     double qty = 0.0;
                     double baseqty = 0.0;
@@ -11142,7 +11135,7 @@ return mystring;
                    
                     res = st.executeQuery("select * from ship_det where shd_id = " + "'" + shipper + "'" +";");
                     while (res.next()) {
-                        part = res.getString("shd_part");
+                        item = res.getString("shd_part");
                         uom = res.getString("shd_uom");
                         qty = res.getDouble("shd_qty");
                         order = res.getString("shd_so");
@@ -11153,7 +11146,7 @@ return mystring;
                         jobnbr = res.getString("shd_jobnbr");
                         serial = res.getString("shd_serial");
                         // reverse qty
-                        baseqty = -1 * OVData.getUOMBaseQty(part, site, uom, qty);
+                        baseqty = -1 * OVData.getUOMBaseQty(item, site, uom, qty);
                         qty = -1 * qty;
                         
                         
@@ -11164,7 +11157,7 @@ return mystring;
                                 + " tr_order, tr_line, tr_po, tr_price, tr_cost, tr_terms ) "
                                 + " values ( " 
                                 + "'" + site + "'" + ","
-                                + "'" + part + "'" + ","
+                                + "'" + item + "'" + ","
                                 + "'" + qty + "'" + ","
                                 + "'" + baseqty + "'" + ","
                                 + "'" + uom + "'" + ","        
@@ -11341,8 +11334,8 @@ return mystring;
                   // if lastop convert type to RCT-FG else leave type as iss-wip
                  if (islastop) {
                      temptype = "RCT-FG";
-                     _wh = OVData.getWarehouseByPart(_part);
-                     _loc = OVData.getLocationByPart(_part);
+                     _wh = OVData.getWarehouseByItem(_part);
+                     _loc = OVData.getLocationByItem(_part);
                  } else {
                      temptype = _type;
                  }
@@ -11573,7 +11566,7 @@ return mystring;
           return didLoad;
       }
       
-    public static boolean TRHistIssDiscrete(Date effdate, String part, double qty, String op, String type, double price, double cost, String site, 
+    public static boolean TRHistIssDiscrete(Date effdate, String item, double qty, String op, String type, double price, double cost, String site, 
               String loc, String wh, String expire, String cust, String nbr, String order, int line, String po, String terms, String lot, String rmks, 
               String ref, String acct, String cc, String jobnbr, String serial, String program, String userid) {
         boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
@@ -11589,7 +11582,7 @@ return mystring;
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
                 String mydate = dfdate.format(now);
-                String uom = OVData.getUOMFromItemSite(part, site);
+                String uom = OVData.getUOMFromItemSite(item, site);
                                            
                 st2.executeUpdate("insert into tran_mstr "
                                 + "(tr_site, tr_part, tr_qty, tr_base_qty, tr_uom, tr_op, tr_ent_date, tr_eff_date, "
@@ -11598,7 +11591,7 @@ return mystring;
                                 + " tr_order, tr_line, tr_po, tr_price, tr_cost, tr_terms ) "
                                 + " values ( " 
                                 + "'" + site + "'" + ","
-                                + "'" + part + "'" + ","
+                                + "'" + item + "'" + ","
                                 + "'" + qty + "'" + ","
                                 + "'" + qty + "'" + "," // baseqty = qty for inventory movement
                                 + "'" + uom + "'" + "," // always base uom for inventory movement 
@@ -17561,7 +17554,7 @@ MainFrame.bslog(e);
   }
 
     public static void CreateSalesOrderSchedDet(String order, String line, String date, String qty, String type, String ref, String rlse) {
-      String part = "";
+      String item = "";
       String po = "";
       try {
 
@@ -17583,7 +17576,7 @@ MainFrame.bslog(e);
                      + " ;");
                while (res.next()) {
                    i++;
-               part = res.getString("sod_part");
+               item = res.getString("sod_part");
                po = res.getString("sod_po");
                }
                if (i == 0) {
@@ -17595,7 +17588,7 @@ MainFrame.bslog(e);
                i = 0;
                res = st.executeQuery("select * from srl_mstr where srl_so = " + "'" + order + "'" 
                         + " AND srl_line = " + "'" + line + "'" 
-                        + " AND srl_part = " + "'" + part + "'" 
+                        + " AND srl_part = " + "'" + item + "'" 
                         + " AND srl_po = " + "'" + po + "'" 
                         + " AND srl_ref = " + "'" + ref + "'" 
                         + " AND srl_duedate = " + "'" + date + "'" 
@@ -17619,7 +17612,7 @@ MainFrame.bslog(e);
                         + " values ( " + "'" + order + "'" + ","
                         + "'" + po + "'" + ","
                         + "'" + line + "'" + ","
-                        + "'" + part + "'" + ","
+                        + "'" + item + "'" + ","
                         + "'" + ref + "'" + ","
                         + "'" + qty + "'" + ","
                         + "'" + date + "'" + ","
@@ -17653,8 +17646,15 @@ MainFrame.bslog(e);
 
         } catch (SQLException s) {
             MainFrame.bslog(s);
-        }
-        con.close();
+        } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
     } catch (Exception e) {
         MainFrame.bslog(e);
     }
@@ -17706,8 +17706,15 @@ MainFrame.bslog(e);
 
         } catch (SQLException s) {
             MainFrame.bslog(s);
-        }
-        con.close();
+        } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
     } catch (Exception e) {
         MainFrame.bslog(e);
     }
@@ -17747,8 +17754,15 @@ MainFrame.bslog(e);
            }
         } catch (SQLException s) {
             MainFrame.bslog(s);
-        }
-        con.close();
+        } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
     } catch (Exception e) {
         MainFrame.bslog(e);
     }
@@ -17774,8 +17788,15 @@ MainFrame.bslog(e);
 
         } catch (SQLException s) {
             MainFrame.bslog(s);
-        }
-        con.close();
+        } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
     } catch (Exception e) {
         MainFrame.bslog(e);
     }
@@ -17798,8 +17819,15 @@ MainFrame.bslog(e);
        }
         catch (SQLException s){
              MainFrame.bslog(s);
-        }
-        con.close();
+        } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -17825,8 +17853,15 @@ MainFrame.bslog(e);
        }
         catch (SQLException s){
              MainFrame.bslog(s);
-        }
-        con.close();
+        } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -17851,8 +17886,15 @@ MainFrame.bslog(e);
        }
         catch (SQLException s){
              MainFrame.bslog(s);
-        }
-        con.close();
+        } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -17877,8 +17919,15 @@ MainFrame.bslog(e);
        }
         catch (SQLException s){
              MainFrame.bslog(s);
-        }
-        con.close();
+        } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -17907,8 +17956,15 @@ MainFrame.bslog(e);
 
         } catch (SQLException s) {
             MainFrame.bslog(s);
-        }
-        con.close();
+        } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
     } catch (Exception e) {
         MainFrame.bslog(e);
     }
@@ -18006,8 +18062,15 @@ MainFrame.bslog(e);
 
         } catch (SQLException s) {
             MainFrame.bslog(s);
-        }
-        con.close();
+        } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
     } catch (Exception e) {
         MainFrame.bslog(e);
     }
@@ -18060,8 +18123,15 @@ MainFrame.bslog(e);
 
         } catch (SQLException s) {
             MainFrame.bslog(s);
-        }
-        con.close();
+        } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
     } catch (Exception e) {
         MainFrame.bslog(e);
     }
@@ -18087,8 +18157,15 @@ MainFrame.bslog(e);
        }
         catch (SQLException s){
              bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-        }
-        con.close();
+        } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -18097,7 +18174,7 @@ MainFrame.bslog(e);
 
 }
 
-    public static String getPlanPart(String serialno) {
+    public static String getPlanItem(String serialno) {
 
       // From perspective of "has it been scanned...or is there a 1 in lbl_scan which is set when label is scanned
       // assume it's false i.e. hasn't been scanned.
@@ -18116,8 +18193,15 @@ MainFrame.bslog(e);
 
         } catch (SQLException s) {
             MainFrame.bslog(s);
-        }
-        con.close();
+        } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
     } catch (Exception e) {
         MainFrame.bslog(e);
     }
@@ -18143,8 +18227,15 @@ MainFrame.bslog(e);
 
         } catch (SQLException s) {
             MainFrame.bslog(s);
-        }
-        con.close();
+        } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
     } catch (Exception e) {
         MainFrame.bslog(e);
     }
@@ -18171,8 +18262,15 @@ MainFrame.bslog(e);
 
         } catch (SQLException s) {
             MainFrame.bslog(s);
-        }
-        con.close();
+        } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
     } catch (Exception e) {
         MainFrame.bslog(e);
     }
@@ -18200,8 +18298,15 @@ MainFrame.bslog(e);
               
             } catch (SQLException s) {
                 MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -18245,8 +18350,6 @@ MainFrame.bslog(e);
     
     public static void updateLabelStatus(String serialno, String value) {
           try {
-
-            
             Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             try {
@@ -18254,8 +18357,12 @@ MainFrame.bslog(e);
                          + " ;");
             } catch (SQLException s) {
                 MainFrame.bslog(s);
+            } finally {
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -18272,8 +18379,12 @@ MainFrame.bslog(e);
                          + " ;");
             } catch (SQLException s) {
                 MainFrame.bslog(s);
+            } finally {
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -18288,8 +18399,12 @@ MainFrame.bslog(e);
                          + " ;");
             } catch (SQLException s) {
                 MainFrame.bslog(s);
+            } finally {
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -18304,8 +18419,12 @@ MainFrame.bslog(e);
                          + " ;");
             } catch (SQLException s) {
                 MainFrame.bslog(s);
+            } finally {
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -18463,7 +18582,7 @@ MainFrame.bslog(e);
           return myreturn;
       }
       
-    public static String CreateLabelMstr(String serialno, String part, String custpart, String serialnostring, 
+    public static String CreateLabelMstr(String serialno, String item, String custpart, String serialnostring, 
               String conttype, String qty, String po, String order, String line, String ref, String lot,
               String parent, String parentstring, String addrcode, String addrname, String addr1, String addr2,
               String addrcity, String addrstate, String addrzip, String addrcountry, String createdate, String effdate, 
@@ -18489,7 +18608,7 @@ MainFrame.bslog(e);
                         + "lbl_crt_date, lbl_ship_date, lbl_userid, lbl_printer, lbl_prog, lbl_site, lbl_loc, lbl_trantype "
                         + " ) "
                         + " values ( " + "'" + serialno + "'" + ","
-                        + "'" + part + "'" + ","
+                        + "'" + item + "'" + ","
                         + "'" + custpart + "'" + ","
                         + "'" + serialnostring + "'" + ","
                         + "'" + conttype + "'" + ","
@@ -18531,12 +18650,12 @@ MainFrame.bslog(e);
       }
       
       
-    public static void locTolocTransfer(String partno, int qty, String user) throws ParseException {
+    public static void locTolocTransfer(String item, int qty, String user) throws ParseException {
           java.util.Date now = new java.util.Date();
           DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
           String op = "";
           OVData.TRHistIssDiscrete(now, 
-                  partno, 
+                  item, 
                   qty, 
                   op,
                   "LOC-TRNF", 
@@ -18564,8 +18683,8 @@ MainFrame.bslog(e);
                 );
          
         
-          OVData.UpdateInventoryDiscrete(partno, "BS", "locA", "warehouse", "", "", (-1 * bsParseDouble(String.valueOf(qty))));
-          OVData.UpdateInventoryDiscrete(partno, "BS", "locB", "warehouse", "", "", (bsParseDouble(String.valueOf(qty)))); 
+          OVData.UpdateInventoryDiscrete(item, "BS", "locA", "warehouse", "", "", (-1 * bsParseDouble(String.valueOf(qty))));
+          OVData.UpdateInventoryDiscrete(item, "BS", "locB", "warehouse", "", "", (bsParseDouble(String.valueOf(qty)))); 
                
       }
      
@@ -18776,7 +18895,7 @@ MainFrame.bslog(e);
             ResultSet res2 = null;
             Statement st3 = con.createStatement();
             try {
-           String part = "";
+           String item = "";
            String site = "";
              int k = 0;
 
@@ -18805,7 +18924,7 @@ MainFrame.bslog(e);
                 while (res.next()) {
                   // for this part, this site, and this 'next' 13 weeks...see what plan_mstr records exist
 
-                 part = res.getString("fct_part");
+                 item = res.getString("fct_part");
                  site = res.getString("fct_site");
 
 
@@ -18818,7 +18937,7 @@ MainFrame.bslog(e);
                           continue;
 
 
-                      res2 = st2.executeQuery("select * from plan_mstr where plan_part = " + "'" + part + "'" +
+                      res2 = st2.executeQuery("select * from plan_mstr where plan_part = " + "'" + item + "'" +
                                " AND plan_site = " + "'" + site + "'" + 
                               " AND plan_date_due = " + "'" + df.format(dates.get(j - 1)) + "'" + 
                               " AND plan_type = 'FCST' " + ";");
@@ -18831,7 +18950,7 @@ MainFrame.bslog(e);
                                 st3.executeUpdate("insert into plan_mstr "
                                     + "(plan_nbr, plan_part, plan_qty_req, plan_date_create, plan_date_due, plan_type, plan_site ) "
                                     + " values ( " + "'" + nbr + "'" + ","
-                                    + "'" + part + "'" + ","
+                                    + "'" + item + "'" + ","
                                     + "'" + qty + "'" + ","
                                     + "'" + df.format(cal.getTime()) + "'" + ","
                                     + "'" + df.format(dates.get(j - 1)) + "'" + ","
@@ -18881,7 +19000,7 @@ MainFrame.bslog(e);
             ResultSet res2 = null;
             Statement st3 = con.createStatement();
             try {
-           String part = "";
+           String item = "";
            double makeqty = 0;
            double demand = 0;
            double qoh = 0;
@@ -18919,7 +19038,7 @@ MainFrame.bslog(e);
                       " group by it_item, ita_fct, sod_site, in_qoh " +
                                      ";" );
                 while (res.next()) {
-                 part = res.getString("it_item");
+                 item = res.getString("it_item");
                  qoh = res.getDouble("in_qoh");
                  qtywk = res.getDouble("2week");
                  demand = res.getDouble("mydemand"); 
@@ -18978,7 +19097,7 @@ MainFrame.bslog(e);
 
                  // now lets find out what tickets we already have open ...tickets that are not closed (whether sched or not sched).
 
-                      res2 = st2.executeQuery("select sum(plan_qty_req) as 'sum' from plan_mstr where plan_part = " + "'" + part + "'" +
+                      res2 = st2.executeQuery("select sum(plan_qty_req) as 'sum' from plan_mstr where plan_part = " + "'" + item + "'" +
                                " AND plan_site = " + "'" + site + "'" + 
                               " AND plan_status = '0' " + ";" );
                          while (res2.next()) {
@@ -18999,7 +19118,7 @@ MainFrame.bslog(e);
                                 st3.executeUpdate("insert into plan_mstr "
                                     + "(plan_nbr, plan_part, plan_qty_req, plan_date_create, plan_date_due, plan_type, plan_site, plan_rmks ) "
                                     + " values ( " + "'" + nbr + "'" + ","
-                                    + "'" + part + "'" + ","
+                                    + "'" + item + "'" + ","
                                     + "'" + min + "'" + ","
                                     + "'" + df.format(now) + "'" + ","
                                     + "'" + df.format(now) + "'" + ","
@@ -19022,7 +19141,7 @@ MainFrame.bslog(e);
                                 st3.executeUpdate("insert into plan_mstr "
                                     + "(plan_nbr, plan_part, plan_qty_req, plan_date_create, plan_date_due, plan_type, plan_site, plan_rmks ) "
                                     + " values ( " + "'" + nbr + "'" + ","
-                                    + "'" + part + "'" + ","
+                                    + "'" + item + "'" + ","
                                     + "'" + min + "'" + ","
                                     + "'" + df.format(now) + "'" + ","
                                     + "'" + df.format(now) + "'" + ","
@@ -19069,7 +19188,7 @@ MainFrame.bslog(e);
             Statement st2 = con.createStatement();
             ResultSet res2 = null;
             try {
-           String part = "";
+           String item = "";
            String order = "";
            String line = "";
            String duedate = "";
@@ -19097,7 +19216,7 @@ MainFrame.bslog(e);
 
                     // for this part, this site, this order, this line ....see what plan_mstr records exist
 
-                 part = res.getString("sod_part");
+                 item = res.getString("sod_part");
                  order = res.getString("sod_nbr");
                  line = res.getString("sod_line");
                  qty = res.getDouble("sod_ord_qty") - res.getDouble("sod_shipped_qty");
@@ -19105,7 +19224,7 @@ MainFrame.bslog(e);
                  k = 0;
 
 
-                      res2 = st2.executeQuery("select * from plan_mstr where plan_part = " + "'" + part + "'" +
+                      res2 = st2.executeQuery("select * from plan_mstr where plan_part = " + "'" + item + "'" +
                                " AND plan_site = " + "'" + site + "'" + 
                                " AND plan_order = " + "'" + order + "'" +
                               " AND plan_line = " + "'" + line + "'" + ";");
@@ -19114,7 +19233,7 @@ MainFrame.bslog(e);
                              k++;
                          }
                          if (k == 0) {
-                             a_part.add(part);
+                             a_part.add(item);
                              a_order.add(order);
                              a_line.add(line);
                              a_qty.add(qty);
@@ -19532,8 +19651,15 @@ return mylist;
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -19587,8 +19713,15 @@ return mylist;
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -19663,8 +19796,15 @@ return mylist;
            }
             catch (SQLException s){
                  bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);

@@ -143,7 +143,7 @@ public class ProdEntryMaint extends javax.swing.JPanel {
              calfrom.add(Calendar.DATE, days);
              dcexpire.setDate(calfrom.getTime());
              }
-            ArrayList myops = OVData.getOperationsByPart(tbpart.getText());
+            ArrayList myops = OVData.getOperationsByItem(tbpart.getText());
             for (int i = 0; i < myops.size(); i++) {
                 ddop.addItem(myops.get(i));
             }
@@ -431,8 +431,8 @@ public class ProdEntryMaint extends javax.swing.JPanel {
         boolean canproceed = true;
         String prodline = "";
         String expire = "";
-        String loc = OVData.getLocationByPart(tbpart.getText());
-        String wh = OVData.getWarehouseByPart(tbpart.getText());
+        String loc = OVData.getLocationByItem(tbpart.getText());
+        String wh = OVData.getWarehouseByItem(tbpart.getText());
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
         
         transtable.setModel(transmodel);
