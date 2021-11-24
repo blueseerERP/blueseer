@@ -6281,9 +6281,9 @@ return myreturn;
          try{
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
 
                 res = st.executeQuery("select ov_wh from ov_mstr;" );
                while (res.next()) {
@@ -6308,10 +6308,9 @@ return myreturn;
          try{
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
                 res = st.executeQuery("select ov_cc from ov_mstr;" );
                while (res.next()) {
                 myitem = res.getString("ov_cc");                    
@@ -6335,9 +6334,9 @@ return myreturn;
          try{
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
 
                 res = st.executeQuery("select site_desc from site_mstr inner join ov_mstr on ov_site = site_site ;" );
                while (res.next()) {
@@ -6361,10 +6360,10 @@ return myreturn;
            String myitem = null;
          try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+          Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
 
                 res = st.executeQuery("select ov_currency from ov_mstr;" );
                while (res.next()) {
@@ -6388,10 +6387,10 @@ return myreturn;
            String myitem = null;
          try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+           Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
 
                 res = st.executeQuery("select ov_labelprinter from ov_mstr;" );
                while (res.next()) {
@@ -6416,9 +6415,9 @@ return myreturn;
          try{
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
 
                 res = st.executeQuery("select arc_bank from ar_ctrl;" );
                while (res.next()) {
@@ -6442,10 +6441,10 @@ return myreturn;
            String myitem = null;
          try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+           Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
 
                 res = st.executeQuery("select arc_default_acct from ar_ctrl;" );
                while (res.next()) {
@@ -6469,10 +6468,10 @@ return myreturn;
            String myitem = null;
          try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+           Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
 
                 res = st.executeQuery("select payc_withhold_acct from pay_ctrl;" );
                while (res.next()) {
@@ -6496,10 +6495,10 @@ return myreturn;
            String myitem = null;
          try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+           Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
 
                 res = st.executeQuery("select payc_labor_acct from pay_ctrl;" );
                while (res.next()) {
@@ -6523,10 +6522,10 @@ return myreturn;
            String myitem = null;
          try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+           Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
 
                 res = st.executeQuery("select payc_labor_cc from pay_ctrl;" );
                while (res.next()) {
@@ -6551,9 +6550,9 @@ return myreturn;
          try{
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
 
                 res = st.executeQuery("select payc_salaried_acct from pay_ctrl;" );
                while (res.next()) {
@@ -6577,10 +6576,10 @@ return myreturn;
            String myitem = null;
          try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+           Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
 
                 res = st.executeQuery("select payc_salaried_cc from pay_ctrl;" );
                while (res.next()) {
@@ -6604,10 +6603,10 @@ return myreturn;
            String myitem = null;
          try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+          Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
 
                 res = st.executeQuery("select payc_payrolltax_acct from pay_ctrl;" );
                while (res.next()) {
@@ -6631,10 +6630,10 @@ return myreturn;
            String myitem = null;
          try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+           Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
 
                 res = st.executeQuery("select arc_sales_acct from ar_ctrl;" );
                while (res.next()) {
@@ -6659,9 +6658,9 @@ return myreturn;
          try{
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
 
                 res = st.executeQuery("select arc_asset_acct from ar_ctrl;" );
                while (res.next()) {
@@ -6685,11 +6684,10 @@ return myreturn;
            String myitem = null;
          try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
+          Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
                 res = st.executeQuery("select apc_assetacct from ap_ctrl;" );
                while (res.next()) {
                 myitem = res.getString("apc_assetacct");                    
@@ -6712,10 +6710,10 @@ return myreturn;
            String myitem = null;
          try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+          Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
 
                 res = st.executeQuery("select arc_asset_cc from ar_ctrl;" );
                while (res.next()) {
@@ -6739,10 +6737,10 @@ return myreturn;
        String myitem = "";
      try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
+       Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
 
             res = st.executeQuery("select arc_default_cc from ar_ctrl;" );
            while (res.next()) {
@@ -6766,10 +6764,10 @@ return myreturn;
        String myitem = "";
      try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
+       Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
 
             res = st.executeQuery("select arc_sales_cc from ar_ctrl;" );
            while (res.next()) {
@@ -6793,10 +6791,10 @@ return myreturn;
        String myitem = "";
      try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
+      Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
 
             res = st.executeQuery("select apc_bank from ap_ctrl;" );
            while (res.next()) {
@@ -6820,10 +6818,10 @@ return myreturn;
        String myitem = "";
      try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
+       Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
 
             res = st.executeQuery("select bk_acct from bk_mstr where bk_id = " + "'" + bank + "'" + ";" );
            while (res.next()) {
@@ -6847,10 +6845,10 @@ return myreturn;
        String myitem = "";
      try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
+      Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
 
             res = st.executeQuery("select apc_apacct from ap_ctrl;" );
            while (res.next()) {
@@ -6874,11 +6872,10 @@ return myreturn;
        String myitem = null;
      try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
+      Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
-
+            try {
             res = st.executeQuery("select siteu_site from siteu_mstr where siteu_userid = " + "'" + myuser.toString() + "';" );
            while (res.next()) {
             myitem = res.getString("siteu_site");                    
@@ -6902,10 +6899,10 @@ return myreturn;
            String myimage = "";
          try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+          Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
 
                 res = st.executeQuery("select iti_file from item_image where iti_default = '1' and iti_item = " + "'" + item + "'" + "  ;" );
                while (res.next()) {
@@ -6928,10 +6925,10 @@ return myreturn;
        String myitem = "";
      try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
+       Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
 
             res = st.executeQuery("select site_sh_jasper from site_mstr where site_site = " + "'" + site + "';" );
            while (res.next()) {
@@ -6955,10 +6952,10 @@ return myreturn;
        String myitem = "";
      try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
+       Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
 
             res = st.executeQuery("select site_po_jasper from site_mstr where site_site = " + "'" + site + "';" );
            while (res.next()) {
@@ -6982,10 +6979,10 @@ return myreturn;
        String myitem = "";
      try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
+       Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
 
             res = st.executeQuery("select site_iv_jasper from site_mstr where site_site = " + "'" + site + "';" );
            while (res.next()) {
@@ -7009,10 +7006,10 @@ return myreturn;
        String myitem = "";
      try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
+      Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
 
             res = st.executeQuery("select site_or_jasper from site_mstr where site_site = " + "'" + site + "';" );
            while (res.next()) {
@@ -7036,10 +7033,10 @@ return myreturn;
        String myitem = "";
      try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
+       Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
 
             res = st.executeQuery("select site_pos_jasper from site_mstr where site_site = " + "'" + site + "';" );
            while (res.next()) {
@@ -7067,10 +7064,10 @@ return myreturn;
       String account = "";
         try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+           Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
 
                 res = st.executeQuery("select gl_earnings from gl_ctrl;"); 
                while (res.next()) {
@@ -7098,10 +7095,10 @@ return myreturn;
       String account = "";
         try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+           Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
 
                 res = st.executeQuery("select gl_foreignreal from gl_ctrl;"); 
                while (res.next()) {
@@ -7241,10 +7238,10 @@ return myreturn;
            String myitem = null;
          try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+           Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
 
                 res = st.executeQuery("select paypd_acct from pay_profdet where paypd_id = " + "'" + line + "'" +
                         " and paypd_parentcode = " + "'" + profile + "'" + ";" );
@@ -7269,10 +7266,10 @@ return myreturn;
            String myitem = null;
          try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+           Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
 
                 res = st.executeQuery("select paypd_cc from pay_profdet where paypd_id = " + "'" + line + "'" +
                         " and paypd_parentcode = " + "'" + profile + "'" + ";" );
@@ -7297,10 +7294,10 @@ return myreturn;
            String myitem = null;
          try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+           Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
 
                 res = st.executeQuery("select payc_payrolltax_cc from pay_ctrl;" );
                while (res.next()) {
@@ -7325,10 +7322,10 @@ return myreturn;
    String myitem = "";
  try{
 
-    Connection con = DriverManager.getConnection(url + db, user, pass);
-    try{
-        Statement st = con.createStatement();
-        ResultSet res = null;
+  Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
 
         res = st.executeQuery("select exc_rate from exc_mstr where exc_base = " + "'" + base + "'" + 
                 " and exc_foreign = " + "'" + foreign + "'" + 
@@ -7354,10 +7351,10 @@ return myitem;
    Double outvalue = invalue;
  try{
 
-    Connection con = DriverManager.getConnection(url + db, user, pass);
-    try{
-        Statement st = con.createStatement();
-        ResultSet res = null;
+   Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
 
         res = st.executeQuery("select exc_rate from exc_mstr where exc_base = " + "'" + base + "'" + 
                 " and exc_foreign = " + "'" + foreign + "'" + 
@@ -7385,10 +7382,10 @@ return outvalue;
        String myitem = null;
      try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
 
             res = st.executeQuery("select it_prodline from item_mstr inner join pl_mstr on pl_line = it_prodline where it_item = " + "'" + mypart.toString() + "';" );
            while (res.next()) {
@@ -7446,10 +7443,10 @@ return outvalue;
        boolean isBase = false;
      try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
 
             res = st.executeQuery("select it_uom from item_mstr where it_item = " + "'" + mypart.toString() + "'" +
                                   " AND it_site = " + "'" + mysite + "'" + ";" ); 
@@ -7477,10 +7474,10 @@ return outvalue;
        String baseuom = "";
      try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
             // if order_uom is base qty...then return same...else convert qty to order_uom..assuming a legitimate conversion table entry for both uoms
             // lets first make sure there's a conversion table entry for the order_uom...if not bail...and return inbound qty
 
@@ -7528,9 +7525,9 @@ return outvalue;
          try{
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
                 // if order_uom is base qty...then return same...else convert qty to order_uom..assuming a legitimate conversion table entry for both uoms
                 // lets first make sure there's a conversion table entry for the order_uom...if not bail...and return inbound qty
                
@@ -7579,9 +7576,9 @@ return outvalue;
          try{
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
 
                 res = st.executeQuery("select pl_inventory from pl_mstr where pl_line = " + "'" + prodline.toString() + "';" );
                while (res.next()) {
@@ -7606,9 +7603,9 @@ return outvalue;
          try{
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
 
                 res = st.executeQuery("select * from wc_mstr " +
                         " where wc_cell = " + "'" + wc + "'" + ";" );
@@ -7645,9 +7642,9 @@ return outvalue;
          try{
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
 
                 res = st.executeQuery("select * from wf_mstr " +
                         " where wf_id = " + "'" + routing + "'" + ";" );
@@ -7682,9 +7679,9 @@ return outvalue;
          try{
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
 
                 res = st.executeQuery("select wf_setup_hours, wf_run_hours, " +
                         " wc_run_rate, wc_run_crew, wc_setup_rate, wc_setup, " +
@@ -7729,10 +7726,9 @@ return outvalue;
          try{
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
                 res = st.executeQuery("select wc_cell from wc_mstr;" );
                while (res.next()) {
                 myarray.add(res.getString("wc_cell"));                    
@@ -7757,9 +7753,9 @@ return outvalue;
          try{
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
 
                 res = st.executeQuery("select wf_id from wf_mstr;" );
                while (res.next()) {
@@ -7785,9 +7781,9 @@ return outvalue;
          try{
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
 
                 res = st.executeQuery("select site_site from site_mstr;" );
                while (res.next()) {
@@ -7813,9 +7809,9 @@ return outvalue;
          try{
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
 
                 res = st.executeQuery("select uom_id from uom_mstr order by uom_id;" );
                while (res.next()) {
@@ -7841,9 +7837,9 @@ return outvalue;
          try{
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
 
                 res = st.executeQuery("select posc_taxpercent from pos_ctrl;" );
                while (res.next()) {
@@ -7868,9 +7864,9 @@ return outvalue;
      try{
 
         Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
 
             res = st.executeQuery("select it_loc from item_mstr where it_item = " + "'" + part + "'" + ";" );
            while (res.next()) {
@@ -7894,10 +7890,10 @@ return outvalue;
       String[] myloc = new String[2];
      try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
 
             // first get the default wh and loc for this item and site in case below optimum item and site return nothing.
              res = st.executeQuery("select it_loc, it_wh from item_mstr where it_item = " + "'" + part + "'" + 
@@ -7934,10 +7930,10 @@ return outvalue;
       Double qty = 0.00;
      try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
 
             res = st.executeQuery("select in_qoh from in_mstr where in_part = " + "'" + part + "'" + 
                     " AND in_site = " + "'" + site + "'" +
@@ -7962,10 +7958,10 @@ return outvalue;
       String myuom = "";
      try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
 
             res = st.executeQuery("select it_uom from item_mstr where it_item = " + "'" + part + "'" + ";" );
            while (res.next()) {
@@ -7989,10 +7985,10 @@ return outvalue;
       String myloc = "";
      try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
 
             res = st.executeQuery("select it_wh from item_mstr where it_item = " + "'" + part + "'" + ";" );
            while (res.next()) {
@@ -8016,10 +8012,10 @@ return outvalue;
        ArrayList myarray = new ArrayList();
      try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
 
             res = st.executeQuery("select loc_loc from loc_mstr order by loc_loc;" );
            while (res.next()) {
@@ -8044,10 +8040,10 @@ return outvalue;
        ArrayList myarray = new ArrayList();
      try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
 
             res = st.executeQuery("select loc_loc from loc_mstr  " + 
                     "where loc_wh = " + "'" + wh + "'" +
@@ -8075,9 +8071,9 @@ return outvalue;
          try{
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
 
                 res = st.executeQuery("select wh_id from wh_mstr order by wh_id;" );
                while (res.next()) {
@@ -8105,9 +8101,9 @@ return outvalue;
         try{
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
                    
                       res = st.executeQuery("select * from wh_mstr where wh_id = " + "'" + wh + "'" + ";");
                     while (res.next()) {
@@ -8141,9 +8137,9 @@ return outvalue;
          try{
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
 
                 res = st.executeQuery("select pl_line from pl_mstr order by pl_line ;" );
                while (res.next()) {
@@ -8167,10 +8163,10 @@ return outvalue;
        String myitem = "";
      try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
 
             res = st.executeQuery("select it_code from item_mstr where it_item = " + "'" + mypart.toString() + "';" );
            while (res.next()) {
@@ -8194,10 +8190,10 @@ return outvalue;
    String myitem = "";
  try{
 
-    Connection con = DriverManager.getConnection(url + db, user, pass);
-    try{
-        Statement st = con.createStatement();
-        ResultSet res = null;
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
 
         res = st.executeQuery("select cm_bank from cm_mstr where cm_code = " + "'" + cust + "';" );
        while (res.next()) {
@@ -8221,10 +8217,10 @@ return myitem;
         String bank = "";
          try{
 
-    Connection con = DriverManager.getConnection(url + db, user, pass);
-    try{
-        Statement st = con.createStatement();
-        ResultSet res = null;
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
 
         res = st.executeQuery("select posc_bank from pos_ctrl;" );
        while (res.next()) {
@@ -8247,10 +8243,10 @@ catch (Exception e){
    int mycount = 0;
  try{
 
-    Connection con = DriverManager.getConnection(url + db, user, pass);
-    try{
-        Statement st = con.createStatement();
-        ResultSet res = null;
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
 
         res = st.executeQuery("select count(*) as mycount from gl_tran;" );
        while (res.next()) {
@@ -8274,10 +8270,10 @@ return mycount;
         String[] address = new String[9];
          try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
 
             res = st.executeQuery("select cm_aliascode, cm_name, cm_line1, cm_line2, cm_line3, cm_city, cm_state, cm_zip, cm_country from cm_mstr where cm_code = " + "'" + cust + "';" );
            while (res.next()) {
@@ -8308,10 +8304,10 @@ return mycount;
         String[] address = new String[9];
          try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
 
             res = st.executeQuery("select cms_plantcode, cms_name, cms_line1, cms_line2, cms_line3, cms_city, cms_state, cms_zip, cms_country from cms_det where cms_code = " + "'" + cust + "'" +
                                  " AND cms_shipto = " + "'" + ship + "'" +
@@ -8345,10 +8341,10 @@ return mycount;
         String[] address = new String[9];
          try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
 
             res = st.executeQuery("select wh_id, wh_name, wh_line1, wh_line2, wh_line3, wh_city, wh_state, wh_zip, wh_country from wh_mstr where wh_site = " + "'" + site + 
                                  " AND wh_id = " + "'" + wh + "'" +
@@ -8382,10 +8378,10 @@ return mycount;
        String[] address = new String[9];
          try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
 
             res = st.executeQuery("select site_site, site_desc, site_line1, site_line2, site_line3, site_city, site_state, site_zip, site_country from site_mstr where site_site = " + "'" + site + 
                                   "';" );
@@ -8418,10 +8414,10 @@ return mycount;
        String myitem = "";
      try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
 
             res = st.executeQuery("select site_logo from site_mstr where site_site = " + "'" + site + "';" );
            while (res.next()) {
@@ -8453,9 +8449,9 @@ return mycount;
         try{
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
 
                   res = st.executeQuery("select wf_op from wf_mstr inner join item_mstr on it_wf = wf_id where it_item = " + "'" + item + "'" + 
                           " order by wf_op asc " + ";" ); 
@@ -11257,8 +11253,8 @@ return mystring;
        try {
              
             Connection con = DriverManager.getConnection(url + db, user, pass);
-        try {
-                Statement st = con.createStatement();
+            Statement st = con.createStatement();
+            try {
                 
                 String _part = "";
                 String _type = "";
@@ -11414,9 +11410,9 @@ return mystring;
                         + ")"
                         + ";", Statement.RETURN_GENERATED_KEYS);
               }
-              ResultSet rs = st.getGeneratedKeys();
-               while (rs.next()) {
-                    mytrkey = String.valueOf(rs.getInt(1));
+              ResultSet res = st.getGeneratedKeys();
+               while (res.next()) {
+                    mytrkey = String.valueOf(res.getInt(1));
                 }
               
                   /* we need to consume material component inventory
@@ -11500,9 +11496,9 @@ return mystring;
                         + ")"
                         + ";", Statement.RETURN_GENERATED_KEYS); 
               }
-              ResultSet rs = st.getGeneratedKeys();
-               while (rs.next()) {
-                    mytrkey = String.valueOf(rs.getInt(1));
+              ResultSet res = st.getGeneratedKeys();
+               while (res.next()) {
+                    mytrkey = String.valueOf(res.getInt(1));
                 }
               
                   /* we need to consume material component inventory
@@ -11545,9 +11541,9 @@ return mystring;
                         + "'" + _bom + "'"
                         + ")"
                         + ";", Statement.RETURN_GENERATED_KEYS);
-              ResultSet rs = st.getGeneratedKeys();
-               while (rs.next()) {
-                    mytrkey = String.valueOf(rs.getInt(1));
+              ResultSet res = st.getGeneratedKeys();
+               while (res.next()) {
+                    mytrkey = String.valueOf(res.getInt(1));
                 }
               
                   /* we need to consume material component inventory
@@ -11571,7 +11567,7 @@ return mystring;
         con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
-               }  
+        }  
        
           
           return didLoad;
@@ -11984,10 +11980,10 @@ return mystring;
    ArrayList myarray = new ArrayList();
     try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
 
             res = st.executeQuery("select ac_id from ac_mstr where " +
                      " ac_id >= " + "'" + fromacct + "'" + " AND " +
@@ -12013,10 +12009,10 @@ return mystring;
    ArrayList myarray = new ArrayList();
     try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
 
             res = st.executeQuery("select ac_id, ac_type, ac_desc from ac_mstr where " +
                      " ac_id >= " + "'" + fromacct + "'" + " AND " +
@@ -12043,10 +12039,10 @@ return mystring;
 
     try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
             if (fromacct.isEmpty() && toacct.isEmpty()) {
                 res = st.executeQuery("select ac_id, ac_cur, ac_type, ac_desc from ac_mstr order by ac_id ;");
             } else {
@@ -12080,10 +12076,10 @@ return mystring;
   String myreturn = "";
     try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
 
             res = st.executeQuery("select ac_type from ac_mstr where " +
                      " ac_id = " + "'" + acct + "'" + ";");
@@ -12108,10 +12104,10 @@ return mystring;
   String myreturn = "";
     try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
 
             res = st.executeQuery("select ac_desc from ac_mstr where " +
                      " ac_id = " + "'" + acct + "'" + ";");
@@ -12136,10 +12132,10 @@ return mystring;
   ArrayList myarray = new ArrayList();
     try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
 
             res = st.executeQuery("select dept_id from dept_mstr ;");
            while (res.next()) {
@@ -12171,10 +12167,10 @@ return mystring;
 
     try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
 
             res = st.executeQuery("select * from gl_cal where glc_start <= " +
                     "'" + EffDate.toString() + "'" + 
@@ -12212,10 +12208,10 @@ return mystring;
      boolean isclosed = false;
     try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
 
             res = st.executeQuery("select * from gl_cal where glc_start <= " +
                     "'" + EffDate.toString() + "'" + 
@@ -12251,10 +12247,10 @@ return mystring;
   ArrayList myarray = new ArrayList();
     try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
 
              res = st.executeQuery("select * from gl_cal where glc_per = " +
                     "'" + per.toString() + "'" + 
@@ -12289,10 +12285,10 @@ return mystring;
   ArrayList myarray = new ArrayList();
     try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
 
             res = st.executeQuery("select * from gl_cal where glc_per = " +
                     "'" + per.toString() + "'" + 
@@ -12325,9 +12321,9 @@ return mystring;
         try{
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
 
                 res = st.executeQuery("select * from gl_ctrl;"); 
                while (res.next()) {
@@ -12359,9 +12355,9 @@ return mystring;
         try{
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
 
                 res = st.executeQuery("select gl_is_from from gl_ctrl;"); 
                while (res.next()) {
@@ -12390,9 +12386,9 @@ return mystring;
         try{
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
 
                 res = st.executeQuery("select gl_is_to from gl_ctrl;"); 
                while (res.next()) {
@@ -12421,9 +12417,9 @@ return mystring;
         try{
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
 
                 res = st.executeQuery("select gl_bs_from from gl_ctrl;"); 
                while (res.next()) {
@@ -12452,9 +12448,9 @@ return mystring;
         try{
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
 
                 res = st.executeQuery("select gl_bs_to from gl_ctrl;"); 
                while (res.next()) {
@@ -12481,9 +12477,9 @@ return mystring;
         try{
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
                
                 res = st.executeQuery("select * from acb_mstr where acb_year = " +
                         "'" + year + "'" + 
@@ -12518,10 +12514,10 @@ return mystring;
    double amt = 0.00;
     try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
 
             res = st.executeQuery("select sum(acb_amt) as sum from acb_mstr where  " +
                     " acb_acct = " + "'" + acct + "'" +
@@ -12562,10 +12558,10 @@ return mystring;
 
     try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
             String accttype = "";
               res = st.executeQuery("select ac_type from ac_mstr where ac_id = " + "'" + acct + "'" +  ";");
               while (res.next()) {
@@ -12632,10 +12628,10 @@ return mystring;
    double amt = 0.00;
     try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
 
             res = st.executeQuery("select sum(acb_amt) as sum from acb_mstr where acb_year = " +
                     "'" + year + "'" + 
@@ -12669,10 +12665,10 @@ return mystring;
          DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
          try {
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try {
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
             res = st.executeQuery("SELECT sum(glh_base_amt) as sum from gl_hist where " +
                     " glh_effdate >= " + "'" + fromdate + "'" + " AND " +
                     " glh_effdate <= " + "'" + todate + "'" + " AND " +
@@ -12698,10 +12694,10 @@ return mystring;
          DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
          try {
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try {
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
             res = st.executeQuery("SELECT sum(glh_base_amt) as sum from gl_hist where " +
                     " glh_effdate >= " + "'" + fromdate + "'" + " AND " +
                     " glh_effdate <= " + "'" + todate + "'" + " AND " +
@@ -12726,10 +12722,10 @@ return mystring;
 
     try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
 
             res = st.executeQuery("select so_nbr from so_mstr where so_status = " + "'" + getGlobalProgTag("open") + "'" + " or so_status = " + "'" + getGlobalProgTag("commit") + "'" + " or so_status = " + "'" + getGlobalProgTag("backorder") + "'" + " ;");
                    while (res.next()) {
@@ -12754,10 +12750,10 @@ return mystring;
 
     try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
 
             res = st.executeQuery("select glic_name from glic_def;");
                    while (res.next()) {
@@ -12783,10 +12779,10 @@ return mystring;
 
     try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
 
             res = st.executeQuery("select glic_start from glic_def where glic_name = " + "'" + name + "'" + ";");
                    while (res.next()) {
@@ -12811,10 +12807,10 @@ return mystring;
 
     try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
 
             res = st.executeQuery("select glic_end from glic_def where glic_name = " + "'" + name + "'" + ";");
                    while (res.next()) {
@@ -12839,10 +12835,10 @@ return mystring;
 
     try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
 
             res = st.executeQuery("select glic_seq from glic_def where glic_name = " + "'" + name + "'"  + ";");
                    while (res.next()) {
@@ -12867,10 +12863,10 @@ return mystring;
 
     try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
 
             res = st.executeQuery("select glicd_acct from glic_accts where glicd_name = " + "'" + name + "'" +
                     " AND glicd_type = " + "'" + type + "'" + ";");
@@ -12896,10 +12892,10 @@ return mystring;
 
            try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
 
             res = st.executeQuery("select sum(acb_amt) as sum from acb_mstr where " +
                    " acb_acct = " + "'" + acct + "'" + 
@@ -12930,10 +12926,10 @@ return mystring;
 
            try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
 
             res = st.executeQuery("select sum(acb_amt) as sum from acb_mstr where " +
                    " acb_acct = " + "'" + acct + "'" + 
@@ -12971,10 +12967,10 @@ return mystring;
 
 
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try {
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
 
             int qty = 0;
             double dol = 0;
@@ -13097,10 +13093,10 @@ return mystring;
 
 
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try {
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
 
             int qty = 0;
             double dol = 0;
@@ -13226,10 +13222,10 @@ return mystring;
 
 
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try {
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
 
             int qty = 0;
             double dol = 0;
@@ -13328,10 +13324,10 @@ return mystring;
 
 
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try {
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
 
             int qty = 0;
             double dol = 0;
@@ -13445,10 +13441,10 @@ return mystring;
        String[] myarray = new String[5];
     try {
 
-    Connection con = DriverManager.getConnection(url + db, user, pass);
-    try {
-        Statement st = con.createStatement();
-        ResultSet res = null;
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
 
         int qty = 0;
         double dol = 0;
@@ -13513,10 +13509,10 @@ return myarray;
 
     try {
 
-    Connection con = DriverManager.getConnection(url + db, user, pass);
-    try {
-        Statement st = con.createStatement();
-        ResultSet res = null;
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
 
         int qty = 0;
         double dol = 0;
@@ -13586,9 +13582,9 @@ return myarray;
              DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 boolean proceed = true;
                 int i = 0;
                 int per = 0;
@@ -13666,13 +13662,13 @@ return myarray;
 
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try {
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             Statement st2 = con.createStatement();
             Statement st3 = con.createStatement();
             ResultSet res = null;
             ResultSet res2 = null;
+            try {
             int i = 0;
             int per = 0;
             int year = 0;
@@ -13766,10 +13762,10 @@ return myarray;
     public static void glCopyTranToHist(ArrayList<Integer> trans) {
        try {
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try {
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
             boolean proceed = true;
 
              if (dbtype.equals("sqlite")) {
@@ -13812,10 +13808,10 @@ return myarray;
        try {
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try {
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
             boolean proceed = true;
 
             res = st.executeQuery("select * from gl_tran;");
@@ -17117,11 +17113,10 @@ MainFrame.bslog(e);
       try {
 
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-
-        try {
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
             boolean proceed = true;
             int i = 0;
              DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
@@ -17646,13 +17641,10 @@ MainFrame.bslog(e);
     public static Integer getSOMaxLine(String order) {
       int myreturn = -1;
       try {
-
-
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-
-        try {
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
              res = st.executeQuery("select max(sod_line) as sod_line from sod_det where sod_nbr = " + "'" + order + "'" 
                      + " ;");
            while (res.next()) {
@@ -17678,10 +17670,10 @@ MainFrame.bslog(e);
        try {
 
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try {
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
-             ResultSet res = null;
+            ResultSet res = null;
+            try {
              boolean proceed = true;
              res = st.executeQuery("select sod_nbr, sod_line, plan_order, plan_line, plan_status, plan_is_sched " +
                      " from sod_det " +
@@ -17731,10 +17723,10 @@ MainFrame.bslog(e);
            if (status.equals(getGlobalProgTag("void"))) { status = "-1"; }
 
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try {
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
-             ResultSet res = null;
+            ResultSet res = null;
+            try {
              boolean proceed = true;
              res = st.executeQuery("select plan_status from plan_mstr where plan_nbr = " + "'" + order + "'" 
                      + " ;");
@@ -17770,13 +17762,10 @@ MainFrame.bslog(e);
       int myreturn = 0;
 
       try {
-
-
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-
-        try {
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
              res = st.executeQuery("select lbl_scan from label_mstr where lbl_id = " + "'" + serialno + "'" 
                      + " ;");
            while (res.next()) {
@@ -17797,10 +17786,10 @@ MainFrame.bslog(e);
    boolean myreturn = false;
     try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
 
             res = st.executeQuery("select serialize from inv_ctrl;");
            while (res.next()) {
@@ -17824,10 +17813,10 @@ MainFrame.bslog(e);
    boolean myreturn = false;
     try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
 
             res = st.executeQuery("select planmultiscan from inv_ctrl;");
            while (res.next()) {
@@ -17850,10 +17839,10 @@ MainFrame.bslog(e);
    boolean myreturn = false;
     try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
 
             res = st.executeQuery("select printsubticket from inv_ctrl;");
            while (res.next()) {
@@ -17876,10 +17865,10 @@ MainFrame.bslog(e);
    boolean myreturn = false;
     try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
 
             res = st.executeQuery("select demdtoplan from inv_ctrl;");
            while (res.next()) {
@@ -17905,13 +17894,10 @@ MainFrame.bslog(e);
       boolean myreturn = false;
 
       try {
-
-
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-
-        try {
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
              res = st.executeQuery("select * from pland_mstr where pland_parent = " + "'" + serialno + "'" 
                      + " AND pland_op = " + "'" + op + "'"
                      + " ;");
@@ -17952,11 +17938,10 @@ MainFrame.bslog(e);
 
       try {
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-
-        try {
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
             boolean proceed = true;
             String _part = "";
             String _parent = "";
@@ -18044,11 +18029,10 @@ MainFrame.bslog(e);
 
       try {
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-
-        try {
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
             boolean proceed = true;
             String _part = "";
             String _parent = "";
@@ -18088,10 +18072,10 @@ MainFrame.bslog(e);
    ArrayList myarray = new ArrayList();
     try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
 
             res = st.executeQuery("select task_id from task_mstr order by task_id ;"); 
 
@@ -18120,13 +18104,10 @@ MainFrame.bslog(e);
      String myreturn = "";
 
       try {
-
-
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-
-        try {
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
              res = st.executeQuery("select plan_part from plan_mstr where plan_nbr = " + "'" + serialno + "'" 
                      + " ;");
            while (res.next()) {
@@ -18150,13 +18131,10 @@ MainFrame.bslog(e);
       double myreturn = 0;
 
       try {
-
-
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-
-        try {
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
              res = st.executeQuery("select plan_qty_sched from plan_mstr where plan_nbr = " + "'" + serialno + "'" 
                      + " ;");
            while (res.next()) {
@@ -18180,13 +18158,10 @@ MainFrame.bslog(e);
       double myreturn = 0;
 
       try {
-
-
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-
-        try {
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
              res = st.executeQuery("select sum(pland_qty) as 'mysum' from pland_mstr where pland_parent = " + "'" + serialno + "'" 
                      + " AND pland_op = " + "'" + op + "'"
                      + " ;");
@@ -18213,13 +18188,10 @@ MainFrame.bslog(e);
           int myreturn = 0;
           
           try {
-
-            
             Connection con = DriverManager.getConnection(url + db, user, pass);
-          
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
                  res = st.executeQuery("select plan_status from plan_mstr where plan_nbr = " + "'" + serialno + "'" 
                          + " ;");
                while (res.next()) {
@@ -18276,9 +18248,8 @@ MainFrame.bslog(e);
 
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
-          
+            Statement st = con.createStatement();
             try {
-                Statement st = con.createStatement();
                  st.executeUpdate("update label_mstr set lbl_scan = " + "'" + value + "'" + " where lbl_id = " + "'" + serialno + "'" 
                          + " ;");
             } catch (SQLException s) {
@@ -18295,9 +18266,8 @@ MainFrame.bslog(e);
 
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
-          
+            Statement st = con.createStatement();
             try {
-                Statement st = con.createStatement();
                  st.executeUpdate("update plan_mstr set plan_status = " + "'" + value + "'" + " where plan_nbr = " + "'" + serialno + "'" 
                          + " ;");
             } catch (SQLException s) {
@@ -18311,12 +18281,9 @@ MainFrame.bslog(e);
       
     public static void updatePlanQty(String serialno, double qty) {
           try {
-
-            
             Connection con = DriverManager.getConnection(url + db, user, pass);
-          
+            Statement st = con.createStatement();
             try {
-                Statement st = con.createStatement();
                  st.executeUpdate("update plan_mstr set plan_qty_comp = " + "'" + qty + "'" + " where plan_nbr = " + "'" + serialno + "'" 
                          + " ;");
             } catch (SQLException s) {
@@ -18330,12 +18297,9 @@ MainFrame.bslog(e);
       
     public static void updatePlanQtyByOp(String serialno, int qty, String op, String ref, String cell) {
           try {
-
-            
             Connection con = DriverManager.getConnection(url + db, user, pass);
-          
+            Statement st = con.createStatement();
             try {
-                Statement st = con.createStatement();
                  st.executeUpdate("update plan_mstr set plan_qty_comp = " + "'" + qty + "'" + " where plan_nbr = " + "'" + serialno + "'" 
                          + " ;");
             } catch (SQLException s) {
@@ -18355,13 +18319,10 @@ MainFrame.bslog(e);
           int i = 0;
           
           try {
-
-            
             Connection con = DriverManager.getConnection(url + db, user, pass);
-          
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
                  res = st.executeQuery("select lbl_id from label_mstr where lbl_id = " + "'" + serialno + "'" 
                          + " ;");
                while (res.next()) {
@@ -18386,9 +18347,9 @@ MainFrame.bslog(e);
         try{
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
 
                 if (type.equals("all")) {
                 res = st.executeQuery("select lblz_code from label_zebra ;");
@@ -18422,13 +18383,10 @@ MainFrame.bslog(e);
           int i = 0;
           
           try {
-
-            
             Connection con = DriverManager.getConnection(url + db, user, pass);
-          
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
                  res = st.executeQuery("select plan_nbr from plan_mstr where plan_nbr = " + "'" + serialno + "'" 
                          + " ;");
                while (res.next()) {
@@ -18452,13 +18410,10 @@ MainFrame.bslog(e);
           String myreturn = "";
           String delim = "+-+";
           try {
-
-            
             Connection con = DriverManager.getConnection(url + db, user, pass);
-          
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
                  res = st.executeQuery("select * from label_mstr where lbl_id = " + "'" + serialno + "'" 
                          + " ;");
                while (res.next()) {
@@ -18515,13 +18470,10 @@ MainFrame.bslog(e);
               String userid, String printer, String prog, String site, String loc, String trantype) {
           String shiptocode = "";
           try {
-
-            
             Connection con = DriverManager.getConnection(url + db, user, pass);
-          
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 int i = 0;
               
                  res = st.executeQuery("select lbl_id from label_mstr where lbl_id  = " + "'" + serialno + "'" 
@@ -18620,13 +18572,10 @@ MainFrame.bslog(e);
     public static String CreateShipTo(String billtocode, String name, String line1, String line2, String line3, String city, String state, String zip, String country, String plantcode) {
           String shiptocode = "";
           try {
-
-            
             Connection con = DriverManager.getConnection(url + db, user, pass);
-          
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 boolean proceed = true;
                 int i = 0;
                 if (! plantcode.isEmpty()) {
@@ -18672,10 +18621,9 @@ MainFrame.bslog(e);
      
     public static void updateOrderStatusError(String nbr) {
             try{
-            
             Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
+            Statement st = con.createStatement();
+            try {
                            st.executeUpdate(
                                  " update so_mstr set so_status = 'error' " +
                                  " where so_nbr = " + "'" + nbr + "'" + ";" );
@@ -18693,10 +18641,9 @@ MainFrame.bslog(e);
       
     public static void updateOrderSourceFlag(String nbr) {
             try{
-            
             Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
+            Statement st = con.createStatement();
+            try {
                            st.executeUpdate(
                                  " update so_mstr set so_issourced = '1' " +
                                  " where so_nbr = " + "'" + nbr + "'" + ";" );
@@ -18714,10 +18661,9 @@ MainFrame.bslog(e);
       
     public static void updateFreightOrderQuoteFlag(String nbr) {
             try{
-            
             Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
+            Statement st = con.createStatement();
+            try {
                            st.executeUpdate(
                                  " update fo_mstr set fo_isquoted = '1', fo_status = 'Quoted' " +
                                  " where fo_nbr = " + "'" + nbr + "'" + ";" );
@@ -18735,10 +18681,9 @@ MainFrame.bslog(e);
         
     public static void updateFreightOrderTenderFlag(String nbr) {
             try{
-            
             Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
+            Statement st = con.createStatement();
+            try {
                            st.executeUpdate(
                                  " update fo_mstr set fo_istendered = '1', fo_status = 'Tendered' " +
                                  " where fo_nbr = " + "'" + nbr + "'" + ";" );
@@ -18756,10 +18701,9 @@ MainFrame.bslog(e);
         
     public static void updateFreightOrderReasonCode(String nbr, String reasoncode) {
             try{
-            
             Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
+            Statement st = con.createStatement();
+            try {
                            st.executeUpdate(
                                  " update fo_mstr set fo_reasoncode = " + "'" + reasoncode + "'" +
                                  " where fo_type = 'tender' and fo_nbr = " + "'" + nbr + "'" + ";" );
@@ -18777,10 +18721,9 @@ MainFrame.bslog(e);
        
     public static void updateFreightOrderStatus(String nbr, String status) {
         try{
-
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
+            try {
                        st.executeUpdate(
                              " update fo_mstr set fo_status = " + "'" + status + "'" +
                              " where fo_nbr = " + "'" + nbr + "'" + ";" );
@@ -18826,13 +18769,13 @@ MainFrame.bslog(e);
 
      try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             Statement st2 = con.createStatement();
-            Statement st3 = con.createStatement();
             ResultSet res2 = null;
+            Statement st3 = con.createStatement();
+            try {
            String part = "";
            String site = "";
              int k = 0;
@@ -18931,13 +18874,13 @@ MainFrame.bslog(e);
 
      try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             Statement st2 = con.createStatement();
-            Statement st3 = con.createStatement();
             ResultSet res2 = null;
+            Statement st3 = con.createStatement();
+            try {
            String part = "";
            double makeqty = 0;
            double demand = 0;
@@ -19120,12 +19063,12 @@ MainFrame.bslog(e);
 
      try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             Statement st2 = con.createStatement();
             ResultSet res2 = null;
+            try {
            String part = "";
            String order = "";
            String line = "";
@@ -19240,9 +19183,9 @@ MainFrame.bslog(e);
 
             Class.forName(bsmf.MainFrame.driver).newInstance();
             Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 int i = 0;
                 res = st.executeQuery("SELECT * FROM  gl_cal where glc_year = " + "'" + year + "'" + " and glc_per = '1' " +
                            ";");
@@ -19295,10 +19238,9 @@ MainFrame.bslog(e);
         try{
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
                st.executeUpdate("insert into time_clock (emp_nbr, indate, intime, intime_adj, outdate, outtime, outtime_adj, dept,  code_id, code_orig, tothrs ) " +
                                 "select emp_nbr, " +
                                 "'" + df.format(clockdate) + "'" + "," +
@@ -19347,15 +19289,14 @@ MainFrame.bslog(e);
      }
     
     public static ArrayList getClockCodes() {
-ArrayList<String> mylist = new ArrayList<String>();
+    ArrayList<String> mylist = new ArrayList<String>();
 
-try{
-
-    Connection con = DriverManager.getConnection(url + db, user, pass);
     try{
-        Statement st = con.createStatement();
-        ResultSet res = null;
 
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
           res = st.executeQuery("select clc_code from clock_code order by clc_code;" );
             while (res.next()) {
                 mylist.add(res.getString("clc_code"));
@@ -19376,14 +19317,14 @@ return mylist;
  }
 
     public static ArrayList getClockCodesAndDesc() {
-ArrayList<String> mylist = new ArrayList<String>();
+    ArrayList<String> mylist = new ArrayList<String>();
 
-try{
-
-    Connection con = DriverManager.getConnection(url + db, user, pass);
     try{
-        Statement st = con.createStatement();
-        ResultSet res = null;
+
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
 
           res = st.executeQuery("select clc_code, clc_desc from clock_code order by clc_code;" );
             while (res.next()) {
@@ -19405,14 +19346,14 @@ return mylist;
  }
 
     public static ArrayList getEmployeeIDAndName() {
-ArrayList<String> mylist = new ArrayList<String>();
+    ArrayList<String> mylist = new ArrayList<String>();
 
-try{
-
-    Connection con = DriverManager.getConnection(url + db, user, pass);
     try{
-        Statement st = con.createStatement();
-        ResultSet res = null;
+
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
 
           res = st.executeQuery("select emp_nbr, emp_lname, emp_fname from emp_mstr order by emp_nbr;" );
             while (res.next()) {
@@ -19439,10 +19380,9 @@ return mylist;
         try{
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-                ResultSet res2 = null;
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
 
                 res = st.executeQuery("select code_id from time_clock where emp_nbr = " + "'" + empnbr + "'" +
                         "and indate = " + "'" + df.format(clockdate) + "'" + ";");
@@ -19467,11 +19407,10 @@ return mylist;
          boolean myreturn = false;
          try {
 
-            Class.forName(bsmf.MainFrame.driver).newInstance();
             Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = con.createStatement();
-                ResultSet res = null;
                 
                     res = st.executeQuery("SELECT * FROM  clock_ctrl ;");
                     while (res.next()) {
@@ -19489,7 +19428,7 @@ return mylist;
          return myreturn;
      }
     
-    public static java.util.Date getPayWindowForSalary(String frequency, java.util.Date weeklyPayDate) {
+    public static Date getPayWindowForSalary(String frequency, java.util.Date weeklyPayDate) {
         java.util.Date r = null;
         
         java.util.Date now = new java.util.Date();
@@ -19558,11 +19497,9 @@ return mylist;
         try{
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-                ResultSet res2 = null;
-
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
                 res = st.executeQuery("select * from shift_mstr where shf_id = " + "'" + shift + "'"  + ";");
                while (res.next()) {
                    if (day == 1) {
@@ -19611,11 +19548,9 @@ return mylist;
         try{
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-                ResultSet res2 = null;
-
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
                 res = st.executeQuery("select * from shift_mstr where shf_id = " + "'" + shift + "'"  + ";");
                while (res.next()) {
                    if (day == 1) {
@@ -19692,10 +19627,9 @@ return mylist;
         try{
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-                ResultSet res2 = null;
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
 
                 res = st.executeQuery("select emp_nbr, emp_shift from emp_mstr where emp_autoclock = '1' order by emp_nbr ;");
                while (res.next()) {
