@@ -77,14 +77,15 @@ OrderReports,pcOpenOrdersByCust,1,JMenuItem,Open Orders By Cust By DueDate (PieC
 OrderReports,DiscreteOrderPerWeekUnits,2,JMenuItem,Order Units By Week (BarChart),,1,,1,1
 OrderReports,DiscreteOrderPerWeekDollars,3,JMenuItem,Order Sales By Week (BarChart),,1,,1,1
 Shipping,ShipMaint,1,JMenuItem,Shipper Maintenance,,,,1,1
-Shipping,ShipperBrowse,2,JMenuItem,Shipper Browse ,,1,,1,1
-Shipping,ShipperBrowseDet,3,JMenuItem,Shipper Detail Browse,,1,,1,1
-Shipping,ShipConfirm,4,JMenuItem,Shipper Confirm,,,,1,1
-Shipping,ShipUnconfirm,5,JMenuItem,Shipper UnConfirm,,,,1,1
-Shipping,TransportationMenu,6,JMenu,Transportation Menu,,,,1,1
-Shipping,ShpRptPicker,7,JMenuItem,Shipping Report Selector,,,,1,1
-Shipping,ShipReports,8,JMenu,Other Reports,,,,1,1
-Shipping,ShipperControl,9,JMenuItem,Shipper Control,,,,1,1
+Shipping,ShipMaintSerial,2,JMenuItem,Shipper Maintenance (Serialized),,,,1,1
+Shipping,ShipperBrowse,3,JMenuItem,Shipper Browse ,,1,,1,1
+Shipping,ShipperBrowseDet,4,JMenuItem,Shipper Detail Browse,,1,,1,1
+Shipping,ShipConfirm,5,JMenuItem,Shipper Confirm,,,,1,1
+Shipping,ShipUnconfirm,6,JMenuItem,Shipper UnConfirm,,,,1,1
+Shipping,TransportationMenu,7,JMenu,Transportation Menu,,,,1,1
+Shipping,ShpRptPicker,8,JMenuItem,Shipping Report Selector,,,,1,1
+Shipping,ShipReports,9,JMenu,Other Reports,,,,1,1
+Shipping,ShipperControl,10,JMenuItem,Shipper Control,,,,1,1
 ShipReports,ShipPerWeekDollarsChart,1,JMenuItem,Shipment Dollars Per Week (BarChart),,1,,1,1
 Finance,LedgerSetupMenu,1,JMenu,Ledger Setup,,,,1,1
 LedgerSetupMenu,AcctMaint,1,JMenuItem,Account Maintenance,,,,1,1

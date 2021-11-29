@@ -107,9 +107,9 @@ public class shpData {
     private static int _addShipDet(ship_det x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
         int rows = 0;
         String sqlSelect = "select * from ship_det where shd_id = ? and shd_line = ?";
-        String sqlInsert = "insert into ship_det (shd_id, shd_line, shd_part, shd_so, shd_soline, shd_date, shd_po, shd_qty,"
-                        + "shd_netprice, shd_disc, shd_listprice, shd_desc, shd_wh, shd_loc, shd_taxamt, shd_cont, shd_serial, shd_site, shd_bom  ) "
-                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
+        String sqlInsert = "insert into ship_det (shd_id, shd_line, shd_part, shd_so, shd_soline, shd_date, shd_po, shd_qty, shd_curr, shd_uom, "
+                        + "shd_netprice, shd_disc, shd_listprice, shd_desc, shd_wh, shd_loc, shd_taxamt, shd_cont, shd_serial, shd_site, shd_bom ) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
        
           ps = con.prepareStatement(sqlSelect); 
           ps.setString(1, x.shd_id);
@@ -125,17 +125,19 @@ public class shpData {
             ps.setString(6, x.shd_date);
             ps.setString(7, x.shd_po);
             ps.setString(8, x.shd_qty);
-            ps.setString(9, x.shd_netprice);
-            ps.setString(10, x.shd_disc);
-            ps.setString(11, x.shd_listprice);
-            ps.setString(12, x.shd_desc);
-            ps.setString(13, x.shd_wh);
-            ps.setString(14, x.shd_loc);
-            ps.setString(15, x.shd_taxamt);
-            ps.setString(16, x.shd_cont);
-            ps.setString(17, x.shd_serial);
-            ps.setString(18, x.shd_site);
-            ps.setString(19, x.shd_bom);
+            ps.setString(9, x.shd_curr);
+            ps.setString(10, x.shd_uom);
+            ps.setString(11, x.shd_netprice);
+            ps.setString(12, x.shd_disc);
+            ps.setString(13, x.shd_listprice);
+            ps.setString(14, x.shd_desc);
+            ps.setString(15, x.shd_wh);
+            ps.setString(16, x.shd_loc);
+            ps.setString(17, x.shd_taxamt);
+            ps.setString(18, x.shd_cont);
+            ps.setString(19, x.shd_serial);
+            ps.setString(20, x.shd_site);
+            ps.setString(21, x.shd_bom);
             rows = ps.executeUpdate();
             } 
             return rows;
@@ -736,6 +738,7 @@ public class shpData {
                     wh = sd[4];
                     site = sd[5];
                     serial = sd[6];
+                 //   bsmf.MainFrame.show(item + "/" + uom + "/" + loc + "/" + wh + "/" + site + "/" + serial + "/" + baseqty);
                     // if not serialized...pull from non-serialized inventory... in_serial = ""
                     // check for serialized inventory flag...if not...prevent serial from entry into in_mstr
                     
@@ -751,12 +754,46 @@ public class shpData {
                   
                     if (! serialized) {  // if not serialized
                    OVData._updateNonSerializedInventory(bscon, item, site, wh, loc, (-1 * baseqty), mydate);
-                   } else { // must be serialized...relieve oldest inventory first by serial / expire
+                   } else if (serialized && ! serial.isEmpty()) {
                     res = st.executeQuery("select in_qoh, in_serial from in_mstr where "
                             + " in_part = " + "'" + item + "'" 
                             + " and in_loc = " + "'" + loc + "'"
                             + " and in_wh = " + "'" + wh + "'"
-                            + " and in_site = " + "'" + site + "'"    
+                            + " and in_site = " + "'" + site + "'"  
+                            + " and in_serial = " + "'" + serial + "'"         
+                            + ";");
+                    ArrayList<String[]> serialinventory = new ArrayList<String[]>();
+                    double diff = 0;
+                    while (res.next()) {
+                      diff = res.getDouble("in_qoh") - baseqty;  // app logic must always insure diff >= 0
+                      if (diff <= 0) { 
+                          st2.executeUpdate("delete from in_mstr where " 
+                            + " in_part = " + "'" + item + "'" 
+                            + " and in_loc = " + "'" + loc + "'"
+                            + " and in_wh = " + "'" + wh + "'"
+                            + " and in_site = " + "'" + site + "'"
+                            + " and in_serial = " + "'" + serial + "'"             
+                            + ";");
+                      } else {
+                          st2.executeUpdate("update in_mstr "
+                            + " set in_qoh = " + "'" + diff + "'" + "," +
+                              " in_date = " + "'" + mydate + "'"
+                            + " where in_part = " + "'" + item + "'" 
+                            + " and in_loc = " + "'" + loc + "'"
+                            + " and in_wh = " + "'" + wh + "'"
+                            + " and in_site = " + "'" + site + "'"
+                            + " and in_serial = " + "'" + serial + "'"             
+                            + ";");
+                      }
+                        
+                    }
+                    res.close();   
+                   } else { // must be serialized...yet no serial inventory specifically chosen...relieve oldest inventory first by serial / expire
+                    res = st.executeQuery("select in_qoh, in_serial from in_mstr where "
+                            + " in_part = " + "'" + item + "'" 
+                            + " and in_loc = " + "'" + loc + "'"
+                            + " and in_wh = " + "'" + wh + "'"
+                            + " and in_site = " + "'" + site + "'"  
                             + " order by in_expire asc ;");
                     ArrayList<String[]> serialinventory = new ArrayList<String[]>();
                     while (res.next()) {

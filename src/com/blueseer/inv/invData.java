@@ -3051,7 +3051,42 @@ public class invData {
          return burden;
      }
 
-    
+    public static double getItemQOHBySerial(String item, String site, String serial) {
+      double qty = 0;
+     try{
+
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+            res = st.executeQuery("select in_qoh from in_mstr where in_part = " + "'" + item + "'" + 
+                    " AND in_site = " + "'" + site + "'" +
+                    " AND in_serial = " + "'" + serial + "'" +        
+                    ";" );
+           while (res.next()) {
+            qty = res.getDouble("in_qoh");                    
+            }
+
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+          }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return qty;
+}
+
     
     
                

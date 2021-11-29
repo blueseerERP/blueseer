@@ -197,7 +197,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
                     }
                 };
     
-     class MyTableModel extends DefaultTableModel {  
+    class MyTableModel extends DefaultTableModel {  
       
         public MyTableModel(Object rowData[][], Object columnNames[]) {  
              super(rowData, columnNames);  

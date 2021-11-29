@@ -1493,6 +1493,41 @@ public class cusData {
 
 }
 
+    public static String getShipName(String cust, String ship) {
+    String myitem = "";
+    try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try  {
+        res = st.executeQuery("select cms_name from cms_det where cms_code = " + "'" + cust + "'" +
+                     " AND cms_shipto = " + "'" + ship + "'" + ";");
+       while (res.next()) {
+        myitem = res.getString("cms_name");                    
+        }
+
+    }
+    catch (SQLException s){
+         MainFrame.bslog(s);
+    } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            } 
+    }
+    catch (Exception e){
+    MainFrame.bslog(e);
+    }
+    return myitem;
+
+}
+
+    
     public static String getCustLabel(String cust) {
         String myitem = "";
         try{

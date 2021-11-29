@@ -145,7 +145,7 @@ public class ShipperMaint extends javax.swing.JPanel {
     
   
     
-     public Integer getmaxline() {
+    public Integer getmaxline() {
         int max = 0;
         int current = 0;
         for (int j = 0; j < tabledetail.getRowCount(); j++) {
@@ -1306,19 +1306,19 @@ public class ShipperMaint extends javax.swing.JPanel {
                 tabledetail.getValueAt(j, 0).toString(), //soline    
                 dfdate.format(dcshipdate.getDate()),
                 tabledetail.getValueAt(j, 4).toString(),
-                tabledetail.getValueAt(j, 5).toString().replace(defaultDecimalSeparator, '.'),
+                tabledetail.getValueAt(j, 5).toString().replace(defaultDecimalSeparator, '.'), // qty
                 "", //uom
                 "", //currency
-                tabledetail.getValueAt(j, 6).toString().replace(defaultDecimalSeparator, '.'),
-                tabledetail.getValueAt(j, 10).toString().replace(defaultDecimalSeparator, '.'),
-                tabledetail.getValueAt(j, 11).toString().replace(defaultDecimalSeparator, '.'),
-                tabledetail.getValueAt(j, 7).toString(),
-                tabledetail.getValueAt(j, 8).toString(),
-                tabledetail.getValueAt(j, 9).toString(),
-                tabledetail.getValueAt(j, 12).toString(),
-                tabledetail.getValueAt(j, 13).toString().replace(defaultDecimalSeparator, '.'),
-                "",
-                tabledetail.getValueAt(j, 14).toString(),     
+                tabledetail.getValueAt(j, 6).toString().replace(defaultDecimalSeparator, '.'), // netprice
+                tabledetail.getValueAt(j, 10).toString().replace(defaultDecimalSeparator, '.'), // disc
+                tabledetail.getValueAt(j, 11).toString().replace(defaultDecimalSeparator, '.'), // listprice
+                tabledetail.getValueAt(j, 7).toString(), // desc
+                tabledetail.getValueAt(j, 8).toString(), // wh
+                tabledetail.getValueAt(j, 9).toString(), // loc
+                tabledetail.getValueAt(j, 12).toString().replace(defaultDecimalSeparator, '.'), // taxamt
+                tabledetail.getValueAt(j, 13).toString(), // cont
+                "", // ref
+                tabledetail.getValueAt(j, 14).toString(),  // serial   
                 ddsite.getSelectedItem().toString(),
                 tabledetail.getValueAt(j, 15).toString() // bom
                 );
