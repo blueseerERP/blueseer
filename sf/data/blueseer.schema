@@ -379,8 +379,11 @@ CREATE TABLE IF NOT EXISTS `ftp_mstr` (
   `ftp_ip` varchar(30) NOT NULL  DEFAULT '',
   `ftp_login` varchar(50) NOT NULL  DEFAULT '',
   `ftp_passwd` varchar(50) NOT NULL  DEFAULT '',
-  `ftp_chgdir` varchar(100) NOT NULL  DEFAULT '',
-  `ftp_delete` tinyint(1) NOT NULL  DEFAULT '0'
+  `ftp_commands` varchar(1000) NOT NULL  DEFAULT '',
+  `ftp_delete` tinyint(1) NOT NULL  DEFAULT '0',
+  `ftp_passive` tinyint(1) NOT NULL  DEFAULT '0',
+  `ftp_binary` tinyint(1) NOT NULL  DEFAULT '0',
+  `ftp_timeout` varchar(3) NOT NULL  DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `edi_ctrl` (
   `edic_indir` varchar(200) NOT NULL  DEFAULT '',

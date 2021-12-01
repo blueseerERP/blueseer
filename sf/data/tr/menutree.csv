@@ -77,6 +77,7 @@ OrderReports,pcOpenOrdersByCust,1,JMenuItem,Vade Tarihine Göre Müşteriye Gör
 OrderReports,DiscreteOrderPerWeekUnits,2,JMenuItem,Haftaya Göre Sipariş Birimleri (BarChart),,1,,1,1
 OrderReports,DiscreteOrderPerWeekDollars,3,JMenuItem,Haftaya Göre Sipariş Satışları (BarChart),,1,,1,1
 Nakliye,ShipMaint,1,JMenuItem,Nakliyeci Bakımı,,,,1,1
+Nakliye,ShipMaintSerial,1,JMenuItem,Nakliyeci Bakımı (Serileştirilmiş),,,,1,1
 Nakliye,ShipperBrowse,2,JMenuItem,Gönderici Gözat,,1,,1,1
 Nakliye,ShipperBrowseDet,3,JMenuItem,Gönderici Detay Gözat,,1,,1,1
 Nakliye,ShipConfirm,4,JMenuItem,Gönderici Onayı,,,,1,1

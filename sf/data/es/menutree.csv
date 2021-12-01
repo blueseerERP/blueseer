@@ -77,6 +77,7 @@ OrderReports,pcOpenOrdersByCust,1,JMenuItem,Órdenes abiertas por cliente por fe
 OrderReports,DiscreteOrderPerWeekUnits,2,JMenuItem,Ordenar unidades por semana (gráfico de barras),,1,,1,1
 OrderReports,DiscreteOrderPerWeekDollars,3,JMenuItem,Ordenar ventas por semana (gráfico de barras),,1,,1,1
 Envío,ShipMaint,1,JMenuItem,Mantenimiento del remitente,,,,1,1
+Envío,ShipMaintSerial,1,JMenuItem,Mantenimiento del remitente (serializado),,,,1,1
 Envío,ShipperBrowse,2,JMenuItem,Navegación del remitente,,1,,1,1
 Envío,ShipperBrowseDet,3,JMenuItem,Navegación detallada del remitente,,1,,1,1
 Envío,ShipConfirm,4,JMenuItem,Remitente Confirmar,,,,1,1

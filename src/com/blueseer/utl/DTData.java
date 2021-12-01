@@ -3566,17 +3566,17 @@ public class DTData {
             ResultSet res = null;
             try{
                 if (state == 1) { // begins
-                    res = st.executeQuery(" SELECT ftp_id, ftp_desc, ftp_ip, ftp_login, ftp_passwd, ftp_chgdir, ftp_indir, ftp_outdir, ftp_delete " +
+                    res = st.executeQuery(" SELECT ftp_id, ftp_desc, ftp_ip, ftp_login, ftp_passwd, ftp_commands, ftp_indir, ftp_outdir, ftp_delete " +
                         " FROM  ftp_mstr where " + myfield + " like " + "'" + str + "%'" +
                         " order by ftp_id ;");
                 }
                 if (state == 2) { // ends
-                    res = st.executeQuery(" SELECT ftp_id, ftp_desc, ftp_ip, ftp_login, ftp_passwd, ftp_chgdir, ftp_indir, ftp_outdir, ftp_delete " +
+                    res = st.executeQuery(" SELECT ftp_id, ftp_desc, ftp_ip, ftp_login, ftp_passwd, ftp_commands, ftp_indir, ftp_outdir, ftp_delete " +
                         " FROM  ftp_mstr where " + myfield + " like " + "'%" + str + "'" +
                         " order by ftp_id ;");
                 }
                  if (state == 0) { // match
-                 res = st.executeQuery(" SELECT ftp_id, ftp_desc, ftp_ip, ftp_login, ftp_passwd, ftp_chgdir, ftp_indir, ftp_outdir, ftp_delete  " +
+                 res = st.executeQuery(" SELECT ftp_id, ftp_desc, ftp_ip, ftp_login, ftp_passwd, ftp_commands, ftp_indir, ftp_outdir, ftp_delete  " +
                         " FROM  ftp_mstr where " + myfield + " like " + "'%" + str + "%'" +
                         " order by ftp_id ;");
                  }
@@ -3586,7 +3586,7 @@ public class DTData {
                                    res.getString("ftp_ip"),
                                    res.getString("ftp_login"),
                                    res.getString("ftp_passwd"),
-                                   res.getString("ftp_chgdir"),
+                                   res.getString("ftp_commands"),
                                    res.getString("ftp_indir"),
                                    res.getString("ftp_outdir"),
                                    res.getString("ftp_delete")

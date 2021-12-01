@@ -72,6 +72,7 @@ admin,FileOrderLoad
 admin,DiscreteOrderPerWeekUnits
 admin,DiscreteOrderPerWeekDollars
 admin,ShipMaint
+admin,ShipMaintSerial
 admin,InvoiceMaint
 admin,ShipUnconfirm
 admin,ShipperBrowse

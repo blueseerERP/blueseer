@@ -77,6 +77,7 @@ OrderReports,pcOpenOrdersByCust,1,JMenuItem,Ordres ouverts par client par date d
 OrderReports,DiscreteOrderPerWeekUnits,2,JMenuItem,Unités de commande par semaine (Bar Chart),,1,,1,1
 OrderReports,DiscreteOrderPerWeekDollars,3,JMenuItem,Ordre des ventes par semaine (BarChart),,1,,1,1
 Expédition,ShipMaint,1,JMenuItem,Maintenance de l'expéditeur,,,,1,1
+Expédition,ShipMaintSerial,1,JMenuItem,Maintenance de l'expéditeur (sérialisé),,,,1,1
 Expédition,ShipperBrowse,2,JMenuItem,Expéditeur Parcourir,,1,,1,1
 Expédition,ShipperBrowseDet,3,JMenuItem,Détails de l'expéditeur Parcourir,,1,,1,1
 Expédition,ShipConfirm,4,JMenuItem,Expéditeur Confirmer,,,,1,1

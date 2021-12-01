@@ -919,9 +919,10 @@ public class ShipperMaintSerial extends javax.swing.JPanel implements IBlueSeer 
         });
 
         jLabel24.setText("Number");
-        jLabel24.setName("lblbatch"); // NOI18N
+        jLabel24.setName("lblid"); // NOI18N
 
         btnew.setText("New");
+        btnew.setName("btnew"); // NOI18N
         btnew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnewActionPerformed(evt);
@@ -1022,6 +1023,7 @@ public class ShipperMaintSerial extends javax.swing.JPanel implements IBlueSeer 
         jLabel5.setName("lbltotal"); // NOI18N
 
         btclear.setText("Clear");
+        btclear.setName("btclear"); // NOI18N
         btclear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btclearActionPerformed(evt);
