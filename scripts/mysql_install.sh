@@ -1,7 +1,5 @@
 #!/bin/bash
 
-
-### For those brave (or desperate) enough to adjust the script...here's some helpful info.
 ###  This script essentially does three things :
 ###  1) creates database schema
 ###  2) creates user 'bs_user' with password
@@ -53,8 +51,6 @@ echo "fr=french"
 echo "es=spanish"
 echo "tr=turkish"
 echo "de=german"
-echo "pt=portuguese"
-echo "ru=russian"
 echo -n "Enter the two character language code (en, es, fr, etc): "
 read LANG
 
@@ -79,6 +75,9 @@ if [[ "$LANG" == "fr" ]]; then
 fi
 if [[ "$LANG" == "tr" ]]; then
 	COUNTRY="TR"
+fi
+if [[ "$LANG" == "de" ]]; then
+	COUNTRY="DE"
 fi
 
 

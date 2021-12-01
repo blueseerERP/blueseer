@@ -15,7 +15,7 @@ exit /b )
 
 set /p pass=Enter the administrator password for the MySQL Database:%=%
 
-set /p lang=Enter the two character language code (en,fr,es,tr,etc):%=%
+set /p lang=Enter the two character language code (en,de,fr,es,tr,etc):%=%
 
 if not defined lang (
 rem @echo "must pass the two character lang parameter"
@@ -23,6 +23,24 @@ rem pause 2
 rem exit /b 
 set "lang=en"
 )
+
+set "country=US"
+
+if "%lang%"=="fr" (
+set "country=FR"
+)
+if "%lang%"=="es" (
+set "country=ES"
+)
+if "%lang%"=="tr" (
+set "country=TR"
+)
+if "%lang%"=="de" (
+set "country=DE"
+)
+
+
+
 
 set "ROOT=root"
 set "DB=bsdb"
@@ -38,6 +56,8 @@ cd %~dp0
 @echo IP=%IP%>>bs.cfg
 @echo PORT=3306>>bs.cfg
 @echo DRIVER=com.mysql.cj.jdbc.Driver>>bs.cfg
+@echo LANGUAGE=%lang%>>bs.cfg
+@echo COUNTRY=%country%>>bs.cfg
 
 
 
