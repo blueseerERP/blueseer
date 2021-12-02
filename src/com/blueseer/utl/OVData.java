@@ -4463,7 +4463,7 @@ return myitem;
            } finally {
                if (res != null) res.close();
                if (st != null) st.close();
-               if (con != null) con.close();
+               con.close();
             }
         } catch (Exception e) {
             MainFrame.bslog(e);
@@ -4523,15 +4523,9 @@ return myitem;
                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
                 myreturn = true;
             } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                if (con != null) {
-                    con.close();
-                }
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
             }
         } catch (Exception e) {
             MainFrame.bslog(e);
@@ -4648,7 +4642,7 @@ return myitem;
            } finally {
                if (res != null) res.close();
                if (st != null) st.close();
-               if (con != null) con.close();
+               con.close();
             }
         } catch (Exception e) {
             MainFrame.bslog(e);
@@ -4668,8 +4662,9 @@ return myitem;
                   try {
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement(); 
             try {
-                Statement st = con.createStatement(); 
+                
                 String[] ld = null;
                                
              // order of delimited elements in file:   acct, cc, site, amount
@@ -4692,8 +4687,10 @@ return myitem;
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
                 myreturn = true;
+            } finally {
+               if (st != null) st.close();
+               con.close();
             }
-            con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }  
@@ -4708,13 +4705,10 @@ return myitem;
                    
                    String op = "";
                    String type = "";
-                      DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-                  try {
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+                   DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+          
             try {
-                Statement st = con.createStatement(); 
-                ResultSet res = null;
+                
                 int i = 0;
                 double qty = 0;
                 String[] ld = null;
@@ -4773,13 +4767,7 @@ return myitem;
             bsmf.MainFrame.show("Error during glentry of MassLoad Inv Adjustment");
         
                 }    // end loop
-            }
-            catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-                myreturn = true;
-            }
-            con.close();
+          
         } catch (Exception e) {
             MainFrame.bslog(e);
         }  
@@ -4840,7 +4828,7 @@ return myitem;
             } finally {
                if (res != null) res.close();
                if (st != null) st.close();
-               if (con != null) con.close();
+               con.close();
             }
         } catch (Exception e) {
             MainFrame.bslog(e);
@@ -4901,7 +4889,7 @@ return myitem;
             } finally {
                if (res != null) res.close();
                if (st != null) st.close();
-               if (con != null) con.close();
+               con.close();
             }
         } catch (Exception e) {
             MainFrame.bslog(e);
@@ -4985,9 +4973,8 @@ return myitem;
                 if (st != null) {
                     st.close();
                 }
-                if (con != null) {
-                    con.close();
-                }
+                con.close();
+                
             }
         } catch (Exception e) {
             MainFrame.bslog(e);
@@ -5578,10 +5565,6 @@ return myitem;
         MainFrame.bslog(e);
     }
     }
-
-
-    
-     /* stop here */
     
     public static ArrayList getCodeMstr(String type) {
        ArrayList myarray = new ArrayList();
@@ -5600,8 +5583,11 @@ return myitem;
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -5628,8 +5614,11 @@ return myitem;
             catch (SQLException s){
                 MainFrame.bslog(s);
                  bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -5656,8 +5645,11 @@ return myitem;
             catch (SQLException s){
                 MainFrame.bslog(s);
                  bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -5683,8 +5675,11 @@ return myitem;
             catch (SQLException s){
                 MainFrame.bslog(s);
                  bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -5711,8 +5706,11 @@ return myitem;
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -5737,8 +5735,11 @@ return myitem;
            }
             catch (SQLException s){
                  bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -5763,8 +5764,11 @@ return myitem;
            }
             catch (SQLException s){
                  bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -5825,8 +5829,11 @@ return myitem;
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -5886,8 +5893,11 @@ return myitem;
        }
         catch (SQLException s){
              MainFrame.bslog(s);
-        }
-        con.close();
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -5932,8 +5942,11 @@ return myitem;
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -5977,8 +5990,11 @@ return myitem;
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -6015,8 +6031,11 @@ return myitem;
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -6042,8 +6061,11 @@ return myitem;
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -6072,8 +6094,11 @@ return myitem;
             catch (SQLException s){
                 MainFrame.bslog(s);
                  bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -6098,8 +6123,11 @@ return myitem;
    }
     catch (SQLException s){
          MainFrame.bslog(s);
-    }
-    con.close();
+    } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
 }
 catch (Exception e){
     MainFrame.bslog(e);
@@ -6123,8 +6151,11 @@ return myreturn;
    }
     catch (SQLException s){
          MainFrame.bslog(s);
-    }
-    con.close();
+    } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
 }
 catch (Exception e){
     MainFrame.bslog(e);
@@ -6149,8 +6180,11 @@ return myreturn;
    }
     catch (SQLException s){
          MainFrame.bslog(s);
-    }
-    con.close();
+    } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
 }
 catch (Exception e){
     MainFrame.bslog(e);
@@ -6175,8 +6209,11 @@ return myreturn;
    }
     catch (SQLException s){
          MainFrame.bslog(s);
-    }
-    con.close();
+    } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
 }
 catch (Exception e){
     MainFrame.bslog(e);
@@ -6201,8 +6238,11 @@ return myreturn;
    }
     catch (SQLException s){
          MainFrame.bslog(s);
-    }
-    con.close();
+    } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
 }
 catch (Exception e){
     MainFrame.bslog(e);
@@ -6227,8 +6267,11 @@ return myreturn;
    }
     catch (SQLException s){
          MainFrame.bslog(s);
-    }
-    con.close();
+    } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
 }
 catch (Exception e){
     MainFrame.bslog(e);
@@ -6286,8 +6329,11 @@ return myreturn;
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -6312,8 +6358,11 @@ return myreturn;
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -6339,8 +6388,11 @@ return myreturn;
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -6366,8 +6418,11 @@ return myreturn;
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -6393,8 +6448,11 @@ return myreturn;
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -6420,8 +6478,11 @@ return myreturn;
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -6447,8 +6508,11 @@ return myreturn;
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -6474,8 +6538,11 @@ return myreturn;
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -6501,8 +6568,11 @@ return myreturn;
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -6528,8 +6598,11 @@ return myreturn;
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -6555,8 +6628,11 @@ return myreturn;
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -6582,8 +6658,11 @@ return myreturn;
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -6609,8 +6688,11 @@ return myreturn;
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -6636,8 +6718,11 @@ return myreturn;
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -6663,8 +6748,11 @@ return myreturn;
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -6689,8 +6777,11 @@ return myreturn;
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -6716,8 +6807,11 @@ return myreturn;
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -6743,8 +6837,11 @@ return myreturn;
        }
         catch (SQLException s){
              MainFrame.bslog(s);
-        }
-        con.close();
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -6770,8 +6867,11 @@ return myreturn;
        }
         catch (SQLException s){
              MainFrame.bslog(s);
-        }
-        con.close();
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -6797,8 +6897,11 @@ return myreturn;
        }
         catch (SQLException s){
              MainFrame.bslog(s);
-        }
-        con.close();
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -6824,8 +6927,11 @@ return myreturn;
        }
         catch (SQLException s){
              MainFrame.bslog(s);
-        }
-        con.close();
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -6851,8 +6957,11 @@ return myreturn;
        }
         catch (SQLException s){
              MainFrame.bslog(s);
-        }
-        con.close();
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -6877,8 +6986,11 @@ return myreturn;
        }
         catch (SQLException s){
              bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-        }
-        con.close();
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -6904,8 +7016,11 @@ return myreturn;
            }
             catch (SQLException s){
                 MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -6931,8 +7046,11 @@ return myreturn;
        }
         catch (SQLException s){
              MainFrame.bslog(s);
-        }
-        con.close();
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -6958,8 +7076,11 @@ return myreturn;
        }
         catch (SQLException s){
              MainFrame.bslog(s);
-        }
-        con.close();
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -6985,8 +7106,11 @@ return myreturn;
        }
         catch (SQLException s){
              MainFrame.bslog(s);
-        }
-        con.close();
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -7012,8 +7136,11 @@ return myreturn;
        }
         catch (SQLException s){
              MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
         }
-        con.close();
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -7039,8 +7166,11 @@ return myreturn;
        }
         catch (SQLException s){
              MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
         }
-        con.close();
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -7070,8 +7200,11 @@ return myreturn;
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -7101,8 +7234,11 @@ return myreturn;
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -7152,16 +7288,10 @@ return myreturn;
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                if (con != null) {
-                    con.close();
-                }
-            }
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -7210,16 +7340,10 @@ return myreturn;
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                if (con != null) {
-                    con.close();
-                }
-            }
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -7245,8 +7369,11 @@ return myreturn;
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-            }
-            con.close();
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -7273,8 +7400,11 @@ return myreturn;
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-            }
-            con.close();
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -7300,8 +7430,11 @@ return myreturn;
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-            }
-            con.close();
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -7330,8 +7463,11 @@ return myreturn;
    }
     catch (SQLException s){
          MainFrame.bslog(s);
-    }
-    con.close();
+    } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
 }
 catch (Exception e){
     MainFrame.bslog(e);
@@ -7361,8 +7497,11 @@ return myitem;
    }
     catch (SQLException s){
          MainFrame.bslog(s);
-    }
-    con.close();
+    } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
 }
 catch (Exception e){
     MainFrame.bslog(e);
@@ -7388,8 +7527,11 @@ return outvalue;
        }
         catch (SQLException s){
              bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
         }
-        con.close();
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -7452,8 +7594,11 @@ return outvalue;
        }
         catch (SQLException s){
             MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
         }
-        con.close();
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -7502,8 +7647,11 @@ return outvalue;
        }
         catch (SQLException s){
             MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
         }
-        con.close();
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -7554,8 +7702,11 @@ return outvalue;
            }
             catch (SQLException s){
                 MainFrame.bslog(s);
-            }
-            con.close();
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -7581,8 +7732,11 @@ return outvalue;
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-            }
-            con.close();
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -7620,8 +7774,11 @@ return outvalue;
             catch (SQLException s){
                 MainFrame.bslog(s);
                  bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            }
-            con.close();
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -7657,8 +7814,11 @@ return outvalue;
             catch (SQLException s){
                 MainFrame.bslog(s);
                  bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            }
-            con.close();
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -7704,8 +7864,11 @@ return outvalue;
             catch (SQLException s){
                 MainFrame.bslog(s);
                  bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            }
-            con.close();
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -7731,8 +7894,11 @@ return outvalue;
             catch (SQLException s){
                 MainFrame.bslog(s);
                  bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            }
-            con.close();
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -7759,8 +7925,11 @@ return outvalue;
             catch (SQLException s){
                 MainFrame.bslog(s);
                  bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            }
-            con.close();
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -7787,8 +7956,11 @@ return outvalue;
             catch (SQLException s){
                 MainFrame.bslog(s);
                  bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            }
-            con.close();
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -7815,8 +7987,11 @@ return outvalue;
             catch (SQLException s){
                 MainFrame.bslog(s);
                  bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            }
-            con.close();
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -7842,8 +8017,11 @@ return outvalue;
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-            }
-            con.close();
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -7869,8 +8047,11 @@ return outvalue;
        }
         catch (SQLException s){
              MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
         }
-        con.close();
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -7909,8 +8090,11 @@ return outvalue;
        }
         catch (SQLException s){
              MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
         }
-        con.close();
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -7938,8 +8122,11 @@ return outvalue;
        }
         catch (SQLException s){
              MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
         }
-        con.close();
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -7964,8 +8151,11 @@ return outvalue;
        }
         catch (SQLException s){
              MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
         }
-        con.close();
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -7991,8 +8181,11 @@ return outvalue;
        }
         catch (SQLException s){
              MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
         }
-        con.close();
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -8019,8 +8212,11 @@ return outvalue;
         catch (SQLException s){
             MainFrame.bslog(s);
              bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
         }
-        con.close();
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -8049,8 +8245,11 @@ return outvalue;
         catch (SQLException s){
             MainFrame.bslog(s);
              bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
         }
-        con.close();
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -8077,8 +8276,11 @@ return outvalue;
             catch (SQLException s){
                 MainFrame.bslog(s);
                  bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            }
-            con.close();
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -8114,8 +8316,11 @@ return outvalue;
             catch (SQLException s){
                  MainFrame.bslog(s);
                  
-            }
-            con.close();
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -8142,8 +8347,11 @@ return outvalue;
            }
             catch (SQLException s){
                  bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            }
-            con.close();
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -8169,8 +8377,11 @@ return outvalue;
        }
         catch (SQLException s){
              bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
         }
-        con.close();
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -8196,8 +8407,11 @@ return outvalue;
    }
     catch (SQLException s){
          MainFrame.bslog(s);
-    }
-    con.close();
+    } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
 }
 catch (Exception e){
     MainFrame.bslog(e);
@@ -8223,8 +8437,11 @@ return myitem;
    }
     catch (SQLException s){
          MainFrame.bslog(s);
-    }
-    con.close();
+    } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
 }
 catch (Exception e){
     MainFrame.bslog(e);
@@ -8249,8 +8466,11 @@ catch (Exception e){
    }
     catch (SQLException s){
          MainFrame.bslog(s);
-    }
-    con.close();
+    } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
 }
 catch (Exception e){
     MainFrame.bslog(e);
@@ -8284,8 +8504,11 @@ return mycount;
        }
         catch (SQLException s){
              MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
         }
-      con.close();  
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -8320,8 +8543,11 @@ return mycount;
        }
         catch (SQLException s){
              MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
         }
-      con.close();  
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -8357,8 +8583,11 @@ return mycount;
        }
         catch (SQLException s){
              MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
         }
-      con.close();  
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -8393,8 +8622,11 @@ return mycount;
        }
         catch (SQLException s){
              MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
         }
-      con.close();  
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -8420,8 +8652,11 @@ return mycount;
        }
         catch (SQLException s){
              MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
         }
-       con.close(); 
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -8461,8 +8696,11 @@ return mycount;
            }
             catch (SQLException s){
                  MainFrame.bslog(s); 
-            }
-            con.close();
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -8478,9 +8716,10 @@ return mycount;
         try{
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+                
 
                   res = st.executeQuery("select wf_op from wf_mstr inner join item_mstr on it_wf = wf_id where it_item = " + "'" + item + "'" + 
                           " and wf_op = " + "'" + op + "'" + ";" ); 
@@ -8495,8 +8734,11 @@ return mycount;
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-            }
-            con.close();
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -8511,10 +8753,10 @@ return mycount;
     try{
 
         Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
         try{
-            Statement st = con.createStatement();
-            ResultSet res = null;
-
+            
             res = st.executeQuery("select poc_venditem from po_ctrl;");
            while (res.next()) {
                 venditemonly = res.getBoolean("poc_venditem");
@@ -8523,8 +8765,11 @@ return mycount;
        }
         catch (SQLException s){
             MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
         }
-        con.close();
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -8539,10 +8784,9 @@ return mycount;
     try{
 
         Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
         try{
-            Statement st = con.createStatement();
-            ResultSet res = null;
-
             res = st.executeQuery("select orc_custitem from order_ctrl;");
            while (res.next()) {
                 custitemonly = res.getBoolean("orc_custitem");
@@ -8551,8 +8795,11 @@ return mycount;
        }
         catch (SQLException s){
             MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
         }
-        con.close();
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -8567,9 +8814,9 @@ return mycount;
     try{
 
         Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
         try{
-            Statement st = con.createStatement();
-            ResultSet res = null;
 
             res = st.executeQuery("select orc_srvm_type from order_ctrl;");
            while (res.next()) {
@@ -8579,8 +8826,11 @@ return mycount;
        }
         catch (SQLException s){
             MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
         }
-        con.close();
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -8595,10 +8845,9 @@ return mycount;
     try{
 
         Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
         try{
-            Statement st = con.createStatement();
-            ResultSet res = null;
-
             res = st.executeQuery("select orc_srvm_item_default from order_ctrl;");
            while (res.next()) {
                 srvmtype = res.getBoolean("orc_srvm_item_default");
@@ -8607,8 +8856,11 @@ return mycount;
        }
         catch (SQLException s){
             MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
         }
-        con.close();
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -8623,9 +8875,9 @@ return mycount;
     try{
 
         Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
         try{
-            Statement st = con.createStatement();
-            ResultSet res = null;
 
             res = st.executeQuery("select shc_custitemonly from ship_ctrl;");
            while (res.next()) {
@@ -8635,8 +8887,11 @@ return mycount;
        }
         catch (SQLException s){
             MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
         }
-        con.close();
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -8651,9 +8906,10 @@ boolean autosource = false;
 try{
 
     Connection con = DriverManager.getConnection(url + db, user, pass);
+    Statement st = con.createStatement();
+    ResultSet res = null;
     try{
-        Statement st = con.createStatement();
-        ResultSet res = null;
+        
 
         res = st.executeQuery("select orc_autosource from order_ctrl;");
        while (res.next()) {
@@ -8663,8 +8919,11 @@ try{
    }
     catch (SQLException s){
         MainFrame.bslog(s);
-    }
-    con.close();
+    } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
 }
 catch (Exception e){
     MainFrame.bslog(e);
@@ -8678,10 +8937,10 @@ return autosource;
        boolean autoitem = false;
         try{
            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try{
 
                 res = st.executeQuery("select autoitem from inv_ctrl;");
                while (res.next()) {
@@ -8691,8 +8950,11 @@ return autosource;
            }
             catch (SQLException s){
                 MainFrame.bslog(s);
-            }
-            con.close();
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -8706,11 +8968,10 @@ return autosource;
        boolean autoinvoice = false;
         try{
            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try{
                 res = st.executeQuery("select orc_autoinvoice from order_ctrl;");
                while (res.next()) {
                     autoinvoice = res.getBoolean("orc_autoinvoice");
@@ -8719,8 +8980,11 @@ return autosource;
            }
             catch (SQLException s){
                 MainFrame.bslog(s);
-            }
-            con.close();
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -8734,10 +8998,10 @@ return autosource;
        boolean autoallocate = false;
         try{
            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try{
 
                 res = st.executeQuery("select orc_autoallocate from order_ctrl;");
                while (res.next()) {
@@ -8747,8 +9011,11 @@ return autosource;
            }
             catch (SQLException s){
                 MainFrame.bslog(s);
-            }
-            con.close();
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -8762,10 +9029,10 @@ return autosource;
        boolean exceedqohu = false;
         try{
            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try{
 
                 res = st.executeQuery("select orc_exceedqohu from order_ctrl;");
                while (res.next()) {
@@ -8775,8 +9042,11 @@ return autosource;
            }
             catch (SQLException s){
                 MainFrame.bslog(s);
-            }
-            con.close();
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -8790,11 +9060,10 @@ return autosource;
        boolean autocust = false;
         try{
            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try{
                 res = st.executeQuery("select cmc_autocust from cm_ctrl;");
                while (res.next()) {
                     autocust = res.getBoolean("cmc_autocust");
@@ -8803,8 +9072,11 @@ return autosource;
            }
             catch (SQLException s){
                 MainFrame.bslog(s);
-            }
-            con.close();
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -8818,10 +9090,10 @@ return autosource;
        boolean autovend = false;
         try{
            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try{
 
                 res = st.executeQuery("select vdc_autovend from vd_ctrl;");
                while (res.next()) {
@@ -8831,8 +9103,11 @@ return autosource;
            }
             catch (SQLException s){
                 MainFrame.bslog(s);
-            }
-            con.close();
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -8845,11 +9120,10 @@ return autosource;
              
        boolean autopost = false;
         try{
-           
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try{
 
                 res = st.executeQuery("select gl_autopost from gl_ctrl;");
                while (res.next()) {
@@ -8859,8 +9133,11 @@ return autosource;
            }
             catch (SQLException s){
                 MainFrame.bslog(s);
-            }
-            con.close();
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -8874,11 +9151,10 @@ return autosource;
        boolean autovoucher = false;
         try{
            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try{
                 res = st.executeQuery("select apc_autovoucher from ap_ctrl;");
                while (res.next()) {
                     autovoucher = res.getBoolean("apc_autovoucher");
@@ -8887,8 +9163,11 @@ return autosource;
            }
             catch (SQLException s){
                 MainFrame.bslog(s);
-            }
-            con.close();
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -8903,9 +9182,9 @@ return autosource;
         try{
            
             Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
 
                 res = st.executeQuery("select it_item from item_mstr where it_item = " + "'" + myitem + "'" + ";");
                while (res.next()) {
@@ -8915,8 +9194,11 @@ return autosource;
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-            }
-            con.close();
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -8931,10 +9213,9 @@ return autosource;
         try{
            
             Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
-
                 res = st.executeQuery("select sh_bol from ship_mstr where sh_bol = " + "'" + bol + "'" +
                         " AND sh_cust = " + "'" + cust + "'" + 
                         ";");
@@ -8945,8 +9226,11 @@ return autosource;
            }
             catch (SQLException s){
                 MainFrame.bslog(s);
-            }
-            con.close();
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -8961,9 +9245,9 @@ return autosource;
         try{
            
             Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
             try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
 
                 res = st.executeQuery("select fo_nbr from fo_mstr where fo_nbr = " + "'" + nbr + "'" +
                         ";");
@@ -8974,8 +9258,11 @@ return autosource;
            }
             catch (SQLException s){
                 MainFrame.bslog(s);
-            }
-            con.close();
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -8990,9 +9277,9 @@ return autosource;
     try{
 
         Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
             Statement st = con.createStatement();
             ResultSet res = null;
+            try{
 
             res = st.executeQuery("select site_site from site_mstr where site_site = " + "'" + key + "'" + ";");
            while (res.next()) {
@@ -9002,8 +9289,11 @@ return autosource;
        }
         catch (SQLException s){
              MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
         }
-        con.close();
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -9017,10 +9307,10 @@ return autosource;
    boolean isgood = false;
     try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try{
 
             res = st.executeQuery("select cm_code from cm_mstr where cm_code = " + "'" + key + "'" + ";");
            while (res.next()) {
@@ -9030,8 +9320,11 @@ return autosource;
        }
         catch (SQLException s){
              MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
         }
-        con.close();
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -9045,10 +9338,10 @@ return autosource;
    boolean isgood = false;
     try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try{
 
             res = st.executeQuery("select cms_shipto from cms_det where cms_code = " + "'" + cust + "'" 
                     + " and cms_shipto = " + "'" + ship + "'" 
@@ -9060,8 +9353,11 @@ return autosource;
        }
         catch (SQLException s){
              MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
         }
-        con.close();
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -9075,10 +9371,10 @@ return autosource;
    boolean isgood = false;
     try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try{
 
             res = st.executeQuery("select vd_addr from vd_mstr where vd_addr = " + "'" + key + "'" + ";");
            while (res.next()) {
@@ -9088,8 +9384,11 @@ return autosource;
        }
         catch (SQLException s){
              MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
         }
-        con.close();
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -9104,9 +9403,9 @@ return autosource;
     try{
 
         Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
         try{
-            Statement st = con.createStatement();
-            ResultSet res = null;
 
             res = st.executeQuery("select loc_loc from loc_mstr where loc_loc = " + "'" + key + "'" + ";");
            while (res.next()) {
@@ -9116,8 +9415,11 @@ return autosource;
        }
         catch (SQLException s){
              MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
         }
-        con.close();
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -9132,9 +9434,9 @@ return autosource;
     try{
 
         Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
         try{
-            Statement st = con.createStatement();
-            ResultSet res = null;
 
             res = st.executeQuery("select wh_id from wh_mstr where wh_id = " + "'" + key + "'" + ";");
            while (res.next()) {
@@ -9144,8 +9446,11 @@ return autosource;
        }
         catch (SQLException s){
              MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
         }
-        con.close();
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -9160,9 +9465,9 @@ return autosource;
     try{
 
         Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
         try{
-            Statement st = con.createStatement();
-            ResultSet res = null;
 
             res = st.executeQuery("select pl_line from pl_mstr where pl_line = " + "'" + key + "'" + ";");
            while (res.next()) {
@@ -9172,8 +9477,11 @@ return autosource;
        }
         catch (SQLException s){
              MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
         }
-        con.close();
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -9188,9 +9496,9 @@ return autosource;
     try{
 
         Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
         try{
-            Statement st = con.createStatement();
-            ResultSet res = null;
 
             res = st.executeQuery("select panel_id from panel_mstr where panel_id = " + "'" + panel + "'" + ";");
            while (res.next()) {
@@ -9200,8 +9508,11 @@ return autosource;
        }
         catch (SQLException s){
              MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
         }
-        con.close();
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -9215,9 +9526,9 @@ return autosource;
     try{
 
         Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
         try{
-            Statement st = con.createStatement();
-            ResultSet res = null;
 
               res = st.executeQuery("select wf_id from wf_mstr where wf_id = " + "'" + key + "'" + ";" ); 
             int i = 0;
@@ -9230,8 +9541,11 @@ return autosource;
        }
         catch (SQLException s){
              MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
         }
-        con.close();
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -9244,10 +9558,10 @@ return autosource;
        boolean isGood = false;
         try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try{
 
                   res = st.executeQuery("select wc_cell from wc_mstr where wc_cell = " + "'" + key + "'" + ";" ); 
                 int i = 0;
@@ -9260,8 +9574,11 @@ return autosource;
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -9276,9 +9593,9 @@ boolean isgood = false;
 try{
 
     Connection con = DriverManager.getConnection(url + db, user, pass);
-    try{
         Statement st = con.createStatement();
         ResultSet res = null;
+        try{
 
         res = st.executeQuery("select shf_id from shift_mstr where shf_id = " + "'" + code + "'" + ";");
        while (res.next()) {
@@ -9288,8 +9605,11 @@ try{
    }
     catch (SQLException s){
          MainFrame.bslog(s);
-    }
-    con.close();
+    } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
 }
 catch (Exception e){
     MainFrame.bslog(e);
@@ -9299,13 +9619,13 @@ return isgood;
 }
 
     public static ArrayList getShiftCodes() {
-ArrayList myarray = new ArrayList();
-try{
-
-    Connection con = DriverManager.getConnection(url + db, user, pass);
+    ArrayList myarray = new ArrayList();
     try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
         Statement st = con.createStatement();
         ResultSet res = null;
+        try{
 
         res = st.executeQuery("select shf_id from shift_mstr;");
        while (res.next()) {
@@ -9315,8 +9635,11 @@ try{
    }
     catch (SQLException s){
          bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+    } finally {
+       if (res != null) res.close();
+       if (st != null) st.close();
+       con.close();
     }
-    con.close();
 }
 catch (Exception e){
     MainFrame.bslog(e);
@@ -9356,6 +9679,8 @@ return myarray;
       return myshift;
   }
 
+    /* stop here */
+    
     public static ArrayList getOperationsByItem(String mypart) {
    ArrayList myarray = new ArrayList();
     try{
@@ -10040,10 +10365,10 @@ return myarray;
          ArrayList<String> carriers = new ArrayList<String>();
           try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
             String cartype = "";
             String carrier = "";
                   // select statement will return all 'unique' warehouses assigned to source the order
@@ -10083,9 +10408,9 @@ return myarray;
     try{
 
         Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
-            Statement st = con.createStatement();
-            ResultSet res = null;
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try {
            java.util.Date now = new java.util.Date();
             DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
             DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
@@ -10126,9 +10451,9 @@ return myarray;
     try{
 
         Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
-            Statement st = con.createStatement();
-            ResultSet res = null;
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try {
            java.util.Date now = new java.util.Date();
             DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
             DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
@@ -10184,9 +10509,9 @@ return myarray;
     try{
 
         Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
-            Statement st = con.createStatement();
-            ResultSet res = null;
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try {
            java.util.Date now = new java.util.Date();
             DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
             DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
@@ -10223,9 +10548,9 @@ return myarray;
 try{
 
     Connection con = DriverManager.getConnection(url + db, user, pass);
-    try{
-        Statement st = con.createStatement();
-        ResultSet res = null;
+    Statement st = con.createStatement();
+    ResultSet res = null;
+    try {
        java.util.Date now = new java.util.Date();
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
         DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
@@ -11651,9 +11976,9 @@ return mystring;
         try{
            
             Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
 
                 res = st.executeQuery("select ac_id from ac_mstr order by ac_id ;");
                while (res.next()) {
@@ -11664,8 +11989,11 @@ return mystring;
            }
             catch (SQLException s){
                  bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -11679,9 +12007,9 @@ return mystring;
         try{
            
             Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
 
                 res = st.executeQuery("select ac_id from ac_mstr where ac_type = " + "'" + type + "'" + " order by ac_id ;");
                while (res.next()) {
@@ -11692,8 +12020,11 @@ return mystring;
            }
             catch (SQLException s){
                  bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -11707,9 +12038,9 @@ return mystring;
     try{
 
         Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
 
             res = st.executeQuery("select ac_id from ac_mstr where ac_display = '1' and ac_type = " + "'" + 'e' + "'" + " order by ac_id ;");
            while (res.next()) {
@@ -11720,8 +12051,11 @@ return mystring;
        }
         catch (SQLException s){
              bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
         }
-        con.close();
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -11735,9 +12069,9 @@ return mystring;
     try{
 
         Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
 
             res = st.executeQuery("select ac_id from ac_mstr where ac_display = '1' and ac_type = " + "'" + 'I' + "'" + " order by ac_id ;");
            while (res.next()) {
@@ -11748,8 +12082,11 @@ return mystring;
        }
         catch (SQLException s){
              bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
         }
-        con.close();
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -11763,9 +12100,9 @@ return mystring;
         try{
            
             Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
-                ResultSet res = null;
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
  
                 res = st.executeQuery("select cut_code from cust_term where cut_code = " + "'" + code + "'" + ";");
                while (res.next()) {
@@ -11774,8 +12111,11 @@ return mystring;
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -11789,9 +12129,9 @@ return mystring;
     try{
 
         Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
 
             res = st.executeQuery("select menu_navcode from menu_mstr where menu_id <> " + "'" + callingmenu + "'" +
                     " and menu_navcode = " + "'" + code + "'" + ";");
@@ -11801,8 +12141,11 @@ return mystring;
        }
         catch (SQLException s){
              MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
         }
-        con.close();
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -11816,9 +12159,9 @@ return mystring;
     try{
 
         Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
 
             res = st.executeQuery("select payp_code from pay_profile where payp_code = " + "'" + code + "'" + ";");
            while (res.next()) {
@@ -11827,8 +12170,11 @@ return mystring;
        }
         catch (SQLException s){
              MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
         }
-        con.close();
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -11842,9 +12188,9 @@ return mystring;
     try{
 
         Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
 
             res = st.executeQuery("select ov_currency from ov_mstr;");
            while (res.next()) {
@@ -11855,8 +12201,11 @@ return mystring;
        }
         catch (SQLException s){
              MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
         }
-        con.close();
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -11870,9 +12219,9 @@ return mystring;
     try{
 
         Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
 
             res = st.executeQuery("select bk_id from bk_mstr where bk_id = " + "'" + code + "'" + ";");
            while (res.next()) {
@@ -11881,8 +12230,11 @@ return mystring;
        }
         catch (SQLException s){
              MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
         }
-        con.close();
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -11896,9 +12248,9 @@ return mystring;
     try{
 
         Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
 
             res = st.executeQuery("select cur_id from cur_mstr where cur_id = " + "'" + code + "'" + ";");
            while (res.next()) {
@@ -11907,8 +12259,11 @@ return mystring;
        }
         catch (SQLException s){
              MainFrame.bslog(s);
-        }
-        con.close();
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -11922,9 +12277,9 @@ return mystring;
     try{
 
         Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
 
             res = st.executeQuery("select ac_id from ac_mstr where ac_id = " + "'" + acct + "'" + ";");
            while (res.next()) {
@@ -11933,8 +12288,11 @@ return mystring;
        }
         catch (SQLException s){
              MainFrame.bslog(s);
-        }
-        con.close();
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -11948,9 +12306,9 @@ return mystring;
     try{
 
         Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
             Statement st = con.createStatement();
             ResultSet res = null;
+            try {
 
             res = st.executeQuery("select dept_id from dept_mstr where dept_id = " + "'" + cc + "'" + ";");
            while (res.next()) {
@@ -11959,8 +12317,11 @@ return mystring;
        }
         catch (SQLException s){
              MainFrame.bslog(s);
-        }
-        con.close();
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -11988,8 +12349,11 @@ return mystring;
        }
         catch (SQLException s){
              bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-        }
-        con.close();
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -12017,8 +12381,11 @@ return mystring;
        }
         catch (SQLException s){
              bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-        }
-        con.close();
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -12055,8 +12422,11 @@ return mystring;
        }
         catch (SQLException s){
              bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-        }
-        con.close();
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -12083,8 +12453,11 @@ return mystring;
        }
         catch (SQLException s){
              bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-        }
-        con.close();
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -12111,8 +12484,11 @@ return mystring;
        }
         catch (SQLException s){
              bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-        }
-        con.close();
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -12139,8 +12515,11 @@ return mystring;
        }
         catch (SQLException s){
              bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-        }
-        con.close();
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -12180,8 +12559,11 @@ return mystring;
        }
         catch (SQLException s){
              MainFrame.bslog(s);
-        }
-        con.close();
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -12219,8 +12601,11 @@ return mystring;
        }
         catch (SQLException s){
              MainFrame.bslog(s);
-        }
-        con.close();
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -12260,8 +12645,11 @@ return mystring;
        }
         catch (SQLException s){
              MainFrame.bslog(s);
-        }
-        con.close();
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -12295,8 +12683,11 @@ return mystring;
        }
         catch (SQLException s){
              bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-        }
-        con.close();
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -12329,8 +12720,11 @@ return mystring;
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -12360,8 +12754,11 @@ return mystring;
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -12391,8 +12788,11 @@ return mystring;
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -12422,8 +12822,11 @@ return mystring;
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -12453,8 +12856,11 @@ return mystring;
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -12493,8 +12899,11 @@ return mystring;
            }
             catch (SQLException s){
                  bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -12524,8 +12933,11 @@ return mystring;
        }
         catch (SQLException s){
             MainFrame.bslog(s);
-        }
-        con.close();
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -12605,8 +13017,11 @@ return mystring;
        }
         catch (SQLException s){
             MainFrame.bslog(s);
-        }
-        con.close();
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -12643,8 +13058,11 @@ return mystring;
        }
         catch (SQLException s){
              bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-        }
-        con.close();
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -12674,8 +13092,11 @@ return mystring;
 
         } catch (SQLException s) {
             MainFrame.bslog(s);
-        }
-        con.close();
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
     } catch (Exception e) {
         MainFrame.bslog(e);
     }
@@ -12702,8 +13123,11 @@ return mystring;
 
         } catch (SQLException s) {
             MainFrame.bslog(s);
-        }
-        con.close();
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
     } catch (Exception e) {
         MainFrame.bslog(e);
     }
@@ -12728,8 +13152,11 @@ return mystring;
        }
         catch (SQLException s){
              bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-        }
-        con.close();
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -12755,10 +13182,12 @@ return mystring;
 
        }
         catch (SQLException s){
-            MainFrame.bslog(s);
-             bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-        }
-        con.close();
+           MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -12784,11 +13213,13 @@ return mystring;
 
        }
         catch (SQLException s){
-             bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-        }
-        con.close();
-    }
-    catch (Exception e){
+            MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
+    } catch (Exception e){
         MainFrame.bslog(e);
     }
     return mystring;
@@ -12812,9 +13243,12 @@ return mystring;
 
        }
         catch (SQLException s){
-             bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-        }
-        con.close();
+            MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -12840,9 +13274,12 @@ return mystring;
 
        }
         catch (SQLException s){
-             bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-        }
-        con.close();
+            MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -12869,9 +13306,12 @@ return mystring;
 
        }
         catch (SQLException s){
-             bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-        }
-        con.close();
+            MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -12902,9 +13342,12 @@ return mystring;
 
        }
         catch (SQLException s){
-             bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-        }
-        con.close();
+            MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -12936,9 +13379,12 @@ return mystring;
 
        }
         catch (SQLException s){
-             bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-        }
-        con.close();
+            MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -13067,8 +13513,11 @@ return mystring;
 
         } catch (SQLException s) {
             MainFrame.bslog(s);
-        }
-        con.close();
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
     } catch (Exception e) {
         MainFrame.bslog(e);
     }
@@ -13196,8 +13645,11 @@ return mystring;
 
         } catch (SQLException s) {
             MainFrame.bslog(s);
-        }
-        con.close();
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
     } catch (Exception e) {
         MainFrame.bslog(e);
     }
@@ -13298,8 +13750,11 @@ return mystring;
 
         } catch (SQLException s) {
             MainFrame.bslog(s);
-        }
-        con.close();
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
     } catch (Exception e) {
         MainFrame.bslog(e);
     }
@@ -13421,8 +13876,11 @@ return mystring;
 
         } catch (SQLException s) {
             MainFrame.bslog(s);
-        }
-        con.close();
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
     } catch (Exception e) {
         MainFrame.bslog(e);
     }
@@ -13486,8 +13944,11 @@ return mystring;
     } catch (SQLException s) {
         MainFrame.bslog(s);
 
-    }
-    con.close();
+    } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
 } catch (Exception e) {
     MainFrame.bslog(e);
 }
@@ -13561,8 +14022,11 @@ return myarray;
     } catch (SQLException s) {
         MainFrame.bslog(s);
 
-    }
-    con.close();
+    } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
 } catch (Exception e) {
     MainFrame.bslog(e);
 }
@@ -13641,8 +14105,11 @@ return myarray;
                
             } catch (SQLException s) {
                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
             }
-            con.close();
            
         } catch (Exception e) {
             MainFrame.bslog(e);
@@ -13744,8 +14211,11 @@ return myarray;
         } catch (SQLException s) {
             MainFrame.bslog(s);
             bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-        }
-        con.close();
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
 
     } catch (Exception e) {
         MainFrame.bslog(e);
@@ -13787,8 +14257,11 @@ return myarray;
 
         } catch (SQLException s) {
            MainFrame.bslog(s);
-        }
-        con.close();
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
 
     } catch (Exception e) {
         MainFrame.bslog(e);
@@ -13814,8 +14287,11 @@ return myarray;
 
         } catch (SQLException s) {
             MainFrame.bslog(s);
-        }
-        con.close();
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
 
     } catch (Exception e) {
         MainFrame.bslog(e);
@@ -13855,11 +14331,11 @@ return myarray;
         try {
 
         Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        Statement st2 = con.createStatement();
+        ResultSet res = null;
         try {
-            Statement st = con.createStatement();
-            Statement st2 = con.createStatement();
-            ResultSet res = null;
-            ResultSet res2 = null;
+            
 
 
                res = st.executeQuery("select ap_site, ap_curr, apd_vend, sum(apd_voamt) as sum, vd_ap_acct, vd_ap_cc, vd_bank, vd_terms from apd_mstr " +
@@ -13925,8 +14401,12 @@ return myarray;
 
           } catch (SQLException s) {
            MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (st2 != null) st.close();
+               con.close();
         }
-        con.close();
     } catch (Exception e) {
            MainFrame.bslog(e);
     }
@@ -13968,11 +14448,12 @@ return myarray;
         try {
 
         Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        Statement st2 = con.createStatement();
+        ResultSet res = null;
         try {
-            Statement st = con.createStatement();
-            Statement st2 = con.createStatement();
-            ResultSet res = null;
-            ResultSet res2 = null;
+            
+            
 
 
                res = st.executeQuery("select ap_site, ap_ref, apd_vend, sum(apd_voamt) as sum, vd_ap_acct, vd_ap_cc, vd_bank, vd_terms, ap_curr from apd_mstr " +
@@ -14035,8 +14516,12 @@ return myarray;
           } catch (SQLException s) {
            MainFrame.bslog(s);
            myreturn = true;
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (st2 != null) st.close();
+               con.close();
         }
-        con.close();
     } catch (Exception e) {
            MainFrame.bslog(e);
            myreturn = true;
@@ -14051,13 +14536,11 @@ return myarray;
     public static boolean APCheckRun_apd_mstr(JTable mytable, int batchid) {
        boolean myreturn = false;
 
-   try {
-
-
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-   try {
+        try {
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try{
         for (int i = 0 ; i < mytable.getRowCount(); i++) {
             st.executeUpdate("insert into apd_mstr "
                     + "(apd_batch, apd_vend, apd_nbr, apd_ref, apd_voamt) "
@@ -14068,16 +14551,23 @@ return myarray;
                     + "'" + bsFormatDouble(bsParseDouble(mytable.getValueAt(i, 6).toString())).replace(defaultDecimalSeparator, '.') + "'" 
                     + ")"
                     + ";");
-       }      
+        }      
 
 
 
 
 
-   } catch (SQLException s) {
+        } catch (SQLException s) {
            MainFrame.bslog(s);
+        } finally {
+            if (res != null) {
+                res.close();
+            }
+            if (st != null) {
+                st.close();
+            }
+            con.close();
         }
-        con.close();
     } catch (Exception e) {
         MainFrame.bslog(e);
     }
@@ -14088,13 +14578,13 @@ return myarray;
     public static boolean APExpense_apd_mstr(int batchid, String vend, String voucher, String invoice, Double amount) {
        boolean myreturn = false;
 
-   try {
+        try {
 
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-   try {
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try{
 
             st.executeUpdate("insert into apd_mstr "
                     + "(apd_batch, apd_vend, apd_nbr, apd_ref, apd_voamt) "
@@ -14106,10 +14596,17 @@ return myarray;
                     + ")"
                     + ";");
 
-   } catch (SQLException s) {
+        } catch (SQLException s) {
            MainFrame.bslog(s);
+        } finally {
+            if (res != null) {
+                res.close();
+            }
+            if (st != null) {
+                st.close();
+            }
+            con.close();
         }
-        con.close();
     } catch (Exception e) {
         MainFrame.bslog(e);
     }
@@ -14119,19 +14616,13 @@ return myarray;
 
     public static boolean APCheckRunUpdateVouchers(int batchid) {
        boolean myreturn = false;
-
-
        ArrayList<String[]> mylist = new ArrayList<String[]>();
        String[] rec = new String[5];
-
-
-   try {
-
-
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-   try {
+        try {
+            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
+            try{
             double checkamt = 0.00;
             double applied = 0.00;
             double newamt = 0.00;
@@ -14185,10 +14676,17 @@ return myarray;
                         ";");
           */
 
-   } catch (SQLException s) {
+        } catch (SQLException s) {
            MainFrame.bslog(s);
+        } finally {
+            if (res != null) {
+                res.close();
+            }
+            if (st != null) {
+                st.close();
+            }
+            con.close();
         }
-        con.close();
     } catch (Exception e) {
         MainFrame.bslog(e);
     }
@@ -14227,7 +14725,7 @@ return myarray;
                 st.close();
             }
             con.close();
-        }
+            }
         }
         catch (Exception e){
             MainFrame.bslog(e);
