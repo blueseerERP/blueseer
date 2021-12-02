@@ -1499,7 +1499,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
             for (String[] wh : boms) {
                 ddbom.addItem(wh[0]);
             }
-             
+            ddbom.setSelectedIndex(0);
             
             if (ddpart.getItemCount() > 0) {
                 String[] arr = OVData.getTopLocationAndWHByQTY(ddpart.getSelectedItem().toString(), ddsite.getSelectedItem().toString());
