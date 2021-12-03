@@ -53,7 +53,7 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
                                   <Component id="ddloc" max="32767" attributes="0"/>
-                                  <EmptySpace min="-2" pref="252" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="198" max="-2" attributes="0"/>
                               </Group>
                               <Group type="102" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
@@ -93,7 +93,11 @@
                               </Group>
                           </Group>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jLabel39" alignment="1" min="-2" max="-2" attributes="0"/>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <Component id="btgenerate" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="jLabel39" min="-2" max="-2" attributes="0"/>
+                              </Group>
                               <Component id="jLabel35" alignment="1" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel29" alignment="1" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel40" alignment="1" min="-2" max="-2" attributes="0"/>
@@ -231,6 +235,7 @@
                       <Component id="jLabel39" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="ddwh" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel31" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btgenerate" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
@@ -626,6 +631,15 @@
             <Property name="text" type="java.lang.String" value="Expire"/>
             <Property name="name" type="java.lang.String" value="lblexpire" noResource="true"/>
           </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="btgenerate">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="generate"/>
+            <Property name="name" type="java.lang.String" value="btgenerate" noResource="true"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btgenerateActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

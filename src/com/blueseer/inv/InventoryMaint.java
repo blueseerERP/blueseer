@@ -383,6 +383,7 @@ public class InventoryMaint extends javax.swing.JPanel {
         btLookUpAcctDesc = new javax.swing.JButton();
         dcexpire = new com.toedter.calendar.JDateChooser();
         jLabel11 = new javax.swing.JLabel();
+        btgenerate = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -479,6 +480,14 @@ public class InventoryMaint extends javax.swing.JPanel {
         jLabel11.setText("Expire");
         jLabel11.setName("lblexpiredate"); // NOI18N
 
+        btgenerate.setText("generate");
+        btgenerate.setName("btgenerate"); // NOI18N
+        btgenerate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btgenerateActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -520,7 +529,8 @@ public class InventoryMaint extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(btLookUpItemDesc, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btLookUpAcctDesc, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(btLookUpAcctDesc, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btgenerate))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -574,7 +584,8 @@ public class InventoryMaint extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tblotserial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel7))
+                    .addComponent(jLabel7)
+                    .addComponent(btgenerate))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbref, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -789,11 +800,16 @@ public class InventoryMaint extends javax.swing.JPanel {
         lookUpFrameAcctDesc();
     }//GEN-LAST:event_btLookUpAcctDescActionPerformed
 
+    private void btgenerateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btgenerateActionPerformed
+       tblotserial.setText(String.valueOf(OVData.getNextNbr("serial")));
+    }//GEN-LAST:event_btgenerateActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btLookUpAcctDesc;
     private javax.swing.JButton btLookUpItemDesc;
     private javax.swing.JButton btadd;
+    private javax.swing.JButton btgenerate;
     private com.toedter.calendar.JDateChooser dcdate;
     private com.toedter.calendar.JDateChooser dcexpire;
     private static javax.swing.JComboBox ddacct;

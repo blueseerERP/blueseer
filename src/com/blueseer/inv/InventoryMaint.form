@@ -74,6 +74,7 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="btLookUpItemDesc" min="-2" pref="27" max="-2" attributes="0"/>
                               <Component id="btLookUpAcctDesc" min="-2" pref="27" max="-2" attributes="0"/>
+                              <Component id="btgenerate" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -146,6 +147,7 @@
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="tblotserial" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel7" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btgenerate" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
@@ -357,6 +359,15 @@
             <Property name="text" type="java.lang.String" value="Expire"/>
             <Property name="name" type="java.lang.String" value="lblexpiredate" noResource="true"/>
           </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="btgenerate">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="generate"/>
+            <Property name="name" type="java.lang.String" value="btgenerate" noResource="true"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btgenerateActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

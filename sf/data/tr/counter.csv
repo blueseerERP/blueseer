@@ -27,6 +27,7 @@ purchreq,purchase requisition range,,5000,9999,5664
 quality,quality number range,,200,999,210
 receiver,receiver tran nbr range,,100000,999999,100057
 sample,sample,,100000,999999,100133
+serial,serial number range,,1000000,9999999,1000000
 shipper,shipper number range,,2000,9999,2117
 shipto,shipto number range,,100000,999999,143546
 task,task master number range,,1000,9999,1005
