@@ -401,6 +401,105 @@ public class cusData {
         return r;
     }
     
+     
+    public static String[] addTermsMstr(cust_term x) {
+        String[] m = new String[2];
+        String sqlSelect = "select * from cust_term where cut_code = ?";
+        String sqlInsert = "insert into cust_term (cut_code, cut_desc, cut_days, cut_discdays, cut_discpercent)  " +
+                " values (?,?,?,?,?); "; 
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+             PreparedStatement ps = con.prepareStatement(sqlSelect);) {
+             ps.setString(1, x.cut_code);
+          try (ResultSet res = ps.executeQuery();
+               PreparedStatement psi = con.prepareStatement(sqlInsert);) {  
+            if (! res.isBeforeFirst()) {
+            psi.setString(1, x.cut_code);
+            psi.setString(2, x.cut_desc);
+            psi.setString(3, x.cut_days);
+            psi.setString(4, x.cut_discdays);
+            psi.setString(5, x.cut_discpercent);
+            int rows = psi.executeUpdate();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+            } else {
+            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists};    
+            }
+          } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+          }
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+        
+    public static String[] updateTermsMstr(cust_term x) {
+        String[] m = new String[2];
+        String sql = "update cust_term set cut_desc = ?, cut_days = ?, cut_discdays = ?, " +
+                " cut_discpercent = ? where cut_code = ? ";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, x.cut_desc);
+        ps.setString(2, x.cut_days);
+        ps.setString(3, x.cut_discdays);
+        ps.setString(4, x.cut_discpercent);
+        ps.setString(5, x.cut_code);
+        int rows = ps.executeUpdate();
+        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+    
+    public static String[] deleteTermsMstr(cust_term x) { 
+       String[] m = new String[2];
+        String sql = "delete from cust_term where cut_code = ?; ";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, x.cut_code);
+        int rows = ps.executeUpdate();
+        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+      
+    public static cust_term getTermsMstr(String[] x) {
+        cust_term r = null;
+        String[] m = new String[2];
+        String sql = "select * from cust_term where cut_code = ? ;";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, x[0]);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new cust_term(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new cust_term(m, res.getString("cut_code"), 
+                            res.getString("cut_desc"),
+                            res.getString("cut_days"),
+                            res.getString("cut_discdays"),
+                            res.getString("cut_discpercent")
+                        );
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new cust_term(m);
+        }
+        return r;
+    }
+    
     
     // cms_det Customer Shipto Table
     public static String[] addCMSDet(cms_det x) {
@@ -1687,7 +1786,12 @@ public class cusData {
         }
     }
     
-     
+    public record cust_term(String[] m, String cut_code, String cut_desc, String cut_days, 
+        String cut_discdays, String cut_discpercent) {
+        public cust_term(String[] m) {
+            this(m,"","","","","");
+        }
+    } 
      
     
     
