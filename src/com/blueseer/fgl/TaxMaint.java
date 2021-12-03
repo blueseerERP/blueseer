@@ -38,6 +38,7 @@ import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
 import static com.blueseer.utl.BlueSeerUtils.luTable;
@@ -91,7 +92,10 @@ public class TaxMaint extends javax.swing.JPanel implements IBlueSeer {
     // global datatablemodel declarations       
      javax.swing.table.DefaultTableModel taxmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
-                "Element", "Percent", "Type", "Enabled"
+                getGlobalColumnTag("element"), 
+                getGlobalColumnTag("percent"), 
+                getGlobalColumnTag("type"), 
+                getGlobalColumnTag("enabled")
             });
     
     
