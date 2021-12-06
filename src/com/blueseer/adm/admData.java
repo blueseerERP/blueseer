@@ -285,6 +285,129 @@ public class admData {
         return m;
     }
     
+    public static String[] addFTPMstr(ftp_mstr x) {
+        String[] m = new String[2];
+        String sqlSelect = "SELECT * FROM  ftp_mstr where ftp_id = ?";
+        String sqlInsert = "insert into ftp_mstr (ftp_id, ftp_desc, ftp_ip, ftp_login, " +
+                          " ftp_passwd, ftp_commands, ftp_indir, ftp_outdir, ftp_delete, ftp_passive, " +
+                          " ftp_binary, ftp_timeout ) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?,?); "; 
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+             PreparedStatement ps = con.prepareStatement(sqlSelect);) {
+             ps.setString(1, x.ftp_id);
+          try (ResultSet res = ps.executeQuery();
+               PreparedStatement psi = con.prepareStatement(sqlInsert);) {  
+            if (! res.isBeforeFirst()) {
+            psi.setString(1, x.ftp_id);
+            psi.setString(2, x.ftp_desc);
+            psi.setString(3, x.ftp_ip);
+            psi.setString(4, x.ftp_login);
+            psi.setString(5, x.ftp_passwd);
+            psi.setString(6, x.ftp_commands);
+            psi.setString(7, x.ftp_indir);
+            psi.setString(8, x.ftp_outdir);
+            psi.setString(9, x.ftp_delete);
+            psi.setString(10, x.ftp_passive);
+            psi.setString(11, x.ftp_binary);
+            psi.setString(12, x.ftp_timeout);
+            int rows = psi.executeUpdate();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+            } else {
+            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists};    
+            }
+          } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+          }
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+
+    public static String[] updateFTPMstr(ftp_mstr x) {
+        String[] m = new String[2];
+        String sql = "update ftp_mstr set ftp_desc = ?, ftp_ip = ?, ftp_login = ?, " +
+                          " ftp_passwd = ?, ftp_commands = ?, ftp_indir = ?, ftp_outdir = ?, " +
+                          " ftp_delete = ?, ftp_passive = ?, " +
+                          " ftp_binary = ?, ftp_timeout = ?  " +               
+                          " where ftp_id = ? ; ";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(12, x.ftp_id);
+            ps.setString(1, x.ftp_desc);
+            ps.setString(2, x.ftp_ip);
+            ps.setString(3, x.ftp_login);
+            ps.setString(4, x.ftp_passwd);
+            ps.setString(5, x.ftp_commands);
+            ps.setString(6, x.ftp_indir);
+            ps.setString(7, x.ftp_outdir);
+            ps.setString(8, x.ftp_delete);
+            ps.setString(9, x.ftp_passive);
+            ps.setString(10, x.ftp_binary);
+            ps.setString(11, x.ftp_timeout);
+        int rows = ps.executeUpdate();
+        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+    
+    public static String[] deleteFTPMstr(ftp_mstr x) { 
+       String[] m = new String[2];
+        String sql = "delete from ftp_mstr where ftp_id = ?; ";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, x.ftp_id);
+        int rows = ps.executeUpdate();
+        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+    
+    public static ftp_mstr getFTPMstr(String[] x) {
+        ftp_mstr r = null;
+        String[] m = new String[2];
+        String sql = "select * from ftp_mstr where ftp_id = ? ;";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, x[0]);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new ftp_mstr(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new ftp_mstr(m, res.getString("ftp_id"), 
+                            res.getString("ftp_desc"),
+                            res.getString("ftp_ip"),
+                            res.getString("ftp_login"),
+                            res.getString("ftp_passwd"),
+                            res.getString("ftp_commands"),
+                            res.getString("ftp_indir"),
+                            res.getString("ftp_outdir"),
+                            res.getString("ftp_delete"),
+                            res.getString("ftp_passive"),
+                            res.getString("ftp_binary"),
+                            res.getString("ftp_timeout")
+                        );
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new ftp_mstr(m);
+        }
+        return r;
+    }
     
     
     
@@ -392,4 +515,14 @@ public class admData {
         }
     }
 
+    public record ftp_mstr(String[] m, String ftp_id, String ftp_desc, String ftp_ip, 
+        String ftp_login, String ftp_passwd, String ftp_commands, String ftp_indir, 
+        String ftp_outdir, String ftp_delete, String ftp_passive, String ftp_binary, 
+        String ftp_timeout) {
+        public ftp_mstr(String[] m) {
+            this(m, "", "", "", "", "", "", "", "", "", "",
+                    "", "");
+        }
+        
+    }
 }

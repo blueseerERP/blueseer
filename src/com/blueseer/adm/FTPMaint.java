@@ -33,6 +33,7 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import com.blueseer.adm.admData.ftp_mstr;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -607,9 +608,14 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeer {
         
     }
 
-    public void runConnect() {
+    public void runClient(String c, boolean FromGUI) {
+        ftp_mstr fm = admData.getFTPMstr(new String[]{c});
+        
          FTPClient client = new FTPClient();
+         
+         if (FromGUI)
          talog.setText("");
+         
          FileOutputStream in = null;
          
            try {
@@ -617,70 +623,70 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeer {
                String homeIn = EDData.getEDIInDir();
                String homeOut = EDData.getEDIOutDir();
                int timeout = 0;
-               if (! tbtimeout.getText().isEmpty()) {
-                   timeout = Integer.valueOf(tbtimeout.getText());
+               if (! fm.ftp_timeout().isEmpty()) {
+                   timeout = Integer.valueOf(fm.ftp_timeout());
                }
                timeout *= 1000;
                client.setDefaultTimeout(timeout);
                client.setDataTimeout(timeout);
                
-                if (! tbindir.getText().isEmpty()) {
-                 homeIn = tbindir.getText();
+                if (! fm.ftp_indir().isEmpty()) {
+                 homeIn = fm.ftp_indir();
                 }
-                if (! tboutdir.getText().isEmpty()) {
-                 homeOut = tboutdir.getText();
+                if (! fm.ftp_outdir().isEmpty()) {
+                 homeOut = fm.ftp_outdir();
                 }
              //  client.addProtocolCommandListener(new PrintCommandListener(new PrintWriter(System.out), true));
-		client.connect(tbip.getText());
-		showServerReply(client);
+		client.connect(fm.ftp_ip());
+		showServerReply(client, FromGUI);
                 
                 int replyCode = client.getReplyCode();
                 if (!FTPReply.isPositiveCompletion(replyCode)) {
-                talog.append("connection failed..." + String.valueOf(replyCode) + "\n");
+                    writeMessage("connection failed..." + String.valueOf(replyCode), FromGUI);
                 return;
                 }
                 
+               
+		// client.login(tblogin.getText(), String.valueOf(tbpasswd.getPassword()));
+                client.login(tblogin.getText(), fm.ftp_passwd());
+		showServerReply(client, FromGUI);
                 
-                String passwd = new String(tbpasswd.getPassword());
-		client.login(tblogin.getText(), String.valueOf(tbpasswd.getPassword()));
-		showServerReply(client);
                 
-                
-                 if (cbpassive.isSelected()) {
+                 if (BlueSeerUtils.ConvertStringToBool(String.valueOf(fm.ftp_passive()))) {
 		client.enterLocalPassiveMode();
-                talog.append("CLIENT: setting passive" + "\n");
+                writeMessage("CLIENT: setting passive", FromGUI);
                 } else {
                 client.enterLocalActiveMode(); 
-                talog.append("CLIENT: setting active" + "\n");
+                writeMessage("CLIENT: setting active", FromGUI);
                 }
-                showServerReply(client);
+                showServerReply(client, FromGUI);
                 
-                if (cbbinary.isSelected()) {
+                if (BlueSeerUtils.ConvertStringToBool(String.valueOf(fm.ftp_binary()))) {
 		client.setFileType(FTP.BINARY_FILE_TYPE);
-                talog.append("CLIENT: setting binary" + "\n");
+                writeMessage("CLIENT: setting binary", FromGUI);
                 } else {
                 client.setFileType(FTP.ASCII_FILE_TYPE);
-                talog.append("CLIENT: setting ascii" + "\n");
+                writeMessage("CLIENT: setting ascii", FromGUI);
                 }
-                showServerReply(client);
+                showServerReply(client, FromGUI);
 		
 		    /* not sure why...but in scenario where login credentials are wrong...you have to execute a function (client.listFiles) that 
 		       returns IOError to generate the error.....client.login does not return an IOError when wrong login or password without subsequent data dive  */
 		
-                for (String line : tacommands.getText().split("\\n"))   {
+                for (String line : fm.ftp_commands().split("\\n"))   {
                     String[] splitLine = line.trim().split("\\s+");
                     if (splitLine.length > 1 && splitLine[0].equals("cd")) {
                         client.changeWorkingDirectory(splitLine[1]);
-                        showServerReply(client);
+                        showServerReply(client, FromGUI);
                     }
                     if (splitLine.length == 1 && splitLine[0].equals("dir")) {
                         FTPFile[] ftpFiles = client.listFiles();
                         if (ftpFiles != null) {
                             for (FTPFile f : ftpFiles) {
-                                talog.append(f.getName() + "\n");
+                                writeMessage(f.getName(), FromGUI);
                             }
 		        }
-                        showServerReply(client);
+                        showServerReply(client, FromGUI);
                     }
                     if (splitLine.length > 1 && splitLine[0].equals("put")) {
                         File localfolder = new File(homeOut);
@@ -693,7 +699,7 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeer {
                                     boolean done = client.storeFile(localFiles[i].getName(), inputStream);
                                     inputStream.close();
                                     if (done) {
-                                        talog.append("putting file: " + localFiles[i].getName() + "\n");
+                                        writeMessage("putting file: " + localFiles[i].getName(), FromGUI);
                                     }    
                                 }
                           } 
@@ -710,14 +716,14 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeer {
 	              		in = new FileOutputStream(inpath.toFile());
                                 client.retrieveFile(f.getName(), in);
                                 in.close();
-                                talog.append("retrieving file: " + f.getName() + "\n");
-                                showServerReply(client);
-                                if (cbdelete.isSelected()) {
+                                writeMessage("retrieving file: " + f.getName(), FromGUI);
+                                showServerReply(client, FromGUI);
+                                if (BlueSeerUtils.ConvertStringToBool(String.valueOf(fm.ftp_delete()))) {
                                     boolean deleted = client.deleteFile(f.getName());
                                     if (deleted) {
-                                        talog.append("deleted from server: " + f.getName() + "\n");
+                                        writeMessage("deleted from server: " + f.getName(), FromGUI);
                                     } else {
-                                        talog.append("Could not delete the file: "+ f.getName() + "\n");
+                                        writeMessage("Could not delete the file: "+ f.getName(), FromGUI);
                                     }
                                 }
                                 }
@@ -727,9 +733,9 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeer {
                 } 
 		    
                 client.logout();
-                showServerReply(client);
+                showServerReply(client, FromGUI);
                 client.disconnect();
-                showServerReply(client);
+                showServerReply(client, FromGUI);
 		
 		
 	} catch (SocketException e) {
@@ -756,11 +762,24 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeer {
    
     }
     
-    private void showServerReply(FTPClient ftpClient) {
+    private void writeMessage(String m, boolean FromGUI) {
+        if (FromGUI) {
+            talog.append(m + "\n");
+        } else {
+            System.out.println(m);
+        }
+    }
+    
+    private void showServerReply(FTPClient ftpClient, boolean FromGUI) {
         String[] replies = ftpClient.getReplyStrings();
         if (replies != null && replies.length > 0) {
+            
             for (String aReply : replies) {
-                talog.append("SERVER: " + aReply + "\n");
+                if (FromGUI) {
+                    talog.append("SERVER: " + aReply + "\n");
+                } else {
+                    System.out.println("SERVER: " + aReply);
+                }
             }
         }
     }
@@ -1105,7 +1124,7 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeer {
     }//GEN-LAST:event_btlookupActionPerformed
 
     private void btrunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btrunActionPerformed
-                    runConnect();
+                    runClient(tbkey.getText(), true);
     }//GEN-LAST:event_btrunActionPerformed
 
 
