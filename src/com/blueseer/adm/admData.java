@@ -147,16 +147,16 @@ public class admData {
           try (ResultSet res = ps.executeQuery();
                PreparedStatement psi = con.prepareStatement(sqlInsert);) {  
             if (! res.isBeforeFirst()) {
-            ps.setString(1, x.user_id);
-            ps.setString(2, x.user_site);
-            ps.setString(3, x.user_lname);
-            ps.setString(4, x.user_fname);
-            ps.setString(5, x.user_mname);
-            ps.setString(6, x.user_email);
-            ps.setString(7, x.user_phone);
-            ps.setString(8, x.user_cell);
-            ps.setString(9, x.user_rmks);
-            ps.setString(10, x.user_passwd); 
+            psi.setString(1, x.user_id);
+            psi.setString(2, x.user_site);
+            psi.setString(3, x.user_lname);
+            psi.setString(4, x.user_fname);
+            psi.setString(5, x.user_mname);
+            psi.setString(6, x.user_email);
+            psi.setString(7, x.user_phone);
+            psi.setString(8, x.user_cell);
+            psi.setString(9, x.user_rmks);
+            psi.setString(10, x.user_passwd); 
             int rows = psi.executeUpdate();
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
             } else {

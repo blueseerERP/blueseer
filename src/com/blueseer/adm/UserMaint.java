@@ -460,7 +460,7 @@ public class UserMaint extends javax.swing.JPanel implements IBlueSeer {
     public user_mstr createRecord() {
         String passwd = bsmf.MainFrame.PassWord("0", tbpassword.getPassword());
         user_mstr x = new user_mstr(null, 
-                tbkey.getText().toString(),
+                tbkey.getText(),
                 ddsite.getSelectedItem().toString(),
                 tbUMLastName.getText(),  
                 tbUMFirstName.getText(),
@@ -469,7 +469,7 @@ public class UserMaint extends javax.swing.JPanel implements IBlueSeer {
                 tbphone.getText(),
                 tbcell.getText(),
                 tarmks.getText(),
-                passwd + "'"
+                passwd
         );
         return x;
     }
