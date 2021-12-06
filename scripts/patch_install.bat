@@ -6,7 +6,7 @@ echo "patch log report" >patch.log
 cls
 @echo ""
 @echo ""
-@echo "this patch is applicable to BlueSeer Version 5.0" 
+@echo "this patch is applicable to BlueSeer Version 6.0" 
 @echo ""
 @echo ""
 
@@ -33,22 +33,8 @@ goto eof
 
 
 
-:libinstall
-rem @echo "  Check if blueseer patch directory structure is correct"
-rem set result=false
-rem set a=%~dp0
-rem set b=patches\\
-rem echo "%errors%" | FINDSTR /I /C:"%b%" && (set result=true)
-rem if "%result%" == "true" (
-rem @echo "  BlueSeer directory structure is correct...continuing"
-rem ping -n 7 127.0.0.1 > nul
-rem ) else (
-rem @echo "  blueseer patch structure is incorrect...exiting"
-rem @echo "  patch must be unzipped and placed in blueseer\patches folder as blueseer\patches\<newpatchdir>"
-rem ping -n 5 127.0.0.1 > nul
-rem exit
-rem )
 
+:libinstall
 cd %~dp0
 @echo "Checking if blueseer patch directory structure is correct"
 if exist ..\..\dist (
@@ -82,7 +68,7 @@ set /a "errors=%errors%+1"
 
 @echo "copying blueseer.jar to dist folder"
 if exist %~dp0\blueseer.jar (
-copy %~dp0\blueseer.jar ..\..\ >>patch.log 2>&1
+copy %~dp0\blueseer.jar ..\..\dist\ >>patch.log 2>&1
 ) else (
 @echo "ERROR: source file blueseer.jar does not exist" 
 @echo "ERROR: source file blueseer.jar does not exist" >>patch.log 2>&1
@@ -91,7 +77,7 @@ set /a "errors=%errors%+1"
 
 @echo "copying bsmf.jar to dist folder "
 if exist %~dp0\bsmf.jar (
-copy %~dp0\bsmf.jar ..\..\ >>patch.log 2>&1
+copy %~dp0\bsmf.jar ..\..\dist\ >>patch.log 2>&1
 ) else (
 @echo "ERROR: source file bsmf.jar does not exist "
 @echo "ERROR: source file bsmf.jar does not exist " >>patch.log 2>&1
@@ -127,7 +113,8 @@ if /I "%DBTYPE%"=="1" (
 )
 if /I "%DBTYPE%"=="1" (
 @echo "  executing sqlite sql schema updates"
-..\..\data\sqlite3.exe ..\..\data\bsdb.db <.patchsqlv51 >>patch.log 2>&1
+..\..\data\sqlite3.exe ..\..\data\bsdb.db <.patchsqlv60 >>patch.log 2>&1
+ping -n 4 127.0.0.1 > nul
 @echo "return code: %ERRORLEVEL%" >>patch.log 2>&1
 ) else (
 goto mysqlinstall
@@ -156,7 +143,7 @@ del mybs.cnf >nul 2>&1
 @echo local_infile = ON >>mybs.cnf 
 @echo "updating schema....."
 @echo "updating schema....." >>patch.log 
-mysql --defaults-extra-file=mybs.cnf -D bsdb -e "source .patchsqlv51;" >>patch.log 2>&1
+mysql --defaults-extra-file=mybs.cnf -D bsdb -e "source .patchsqlv60;" >>patch.log 2>&1
 if %errorlevel% NEQ 0 set /a "errors=%errors%+1"
 @echo "done with mysql changes....."
 ping -n 4 127.0.0.1 > nul
