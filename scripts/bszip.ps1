@@ -19,6 +19,11 @@ foreach ($line in $filecontent) {
 }
 
 
+# create jar only patch zip file
+$jaronly = "blueseer.jaronly.zip"
+rm $jaronly
+compress-archive -update -path ..\dist\blueseer.jar -destinationpath $wip\$jaronly
+
 
 rm blueseer.patch.*.zip
 $patchdir = "patchV" + $version + "P" + $pc
