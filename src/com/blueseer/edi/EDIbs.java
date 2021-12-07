@@ -29,6 +29,8 @@ package com.blueseer.edi;
  *
  * @author vaughnte
  */
+import static bsmf.MainFrame.tags;
+import static com.blueseer.adm.admData.runClient;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -43,6 +45,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import jcifs.smb.NtlmPasswordAuthentication;
@@ -104,7 +108,10 @@ public static void main(String args[]) throws IOException {
             break;   
         case "trafficDir" :
             trafficDir(indir, map);
-            break;     
+            break;   
+        case "ftpClient" :
+            ftpClient(map);
+            break;       
         default:
             System.out.println("Unable to process arguments " + myargs);
         
@@ -118,7 +125,7 @@ public static void main(String args[]) throws IOException {
 
 
  public static String[] checkargs(String[] args) {
-        List<String> legitargs = Arrays.asList("-if", "-of", "-id", "-od", "-m", "-x", "-ff", "-fd", "-ad", "-td", "-tf", "-e", "-debug" );
+        List<String> legitargs = Arrays.asList("-if", "-of", "-id", "-od", "-m", "-x", "-ff", "-fd", "-ad", "-td", "-tf", "-e", "-debug", "-ftp" );
      
         String[] vals = new String[9]; // last element is the program type (single or mulitiple)
         Arrays.fill(vals, "");
@@ -208,7 +215,11 @@ public static void main(String args[]) throws IOException {
                         break;
                     case "-debug" :
                         isDebug = true; 
-                        break;    
+                        break;  
+                    case "-ftp" :
+                        vals[4] = args[i+1];
+                        vals[7] = "ftpClient"; 
+                        break;      
                     default:
                         System.out.println("Unable to process arguments " + myargs);
                         System.exit(1);
@@ -300,6 +311,11 @@ public static void main(String args[]) throws IOException {
     } 
  }
  
+ public static void ftpClient(String key) {
+     bsmf.MainFrame.setConfig();
+     tags = ResourceBundle.getBundle("resources.bs", Locale.getDefault());
+     runClient(key); 
+ }
  
  public static void filterFile(String infile, String outfile, String[] doctypes) {
       // case of single input and output file THIS NEEDS TO BE REVISTED!!!!!   

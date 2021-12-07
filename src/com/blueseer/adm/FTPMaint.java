@@ -648,7 +648,7 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeer {
                 
                
 		// client.login(tblogin.getText(), String.valueOf(tbpasswd.getPassword()));
-                client.login(tblogin.getText(), fm.ftp_passwd());
+                client.login(fm.ftp_login(), fm.ftp_passwd());
 		showServerReply(client, FromGUI);
                 
                 

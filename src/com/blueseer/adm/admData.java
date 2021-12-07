@@ -33,9 +33,17 @@ import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import com.blueseer.utl.EDData;
 import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.SocketException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -50,6 +58,10 @@ import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.commons.net.ftp.FTP;
+import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPFile;
+import org.apache.commons.net.ftp.FTPReply;
 
 /**
  *
@@ -412,6 +424,166 @@ public class admData {
     
     
     // misc
+    public static void runClient(String c) {
+        ftp_mstr fm = admData.getFTPMstr(new String[]{c});
+        
+         FTPClient client = new FTPClient();
+         FileOutputStream in = null;
+         
+           try {
+               String homeIn = EDData.getEDIInDir();
+               String homeOut = EDData.getEDIOutDir();
+               int timeout = 0;
+               if (! fm.ftp_timeout().isEmpty()) {
+                   timeout = Integer.valueOf(fm.ftp_timeout());
+               }
+               timeout *= 1000;
+               client.setDefaultTimeout(timeout);
+               client.setDataTimeout(timeout);
+               
+                if (! fm.ftp_indir().isEmpty()) {
+                 homeIn = fm.ftp_indir();
+                }
+                if (! fm.ftp_outdir().isEmpty()) {
+                 homeOut = fm.ftp_outdir();
+                }
+             //  client.addProtocolCommandListener(new PrintCommandListener(new PrintWriter(System.out), true));
+		client.connect(fm.ftp_ip());
+		showServerReply(client);
+                
+                int replyCode = client.getReplyCode();
+                if (! FTPReply.isPositiveCompletion(replyCode)) {
+                    System.out.println("connection failed..." + String.valueOf(replyCode));
+                return;
+                }
+                
+               
+		// client.login(tblogin.getText(), String.valueOf(tbpasswd.getPassword()));
+                client.login(fm.ftp_login(), fm.ftp_passwd());
+		showServerReply(client);
+                
+                
+                 if (BlueSeerUtils.ConvertStringToBool(String.valueOf(fm.ftp_passive()))) {
+		client.enterLocalPassiveMode();
+                System.out.println("CLIENT: setting passive");
+                } else {
+                client.enterLocalActiveMode(); 
+                System.out.println("CLIENT: setting active");
+                }
+                showServerReply(client);
+                
+                if (BlueSeerUtils.ConvertStringToBool(String.valueOf(fm.ftp_binary()))) {
+		client.setFileType(FTP.BINARY_FILE_TYPE);
+                System.out.println("CLIENT: setting binary");
+                } else {
+                client.setFileType(FTP.ASCII_FILE_TYPE);
+                System.out.println("CLIENT: setting ascii");
+                }
+                showServerReply(client);
+		
+		    /* not sure why...but in scenario where login credentials are wrong...you have to execute a function (client.listFiles) that 
+		       returns IOError to generate the error.....client.login does not return an IOError when wrong login or password without subsequent data dive  */
+		
+                for (String line : fm.ftp_commands().split("\\n"))   {
+                    String[] splitLine = line.trim().split("\\s+");
+                    if (splitLine.length > 1 && splitLine[0].equals("cd")) {
+                        client.changeWorkingDirectory(splitLine[1]);
+                        showServerReply(client);
+                    }
+                    if (splitLine.length == 1 && splitLine[0].equals("dir")) {
+                        FTPFile[] ftpFiles = client.listFiles();
+                        if (ftpFiles != null) {
+                            for (FTPFile f : ftpFiles) {
+                                System.out.println(f.getName());
+                            }
+		        }
+                        showServerReply(client);
+                    }
+                    if (splitLine.length > 1 && splitLine[0].equals("put")) {
+                        File localfolder = new File(homeOut);
+	                File[] localFiles = localfolder.listFiles();
+                        for (int i = 0; i < localFiles.length; i++) {
+                          if (localFiles[i].isFile()) {
+                              String x = ("\\Q" + splitLine[1] + "\\E").replace("*", "\\E.*\\Q");
+                                if (localFiles[i].getName().matches(x)) {
+                                    InputStream inputStream = new FileInputStream(localFiles[i]);
+                                    boolean done = client.storeFile(localFiles[i].getName(), inputStream);
+                                    inputStream.close();
+                                    if (done) {
+                                        System.out.println("putting file: " + localFiles[i].getName());
+                                    }    
+                                }
+                          } 
+                        }
+                    }
+                    if (splitLine.length > 1 && splitLine[0].equals("get")) {
+                        // first capture list of available files...
+                        FTPFile[] ftpFiles = client.listFiles();
+                        if (ftpFiles != null) {
+                            for (FTPFile f : ftpFiles) {
+                                String x = ("\\Q" + splitLine[1] + "\\E").replace("*", "\\E.*\\Q");
+                                if (f.getName().matches(x)) {
+                                Path inpath = Paths.get(homeIn + "\\" + f.getName());
+	              		in = new FileOutputStream(inpath.toFile());
+                                client.retrieveFile(f.getName(), in);
+                                in.close();
+                                System.out.println("retrieving file: " + f.getName());
+                                showServerReply(client);
+                                if (BlueSeerUtils.ConvertStringToBool(String.valueOf(fm.ftp_delete()))) {
+                                    boolean deleted = client.deleteFile(f.getName());
+                                    if (deleted) {
+                                        System.out.println("deleted from server: " + f.getName());
+                                    } else {
+                                        System.out.println("Could not delete the file: "+ f.getName());
+                                    }
+                                }
+                                }
+                            }
+		        }
+                    }
+                } 
+		    
+                client.logout();
+                showServerReply(client);
+                client.disconnect();
+                showServerReply(client);
+		
+		
+	} catch (SocketException e) {
+		System.out.println("socket error: " + e.getMessage());
+	} catch (IOException e) {
+		System.out.println("io error: " + e.getMessage());
+		
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+          if (client.isConnected()) {
+              try {
+                      client.disconnect();
+              } catch (IOException ex) {
+                  ex.printStackTrace();
+              }
+          }
+       }
+   
+    }
+    
+    private static void showServerReply(FTPClient ftpClient) {
+        String[] replies = ftpClient.getReplyStrings();
+        if (replies != null && replies.length > 0) {
+            
+            for (String aReply : replies) {
+                System.out.println("SERVER: " + aReply);
+            }
+        }
+    }
+    
+    
     public static void updateDefaultCurrency(String x) {
          DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd"); 
        try{
@@ -454,8 +626,7 @@ public class admData {
             System.exit(0);
           }
     }
-    
-    
+      
     
     public static boolean isValidLocale(Locale locale) {
       try {
