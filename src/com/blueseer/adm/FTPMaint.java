@@ -33,8 +33,13 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.adm.admData.addFTPMstr;
+import static com.blueseer.adm.admData.deleteFTPMstr;
 import com.blueseer.adm.admData.ftp_mstr;
+import static com.blueseer.adm.admData.getFTPMstr;
+import static com.blueseer.adm.admData.updateFTPMstr;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
@@ -46,7 +51,7 @@ import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.EDData;
-import com.blueseer.utl.IBlueSeer;
+import com.blueseer.utl.IBlueSeerT;
 import com.blueseer.utl.OVData;
 import java.awt.Color;
 import java.awt.Component;
@@ -92,7 +97,7 @@ import org.apache.commons.net.ftp.FTPReply;
  *
  * @author vaughnte
  */
-public class FTPMaint extends javax.swing.JPanel implements IBlueSeer {
+public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
 
     
     // global variable declarations
@@ -106,15 +111,15 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeer {
     }
 
     // interface functions implemented
-    public void executeTask(String x, String[] y) { 
+    public void executeTask(dbaction x, String[] y) { 
       
         class Task extends SwingWorker<String[], Void> {
        
           String type = "";
           String[] key = null;
           
-          public Task(String type, String[] key) { 
-              this.type = type;
+          public Task(BlueSeerUtils.dbaction type, String[] key) { 
+              this.type = type.name();
               this.key = key;
           } 
            
@@ -160,7 +165,6 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeer {
            } else {
              initvars(null);  
            }
-           
             
             } catch (Exception e) {
                 MainFrame.bslog(e);
@@ -316,22 +320,18 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeer {
         tbkey.requestFocus();
     }
     
-    public String[] setAction(int i) {
-        String[] m = new String[2];
-        if (i > 0) {
-            m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
+    public void setAction(String[] x) {
+        if (x[0].equals("0")) { 
                    setPanelComponentState(this, true);
                    btadd.setEnabled(false);
                    tbkey.setEditable(false);
                    tbkey.setForeground(Color.blue);
         } else {
-           m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
                    tbkey.setForeground(Color.red); 
         }
-        return m;
     }
     
-    public boolean validateInput(String x) {
+    public boolean validateInput(dbaction x) {
         boolean b = true;
                 
                 if (tbkey.getText().isEmpty()) {
@@ -383,7 +383,7 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeer {
         btlookup.setEnabled(true);
         
         if (arg != null && arg.length > 0) {
-            executeTask("get",arg);
+            executeTask(dbaction.get,arg);
         } else {
             tbkey.setEnabled(true);
             tbkey.setEditable(true);
@@ -392,181 +392,63 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeer {
     }
     
     public String[] addRecord(String[] x) {
-     String[] m = new String[2];
-     
-     try {
-
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                boolean proceed = true;
-                int i = 0;
-                
-               
-
-                    res = st.executeQuery("SELECT ftp_id FROM  ftp_mstr where ftp_id = " + "'" + tbkey.getText() + "'" + ";");
-                    while (res.next()) {
-                        i++;
-                    }
-                    if (i == 0) {
-                        st.executeUpdate("insert into ftp_mstr "
-                            + "(ftp_id, ftp_desc, ftp_ip, ftp_login, ftp_passwd, ftp_commands, ftp_indir, ftp_outdir, ftp_delete, ftp_passive, ftp_binary, ftp_timeout ) "
-                            + " values ( " + "'" + tbkey.getText() + "'" + ","
-                            + "'" + tbdesc.getText() + "'" + ","
-                            + "'" + tbip.getText() + "'" + ","
-                            + "'" + tblogin.getText() + "'" + ","
-                            + "'" + String.valueOf(tbpasswd.getPassword()) + "'" + ","
-                            + "'" + tacommands.getText().replace("'", "") + "'" + ","        
-                            + "'" + tbindir.getText() + "'" + ","
-                            + "'" + tboutdir.getText() + "'" + ","
-                            + "'" + BlueSeerUtils.boolToInt(cbdelete.isSelected()) + "'" + ","
-                            + "'" + BlueSeerUtils.boolToInt(cbpassive.isSelected()) + "'" + "," 
-                            + "'" + BlueSeerUtils.boolToInt(cbbinary.isSelected()) + "'" + ","        
-                            + "'" + tbtimeout.getText() + "'"         
-                            + ")"
-                            + ";");
-                        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
-                    } else {
-                       m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists}; 
-                    }
-
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordSQLError};  
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordConnError};
-        }
-     
-     return m;
+     String[] m = addFTPMstr(createRecord());
+         return m;
      }
      
     public String[] updateRecord(String[] x) {
-     String[] m = new String[2];
-     
-     try {
-            boolean proceed = true;
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                   st.executeUpdate("update ftp_mstr set ftp_desc = " + "'" + tbdesc.getText() + "'" + ","
-                            + "ftp_ip = " + "'" + tbip.getText() + "'" + ","
-                            + "ftp_login = " + "'" + tblogin.getText() + "'" + ","
-                            + "ftp_passwd = " + "'" + String.valueOf(tbpasswd.getPassword()) + "'" + ","
-                            + "ftp_commands = " + "'" + tacommands.getText().replace("'", "") + "'" + ","
-                            + "ftp_indir = " + "'" + tbindir.getText() + "'" + ","
-                            + "ftp_outdir = " + "'" + tboutdir.getText() + "'" + ","
-                            + "ftp_timeout = " + "'" + tbtimeout.getText() + "'" + ","
-                            + "ftp_delete = " + "'" + BlueSeerUtils.boolToInt(cbdelete.isSelected()) + "'" + ","
-                            + "ftp_passive = " + "'" + BlueSeerUtils.boolToInt(cbpassive.isSelected()) + "'" + ","
-                            + "ftp_binary = " + "'" + BlueSeerUtils.boolToInt(cbbinary.isSelected()) + "'"        
-                            + " where ftp_id = " + "'" + tbkey.getText() + "'"                             
-                            + ";"); 
-                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
-               
-         
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError};  
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordConnError};
-        }
-     
-     return m;
+     String[] m = updateFTPMstr(createRecord());
+         return m;
      }
      
     public String[] deleteRecord(String[] x) {
      String[] m = new String[2];
-        boolean proceed = bsmf.MainFrame.warn("Are you sure?");
+        boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
         if (proceed) {
-        try {
-
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-              
-                   int i = st.executeUpdate("delete from ftp_mstr where ftp_id = " + "'" + x[0] + "'" + ";");
-                    if (i > 0) {
-                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
-                    } else {
-                    m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordError};    
-                    }
-                } catch (SQLException s) {
-                 MainFrame.bslog(s); 
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordSQLError};  
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordConnError};
-        }
+         m = deleteFTPMstr(createRecord()); 
+         initvars(null);
         } else {
            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
         }
-     return m;
+         return m;
      }
       
-    public String[] getRecord(String[] x) {
-       String[] m = new String[2];
-       
-        try {
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                int i = 0;
-                res = st.executeQuery("select * from ftp_mstr where ftp_id = " + "'" + x[0] + "'" + ";");
-                while (res.next()) {
-                    i++;
-                    tbkey.setText(x[0]);
-                    tbdesc.setText(res.getString("ftp_desc"));
-                    cbdelete.setSelected(res.getBoolean("ftp_delete"));
-                    cbpassive.setSelected(res.getBoolean("ftp_passive"));
-                    cbbinary.setSelected(res.getBoolean("ftp_binary"));
-                    tbip.setText(res.getString("ftp_ip"));
-                    tblogin.setText(res.getString("ftp_login"));
-                    tbpasswd.setText(res.getString("ftp_passwd"));
-                    tbtimeout.setText(res.getString("ftp_timeout"));
-                    tacommands.setText(res.getString("ftp_commands"));
-                    tboutdir.setText(res.getString("ftp_outdir"));
-                    tbindir.setText(res.getString("ftp_indir"));
-                }
-               
-                // set Action if Record found (i > 0)
-                m = setAction(i);
-                
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};  
-        }
-      return m;
+    public String[] getRecord(String[] key) {
+       ftp_mstr x = getFTPMstr(key);  
+        tbkey.setText(x.ftp_id());
+        tbdesc.setText(x.ftp_desc());
+        tbip.setText(x.ftp_ip());
+        tblogin.setText(x.ftp_login());
+        tbpasswd.setText(x.ftp_passwd());
+        tacommands.setText(x.ftp_commands());      
+        tbindir.setText(x.ftp_indir());
+        tboutdir.setText(x.ftp_outdir());
+        cbpassive.setSelected(BlueSeerUtils.ConvertStringToBool(String.valueOf(x.ftp_passive())));
+        cbdelete.setSelected(BlueSeerUtils.ConvertStringToBool(String.valueOf(x.ftp_delete())));
+        cbbinary.setSelected(BlueSeerUtils.ConvertStringToBool(String.valueOf(x.ftp_binary())));
+        tbtimeout.setText(x.ftp_timeout());
+        setAction(x.m());
+        return x.m();
     }
     
+    public ftp_mstr createRecord() { 
+        ftp_mstr x = new ftp_mstr(null, 
+                tbkey.getText().toString(),
+                tbdesc.getText().toUpperCase(),
+                tbip.getText(),
+                tblogin.getText(),
+                String.valueOf(tbpasswd.getPassword()),
+                tacommands.getText().replace("'", ""),      
+                tbindir.getText(),
+                tboutdir.getText(),
+                String.valueOf(BlueSeerUtils.boolToInt(cbdelete.isSelected())),
+                String.valueOf(BlueSeerUtils.boolToInt(cbpassive.isSelected())),
+                String.valueOf(BlueSeerUtils.boolToInt(cbbinary.isSelected())),       
+                tbtimeout.getText()      
+                );
+        return x;
+    }
+        
     public void lookUpFrame() {
         
         luinput.removeActionListener(lual);
@@ -608,12 +490,13 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeer {
         
     }
 
-    public void runClient(String c, boolean FromGUI) {
+    // misc
+    public void runClient(String c) {
         ftp_mstr fm = admData.getFTPMstr(new String[]{c});
         
          FTPClient client = new FTPClient();
          
-         if (FromGUI)
+        
          talog.setText("");
          
          FileOutputStream in = null;
@@ -638,37 +521,37 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeer {
                 }
              //  client.addProtocolCommandListener(new PrintCommandListener(new PrintWriter(System.out), true));
 		client.connect(fm.ftp_ip());
-		showServerReply(client, FromGUI);
+		showServerReply(client);
                 
                 int replyCode = client.getReplyCode();
                 if (!FTPReply.isPositiveCompletion(replyCode)) {
-                    writeMessage("connection failed..." + String.valueOf(replyCode), FromGUI);
+                    talog.append("connection failed..." + String.valueOf(replyCode) + "\n");
                 return;
                 }
                 
                
 		// client.login(tblogin.getText(), String.valueOf(tbpasswd.getPassword()));
                 client.login(fm.ftp_login(), fm.ftp_passwd());
-		showServerReply(client, FromGUI);
+		showServerReply(client);
                 
                 
                  if (BlueSeerUtils.ConvertStringToBool(String.valueOf(fm.ftp_passive()))) {
 		client.enterLocalPassiveMode();
-                writeMessage("CLIENT: setting passive", FromGUI);
+                talog.append("CLIENT: setting passive" + "\n");
                 } else {
                 client.enterLocalActiveMode(); 
-                writeMessage("CLIENT: setting active", FromGUI);
+                talog.append("CLIENT: setting active" + "\n");
                 }
-                showServerReply(client, FromGUI);
+                showServerReply(client);
                 
                 if (BlueSeerUtils.ConvertStringToBool(String.valueOf(fm.ftp_binary()))) {
 		client.setFileType(FTP.BINARY_FILE_TYPE);
-                writeMessage("CLIENT: setting binary", FromGUI);
+                talog.append("CLIENT: setting binary" + "\n");
                 } else {
                 client.setFileType(FTP.ASCII_FILE_TYPE);
-                writeMessage("CLIENT: setting ascii", FromGUI);
+                talog.append("CLIENT: setting ascii" + "\n");
                 }
-                showServerReply(client, FromGUI);
+                showServerReply(client);
 		
 		    /* not sure why...but in scenario where login credentials are wrong...you have to execute a function (client.listFiles) that 
 		       returns IOError to generate the error.....client.login does not return an IOError when wrong login or password without subsequent data dive  */
@@ -677,16 +560,16 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeer {
                     String[] splitLine = line.trim().split("\\s+");
                     if (splitLine.length > 1 && splitLine[0].equals("cd")) {
                         client.changeWorkingDirectory(splitLine[1]);
-                        showServerReply(client, FromGUI);
+                        showServerReply(client);
                     }
                     if (splitLine.length == 1 && splitLine[0].equals("dir")) {
                         FTPFile[] ftpFiles = client.listFiles();
                         if (ftpFiles != null) {
                             for (FTPFile f : ftpFiles) {
-                                writeMessage(f.getName(), FromGUI);
+                                talog.append(f.getName() + "\n");
                             }
 		        }
-                        showServerReply(client, FromGUI);
+                        showServerReply(client);
                     }
                     if (splitLine.length > 1 && splitLine[0].equals("put")) {
                         File localfolder = new File(homeOut);
@@ -699,7 +582,7 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeer {
                                     boolean done = client.storeFile(localFiles[i].getName(), inputStream);
                                     inputStream.close();
                                     if (done) {
-                                        writeMessage("putting file: " + localFiles[i].getName(), FromGUI);
+                                        talog.append("putting file: " + localFiles[i].getName() + "\n");
                                     }    
                                 }
                           } 
@@ -716,14 +599,14 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeer {
 	              		in = new FileOutputStream(inpath.toFile());
                                 client.retrieveFile(f.getName(), in);
                                 in.close();
-                                writeMessage("retrieving file: " + f.getName(), FromGUI);
-                                showServerReply(client, FromGUI);
+                                talog.append("retrieving file: " + f.getName() + "\n");
+                                showServerReply(client);
                                 if (BlueSeerUtils.ConvertStringToBool(String.valueOf(fm.ftp_delete()))) {
                                     boolean deleted = client.deleteFile(f.getName());
                                     if (deleted) {
-                                        writeMessage("deleted from server: " + f.getName(), FromGUI);
+                                        talog.append("deleted from server: " + f.getName() + "\n");
                                     } else {
-                                        writeMessage("Could not delete the file: "+ f.getName(), FromGUI);
+                                        talog.append("Could not delete the file: "+ f.getName() + "\n");
                                     }
                                 }
                                 }
@@ -733,9 +616,9 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeer {
                 } 
 		    
                 client.logout();
-                showServerReply(client, FromGUI);
+                showServerReply(client);
                 client.disconnect();
-                showServerReply(client, FromGUI);
+                showServerReply(client);
 		
 		
 	} catch (SocketException e) {
@@ -762,24 +645,12 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeer {
    
     }
     
-    private void writeMessage(String m, boolean FromGUI) {
-        if (FromGUI) {
-            talog.append(m + "\n");
-        } else {
-            System.out.println(m);
-        }
-    }
-    
-    private void showServerReply(FTPClient ftpClient, boolean FromGUI) {
+    private void showServerReply(FTPClient ftpClient) {
         String[] replies = ftpClient.getReplyStrings();
         if (replies != null && replies.length > 0) {
             
             for (String aReply : replies) {
-                if (FromGUI) {
-                    talog.append("SERVER: " + aReply + "\n");
-                } else {
-                    System.out.println("SERVER: " + aReply);
-                }
+              talog.append("SERVER: " + aReply + "\n");
             }
         }
     }
@@ -1083,27 +954,27 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeer {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
-      if (! validateInput("addRecord")) {
+      if (! validateInput(dbaction.add)) {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("add", new String[]{tbkey.getText()});
+        executeTask(dbaction.add, new String[]{tbkey.getText()});
     }//GEN-LAST:event_btaddActionPerformed
 
     private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
-       if (! validateInput("updateRecord")) {
+       if (! validateInput(dbaction.update)) {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("update", new String[]{tbkey.getText()});
+        executeTask(dbaction.update, new String[]{tbkey.getText()});
     }//GEN-LAST:event_btupdateActionPerformed
 
     private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
-        if (! validateInput("deleteRecord")) {
+        if (! validateInput(dbaction.delete)) {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("delete", new String[]{tbkey.getText()});  
+        executeTask(dbaction.delete, new String[]{tbkey.getText()});  
     }//GEN-LAST:event_btdeleteActionPerformed
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
@@ -1116,7 +987,7 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeer {
     }//GEN-LAST:event_tbclearActionPerformed
 
     private void tbkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkeyActionPerformed
-        executeTask("get", new String[]{tbkey.getText()});
+        executeTask(dbaction.get, new String[]{tbkey.getText()});
     }//GEN-LAST:event_tbkeyActionPerformed
 
     private void btlookupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btlookupActionPerformed
@@ -1124,7 +995,7 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeer {
     }//GEN-LAST:event_btlookupActionPerformed
 
     private void btrunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btrunActionPerformed
-                    runClient(tbkey.getText(), true);
+        runClient(tbkey.getText());
     }//GEN-LAST:event_btrunActionPerformed
 
 
