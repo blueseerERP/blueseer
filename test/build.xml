@@ -3,11 +3,13 @@
     <!-- Sets variables which can later be used. -->
     <!-- The value of a property is accessed via ${} -->
     <property name="src.dir" location="../src" />
-    <property name="sf.dir" location="../sf" />
     <property name="build.dir" location="../build" />
     <property name="dist.dir" location="../dist" />
-    <property name="test.dir" location="../test/scratch" />
+    <property name="test.dir" location="../test" />
     <property name="lib.dir" location="../lib" />
+    <property name="JDK17dir" location="C:\java\jdk-17" />
+    <property name="javac17" location="${JDK17dir}/bin/javac" />
+    <property name="java17" location="${JDK17dir}/bin/java" />
     <property name="classpath.property" 
 	    value="dist/" />
 
@@ -16,6 +18,12 @@
             <include name="**/*.jar" />
         </fileset>
     </path>
+
+     <path id="run.classpath">
+	<fileset dir="../dist" includes="*.jar"/>
+	<fileset dir="." includes="*.jar"/>
+    </path>
+
 
     <!-- Deletes the existing build, docs and dist directory-->
     <target name="clean">
@@ -34,7 +42,7 @@
 
     <!-- Compiles the java code (including the usage of library for JUnit -->
     <target name="compile" depends="clean, makedir">
-        <javac srcdir="${src.dir}" destdir="${build.dir}" classpathref="build.classpath" includeantruntime="false" debug="true">
+        <javac executable="${javac17}" fork="yes" srcdir="${src.dir}" destdir="${build.dir}" classpathref="build.classpath" includeantruntime="false" debug="true">
         </javac>
     </target>
 
@@ -42,7 +50,7 @@
     <!--Creates the deployable jar file  -->
     <target name="jar" depends="compile">
         <jar destfile="${dist.dir}\blueseer.jar" basedir="${build.dir}">
-		<fileset dir="${src.dir}" includes="images/**/*.png,images/**/*.gif" />
+		<fileset dir="${src.dir}" includes="images/**/*.png,images/**/*.gif,resources/**/*.properties" />
 		<!--	<fileset dir="${lib.dir}" includes="**/*.jar"/> -->
             <manifest>
                 <attribute name="Main-Class" value="bsmf" />
@@ -51,37 +59,7 @@
 	<copy file="${dist.dir}\blueseer.jar" todir="${test.dir}" overwrite="true"/>
     </target>
 
-    <!-- refresh test database - windows -->
-<target name="refresh">
-        <delete dir="${test.dir}" />
-        <mkdir dir="${test.dir}" />
-	 <copy todir="${test.dir}" overwrite="true">
-         <fileset dir="${sf.dir}"/>
-         </copy>
-	 <!--	<copy file="refresh.bat" todir="${test.dir}" overwrite="true"/> -->
-	<exec executable="cmd">
-		<arg line="/c refresh.bat"/>
-	</exec>
-</target>
 
-    <!-- refresh test database - linux -->
-<target name="refreshlinux">
-        <delete dir="${test.dir}" />
-        <mkdir dir="${test.dir}" />
-	 <copy todir="${test.dir}" overwrite="true">
-         <fileset dir="${sf.dir}"/>
-         </copy>
-	<copy file="refresh.sh" todir="${test.dir}" overwrite="true"/>
-        <chmod file="${test.dir}/refresh.sh" perm="777" />
-        <chmod file="${test.dir}/data/sqlite3" perm="777" />
-	<exec dir="${test.dir}" executable="./refresh.sh">
-	</exec>
-</target>
-
-<target name="patch">
-	<exec executable="cmd"> <arg line="/c git rev-parse HEAD >.patch"/>
-	</exec>
-</target>
 
 <target name="run">
     <path id="runtime.path">
@@ -89,7 +67,8 @@
 	    <fileset dir="../lib" includes="*.jar"/>
     </path>
     <echo>running in ....${test.dir}</echo>
-    <java classname="bsmf.MainFrame" fork="true" classpathref="runtime.path" dir="scratch">
+   <java classname="bsmf.MainFrame" jvm="${java17}" fork="true" classpathref="runtime.path" dir="${test.dir}">
+	    <arg value="-debug"/> 
 	    <jvmarg value="-Djava.util.logging.config.file=bslogging.properties"/>
         </java>
 </target>
