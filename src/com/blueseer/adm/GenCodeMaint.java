@@ -31,8 +31,14 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.adm.admData.addCodeMstr;
+import com.blueseer.adm.admData.code_mstr;
+import static com.blueseer.adm.admData.deleteCodeMstr;
+import static com.blueseer.adm.admData.getCodeMstr;
+import static com.blueseer.adm.admData.updateCodeMstr;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
@@ -43,7 +49,7 @@ import static com.blueseer.utl.BlueSeerUtils.luinput;
 import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import com.blueseer.utl.DTData;
-import com.blueseer.utl.IBlueSeer;
+import com.blueseer.utl.IBlueSeerT;
 import com.blueseer.utl.OVData;
 import java.awt.Color;
 import java.awt.Component;
@@ -82,7 +88,7 @@ import javax.swing.SwingWorker;
  *
  * @author vaughnte
  */
-public class GenCodeMaint extends javax.swing.JPanel    {
+public class GenCodeMaint extends javax.swing.JPanel implements IBlueSeerT    {
 
     // global variable declarations
     boolean isLoad = false;
@@ -107,15 +113,15 @@ public class GenCodeMaint extends javax.swing.JPanel    {
 
     
       // interface functions implemented
-    public void executeTask(String x, String[] y) { 
+    public void executeTask(BlueSeerUtils.dbaction x, String[] y) { 
       
         class Task extends SwingWorker<String[], Void> {
        
           String type = "";
           String[] key = null;
           
-          public Task(String type, String[] key) { 
-              this.type = type;
+          public Task(BlueSeerUtils.dbaction type, String[] key) { 
+              this.type = type.name();
               this.key = key;
           } 
            
@@ -161,7 +167,6 @@ public class GenCodeMaint extends javax.swing.JPanel    {
            } else {
              initvars(null);  
            }
-           
             
             } catch (Exception e) {
                 MainFrame.bslog(e);
@@ -175,7 +180,7 @@ public class GenCodeMaint extends javax.swing.JPanel    {
        z.execute(); 
        
     }
-       
+      
     public void setPanelComponentState(Object myobj, boolean b) {
         JPanel panel = null;
         JTabbedPane tabpane = null;
@@ -308,24 +313,19 @@ public class GenCodeMaint extends javax.swing.JPanel    {
         tbkey.requestFocus();
     }
     
-    public String[] setAction(int i) {
-        String[] m = new String[2];
-        if (i > 0) {
-            m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
+    public void setAction(String[] x) {
+        if (x[0].equals("0")) { 
                    setPanelComponentState(this, true);
-                   btnew.setEnabled(false);
                    btadd.setEnabled(false);
                    tbkey.setEditable(false);
-                   cbsystem.setEnabled(false);
                    tbkey.setForeground(Color.blue);
+                   cbsystem.setEnabled(false);
         } else {
-           m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
                    tbkey.setForeground(Color.red); 
         }
-        return m;
     }
     
-    public boolean validateInput(String x) {
+    public boolean validateInput(dbaction x) {
         boolean b = true;
                
                 
@@ -361,7 +361,7 @@ public class GenCodeMaint extends javax.swing.JPanel    {
         cbsystem.setEnabled(false);
         // this is a two key data record
         if (arg != null && arg.length > 1) {
-            executeTask("get", arg);
+            executeTask(dbaction.get, arg);
         } else {
             tbkey.setEnabled(true);
             tbkey.setEditable(true);
@@ -372,209 +372,47 @@ public class GenCodeMaint extends javax.swing.JPanel    {
     }
      
     public String[] addRecord(String[] x) {
-         String[] m = new String[2];
-          try {
-
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                
-               
-                int i = 0;
-                
-               boolean proceed = validateInput("addRecord");
-                
-                if (proceed) {
-
-                    res = st.executeQuery("SELECT code_value FROM  code_mstr where code_code = " + "'" + x[0] + "'" + 
-                            " AND code_key = " + "'" + x[1] + "'" + ";");
-                    while (res.next()) {
-                        i++;
-                    }
-                    if (i == 0) {
-                        st.executeUpdate("insert into code_mstr "
-                            + "(code_code, code_key, code_value ) "
-                            + " values ( " + "'" + x[0] + "'" + ","
-                            + "'" + x[1] + "'" + ","
-                            + "'" + tbvalue.getText().toString() + "'"
-                            + ")"
-                            + ";");
-                         m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
-                    } else {
-                       m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists}; 
-                    }
-
-                   initvars(null);
-                   
-                } // if proceed
-          } catch (SQLException s) {
-                MainFrame.bslog(s);
-                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordSQLError};  
-           } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordConnError};
-        }
-    return m;
+        String[] m = addCodeMstr(createRecord());
+         return m;
     }
     
     public String[] updateRecord(String[] x) {
-        String[] m = new String[2];
-         try {
-           
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                
-                int i = 0;   
-                boolean proceed = validateInput("updateRecord");
-                
-                res = st.executeQuery("SELECT code_code FROM  code_mstr where code_code = " + "'" + x[0] + "'" + 
-                            " AND code_key = " + "'" + x[1] + "'" + ";");
-                    while (res.next()) {
-                        i++;
-                    }
-                
-                if (i == 0) {
-                    proceed = false;
-                    bsmf.MainFrame.show(getMessageTag(1014));
-                }
-                
-                if (proceed) {
-                    st.executeUpdate("update code_mstr set code_value = " + "'" + tbvalue.getText() + "'"
-                            + " where code_key = " + "'" + x[1] + "'"
-                            + " AND code_code = " + "'" + x[0] + "'"                             
-                            + ";");
-                      m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
-                    initvars(null);
-                  
-                } 
-         
-           } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError};  
-           } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordConnError};
-        }
-    return m;
+        String[] m = updateCodeMstr(createRecord());
+         return m;
     }
     
     public String[] deleteRecord(String[] x) {
-        String[] m = new String[2];
-        
-        boolean proceed = bsmf.MainFrame.warn("Are you sure?");
-        if (cbsystem.isSelected() && ! bsmf.MainFrame.userid.equals("admin")) {
-                    bsmf.MainFrame.show(getMessageTag(1113));
-                    proceed = false;
-        }
-        
+       String[] m = new String[2];
+        boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
         if (proceed) {
-        try {
-
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                
-                   int i = st.executeUpdate("delete from code_mstr where code_key = " + "'" + x[1] + "'" 
-                           + " and code_code = " + "'" + x[0] + "'" 
-                           + ";");
-                    if (i > 0) {
-                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
-                    initvars(null);
-                    }
-                } catch (SQLException s) {
-                 MainFrame.bslog(s); 
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordSQLError};  
-           } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordConnError};
-        }
+         m = deleteCodeMstr(createRecord()); 
+         initvars(null);
         } else {
            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
         }
-     return m;
+         return m;
     }
         
-    public String[] getRecord(String[] x) {
-        String[] m = new String[2];
-        try {
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                
-                int i = 0;
-                if (x == null && x.length < 1) { return new String[]{}; };
-                // two key system....make accomodation for first key action performed returning first record where it exists..else grab specific rec with both keys
-                if (x[1].isEmpty()) {
-                res = st.executeQuery("select * from code_mstr where code_code = " + "'" + x[0] + "'"  + " limit 1 ;"); 
-                } else {
-                 res = st.executeQuery("select * from code_mstr where code_code = " + "'" + x[0] + "'"  + 
-                        " and code_key = " + "'" + x[1] + "'" +
-                        ";");   
-                }
-                while (res.next()) {
-                    i++;
-                    tbkey.setText(x[0]);
-                    tbkey2.setText(res.getString("code_key"));
-                    tbvalue.setText(res.getString("code_value"));
-                    cbsystem.setSelected(bsmf.MainFrame.ConvertStringToBool(res.getString("code_internal")));
-                    
-                }
-              
-           
-               // set Action if Record found (i > 0)
-                m = setAction(i);
-                
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
-           } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};  
-        }
-      return m;
-
+    public String[] getRecord(String[] key) {
+        code_mstr x = getCodeMstr(key); 
+        tbkey.setText(x.code_code());
+        tbkey2.setText(x.code_key());
+        tbvalue.setText(x.code_value());
+        cbsystem.setSelected(BlueSeerUtils.ConvertStringToBool(String.valueOf(x.code_internal())));
+        setAction(x.m());
+        return x.m();
     }
+    
+    public code_mstr createRecord() { 
+        code_mstr x = new code_mstr(null, 
+                tbkey.getText(),
+                tbkey2.getText(),
+                tbvalue.getText(),
+                String.valueOf(BlueSeerUtils.boolToInt(cbsystem.isSelected()))
+                );
+        return x;
+    }
+    
     
     public void lookUpFrame() {
         
@@ -784,27 +622,27 @@ public class GenCodeMaint extends javax.swing.JPanel    {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
-          if (! validateInput("addRecord")) {
+          if (! validateInput(dbaction.add)) {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("add", new String[]{tbkey.getText(), tbkey2.getText()});
+        executeTask(dbaction.add, new String[]{tbkey.getText(), tbkey2.getText()});
     }//GEN-LAST:event_btaddActionPerformed
 
     private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
-        if (! validateInput("updateRecord")) {
+        if (! validateInput(dbaction.update)) {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("update", new String[]{tbkey.getText(), tbkey2.getText()});
+        executeTask(dbaction.update, new String[]{tbkey.getText(), tbkey2.getText()});
     }//GEN-LAST:event_btupdateActionPerformed
 
     private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
-       if (! validateInput("deleteRecord")) {
+       if (! validateInput(dbaction.delete)) {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("delete", new String[]{tbkey.getText(), tbkey2.getText()});   
+        executeTask(dbaction.delete, new String[]{tbkey.getText(), tbkey2.getText()});   
     }//GEN-LAST:event_btdeleteActionPerformed
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
@@ -812,11 +650,11 @@ public class GenCodeMaint extends javax.swing.JPanel    {
     }//GEN-LAST:event_btnewActionPerformed
 
     private void tbkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkeyActionPerformed
-        executeTask("get", new String[]{tbkey.getText(), tbkey2.getText()});
+        executeTask(dbaction.get, new String[]{tbkey.getText(), tbkey2.getText()});
     }//GEN-LAST:event_tbkeyActionPerformed
 
     private void tbkey2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkey2ActionPerformed
-       executeTask("get", new String[]{tbkey.getText(), tbkey2.getText()});
+       executeTask(dbaction.get, new String[]{tbkey.getText(), tbkey2.getText()});
     }//GEN-LAST:event_tbkey2ActionPerformed
 
     private void btclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearActionPerformed

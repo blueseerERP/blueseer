@@ -421,6 +421,112 @@ public class admData {
         return r;
     }
     
+    public static String[] addCodeMstr(code_mstr x) {
+        String[] m = new String[2];
+        String sqlSelect = "SELECT * FROM  code_mstr where code_code = ? and code_key = ?";
+        String sqlInsert = "insert into code_mstr (code_code, code_key, code_value, code_internal) " 
+                        + " values (?,?,?,?); "; 
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+             PreparedStatement ps = con.prepareStatement(sqlSelect);) {
+             ps.setString(1, x.code_code);
+             ps.setString(2, x.code_key);
+          try (ResultSet res = ps.executeQuery();
+               PreparedStatement psi = con.prepareStatement(sqlInsert);) {  
+            if (! res.isBeforeFirst()) {
+            psi.setString(1, x.code_code);
+            psi.setString(2, x.code_key);
+            psi.setString(3, x.code_value);
+            psi.setString(4, x.code_internal);
+            int rows = psi.executeUpdate();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+            } else {
+            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists};    
+            }
+          } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+          }
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+
+    public static String[] updateCodeMstr(code_mstr x) {
+        String[] m = new String[2];
+        String sql = "update code_mstr set code_value = ?, code_internal = ? " +   
+                          " where code_code = ? and code_key = ? ; ";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, x.code_value);
+        ps.setString(2, x.code_internal);
+        ps.setString(3, x.code_code);
+        ps.setString(4, x.code_key);
+        int rows = ps.executeUpdate();
+        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+    
+    public static String[] deleteCodeMstr(code_mstr x) { 
+       String[] m = new String[2];
+        String sql = "delete from code_mstr where code_code = ? and code_key = ?; ";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, x.code_code);
+        ps.setString(2, x.code_key);
+        int rows = ps.executeUpdate();
+        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+    
+    public static code_mstr getCodeMstr(String[] x) {
+        code_mstr r = null;
+        String[] m = new String[2];
+        String sql = "";
+         if (x.length >= 2 && ! x[1].isEmpty()) {
+            sql = "select * from code_mstr where code_code = ? and code_key = ? ;"; 
+         } else {
+            sql = "select * from code_mstr where code_code = ? limit 1 ;";  
+         }
+        
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, x[0]);
+        if (x.length >= 2 && ! x[1].isEmpty()) {
+        ps.setString(2, x[1]);
+        }
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new code_mstr(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new code_mstr(m, 
+                            res.getString("code_code"), 
+                            res.getString("code_key"),
+                            res.getString("code_value"),
+                            res.getString("code_internal")
+                        );
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new code_mstr(m);
+        }
+        return r;
+    }
     
     
     // misc
@@ -696,4 +802,12 @@ public class admData {
         }
         
     }
+    
+    public record code_mstr(String[] m, String code_code, String code_key, String code_value,
+        String code_internal ) {
+        public code_mstr(String[] m) {
+            this(m, "", "", "", "");
+        }
+    }
+    
 }
