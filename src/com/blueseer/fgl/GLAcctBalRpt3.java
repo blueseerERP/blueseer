@@ -104,7 +104,7 @@ public class GLAcctBalRpt3 extends javax.swing.JPanel {
  
      String chartfilepath = OVData.getSystemTempDirectory() + "/" + "chartexpinc.jpg";
     javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"ChartIt", getGlobalColumnTag("account"), 
+                        new String[]{"Chart", getGlobalColumnTag("account"), 
                             getGlobalColumnTag("description"), "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11","12"})
             {
                       @Override  
