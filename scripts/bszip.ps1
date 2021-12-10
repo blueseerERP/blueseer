@@ -21,7 +21,7 @@ foreach ($line in $filecontent) {
 
 # create jar only patch zip file
 $jaronly = "blueseer.jaronly.zip"
-rm $jaronly
+rm $wip\$jaronly
 compress-archive -update -path ..\dist\blueseer.jar -destinationpath $wip\$jaronly
 
 
