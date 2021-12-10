@@ -37,6 +37,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
  *
@@ -44,7 +45,7 @@ import java.sql.SQLException;
  */
 public class hrmData {
     
-      public static String[] addEmployeeMstr(emp_mstr x) {
+    public static String[] addEmployeeMstr(emp_mstr x) {
         String[] m = new String[2];
         String sqlSelect = "select * from emp_mstr where emp_nbr = ?";
         String sqlInsert = "insert into emp_mstr (emp_nbr, emp_lname, emp_fname, "
@@ -52,8 +53,8 @@ public class hrmData {
                             + " emp_gender, emp_jobtitle, emp_ssn, emp_autoclock, emp_active, emp_rate, emp_profile, "
                             + " emp_acct, emp_routing, emp_payfrequency, emp_efla_days, "
                             + " emp_vac_days, emp_vac_taken, emp_addrline1, emp_addrline2, emp_city, "
-                            + " emp_state, emp_country, emp_zip, emp_phone, emp_emer_contact, emp_emer_phone, emp_dob) " +
-                " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
+                            + " emp_state, emp_country, emp_zip, emp_phone, emp_emer_contact, emp_emer_phone, emp_dob, emp_termdate, emp_clockin, emp_supervisor) " +
+                " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
         try (Connection con = DriverManager.getConnection(url + db, user, pass);
              PreparedStatement ps = con.prepareStatement(sqlSelect);) {
              ps.setString(1, x.emp_nbr);
@@ -92,6 +93,9 @@ public class hrmData {
             psi.setString(30, x.emp_emer_contact);
             psi.setString(31, x.emp_emer_phone);
             psi.setString(32, x.emp_dob);
+            psi.setString(33, x.emp_termdate);
+            psi.setString(34, x.emp_clockin);
+            psi.setString(34, x.emp_supervisor);
             
             int rows = psi.executeUpdate();
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
@@ -116,11 +120,11 @@ public class hrmData {
                             + " emp_gender = ?, emp_jobtitle = ?, emp_ssn = ?, emp_autoclock = ?, emp_active = ?, emp_rate = ?, emp_profile = ?, "
                             + " emp_acct = ?, emp_routing = ?, emp_payfrequency = ?, emp_efla_days = ?, "
                             + " emp_vac_days = ?, emp_vac_taken = ?, emp_addrline1 = ?, emp_addrline2 = ?, emp_city = ?, "
-                            + " emp_state = ?, emp_country = ?, emp_zip = ?, emp_phone = ?, emp_emer_contact = ?, emp_emer_phone = ?, emp_dob = ? " +
+                            + " emp_state = ?, emp_country = ?, emp_zip = ?, emp_phone = ?, emp_emer_contact = ?, emp_emer_phone = ?, emp_dob = ?, emp_termdate = ?, emp_supervisor = ? " +
                               " where emp_nbr = ? ";
         try (Connection con = DriverManager.getConnection(url + db, user, pass);
 	PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setString(32, x.emp_nbr);
+            ps.setString(34, x.emp_nbr);
             ps.setString(1, x.emp_lname);
             ps.setString(2, x.emp_fname);
             ps.setString(3, x.emp_mname);
@@ -152,6 +156,9 @@ public class hrmData {
             ps.setString(29, x.emp_emer_contact);
             ps.setString(30, x.emp_emer_phone);
             ps.setString(31, x.emp_dob);
+            ps.setString(32, x.emp_termdate);
+            ps.setString(33, x.emp_supervisor);
+            // we do not update emp_clockin
         int rows = ps.executeUpdate();
         m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
         } catch (SQLException s) {
@@ -222,7 +229,10 @@ public class hrmData {
                         res.getString("emp_phone"),
                         res.getString("emp_emer_contact"),
                         res.getString("emp_emer_phone"),
-                        res.getString("emp_dob")
+                        res.getString("emp_dob"),
+                        res.getString("emp_termdate"),
+                        res.getString("emp_clockin"),
+                        res.getString("emp_supervisor")        
                         );
                     }
                 }
@@ -235,7 +245,42 @@ public class hrmData {
         return r;
     }
    
-    
+    public static ArrayList<emp_exception> getEmployeeExceptions(String[] x) {
+        ArrayList<emp_exception> list = new ArrayList<emp_exception>();
+        emp_exception r = null;
+        String[] m = new String[2];
+        String sql = "select * from emp_exception where empx_nbr = ? ;";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, x[0]);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new emp_exception(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new emp_exception(m, 
+                        res.getString("empx_nbr"), 
+                        res.getString("empx_desc"),
+                        res.getString("empx_type"),
+                        res.getString("empx_acct"),
+                        res.getString("empx_cc"),
+                        res.getString("empx_amttype"),
+                        res.getString("empx_amt")   
+                        );
+                        list.add(r);
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new emp_exception(m);
+        }
+        return list;
+    }
+   
     
     public record emp_mstr(String[] m, String emp_nbr, String emp_lname, String emp_fname,
                      String emp_mname, String emp_dept, String emp_status, String emp_startdate, 
@@ -245,12 +290,19 @@ public class hrmData {
                      String emp_efla_days, String emp_vac_days, String emp_vac_taken, String emp_addrline1, 
                      String emp_addrline2, String emp_city, String emp_state, String emp_country, 
                      String emp_zip, String emp_phone, String emp_emer_contact, String emp_emer_phone, 
-                     String emp_dob) {
+                     String emp_dob, String emp_termdate, String emp_clockin, String emp_supervisor) {
         public emp_mstr(String[] m) {
             this(m, "", "", "", "", "", "", "", "", "", "",
                     "", "", "", "", "", "", "", "", "", "",
                     "", "", "", "", "", "", "", "", "", "",
-                    "", "");
+                    "", "", "", "", "");
+        }
+    }
+    
+    public record emp_exception(String[] m, String empx_nbr, String empx_desc, String empx_type,
+        String empx_acct, String empx_cc, String empx_amttype, String empx_amt) {
+        public emp_exception(String[] m) {
+            this(m, "", "", "", "", "", "", "");
         }
     }
     

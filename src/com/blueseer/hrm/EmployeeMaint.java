@@ -52,10 +52,18 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.hrm.hrmData.addEmployeeMstr;
+import static com.blueseer.hrm.hrmData.deleteEmployeeMstr;
+import com.blueseer.hrm.hrmData.emp_exception;
+import com.blueseer.hrm.hrmData.emp_mstr;
+import static com.blueseer.hrm.hrmData.getEmployeeExceptions;
+import static com.blueseer.hrm.hrmData.getEmployeeMstr;
+import static com.blueseer.hrm.hrmData.updateEmployeeMstr;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
+import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -68,7 +76,7 @@ import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import static com.blueseer.utl.BlueSeerUtils.lurb2;
 import com.blueseer.utl.DTData;
-import com.blueseer.utl.IBlueSeer;
+import com.blueseer.utl.IBlueSeerT;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -98,7 +106,7 @@ import javax.swing.text.StyledDocument;
  *
  * @author vaughnte
  */
-public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeer {
+public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeerT {
 
      // global variable declarations
                 boolean isLoad = false;
@@ -175,15 +183,15 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeer {
 
     
     // interface functions implemented
-    public void executeTask(String x, String[] y) { 
+    public void executeTask(dbaction x, String[] y) { 
       
         class Task extends SwingWorker<String[], Void> {
        
           String type = "";
           String[] key = null;
           
-          public Task(String type, String[] key) { 
-              this.type = type;
+          public Task(BlueSeerUtils.dbaction type, String[] key) { 
+              this.type = type.name();
               this.key = key;
           } 
            
@@ -229,7 +237,6 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeer {
            } else {
              initvars(null);  
            }
-           
             
             } catch (Exception e) {
                 MainFrame.bslog(e);
@@ -475,22 +482,18 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeer {
         tbkey.requestFocus();
     }
     
-    public String[] setAction(int i) {
-        String[] m = new String[2];
-        if (i > 0) {
-            m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
+    public void setAction(String[] x) {
+        if (x[0].equals("0")) { 
                    setPanelComponentState(this, true);
                    btadd.setEnabled(false);
                    tbkey.setEditable(false);
                    tbkey.setForeground(Color.blue);
         } else {
-           m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
                    tbkey.setForeground(Color.red); 
         }
-        return m;
     }
-    
-    public boolean validateInput(String x) {
+        
+    public boolean validateInput(dbaction x) {
         boolean b = true;
                 if (ddsite.getSelectedItem() == null || ddsite.getSelectedItem().toString().isEmpty()) {
                     b = false;
@@ -548,7 +551,7 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeer {
         btlookup.setEnabled(true);
         
         if (arg != null && arg.length > 0) {
-            executeTask("get",arg);
+            executeTask(dbaction.get, arg);
         } else {
             tbkey.setEnabled(true);
             tbkey.setEditable(true);
@@ -557,331 +560,124 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeer {
     }
     
     public String[] addRecord(String[] x) {
-     String[] m = new String[2];
-     
-     try {
-
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                boolean proceed = true;
-                int i = 0;
-                
-                String autoclock = "";
-                String isactive = "";
-                
-                if (cbactive.isSelected()) {
-                    isactive = "1";
-                } else {
-                    isactive = "0";
-                }
-                
-                if (cbautoclock.isSelected()) {
-                    autoclock = "1";
-                } else {
-                    autoclock = "0";
-                }
-
-                String termdatestr = Objects.toString(null);
-                String hiredatestr = Objects.toString(null);
-                String dobdatestr = Objects.toString(null);
-                if (termdate.getDate() != null)
-                    termdatestr = "'" + dfdate.format(termdate.getDate()) + "'";
-                if (hiredate.getDate() != null)
-                    hiredatestr = "'" + dfdate.format(hiredate.getDate()) + "'";
-                if (dcdob.getDate() != null)
-                    dobdatestr = "'" + dfdate.format(dcdob.getDate()) + "'";
-
-                    res = st.executeQuery("SELECT emp_nbr FROM  emp_mstr where emp_nbr = " + "'" + x[0] + "'" + ";");
-                    while (res.next()) {
-                        i++;
-                    }
-                    if (i == 0) {
-                        st.executeUpdate("insert into emp_mstr "
-                        + "(emp_nbr, emp_lname, emp_fname, "
-                        + "emp_mname, emp_dept, emp_status, emp_startdate, emp_shift, emp_type, "
-                            + "emp_gender, emp_jobtitle, emp_ssn, emp_autoclock, emp_active, emp_rate, emp_profile, emp_acct, emp_routing, emp_payfrequency, emp_efla_days, "
-                            + "emp_vac_days, emp_vac_taken, emp_addrline1, emp_addrline2, emp_city, "
-                       + "emp_state, emp_country, emp_zip, emp_phone, emp_emer_contact, emp_emer_phone, emp_dob ) "
-                            + "values ( " + "'" + tbkey.getText().toString() + "'" + ","
-                        + "'" + lastname.getText().toString() + "'" + ","
-                        + "'" + firstname.getText().toString() + "'" + ","
-                        + "'" + middlename.getText().toString() + "'" + ","
-                        + "'" + dddept.getSelectedItem().toString() + "'" + ","
-                        + "'" + ddstatus.getSelectedItem().toString() + "'" + ","
-                        + hiredatestr + ","
-                            + "'" + ddshift.getSelectedItem().toString() + "'" + ","
-                            + "'" + ddtype.getSelectedItem().toString() + "'" + ","
-                            + "'" + ddgender.getSelectedItem().toString() + "'" + ","
-                             + "'" + tbtitle.getText().toString() + "'" + ","
-                             + "'" + tbssn.getText().toString() + "'" + ","
-                             + "'" + autoclock + "'" + ","
-                             + "'" + isactive + "'" + ","        
-                             + "'" + tbrate.getText().toString().replace(defaultDecimalSeparator,'.') + "'" + ","
-                             + "'" + tbprofile.getText().toString() + "'" + ","  
-                             + "'" + tbaccount.getText().toString() + "'" + ","  
-                             + "'" + tbroute.getText().toString() + "'" + ","   
-                             + "'" + ddpayfrequency.getSelectedItem().toString() + "'" + ","         
-                             + "'" + tbefladays.getText().toString() + "'" + ","
-                             + "'" + tbvacdays.getText().toString() + "'" + ","
-                             + "'" + tbvactaken.getText().toString() + "'" + ","
-                             + "'" + tbline1.getText().toString() + "'" + ","
-                             + "'" + tbline2.getText().toString() + "'" + ","
-                             + "'" + tbcity.getText().toString() + "'" + ","
-                            + "'" + ddstate.getSelectedItem().toString() + "'" + ","
-                            + "'" + ddcountry.getSelectedItem().toString() + "'" + ","
-                             + "'" + tbzip.getText().toString() + "'" + ","
-                             + "'" + tbphone.getText().toString() + "'" + ","
-                             + "'" + tbemercontact.getText().toString() + "'" + ","
-                             + "'" + tbemernumber.getText().toString() + "'" + ","
-                             + dobdatestr
-                        + ")"
-                        + ";");
-                        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
-                    } else {
-                       m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists}; 
-                    }
-
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordSQLError};  
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordConnError};
-        }
-     
-     return m;
+     String[] m = addEmployeeMstr(createRecord());
+         return m;
      }
      
     public String[] updateRecord(String[] x) {
-     String[] m = new String[2];
-     
-     try {
-            boolean proceed = true;
-                String termdatestr = Objects.toString(null);
-                String hiredatestr = Objects.toString(null);
-                String dobdatestr = Objects.toString(null);
-                if (termdate.getDate() != null)
-                    termdatestr = "'" + dfdate.format(termdate.getDate()) + "'";
-                if (hiredate.getDate() != null)
-                    hiredatestr = "'" + dfdate.format(hiredate.getDate()) + "'";
-                if (dcdob.getDate() != null)
-                    dobdatestr = "'" + dfdate.format(dcdob.getDate()) + "'";
-                
-                String autoclock = "";
-                 String isactive = "";
-                
-                if (cbautoclock.isSelected()) {
-                    autoclock = "1";
-                } else {
-                    autoclock = "0";
-                }
-                
-                 if (cbactive.isSelected()) {
-                    isactive = "1";
-                } else {
-                    isactive = "0";
-                }
-                
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            try {
-                   st.executeUpdate("update emp_mstr set "
-                                + "emp_lname = " + "'" + lastname.getText().toString() + "'" + ","
-                                + "emp_fname = " + "'" + firstname.getText().toString() + "'" + ","
-                                + "emp_mname = " + "'" + middlename.getText().toString() + "'" + ","
-                                + "emp_dept = " + "'" + dddept.getSelectedItem().toString() + "'" + ","
-                                + "emp_status = " + "'" + ddstatus.getSelectedItem().toString() + "'" + ","
-                                + "emp_shift = " + "'" + ddshift.getSelectedItem().toString() + "'" + ","
-                                + "emp_startdate = " + hiredatestr + ","
-                                + "emp_termdate = " + termdatestr + ","
-                                + "emp_active = " + isactive + ","        
-                                + "emp_state = " + "'" + ddstate.getSelectedItem().toString() + "'" + ","
-                                + "emp_country = " + "'" + ddcountry.getSelectedItem().toString() + "'" + ","
-                                + "emp_type = " + "'" + ddtype.getSelectedItem().toString() + "'" + ","
-                                + "emp_gender = " + "'" + ddgender.getSelectedItem().toString() + "'" + ","
-                                + "emp_addrline1 = " + "'" + tbline1.getText().toString() + "'" + ","
-                                + "emp_addrline2 = " + "'" + tbline2.getText().toString() + "'" + ","
-                                + "emp_city = " + "'" + tbcity.getText().toString() + "'" + ","
-                                + "emp_zip = " + "'" + tbzip.getText().toString() + "'" + ","
-                                + "emp_phone = " + "'" + tbphone.getText().toString() + "'" + ","
-                                + "emp_emer_contact = " + "'" + tbemercontact.getText().toString() + "'" + ","
-                                + "emp_emer_phone = " + "'" + tbemernumber.getText().toString() + "'" + ","
-                                + "emp_efla_days = " + "'" + tbefladays.getText().toString() + "'" + ","
-                                + "emp_profile = " + "'" + tbprofile.getText().toString() + "'" + ","   
-                                + "emp_acct = " + "'" + tbaccount.getText().toString() + "'" + ","   
-                                + "emp_routing = " + "'" + tbroute.getText().toString() + "'" + ","       
-                                + "emp_payfrequency = " + "'" + ddpayfrequency.getSelectedItem().toString() + "'" + ","               
-                                + "emp_vac_days = " + "'" + tbvacdays.getText().toString() + "'" + ","
-                                + "emp_vac_taken = " + "'" + tbvactaken.getText().toString() + "'" + ","
-                                + "emp_jobtitle = " + "'" + tbtitle.getText().toString() + "'" + ","
-                                + "emp_ssn = " + "'" + tbssn.getText().toString() + "'" + ","
-                                + "emp_autoclock = " + "'" + autoclock + "'" + ","
-                                + "emp_rate = " + "'" + tbrate.getText().toString().replace(defaultDecimalSeparator,'.') + "'" + ","
-                                + "emp_dob = " + dobdatestr 
-                                + " where emp_nbr = " + "'" + tbkey.getText().toString() + "'"
-                                + ";");
-                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
-               
-         
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError};  
-            } finally {
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordConnError};
-        }
-     
-     return m;
+     String[] m = updateEmployeeMstr(createRecord());
+         return m;
      }
      
     public String[] deleteRecord(String[] x) {
      String[] m = new String[2];
-        boolean proceed = bsmf.MainFrame.warn("Are you sure?");
+        boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
         if (proceed) {
-        try {
-
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            try {
-              
-                   int i = st.executeUpdate("delete from emp_mstr where emp_nbr = " + "'" + x[0] + "'" + ";");
-                    if (i > 0) {
-                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
-                    } else {
-                    m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordError};    
-                    }
-                } catch (SQLException s) {
-                 MainFrame.bslog(s); 
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordSQLError};  
-            } finally {
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordConnError};
-        }
+         m = deleteEmployeeMstr(createRecord()); 
+         initvars(null);
         } else {
            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
         }
-     return m;
+         return m;
      }
       
-    public String[] getRecord(String[] x) {
-       String[] m = new String[2];
+    public String[] getRecord(String[] key) {
        
-        try {
-
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                int i = 0;
-                res = st.executeQuery("SELECT * FROM  emp_mstr where emp_nbr = " + "'" + x[0] + "'" + ";");
-                    while (res.next()) {
-                        i++;
-                        tbkey.setText(res.getString("emp_nbr"));
-                        lastname.setText(res.getString("emp_lname"));
-                        firstname.setText(res.getString("emp_fname")); 
-                        middlename.setText(res.getString("emp_mname"));
-                        dddept.setSelectedItem(res.getString("emp_dept"));
-                        ddstatus.setSelectedItem(res.getString("emp_status"));
-                        ddshift.setSelectedItem(res.getString("emp_shift"));
-                        ddtype.setSelectedItem(res.getString("emp_type"));
-                        ddstate.setSelectedItem(res.getString("emp_state"));
-                        ddcountry.setSelectedItem(res.getString("emp_country"));
-                        ddgender.setSelectedItem(res.getString("emp_gender"));
-                        if (res.getString("emp_startdate") != null && ! res.getString("emp_startdate").isEmpty()) {
-                        hiredate.setDate(bsmf.MainFrame.dfdate.parse(res.getString("emp_startdate")));
-                        }
-                        if (res.getString("emp_termdate") != null && ! res.getString("emp_termdate").isEmpty()) {
-                        termdate.setDate(bsmf.MainFrame.dfdate.parse(res.getString("emp_termdate")));
-                        }
-                        tbline1.setText(res.getString("emp_addrline1"));
-                        tbline2.setText(res.getString("emp_addrline2"));
-                        tbcity.setText(res.getString("emp_city"));
-                        tbzip.setText(res.getString("emp_zip"));
-                        tbvacdays.setText(res.getString("emp_vac_days"));
-                        tbvactaken.setText(res.getString("emp_vac_taken"));
-                        tbphone.setText(res.getString("emp_phone"));
-                        tbemercontact.setText(res.getString("emp_emer_contact"));
-                        tbemernumber.setText(res.getString("emp_emer_phone"));
-                        tbssn.setText(res.getString("emp_ssn"));
-                        tbrate.setText(res.getString("emp_rate").replace('.',defaultDecimalSeparator));
-                        tbtitle.setText(res.getString("emp_jobtitle"));
-                        tbefladays.setText(res.getString("emp_efla_days"));
-                        tbprofile.setText(res.getString("emp_profile"));
-                        tbaccount.setText(res.getString("emp_acct"));
-                        tbroute.setText(res.getString("emp_routing"));
-                        ddpayfrequency.setSelectedItem(res.getString("emp_payfrequency"));
-                        tbsupervisor.setText(res.getString("emp_supervisor"));
-                        cbautoclock.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("emp_autoclock")));
-                        cbactive.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("emp_active")));
-                        if (res.getString("emp_clockin").equals("1")) {
-                        tbclockin.setText("yes");
-                        } else {
-                        tbclockin.setText("no");    
-                        }
-                        if (res.getString("emp_dob") != null && ! res.getString("emp_dob").isEmpty()) {
-                        dcdob.setDate(bsmf.MainFrame.dfdate.parse(res.getString("emp_dob")));
-                        }
-                        //    
-                    }
-                    
-                    // lets get the exceptions specific to this employee
-                    if (i > 0) {
-                     res = st.executeQuery("SELECT * FROM  emp_exception where empx_nbr = " + "'" + x[0] + "'" + ";");
-                     while (res.next()) {
-                      excmodel.addRow(new Object[]{ res.getString("empx_type"), res.getString("empx_desc"), res.getString("empx_amttype"), res.getString("empx_amt").replace('.',defaultDecimalSeparator)
-                      });
-                     }
-                    }
-                     
-                    // now get payrecords
-                    if (i > 0) getPayRecords(x[0]); 
-                     
-                    
-               
-                // set Action if Record found (i > 0)
-                m = setAction(i);
-                
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};  
+        emp_mstr x = getEmployeeMstr(key);  
+        tbkey.setText(x.emp_nbr());
+        lastname.setText(x.emp_lname());
+        firstname.setText(x.emp_fname());
+        middlename.setText(x.emp_mname());
+        dddept.setSelectedItem(x.emp_dept());
+        ddstatus.setSelectedItem(x.emp_status());
+        ddshift.setSelectedItem(x.emp_shift());
+        ddtype.setSelectedItem(x.emp_type());
+        ddstate.setSelectedItem(x.emp_state());
+        ddcountry.setSelectedItem(x.emp_country());
+        ddgender.setSelectedItem(x.emp_gender());
+        hiredate.setDate(BlueSeerUtils.parseDate(x.emp_startdate()));
+        termdate.setDate(BlueSeerUtils.parseDate(x.emp_termdate()));
+        tbline1.setText(x.emp_addrline1());
+        tbline2.setText(x.emp_addrline2());
+        tbcity.setText(x.emp_city());
+        tbzip.setText(x.emp_zip());
+        tbvacdays.setText(x.emp_vac_days());
+        tbvactaken.setText(x.emp_vac_taken());
+        tbphone.setText(x.emp_phone());
+        tbemercontact.setText(x.emp_emer_contact());
+        tbemernumber.setText(x.emp_emer_phone());
+        tbssn.setText(x.emp_ssn());
+        tbrate.setText(x.emp_rate().replace('.',defaultDecimalSeparator));
+        tbtitle.setText(x.emp_jobtitle());
+        tbefladays.setText(x.emp_efla_days());
+        tbprofile.setText(x.emp_profile());
+        tbaccount.setText(x.emp_acct());
+        tbroute.setText(x.emp_routing());
+        ddpayfrequency.setSelectedItem(x.emp_payfrequency());
+        tbsupervisor.setText(x.emp_supervisor());
+        cbautoclock.setSelected(BlueSeerUtils.ConvertStringToBool(x.emp_autoclock()));
+        cbactive.setSelected(BlueSeerUtils.ConvertStringToBool(x.emp_active()));
+        if (x.emp_clockin().equals("1")) {
+        tbclockin.setText("yes");
+        } else {
+        tbclockin.setText("no");    
         }
-      return m;
+        dcdob.setDate(BlueSeerUtils.parseDate(x.emp_dob()));
+      
+        // lets get the exceptions specific to this employee and pay records
+        if (! x.emp_nbr().isEmpty()) {
+        ArrayList<emp_exception> list = getEmployeeExceptions(new String[]{x.emp_nbr()});   
+        for (emp_exception e : list) {
+          excmodel.addRow(new Object[]{ e.empx_type(), e.empx_desc(), e.empx_amttype(), e.empx_amt().replace('.',defaultDecimalSeparator)});  
+        }
+        getPayRecords(x.emp_nbr()); 
+        }
+        
+       setAction(x.m());
+       return x.m();
     }
+    
+    public emp_mstr createRecord() { 
+        emp_mstr x = new emp_mstr(null, 
+                tbkey.getText().toString(),
+                lastname.getText(),
+                firstname.getText(),
+                middlename.getText(),
+                dddept.getSelectedItem().toString(),
+                ddstatus.getSelectedItem().toString(),
+                BlueSeerUtils.setDateFormat(hiredate.getDate()),
+                ddshift.getSelectedItem().toString(),
+                ddtype.getSelectedItem().toString(),
+                ddgender.getSelectedItem().toString(),
+                 tbtitle.getText(),
+                 tbssn.getText(),
+                 String.valueOf(BlueSeerUtils.boolToInt(cbautoclock.isSelected())),
+                 String.valueOf(BlueSeerUtils.boolToInt(cbactive.isSelected())),        
+                 tbrate.getText().replace(defaultDecimalSeparator,'.'),
+                 tbprofile.getText(),
+                 tbaccount.getText(),
+                 tbroute.getText(), 
+                 ddpayfrequency.getSelectedItem().toString(),     
+                 tbefladays.getText(),
+                 tbvacdays.getText(),
+                 tbvactaken.getText(),
+                 tbline1.getText(),
+                 tbline2.getText(),
+                 tbcity.getText(),
+                 ddstate.getSelectedItem().toString(),
+                 ddcountry.getSelectedItem().toString(),
+                 tbzip.getText(),
+                 tbphone.getText(),
+                 tbemercontact.getText(),
+                 tbemernumber.getText(),
+                 BlueSeerUtils.setDateFormat(dcdob.getDate()),
+                 BlueSeerUtils.setDateFormat(termdate.getDate()),
+                 "0", // emp_clockin add = 0; update = n/a ....always updated by another prog
+                 tbsupervisor.getText()
+                );
+        return x;
+    }
+    
     
     public void lookUpFrame() {
         
@@ -2222,27 +2018,27 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeer {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
-       if (! validateInput("addRecord")) {
+       if (! validateInput(dbaction.add)) {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("add", new String[]{tbkey.getText()});
+        executeTask(dbaction.add, new String[]{tbkey.getText()});
     }//GEN-LAST:event_btaddActionPerformed
 
     private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
-       if (! validateInput("updateRecord")) {
+       if (! validateInput(dbaction.update)) {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("update", new String[]{tbkey.getText()});
+        executeTask(dbaction.update, new String[]{tbkey.getText()});
     }//GEN-LAST:event_btupdateActionPerformed
 
     private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
-       if (! validateInput("deleteRecord")) {
+       if (! validateInput(dbaction.delete)) {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("delete", new String[]{tbkey.getText()});  
+        executeTask(dbaction.delete, new String[]{tbkey.getText()});  
     }//GEN-LAST:event_btdeleteActionPerformed
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
@@ -2250,7 +2046,7 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeer {
     }//GEN-LAST:event_btnewActionPerformed
 
     private void tbkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkeyActionPerformed
-        executeTask("get", new String[]{tbkey.getText()});
+        executeTask(dbaction.get, new String[]{tbkey.getText()});
     }//GEN-LAST:event_tbkeyActionPerformed
 
     private void jTabbedPane1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jTabbedPane1StateChanged
