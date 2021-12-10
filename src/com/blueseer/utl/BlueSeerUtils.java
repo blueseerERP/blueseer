@@ -897,7 +897,11 @@ public class BlueSeerUtils {
     public static String setDateFormat(Date date) {
        String mydate = "";
        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-       return mydate = sdf.format(date);
+       if (date == null) {
+           return mydate;
+       } else {
+           return sdf.format(date);
+       }
     }
             
     public static boolean isValidDateStr(String date) {
