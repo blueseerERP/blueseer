@@ -528,6 +528,115 @@ public class admData {
         return r;
     }
     
+    public static String[] addJaspMstr(jasp_mstr x) {
+        String[] m = new String[2];
+        String sqlSelect = "SELECT * FROM  jasp_mstr where jasp_group = ? and jasp_sequence = ?";
+        String sqlInsert = "insert into jasp_mstr (jasp_group, jasp_desc, jasp_func, jasp_sequence, jasp_format) " 
+                        + " values (?,?,?,?,?); "; 
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+             PreparedStatement ps = con.prepareStatement(sqlSelect);) {
+             ps.setString(1, x.jasp_group);
+             ps.setString(2, x.jasp_sequence);
+          try (ResultSet res = ps.executeQuery();
+               PreparedStatement psi = con.prepareStatement(sqlInsert);) {  
+            if (! res.isBeforeFirst()) {
+            psi.setString(1, x.jasp_group);
+            psi.setString(2, x.jasp_desc);
+            psi.setString(3, x.jasp_func);
+            psi.setString(4, x.jasp_sequence);
+            psi.setString(5, x.jasp_format);
+            int rows = psi.executeUpdate();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+            } else {
+            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists};    
+            }
+          } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+          }
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+
+    public static String[] updateJaspMstr(jasp_mstr x) {
+        String[] m = new String[2];
+        String sql = "update jasp_mstr set jasp_desc = ?, jasp_func = ?, jasp_format = ? " +   
+                          " where jasp_group = ? and jasp_sequence = ? ; ";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, x.jasp_desc);
+        ps.setString(2, x.jasp_func);
+        ps.setString(3, x.jasp_format);
+        ps.setString(4, x.jasp_group);
+        ps.setString(4, x.jasp_sequence);
+        int rows = ps.executeUpdate();
+        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+    
+    public static String[] deleteJaspMstr(jasp_mstr x) { 
+       String[] m = new String[2];
+        String sql = "delete from jasp_mstr where jasp_group = ? and jasp_sequence = ?; ";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, x.jasp_group);
+        ps.setString(2, x.jasp_sequence);
+        int rows = ps.executeUpdate();
+        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+    
+    public static jasp_mstr getJaspMstr(String[] x) {
+        jasp_mstr r = null;
+        String[] m = new String[2];
+        String sql = "";
+         if (x.length >= 2 && ! x[1].isEmpty()) {
+            sql = "select * from jasp_mstr where jasp_group = ? and jasp_sequence = ? ;"; 
+         } else {
+            sql = "select * from jasp_mstr where jasp_group = ? limit 1 ;";  
+         }
+        
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, x[0]);
+        if (x.length >= 2 && ! x[1].isEmpty()) {
+        ps.setString(2, x[1]);
+        }
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new jasp_mstr(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new jasp_mstr(m, 
+                            res.getString("jasp_group"), 
+                            res.getString("jasp_desc"),
+                            res.getString("jasp_func"),
+                            res.getString("jasp_sequence"),
+                            res.getString("jasp_format")
+                        );
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new jasp_mstr(m);
+        }
+        return r;
+    }
     
     // misc
     public static void runClient(String c) {
@@ -807,6 +916,13 @@ public class admData {
         String code_internal ) {
         public code_mstr(String[] m) {
             this(m, "", "", "", "");
+        }
+    }
+    
+    public record jasp_mstr(String[] m, String jasp_group, String jasp_desc, String jasp_func, 
+        String jasp_sequence, String jasp_format ) {
+        public jasp_mstr(String[] m) {
+            this(m, "", "", "", "", "");
         }
     }
     

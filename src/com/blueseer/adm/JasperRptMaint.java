@@ -32,8 +32,14 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.adm.admData.addJaspMstr;
+import static com.blueseer.adm.admData.deleteJaspMstr;
+import static com.blueseer.adm.admData.getJaspMstr;
+import com.blueseer.adm.admData.jasp_mstr;
+import static com.blueseer.adm.admData.updateJaspMstr;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.luTable;
 import static com.blueseer.utl.BlueSeerUtils.lual;
@@ -44,8 +50,9 @@ import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
 import com.blueseer.utl.DTData;
-import com.blueseer.utl.IBlueSeer;
+import com.blueseer.utl.IBlueSeerT;
 import com.blueseer.utl.OVData;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -73,7 +80,7 @@ import javax.swing.SwingWorker;
  *
  * @author vaughnte
  */
-public class JasperRptMaint extends javax.swing.JPanel implements IBlueSeer {
+public class JasperRptMaint extends javax.swing.JPanel implements IBlueSeerT {
 
    
     // global variable declarations
@@ -90,15 +97,15 @@ public class JasperRptMaint extends javax.swing.JPanel implements IBlueSeer {
 
     
     // interface functions implemented
-    public void executeTask(String x, String[] y) { 
+    public void executeTask(BlueSeerUtils.dbaction x, String[] y) { 
       
         class Task extends SwingWorker<String[], Void> {
        
           String type = "";
           String[] key = null;
           
-          public Task(String type, String[] key) { 
-              this.type = type;
+          public Task(BlueSeerUtils.dbaction type, String[] key) { 
+              this.type = type.name();
               this.key = key;
           } 
            
@@ -144,7 +151,6 @@ public class JasperRptMaint extends javax.swing.JPanel implements IBlueSeer {
            } else {
              initvars(null);  
            }
-           
             
             } catch (Exception e) {
                 MainFrame.bslog(e);
@@ -158,7 +164,7 @@ public class JasperRptMaint extends javax.swing.JPanel implements IBlueSeer {
        z.execute(); 
        
     }
-   
+    
     public void setPanelComponentState(Object myobj, boolean b) {
         JPanel panel = null;
         JTabbedPane tabpane = null;
@@ -290,21 +296,14 @@ public class JasperRptMaint extends javax.swing.JPanel implements IBlueSeer {
       
     }
     
-    public String[] setAction(int i) {
-        String[] m = new String[2];
-        if (i > 0) {
-            m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
+    public void setAction(String[] x) {
+        if (x[0].equals("0")) { 
                    setPanelComponentState(this, true);
                    btadd.setEnabled(false);
-                  
-        } else {
-           m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
-                 
-        }
-        return m;
+        } 
     }
     
-    public boolean validateInput(String x) {
+    public boolean validateInput(BlueSeerUtils.dbaction x) {
         boolean b = true;
                                 
                   
@@ -335,191 +334,54 @@ public class JasperRptMaint extends javax.swing.JPanel implements IBlueSeer {
         btlookup.setEnabled(true);
         
         if (arg != null && arg.length > 1) {
-            executeTask("get",arg);
+            executeTask(dbaction.get,arg);
         } else {
            
         }
     }
     
     public String[] addRecord(String[] x) {
-     String[] m = new String[2];
-     
-     try {
-
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-               
-                boolean proceed = true;
-                int i = 0;
-                
-               
-
-                    res = st.executeQuery("SELECT jasp_group FROM  jasp_mstr where jasp_group = " + "'" + ddgroup.getSelectedItem().toString() + "'" +
-                                          " and jasp_sequence = " + "'" + tbsequence.getText() + "'" + ";");
-                    while (res.next()) {
-                        i++;
-                    }
-                    if (i == 0) {
-                        st.executeUpdate("insert into jasp_mstr "
-                            + "(jasp_group, jasp_desc, jasp_func, jasp_sequence, jasp_format) "
-                            + " values ( " + "'" + ddgroup.getSelectedItem().toString() + "'" + ","
-                            + "'" + tbdesc.getText().toString() + "'" + ","
-                            + "'" + tbfunc.getText().toString() + "'" + ","        
-                            + "'" + tbsequence.getText().toString() + "'" + ","        
-                            + "'" + ddformat.getSelectedItem().toString() + "'"
-                            + ")"
-                            + ";");
-                        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
-                    } else {
-                       m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists}; 
-                    }
-
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordSQLError};  
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordConnError};
-        }
-     
+     String[] m = addJaspMstr(createRecord());
      return m;
      }
      
     public String[] updateRecord(String[] x) {
-     String[] m = new String[2];
-     
-     try {
-            boolean proceed = true;
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                
-                   
-             
-                    st.executeUpdate("update jasp_mstr set jasp_desc = " + "'" + tbdesc.getText() + "'" + ","
-                            + " jasp_format = " + "'" + ddformat.getSelectedItem().toString() + "'" + "," 
-                            + " jasp_func = " + "'" + tbfunc.getText() + "'"
-                            + " where jasp_group = " + "'" + x[0] + "'" 
-                            + " and jasp_sequence = " + "'" + x[1] + "'" 
-                            + ";");
-                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
-               
-         
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError};  
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordConnError};
-        }
-     
+     String[] m = updateJaspMstr(createRecord());
      return m;
      }
      
     public String[] deleteRecord(String[] x) {
      String[] m = new String[2];
-        boolean proceed = bsmf.MainFrame.warn("Are you sure?");
+        boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
         if (proceed) {
-        try {
-
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                            
-                   int i = st.executeUpdate("delete from jasp_mstr where jasp_group = " + "'" + x[0] + "'" 
-                           + " and jasp_sequence = " + "'" + x[1] + "'" 
-                           + ";");
-                    if (i > 0) {
-                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
-                    } else {
-                    m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordError};    
-                    }
-                } catch (SQLException s) {
-                 MainFrame.bslog(s); 
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordSQLError};  
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordConnError};
-        }
+         m = deleteJaspMstr(createRecord()); 
+         initvars(null);
         } else {
            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
         }
-     return m;
+         return m;
      }
       
-    public String[] getRecord(String[] x) {
-       String[] m = new String[2];
-       
-        try {
-
-           Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-              
-                int i = 0;
-                res = st.executeQuery("SELECT * FROM  jasp_mstr where jasp_group = " + "'" + x[0] + "'" +
-                                          " and jasp_sequence = " + "'" + x[1] + "'" + ";");
-                while (res.next()) {
-                    i++;
-                    ddgroup.setSelectedItem(res.getString("jasp_group"));
-                    tbsequence.setText(res.getString("jasp_sequence"));
-                    tbdesc.setText(res.getString("jasp_desc"));
-                    tbfunc.setText(res.getString("jasp_func"));
-                    ddformat.setSelectedItem(res.getString("jasp_format"));
-                }
-               
-                // set Action if Record found (i > 0)
-                m = setAction(i);
-                
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};  
-        }
-      return m;
+    public String[] getRecord(String[] key) {
+       jasp_mstr x = getJaspMstr(key); 
+        ddgroup.setSelectedItem(x.jasp_group());
+        tbsequence.setText(x.jasp_sequence());
+        tbdesc.setText(x.jasp_desc());
+        tbfunc.setText(x.jasp_func());
+        ddformat.setSelectedItem(x.jasp_format());
+        setAction(x.m());
+        return x.m();
+    }
+    
+    public jasp_mstr createRecord() { 
+        jasp_mstr x = new jasp_mstr(null, 
+                ddgroup.getSelectedItem().toString(),
+                tbdesc.getText(),
+                tbfunc.getText(),     
+                tbsequence.getText(),      
+                ddformat.getSelectedItem().toString()
+                );
+        return x;
     }
     
     public void lookUpFrame() {
@@ -737,27 +599,27 @@ public class JasperRptMaint extends javax.swing.JPanel implements IBlueSeer {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
-      if (! validateInput("addRecord")) {
+      if (! validateInput(dbaction.add)) {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("add", new String[]{ddgroup.getSelectedItem().toString(), tbsequence.getText()});
+        executeTask(dbaction.add, new String[]{ddgroup.getSelectedItem().toString(), tbsequence.getText()});
     }//GEN-LAST:event_btaddActionPerformed
 
     private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
-       if (! validateInput("updateRecord")) {
+       if (! validateInput(dbaction.update)) {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("update", new String[]{ddgroup.getSelectedItem().toString(), tbsequence.getText()});
+        executeTask(dbaction.update, new String[]{ddgroup.getSelectedItem().toString(), tbsequence.getText()});
     }//GEN-LAST:event_btupdateActionPerformed
 
     private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
-       if (! validateInput("deleteRecord")) {
+       if (! validateInput(dbaction.delete)) {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("delete", new String[]{ddgroup.getSelectedItem().toString(), tbsequence.getText()});      
+        executeTask(dbaction.delete, new String[]{ddgroup.getSelectedItem().toString(), tbsequence.getText()});      
     }//GEN-LAST:event_btdeleteActionPerformed
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
