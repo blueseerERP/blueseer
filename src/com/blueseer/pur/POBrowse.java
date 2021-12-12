@@ -72,6 +72,7 @@ import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import com.blueseer.vdr.venData;
 import java.sql.Connection;
 import java.text.DecimalFormatSymbols;
 import java.util.Enumeration;
@@ -320,7 +321,7 @@ public class POBrowse extends javax.swing.JPanel {
         }
         
         ddvendfrom.removeAllItems();
-        ArrayList vends = OVData.getVendMstrList();
+        ArrayList vends = venData.getVendMstrList();
         for (Object vend : vends) {
             ddvendfrom.addItem(vend);
         }

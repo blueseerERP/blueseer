@@ -52,6 +52,7 @@ import static com.blueseer.utl.BlueSeerUtils.lurb2;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeer;
 import com.blueseer.utl.OVData;
+import com.blueseer.vdr.venData;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
@@ -376,7 +377,7 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
         ddsite.setSelectedItem(OVData.getDefaultSite());
         
         ddvend.removeAllItems();
-        ArrayList myvends = OVData.getVendNameList();
+        ArrayList myvends = venData.getVendNameList();
         for (int i = 0; i < myvends.size(); i++) {
          ddvend.addItem(myvends.get(i));
         }

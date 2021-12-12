@@ -101,6 +101,7 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import static com.blueseer.utl.OVData.getDueDateFromTerms;
+import com.blueseer.vdr.venData;
 import java.awt.Color;
 import java.awt.Component;
 import java.sql.Connection;
@@ -254,7 +255,7 @@ public class VoucherMaint extends javax.swing.JPanel {
         receiverdet.setModel(receivermodel);
         voucherdet.setModel(vouchermodel);
         ddvend.removeAllItems();
-        ArrayList myvend = OVData.getVendMstrList();
+        ArrayList myvend = venData.getVendMstrList();
         for (int i = 0; i < myvend.size(); i++) {
             ddvend.addItem(myvend.get(i));
         }

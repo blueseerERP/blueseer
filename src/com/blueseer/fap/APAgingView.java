@@ -37,6 +37,7 @@ import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.OVData;
+import com.blueseer.vdr.venData;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.FileDialog;
@@ -536,7 +537,7 @@ public class APAgingView extends javax.swing.JPanel {
         
         ddfromvend.removeAllItems();
         ddtovend.removeAllItems();
-        ArrayList vends = OVData.getVendMstrList();
+        ArrayList vends = venData.getVendMstrList();
         for (int i = 0; i < vends.size(); i++) {
             ddfromvend.addItem(vends.get(i));
         }
@@ -850,7 +851,7 @@ try {
                     tovend = ddtovend.getSelectedItem().toString();
                 }
                 
-                 ArrayList vends = OVData.getVendMstrListBetween(fromvend, tovend);
+                 ArrayList vends = venData.getVendMstrListBetween(fromvend, tovend);
                  
                 
                  for (int j = 0; j < vends.size(); j++) {

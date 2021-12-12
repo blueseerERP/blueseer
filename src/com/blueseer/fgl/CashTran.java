@@ -97,6 +97,7 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import static com.blueseer.utl.OVData.getDueDateFromTerms;
+import com.blueseer.vdr.venData;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -1849,7 +1850,7 @@ public class CashTran extends javax.swing.JPanel {
         detailtable.setModel(buymodel);
         ddentity.removeAllItems();
          ArrayList entity = new ArrayList();
-        entity = OVData.getVendMstrList(); 
+        entity = venData.getVendMstrList(); 
         for (int i = 0; i < entity.size(); i++) {
             ddentity.addItem(entity.get(i));
         }
@@ -1883,7 +1884,7 @@ public class CashTran extends javax.swing.JPanel {
         ddentityExpense.removeAllItems();
         
         ArrayList entity = new ArrayList();
-        entity = OVData.getVendMstrList(); 
+        entity = venData.getVendMstrList(); 
         for (int i = 0; i < entity.size(); i++) {
             ddentityExpense.addItem(entity.get(i));
         }
@@ -1984,7 +1985,7 @@ public class CashTran extends javax.swing.JPanel {
         isLoad = true;
         ddrexpentity.removeAllItems();
          ArrayList entity = new ArrayList();
-        entity = OVData.getVendMstrList(); 
+        entity = venData.getVendMstrList(); 
         for (int i = 0; i < entity.size(); i++) {
             ddrexpentity.addItem(entity.get(i));
         }

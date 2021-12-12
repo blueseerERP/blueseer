@@ -37,6 +37,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 
 /**
  *
@@ -279,7 +281,6 @@ public class venData {
         ps.executeUpdate();
     }
         
-    
     public static vd_mstr getVendMstr(String[] x) {
         vd_mstr r = null;
         String[] m = new String[2];
@@ -316,7 +317,356 @@ public class venData {
         return r;
     }
     
-       public record vd_mstr(String[] m, String vd_addr, String vd_site, String vd_name, 
+    // misc
+    
+    public static ArrayList getVendMstrList() {
+        ArrayList myarray = new ArrayList();
+        try {
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+                res = st.executeQuery("select vd_addr from vd_mstr order by vd_addr;");
+                while (res.next()) {
+                    myarray.add(res.getString("vd_addr"));
+
+                }
+
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                    con.close();
+            }
+        } catch (SQLException e) {
+            MainFrame.bslog(e);
+        }
+        return myarray;
+
+    }
+
+    public static ArrayList getVendMstrListBetween(String from, String to) {
+        ArrayList myarray = new ArrayList();
+        try {
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+                res = st.executeQuery("select vd_addr from vd_mstr "
+                        + " where vd_addr >= " + "'" + from + "'"
+                        + " and vd_addr <= " + "'" + to + "'"
+                        + " order by vd_addr;");
+                while (res.next()) {
+                    myarray.add(res.getString("vd_addr"));
+
+                }
+
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                    con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return myarray;
+
+    }
+
+    public static ArrayList getVendTermsList() {
+        ArrayList myarray = new ArrayList();
+        try {
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+                res = st.executeQuery("select cut_code from cust_term order by cut_code;");
+                while (res.next()) {
+                    myarray.add(res.getString("cut_code"));
+
+                }
+
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return myarray;
+
+    }
+        
+    public static ArrayList getVendNameList() {
+        ArrayList myarray = new ArrayList();
+        try {
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+                res = st.executeQuery("select vd_name from vd_mstr order by vd_name;");
+                while (res.next()) {
+                    myarray.add(res.getString("vd_name").replace("'", ""));
+
+                }
+
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                    con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return myarray;
+
+    }
+
+    public static String getVendTerms(String vend) {
+           String myitem = null;
+         try{
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+                ResultSet res = null;
+            try{
+                
+
+                res = st.executeQuery("select vd_terms from vd_mstr where vd_addr = " + "'" + vend + "'" + ";" );
+               while (res.next()) {
+                myitem = res.getString("vd_terms");                    
+                }
+               
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                    con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return myitem;
+        
+    }
+           
+    public static String getVendName(String vend) {
+           String myitem = null;
+         try{
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+                ResultSet res = null;
+            try{
+                res = st.executeQuery("select vd_name from vd_mstr where vd_addr = " + "'" + vend + "'" + ";" );
+               while (res.next()) {
+                myitem = res.getString("vd_name");                    
+                }
+               
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                    con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return myitem;
+        
+    }       
+         
+    public static String getVendAPAcct(String vend) {
+   String myitem = null;
+ try{
+
+    Connection con = DriverManager.getConnection(url + db, user, pass);
+    Statement st = con.createStatement();
+        ResultSet res = null;
+    try{
+        
+
+        res = st.executeQuery("select vd_ap_acct from vd_mstr where vd_addr = " + "'" + vend + "'" + ";" );
+       while (res.next()) {
+        myitem = res.getString("vd_ap_acct");                    
+        }
+
+   }
+    catch (SQLException s){
+         MainFrame.bslog(s);
+    } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                    con.close();
+            }
+}
+catch (Exception e){
+    MainFrame.bslog(e);
+}
+return myitem;
+
+}
+
+    public static String getVendAPCC(String vend) {
+   String myitem = null;
+ try{
+
+    Connection con = DriverManager.getConnection(url + db, user, pass);
+    Statement st = con.createStatement();
+        ResultSet res = null;
+    try{
+        
+
+        res = st.executeQuery("select vd_ap_cc from vd_mstr where vd_addr = " + "'" + vend + "'" + ";" );
+       while (res.next()) {
+        myitem = res.getString("vd_ap_cc");                    
+        }
+
+   }
+    catch (SQLException s){
+         MainFrame.bslog(s);
+    } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                    con.close();
+            }
+}
+catch (Exception e){
+    MainFrame.bslog(e);
+}
+return myitem;
+
+}
+
+    public static String getVendItemFromItem(String vend, String item) {
+   String mystring = "";
+    try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+            ResultSet res = null;
+
+        try{
+            
+            res = st.executeQuery("select vdp_vitem from vdp_mstr where vdp_vend = " + "'" + vend + "'" + 
+                                  " AND vdp_item = " + "'" + item + "'" + ";");
+           while (res.next()) {
+               mystring = res.getString("vdp_vitem");
+
+            }
+
+       }
+        catch (SQLException s){
+              MainFrame.bslog(s);
+        } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                    con.close();
+            }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return mystring;
+
+}        
+
+    public static String getVendCurrency(String vend) {
+           String myitem = "";
+         try{
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+                ResultSet res = null;
+            try{
+                
+
+                res = st.executeQuery("select vd_curr from vd_mstr where vd_addr = " + "'" + vend + "'" + ";" );
+               while (res.next()) {
+                myitem = res.getString("vd_curr");                    
+                }
+               
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                    con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return myitem;
+        
+    } 
+
+    
+    public record vd_mstr(String[] m, String vd_addr, String vd_site, String vd_name, 
         String vd_line1, String vd_line2, String vd_line3, 
         String vd_city, String vd_state, String vd_zip,
     String vd_country, String vd_dateadd, String vd_datemod, String vd_usermod, 

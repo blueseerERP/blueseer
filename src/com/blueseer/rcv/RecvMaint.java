@@ -75,6 +75,7 @@ import javax.swing.JTable;
 import javax.swing.SwingWorker;
 import javax.swing.table.DefaultTableModel;
 import com.blueseer.utl.IBlueSeer;
+import com.blueseer.vdr.venData;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -399,7 +400,7 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeer {
          ddsite.setSelectedItem(OVData.getDefaultSite());
         
         ddvend.removeAllItems();
-        ArrayList myvend = OVData.getVendMstrList();
+        ArrayList myvend = venData.getVendMstrList();
         for (int i = 0; i < myvend.size(); i++) {
             ddvend.addItem(myvend.get(i));
         }
