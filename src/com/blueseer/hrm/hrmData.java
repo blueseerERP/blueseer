@@ -37,6 +37,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 /**
@@ -281,6 +282,41 @@ public class hrmData {
         return list;
     }
    
+    // misc
+    public static ArrayList getempmstrlist() {
+        ArrayList myarray = new ArrayList();
+        try {
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+                res = st.executeQuery("select emp_nbr from emp_mstr order by emp_nbr ;");
+                while (res.next()) {
+                    myarray.add(res.getString("emp_nbr"));
+
+                }
+
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return myarray;
+
+    }
+
     
     public record emp_mstr(String[] m, String emp_nbr, String emp_lname, String emp_fname,
                      String emp_mname, String emp_dept, String emp_status, String emp_startdate, 

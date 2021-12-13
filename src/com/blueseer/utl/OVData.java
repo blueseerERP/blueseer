@@ -2354,40 +2354,7 @@ public class OVData {
    
   
    
-    public static ArrayList getempmstrlist() {
-        ArrayList myarray = new ArrayList();
-        try {
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                res = st.executeQuery("select emp_nbr from emp_mstr order by emp_nbr ;");
-                while (res.next()) {
-                    myarray.add(res.getString("emp_nbr"));
-
-                }
-
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                if (con != null) {
-                    con.close();
-                }
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-        return myarray;
-
-    }
-
+    
     public static ArrayList getCurrlist() {
         ArrayList myarray = new ArrayList();
         try {

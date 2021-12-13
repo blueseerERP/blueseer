@@ -316,7 +316,7 @@ public class TrainingMaint extends javax.swing.JPanel implements IBlueSeer {
          
         ArrayList<String> mylist = new ArrayList();
         ddempid.removeAllItems();
-        mylist = OVData.getempmstrlist();
+        mylist = hrmData.getempmstrlist();
         for (String emp : mylist) {
             ddempid.addItem(emp);
         } 

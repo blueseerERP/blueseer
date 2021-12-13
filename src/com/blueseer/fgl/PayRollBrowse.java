@@ -69,6 +69,7 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import com.blueseer.hrm.hrmData;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.sql.Connection;
@@ -275,7 +276,7 @@ public class PayRollBrowse extends javax.swing.JPanel {
         }
         
         ddempfrom.removeAllItems();
-        ArrayList emps = OVData.getempmstrlist();
+        ArrayList emps = hrmData.getempmstrlist();
         for (Object emp : emps) {
             ddempfrom.addItem(emp);
         }

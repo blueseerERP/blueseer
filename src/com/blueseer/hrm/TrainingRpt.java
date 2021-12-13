@@ -158,7 +158,7 @@ public class TrainingRpt extends javax.swing.JPanel {
         
         ArrayList<String> mylist = new ArrayList();
         if (ddempid.getItemCount() == 0) {
-        mylist = OVData.getempmstrlist();
+        mylist = hrmData.getempmstrlist();
         for (String emp : mylist) {
             ddempid.addItem(emp);
         }

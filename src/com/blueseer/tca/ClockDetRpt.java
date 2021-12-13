@@ -55,6 +55,7 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import com.blueseer.hrm.hrmData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -172,7 +173,7 @@ public class ClockDetRpt extends javax.swing.JPanel {
          
         ddempfrom.removeAllItems();
         ddempto.removeAllItems();
-        ArrayList myemp = OVData.getempmstrlist();
+        ArrayList myemp = hrmData.getempmstrlist();
         for (int i = 0; i < myemp.size(); i++) {
             ddempfrom.addItem(myemp.get(i));
             ddempto.addItem(myemp.get(i));
