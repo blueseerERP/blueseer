@@ -1103,8 +1103,8 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
       
         
         callDialog(getClassLabelTag("lblid", this.getClass().getSimpleName()), 
-                getClassLabelTag("lblpo", this.getClass().getSimpleName()),
-                getClassLabelTag("lblcust", this.getClass().getSimpleName())); 
+                getClassLabelTag("lblponbr", this.getClass().getSimpleName()),
+                getClassLabelTag("lblbillto", this.getClass().getSimpleName())); 
         
     }
  
