@@ -629,7 +629,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeer {
                 res = st.executeQuery("select pod_line, pod_part, pod_desc, " +
                         " pod_vendpart, pod_nbr, pod_ord_qty, pod_uom, pod_listprice, " +
                         " pod_disc, pod_netprice, pod_rcvd_qty, pod_status " +
-                        " from pod_mstr left outer join item_mstr on it_item = pod_part where pod_nbr = " + "'" + x[0] + "'" + ";");
+                        " from pod_mstr where pod_nbr = " + "'" + x[0] + "'" + ";");
                 while (res.next()) {
                   myorddetmodel.addRow(new Object[]{res.getString("pod_line"), 
                       res.getString("pod_part"),
