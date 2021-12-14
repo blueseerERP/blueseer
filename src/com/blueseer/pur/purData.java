@@ -254,13 +254,13 @@ public class purData {
                 " pod_ord_qty = ?, pod_uom = ?, " +
                 " pod_listprice = ?, pod_disc = ?, pod_netprice = ?,  " +
                 " pod_due_date = ?, pod_status = ?, " +
-                " pod_site = ? " +
+                " pod_site = ?, pod_desc = ? " +
                  " where pod_nbr = ? and pod_line = ? ; ";
         String sqlInsert = "insert into pod_mstr (pod_nbr, pod_line, pod_part, pod_vendpart, "
                             + " pod_ord_qty, pod_uom, pod_listprice, pod_disc, "
                             + " pod_netprice, pod_ord_date, pod_due_date, "
-                            + "pod_rcvd_qty, pod_status, pod_site) "
-                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
+                            + "pod_rcvd_qty, pod_status, pod_site, pod_desc) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
         ps = con.prepareStatement(sqlSelect); 
         ps.setString(1, x.pod_nbr);
         ps.setString(2, x.pod_line);
@@ -281,6 +281,7 @@ public class purData {
             ps.setString(12, x.pod_rcvd_qty);
             ps.setString(13, x.pod_status);
             ps.setString(14, x.pod_site);
+            ps.setString(15, x.pod_desc);
             rows = ps.executeUpdate();
         } else {    // update
          ps = con.prepareStatement(sqlUpdate) ;
@@ -296,6 +297,7 @@ public class purData {
             ps.setString(8, x.pod_due_date);
             ps.setString(9, x.pod_status);
             ps.setString(10, x.pod_site);
+            ps.setString(11, x.pod_desc);
             rows = ps.executeUpdate();
         }
             
@@ -472,8 +474,8 @@ public class purData {
         String sqlInsert = "insert into pod_mstr (pod_nbr, pod_line, pod_part, pod_vendpart, "
                             + " pod_ord_qty, pod_uom, pod_listprice, pod_disc, "
                             + " pod_netprice, pod_ord_date, pod_due_date, "
-                            + "pod_rcvd_qty, pod_status, pod_site) "
-                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
+                            + "pod_rcvd_qty, pod_status, pod_site, pod_desc) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
        
           ps = con.prepareStatement(sqlSelect); 
           ps.setString(1, x.pod_nbr);
@@ -495,6 +497,7 @@ public class purData {
             ps.setString(12, x.pod_rcvd_qty);
             ps.setString(13, x.pod_status);
             ps.setString(14, x.pod_site); 
+            ps.setString(15, x.pod_desc);
             rows = ps.executeUpdate();
             } 
             return rows;
@@ -544,10 +547,10 @@ public class purData {
     public record pod_mstr(String[] m, String pod_nbr, String pod_line, String pod_part, String pod_vendpart, 
         String pod_ord_qty, String pod_rcvd_qty, String pod_netprice, String pod_disc,
         String pod_listprice, String pod_due_date, String pod_status, String pod_site,
-        String pod_ord_date, String pod_uom ) {
+        String pod_ord_date, String pod_uom, String pod_desc ) {
         public pod_mstr(String[] m) {
             this (m, "", "", "", "", "", "", "", "", "", "",
-                    "", "", "", "");
+                    "", "", "", "", "");
         }
     }
     

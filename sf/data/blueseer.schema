@@ -1060,7 +1060,8 @@ CREATE TABLE IF NOT EXISTS `pod_mstr` (
   `pod_status` varchar(30)  NOT NULL DEFAULT '',
   `pod_site` varchar(10)  NOT NULL DEFAULT '',
   `pod_ord_date` date  DEFAULT NULL,
-  `pod_uom` varchar(3)  NOT NULL DEFAULT ''
+  `pod_uom` varchar(3)  NOT NULL DEFAULT '',
+  `pod_desc` varchar(50)  NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `pos_ctrl` (
   `posc_taxpercent` decimal(14,4) NOT NULL DEFAULT '0.0000',

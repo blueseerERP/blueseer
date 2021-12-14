@@ -1285,7 +1285,8 @@ CREATE TABLE "pod_mstr" (
   "pod_status" varchar(30) COLLATE NOCASE DEFAULT '',
   "pod_site" varchar(10) COLLATE NOCASE DEFAULT '',
   "pod_ord_date" date COLLATE NOCASE DEFAULT '',
-  "pod_uom" varchar(3) COLLATE NOCASE DEFAULT ''
+  "pod_uom" varchar(3) COLLATE NOCASE DEFAULT '',
+  "pod_desc" varchar(50) COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;

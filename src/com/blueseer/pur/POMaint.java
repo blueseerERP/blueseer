@@ -626,14 +626,14 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeer {
                 }
                 
                  // myorddetmodel  "Line", "Part", "CustPart",  "PO", "Qty", UOM", "ListPrice", "Discount", "NetPrice", "QtyShip", "Status"
-                res = st.executeQuery("select pod_line, pod_part, ifnull(it_desc,'') it_desc, " +
+                res = st.executeQuery("select pod_line, pod_part, pod_desc, " +
                         " pod_vendpart, pod_nbr, pod_ord_qty, pod_uom, pod_listprice, " +
                         " pod_disc, pod_netprice, pod_rcvd_qty, pod_status " +
                         " from pod_mstr left outer join item_mstr on it_item = pod_part where pod_nbr = " + "'" + x[0] + "'" + ";");
                 while (res.next()) {
                   myorddetmodel.addRow(new Object[]{res.getString("pod_line"), 
                       res.getString("pod_part"),
-                      res.getString("it_desc"), 
+                      res.getString("pod_desc"), 
                       res.getString("pod_vendpart"), 
                       res.getString("pod_nbr"), 
                       bsNumber(res.getString("pod_ord_qty")), 
@@ -709,7 +709,8 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeer {
                 orddet.getValueAt(j, 11).toString(),
                 ddsite.getSelectedItem().toString(),
                 bsdate.format(orddate.getDate()).toString(),
-                orddet.getValueAt(j, 6).toString()
+                orddet.getValueAt(j, 6).toString(),
+                orddet.getValueAt(j, 2).toString()     
                 );
         list.add(x);
          }
