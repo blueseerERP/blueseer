@@ -97,12 +97,11 @@ public class RecvBrowse extends javax.swing.JPanel {
                             getGlobalColumnTag("detail"), 
                             getGlobalColumnTag("po"), 
                             getGlobalColumnTag("vendor"), 
-                            getGlobalColumnTag("line"), 
-                            getGlobalColumnTag("item"), 
-                            getGlobalColumnTag("type"), 
+                            getGlobalColumnTag("packingslip"), 
+                            getGlobalColumnTag("recvdate"), 
                             getGlobalColumnTag("status"), 
-                            getGlobalColumnTag("orderqty"), 
-                            getGlobalColumnTag("recvqty")})
+                            getGlobalColumnTag("reference"), 
+                            getGlobalColumnTag("remarks")})
             {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -567,14 +566,15 @@ try {
                   
                 
                        while (res.next()) {
-                    mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, BlueSeerUtils.clickbasket, res.getString("rv_id"),
-                                res.getString("rv_vend"),
-                                res.getString("rv_packingslip"),
-                                res.getString("rv_recvdate"),
-                                res.getString("rv_status"),
-                                res.getString("rv_ref"),
-                                res.getString("rv_rmks")
-                            });
+                    mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, BlueSeerUtils.clickbasket, 
+                        res.getString("rv_id"),
+                        res.getString("rv_vend"),
+                        res.getString("rv_packingslip"),
+                        res.getString("rv_recvdate"),
+                        res.getString("rv_status"),
+                        res.getString("rv_ref"),
+                        res.getString("rv_rmks")
+                    });
                
              
                    

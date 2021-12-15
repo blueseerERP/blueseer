@@ -15774,12 +15774,13 @@ return myarray;
             ArrayList line = new ArrayList();
             ArrayList ordqty = new ArrayList();
             ArrayList linestatus = new ArrayList();
+            ArrayList ponbr = new ArrayList();
 
         try{
             
 
 
-            res = st.executeQuery("select pod_status, pod_line, rvd_qty, pod_rcvd_qty, pod_ord_qty from recv_det inner join " +
+            res = st.executeQuery("select pod_nbr, pod_status, pod_line, rvd_qty, pod_rcvd_qty, pod_ord_qty from recv_det inner join " +
                      " pod_mstr on rvd_part = pod_part and rvd_poline = pod_line and rvd_po = pod_nbr " +
                " where rvd_id = " + "'" + receiver + "'" +";");
                while (res.next()) {
@@ -15788,6 +15789,7 @@ return myarray;
                    ordqty.add(res.getString("pod_ord_qty"));
                    linestatus.add(res.getString("pod_status"));
                    line.add(res.getString("pod_line"));
+                   ponbr.add(res.getString("pod_nbr"));
                 }
                res.close();
 
@@ -15801,7 +15803,11 @@ return myarray;
                   } else {
                       status = linestatus.get(j).toString();
                   }
-                  st.executeUpdate("update pod_mstr set pod_rcvd_qty = " + "'" + total + "'" + ", pod_status = " + "'" + status + "'" + ";" );
+                  st.executeUpdate("update pod_mstr set pod_rcvd_qty = " + "'" + total + "'" + ", pod_status = " + "'" + status + "'" + 
+                          " where pod_nbr = " + "'" + ponbr.get(j).toString() + "'" + 
+                          " and pod_line = " + "'" + line.get(j).toString() + "'" +
+                          ";" );
+              
               }
 
             } else {
