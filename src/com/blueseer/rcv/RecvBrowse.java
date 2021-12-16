@@ -95,7 +95,7 @@ public class RecvBrowse extends javax.swing.JPanel {
                         new String[]{
                             getGlobalColumnTag("select"), 
                             getGlobalColumnTag("detail"), 
-                            getGlobalColumnTag("po"), 
+                            getGlobalColumnTag("id"),
                             getGlobalColumnTag("vendor"), 
                             getGlobalColumnTag("packingslip"), 
                             getGlobalColumnTag("recvdate"), 
@@ -113,6 +113,7 @@ public class RecvBrowse extends javax.swing.JPanel {
                 
     javax.swing.table.DefaultTableModel modeldetail = new javax.swing.table.DefaultTableModel(new Object[][]{},
                         new String[]{getGlobalColumnTag("id"), 
+                            getGlobalColumnTag("po"),
                             getGlobalColumnTag("line"), 
                             getGlobalColumnTag("item"), 
                             getGlobalColumnTag("packingslip"), 
@@ -169,12 +170,13 @@ public class RecvBrowse extends javax.swing.JPanel {
                 int i = 0;
                 String blanket = "";
                 
-                res = st.executeQuery("select rvd_id, rvd_poline, rvd_part, rvd_packingslip, rvd_date, rvd_netprice, rvd_qty, rvd_voqty " +
+                res = st.executeQuery("select rvd_id, rvd_po, rvd_poline, rvd_part, rvd_packingslip, rvd_date, rvd_netprice, rvd_qty, rvd_voqty " +
                         " from recv_det " +
                         " where rvd_id = " + "'" + rvid + "'" + ";");
                 while (res.next()) {
                    modeldetail.addRow(new Object[]{ 
                       res.getString("rvd_id"), 
+                       res.getString("rvd_po"),
                        res.getString("rvd_poline"),
                        res.getString("rvd_part"),
                        res.getString("rvd_packingslip"),
@@ -186,7 +188,7 @@ public class RecvBrowse extends javax.swing.JPanel {
                
               
                 tabledetail.setModel(modeldetail);
-                 tabledetail.getColumnModel().getColumn(5).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+                 tabledetail.getColumnModel().getColumn(6).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
                 this.repaint();
 
             } catch (SQLException s) {

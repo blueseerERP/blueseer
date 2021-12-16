@@ -451,7 +451,7 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeer {
         btnew.setEnabled(true);
         btlookup.setEnabled(true);
         
-        if (arg != null && arg.length > 1) {
+        if (arg != null && arg.length > 0) {
             executeTask("get", arg);
         } else {
             tbkey.setEnabled(true);
