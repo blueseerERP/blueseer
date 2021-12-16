@@ -31,11 +31,11 @@ import static bsmf.MainFrame.defaultDecimalSeparator;
 import static bsmf.MainFrame.dfdate;
 import static bsmf.MainFrame.pass;
 import com.blueseer.utl.OVData;
-import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.fgl.fglData;
+import com.blueseer.pur.purData;
 import static com.blueseer.rcv.rcvData.addReceiverTransaction;
 import static com.blueseer.rcv.rcvData.getReceiverLines;
 import static com.blueseer.rcv.rcvData.isReceived;
@@ -57,7 +57,6 @@ import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import static com.blueseer.utl.BlueSeerUtils.lurb2;
 import static com.blueseer.utl.BlueSeerUtils.lurb3;
-import com.blueseer.utl.DBTask;
 import com.blueseer.utl.DTData;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -73,7 +72,6 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.SwingWorker;
-import javax.swing.table.DefaultTableModel;
 import com.blueseer.utl.IBlueSeer;
 import com.blueseer.vdr.venData;
 import java.awt.event.ActionEvent;
@@ -535,7 +533,7 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeer {
      boolean error = false;
      m = addReceiverTransaction(createDetRecord(), createRecord());
      /* update PO from receiver */
-     OVData.updatePOFromReceiver(tbkey.getText());
+     purData.updatePOFromReceiver(tbkey.getText());
 
     /* create tran_mstr records */
         if (! error)
