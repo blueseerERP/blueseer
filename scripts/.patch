@@ -1,8 +1,10 @@
-# Version 5.2 Patch file
+# Version 6.0 Patch file
 #
 # bszip.ps1 maintains a running account of patches.   All lines in the patch file will be commented out except the
 # current patch.   There can only be one line starting with 'patch=' in the .patch file rolling forward.
 # Once a new patch is added with comments...the previous patch= is commented out
 #
 patch=0
-# First release of 5.2
+# First release of 6.0
+patch=1
+# Bug fix(s) 1 - 16 included on version 6.0
