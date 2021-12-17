@@ -455,9 +455,9 @@ public class BOMBrowse extends javax.swing.JPanel {
                 Enumeration<TableColumn> en = tableorder.getColumnModel().getColumns();
                 while (en.hasMoreElements()) {
                     TableColumn tc = en.nextElement();
-                    if (tc.getIdentifier().toString().equals("Select") ) {
-                        continue;
-                    }
+                    if (mymodel.getColumnClass(tc.getModelIndex()).getSimpleName().equals("ImageIcon")) {
+                         continue;
+                     }
                     tc.setCellRenderer(new BOMBrowse.SomeRenderer());
                 }
                 // TableColumnModel tcm = tablescrap.getColumnModel();

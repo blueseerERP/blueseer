@@ -733,8 +733,7 @@ public class RetailReorderRpt extends javax.swing.JPanel {
                 Enumeration<TableColumn> en = tablesummary.getColumnModel().getColumns();
                  while (en.hasMoreElements()) {
                      TableColumn tc = en.nextElement();
-                     if (tc.getIdentifier().toString().equals("Select") || 
-                             tc.getIdentifier().toString().equals("Print") ) {
+                     if (summarymodel.getColumnClass(tc.getModelIndex()).getSimpleName().equals("ImageIcon")) {
                          continue;
                      }
                      tc.setCellRenderer(new RetailReorderRpt.SomeRenderer());

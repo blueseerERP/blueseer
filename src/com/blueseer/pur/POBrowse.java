@@ -658,8 +658,7 @@ try {
                   Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
                  while (en.hasMoreElements()) {
                      TableColumn tc = en.nextElement();
-                     if (tc.getIdentifier().toString().equals("Select") || 
-                             tc.getIdentifier().toString().equals("Detail") ) {
+                     if (mymodel.getColumnClass(tc.getModelIndex()).getSimpleName().equals("ImageIcon")) {
                          continue;
                      }
                      tc.setCellRenderer(new POBrowse.SomeRenderer());

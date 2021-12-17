@@ -1006,7 +1006,7 @@ public class MRPBrowse extends javax.swing.JPanel {
                 Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
                  while (en.hasMoreElements()) {
                      TableColumn tc = en.nextElement();
-                      if (tc.getIdentifier().toString().equals("Select")) {
+                     if (mymodel.getColumnClass(tc.getModelIndex()).getSimpleName().equals("ImageIcon")) {
                          continue;
                      }
                      tc.setCellRenderer(new MRPBrowse.MainRenderer());

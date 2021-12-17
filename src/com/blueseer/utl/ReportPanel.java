@@ -267,7 +267,7 @@ public int[] mywidth;
         if (mymodel != null) { 
             TableReport.setModel(mymodel);
             TableReport.setName(arg[0]);
-            if (TableReport.getColumnModel().getColumn(0).getIdentifier().equals("select")) {
+            if (TableReport.getColumnModel().getColumn(0).getIdentifier().equals(getGlobalColumnTag("select"))) {
                 TableReport.getColumnModel().getColumn(0).setMaxWidth(100);
             }
         }

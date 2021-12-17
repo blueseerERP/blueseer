@@ -50,6 +50,7 @@ import static com.blueseer.utl.BlueSeerUtils.bsParseDoubleUS;
 import static com.blueseer.utl.BlueSeerUtils.bsformat;
 import static com.blueseer.utl.BlueSeerUtils.currformatDoubleUS;
 import static com.blueseer.utl.BlueSeerUtils.currformatUS;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.io.BufferedReader;
@@ -15856,7 +15857,8 @@ return myarray;
             output = new BufferedWriter(new FileWriter(f));
             // lets put out the headers
             for (int j = 0; j < tablereport.getColumnCount(); j++) {
-                if (tablereport.getColumnName(j).toString().toLowerCase().equals("select") || tablereport.getColumnName(j).toString().toLowerCase().equals("detail")) {
+                if (tablereport.getColumnName(j).toString().toLowerCase().equals(getGlobalColumnTag("select")) ||  
+                    tablereport.getColumnName(j).toString().toLowerCase().equals(getGlobalColumnTag("detail"))) {
                     continue;
                 }
                 output.write(tablereport.getColumnName(j).toString().replace(",", "") + ",");
@@ -15865,9 +15867,10 @@ return myarray;
             // now the data
             for (int i = 0; i < tablereport.getRowCount(); i++) {
                 for (int j = 0; j < tablereport.getColumnCount(); j++) {
-                 if (tablereport.getColumnName(j).toString().toLowerCase().equals("select") || tablereport.getColumnName(j).toString().toLowerCase().equals("detail")) {
+                  if (tablereport.getColumnName(j).toString().toLowerCase().equals(getGlobalColumnTag("select")) ||  
+                    tablereport.getColumnName(j).toString().toLowerCase().equals(getGlobalColumnTag("detail"))) {
                     continue;
-                } 
+                }
                 if (tablereport.getValueAt(i, j) != null ) {
                 output.write(tablereport.getValueAt(i, j).toString().replace(",", "") + ",");
                 } else {
