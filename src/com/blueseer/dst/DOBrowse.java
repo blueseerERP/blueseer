@@ -75,6 +75,7 @@ import java.sql.Connection;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -99,13 +100,21 @@ public class DOBrowse extends javax.swing.JPanel {
                             getGlobalColumnTag("shipdate"), 
                             getGlobalColumnTag("type"), 
                             getGlobalColumnTag("status"), 
-                            getGlobalColumnTag("quantity")});
+                            getGlobalColumnTag("quantity")})
+            {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0 || col == 1)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        };
                 
     javax.swing.table.DefaultTableModel modeldetail = new javax.swing.table.DefaultTableModel(new Object[][]{},
                         new String[]{getGlobalColumnTag("order"), 
                             getGlobalColumnTag("item"), 
                             getGlobalColumnTag("quantity"), 
-                            getGlobalColumnTag("reference")});
+                            getGlobalColumnTag("serial")});
     
      class ButtonRenderer extends JButton implements TableCellRenderer {
 
@@ -152,15 +161,15 @@ public class DOBrowse extends javax.swing.JPanel {
             ResultSet res = null;
             try {
                 int i = 0;
-                res = st.executeQuery("select dod_nbr, dod_part, dod_qty, dod_ref from dod_mstr " +
+                res = st.executeQuery("select dod_nbr, dod_item, dod_qty, dod_serial from dod_mstr " +
                         " where dod_nbr = " + "'" + donbr + "'" +  ";");
                 // "DO", "Part", "Qty", "Ref"
                 while (res.next()) {
                    modeldetail.addRow(new Object[]{ 
                       res.getString("dod_nbr"), 
-                       res.getString("dod_part"),
+                       res.getString("dod_item"),
                       res.getInt("dod_qty"), 
-                   res.getString("dod_ref")});
+                   res.getString("dod_serial")});
                 }
                
               
@@ -521,10 +530,7 @@ try {
                mymodel.setNumRows(0);
         
               tablereport.setModel(mymodel);
-              tablereport.getColumnModel().getColumn(7).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
-              tablereport.getColumnModel().getColumn(0).setCellRenderer(new ButtonRenderer());
               tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
-               tablereport.getColumnModel().getColumn(1).setCellRenderer(new ButtonRenderer());
               tablereport.getColumnModel().getColumn(1).setMaxWidth(100);
                  DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 
@@ -557,7 +563,7 @@ try {
                        while (res.next()) {
                           totqty += res.getDouble(("qty"));
                
-                    mymodel.addRow(new Object[]{"Select", "Detail", res.getString("do_nbr"),
+                    mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, BlueSeerUtils.clickbasket, res.getString("do_nbr"),
                                 res.getString("do_wh_from"),
                                 res.getString("do_wh_to"),
                                 res.getString("do_shipdate"),

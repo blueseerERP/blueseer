@@ -1299,22 +1299,14 @@ CREATE TABLE IF NOT EXISTS `ship_det` (
   `shd_bom` varchar(30) NOT NULL  DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `dod_mstr` (
-  `dod_id` int(11) NOT NULL  DEFAULT '0',
   `dod_nbr` varchar(8) NOT NULL  DEFAULT '',
   `dod_line` int(8) NOT NULL DEFAULT '0',
-  `shd_so` varchar(30) NOT NULL  DEFAULT '',
-  `dod_soline` int(8) NOT NULL DEFAULT '0',
-  `shd_po` varchar(30) NOT NULL  DEFAULT '',
-  `shd_part` varchar(100) NOT NULL  DEFAULT '',
-  `shd_qty` int(11) NOT NULL DEFAULT '0',
-  `shd_date` date DEFAULT NULL,
-  `dod_lot` varchar(30) NOT NULL  DEFAULT '',
+  `dod_item` varchar(30) NOT NULL  DEFAULT '',
+  `dod_qty` int(11) NOT NULL DEFAULT '0',
   `dod_ref` varchar(30) NOT NULL  DEFAULT '',
   `dod_serial` varchar(30) NOT NULL  DEFAULT '',
-  `dod_loc` varchar(30) NOT NULL  DEFAULT '',
-  `dod_site` varchar(10) NOT NULL  DEFAULT '',
-  `dod_custpart` varchar(30) NOT NULL  DEFAULT '',
-  `dod_desc` varchar(50) NOT NULL  DEFAULT ''
+  `dod_uom` varchar(3) NOT NULL  DEFAULT '',
+  `dod_char1` varchar(50) NOT NULL  DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `fo_mstr` (
   `fo_nbr` varchar(8) NOT NULL  DEFAULT '',
@@ -1398,8 +1390,6 @@ CREATE TABLE IF NOT EXISTS `do_mstr` (
   `do_type` varchar(10) NOT NULL  DEFAULT '',
   `do_wh_from` varchar(10) NOT NULL  DEFAULT '',
   `do_wh_to` varchar(10) NOT NULL  DEFAULT '',
-  `do_cust` varchar(8) NOT NULL  DEFAULT '',
-  `do_ship` varchar(8) NOT NULL  DEFAULT '',
   `do_shipdate` date  DEFAULT NULL,
   `do_recvdate` date  DEFAULT NULL,
   `do_status` varchar(30) NOT NULL  DEFAULT '',
@@ -1408,9 +1398,8 @@ CREATE TABLE IF NOT EXISTS `do_mstr` (
   `do_shipvia` varchar(30) NOT NULL  DEFAULT '',
   `do_pallets` int(8) NOT NULL DEFAULT '0',
   `do_gross_wt` int(8) NOT NULL DEFAULT '0',
-  `do_net_wt` int(8) NOT NULL DEFAULT '0',
-  `do_po` varchar(30) NOT NULL  DEFAULT '',
-  `do_so` varchar(30) NOT NULL DEFAULT '') 
+  `do_char1` varchar(30) NOT NULL  DEFAULT '',
+  `do_char2` varchar(30) NOT NULL DEFAULT '') 
 ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `ship_log` (
   `shl_id` varchar(8) NOT NULL  DEFAULT '',

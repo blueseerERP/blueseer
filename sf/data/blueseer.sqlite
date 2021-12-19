@@ -1539,22 +1539,14 @@ CREATE TABLE "ship_ctrl" (
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "dod_mstr" (
-  "dod_id" INT(11) NOT NULL COLLATE NOCASE DEFAULT '',
   "dod_nbr" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
   "dod_line" int(8) NOT NULL DEFAULT '0',
-  "dod_so" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "dod_soline" int(8) NOT NULL DEFAULT '0',
-  "dod_po" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "dod_part" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
+  "dod_item" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "dod_qty" int(11) NOT NULL DEFAULT '0',
-  "dod_date" date NOT NULL DEFAULT '0000-00-00',
-  "dod_lot" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "dod_ref" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "dod_serial" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "dod_loc" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "dod_site" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
-  "dod_custpart" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "dod_desc" varchar(50) NOT NULL COLLATE NOCASE DEFAULT ''
+  "dod_uom" varchar(3) NOT NULL COLLATE NOCASE DEFAULT '',
+  "dod_char1" varchar(50) NOT NULL COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -1683,8 +1675,6 @@ CREATE TABLE "do_mstr" (
   "do_type" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
   "do_wh_from" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
   "do_wh_to" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
-  "do_cust" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
-  "do_ship" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
   "do_shipdate" date COLLATE NOCASE DEFAULT '',
   "do_recvdate" date COLLATE NOCASE DEFAULT '',
   "do_status" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
@@ -1693,9 +1683,8 @@ CREATE TABLE "do_mstr" (
   "do_shipvia" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "do_pallets" int(8) NOT NULL DEFAULT '0',
   "do_gross_wt" int(8) NOT NULL DEFAULT '0',
-  "do_net_wt" int(8) NOT NULL DEFAULT '0',
-  "do_po" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "do_so" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '');
+  "do_char1" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "do_char2" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '');
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
