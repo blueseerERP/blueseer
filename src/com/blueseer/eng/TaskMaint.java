@@ -39,7 +39,16 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.eng.engData.addTaskTransaction;
+import static com.blueseer.eng.engData.deleteTaskMstr;
+import static com.blueseer.eng.engData.getTaskDet;
+import static com.blueseer.eng.engData.getTaskMstr;
+import static com.blueseer.eng.engData.getTaskSequences;
+import com.blueseer.eng.engData.task_det;
+import com.blueseer.eng.engData.task_mstr;
+import static com.blueseer.eng.engData.updateTaskTransaction;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -51,7 +60,7 @@ import static com.blueseer.utl.BlueSeerUtils.luinput;
 import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import com.blueseer.utl.DTData;
-import com.blueseer.utl.IBlueSeer;
+import com.blueseer.utl.IBlueSeerT;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.GradientPaint;
@@ -84,7 +93,7 @@ import javax.swing.SwingWorker;
  */
 
 
-public class TaskMaint extends javax.swing.JPanel implements IBlueSeer {
+public class TaskMaint extends javax.swing.JPanel implements IBlueSeerT {
 
     // global variable declarations
                 boolean isLoad = false;
@@ -93,9 +102,9 @@ public class TaskMaint extends javax.swing.JPanel implements IBlueSeer {
      javax.swing.table.DefaultTableModel taskmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
                 getGlobalColumnTag("owner"), 
-                getGlobalColumnTag("description"), 
-                getGlobalColumnTag("sequence"), 
-                getGlobalColumnTag("enabled")
+                getGlobalColumnTag("description"),                 
+                getGlobalColumnTag("enabled"),
+                getGlobalColumnTag("sequence") 
             });
     
   
@@ -105,15 +114,15 @@ public class TaskMaint extends javax.swing.JPanel implements IBlueSeer {
     }
 
     // interface functions implemented
-    public void executeTask(String x, String[] y) { 
+    public void executeTask(dbaction x, String[] y) { 
       
         class Task extends SwingWorker<String[], Void> {
        
           String type = "";
           String[] key = null;
           
-          public Task(String type, String[] key) { 
-              this.type = type;
+          public Task(BlueSeerUtils.dbaction type, String[] key) { 
+              this.type = type.name();
               this.key = key;
           } 
            
@@ -159,7 +168,6 @@ public class TaskMaint extends javax.swing.JPanel implements IBlueSeer {
            } else {
              initvars(null);  
            }
-           
             
             } catch (Exception e) {
                 MainFrame.bslog(e);
@@ -318,22 +326,18 @@ public class TaskMaint extends javax.swing.JPanel implements IBlueSeer {
         tbkey.requestFocus();
     }
     
-    public String[] setAction(int i) {
-        String[] m = new String[2];
-        if (i > 0) {
-            m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
+    public void setAction(String[] x) {
+        if (x[0].equals("0")) { 
                    setPanelComponentState(this, true);
                    btadd.setEnabled(false);
                    tbkey.setEditable(false);
                    tbkey.setForeground(Color.blue);
         } else {
-           m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
                    tbkey.setForeground(Color.red); 
         }
-        return m;
     }
     
-    public boolean validateInput(String x) {
+    public boolean validateInput(dbaction x) {
         boolean b = true;
                
                 if (tbkey.getText().isEmpty()) {
@@ -364,7 +368,7 @@ public class TaskMaint extends javax.swing.JPanel implements IBlueSeer {
         btlookup.setEnabled(true);
         
         if (arg != null && arg.length > 0) {
-            executeTask("get",arg);
+            executeTask(dbaction.get,arg);
         } else {
             tbkey.setEnabled(true);
             tbkey.setEditable(true);
@@ -373,184 +377,86 @@ public class TaskMaint extends javax.swing.JPanel implements IBlueSeer {
     }
     
     public String[] addRecord(String[] x) {
-     String[] m = new String[2];
-     
-     try {
-
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                
-                boolean proceed = true;
-                int i = 0;
-
-                    res = st.executeQuery("SELECT task_id FROM  task_mstr where task_id = " + "'" + x[0] + "'" + ";");
-                    while (res.next()) {
-                        i++;
-                    }
-                    if (i == 0) {
-                        st.executeUpdate("insert into task_mstr (task_id, task_desc) values (" + 
-                            "'" + tbkey.getText() + "'" + "," +
-                            "'" + tbdesc.getText() + "'"  + 
-                            ")" + ";"); 
-                        for (int j = 0; j < tabletasks.getRowCount(); j++) {
-                        st.executeUpdate("insert into task_det (taskd_id, taskd_owner, taskd_desc, taskd_enabled, taskd_sequence ) values ( " 
-                        + "'" + tbkey.getText() + "'" + ","
-                        + "'" + tabletasks.getValueAt(j, 0).toString() + "'" + ","
-                        + "'" + tabletasks.getValueAt(j, 1).toString() + "'" + ","
-                        + "'" + BlueSeerUtils.boolToInt(Boolean.valueOf(tabletasks.getValueAt(j, 3).toString())) + "'" + ","
-                        + "'" + tabletasks.getValueAt(j, 2).toString() + "'" 
-                        + " );" );
-                        }
-                        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
-                    } else {
-                       m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists}; 
-                    }
-
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordSQLError};  
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordConnError};
-        }
-     
-     return m;
+    String[] m = addTaskTransaction(createDetRecord(), createRecord());
+         return m;
      }
      
     public String[] updateRecord(String[] x) {
-     String[] m = new String[2];
-     
-     try {
-            boolean proceed = true;
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            try {
-                           st.executeUpdate("update task_mstr set " + 
-                           "task_desc = " + "'" + tbdesc.getText() + "'" + 
-                           " where task_id = " + "'" + tbkey.getText() + "'" +
-                             ";");     
-                
-               //  now lets delete all stored actions of this master task...then add back from table
-                st.executeUpdate("delete from task_det where taskd_id = " + "'" + tbkey.getText() + "'" + ";");
-                       
-                 for (int j = 0; j < tabletasks.getRowCount(); j++) {
-                st.executeUpdate("insert into task_det (taskd_id, taskd_owner, taskd_desc, taskd_enabled, taskd_sequence ) values ( " 
-                        + "'" + tbkey.getText() + "'" + ","
-                        + "'" + tabletasks.getValueAt(j, 0).toString() + "'" + ","
-                        + "'" + tabletasks.getValueAt(j, 1).toString() + "'" + ","
-                        + "'" + BlueSeerUtils.boolToInt(Boolean.valueOf(tabletasks.getValueAt(j, 3).toString())) + "'" + ","
-                        + "'" + tabletasks.getValueAt(j, 2).toString() + "'" 
-                        + " );" );
-                 }
-                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
-               
-         
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError};  
-            } finally {
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordConnError};
+    String[] m = new String[2];
+        // first delete any sod_det line records that have been
+        // disposed from the current orddet table
+        ArrayList<String> lines = new ArrayList<String>();
+        ArrayList<String> badlines = new ArrayList<String>();
+        boolean goodLine = false;
+        lines = getTaskSequences(tbkey.getText());
+       for (String line : lines) {
+          goodLine = false;
+          for (int j = 0; j < tabletasks.getRowCount(); j++) {
+             if (tabletasks.getValueAt(j, 3).toString().equals(line)) {
+                 goodLine = true;
+             }
+          }
+          if (! goodLine) {
+              badlines.add(line);
+          }
         }
-     
+        m = updateTaskTransaction(tbkey.getText(), badlines, createDetRecord(), createRecord());
      return m;
      }
      
     public String[] deleteRecord(String[] x) {
      String[] m = new String[2];
-        boolean proceed = bsmf.MainFrame.warn("Are you sure?");
+        boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
         if (proceed) {
-        try {
-
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            try {
-                   int i = st.executeUpdate("delete from task_mstr where task_id = " + "'" + x[0] + "'" + ";");
-                   st.executeUpdate("delete from task_det where taskd_id = " + "'" + x[0] + "'" + ";");
-                    if (i > 0) {
-                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
-                    } else {
-                    m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordError};    
-                    }
-                } catch (SQLException s) {
-                 MainFrame.bslog(s); 
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordSQLError};  
-            } finally {
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordConnError};
-        }
+         m = deleteTaskMstr(createRecord()); 
+         initvars(null);
         } else {
            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
         }
-     return m;
+         return m;
      }
       
-    public String[] getRecord(String[] x) {
-       String[] m = new String[2];
+    public String[] getRecord(String[] key) {
        
-        try {
-
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                
-                int i = 0;
-                res = st.executeQuery("SELECT * FROM  task_mstr where task_id = " + "'" + x[0] + "'" + ";");
-                    while (res.next()) {
-                        i++;
-                        tbdesc.setText(res.getString("task_desc"));
-                        tbkey.setText(res.getString("task_id"));
-                    }
-                    res = st.executeQuery("SELECT * FROM  task_det where " +
-                            " taskd_id = " + "'" + x[0] + "'" + " order by taskd_sequence ;");
-                    while (res.next()) {
-                     taskmodel.addRow(new Object[]{res.getString("taskd_owner"), res.getString("taskd_desc"), res.getString("taskd_sequence"), res.getBoolean("taskd_enabled")});   
-                    }
-               
-                // set Action if Record found (i > 0)
-                m = setAction(i);
-                
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};  
+        task_mstr x = getTaskMstr(key); 
+        tbkey.setText(x.task_id());
+        tbdesc.setText(x.task_desc());
+       
+       
+        // now detail
+        taskmodel.setRowCount(0);
+        ArrayList<task_det> z = getTaskDet(key[0]);
+        for (task_det d : z) {
+            taskmodel.addRow(new Object[]{d.taskd_owner(), d.taskd_desc(), d.taskd_enabled(),
+                 d.taskd_sequence()});
         }
-      return m;
+       // getTasks(ddtask.getSelectedItem().toString());
+        setAction(x.m());
+        return x.m();
+       
+    }
+    
+     public task_mstr createRecord() { 
+        task_mstr x = new task_mstr(null, 
+                tbkey.getText(),
+                tbdesc.getText()
+                );
+        return x;
+    }
+    
+    public ArrayList<task_det> createDetRecord() {
+        ArrayList<task_det> list = new ArrayList<task_det>();
+         for (int j = 0; j < tabletasks.getRowCount(); j++) {
+             task_det x = new task_det(null, 
+                tbkey.getText(),
+                tabletasks.getValueAt(j, 0).toString(),
+                tabletasks.getValueAt(j, 1).toString(),
+                tabletasks.getValueAt(j, 2).toString(),
+                tabletasks.getValueAt(j, 3).toString()
+                );
+        list.add(x);
+         }
+        return list;   
     }
     
     public void lookUpFrame() {
@@ -871,11 +777,11 @@ public class TaskMaint extends javax.swing.JPanel implements IBlueSeer {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
-         if (! validateInput("updateRecord")) {
+         if (! validateInput(dbaction.update)) {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("update", new String[]{tbkey.getText()});
+        executeTask(dbaction.update, new String[]{tbkey.getText()});
     }//GEN-LAST:event_btupdateActionPerformed
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
@@ -883,7 +789,7 @@ public class TaskMaint extends javax.swing.JPanel implements IBlueSeer {
     }//GEN-LAST:event_btnewActionPerformed
 
     private void btaddtaskActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddtaskActionPerformed
-         taskmodel.addRow(new Object[]{ddowner.getSelectedItem().toString(), tbaction.getText(), tbsequence.getText(), cbenabled.isSelected()});
+         taskmodel.addRow(new Object[]{ddowner.getSelectedItem().toString(), tbaction.getText(), cbenabled.isSelected(), tbsequence.getText()});
     }//GEN-LAST:event_btaddtaskActionPerformed
 
     private void btdeletetaskActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeletetaskActionPerformed
@@ -896,19 +802,19 @@ public class TaskMaint extends javax.swing.JPanel implements IBlueSeer {
     }//GEN-LAST:event_btdeletetaskActionPerformed
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
-       if (! validateInput("addRecord")) {
+       if (! validateInput(dbaction.add)) {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("add", new String[]{tbkey.getText()});
+        executeTask(dbaction.add, new String[]{tbkey.getText()});
     }//GEN-LAST:event_btaddActionPerformed
 
     private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
-       if (! validateInput("deleteRecord")) {
+       if (! validateInput(dbaction.delete)) {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("delete", new String[]{tbkey.getText()});   
+        executeTask(dbaction.delete, new String[]{tbkey.getText()});   
     }//GEN-LAST:event_btdeleteActionPerformed
 
     private void btclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearActionPerformed
@@ -917,7 +823,7 @@ public class TaskMaint extends javax.swing.JPanel implements IBlueSeer {
     }//GEN-LAST:event_btclearActionPerformed
 
     private void tbkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkeyActionPerformed
-        executeTask("get", new String[]{tbkey.getText()});
+        executeTask(dbaction.get, new String[]{tbkey.getText()});
     }//GEN-LAST:event_tbkeyActionPerformed
 
     private void btlookupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btlookupActionPerformed

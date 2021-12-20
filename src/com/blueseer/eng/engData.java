@@ -423,7 +423,7 @@ public class engData {
         return list;
     }
     
-     public static ecn_task getECNTask(String nbr, String masterid) {
+    public static ecn_task getECNTask(String nbr, String masterid) {
         ecn_task r = null;
         String[] m = new String[2];
         String sql = "select * from ecn_task where ecnt_nbr = ? and ecnt_mstrid = ? ;";
@@ -451,7 +451,7 @@ public class engData {
         }
         return r;
     }
-    
+        
     
     public static String[] deleteECNMstr(ecn_mstr x) {
         String[] m = new String[2];
@@ -514,8 +514,7 @@ public class engData {
         ps.executeUpdate();
         ps.close();
     }
-    
-    
+        
     private static void _deleteECNMstr(ecn_mstr x, Connection con) throws SQLException { 
         PreparedStatement ps = null; 
         String sql = "delete from ecn_mstr where ecn_nbr = ?; ";
@@ -525,6 +524,445 @@ public class engData {
         sql = "delete from ecn_task where ecnt_nbr = ?; ";
         ps = con.prepareStatement(sql);
         ps.setString(1, x.ecn_nbr);
+        ps.executeUpdate();
+        ps.close();
+    }
+     
+       
+    public static String[] addTaskMstr(task_mstr x) {
+        String[] m = new String[2];
+        if (x == null) {
+            return new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordError};
+        }
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet res = null;
+        try { 
+            con = DriverManager.getConnection(url + db, user, pass);
+            int rows = _addTaskMstr(x, con, ps, res);  
+            if (rows > 0) {
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+            } else {
+            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordError};    
+            }
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordError};
+        } finally {
+            if (res != null) {
+                try {
+                    res.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
+    }
+    
+    private static int _addTaskMstr(task_mstr x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+        int rows = 0;
+        String sqlSelect = "select * from task_mstr where task_id = ?";
+        String sqlInsert = "insert into task_mstr (task_id, task_desc) "
+                        + " values (?,?); "; 
+       
+          ps = con.prepareStatement(sqlSelect); 
+          ps.setString(1, x.task_id);
+          res = ps.executeQuery();
+          ps = con.prepareStatement(sqlInsert);
+            if (! res.isBeforeFirst()) {
+            ps.setString(1, x.task_id);
+            ps.setString(2, x.task_desc);
+            rows = ps.executeUpdate();
+            } 
+            return rows;
+    }
+    
+    private static int _addTaskDet(task_det x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+        int rows = 0;
+        String sqlSelect = "select * from task_det where taskd_id = ? and taskd_sequence = ?";
+        String sqlInsert = "insert into task_det (taskd_id, taskd_owner, taskd_desc,  "
+                            + " taskd_enabled, taskd_sequence ) "
+                        + " values (?,?,?,?,?); "; 
+       
+          ps = con.prepareStatement(sqlSelect); 
+          ps.setString(1, x.taskd_id);
+          ps.setString(2, x.taskd_sequence);
+          res = ps.executeQuery();
+          ps = con.prepareStatement(sqlInsert);  
+            if (! res.isBeforeFirst()) {
+            ps.setString(1, x.taskd_id);
+            ps.setString(2, x.taskd_owner);
+            ps.setString(3, x.taskd_desc);
+            ps.setString(4, x.taskd_enabled);
+            ps.setString(5, x.taskd_sequence);
+            rows = ps.executeUpdate();
+            } 
+            return rows;
+    }
+    
+    public static String[] addTaskTransaction(ArrayList<task_det> td, task_mstr tm) {
+        String[] m = new String[2];
+        Connection bscon = null;
+        PreparedStatement ps = null;
+        ResultSet res = null;
+        try { 
+            bscon = DriverManager.getConnection(url + db, user, pass);
+            bscon.setAutoCommit(false);
+            _addTaskMstr(tm, bscon, ps, res);  
+            for (task_det z : td) {
+                _addTaskDet(z, bscon, ps, res);
+            }
+            bscon.commit();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             try {
+                 bscon.rollback();
+                 m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordError};
+             } catch (SQLException rb) {
+                 MainFrame.bslog(rb);
+             }
+        } finally {
+            if (res != null) {
+                try {
+                    res.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (bscon != null) {
+                try {
+                    bscon.setAutoCommit(true);
+                    bscon.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
+    }
+    
+     public static String[] updateTaskMstr(task_mstr x) {
+        String[] m = new String[2];
+        if (x == null) {
+            return new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordError};
+        }
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet res = null;
+        try { 
+            con = DriverManager.getConnection(url + db, user, pass);
+            int rows = _updateTaskMstr(x, con, ps);  // add cms_det
+            if (rows > 0) {
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+            } else {
+            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordError};    
+            }
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordError};
+        } finally {
+            if (res != null) {
+                try {
+                    res.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
+    }
+   
+    private static int _updateTaskMstr(task_mstr x, Connection con, PreparedStatement ps) throws SQLException {
+        int rows = 0;
+        String sql = "update task_mstr set task_desc = ?  " +
+                 " where task_id = ? ; ";
+	ps = con.prepareStatement(sql) ;
+        ps.setString(2, x.task_id);
+            ps.setString(1, x.task_desc);
+            rows = ps.executeUpdate();
+        return rows;
+    }
+    
+    private static int _updateTaskdet(task_det x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+        int rows = 0;
+        String sqlSelect = "select * from task_det where taskd_id = ? and taskd_sequence = ?";
+        String sqlUpdate = "update task_det set taskd_owner = ?, " +
+                           " taskd_desc = ?, taskd_enabled = ? " +
+                 " where taskd_id = ? and taskd_sequence = ? ; ";
+        String sqlInsert = "insert into task_det (taskd_id, taskd_owner, taskd_desc, taskd_enabled, "
+                            + " taskd_sequence) "
+                        + " values (?,?,?,?,?); "; 
+        ps = con.prepareStatement(sqlSelect); 
+        ps.setString(1, x.taskd_id);
+        ps.setString(2, x.taskd_sequence);
+        res = ps.executeQuery();
+        if (! res.isBeforeFirst()) {  // insert
+	 ps = con.prepareStatement(sqlInsert) ;
+            ps.setString(1, x.taskd_id);
+            ps.setString(2, x.taskd_owner);
+            ps.setString(3, x.taskd_desc);
+            ps.setString(4, x.taskd_enabled);
+            ps.setString(5, x.taskd_sequence);
+            // ps.setString(9, x.ecnt_notes);  another mechanism updates the Notes field
+            rows = ps.executeUpdate();
+        } else {    // update
+         ps = con.prepareStatement(sqlUpdate) ;
+            ps.setString(4, x.taskd_id);
+            ps.setString(5, x.taskd_sequence);
+            ps.setString(1, x.taskd_owner);
+            ps.setString(2, x.taskd_desc);
+            ps.setString(3, x.taskd_enabled);
+            // ps.setString(7, x.ecnt_notes);  another mechanism updates the Notes field
+            rows = ps.executeUpdate();
+        }
+            
+        return rows;
+    }
+        
+    public static String[] updateTaskTransaction(String x, ArrayList<String> lines, ArrayList<task_det> td, task_mstr tm) {
+        String[] m = new String[2];
+        Connection bscon = null;
+        PreparedStatement ps = null;
+        ResultSet res = null;
+        try { 
+            bscon = DriverManager.getConnection(url + db, user, pass);
+            bscon.setAutoCommit(false);
+            for (String line : lines) {
+               _deleteTaskLines(x, line, bscon);  // discard unwanted lines
+             }
+            for (task_det z : td) {
+                _updateTaskdet(z, bscon, ps, res);
+            }
+             _updateTaskMstr(tm, bscon, ps);  // update so_mstr
+            bscon.commit();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             try {
+                 bscon.rollback();
+                 m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordError};
+             } catch (SQLException rb) {
+                 MainFrame.bslog(rb);
+             }
+        } finally {
+            if (res != null) {
+                try {
+                    res.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (bscon != null) {
+                try {
+                    bscon.setAutoCommit(true);
+                    bscon.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
+    }
+    
+    
+    public static task_mstr getTaskMstr(String[] x) {
+        task_mstr r = null;
+        String[] m = new String[2];
+        String sql = "select * from task_mstr where task_id = ? ;";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, x[0]);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};
+                r = new task_mstr(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new task_mstr(m, res.getString("task_id"), res.getString("task_desc"));
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new task_mstr(m);
+        }
+        return r;
+    }
+    
+    public static ArrayList<task_det> getTaskDet(String code) {
+        task_det r = null;
+        String[] m = new String[2];
+        ArrayList<task_det> list = new ArrayList<task_det>();
+        String sql = "select * from task_det where taskd_id = ? ;";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, code);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new task_det(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new task_det(m, res.getString("taskd_id"), res.getString("taskd_owner"), res.getString("taskd_desc"), res.getString("taskd_enabled"), res.getString("taskd_sequence"));
+                        list.add(r);
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new task_det(m);
+               list.add(r);
+        }
+        return list;
+    }
+    
+    public static task_det getTaskDet(String id, String sequence) {
+        task_det r = null;
+        String[] m = new String[2];
+        String sql = "select * from task_det where taskd_id = ? and taskd_sequence = ? ;";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, id);
+        ps.setString(2, sequence);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new task_det(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                      r = new task_det(m, res.getString("taskd_id"), res.getString("taskd_owner"), res.getString("taskd_desc"), res.getString("taskd_enabled"), res.getString("taskd_sequence"));
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new task_det(m);
+        }
+        return r;
+    }
+        
+    
+    public static String[] deleteTaskMstr(task_mstr x) {
+        String[] m = new String[2];
+        if (x == null) {
+            return new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordError};
+        }
+        Connection con = null;
+        try { 
+            con = DriverManager.getConnection(url + db, user, pass);
+            _deleteTaskMstr(x, con);  // add cms_det
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordError};
+        } finally {
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
+    }
+    
+    public static String[] deleteTaskLines(String x, ArrayList<String> lines) {
+        String[] m = new String[2];
+        if (x == null) {
+            return new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordError};
+        }
+        Connection con = null;
+        try { 
+            con = DriverManager.getConnection(url + db, user, pass);
+             for (String line : lines) {
+               _deleteTaskLines(x, line, con);  // add cms_det
+             }
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordError};
+        } finally {
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
+    }
+    
+    private static void _deleteTaskLines(String x, String line, Connection con) throws SQLException { 
+        PreparedStatement ps = null; 
+        String sql = "delete from task_det where taskd_id = ? and taskd_sequence = ?; ";
+        ps = con.prepareStatement(sql);
+        ps.setString(1, x);
+        ps.setString(2, line);
+        ps.executeUpdate();
+        ps.close();
+    }
+        
+    private static void _deleteTaskMstr(task_mstr x, Connection con) throws SQLException { 
+        PreparedStatement ps = null; 
+        String sql = "delete from task_mstr where task_id = ?; ";
+        ps = con.prepareStatement(sql);
+        ps.setString(1, x.task_id);
+        ps.executeUpdate();
+        sql = "delete from task_det where taskd_id = ?; ";
+        ps = con.prepareStatement(sql);
+        ps.setString(1, x.task_id);
         ps.executeUpdate();
         ps.close();
     }
@@ -557,6 +995,31 @@ public class engData {
         return lines;
     }
     
+    public static ArrayList<String> getTaskSequences(String nbr) {
+        ArrayList<String> lines = new ArrayList<String>();
+        try{
+        Class.forName(driver).newInstance();
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+           res = st.executeQuery("SELECT taskd_sequence from task_det " +
+                   " where taskd_id = " + "'" + nbr + "'" + ";");
+                        while (res.next()) {
+                          lines.add(res.getString("taskd_sequence"));
+                        }
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+        return lines;
+    }
     
     
     public record ecn_mstr(String[] m, String ecn_nbr, String ecn_poc, String ecn_mstrtask, 
