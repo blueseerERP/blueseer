@@ -25,10 +25,569 @@ SOFTWARE.
  */
 package com.blueseer.eng;
 
+import bsmf.MainFrame;
+import static bsmf.MainFrame.db;
+import static bsmf.MainFrame.driver;
+import static bsmf.MainFrame.pass;
+import static bsmf.MainFrame.url;
+import static bsmf.MainFrame.user;
+import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+
 /**
  *
  * @author terryva
  */
 public class engData {
+    
+    
+      
+    public static String[] addECNMstr(ecn_mstr x) {
+        String[] m = new String[2];
+        if (x == null) {
+            return new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordError};
+        }
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet res = null;
+        try { 
+            con = DriverManager.getConnection(url + db, user, pass);
+            int rows = _addECNMstr(x, con, ps, res);  
+            if (rows > 0) {
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+            } else {
+            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordError};    
+            }
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordError};
+        } finally {
+            if (res != null) {
+                try {
+                    res.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
+    }
+    
+    private static int _addECNMstr(ecn_mstr x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+        int rows = 0;
+        String sqlSelect = "select * from ecn_mstr where ecn_nbr = ?";
+        String sqlInsert = "insert into ecn_mstr (ecn_nbr, ecn_poc, ecn_mstrtask, ecn_status, "
+                        + " ecn_targetdate, ecn_createdate, ecn_closedate, "
+                        + " ecn_drawing, ecn_item, ecn_rev, ecn_custrev ) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?); "; 
+       
+          ps = con.prepareStatement(sqlSelect); 
+          ps.setString(1, x.ecn_nbr);
+          res = ps.executeQuery();
+          ps = con.prepareStatement(sqlInsert);
+            if (! res.isBeforeFirst()) {
+            ps.setString(1, x.ecn_nbr);
+            ps.setString(2, x.ecn_poc);
+            ps.setString(3, x.ecn_mstrtask);
+            ps.setString(4, x.ecn_status);
+            ps.setString(5, x.ecn_targetdate);
+            ps.setString(6, x.ecn_createdate);
+            ps.setString(7, x.ecn_closedate);
+            ps.setString(8, x.ecn_drawing);
+            ps.setString(9, x.ecn_item);
+            ps.setString(10, x.ecn_rev);
+            ps.setString(11, x.ecn_custrev);
+            rows = ps.executeUpdate();
+            } 
+            return rows;
+    }
+    
+    private static int _addECNTask(ecn_task x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+        int rows = 0;
+        String sqlSelect = "select * from ecn_task where ecnt_nbr = ? and ecnt_mstrid = ?";
+        String sqlInsert = "insert into ecn_task (ecnt_nbr, ecnt_mstrid, ecnt_seq,  "
+                            + " ecnt_owner, ecnt_task, ecnt_assigndate, ecnt_closedate, ecnt_status, ecnt_notes) "
+                        + " values (?,?,?,?,?,?,?,?,?); "; 
+       
+          ps = con.prepareStatement(sqlSelect); 
+          ps.setString(1, x.ecnt_nbr);
+          ps.setString(2, x.ecnt_mstrid);
+          res = ps.executeQuery();
+          ps = con.prepareStatement(sqlInsert);  
+            if (! res.isBeforeFirst()) {
+            ps.setString(1, x.ecnt_nbr);
+            ps.setString(2, x.ecnt_mstrid);
+            ps.setString(3, x.ecnt_seq);
+            ps.setString(4, x.ecnt_owner);
+            ps.setString(5, x.ecnt_task);
+            ps.setString(6, x.ecnt_assigndate);
+            ps.setString(7, x.ecnt_closedate);
+            ps.setString(8, "pending");  // hardcoded to 'pending' for initial add
+            ps.setString(9, x.ecnt_notes);
+            rows = ps.executeUpdate();
+            } 
+            return rows;
+    }
+    
+    public static String[] addECNTransaction(ArrayList<ecn_task> ecnt, ecn_mstr ecn) {
+        String[] m = new String[2];
+        Connection bscon = null;
+        PreparedStatement ps = null;
+        ResultSet res = null;
+        try { 
+            bscon = DriverManager.getConnection(url + db, user, pass);
+            bscon.setAutoCommit(false);
+            _addECNMstr(ecn, bscon, ps, res);  
+            for (ecn_task z : ecnt) {
+                _addECNTask(z, bscon, ps, res);
+            }
+            bscon.commit();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             try {
+                 bscon.rollback();
+                 m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordError};
+             } catch (SQLException rb) {
+                 MainFrame.bslog(rb);
+             }
+        } finally {
+            if (res != null) {
+                try {
+                    res.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (bscon != null) {
+                try {
+                    bscon.setAutoCommit(true);
+                    bscon.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
+    }
+    
+     
+    public static String[] updateECNMstr(ecn_mstr x) {
+        String[] m = new String[2];
+        if (x == null) {
+            return new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordError};
+        }
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet res = null;
+        try { 
+            con = DriverManager.getConnection(url + db, user, pass);
+            int rows = _updateECNMstr(x, con, ps);  // add cms_det
+            if (rows > 0) {
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+            } else {
+            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordError};    
+            }
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordError};
+        } finally {
+            if (res != null) {
+                try {
+                    res.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
+    }
+   
+    private static int _updateECNMstr(ecn_mstr x, Connection con, PreparedStatement ps) throws SQLException {
+        int rows = 0;
+        String sql = "update ecn_mstr set ecn_poc = ?, ecn_mstrtask = ?,  " +
+                "ecn_status = ?, ecn_targetdate = ?, ecn_createdate = ?, ecn_closedate = ?, " + 
+                " ecn_drawing = ?, ecn_item = ?, ecn_rev = ?, ecn_custrev = ? " +
+                 " where ecn_nbr = ? ; ";
+	ps = con.prepareStatement(sql) ;
+        ps.setString(11, x.ecn_nbr);
+            ps.setString(1, x.ecn_poc);
+            ps.setString(2, x.ecn_mstrtask);
+            ps.setString(3, x.ecn_status);
+            ps.setString(4, x.ecn_targetdate);
+            ps.setString(5, x.ecn_createdate);
+            ps.setString(6, x.ecn_closedate);
+            ps.setString(7, x.ecn_drawing);
+            ps.setString(8, x.ecn_item);
+            ps.setString(9, x.ecn_rev);
+            ps.setString(10, x.ecn_custrev);
+       
+            rows = ps.executeUpdate();
+        return rows;
+    }
+    
+    private static int _updateECNTask(ecn_task x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+        int rows = 0;
+        String sqlSelect = "select * from ecn_task where ecnt_nbr = ? and ecnt_mstrid = ?";
+        String sqlUpdate = "update ecn_task set ecnt_seq = ?, " +
+                           " ecnt_owner = ?, ecnt_task = ?, ecnt_assigndate = ?, ecnt_closedate = ?, ecnt_status = ? " +
+                 " where ecnt_nbr = ? and ecnt_mstrid = ? ; ";
+        String sqlInsert = "insert into ecn_task (ecnt_nbr, ecnt_mstrid, ecnt_seq, ecnt_owner, "
+                            + " ecnt_task, ecnt_assigndate, ecnt_closedate, ecnt_status) "
+                        + " values (?,?,?,?,?,?,?,?); "; 
+        ps = con.prepareStatement(sqlSelect); 
+        ps.setString(1, x.ecnt_nbr);
+        ps.setString(2, x.ecnt_mstrid);
+        res = ps.executeQuery();
+        if (! res.isBeforeFirst()) {  // insert
+	 ps = con.prepareStatement(sqlInsert) ;
+            ps.setString(1, x.ecnt_nbr);
+            ps.setString(2, x.ecnt_mstrid);
+            ps.setString(3, x.ecnt_seq);
+            ps.setString(4, x.ecnt_owner);
+            ps.setString(5, x.ecnt_task);
+            ps.setString(6, x.ecnt_assigndate);
+            ps.setString(7, x.ecnt_closedate);
+            ps.setString(8, x.ecnt_status);
+            // ps.setString(9, x.ecnt_notes);  another mechanism updates the Notes field
+            rows = ps.executeUpdate();
+        } else {    // update
+         ps = con.prepareStatement(sqlUpdate) ;
+            ps.setString(7, x.ecnt_nbr);
+            ps.setString(8, x.ecnt_mstrid);
+            ps.setString(1, x.ecnt_seq);
+            ps.setString(2, x.ecnt_owner);
+            ps.setString(3, x.ecnt_task);
+            ps.setString(4, x.ecnt_assigndate);
+            ps.setString(5, x.ecnt_closedate);
+            ps.setString(6, x.ecnt_status);
+            // ps.setString(7, x.ecnt_notes);  another mechanism updates the Notes field
+            rows = ps.executeUpdate();
+        }
+            
+        return rows;
+    }
+        
+    public static String[] updateECNTransaction(String x, ArrayList<String> lines, ArrayList<ecn_task> ecnt, ecn_mstr ecn) {
+        String[] m = new String[2];
+        Connection bscon = null;
+        PreparedStatement ps = null;
+        ResultSet res = null;
+        try { 
+            bscon = DriverManager.getConnection(url + db, user, pass);
+            bscon.setAutoCommit(false);
+            for (String line : lines) {
+               _deleteECNLines(x, line, bscon);  // discard unwanted lines
+             }
+            for (ecn_task z : ecnt) {
+                _updateECNTask(z, bscon, ps, res);
+            }
+             _updateECNMstr(ecn, bscon, ps);  // update so_mstr
+            bscon.commit();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             try {
+                 bscon.rollback();
+                 m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordError};
+             } catch (SQLException rb) {
+                 MainFrame.bslog(rb);
+             }
+        } finally {
+            if (res != null) {
+                try {
+                    res.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (bscon != null) {
+                try {
+                    bscon.setAutoCommit(true);
+                    bscon.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
+    }
+    
+    
+    public static ecn_mstr getECNMstr(String[] x) {
+        ecn_mstr r = null;
+        String[] m = new String[2];
+        String sql = "select * from ecn_mstr where ecn_nbr = ? ;";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, x[0]);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};
+                r = new ecn_mstr(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new ecn_mstr(m, res.getString("ecn_nbr"), res.getString("ecn_poc"), 
+                        res.getString("ecn_mstrtask"), res.getString("ecn_status"), res.getString("ecn_targetdate"), 
+                        res.getString("ecn_createdate"), res.getString("ecn_closedate"), res.getString("ecn_drawing"), 
+                        res.getString("ecn_item"), res.getString("ecn_rev"), res.getString("ecn_custrev"));
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new ecn_mstr(m);
+        }
+        return r;
+    }
+    
+    public static ArrayList<ecn_task> getECNTask(String code) {
+        ecn_task r = null;
+        String[] m = new String[2];
+        ArrayList<ecn_task> list = new ArrayList<ecn_task>();
+        String sql = "select * from ecn_task where ecnt_nbr = ? ;";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, code);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new ecn_task(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new ecn_task(m, res.getString("ecnt_nbr"), res.getString("ecnt_mstrid"), res.getString("ecnt_seq"), res.getString("ecnt_owner"), res.getString("ecnt_task"),
+                    res.getString("ecnt_assigndate"), res.getString("ecnt_closedate"), res.getString("ecnt_status"), res.getString("ecnt_notes")
+                    );
+                        list.add(r);
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new ecn_task(m);
+               list.add(r);
+        }
+        return list;
+    }
+    
+     public static ecn_task getECNTask(String nbr, String masterid) {
+        ecn_task r = null;
+        String[] m = new String[2];
+        String sql = "select * from ecn_task where ecnt_nbr = ? and ecnt_mstrid = ? ;";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, nbr);
+        ps.setString(2, masterid);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new ecn_task(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                      r = new ecn_task(m, res.getString("ecnt_nbr"), res.getString("ecnt_mstrid"), res.getString("ecnt_seq"), res.getString("ecnt_owner"), res.getString("ecnt_task"),
+                    res.getString("ecnt_assigndate"), res.getString("ecnt_closedate"), res.getString("ecnt_status"), res.getString("ecnt_notes")
+                    );
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new ecn_task(m);
+        }
+        return r;
+    }
+    
+    
+    public static String[] deleteECNMstr(ecn_mstr x) {
+        String[] m = new String[2];
+        if (x == null) {
+            return new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordError};
+        }
+        Connection con = null;
+        try { 
+            con = DriverManager.getConnection(url + db, user, pass);
+            _deleteECNMstr(x, con);  // add cms_det
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordError};
+        } finally {
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
+    }
+    
+    public static String[] deleteECNLines(String x, ArrayList<String> lines) {
+        String[] m = new String[2];
+        if (x == null) {
+            return new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordError};
+        }
+        Connection con = null;
+        try { 
+            con = DriverManager.getConnection(url + db, user, pass);
+             for (String line : lines) {
+               _deleteECNLines(x, line, con);  // add cms_det
+             }
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordError};
+        } finally {
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
+    }
+    
+    private static void _deleteECNLines(String x, String line, Connection con) throws SQLException { 
+        PreparedStatement ps = null; 
+        String sql = "delete from ecn_task where ecnt_nbr = ? and ecnt_mstrid = ?; ";
+        ps = con.prepareStatement(sql);
+        ps.setString(1, x);
+        ps.setString(2, line);
+        ps.executeUpdate();
+        ps.close();
+    }
+    
+    
+    private static void _deleteECNMstr(ecn_mstr x, Connection con) throws SQLException { 
+        PreparedStatement ps = null; 
+        String sql = "delete from ecn_mstr where ecn_nbr = ?; ";
+        ps = con.prepareStatement(sql);
+        ps.setString(1, x.ecn_nbr);
+        ps.executeUpdate();
+        sql = "delete from ecn_task where ecnt_nbr = ?; ";
+        ps = con.prepareStatement(sql);
+        ps.setString(1, x.ecn_nbr);
+        ps.executeUpdate();
+        ps.close();
+    }
+     
+    
+    // misc
+    public static ArrayList<String> getECNSequences(String nbr) {
+        ArrayList<String> lines = new ArrayList<String>();
+        try{
+        Class.forName(driver).newInstance();
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+           res = st.executeQuery("SELECT ecnt_seq from ecn_task " +
+                   " where ecnt_nbr = " + "'" + nbr + "'" + ";");
+                        while (res.next()) {
+                          lines.add(res.getString("ecnt_seq"));
+                        }
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+        return lines;
+    }
+    
+    
+    
+    public record ecn_mstr(String[] m, String ecn_nbr, String ecn_poc, String ecn_mstrtask, 
+        String ecn_status, String ecn_targetdate, String ecn_createdate, String ecn_closedate,
+        String ecn_drawing, String ecn_item, String ecn_rev, String ecn_custrev) {
+        public ecn_mstr(String[] m) {
+            this(m, "", "", "", "", "", "", "", "", "", "",
+                    "");
+        }
+    }
+    
+    public record ecn_task(String[] m, String ecnt_nbr, String ecnt_mstrid, String ecnt_seq, 
+        String ecnt_owner, String ecnt_task, String ecnt_assigndate, String ecnt_closedate, 
+        String ecnt_status, String ecnt_notes) {
+        public ecn_task(String[]m) {
+            this(m, "", "", "", "", "", "", "", "", "");
+        }
+    }
+    
+    
+    public record task_mstr(String[] m, String task_id, String task_desc) {
+        public task_mstr(String[] m) {
+            this(m, "", "");
+        }
+    }
+    
+    public record task_det(String[] m, String taskd_id, String taskd_owner, String taskd_desc, 
+        String taskd_enabled, String taskd_sequence) {
+        public task_det(String[]m) {
+            this(m, "", "", "", "", "");
+        }
+    }
     
 }

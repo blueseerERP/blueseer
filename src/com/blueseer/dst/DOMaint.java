@@ -119,7 +119,7 @@ public class DOMaint extends javax.swing.JPanel implements IBlueSeerT {
         setLanguageTags(this);
     }
 
-     public void executeTask(BlueSeerUtils.dbaction x, String[] y) { 
+    public void executeTask(BlueSeerUtils.dbaction x, String[] y) { 
       
         class Task extends SwingWorker<String[], Void> {
        

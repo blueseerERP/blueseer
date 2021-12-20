@@ -28,17 +28,28 @@ package com.blueseer.eng;
 
 import bsmf.MainFrame;
 import static bsmf.MainFrame.db;
+import static bsmf.MainFrame.defaultDecimalSeparator;
 import static bsmf.MainFrame.pass;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.eng.engData.addECNTransaction;
+import static com.blueseer.eng.engData.deleteECNMstr;
+import com.blueseer.eng.engData.ecn_mstr;
+import com.blueseer.eng.engData.ecn_task;
+import static com.blueseer.eng.engData.getECNMstr;
+import static com.blueseer.eng.engData.getECNSequences;
+import static com.blueseer.eng.engData.getECNTask;
+import static com.blueseer.eng.engData.updateECNTransaction;
 import com.blueseer.inv.invData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
 import static com.blueseer.utl.BlueSeerUtils.luTable;
@@ -46,15 +57,8 @@ import static com.blueseer.utl.BlueSeerUtils.lual;
 import static com.blueseer.utl.BlueSeerUtils.ludialog;
 import static com.blueseer.utl.BlueSeerUtils.luinput;
 import static com.blueseer.utl.BlueSeerUtils.luml;
-import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import com.blueseer.utl.DTData;
-import com.blueseer.utl.IBlueSeer;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Phrase;
-import com.itextpdf.text.pdf.BaseFont;
-import com.itextpdf.text.pdf.PdfContentByte;
-import com.itextpdf.text.pdf.PdfWriter;
+import com.blueseer.utl.IBlueSeerT;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Point;
@@ -64,30 +68,12 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.DateFormat;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import javax.print.Doc;
-import javax.print.DocFlavor;
-import javax.print.DocPrintJob;
-import javax.print.PrintService;
-import javax.print.PrintServiceLookup;
-import javax.print.SimpleDoc;
-import javax.print.attribute.HashPrintRequestAttributeSet;
-import javax.print.attribute.PrintRequestAttributeSet;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultComboBoxModel;
@@ -97,7 +83,6 @@ import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JRadioButton;
@@ -113,7 +98,6 @@ import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -125,7 +109,7 @@ import javax.swing.tree.TreeSelectionModel;
  *
  * @author vaughnte
  */
-public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
+public class ECNMaint extends javax.swing.JPanel implements IBlueSeerT  {
   
      
     // global variable declarations
@@ -163,7 +147,7 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
             }
             setText((value == null) ? "" : value.toString());
             if (taskmodel.getRowCount() > 0) {
-            if (tasktable.getModel().getValueAt(row, 5).toString().compareTo("complete") == 0) {
+            if (tasktable.getModel().getValueAt(row, 5).toString().compareTo(getGlobalProgTag("complete")) == 0) {
             setBackground(Color.green);
             //setEnabled(false);
             }
@@ -221,9 +205,9 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
                     // approvereq(label);
               //  }
                 myrow = tasktable.getSelectedRow();
-                if (tasktable.getModel().getValueAt(myrow, 5).toString().compareTo("pending") == 0) {
+                if (tasktable.getModel().getValueAt(myrow, 5).toString().compareTo(getGlobalProgTag("pending")) == 0) {
                     if (tasktable.getModel().getValueAt(myrow, 1).toString().compareTo(bsmf.MainFrame.userid) == 0) {
-                 completetask(tbkey.getText(), tasktable.getValueAt(myrow, 0).toString());
+                      completetask(tbkey.getText(), tasktable.getValueAt(myrow, 0).toString());
                     } else {
                       bsmf.MainFrame.show(getMessageTag(1112));  
                     }
@@ -452,15 +436,15 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
 
      
     // interface functions implemented
-    public void executeTask(String x, String[] y) { 
+    public void executeTask(BlueSeerUtils.dbaction x, String[] y) { 
       
         class Task extends SwingWorker<String[], Void> {
        
           String type = "";
           String[] key = null;
           
-          public Task(String type, String[] key) { 
-              this.type = type;
+          public Task(BlueSeerUtils.dbaction type, String[] key) { 
+              this.type = type.name();
               this.key = key;
           } 
            
@@ -506,7 +490,6 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
            } else {
              initvars(null);  
            }
-           
             
             } catch (Exception e) {
                 MainFrame.bslog(e);
@@ -648,10 +631,13 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
         
         if (ddpart.getItemCount() > 0)
         ddpart.setSelectedIndex(0);
-        
-        if (ddstatus.getItemCount() > 0)
+                
+        ddstatus.removeAllItems();
+        ddstatus.addItem(getGlobalProgTag("open"));
+        ddstatus.addItem(getGlobalProgTag("closed"));
+        ddstatus.addItem(getGlobalProgTag("cancel"));
+        ddstatus.addItem(getGlobalProgTag("hold"));
         ddstatus.setSelectedIndex(0);
-        
         
         dctargetdate.setDate(now);
         tbrev.setText("");
@@ -715,22 +701,18 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
         tbkey.requestFocus();
     }
     
-    public String[] setAction(int i) {
-        String[] m = new String[2];
-        if (i > 0) {
-            m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
+     public void setAction(String[] x) {
+        if (x[0].equals("0")) { 
                    setPanelComponentState(this, true);
                    btadd.setEnabled(false);
                    tbkey.setEditable(false);
                    tbkey.setForeground(Color.blue);
         } else {
-           m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
                    tbkey.setForeground(Color.red); 
         }
-        return m;
     }
     
-    public boolean validateInput(String x) {
+    public boolean validateInput(BlueSeerUtils.dbaction x) {
         boolean b = true;
                 
                 
@@ -757,7 +739,7 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
         btlookup.setEnabled(true);
         
         if (arg != null && arg.length > 0) {
-            executeTask("get",arg);
+            executeTask(dbaction.get,arg);
         } else {
             tbkey.setEnabled(true);
             tbkey.setEditable(true);
@@ -766,221 +748,108 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
     }
     
     public String[] addRecord(String[] x) {
-     String[] m = new String[2];
-     
-     try {
-
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                
-                boolean proceed = true;
-                int i = 0;
-
-                    res = st.executeQuery("SELECT ecn_nbr FROM  ecn_mstr where ecn_nbr = " + "'" + x[0] + "'" + ";");
-                    while (res.next()) {
-                        i++;
-                    }
-                    if (i == 0) {
-                        st.executeUpdate("insert into ecn_mstr "
-                        + "(ecn_nbr, ecn_poc, ecn_mstrtask, ecn_status, "
-                        + " ecn_targetdate, ecn_createdate, ecn_closedate, "
-                        + " ecn_drawing, ecn_item, ecn_rev, ecn_custrev ) "
-                        + " values ( " + "'" + tbkey.getText().toString() + "'" + ","
-                        + "'" + ddengineer.getSelectedItem().toString() + "'" + ","
-                        + "'" + ddtask.getSelectedItem().toString() + "'" + ","
-                        + "'" + "open" + "'" + ","
-                        + "'" + bsmf.MainFrame.dfdate.format(dctargetdate.getDate()).toString() + "'" + ","
-                        + "'" + tbdatecreate.getText() + "'" + ","
-                        +  null + ","
-                        + "'" + tbdrawing.getText() + "'" + ","
-                        + "'" + ddpart.getSelectedItem().toString() + "'" + ","
-                        + "'" + tbrev.getText() + "'" + ","
-                        + "'" + tbcustrev.getText() + "'" 
-                        + ")"
-                        + ";");
-                        
-                        for (int j = 0; j < tasktable.getRowCount(); j++) {
-                        st.executeUpdate("insert into ecn_task "
-                            + "(ecnt_nbr, ecnt_mstrid, ecnt_seq, ecnt_owner, ecnt_task, "
-                            + "ecnt_assigndate, ecnt_closedate, ecnt_status ) "
-                            + " values ( " 
-                            + "'" + tbkey.getText().toString() + "'" + ","
-                            + "'" + ddtask.getSelectedItem().toString() + "'" + ","
-                            + "'" + tasktable.getValueAt(j, 0).toString() + "'" + ","
-                            + "'" + tasktable.getValueAt(j, 1).toString() + "'" + ","
-                            + "'" + tasktable.getValueAt(j, 2).toString() + "'" + ","
-                            + null + ","
-                            + null + "," 
-                            + "'" + "pending" + "'"    
-                            + ")"
-                            + ";");
-                        }
-                        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
-                    } else {
-                       m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists}; 
-                    }
-
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordSQLError};  
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordConnError};
-        }
-     
-     return m;
+     String[] m = addECNTransaction(createDetRecord(), createRecord());
+         return m;
      }
      
     public String[] updateRecord(String[] x) {
-     String[] m = new String[2];
-     
-     try {
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            try {
-                    st.executeUpdate("update ecn_mstr set ecn_poc = " + "'" + ddengineer.getSelectedItem().toString() + "'" + ","
-                            + "ecn_mstrtask = " + "'" + ddtask.getSelectedItem().toString() + "'" + ","
-                            + "ecn_status = " + "'" + ddstatus.getSelectedItem().toString() + "'" + ","
-                            + "ecn_targetdate = " + "'" + bsmf.MainFrame.dfdate.format(dctargetdate.getDate()).toString() + "'" + ","        
-                            + "ecn_drawing = " + "'" + tbdrawing.getText() + "'" + ","
-                            + "ecn_item = " + "'" + ddpart.getSelectedItem().toString() + "'" + ","
-                            + "ecn_rev = " + "'" + tbrev.getText() + "'" + ","
-                            + "ecn_custrev = " + "'" + tbcustrev.getText() + "'" 
-                            + " where ecn_nbr = " + "'" + x[0] + "'"                             
-                            + ";");
-                    
-                    // delete and reassign all task items
-                    st.executeUpdate("delete from ecn_task where ecnt_nbr = " + "'" + x[0] + "'" + ";");
-                    for (int j = 0; j < tasktable.getRowCount(); j++) {
-                        st.executeUpdate("insert into ecn_task "
-                            + "(ecnt_nbr, ecnt_mstrid, ecnt_seq, ecnt_owner, ecnt_task, "
-                            + "ecnt_assigndate, ecnt_closedate, ecnt_status ) "
-                            + " values ( " 
-                            + "'" + x[0] + "'" + ","
-                            + "'" + ddtask.getSelectedItem().toString() + "'" + ","
-                            + "'" + tasktable.getValueAt(j, 0).toString() + "'" + ","
-                            + "'" + tasktable.getValueAt(j, 1).toString() + "'" + ","
-                            + "'" + tasktable.getValueAt(j, 2).toString() + "'" + ","
-                            + null + ","
-                            + null + "," 
-                            + "'" + "pending" + "'"    
-                            + ")"
-                            + ";");
-                        }
-                    
-                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
-               
-         
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError};  
-            } finally {
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordConnError};
+       String[] m = new String[2];
+        // first delete any sod_det line records that have been
+        // disposed from the current orddet table
+        ArrayList<String> lines = new ArrayList<String>();
+        ArrayList<String> badlines = new ArrayList<String>();
+        boolean goodLine = false;
+        lines = getECNSequences(tbkey.getText());
+       for (String line : lines) {
+          goodLine = false;
+          for (int j = 0; j < tasktable.getRowCount(); j++) {
+             if (tasktable.getValueAt(j, 0).toString().equals(line)) {
+                 goodLine = true;
+             }
+          }
+          if (! goodLine) {
+              badlines.add(line);
+          }
         }
-     
+        m = updateECNTransaction(tbkey.getText(), badlines, createDetRecord(), createRecord());
      return m;
      }
      
     public String[] deleteRecord(String[] x) {
      String[] m = new String[2];
-        boolean proceed = bsmf.MainFrame.warn("Are you sure?");
+        boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
         if (proceed) {
-        try {
-
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            try {
-                   int i = st.executeUpdate("delete from ecn_mstr where ecn_nbr = " + "'" + x[0] + "'" + ";");
-                   st.executeUpdate("delete from ecn_task where ecnt_nbr = " + "'" + x[0] + "'" + ";");
-                    if (i > 0) {
-                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
-                    } else {
-                    m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordError};    
-                    }
-                } catch (SQLException s) {
-                 MainFrame.bslog(s); 
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordSQLError};  
-            } finally {
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordConnError};
-        }
+         m = deleteECNMstr(createRecord()); 
+         initvars(null);
         } else {
            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
         }
-     return m;
+         return m;
      }
       
-    public String[] getRecord(String[] x) {
-       String[] m = new String[2];
+    public String[] getRecord(String[] key) {
        
-        try {
-
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                
-                int i = 0;
-                res = st.executeQuery("select * from ecn_mstr where ecn_nbr = " + "'" + x[0] + "'" + ";");
-                while (res.next()) {
-                    i++;
-                    tbdatecreate.setText(res.getString("ecn_createdate"));
-                    tbrev.setText(res.getString("ecn_rev"));
-                    tbcustrev.setText(res.getString("ecn_custrev"));
-                    tbdrawing.setText(res.getString("ecn_drawing"));
-                    ddengineer.setSelectedItem(res.getString("ecn_poc"));
-                    ddtask.setSelectedItem(res.getString("ecn_mstrtask"));
-                    ddstatus.setSelectedItem(res.getString("ecn_status"));
-                    ddpart.setSelectedItem(res.getString("ecn_item"));
-                    dctargetdate.setDate(bsmf.MainFrame.dfdate.parse(res.getString("ecn_targetdate")));
-                    tbkey.setText(res.getString("ecn_nbr"));
-                }
-               
-                // set Action if Record found (i > 0)
-                m = setAction(i);
-                
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};  
+        ecn_mstr x = getECNMstr(key); 
+        tbkey.setText(x.ecn_nbr());
+        tbdatecreate.setText(x.ecn_createdate());
+        tbrev.setText(x.ecn_rev());
+        tbcustrev.setText(x.ecn_custrev());
+        tbdrawing.setText(x.ecn_drawing());
+        ddengineer.setSelectedItem(x.ecn_poc());
+        ddtask.setSelectedItem(x.ecn_mstrtask());
+        ddstatus.setSelectedItem(x.ecn_status());
+        ddpart.setSelectedItem(x.ecn_item());
+        dctargetdate.setDate(BlueSeerUtils.parseDate(x.ecn_targetdate()));
+       
+        // now detail
+        taskmodel.setRowCount(0);
+        ArrayList<ecn_task> z = getECNTask(key[0]);
+        for (ecn_task d : z) {
+            taskmodel.addRow(new Object[]{d.ecnt_seq(), d.ecnt_owner(), d.ecnt_task(),
+                 d.ecnt_assigndate(), d.ecnt_closedate(), d.ecnt_status()});
         }
-      return m;
+       // getTasks(ddtask.getSelectedItem().toString());
+        setAction(x.m());
+        return x.m();
+       
     }
+    
+    public ecn_mstr createRecord() { 
+        ecn_mstr x = new ecn_mstr(null, 
+                tbkey.getText(),
+                ddengineer.getSelectedItem().toString(),
+                ddtask.getSelectedItem().toString(),
+                ddstatus.getSelectedItem().toString(),
+                BlueSeerUtils.setDateFormat(dctargetdate.getDate()),
+                tbdatecreate.getText(),
+                "",
+                tbdrawing.getText(),
+                ddpart.getSelectedItem().toString(),
+                tbrev.getText(),
+                tbcustrev.getText()
+                );
+        return x;
+    }
+    
+    public ArrayList<ecn_task> createDetRecord() {
+        ArrayList<ecn_task> list = new ArrayList<ecn_task>();
+         for (int j = 0; j < tasktable.getRowCount(); j++) {
+             ecn_task x = new ecn_task(null, 
+                tbkey.getText(),
+                ddtask.getSelectedItem().toString(),
+                tasktable.getValueAt(j, 0).toString(),
+                tasktable.getValueAt(j, 1).toString(),
+                tasktable.getValueAt(j, 2).toString(),
+                tasktable.getValueAt(j, 3).toString(),
+                tasktable.getValueAt(j, 4).toString(), 
+                tasktable.getValueAt(j, 5).toString(), 
+                "" // notes...this is ignored in add/update...another mechanism updates the notes field
+                );
+        list.add(x);
+         }
+        return list;   
+    }
+    
     
     public void lookUpFrame() {
         
@@ -1072,7 +941,8 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
              
                 
                 // now...lets update task and set to complete 
-                 st.executeUpdate("update ecn_task set ecnt_status = 'complete' where " + 
+                 st.executeUpdate("update ecn_task set ecnt_status = " +
+                         "'" + getGlobalProgTag("complete") + "'" + " where " + 
                         " ecnt_nbr = " + "'" + myid + "'" + " AND " + 
                          "ecnt_seq = " + "'" + mysequence + "'" + ";");
                  
@@ -1099,7 +969,8 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
                  
                  // now...lets set next sequence to pending....if there is one
                  if (! islast) {
-                 st.executeUpdate("update ecn_task set ecnt_status = 'pending' where " + 
+                 st.executeUpdate("update ecn_task set ecnt_status = " +
+                         "'" + getGlobalProgTag("pending") + "'" + " where " + 
                         " ecnt_nbr = " + "'" + myid + "'" + " AND " + 
                          "ecnt_seq = " + "'" + nextsequence + "'" + ";");
                  }
@@ -1107,9 +978,10 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
                  //finally....if is last sequence...then set entire Req to 'approved'
                  if (islast) {
                 
-                  st.executeUpdate("update ecn_mstr set ecn_status = 'closed' where " + 
+                  st.executeUpdate("update ecn_mstr set ecn_status = " +
+                        "'" + getGlobalProgTag("closed") + "'" + " where " + 
                         " ecn_nbr = " + "'" + myid + "'" +  ";");
-                         ddstatus.setSelectedItem("closed");
+                         ddstatus.setSelectedItem(getGlobalProgTag("closed"));
                          messglbl.setText("This ECN is now closed");
                        
                          if (isEmail)
@@ -1198,9 +1070,6 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
     
     public void getTasks(String task) {
        
-        if (ddstatus.getSelectedItem().toString().compareTo("open") == 0)
-            return;
-          
         taskmodel.setNumRows(0);
         try {
      
@@ -1299,22 +1168,6 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
         }
     }
    
- /*
-   public void WalkShipper(TreeNode root) {
-    if (tree.getModel().getRoot().toString().equals(root.toString()))
-    OVData.CreateAdvancedShipperHeader(root.toString(), site.getText(), billto.getText(), tbrev.getText(), "1", "s", dctargetdate.getDate().toString(), tbdatecreate.getText(), ddshipvia.getSelectedItem().toString(), tbcustrev.getText());
-   
-    OVData.CreateAdvancedShipperDetail(root.toString(), site.getText(), billto.getText(), tbrev.getText(), "1", "s", dctargetdate.getDate().toString(), tbdatecreate.getText(), ddshipvia.getSelectedItem().toString(), tbcustrev.getText());
-    Enumeration children = root.children();
-    if (children != null) {
-      while (children.hasMoreElements()) {
-        WalkShipper((TreeNode) children.nextElement());
-      }
-    }
-  }
-    
-   */
-      
       
     /**
      * This method is called from within the constructor to initialize the form.
@@ -1460,8 +1313,6 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
         tanotes.setRows(5);
         jScrollPane2.setViewportView(tanotes);
 
-        ddstatus.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "open", "hold", "closed", "cancelled" }));
-
         jLabel36.setText("Status");
         jLabel36.setName("lblstatus"); // NOI18N
 
@@ -1501,41 +1352,22 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(51, 51, 51)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel37, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel38, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel40, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel39, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(messglbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(45, 45, 45)
-                        .addComponent(jLabel24)
-                        .addGap(5, 5, 5)
-                        .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btlookup, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(13, 13, 13)
-                        .addComponent(btnew)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btclear))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addContainerGap()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGap(51, 51, 51)
-                                .addComponent(jLabel37)
-                                .addGap(12, 12, 12)
-                                .addComponent(ddengineer, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGap(57, 57, 57)
-                                .addComponent(jLabel38)
-                                .addGap(12, 12, 12)
-                                .addComponent(ddtask, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGap(54, 54, 54)
-                                .addComponent(jLabel40)
-                                .addGap(12, 12, 12)
-                                .addComponent(ddpart, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGap(61, 61, 61)
-                                .addComponent(jLabel39)
-                                .addGap(12, 12, 12)
-                                .addComponent(tbrev, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                            .addComponent(ddengineer, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(ddtask, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(ddpart, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tbrev, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addGap(4, 4, 4)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel36, javax.swing.GroupLayout.Alignment.TRAILING)
@@ -1550,26 +1382,37 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
                     .addComponent(dctargetdate, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tbcustrev, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tbdatecreate, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(messglbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(12, 12, 12))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 593, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(29, 29, 29))
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(12, 12, 12)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 593, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(btnotes)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btdelete)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btupdate)
                         .addGap(12, 12, 12)
-                        .addComponent(btadd)))
-                .addGap(29, 29, 29))
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 593, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(btnotes)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btdelete)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btupdate)
+                                .addGap(12, 12, 12)
+                                .addComponent(btadd))))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(45, 45, 45)
+                        .addComponent(jLabel24)
+                        .addGap(5, 5, 5)
+                        .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btlookup, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(13, 13, 13)
+                        .addComponent(btnew)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btclear)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1583,7 +1426,9 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
                     .addComponent(btnew)
                     .addComponent(btclear)
                     .addComponent(btlookup))
-                .addGap(8, 8, 8)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(messglbl, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(ddengineer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(dctargetdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1612,14 +1457,15 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
                             .addComponent(jLabel26))))
                 .addGap(12, 12, 12)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(tbrev, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tbcustrev, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
+                        .addGap(3, 3, 3)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel39)
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel39)
+                                .addComponent(tbrev, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jLabel27))))
-                .addGap(18, 18, 18)
+                .addGap(15, 15, 15)
                 .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1630,10 +1476,6 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
                         .addComponent(btnotes)
                         .addComponent(btdelete))
                     .addComponent(btadd)))
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(16, 16, 16)
-                .addComponent(messglbl, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(542, 542, 542))
         );
 
         javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("root");
@@ -1669,19 +1511,19 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
     }//GEN-LAST:event_btnewActionPerformed
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
-         if (! validateInput("addRecord")) {
+         if (! validateInput(dbaction.add)) {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("add", new String[]{tbkey.getText()});
+        executeTask(dbaction.add, new String[]{tbkey.getText()});
     }//GEN-LAST:event_btaddActionPerformed
 
     private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
-        if (! validateInput("updateRecord")) {
+        if (! validateInput(dbaction.update)) {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("update", new String[]{tbkey.getText()});
+        executeTask(dbaction.update, new String[]{tbkey.getText()});
     }//GEN-LAST:event_btupdateActionPerformed
 
     private void ddtaskActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddtaskActionPerformed
@@ -1707,17 +1549,17 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
         
         
         int row = tasktable.getSelectedRow();
-        if (row > 0) {
+        if (row > -1) {
         updateNotes(tbkey.getText(), tasktable.getValueAt(row, 0).toString());
         }
     }//GEN-LAST:event_btnotesActionPerformed
 
     private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
-         if (! validateInput("deleteRecord")) {
+         if (! validateInput(dbaction.delete)) {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("delete", new String[]{tbkey.getText()});   
+        executeTask(dbaction.delete, new String[]{tbkey.getText()});   
     }//GEN-LAST:event_btdeleteActionPerformed
 
     private void btclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearActionPerformed
@@ -1726,7 +1568,7 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeer  {
     }//GEN-LAST:event_btclearActionPerformed
 
     private void tbkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkeyActionPerformed
-        executeTask("get", new String[]{tbkey.getText()});
+        executeTask(dbaction.get, new String[]{tbkey.getText()});
     }//GEN-LAST:event_tbkeyActionPerformed
 
     private void btlookupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btlookupActionPerformed
