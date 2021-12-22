@@ -1294,7 +1294,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeer {
 
         panelMain.setBorder(javax.swing.BorderFactory.createTitledBorder("Purchase Order Maintenance"));
         panelMain.setName("panelmain"); // NOI18N
-        panelMain.setPreferredSize(new java.awt.Dimension(750, 550));
+        panelMain.setPreferredSize(new java.awt.Dimension(850, 550));
 
         jLabel76.setText("OrderNbr");
         jLabel76.setName("lblid"); // NOI18N
@@ -1471,7 +1471,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeer {
                         .addGap(10, 10, 10)
                         .addComponent(btadd)
                         .addGap(3, 3, 3)))
-                .addContainerGap(27, Short.MAX_VALUE))
+                .addContainerGap(235, Short.MAX_VALUE))
         );
         panelMainLayout.setVerticalGroup(
             panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1570,7 +1570,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeer {
 
         panelSchedule.setBorder(javax.swing.BorderFactory.createTitledBorder("Schedule Releases"));
         panelSchedule.setMinimumSize(new java.awt.Dimension(715, 550));
-        panelSchedule.setPreferredSize(new java.awt.Dimension(640, 550));
+        panelSchedule.setPreferredSize(new java.awt.Dimension(850, 550));
         panelSchedule.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         tablesched.setModel(new javax.swing.table.DefaultTableModel(
@@ -1591,7 +1591,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeer {
         add(panelSchedule);
 
         panelDetail.setName("panellines"); // NOI18N
-        panelDetail.setPreferredSize(new java.awt.Dimension(750, 550));
+        panelDetail.setPreferredSize(new java.awt.Dimension(850, 550));
 
         qtyshipped.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -1776,7 +1776,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeer {
                         .addComponent(discount, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 94, Short.MAX_VALUE)
                         .addComponent(listprice, javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(netprice)))
-                .addContainerGap(142, Short.MAX_VALUE))
+                .addContainerGap(242, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1847,7 +1847,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeer {
                 .addComponent(tbtotdollars, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(6, 6, 6)
                 .addComponent(lblcurr, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 209, Short.MAX_VALUE))
+                .addGap(0, 309, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelDetailLayout.createSequentialGroup()
                 .addGroup(panelDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jScrollPane8, javax.swing.GroupLayout.Alignment.LEADING)
