@@ -665,6 +665,47 @@ return myitem;
         
     } 
 
+    public static String[] getVendInfo(String vend) {
+           // get vendor specific data
+            // addr, acct, cc, currency, bank, terms, site
+            String[] vendinfo = new String[]{"","","","","","","", ""};
+         try{
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+                ResultSet res = null;
+            try{
+                res = st.executeQuery("select * from vd_mstr where vd_addr = " + "'" + vend + "'" + ";" );
+               while (res.next()) {
+                   vendinfo[0] = res.getString("vd_addr");
+                   vendinfo[1] = res.getString("vd_ap_acct");
+                   vendinfo[2] = res.getString("vd_ap_cc");
+                   vendinfo[3] = res.getString("vd_curr");
+                   vendinfo[4] = res.getString("vd_bank");
+                   vendinfo[5] = res.getString("vd_terms");
+                   vendinfo[6] = res.getString("vd_site");         
+                }
+               
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                    con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return vendinfo;
+        
+    } 
+
     
     public record vd_mstr(String[] m, String vd_addr, String vd_site, String vd_name, 
         String vd_line1, String vd_line2, String vd_line3, 

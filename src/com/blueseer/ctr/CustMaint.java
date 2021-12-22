@@ -42,6 +42,7 @@ import static com.blueseer.ctr.cusData.getCustMstr;
 import static com.blueseer.ctr.cusData.updateCMCDet;
 import static com.blueseer.ctr.cusData.updateCMSDet;
 import static com.blueseer.ctr.cusData.updateCustMstr;
+import com.blueseer.lbl.lblData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
@@ -818,7 +819,7 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
         ddbank.setSelectedItem(OVData.getDefaultARBank());
         
         ddlabel.removeAllItems();
-        ArrayList label = OVData.getLabelFileList("cont");
+        ArrayList label = lblData.getLabelFileList("cont");
         for (int i = 0; i < label.size(); i++) {
             ddlabel.addItem(label.get(i));
         }

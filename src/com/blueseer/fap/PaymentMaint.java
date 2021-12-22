@@ -58,6 +58,7 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.fap.fapData.apCheckRunTransaction;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.awt.Component;
@@ -755,7 +756,8 @@ try {
              
              // now all that should be left is vouchers that needs a check cut against them....pass it over to APCHECKRUN
              if (mytable.getRowCount() > 0) {
-              OVData.APCheckRun(mytable, now, Integer.valueOf(tbchecknbr.getText().toString()), "AP-Vendor");
+              //OVData.APCheckRun(mytable, now, Integer.valueOf(tbchecknbr.getText().toString()), "AP-Vendor");
+              apCheckRunTransaction(mytable, OVData.getNextNbr("batch"), OVData.getDefaultCurrency(), Integer.valueOf(tbchecknbr.getText().toString()), now, "AP-Vendor");
              }
              postcommit();
              bsmf.MainFrame.show(getMessageTag(1125));

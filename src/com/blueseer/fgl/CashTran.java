@@ -35,6 +35,7 @@ import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.ctr.cusData;
+import com.blueseer.fap.fapData;
 import com.blueseer.inv.invData;
 import com.blueseer.shp.shpData;
 import static com.blueseer.shp.shpData.confirmShipperTransaction;
@@ -699,12 +700,11 @@ public class CashTran extends javax.swing.JPanel {
                      }
                     
                     /* create gl_tran records */
-                        if (! error)
-                        error = fglData.glEntryFromCashTranBuy(expensenbr.getText(), dcdate.getDate());
+                    //    if (! error)
+                    //    error = fglData.glEntryFromCashTranBuy(expensenbr.getText(), dcdate.getDate());
                     
-                    /* emulate cash payment */    
-                        if (! error)
-                        error = OVData.APExpense(dcdate.getDate(), OVData.getNextNbr("expensenumber"), expensenbr.getText(), tbpo.getText(), ddentity.getSelectedItem().toString(), actamt, "AP-Cash");
+                   
+                    message = fapData.APExpense(OVData.getNextNbr("batch"), OVData.getDefaultCurrency(), dcdate.getDate(), OVData.getNextNbr("expensenumber"), expensenbr.getText(), tbpo.getText(), ddentity.getSelectedItem().toString(), actamt, "AP-Cash-Purch");
                         
                     if (error) {
                         message = new String[]{"1", "Error Occurred in Buy"};
@@ -1013,7 +1013,7 @@ public class CashTran extends javax.swing.JPanel {
                        st.executeUpdate("insert into ap_mstr "
                         + "(ap_vend, ap_site, ap_nbr, ap_amt, ap_type, ap_ref, ap_rmks, "
                         + "ap_entdate, ap_effdate, ap_duedate, ap_acct, ap_cc, "
-                        + "ap_terms, ap_status, ap_bank ) "
+                        + "ap_terms, ap_status, ap_bank, ap_curr, ap_base_curr ) "
                         + " values ( " + "'" + ddentityExpense.getSelectedItem() + "'" + ","
                               + "'" + site + "'" + ","
                         + "'" + tbKeyExpense.getText() + "'" + ","
@@ -1028,7 +1028,9 @@ public class CashTran extends javax.swing.JPanel {
                         + "'" + apcc + "'" + ","
                         + "'" + terms + "'" + ","
                         + "'" + "o" + "'"  + ","
-                        + "'" + apbank + "'"
+                        + "'" + apbank + "'" + ","
+                        + "'" + curr + "'" + ","  
+                        + "'" + curr + "'"        
                         + ")"
                         + ";");
                
@@ -1056,11 +1058,11 @@ public class CashTran extends javax.swing.JPanel {
                     int exp = OVData.getNextNbr("expensenumber");
                     key = String.valueOf(exp);
                     /* create gl_tran records */
-                        if (! error)
-                        error = fglData.glEntryFromVoucherExpense(tbKeyExpense.getText(), dcdateExpense.getDate());
+                      //  if (! error)
+                      //  error = fglData.glEntryFromVoucherExpense(tbKeyExpense.getText(), dcdateExpense.getDate());
                          
-                        if (! error)
-                        error = OVData.APExpense(dcdateExpense.getDate(), exp, tbKeyExpense.getText(), tbexpensePO.getText(), ddentityExpense.getSelectedItem().toString(), total, "AP-Cash");
+                       
+                    message = fapData.APExpense(OVData.getNextNbr("batch"), OVData.getDefaultCurrency(), dcdateExpense.getDate(), exp, tbKeyExpense.getText(), tbexpensePO.getText(), ddentityExpense.getSelectedItem().toString(), total, "AP-Cash");
                         
                     if (error) {
                         message = new String[]{"1", "An Error Occurred in Expense"};
@@ -1348,11 +1350,10 @@ public class CashTran extends javax.swing.JPanel {
                      
                     
                     /* create gl_tran records */
-                        if (! error)
-                        error = fglData.glEntryFromVoucherExpense(key, now);
-                         
-                        if (! error)
-                        error = OVData.APExpense(now, exp, key, recurexpensetable.getValueAt(z, 1).toString(), recurexpensetable.getValueAt(z, 3).toString(), bsParseDouble(recurexpensetable.getValueAt(z, 9).toString()), "AP-Cash");
+                    //    if (! error)
+                    //    error = fglData.glEntryFromVoucherExpense(key, now);
+                     
+                    message = fapData.APExpense(OVData.getNextNbr("batch"), OVData.getDefaultCurrency(), now, exp, key, recurexpensetable.getValueAt(z, 1).toString(), recurexpensetable.getValueAt(z, 3).toString(), bsParseDouble(recurexpensetable.getValueAt(z, 9).toString()), "AP-Cash");
                         
                     if (error) {
                         message = new String[]{"1", "An Error Occurred in Expense"};

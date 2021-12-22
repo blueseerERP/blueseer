@@ -28,6 +28,7 @@ SOFTWARE.
 package utilities;
 
 
+import com.blueseer.lbl.lblData;
 import com.blueseer.utl.OVData;
 import java.io.*;
 import java.text.ParseException;
@@ -111,7 +112,7 @@ myscan = in.nextLine();
    if (myscan.equals("d")) {
        // lets insert tran_mstr record for each serial number
        for (String element : mylist) {
-           if (OVData.isLabel(element) &&  OVData.getLabelStatus(element) == 2 ) {
+           if (lblData.isLabel(element) &&  lblData.getLabelStatus(element) == 2 ) {
                //OVData.doTransfer(element);
            } 
        }
@@ -124,22 +125,22 @@ myscan = in.nextLine();
    
    if (! myscan.equals("d") && ! myscan.isEmpty()) {
       
-      if (! OVData.isLabel(myscan)) {
+      if (! lblData.isLabel(myscan)) {
           System.out.println("Bad Label");
           Thread.sleep(1000);
           continue;
       } 
-       if ( OVData.isLabel(myscan) && OVData.getLabelStatus(myscan) == 0) {
+       if ( lblData.isLabel(myscan) && lblData.getLabelStatus(myscan) == 0) {
           System.out.println("Missing CR Scan");
           Thread.sleep(1000);
           continue;
       }
-       if ( OVData.isLabel(myscan) && OVData.getLabelStatus(myscan) == 1) {
+       if ( lblData.isLabel(myscan) && lblData.getLabelStatus(myscan) == 1) {
           System.out.println("Missing TT Scan");
           Thread.sleep(1000);
           continue;
       }
-      if ( OVData.isLabel(myscan) && OVData.getLabelStatus(myscan) == 3) {
+      if ( lblData.isLabel(myscan) && lblData.getLabelStatus(myscan) == 3) {
           System.out.println("Previously Scanned");
           Thread.sleep(1000);
           continue;
@@ -173,7 +174,7 @@ myscan = in.nextLine();
    if (myscan.equals("d")) {
        // lets insert tran_mstr record for each serial number
        for (String element : mylist) {
-           if (OVData.isLabel(element) &&  OVData.getLabelStatus(element) == 2 ) {
+           if (lblData.isLabel(element) &&  lblData.getLabelStatus(element) == 2 ) {
                //OVData.doTransfer(element);
            } 
        }
@@ -186,22 +187,22 @@ myscan = in.nextLine();
    
    if (! myscan.equals("d") && ! myscan.isEmpty()) {
       
-      if (! OVData.isLabel(myscan)) {
+      if (! lblData.isLabel(myscan)) {
           System.out.println("Bad Label");
           Thread.sleep(1000);
           continue;
       } 
-       if ( OVData.isLabel(myscan) && OVData.getLabelStatus(myscan) == 0) {
+       if ( lblData.isLabel(myscan) && lblData.getLabelStatus(myscan) == 0) {
           System.out.println("Missing CR Scan");
           Thread.sleep(1000);
           continue;
       }
-       if ( OVData.isLabel(myscan) && OVData.getLabelStatus(myscan) == 1) {
+       if ( lblData.isLabel(myscan) && lblData.getLabelStatus(myscan) == 1) {
           System.out.println("Missing TT Scan");
           Thread.sleep(1000);
           continue;
       }
-      if ( OVData.isLabel(myscan) && OVData.getLabelStatus(myscan) == 3) {
+      if ( lblData.isLabel(myscan) && lblData.getLabelStatus(myscan) == 3) {
           System.out.println("Previously Scanned");
           Thread.sleep(1000);
           continue;

@@ -30,14 +30,17 @@ import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.defaultDecimalSeparator;
 import static bsmf.MainFrame.dfdate;
 import static bsmf.MainFrame.pass;
-import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.fap.fapData.VouchAndPayTransaction;
+import com.blueseer.fap.fapData.ap_mstr;
+import com.blueseer.fap.fapData.vod_mstr;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
+import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -48,72 +51,30 @@ import static com.blueseer.utl.BlueSeerUtils.ludialog;
 import static com.blueseer.utl.BlueSeerUtils.luinput;
 import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
+import static com.blueseer.utl.BlueSeerUtils.setDateFormat;
 import com.blueseer.utl.DTData;
-import com.blueseer.utl.IBlueSeer;
+import com.blueseer.utl.IBlueSeerT;
 import com.blueseer.utl.OVData;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import javax.swing.JOptionPane;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Phrase;
-import com.itextpdf.text.pdf.BaseFont;
-import com.itextpdf.text.pdf.PdfContentByte;
-import com.itextpdf.text.pdf.PdfWriter;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.text.DecimalFormat;
-import java.util.Date;
-import javax.print.Doc;
-import javax.print.DocFlavor;
-import javax.print.DocPrintJob;
-import javax.print.PrintService;
-import javax.print.PrintServiceLookup;
-import javax.print.SimpleDoc;
-import javax.print.attribute.HashPrintRequestAttributeSet;
-import javax.print.attribute.PrintRequestAttributeSet;
-import javax.swing.JFileChooser;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
-import javax.swing.JScrollPane;
-import javax.swing.JTree;
-import javax.swing.ToolTipManager;
-import javax.swing.event.PopupMenuEvent;
-import javax.swing.event.PopupMenuListener;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreeNode;
-import javax.swing.tree.TreePath;
-import static com.blueseer.utl.OVData.getDueDateFromTerms;
 import com.blueseer.vdr.venData;
 import java.awt.Color;
 import java.awt.Component;
 import java.sql.Connection;
-import java.text.DecimalFormatSymbols;
-import java.util.Locale;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JViewport;
@@ -124,7 +85,7 @@ import javax.swing.SwingWorker;
  *
  * @author vaughnte
  */
-public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeer {
+public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeerT {
                 
                  // global variable declarations
                 boolean isLoad = false;
@@ -132,6 +93,8 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeer {
                 String apacct = "";
                 String apcc = "";
                 String apbank = "";
+                String apcurr = "";
+                String basecurr = "";
                 double actamt = 0.00;
                 double control = 0.00;
                 double rcvamt = 0.00;
@@ -167,15 +130,15 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeer {
     }
    
       // interface functions implemented
-    public void executeTask(String x, String[] y) { 
+    public void executeTask(BlueSeerUtils.dbaction x, String[] y) { 
       
         class Task extends SwingWorker<String[], Void> {
        
           String type = "";
           String[] key = null;
           
-          public Task(String type, String[] key) { 
-              this.type = type;
+          public Task(BlueSeerUtils.dbaction type, String[] key) { 
+              this.type = type.name();
               this.key = key;
           } 
            
@@ -221,7 +184,6 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeer {
            } else {
              initvars(null);  
            }
-           
             
             } catch (Exception e) {
                 MainFrame.bslog(e);
@@ -352,10 +314,13 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeer {
          apacct = "";
          apcc = "";
          apbank = "";
+         apcurr = "";
          actamt = 0.00;
          control = 0.00;
          rcvamt = 0.00;
         
+        basecurr = OVData.getDefaultCurrency();
+         
         lbvendor.setText("");
         lbmessage.setText("");
         lbmessage.setForeground(Color.blue);
@@ -423,24 +388,22 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeer {
         tbkey.requestFocus();
     }
     
-    public String[] setAction(int i) {
+    public void setAction(String[] x) {
         String[] m = new String[2];
-        if (i > 0) {
-            m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
+        if (x[0].equals("0")) {
                    setPanelComponentState(this, true);
                    btadd.setEnabled(false);
                    tbkey.setEditable(false);
                    tbkey.setForeground(Color.blue);
                    tbactualamt.setText(currformatDouble(actamt));
-                   lbmessage.setText("Batch has been committed");
+                   lbmessage.setText(getMessageTag(1170));
         } else {
-           m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
                    tbkey.setForeground(Color.red); 
         }
-        return m;
+       
     }
     
-    public boolean validateInput(String x) {
+    public boolean validateInput(dbaction x) {
         boolean b = true;
                 
                 
@@ -504,7 +467,7 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeer {
         btlookup.setEnabled(true);
         
         if (arg != null && arg.length > 0) {
-            executeTask("get",arg);
+            executeTask(dbaction.get,arg);
         } else {
             tbkey.setEnabled(true);
             tbkey.setEditable(true);
@@ -514,100 +477,7 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeer {
     
     
     public String[] addRecord(String[] x) {
-     String[] m = new String[2];
-     
-     try {
-
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            boolean error = false;
-            try {
-                boolean proceed = true;
-                int i = 0;
-                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-                java.util.Date now = new java.util.Date();
-                 Date duedate = OVData.getDueDateFromTerms(dcdate.getDate(), terms);
-                
-                proceed = validateInput("addRecord");
-                
-                if (proceed) {
-
-                    res = st.executeQuery("SELECT cur_id FROM  cur_mstr where cur_id = " + "'" + x[0] + "'" + ";");
-                    while (res.next()) {
-                        i++;
-                    }
-                    
-                       st.executeUpdate("insert into ap_mstr "
-                        + "(ap_vend, ap_site, ap_nbr, ap_amt, ap_type, ap_check, ap_rmks, "
-                        + "ap_entdate, ap_effdate, ap_duedate, ap_acct, ap_cc, "
-                        + "ap_terms, ap_status, ap_bank ) "
-                        + " values ( " + "'" + ddvend.getSelectedItem() + "'" + ","
-                              + "'" + ddsite.getSelectedItem().toString() + "'" + ","
-                        + "'" + tbkey.getText() + "'" + ","
-                        + "'" + currformatDouble(actamt).replace(defaultDecimalSeparator, '.') + "'" + ","
-                        + "'" + "V" + "'" + ","
-                        + "'" + tbcheck.getText().replace("'", "''") + "'" + ","        
-                        + "'" + tbrmks.getText().replace("'", "''") + "'" + ","
-                        + "'" + dfdate.format(now) + "'" + ","
-                        + "'" + dfdate.format(dcdate.getDate()) + "'" + ","
-                        + "'" + dfdate.format(duedate) + "'" + ","
-                        + "'" + apacct + "'" + ","
-                        + "'" + apcc + "'" + ","
-                        + "'" + terms + "'" + ","
-                        + "'" + "o" + "'"  + ","
-                        + "'" + apbank + "'"
-                        + ")"
-                        + ";");
-                       
-                       for (int j = 0; j < expensedet.getRowCount(); j++) {
-                        st.executeUpdate("insert into vod_mstr "
-                            + "(vod_id, vod_vend, vod_rvdid, vod_rvdline, vod_part, vod_qty, "
-                            + " vod_voprice, vod_date, vod_invoice, vod_expense_acct, vod_expense_cc )  "
-                            + " values ( " + "'" + tbkey.getText() + "'" + ","
-                                + "'" + ddvend.getSelectedItem().toString() + "'" + ","
-                            + "'" + expensedet.getValueAt(j, 5).toString() + "'" + ","
-                            + "'" + expensedet.getValueAt(j, 6).toString() + "'" + ","
-                            + "'" + expensedet.getValueAt(j, 2).toString().replace("'", "''") + "'" + ","
-                            + "'" + expensedet.getValueAt(j, 3).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
-                            + "'" + expensedet.getValueAt(j, 4).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
-                            + "'" + dfdate.format(dcdate.getDate()) + "'" + ","
-                            + "'" + tbcheck.getText() + "'" + ","        
-                            + "'" + expensedet.getValueAt(j, 7).toString() + "'" + ","
-                            + "'" + expensedet.getValueAt(j, 8).toString() + "'"
-                            + ")"
-                            + ";");
-                  
-                     }
-                      
-                     /* create gl_tran records */
-                        if (! error)
-                        error = fglData.glEntryFromVoucherExpense(tbkey.getText(), dcdate.getDate());
-                         
-                        if (! error)
-                        error = OVData.APExpense(dcdate.getDate(), OVData.getNextNbr("expensenumber"), tbkey.getText(), tbrmks.getText(), ddvend.getSelectedItem().toString(), actamt, "AP-Expense");
-                           
-                  if (! error) {        
-                   m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
-                   initvars(null);
-                  } else {
-                   m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordError};
-                  }
-                   
-                } // if proceed
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordSQLError};  
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordConnError};
-        }
-     
+     String[] m = VouchAndPayTransaction(OVData.getNextNbr("batch"), "AP-Expense", createDetRecord(), createRecord());
      return m;
      }
      
@@ -664,8 +534,8 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeer {
                
                 }
                
-                // set Action if Record found (i > 0)
-                m = setAction(i);
+                if (i > 0)
+                m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
                 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
@@ -681,6 +551,56 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeer {
         }
       return m;
     }
+    
+    public ap_mstr createRecord() {
+        ap_mstr x = new ap_mstr(null, 
+                "", //ap_id
+                ddvend.getSelectedItem().toString(), // ap_vend, 
+                tbkey.getText(), // ap_nbr
+                currformatDouble(actamt).replace(defaultDecimalSeparator, '.'), // ap_amt
+                currformatDouble(actamt).replace(defaultDecimalSeparator, '.'), // ap_base_amt
+                setDateFormat(dcdate.getDate()), // ap_effdate
+                setDateFormat(dcdate.getDate()), // ap_entdate
+                "", // ap_duedate        
+                "V", // ap_type
+                tbrmks.getText(), //ap_rmks
+                tbcheck.getText(), //ap_ref
+                terms, //ap_terms
+                apacct, //ap_acct
+                apcc, //ap_cc
+                "0", //ap_applied
+                "o", //ap_status
+                apbank, //ap_bank
+                apcurr, //ap_curr
+                basecurr, //ap_base_curr
+                tbkey.getText(), //ap_check // in this case voucher number is reference field
+                "", //ap_batch
+                ddsite.getSelectedItem().toString() //ap_site
+                ); 
+        return x;  
+    }
+    
+    public ArrayList<vod_mstr> createDetRecord() {
+        ArrayList<vod_mstr> list = new ArrayList<vod_mstr>();
+         for (int j = 0; j < expensedet.getRowCount(); j++) {
+             vod_mstr x = new vod_mstr(null, 
+                tbkey.getText(),
+                expensedet.getValueAt(j, 5).toString(),
+                expensedet.getValueAt(j, 6).toString(),
+                expensedet.getValueAt(j, 2).toString(),
+                expensedet.getValueAt(j, 3).toString().replace(defaultDecimalSeparator, '.'),
+                expensedet.getValueAt(j, 4).toString().replace(defaultDecimalSeparator, '.'),
+                dfdate.format(dcdate.getDate()),
+                ddvend.getSelectedItem().toString(),
+                tbcheck.getText(), 
+                expensedet.getValueAt(j, 7).toString(),
+                expensedet.getValueAt(j, 8).toString()
+                );
+        list.add(x);
+         }
+        return list;   
+    }
+    
     
     public void lookUpFrame() {
         
@@ -734,13 +654,12 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeer {
             int d = 0;
             String uniqpo = null;
             try {
-
-
-                res = st.executeQuery("select vd_name, vd_ap_acct, vd_ap_cc, vd_terms, vd_bank from vd_mstr where vd_addr = " + "'" + vendor + "'" + ";");
+                res = st.executeQuery("select vd_name, vd_curr, vd_ap_acct, vd_ap_cc, vd_terms, vd_bank from vd_mstr where vd_addr = " + "'" + vendor + "'" + ";");
                 while (res.next()) {
                     i++;
                    apacct = res.getString("vd_ap_acct");
                    apcc = res.getString("vd_ap_cc");
+                   apcurr = res.getString("vd_curr");
                    terms = res.getString("vd_terms");
                    apbank = res.getString("vd_bank");
                    lbvendor.setText(res.getString("vd_name"));
@@ -837,7 +756,7 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         jLabel36.setText("Vendor");
-        jLabel36.setName("lblvendor"); // NOI18N
+        jLabel36.setName("vendor"); // NOI18N
 
         btadditem.setText("Add Item");
         btadditem.setName("btadditem"); // NOI18N
@@ -933,7 +852,7 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         jLabel10.setText("Site");
-        jLabel10.setName("lblsite"); // NOI18N
+        jLabel10.setName("site"); // NOI18N
 
         ddacct.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -942,7 +861,7 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeer {
         });
 
         jLabel1.setText("CheckNbr");
-        jLabel1.setName("lblchecknbr"); // NOI18N
+        jLabel1.setName("checknbr"); // NOI18N
 
         btclear.setText("Clear");
         btclear.setName("btclear"); // NOI18N
@@ -1127,12 +1046,12 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeer {
        // voucherdet   "PO", "Line", "Part", "Qty", "Price", "RecvID", "RecvLine", "Acct", "CC"
             voucherline++;
             actamt += bsParseDouble(tbqty.getText()) * bsParseDouble(tbprice.getText());
-            expensemodel.addRow(new Object[] { "", voucherline,
+            expensemodel.addRow(new Object[] { tbkey.getText(), voucherline,
                                                   tbitemservice.getText(),
                                                   tbqty.getText(),
                                                   tbprice.getText(),
                                                   "expense",
-                                                  "0",
+                                                  voucherline,
                                                   ddacct.getSelectedItem().toString(),
                                                   ddcc.getSelectedItem().toString()
                                                   });
@@ -1148,11 +1067,11 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeer {
     }//GEN-LAST:event_btadditemActionPerformed
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
-         if (! validateInput("addRecord")) {
+         if (! validateInput(dbaction.add)) {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("add", new String[]{tbkey.getText()});
+        executeTask(dbaction.add, new String[]{tbkey.getText()});
     }//GEN-LAST:event_btaddActionPerformed
 
     private void ddvendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddvendActionPerformed
@@ -1252,7 +1171,7 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeer {
     }//GEN-LAST:event_btclearActionPerformed
 
     private void tbkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkeyActionPerformed
-        executeTask("get", new String[]{tbkey.getText()});
+        executeTask(dbaction.get, new String[]{tbkey.getText()});
     }//GEN-LAST:event_tbkeyActionPerformed
 
     private void btlookupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btlookupActionPerformed

@@ -589,7 +589,70 @@ public class fglData {
         return myerror;
         
         }
+    
+    public static boolean _glEntryFromVoucher(String voucher, Date effdate, Connection bscon) throws SQLException {
+                boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
+       
+          
+                Statement st = bscon.createStatement();
+                ResultSet res = null;
+               
+                
+               java.util.Date now = new java.util.Date();
+                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+                DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
+                String mydate = dfdate.format(now);
+                
+                 // added SQLITE adjustment here...create arraylist of entries for glentry instead of inline
+                    ArrayList acct_cr = new ArrayList();
+                    ArrayList ref =  new ArrayList();
+                    ArrayList desc =   new ArrayList();
+                    ArrayList type =   new ArrayList();
+                    ArrayList cc_cr =   new ArrayList();
+                    ArrayList acct_dr =   new ArrayList();
+                    ArrayList cc_dr =   new ArrayList();
+                    ArrayList site =   new ArrayList();
+                    ArrayList cost =  new ArrayList();   
+                    ArrayList basecost =  new ArrayList();
+                    ArrayList curr =  new ArrayList();
+                    ArrayList basecurr =  new ArrayList();
+                   
+                    String thistype = "RCT-VOUCH";
+                    String thisdesc = "RCT VOUCHER";   
+                
+                    
+                   
+                       res = st.executeQuery("select ap_amt, ap_base_amt, ap_curr, ap_base_curr, ap_ref, ap_site, ap_acct, ap_cc, ap_vend, poc_rcpt_cc, poc_rcpt_acct from ap_mstr " +
+                               " inner join po_ctrl where ap_type = 'V' and ap_nbr = " + "'" + voucher + "'" +";");
+                   
+                    while (res.next()) {
+                     // credit vendor AP Acct (AP Voucher) and debit unvouchered receipts (po_rcpts acct)
+                        acct_cr.add(res.getString("ap_acct"));
+                    acct_dr.add(res.getString("poc_rcpt_acct"));
+                    cc_cr.add(res.getString("ap_cc"));
+                    cc_dr.add(res.getString("poc_rcpt_cc"));
+                    cost.add(res.getDouble("ap_amt"));
+                    basecost.add(res.getDouble("ap_base_amt"));
+                    curr.add(res.getDouble("ap_curr"));
+                    basecurr.add(res.getDouble("ap_base_curr"));
+                    site.add(res.getString("ap_site"));
+                    ref.add(res.getString("ap_ref"));
+                    type.add(thistype);
+                    desc.add(res.getString("ap_ref"));     
+          
+                    // need to do discounts ..credit sales, debit disc, debit AR (-$4.00, $.02, $3.98)
+                    }
+                    res.close();
+                    st.close();
+                      for (int j = 0; j < acct_cr.size(); j++) {
+                      glEntryXP(bscon, acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), dfdate.format(effdate), bsParseDoubleUS(cost.get(j).toString()), bsParseDoubleUS(basecost.get(j).toString()), curr.get(j).toString(), basecurr.get(j).toString(), ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString());  
+                    }
+          
+        return myerror;
         
+        }
+    
+    
     public static boolean glEntryFromVoucherExpense(String voucher, Date effdate) {
                 boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
         try{
@@ -669,7 +732,75 @@ public class fglData {
         return myerror;
         
         }
+    
+    public static boolean _glEntryFromVoucherExpense(String voucher, Date effdate, Connection bscon) throws SQLException {
+                boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
         
+                Statement st = bscon.createStatement();
+                ResultSet res = null;
+                
+               java.util.Date now = new java.util.Date();
+                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+                DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
+                String mydate = dfdate.format(now);
+                
+                   // added SQLITE adjustment here...create arraylist of entries for glentry instead of inline
+                    ArrayList acct_cr = new ArrayList();
+                    ArrayList ref =  new ArrayList();
+                    ArrayList desc =   new ArrayList();
+                    ArrayList type =   new ArrayList();
+                    ArrayList cc_cr =   new ArrayList();
+                    ArrayList acct_dr =   new ArrayList();
+                    ArrayList cc_dr =   new ArrayList();
+                    ArrayList site =   new ArrayList();
+                    ArrayList cost =  new ArrayList();   
+                    ArrayList basecost =  new ArrayList();
+                    ArrayList curr =  new ArrayList();
+                    ArrayList basecurr =  new ArrayList();
+                   
+                    String thistype = "RCT-VOUCH";
+                   
+                   
+                       res = st.executeQuery("select ap_amt, ap_base_amt, ap_curr, ap_base_curr, ap_ref, ap_check, ap_nbr, vod_part, ap_site, ap_acct, ap_cc, ap_vend, vod_qty, vod_voprice, vod_expense_acct, vod_expense_cc from vod_mstr " +
+                               "inner join ap_mstr on ap_nbr = vod_id and ap_type = 'V' where vod_id = " + "'" + voucher + "'" +";");
+                   
+                    Double amt = 0.00;   
+                    while (res.next()) {
+                     // credit vendor AP Acct (AP Voucher) and debit unvouchered receipts (po_rcpts acct)
+                    amt = res.getDouble("vod_qty") * res.getDouble("vod_voprice");
+                       acct_cr.add(res.getString("ap_acct"));
+                    acct_dr.add(res.getString("vod_expense_acct"));
+                    cc_cr.add(res.getString("ap_cc"));
+                    cc_dr.add(res.getString("vod_expense_cc"));
+                      cost.add(amt);
+                      basecost.add(amt);
+                    curr.add(res.getString("ap_curr"));
+                    basecurr.add(res.getString("ap_base_curr"));
+                    site.add(res.getString("ap_site"));
+                    ref.add(res.getString("ap_check"));
+                    type.add(thistype);
+                    if (res.getString("ap_ref").isEmpty()) {
+                       desc.add(res.getString("vod_part")); 
+                    } else {
+                       desc.add(res.getString("ap_ref") + "/" + res.getString("vod_part"));
+                    }
+                             
+               
+                    // need to do discounts ..credit sales, debit disc, debit AR (-$4.00, $.02, $3.98)
+                    
+                
+                    }
+                     for (int j = 0; j < acct_cr.size(); j++) {
+                      glEntryXP(bscon, acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), dfdate.format(effdate), bsParseDoubleUS(cost.get(j).toString()), bsParseDoubleUS(basecost.get(j).toString()), curr.get(j).toString(), basecurr.get(j).toString(), ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString());  
+                    }
+          
+                     res.close();
+                     st.close();
+        return myerror;
+        
+        }
+    
+    
     public static boolean glEntryFromPayRoll(String batch, Date effdate) {
                 boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
         try{
@@ -887,7 +1018,85 @@ public class fglData {
         return myerror;
         
         }
+      
+    public static boolean _glEntryFromCashTranBuy(String voucher, Date effdate, String ctype, Connection bscon) throws SQLException {
+                boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
+       
+                Statement st = bscon.createStatement();
+                ResultSet res = null;
+                java.util.Date now = new java.util.Date();
+                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+                DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
+                String mydate = dfdate.format(now);
                 
+                   // added SQLITE adjustment here...create arraylist of entries for glentry instead of inline
+                    ArrayList acct_cr = new ArrayList();
+                    ArrayList ref =  new ArrayList();
+                    ArrayList desc =   new ArrayList();
+                    ArrayList type =   new ArrayList();
+                    ArrayList cc_cr =   new ArrayList();
+                    ArrayList acct_dr =   new ArrayList();
+                    ArrayList cc_dr =   new ArrayList();
+                    ArrayList site =   new ArrayList();
+                    ArrayList cost =  new ArrayList();   
+                    ArrayList basecost =  new ArrayList(); 
+                    ArrayList curr =  new ArrayList(); 
+                    ArrayList basecurr =  new ArrayList(); 
+                   
+                    String thistype = "RCT-VOUCH";
+                   
+                   
+                       res = st.executeQuery("select pl_line, pl_po_rcpt, pl_inventory, ap_amt, ap_base_amt, ap_curr, ap_base_curr, ap_ref, ap_nbr, vod_part, ap_site, ap_acct, ap_cc, ap_vend, " +
+                               " vod_qty, vod_voprice, vod_expense_acct, vod_expense_cc from vod_mstr " +
+                               " inner join item_mstr on it_item = vod_part " +
+                               " inner join pl_mstr on pl_line = it_prodline " +
+                               "inner join ap_mstr on ap_nbr = vod_id and ap_type = 'V' where vod_id = " + "'" + voucher + "'" +";");
+                   
+                    Double amt = 0.00;   
+                    while (res.next()) {
+                     // credit vendor AP Acct (AP Voucher) and debit unvouchered receipts (po_rcpts acct)
+                    amt = res.getDouble("vod_qty") * res.getDouble("vod_voprice");
+                    acct_cr.add(res.getString("ap_acct"));
+                    acct_dr.add(res.getString("vod_expense_acct"));
+                    cc_cr.add(res.getString("ap_cc"));
+                    cc_dr.add(res.getString("vod_expense_cc"));
+                    cost.add(amt);
+                    basecost.add(amt);
+                    curr.add(res.getString("ap_curr"));
+                    basecurr.add(res.getString("ap_base_curr"));
+                    site.add(res.getString("ap_site"));
+                    ref.add(res.getString("ap_nbr"));
+                    type.add(thistype);
+                    desc.add("cashtranvouch:" + res.getString("ap_ref") + "/" + res.getString("vod_part"));         
+               
+                    // need to do discounts ..credit sales, debit disc, debit AR (-$4.00, $.02, $3.98)
+                    
+                         // Now we do the Rct-purch so that we add to inventory account
+                         
+                    acct_cr.add(res.getString("vod_expense_acct"));
+                    acct_dr.add(res.getString("pl_inventory"));
+                    cc_cr.add(res.getString("pl_line"));
+                    cc_dr.add(res.getString("pl_line"));
+                    cost.add(amt);
+                    basecost.add(amt);
+                    curr.add(res.getString("ap_curr"));
+                    basecurr.add(res.getString("ap_base_curr"));
+                    site.add(res.getString("ap_site"));
+                    ref.add(res.getString("ap_nbr"));
+                    type.add("RCT-PURCH");
+                    desc.add("cashtranpurch:" + res.getString("ap_ref") + "/" + res.getString("vod_part"));      
+                    
+                    }
+                     for (int j = 0; j < acct_cr.size(); j++) {
+                      glEntryXP(bscon, acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), dfdate.format(effdate), bsParseDoubleUS(cost.get(j).toString()), bsParseDoubleUS(basecost.get(j).toString()), curr.get(j).toString(), basecurr.get(j).toString(), ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString());  
+                    }
+          
+                     res.close();
+                     st.close();
+        return myerror;
+        
+        }
+    
     public static boolean glEntryFromARMemo(String batchnbr, Date effdate) {
                 boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
         try{
@@ -1961,15 +2170,12 @@ public class fglData {
         
          }
                 
-    public static boolean glEntryFromCheckRun(int batchid, Date effdate, String ctype) {
+    public static boolean _glEntryFromCheckRun(int batchid, Date effdate, String ctype, Connection bscon) throws SQLException {
               boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
-        try{
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
+       
+                Statement st = bscon.createStatement();
                 ResultSet res = null;
-               java.util.Date now = new java.util.Date();
+                java.util.Date now = new java.util.Date();
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
                 String mydate = dfdate.format(now);
@@ -2008,7 +2214,7 @@ public class fglData {
                     }
                     
                     
-                       res = st.executeQuery("select ap_check, ap_ref, ap_site, ap_acct, bk_acct, ap_cc, ap_amt, ap_base_amt, ap_curr, ap_base_curr from ap_mstr inner join bk_mstr on bk_id = ap_bank " +
+                    res = st.executeQuery("select ap_check, ap_ref, ap_site, ap_acct, bk_acct, ap_cc, ap_amt, ap_base_amt, ap_curr, ap_base_curr from ap_mstr inner join bk_mstr on bk_id = ap_bank " +
                                " where (ap_type = 'C' or ap_type = 'E') AND ap_batch = " + "'" + batchid + "'" +";");
                     while (res.next()) {
                         acct_cr.add(res.getString("bk_acct"));
@@ -2023,24 +2229,15 @@ public class fglData {
                         ref.add(res.getString("ap_check"));
                         type.add(thistype);
                         desc.add(thisdesc);
-                        
                     }
                     
                      for (int j = 0; j < acct_cr.size(); j++) {
-                      glEntry(acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), dfdate.format(effdate), bsParseDoubleUS(cost.get(j).toString()), bsParseDoubleUS(basecost.get(j).toString()), curr.get(j).toString(), basecurr.get(j).toString(), ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString());  
+                      glEntryXP(bscon, acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), dfdate.format(effdate), bsParseDoubleUS(cost.get(j).toString()), bsParseDoubleUS(basecost.get(j).toString()), curr.get(j).toString(), basecurr.get(j).toString(), ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString());  
                     }
-                   
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-                 myerror = true;
-            }
-            con.close();
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-            myerror = true;
-        }
+                 
+                    st.close();
+                    res.close();
+           
         return myerror;
         
          }

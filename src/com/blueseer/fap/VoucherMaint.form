@@ -41,7 +41,9 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="103" groupAlignment="1" attributes="0">
                                   <Group type="102" attributes="0">
-                                      <Component id="btedit" min="-2" max="-2" attributes="0"/>
+                                      <Component id="btdelete" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="btupdate" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="btadd" min="-2" max="-2" attributes="0"/>
                                   </Group>
@@ -98,11 +100,13 @@
                                                       <Group type="102" alignment="1" attributes="0">
                                                           <Component id="jLabel24" min="-2" max="-2" attributes="0"/>
                                                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                                          <Component id="vouchernbr" min="-2" pref="77" max="-2" attributes="0"/>
+                                                          <Component id="tbkey" min="-2" pref="77" max="-2" attributes="0"/>
                                                           <EmptySpace max="-2" attributes="0"/>
                                                           <Component id="btlookup" min="-2" pref="25" max="-2" attributes="0"/>
                                                           <EmptySpace min="-2" pref="13" max="-2" attributes="0"/>
                                                           <Component id="btnew" min="-2" max="-2" attributes="0"/>
+                                                          <EmptySpace max="-2" attributes="0"/>
+                                                          <Component id="btclear" min="-2" max="-2" attributes="0"/>
                                                           <EmptySpace max="32767" attributes="0"/>
                                                           <Component id="jLabel27" min="-2" max="-2" attributes="0"/>
                                                       </Group>
@@ -179,12 +183,13 @@
                   <Group type="103" groupAlignment="1" attributes="0">
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="btnew" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="vouchernbr" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="tbkey" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel24" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="tbcontrolamt" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel27" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="tbactualamt" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel28" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btclear" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <Component id="btlookup" min="-2" max="-2" attributes="0"/>
                   </Group>
@@ -252,7 +257,8 @@
                   <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="btadd" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="btedit" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btupdate" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btdelete" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
               </Group>
@@ -260,7 +266,10 @@
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JTextField" name="vouchernbr">
+        <Component class="javax.swing.JTextField" name="tbkey">
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tbkeyActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel24">
           <Properties>
@@ -302,7 +311,7 @@
         </Component>
         <Component class="javax.swing.JButton" name="btadd">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Save"/>
+            <Property name="text" type="java.lang.String" value="Add"/>
             <Property name="name" type="java.lang.String" value="btadd" noResource="true"/>
           </Properties>
           <Events>
@@ -349,13 +358,13 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btdeleteitemActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="btedit">
+        <Component class="javax.swing.JButton" name="btupdate">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Edit"/>
+            <Property name="text" type="java.lang.String" value="Update"/>
             <Property name="name" type="java.lang.String" value="btupdate" noResource="true"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bteditActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btupdateActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JComboBox" name="ddreceiver">
@@ -548,6 +557,22 @@
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btlookupActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="btdelete">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Delete"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btdeleteActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="btclear">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Clear"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btclearActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>

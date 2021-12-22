@@ -544,7 +544,7 @@ String sitecitystatezip = "";
                      try {
                         printTubTicket(tbscan.getText(), String.valueOf(key));
                     } catch (PrinterException ex) {
-                        Logger.getLogger(ProdEntryByPlanMaint.class.getName()).log(Level.SEVERE, null, ex);
+                        MainFrame.bslog(ex);
                     }
                 }
             }

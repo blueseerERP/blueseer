@@ -513,7 +513,7 @@ File f = new File(labelfile);
 if(f.exists() && !f.isDirectory()) { 
     
       // ok....apparently we have a label/printer match.... lets create the label_mstr record for this label
-        OVData.CreateLabelMstr(serialno_str, partnumber, custpart, serialno_str, "XX", quantity, ponbr, ordernbr, linenbr, ref, lot, "0", "0", shipname, shipaddr1, shipaddr2, shipcity, shipstate, shipstate, shipzip, shipcountry, dfdate2.format(now), dfdate2.format(now), bsmf.MainFrame.userid, ddprinter.getSelectedItem().toString(), "LabelContPanel", OVData.getDefaultSite(), "", "CONT");
+        lblData.CreateLabelMstr(serialno_str, partnumber, custpart, serialno_str, "XX", quantity, ponbr, ordernbr, linenbr, ref, lot, "0", "0", shipname, shipaddr1, shipaddr2, shipcity, shipstate, shipstate, shipzip, shipcountry, dfdate2.format(now), dfdate2.format(now), bsmf.MainFrame.userid, ddprinter.getSelectedItem().toString(), "LabelContPanel", OVData.getDefaultSite(), "", "CONT");
        
     
     

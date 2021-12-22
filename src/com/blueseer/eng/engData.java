@@ -1021,6 +1021,42 @@ public class engData {
         return lines;
     }
     
+    public static ArrayList getTaskMasterList() {
+        ArrayList myarray = new ArrayList();
+        try{
+
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+            res = st.executeQuery("select task_id from task_mstr order by task_id ;"); 
+
+           while (res.next()) {
+                myarray.add(res.getString("task_id"));
+
+            }
+
+       }
+        catch (SQLException s){
+             bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+        } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myarray;
+
+}
+
     
     public record ecn_mstr(String[] m, String ecn_nbr, String ecn_poc, String ecn_mstrtask, 
         String ecn_status, String ecn_targetdate, String ecn_createdate, String ecn_closedate,

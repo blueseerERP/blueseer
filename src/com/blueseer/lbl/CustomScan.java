@@ -433,7 +433,7 @@ String sitecitystatezip = "";
         }
         
         // lets create the label_mstr record for this label
-        OVData.CreateLabelMstr(serialno_str, partnumber, "", serialno_str, "XX", quantity, "", "", "0", "", "", "0", "", "", "", "", "", "", "", "", "", dfdate2.format(now), dfdate2.format(now), bsmf.MainFrame.userid, ddprinter.getSelectedItem().toString(), "LabelPartPanel", OVData.getDefaultSite(), "", "TFR-SCAN");
+        lblData.CreateLabelMstr(serialno_str, partnumber, "", serialno_str, "XX", quantity, "", "", "0", "", "", "0", "", "", "", "", "", "", "", "", "", dfdate2.format(now), dfdate2.format(now), bsmf.MainFrame.userid, ddprinter.getSelectedItem().toString(), "LabelPartPanel", OVData.getDefaultSite(), "", "TFR-SCAN");
        
         
         try {
@@ -489,15 +489,15 @@ MainFrame.bslog(e);
 
     private void btcommitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcommitActionPerformed
        
-        if (! OVData.isLabel(tbscan.getText())) {
+        if (! lblData.isLabel(tbscan.getText())) {
             bsmf.MainFrame.show(getMessageTag(1070,tbscan.getText()));
             return;
         }
-        if (OVData.isLabel(tbscan.getText()) &&  OVData.getLabelStatus(tbscan.getText()) == 1 ) {
+        if (lblData.isLabel(tbscan.getText()) &&  lblData.getLabelStatus(tbscan.getText()) == 1 ) {
             bsmf.MainFrame.show(getMessageTag(1071,tbscan.getText()));
             return;
         }
-        if (OVData.isLabel(tbscan.getText()) &&  OVData.getLabelStatus(tbscan.getText()) > 1 ) {
+        if (lblData.isLabel(tbscan.getText()) &&  lblData.getLabelStatus(tbscan.getText()) > 1 ) {
             bsmf.MainFrame.show(getMessageTag(1144));
             return;
         }

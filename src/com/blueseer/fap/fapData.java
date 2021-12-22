@@ -25,10 +25,718 @@ SOFTWARE.
  */
 package com.blueseer.fap;
 
+import bsmf.MainFrame;
+import static bsmf.MainFrame.db;
+import static bsmf.MainFrame.defaultDecimalSeparator;
+import static bsmf.MainFrame.pass;
+import static bsmf.MainFrame.url;
+import static bsmf.MainFrame.user;
+import com.blueseer.fgl.fglData;
+import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
+import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
+import static com.blueseer.utl.BlueSeerUtils.currformat;
+import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
+import static com.blueseer.utl.BlueSeerUtils.currformatDoubleUS;
+import static com.blueseer.utl.BlueSeerUtils.parseDate;
+import static com.blueseer.utl.BlueSeerUtils.setDateFormat;
+import com.blueseer.utl.OVData;
+import com.blueseer.vdr.venData;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Date;
+import javax.swing.JTable;
+
 /**
  *
  * @author terryva
  */
 public class fapData {
+    
+    public static String[] apCheckRunTransaction(JTable mytable, int batchid, String basecurr, int checknbr, Date effdate, String ctype) {
+        String[] m = new String[2];
+        Connection bscon = null;
+        PreparedStatement ps = null;
+        ResultSet res = null;
+        java.util.Date now = new java.util.Date();
+        
+        try { 
+            bscon = DriverManager.getConnection(url + db, user, pass);
+            bscon.setAutoCommit(false);
+            // lets loop through the JTable with the vouchers to pay
+            for (int i = 0 ; i < mytable.getRowCount(); i++) {
+                apd_mstr x = new apd_mstr(null, 
+                String.valueOf(batchid),
+                mytable.getValueAt(i,0).toString(),
+                mytable.getValueAt(i,2).toString(),
+                mytable.getValueAt(i,3).toString(),
+                "",  // check nbr ...blank in this case
+                bsFormatDouble(bsParseDouble(mytable.getValueAt(i, 6).toString())).replace(defaultDecimalSeparator, '.')
+                );
+                _addAPDMstr(x, bscon, ps, res);  
+            }
+            // now retrieves the records just inserted into apd_mstr and group by vendor, site, currency
+            ArrayList<String[]> ap = _getUniqueAPRecords(String.valueOf(batchid), basecurr, bscon, ps, res);
+            
+            for (String[] s : ap) {
+                String[] vendinfo = venData.getVendInfo(s[0]);
+                ap_mstr x = new ap_mstr(null,
+                "", //ap_id
+                s[0], // ap_vend, 
+                String.valueOf(checknbr), // ap_nbr
+                currformat(s[3]), // ap_amt
+                currformat(s[4]), // ap_base_amt,  String ap_entdate, String ap_duedate,
+                setDateFormat(effdate), // ap_effdate
+                setDateFormat(now), // ap_entdate
+                "", // ap_duedate        
+                "C", // ap_type
+                "", //ap_rmks
+                "", //ap_ref
+                vendinfo[5], //ap_terms
+                vendinfo[1], //ap_acct
+                vendinfo[2], //ap_cc
+                "", //ap_applied
+                "", //ap_status
+                vendinfo[4], //ap_bank
+                s[2], //ap_curr
+                basecurr, //ap_base_curr
+                "", //ap_check
+                String.valueOf(batchid), //ap_batch
+                s[1] //ap_site
+                );
+                _addAPMstr(x, bscon, ps, res);
+                // increment each check nbr per record
+                    checknbr++;
+            }
+            
+            // ok....got apd_mstr and ap_mstr set for checkrun...now write transactions to GL
+            fglData._glEntryFromCheckRun(batchid, effdate, ctype, bscon);  
+
+            // ok...now lets close out the vouchers we just paid
+            APCheckRunUpdateVouchers(batchid, bscon);
+            
+            // now commit
+            bscon.commit();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             try {
+                 bscon.rollback();
+                 m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordError};
+             } catch (SQLException rb) {
+                 MainFrame.bslog(rb);
+             }
+        } finally {
+            if (res != null) {
+                try {
+                    res.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (bscon != null) {
+                try {
+                    bscon.setAutoCommit(true);
+                    bscon.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
+    }
+    
+    public static String[] VouchAndPayTransaction(int batchid, String ctype, ArrayList<vod_mstr> vod, ap_mstr ap) {
+        String[] m = new String[2];
+        Connection bscon = null;
+        PreparedStatement ps = null;
+        ResultSet res = null;
+        java.util.Date now = new java.util.Date();
+        try { 
+            bscon = DriverManager.getConnection(url + db, user, pass);
+            bscon.setAutoCommit(false);
+             _addAPMstr(ap, bscon, ps, res);  
+            for (vod_mstr z : vod) {
+                _addVODMstr(z, bscon, ps, res);
+            }
+                // the apd_mstr record holds vouchers to be paid
+                // in the case of a single expense transaction, the apd_mstr is equivalent to ap_mstr type=V (vouchered)
+                // this apd_mstr will be scanned and a new ap_mstr created with type=E (payment)
+                apd_mstr z = new apd_mstr(null, 
+                String.valueOf(batchid),
+                ap.ap_vend,
+                ap.ap_nbr,
+                ap.ap_nbr,
+                ap.ap_check,  // check nbr ...blank in this case
+                ap.ap_amt
+                );
+                _addAPDMstr(z, bscon, ps, res);  
+          
+          
+                // now for the expense side of the ap_mstr to close the ap voucher side
+                ap_mstr x = new ap_mstr(null, 
+                "", //ap_id
+                ap.ap_vend, // ap_vend, 
+                ap.ap_nbr, // ap_nbr
+                ap.ap_amt, // ap_amt
+                ap.ap_base_amt, 
+                ap.ap_effdate,
+                ap.ap_entdate,
+                "", // ap_duedate        
+                "E", // ap_type
+                ap.ap_rmks, //ap_rmks
+                ap.ap_ref, //ap_ref
+                ap.ap_terms, //ap_terms
+                ap.ap_acct, //ap_acct
+                ap.ap_cc, //ap_cc
+                "0", //ap_applied
+                "c", //ap_status
+                ap.ap_bank, //ap_bank
+                ap.ap_curr, //ap_curr
+                ap.ap_base_curr, //ap_base_curr
+                String.valueOf(batchid), //ap_check 
+                String.valueOf(batchid), //ap_batch
+                ap.ap_site //ap_site
+                ); 
+                _addAPMstr(x, bscon, ps, res); // add AP Type E payment
+            
+            if (ctype.equals("AP-Expense")) {
+                fglData._glEntryFromVoucherExpense(ap.ap_nbr, parseDate(ap.ap_effdate), bscon); // aptype=V
+                fglData._glEntryFromCheckRun(batchid, parseDate(ap.ap_effdate), ctype, bscon); //aptype=E
+            }
+            if (ctype.equals("AP-Cash-Purch")) {
+                fglData._glEntryFromCashTranBuy(ap.ap_nbr, parseDate(ap.ap_effdate), ctype, bscon);
+            }
+            if (ctype.equals("AP-Cash")) {
+                fglData._glEntryFromVoucherExpense(ap.ap_nbr, parseDate(ap.ap_effdate),  bscon);
+            }
+            if (ctype.equals("AP-Vendor")) {
+                fglData._glEntryFromCheckRun(batchid, parseDate(ap.ap_effdate), ctype, bscon);
+            }
+            
+            
+            // ok...now lets close out the vouchers we just paid
+            _APCheckRunUpdateVouchers(batchid, bscon);
+            
+            // now commit
+            bscon.commit();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             try {
+                 bscon.rollback();
+                 m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordError};
+             } catch (SQLException rb) {
+                 MainFrame.bslog(rb);
+             }
+        } finally {
+            if (res != null) {
+                try {
+                    res.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (bscon != null) {
+                try {
+                    bscon.setAutoCommit(true);
+                    bscon.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
+    }
+    
+    public static String[] VoucherTransaction(int batchid, String ctype, ArrayList<vod_mstr> vod, ap_mstr ap) {
+        String[] m = new String[2];
+        Connection bscon = null;
+        PreparedStatement ps = null;
+        ResultSet res = null;
+        java.util.Date now = new java.util.Date();
+        try { 
+            bscon = DriverManager.getConnection(url + db, user, pass);
+            bscon.setAutoCommit(false);
+             _addAPMstr(ap, bscon, ps, res);  
+            for (vod_mstr z : vod) {
+                _addVODMstr(z, bscon, ps, res);
+            }
+            if (ctype.equals("Receipt")) {
+            fglData._glEntryFromVoucher(ap.ap_nbr, parseDate(ap.ap_effdate), bscon); 
+            } else {
+            fglData._glEntryFromVoucherExpense(ap.ap_nbr, parseDate(ap.ap_effdate), bscon);    
+            }
+            // now commit
+            bscon.commit();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             try {
+                 bscon.rollback();
+                 m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordError};
+             } catch (SQLException rb) {
+                 MainFrame.bslog(rb);
+             }
+        } finally {
+            if (res != null) {
+                try {
+                    res.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (bscon != null) {
+                try {
+                    bscon.setAutoCommit(true);
+                    bscon.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
+    }
+    
+    
+    public static String[] APExpense(int batchid, String basecurr, Date effdate, int checknbr, String voucher, String invoice, String vend, Double amount, String ctype) {
+        String[] m = new String[2];
+        Connection bscon = null;
+        PreparedStatement ps = null;
+        ResultSet res = null;
+        java.util.Date now = new java.util.Date();
+        String[] vendinfo = venData.getVendInfo(vend);
+        try { 
+            bscon = DriverManager.getConnection(url + db, user, pass);
+            bscon.setAutoCommit(false);
+            // lets loop through the JTable with the vouchers to pay
+           
+                apd_mstr z = new apd_mstr(null, 
+                String.valueOf(batchid),
+                vend,
+                voucher,
+                invoice,
+                "",  // check nbr ...blank in this case
+                bsFormatDouble(amount).replace(defaultDecimalSeparator, '.')
+                );
+                _addAPDMstr(z, bscon, ps, res);  
+          
+            // now retrieves the records just inserted into apd_mstr and group by vendor, site, currency
+            ArrayList<String[]> ap = _getUniqueAPRecords(String.valueOf(batchid), basecurr, bscon, ps, res);
+            for (String[] s : ap) {
+                ap_mstr x = new ap_mstr(null,
+                "", //ap_id
+                s[0], // ap_vend, 
+                String.valueOf(checknbr), // ap_nbr
+                currformat(s[3]), // ap_amt
+                currformat(s[4]), // ap_base_amt,  String ap_entdate, String ap_duedate,
+                setDateFormat(effdate), // ap_effdate
+                setDateFormat(now), // ap_entdate
+                "", // ap_duedate        
+                "E", // ap_type
+                "", //ap_rmks
+                voucher, //ap_ref
+                vendinfo[5], //ap_terms
+                vendinfo[1], //ap_acct
+                vendinfo[2], //ap_cc
+                "", //ap_applied
+                "", //ap_status
+                vendinfo[4], //ap_bank
+                s[2], //ap_curr
+                basecurr, //ap_base_curr
+                "", //ap_check
+                String.valueOf(batchid), //ap_batch
+                s[1] //ap_site
+                );
+                _addAPMstr(x, bscon, ps, res);
+                // increment each check nbr per record
+                    checknbr++;
+            }
+            
+            if (ctype.equals("AP-Expense")) {
+                fglData._glEntryFromVoucherExpense(voucher, effdate, bscon);
+            }
+            if (ctype.equals("AP-Cash-Purch")) {
+                fglData._glEntryFromCashTranBuy(voucher, effdate, ctype, bscon);
+            }
+            if (ctype.equals("AP-Cash")) {
+                fglData._glEntryFromVoucherExpense(voucher, effdate, bscon);
+            }
+            if (ctype.equals("AP-Vendor")) {
+                fglData._glEntryFromCheckRun(batchid, effdate, ctype, bscon);
+            }
+            
+            
+            // ok...now lets close out the vouchers we just paid
+            APCheckRunUpdateVouchers(batchid, bscon);
+            
+            // now commit
+            bscon.commit();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             try {
+                 bscon.rollback();
+                 m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordError};
+             } catch (SQLException rb) {
+                 MainFrame.bslog(rb);
+             }
+        } finally {
+            if (res != null) {
+                try {
+                    res.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (bscon != null) {
+                try {
+                    bscon.setAutoCommit(true);
+                    bscon.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
+    }
+    
+    
+    private static int _addAPDMstr(apd_mstr x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+        int rows = 0;
+        String sqlSelect = "select * from apd_mstr where apd_batch = ? and apd_nbr = ?";
+        String sqlInsert = "insert into apd_mstr (apd_batch, apd_vend, apd_nbr, apd_ref, apd_check, apd_voamt ) "
+                        + " values (?,?,?,?,?,?); "; 
+       
+          ps = con.prepareStatement(sqlSelect); 
+          ps.setString(1, x.apd_batch);
+          ps.setString(2, x.apd_nbr);
+          res = ps.executeQuery();
+          ps = con.prepareStatement(sqlInsert);
+            if (! res.isBeforeFirst()) {
+            ps.setString(1, x.apd_batch);
+            ps.setString(2, x.apd_vend);
+            ps.setString(3, x.apd_nbr);
+            ps.setString(4, x.apd_ref);
+            ps.setString(5, x.apd_check);
+            ps.setString(6, x.apd_voamt);
+            rows = ps.executeUpdate();
+            } 
+            return rows;
+    }
+    
+    private static int _addVODMstr(vod_mstr x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+        int rows = 0;
+        String sqlSelect = "select * from vod_mstr where vod_id = ? and vod_rvdid = ? and vod_rvdline = ?";
+        String sqlInsert = "insert into vod_mstr (vod_id, vod_rvdid, vod_rvdline, vod_part, vod_qty, vod_voprice, vod_date, vod_vend," +
+        "vod_invoice, vod_expense_acct, vod_expense_cc ) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?); "; 
+       
+          ps = con.prepareStatement(sqlSelect); 
+          ps.setString(1, x.vod_id);
+          ps.setString(2, x.vod_rvdid);
+          ps.setString(3, x.vod_rvdline);
+          res = ps.executeQuery();
+          ps = con.prepareStatement(sqlInsert);
+            if (! res.isBeforeFirst()) {
+            ps.setString(1, x.vod_id);
+            ps.setString(2, x.vod_rvdid);
+            ps.setString(3, x.vod_rvdline);
+            ps.setString(4, x.vod_part);
+            ps.setString(5, x.vod_qty);
+            ps.setString(6, x.vod_voprice);
+            ps.setString(7, x.vod_date);
+            ps.setString(8, x.vod_vend);
+            ps.setString(9, x.vod_invoice);
+            ps.setString(10, x.vod_expense_acct);
+            ps.setString(11, x.vod_expense_cc);
+            rows = ps.executeUpdate();
+            } 
+            return rows;
+    }
+    
+    
+    private static int _addAPMstr(ap_mstr x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+        int rows = 0;
+        String sqlSelect = "select * from ap_mstr where ap_batch = ? and ap_nbr = ? and ap_type = ?";
+        String sqlInsert = "insert into ap_mstr (ap_vend, ap_nbr, " +
+        "ap_amt, ap_base_amt, ap_effdate, ap_entdate, ap_duedate, " +
+        "ap_type, ap_rmks, ap_ref, ap_terms, ap_acct, " +
+        "ap_cc, ap_applied, ap_status, ap_bank, ap_curr, " +
+        "ap_base_curr, ap_check, ap_batch, ap_site ) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
+       
+          ps = con.prepareStatement(sqlSelect); 
+          ps.setString(1, x.ap_batch);
+          ps.setString(2, x.ap_nbr);
+          ps.setString(3, x.ap_type);
+          res = ps.executeQuery();
+          ps = con.prepareStatement(sqlInsert);
+            if (! res.isBeforeFirst()) {
+            ps.setString(1, x.ap_vend);
+            ps.setString(2, x.ap_nbr);
+            ps.setString(3, x.ap_amt);
+            ps.setString(4, x.ap_base_amt);
+            ps.setString(5, x.ap_effdate);
+            ps.setString(6, x.ap_entdate);
+            ps.setString(7, x.ap_duedate);
+            ps.setString(8, x.ap_type);
+            ps.setString(9, x.ap_rmks);
+            ps.setString(10, x.ap_ref);
+            ps.setString(11, x.ap_terms);
+            ps.setString(12, x.ap_acct);
+            ps.setString(13, x.ap_cc);
+            ps.setString(14, x.ap_applied);
+            ps.setString(15, x.ap_status);
+            ps.setString(16, x.ap_bank);
+            ps.setString(17, x.ap_curr);
+            ps.setString(18, x.ap_base_curr);
+            ps.setString(19, x.ap_check);
+            ps.setString(20, x.ap_batch);
+            ps.setString(21, x.ap_site);
+            rows = ps.executeUpdate();
+            } 
+            return rows;
+    }
+    
+    
+    private static ArrayList<String[]> _getUniqueAPRecords(String batchid, String basecurr, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+        ArrayList<String[]> list = new ArrayList<String[]>(); // vend, site, currency, amount, baseamount
+        String sqlSelect = "select ap_site, ap_curr, apd_vend, sum(apd_voamt) as sum from apd_mstr " +
+                       " inner join ap_mstr on ap_nbr = apd_nbr " +
+                       " where apd_batch = ? " +
+                       " group by apd_vend, ap_site, ap_curr order by apd_vend ";
+          ps = con.prepareStatement(sqlSelect); 
+          ps.setString(1, batchid);
+          res = ps.executeQuery();
+          double sum = 0.00;
+          double sumbase = 0.00;
+          while (res.next()) {
+            sum = res.getDouble("sum");
+            if (basecurr.toUpperCase().equals(res.getString("ap_curr").toUpperCase())) {
+            sumbase = res.getDouble("sum");
+            } else {
+            sumbase = OVData.getExchangeBaseValue(basecurr, res.getString("ap_curr"), res.getDouble("sum"));    
+            }  
+            String[] s = new String[]{res.getString("apd_vend"),
+                res.getString("ap_site"),
+                res.getString("ap_curr"),
+                String.valueOf(sum), String.valueOf(sumbase)};
+            list.add(s);
+            }
+          
+          return list;
+    }
+        
+    public static boolean APCheckRun_apd_mstr(JTable mytable, int batchid) {
+       boolean myreturn = false;
+
+        try {
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+        for (int i = 0 ; i < mytable.getRowCount(); i++) {
+            st.executeUpdate("insert into apd_mstr "
+                    + "(apd_batch, apd_vend, apd_nbr, apd_ref, apd_voamt) "
+                    + " values ( " + "'" + batchid + "'" + ","
+                    + "'" + mytable.getValueAt(i,0).toString() + "'" + ","
+                    + "'" + mytable.getValueAt(i,2).toString() + "'" + ","
+                    + "'" + mytable.getValueAt(i,3).toString() + "'" + ","
+                    + "'" + bsFormatDouble(bsParseDouble(mytable.getValueAt(i, 6).toString())).replace(defaultDecimalSeparator, '.') + "'" 
+                    + ")"
+                    + ";");
+        }  
+        } catch (SQLException s) {
+           MainFrame.bslog(s);
+        } finally {
+            if (res != null) {
+                res.close();
+            }
+            if (st != null) {
+                st.close();
+            }
+            con.close();
+        }
+    } catch (Exception e) {
+        MainFrame.bslog(e);
+    }
+
+       return myreturn;
+   }
+
+    public static boolean APCheckRunUpdateVouchers(int batchid, Connection bscon) throws SQLException {
+       boolean myreturn = false;
+       ArrayList<String[]> mylist = new ArrayList<String[]>();
+       String[] rec = new String[5];
+        
+            Statement st = bscon.createStatement();
+            ResultSet res = null;
+          
+            double checkamt = 0.00;
+            double applied = 0.00;
+            double newamt = 0.00;
+            double apamt = 0.00;
+            String status = "";
+            String voucher = "";
+            res = st.executeQuery("select ap_nbr, ap_amt, apd_voamt, ap_applied from apd_mstr " +
+                       " inner join ap_mstr on ap_nbr = apd_nbr " +
+                       " where apd_batch = " + "'" + batchid + "'" +
+                        ";");
+
+
+            while (res.next()) {
+                    voucher = res.getString("ap_nbr");
+                    apamt = res.getDouble("ap_amt");
+                    checkamt = res.getDouble("apd_voamt");
+                    applied = res.getDouble("ap_applied");
+                    newamt = applied + checkamt;
+
+              if (apamt <= newamt) {
+                status = "c";
+              } else {
+                status = "o";
+              }
+
+               // now store record in arraylist
+            rec[0] = voucher;
+            rec[1] = currformatDoubleUS(newamt);
+            rec[2] = status;
+            mylist.add(rec);
+
+            }
+            res.close();
+            // set ap_applied to ap_applied + apd_voamt...and set status
+
+
+
+
+          for (String[] s : mylist) {
+                st.executeUpdate("update ap_mstr set ap_applied = " + "'" + s[1] + "'" + ", ap_status = " + "'" + s[2] + "'" + 
+                  " where ap_type = 'V' and ap_nbr = " + "'" + s[0] + "'" +
+                  ";");  
+          }
+          st.close();
+
+       return myreturn;
+   }
+
+    private static boolean _APCheckRunUpdateVouchers(int batchid, Connection bscon) throws SQLException {
+       boolean myreturn = false;
+       ArrayList<String[]> mylist = new ArrayList<String[]>();
+       String[] rec = new String[5];
+        
+            Statement st = bscon.createStatement();
+            ResultSet res = null;
+          
+            double checkamt = 0.00;
+            double applied = 0.00;
+            double newamt = 0.00;
+            double apamt = 0.00;
+            String status = "";
+            String voucher = "";
+            res = st.executeQuery("select ap_nbr, ap_amt, apd_voamt, ap_applied from apd_mstr " +
+                       " inner join ap_mstr on ap_nbr = apd_nbr " +
+                       " where apd_batch = " + "'" + batchid + "'" +
+                        ";");
+
+
+            while (res.next()) {
+                    voucher = res.getString("ap_nbr");
+                    apamt = res.getDouble("ap_amt");
+                    checkamt = res.getDouble("apd_voamt");
+                    applied = res.getDouble("ap_applied");
+                    newamt = applied + checkamt;
+
+              if (apamt <= newamt) {
+                status = "c";
+              } else {
+                status = "o";
+              }
+
+               // now store record in arraylist
+            rec[0] = voucher;
+            rec[1] = currformatDoubleUS(newamt);
+            rec[2] = status;
+            mylist.add(rec);
+
+            }
+            res.close();
+            // set ap_applied to ap_applied + apd_voamt...and set status
+
+
+
+
+          for (String[] s : mylist) {
+                st.executeUpdate("update ap_mstr set ap_applied = " + "'" + s[1] + "'" + ", ap_status = " + "'" + s[2] + "'" + 
+                  " where ap_type = 'V' and ap_nbr = " + "'" + s[0] + "'" +
+                  ";");  
+          }
+          st.close();
+
+       return myreturn;
+   }
+
+    
+    public record ap_mstr(String[] m, String ap_id, String ap_vend, String ap_nbr, 
+        String ap_amt, String ap_base_amt, String ap_effdate, String ap_entdate, String ap_duedate,
+        String ap_type, String ap_rmks, String ap_ref, String ap_terms, String ap_acct,
+        String ap_cc, String ap_applied, String ap_status, String ap_bank, String ap_curr,
+        String ap_base_curr, String ap_check, String ap_batch, String ap_site) {
+        public ap_mstr(String[]m) {
+            this(m, "", "", "", "", "", "", "", "", "", "", 
+                    "", "", "", "", "", "", "", "", "", "",
+                    "", "");
+        }
+    }
+    
+    public record apd_mstr(String[] m, String apd_batch, String apd_vend, String apd_nbr, 
+        String apd_ref, String apd_check, String apd_voamt) {
+        public apd_mstr(String[]m) {
+            this(m, "", "", "", "", "", "");
+        }
+    }
+    
+    public record vod_mstr(String[] m, String vod_id, String vod_rvdid, String vod_rvdline, 
+        String vod_part, String vod_qty, String vod_voprice, String vod_date, String vod_vend,
+        String vod_invoice, String vod_expense_acct, String vod_expense_cc) {
+        public vod_mstr(String[]m) {
+            this(m, "", "", "", "", "", "", "", "", "", "",
+                    "" );
+        }
+    }
     
 }

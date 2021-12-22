@@ -668,7 +668,7 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeerT  {
         ddtask.removeAllItems();
         ddtask.insertItemAt("", 0);
         ddtask.setSelectedIndex(0);
-        ArrayList task = OVData.getTaskMasterList();
+        ArrayList task = engData.getTaskMasterList();
         for (int i = 0; i < task.size(); i++) {
             ddtask.addItem(task.get(i));
         }
