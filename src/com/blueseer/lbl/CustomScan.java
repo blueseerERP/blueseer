@@ -33,6 +33,7 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import com.blueseer.sch.schData;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.OVData;
 import java.awt.Color;
@@ -93,9 +94,9 @@ String sitecitystatezip = "";
 
     
     public void validateScan(String scan) {
-      if (OVData.isPlan(scan)) {
-       tbqty.setText(String.valueOf(OVData.getPlanSchedQty(scan)));
-       partlabel.setText(OVData.getPlanItem(scan));
+      if (schData.isPlan(scan)) {
+       tbqty.setText(String.valueOf(schData.getPlanSchedQty(scan)));
+       partlabel.setText(schData.getPlanItem(scan));
        partlabel.setForeground(Color.blue);
        tbqty.requestFocusInWindow();
        btcommit.setEnabled(true);

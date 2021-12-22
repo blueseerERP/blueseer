@@ -827,7 +827,65 @@ public class DTData {
         return mymodel;
         
          } 
-         
+    
+    public static DefaultTableModel getLabelFileUtil( String str, int state, String myfield) {
+        javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("code"), getGlobalColumnTag("description"), getGlobalColumnTag("type"), getGlobalColumnTag("file")})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
+              
+        try{
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                if (state == 1) { // begins
+                    res = st.executeQuery("SELECT lblz_code, lblz_desc, lblz_type, lblz_file " +
+                        " FROM  label_zebra where " + myfield + " like " + "'" + str + "%'" +
+                        " order by lblz_code ;");
+                }
+                if (state == 2) { // ends
+                    res = st.executeQuery("SELECT lblz_code, lblz_desc, lblz_type, lblz_file  " +
+                        " FROM  label_zebra where " + myfield + " like " + "'%" + str + "'" +
+                        " order by lblz_code ;");
+                }
+                 if (state == 0) { // match
+                 res = st.executeQuery("SELECT lblz_code, lblz_code, lblz_type, lblz_file   " +
+                        " FROM  label_zebra where " + myfield + " like " + "'%" + str + "%'" +
+                        " order by lblz_code ;");
+                 }
+                    while (res.next()) {
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("lblz_code"),
+                                   res.getString("lblz_code"),
+                                   res.getString("lblz_type"),
+                                   res.getString("lblz_file")
+                        });
+                    }
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+             } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+            
+        }
+        return mymodel;
+        
+         } 
+     
+    
     public static DefaultTableModel getPanelBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("class"), getGlobalColumnTag("description"), getGlobalColumnTag("system")})

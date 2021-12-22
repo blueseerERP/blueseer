@@ -33,6 +33,7 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import com.blueseer.sch.schData;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.OVData;
 import java.awt.Color;
@@ -318,27 +319,27 @@ Connection con = DriverManager.getConnection(url + db, user, pass);
             qty = Integer.valueOf(tbqty.getText());
         }
         
-        if (! OVData.isPlan(tbscan.getText())) {
+        if (! schData.isPlan(tbscan.getText())) {
             bsmf.MainFrame.show(getMessageTag(1070, tbscan.getText()));
             initvars(null);
             return;
         }
-        if (OVData.isPlan(tbscan.getText()) &&  OVData.getPlanStatus(tbscan.getText()) > 0 ) {
+        if (schData.isPlan(tbscan.getText()) &&  schData.getPlanStatus(tbscan.getText()) > 0 ) {
             bsmf.MainFrame.show(getMessageTag(1071, tbscan.getText()));
             initvars(null);
             return;
         }
-        if (OVData.isPlan(tbscan.getText()) &&  OVData.getPlanStatus(tbscan.getText()) < 0 ) {
+        if (schData.isPlan(tbscan.getText()) &&  schData.getPlanStatus(tbscan.getText()) < 0 ) {
             bsmf.MainFrame.show(getMessageTag(1072, tbscan.getText()));
             initvars(null);
             return;
         }
        
         
-        if (OVData.isPlan(tbscan.getText()) &&  OVData.getPlanStatus(tbscan.getText()) == 0 ) {
+        if (schData.isPlan(tbscan.getText()) &&  schData.getPlanStatus(tbscan.getText()) == 0 ) {
                
-               OVData.updatePlanQty(tbscan.getText(), qty);
-               OVData.updatePlanStatus(tbscan.getText(), "1");
+               schData.updatePlanQty(tbscan.getText(), qty);
+               schData.updatePlanStatus(tbscan.getText(), "1");
                bsmf.MainFrame.show(getMessageTag(1073));
                initvars(null);
            
@@ -364,7 +365,7 @@ Connection con = DriverManager.getConnection(url + db, user, pass);
     }//GEN-LAST:event_tbscanFocusLost
 
     private void tbscanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbscanActionPerformed
-       tbqty.setText(String.valueOf(OVData.getPlanSchedQty(tbscan.getText())));
+       tbqty.setText(String.valueOf(schData.getPlanSchedQty(tbscan.getText())));
        tbqty.requestFocus();
     }//GEN-LAST:event_tbscanActionPerformed
 

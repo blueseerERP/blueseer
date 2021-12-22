@@ -1338,7 +1338,7 @@ public class Scheduler extends javax.swing.JPanel {
                             bsmf.MainFrame.show(getMessageTag(1123));
                             return;
                         }
-                        boolean isGood = OVData.updatePlanOrder(mytable.getValueAt(row, 0).toString(), 
+                        boolean isGood = schData.updatePlanOrder(mytable.getValueAt(row, 0).toString(), 
                         mytable.getValueAt(row, 6).toString(),
                         mytable.getValueAt(row, 5).toString(),
                         mytable.getValueAt(row, 9).toString(),
@@ -1353,7 +1353,7 @@ public class Scheduler extends javax.swing.JPanel {
         }
         if (col == 15)   {
                     if ( mytable.getValueAt(row, 12).equals(getGlobalProgTag("open"))) {
-                        OVData.updatePlanStatus(mytable.getValueAt(row, 0).toString(), "-1");
+                        schData.updatePlanStatus(mytable.getValueAt(row, 0).toString(), "-1");
                         bsmf.MainFrame.show(getMessageTag(1072, mytable.getValueAt(row, 0).toString()));
                         mytable.setValueAt(getGlobalProgTag("void"), row, 12);
                    } 

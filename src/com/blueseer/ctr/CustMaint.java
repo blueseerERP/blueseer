@@ -520,8 +520,6 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
         return x;
     }
     
-    
-    
     public boolean validateInput(dbaction action) {
          boolean r = true;
           if ( tbkey.getText().isEmpty()) {

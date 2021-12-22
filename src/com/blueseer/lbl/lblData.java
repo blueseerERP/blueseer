@@ -30,11 +30,13 @@ import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.ArrayList;
 
@@ -43,6 +45,162 @@ import java.util.ArrayList;
  * @author terryva
  */
 public class lblData {
+    
+    
+    public static String[] addLabelMstr(label_mstr x) {
+        String[] m = new String[2];
+        String sqlSelect = "select * from label_mstr where lbl_id = ?";
+        String sqlInsert = "insert into label_mstr (lbl_id, lbl_part, lbl_custpart, lbl_id_str, lbl_conttype, lbl_qty, lbl_po, "
+                        + "lbl_order, lbl_line, lbl_ref, lbl_lot, lbl_parent, lbl_parent_str, "
+                        + "lbl_addrcode, lbl_addrname, lbl_addr1, lbl_addr2, lbl_addrcity, lbl_addrstate, lbl_addrzip, lbl_addrcountry, "
+                        + "lbl_crt_date, lbl_ship_date, lbl_userid, lbl_printer, lbl_prog, lbl_site, lbl_loc, lbl_trantype)  " +
+                " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+             PreparedStatement ps = con.prepareStatement(sqlSelect);) {
+             ps.setString(1, x.lbl_id);
+          try (ResultSet res = ps.executeQuery();
+               PreparedStatement psi = con.prepareStatement(sqlInsert);) {  
+            if (! res.isBeforeFirst()) {
+            psi.setString(1, x.lbl_id);
+            psi.setString(2, x.lbl_part);
+            psi.setString(3, x.lbl_custpart);
+            psi.setString(4, x.lbl_id_str);
+            psi.setString(5, x.lbl_conttype);
+            psi.setString(6, x.lbl_qty);
+            psi.setString(7, x.lbl_po);
+            psi.setString(8, x.lbl_order);
+            psi.setString(9, x.lbl_line);
+            psi.setString(10, x.lbl_ref);
+            psi.setString(11, x.lbl_lot);
+            psi.setString(12, x.lbl_parent);
+            psi.setString(13, x.lbl_parent_str);
+            psi.setString(14, x.lbl_addrcode);
+            psi.setString(15, x.lbl_addrname);
+            psi.setString(16, x.lbl_addr1);
+            psi.setString(17, x.lbl_addr2);
+            psi.setString(18, x.lbl_addrcity);
+            psi.setString(19, x.lbl_addrstate);
+            psi.setString(20, x.lbl_addrzip);
+            psi.setString(21, x.lbl_addrcountry);
+            psi.setString(22, x.lbl_crt_date);
+            psi.setString(23, x.lbl_ship_date);
+            psi.setString(24, x.lbl_userid);
+            psi.setString(25, x.lbl_printer);
+            psi.setString(26, x.lbl_prog);
+            psi.setString(27, x.lbl_site);
+            psi.setString(28, x.lbl_loc);
+            psi.setString(29, x.lbl_trantype);
+            int rows = psi.executeUpdate();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+            } else {
+            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists};    
+            }
+          } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+          }
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+       
+    public static String[] addLabelZebraMstr(label_zebra x) {
+        String[] m = new String[2];
+        String sqlSelect = "select * from label_zebra where lblz_code = ?";
+        String sqlInsert = "insert into label_zebra (lblz_code, lblz_desc, lblz_type, lblz_file)  " +
+                " values (?,?,?,?); "; 
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+             PreparedStatement ps = con.prepareStatement(sqlSelect);) {
+             ps.setString(1, x.lblz_code);
+          try (ResultSet res = ps.executeQuery();
+               PreparedStatement psi = con.prepareStatement(sqlInsert);) {  
+            if (! res.isBeforeFirst()) {
+            psi.setString(1, x.lblz_code);
+            psi.setString(2, x.lblz_desc);
+            psi.setString(3, x.lblz_type);
+            psi.setString(4, x.lblz_file);
+            int rows = psi.executeUpdate();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+            } else {
+            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists};    
+            }
+          } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+          }
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+    
+    public static String[] updateLabelZebraMstr(label_zebra x) {
+        String[] m = new String[2];
+        String sql = "update label_zebra set lblz_desc = ?, lblz_type = ?, lblz_file = ? " +
+                "  where lblz_code = ? ";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, x.lblz_desc);
+        ps.setString(2, x.lblz_type);
+        ps.setString(3, x.lblz_file);
+        ps.setString(4, x.lblz_code);
+        int rows = ps.executeUpdate();
+        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+    
+    public static String[] deleteLabelZebraMstr(label_zebra x) { 
+       String[] m = new String[2];
+        String sql = "delete from label_zebra where lblz_code = ?; ";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, x.lblz_code);
+        int rows = ps.executeUpdate();
+        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+      
+    public static label_zebra getLabelZebraMstr(String[] x) {
+        label_zebra r = null;
+        String[] m = new String[2];
+        String sql = "select * from label_zebra where lblz_code = ? ;";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, x[0]);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new label_zebra(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new label_zebra(m, res.getString("lblz_code"), 
+                            res.getString("lblz_desc"),
+                            res.getString("lblz_type"),
+                            res.getString("lblz_file")
+                        );
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new label_zebra(m);
+        }
+        return r;
+    }
+    
     
     public static String CreateLabelMstr(String serialno, String item, String custpart, String serialnostring, 
               String conttype, String qty, String po, String order, String line, String ref, String lot,

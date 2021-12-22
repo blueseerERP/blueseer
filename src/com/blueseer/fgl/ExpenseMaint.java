@@ -561,7 +561,7 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeerT {
                 currformatDouble(actamt).replace(defaultDecimalSeparator, '.'), // ap_base_amt
                 setDateFormat(dcdate.getDate()), // ap_effdate
                 setDateFormat(dcdate.getDate()), // ap_entdate
-                "", // ap_duedate        
+                setDateFormat(dcdate.getDate()), // ap_duedate        
                 "V", // ap_type
                 tbrmks.getText(), //ap_rmks
                 tbcheck.getText(), //ap_ref

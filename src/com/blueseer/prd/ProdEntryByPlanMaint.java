@@ -61,6 +61,7 @@ import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.inv.invData;
+import com.blueseer.sch.schData;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.awt.Component;
 import java.sql.Connection;
@@ -164,9 +165,9 @@ String sitecitystatezip = "";
             return;
         }
         
-        if (OVData.isPlan(scan)) {
-       tbqty.setText(String.valueOf(OVData.getPlanSchedQty(scan)));
-       partlabel.setText(OVData.getPlanItem(scan));
+        if (schData.isPlan(scan)) {
+       tbqty.setText(String.valueOf(schData.getPlanSchedQty(scan)));
+       partlabel.setText(schData.getPlanItem(scan));
        partlabel.setForeground(Color.blue);
        ddop.removeAllItems();
        ArrayList mylist = invData.getItemRoutingOPs(partlabel.getText());
@@ -415,20 +416,20 @@ String sitecitystatezip = "";
             qty = Integer.valueOf(tbqty.getText());
         }
         
-        if (! OVData.isPlan(tbscan.getText())) {
+        if (! schData.isPlan(tbscan.getText())) {
             lblmessage.setText(getMessageTag(1070,tbscan.getText()));
             lblmessage.setForeground(Color.red);
             initvars(null);
             return;
         }
         
-        if (OVData.isPlan(tbscan.getText()) &&  OVData.getPlanStatus(tbscan.getText()) > 0 ) {
+        if (schData.isPlan(tbscan.getText()) &&  schData.getPlanStatus(tbscan.getText()) > 0 ) {
             lblmessage.setText(getMessageTag(1071,tbscan.getText()));
             lblmessage.setForeground(Color.red);
             initvars(null);
             return;
         }
-        if (OVData.isPlan(tbscan.getText()) &&  OVData.getPlanStatus(tbscan.getText()) < 0 ) {
+        if (schData.isPlan(tbscan.getText()) &&  schData.getPlanStatus(tbscan.getText()) < 0 ) {
             lblmessage.setText(getMessageTag(1072,tbscan.getText()));
             lblmessage.setForeground(Color.red);
             initvars(null);
@@ -448,8 +449,8 @@ String sitecitystatezip = "";
         // now lets sum up qtys posted previously (if any) for this OP and this Ticket and make sure
         // qty field is not greater than qty previous + qty scheduled
         // this should work for multiscan and nonmultican conditions
-        double prevscanned = OVData.getPlanDetTotQtyByOp(tbscan.getText(), ddop.getSelectedItem().toString());
-        double schedqty = OVData.getPlanSchedQty(tbscan.getText());
+        double prevscanned = schData.getPlanDetTotQtyByOp(tbscan.getText(), ddop.getSelectedItem().toString());
+        double schedqty = schData.getPlanSchedQty(tbscan.getText());
         if ( qty > (schedqty - prevscanned) ) {
              lblmessage.setText("Qty Exceeds limit (Already Scanned Qty: " + String.valueOf(prevscanned) + " out of SchedQty: " + String.valueOf(schedqty) + ")");
             lblmessage.setForeground(Color.red);
@@ -460,7 +461,7 @@ String sitecitystatezip = "";
         
        
         
-        if (OVData.isPlan(tbscan.getText()) &&  OVData.getPlanStatus(tbscan.getText()) == 0 ) {
+        if (schData.isPlan(tbscan.getText()) &&  schData.getPlanStatus(tbscan.getText()) == 0 ) {
             
             //OK ...if here..we should be prepared to commit.... Let's commit the transaction with OVData.loadTranHistByTable
             JTable mytable = new JTable();

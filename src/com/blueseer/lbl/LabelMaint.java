@@ -32,15 +32,41 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.lbl.lblData.addLabelZebraMstr;
+import static com.blueseer.lbl.lblData.deleteLabelZebraMstr;
+import static com.blueseer.lbl.lblData.getLabelZebraMstr;
+import com.blueseer.lbl.lblData.label_zebra;
+import static com.blueseer.lbl.lblData.updateLabelZebraMstr;
+import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import com.blueseer.utl.BlueSeerUtils.dbaction;
+import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import static com.blueseer.utl.BlueSeerUtils.luModel;
+import static com.blueseer.utl.BlueSeerUtils.luTable;
+import static com.blueseer.utl.BlueSeerUtils.lual;
+import static com.blueseer.utl.BlueSeerUtils.ludialog;
+import static com.blueseer.utl.BlueSeerUtils.luinput;
+import static com.blueseer.utl.BlueSeerUtils.luml;
+import static com.blueseer.utl.BlueSeerUtils.lurb1;
+import static com.blueseer.utl.BlueSeerUtils.setDateFormat;
+import com.blueseer.utl.DTData;
+import com.blueseer.utl.IBlueSeerT;
 import com.blueseer.utl.OVData;
+import java.awt.Color;
 import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -50,13 +76,21 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTable;
+import javax.swing.JViewport;
+import javax.swing.SwingWorker;
 
 /**
  *
  * @author vaughnte
  */
-public class LabelMaint extends javax.swing.JPanel {
+public class LabelMaint extends javax.swing.JPanel implements IBlueSeerT {
 
+    // global variable declarations
+                boolean isLoad = false;
+    
+   // global datatablemodel declarations       
+    
     /**
      * Creates new form CarrierMaintPanel
      */
@@ -65,56 +99,136 @@ public class LabelMaint extends javax.swing.JPanel {
         setLanguageTags(this);
     }
 
-    
-    public boolean isFile(String myfile) {
-        boolean isgood = false;
-        String labelfile = "zebra/" + myfile;
-        File f = new File(labelfile);
-        if(f.exists() && !f.isDirectory()) { 
-           isgood = true;
+     public void executeTask(BlueSeerUtils.dbaction x, String[] y) { 
+      
+        class Task extends SwingWorker<String[], Void> {
+       
+          String type = "";
+          String[] key = null;
+          
+          public Task(BlueSeerUtils.dbaction type, String[] key) { 
+              this.type = type.name();
+              this.key = key;
+          } 
+           
+        @Override
+        public String[] doInBackground() throws Exception {
+            String[] message = new String[2];
+            message[0] = "";
+            message[1] = "";
+            
+            
+             switch(this.type) {
+                case "add":
+                    message = addRecord(key);
+                    break;
+                case "update":
+                    message = updateRecord(key);
+                    break;
+                case "delete":
+                    message = deleteRecord(key);    
+                    break;
+                case "get":
+                    message = getRecord(key);    
+                    break;    
+                default:
+                    message = new String[]{"1", "unknown action"};
+            }
+            
+            return message;
         }
-        return isgood;
-    }
-    
-    public void getLabelFileCode(String mykey) {
-        initvars(null);
-        try {
-
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
+ 
+        
+       public void done() {
             try {
-                int i = 0;
-                res = st.executeQuery("select * from label_zebra where lblz_code = " + "'" + mykey + "'" + ";");
-                while (res.next()) {
-                    i++;
-                    tbcode.setText(res.getString("lblz_code"));
-                    tbdesc.setText(res.getString("lblz_desc"));
-                    tbfile.setText(res.getString("lblz_file"));
-                    ddtype.setSelectedItem(res.getString("lblz_type"));
+            String[] message = get();
+           
+            BlueSeerUtils.endTask(message);
+           if (this.type.equals("delete")) {
+             initvars(null);  
+           } else if (this.type.equals("get") && message[0].equals("1")) {
+             tbkey.requestFocus();
+           } else if (this.type.equals("get") && message[0].equals("0")) {
+             tbkey.requestFocus();
+           } else {
+             initvars(null);  
+           }
+            
+            } catch (Exception e) {
+                MainFrame.bslog(e);
+            } 
+           
+        }
+    }  
+      
+       BlueSeerUtils.startTask(new String[]{"","Running..."});
+       Task z = new Task(x, y); 
+       z.execute(); 
+       
+    }
+   
+    public void setPanelComponentState(Object myobj, boolean b) {
+        JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+        
+        if (panel != null) {
+        panel.setEnabled(b);
+        Component[] components = panel.getComponents();
+        
+            for (Component component : components) {
+                if (component instanceof JLabel || component instanceof JTable ) {
+                     continue;
+                }
+                if (component instanceof JPanel) {
+                    setPanelComponentState((JPanel) component, b);
+                }
+                if (component instanceof JTabbedPane) {
+                    setPanelComponentState((JTabbedPane) component, b);
+                }
+                if (component instanceof JScrollPane) {
+                    setPanelComponentState((JScrollPane) component, b);
+                }
+                
+                component.setEnabled(b);
+            }
+        }
+            if (tabpane != null) {
+                tabpane.setEnabled(b);
+                Component[] componentspane = tabpane.getComponents();
+                for (Component component : componentspane) {
+                    if (component instanceof JLabel || component instanceof JTable ) {
+                        continue;
+                    }
+                    if (component instanceof JPanel) {
+                        setPanelComponentState((JPanel) component, b);
+                    }
+                    
+                    component.setEnabled(b);
                     
                 }
-               
-                if (i == 0)
-                    bsmf.MainFrame.show(getMessageTag(1143,mykey));
-
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
             }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-
-    }
+            if (scrollpane != null) {
+                scrollpane.setEnabled(b);
+                JViewport viewport = scrollpane.getViewport();
+                Component[] componentspane = viewport.getComponents();
+                for (Component component : componentspane) {
+                    if (component instanceof JLabel || component instanceof JTable ) {
+                        continue;
+                    }
+                    component.setEnabled(b);
+                }
+            }
+    } 
     
     public void setLanguageTags(Object myobj) {
        JPanel panel = null;
@@ -160,8 +274,9 @@ public class LabelMaint extends javax.swing.JPanel {
        }
     }
     
-    public void initvars(String[] arg) {
-        tbcode.setText("");
+    public void setComponentDefaultValues() {
+        isLoad = true;
+        tbkey.setText("");
         tbdesc.setText("");
         tbfile.setText("");
         
@@ -169,12 +284,223 @@ public class LabelMaint extends javax.swing.JPanel {
         ArrayList<String> mylist = OVData.getCodeMstr("labeltype");
         for (int i = 0; i < mylist.size(); i++) {
             ddtype.addItem(mylist.get(i));
-        }
+        } 
         
-         if (arg != null && arg.length > 0) {
-            getLabelFileCode(arg[0]);
+       isLoad = false;
+    }
+    
+    public void newAction(String x) {
+       setPanelComponentState(this, true);
+        setComponentDefaultValues();
+        BlueSeerUtils.message(new String[]{"0",BlueSeerUtils.addRecordInit});
+        btupdate.setEnabled(false);
+        btdelete.setEnabled(false);
+        btnew.setEnabled(false);
+        tbkey.setEditable(true);
+        tbkey.setForeground(Color.blue);
+        if (! x.isEmpty()) {
+          tbkey.setText(String.valueOf(OVData.getNextNbr(x)));  
+          tbkey.setEditable(false);
+        } 
+        tbkey.requestFocus();
+    }
+    
+    public void setAction(String[] x) {
+        if (x[0].equals("0")) { 
+                   setPanelComponentState(this, true);
+                   btadd.setEnabled(false);
+                   tbkey.setEditable(false);
+                   tbkey.setForeground(Color.blue);
+        } else {
+                   tbkey.setForeground(Color.red); 
         }
     }
+     
+    public boolean validateInput(BlueSeerUtils.dbaction x) {
+        boolean b = true;
+        
+                        
+                if (ddtype.getSelectedItem() == null || ddtype.getSelectedItem().toString().isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show(getMessageTag(1024));
+                    ddtype.requestFocus();
+                    return b;
+                }
+               
+                if (tbdesc.getText().isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show(getMessageTag(1024));
+                    tbdesc.requestFocus();
+                    return b;
+                }
+                
+                if (tbkey.getText().isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show(getMessageTag(1024));
+                    tbkey.requestFocus();
+                    return b;
+                }
+                
+                 
+                
+               
+        return b;
+    }
+    
+    public void initvars(String[] arg) {
+       
+       setPanelComponentState(this, false); 
+       setComponentDefaultValues();
+        btnew.setEnabled(true);
+        btlookup.setEnabled(true);
+      
+       
+        
+        if (arg != null && arg.length > 0) {
+            executeTask(BlueSeerUtils.dbaction.get,arg);
+        } else {
+            tbkey.setEnabled(true);
+            tbkey.setEditable(true);
+            tbkey.requestFocus();
+        }
+    }
+   
+    public String[] getRecord(String[] key) {
+        label_zebra x = getLabelZebraMstr(key);  
+        tbdesc.setText(x.lblz_desc());
+        tbkey.setText(x.lblz_code());
+        ddtype.setSelectedItem(x.lblz_type());
+        tbfile.setText(x.lblz_file());
+        setAction(x.m());
+        return x.m();
+    }
+    
+    public label_zebra createRecord() {
+         label_zebra x = new label_zebra(null, 
+                 tbkey.getText(),
+                 tbdesc.getText(),
+                 ddtype.getSelectedItem().toString(),
+                 tbfile.getText()
+                );
+        return x;
+    }
+      
+    public String[] addRecord(String[] key) {
+         String[] m = addLabelZebraMstr(createRecord());
+         return m;
+    }
+        
+    public String[] updateRecord(String[] key) {
+         String[] m = updateLabelZebraMstr(createRecord());
+         return m;
+    }
+    
+    public String[] deleteRecord(String[] key) {
+        String[] m = new String[2];
+        boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
+        if (proceed) {
+         m = deleteLabelZebraMstr(createRecord()); 
+         initvars(null);
+        } else {
+           m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
+        }
+         return m;
+    }
+    
+    public void lookUpFrame() {
+        
+        luinput.removeActionListener(lual);
+        lual = new ActionListener() {
+        public void actionPerformed(ActionEvent event) {
+        if (lurb1.isSelected()) {  
+         luModel = DTData.getLabelFileUtil(luinput.getText(),0, "lblz_code");
+        } else {
+         luModel = DTData.getLabelFileUtil(luinput.getText(),0, "lblz_desc");   
+        }
+        luTable.setModel(luModel);
+        luTable.getColumnModel().getColumn(0).setMaxWidth(50);
+        if (luModel.getRowCount() < 1) {
+            ludialog.setTitle(getMessageTag(1001));
+        } else {
+            ludialog.setTitle(getMessageTag(1002, String.valueOf(luModel.getRowCount())));
+        }
+        }
+        };
+        luinput.addActionListener(lual);
+        
+        luTable.removeMouseListener(luml);
+        luml = new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                JTable target = (JTable)e.getSource();
+                int row = target.getSelectedRow();
+                int column = target.getSelectedColumn();
+                if ( column == 0) {
+                ludialog.dispose();
+                initvars(new String[]{target.getValueAt(row,1).toString(), target.getValueAt(row,2).toString()});
+                }
+            }
+        };
+        luTable.addMouseListener(luml);
+      
+        callDialog(getClassLabelTag("lblid", this.getClass().getSimpleName()), 
+                getClassLabelTag("lbldesc", this.getClass().getSimpleName())); 
+        
+        
+    }
+
+    
+    // misc funcs
+    public boolean isFile(String myfile) {
+        boolean isgood = false;
+        String labelfile = "zebra/" + myfile;
+        File f = new File(labelfile);
+        if(f.exists() && !f.isDirectory()) { 
+           isgood = true;
+        }
+        return isgood;
+    }
+    
+    public void getLabelFileCode(String mykey) {
+        initvars(null);
+        try {
+
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+                int i = 0;
+                res = st.executeQuery("select * from label_zebra where lblz_code = " + "'" + mykey + "'" + ";");
+                while (res.next()) {
+                    i++;
+                    tbkey.setText(res.getString("lblz_code"));
+                    tbdesc.setText(res.getString("lblz_desc"));
+                    tbfile.setText(res.getString("lblz_file"));
+                    ddtype.setSelectedItem(res.getString("lblz_type"));
+                    
+                }
+               
+                if (i == 0)
+                    bsmf.MainFrame.show(getMessageTag(1143,mykey));
+
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+
+    }
+    
+    
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -189,15 +515,17 @@ public class LabelMaint extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         tbdesc = new javax.swing.JTextField();
-        btget = new javax.swing.JButton();
         btdelete = new javax.swing.JButton();
         btadd = new javax.swing.JButton();
         btupdate = new javax.swing.JButton();
-        tbcode = new javax.swing.JTextField();
+        tbkey = new javax.swing.JTextField();
         tbfile = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         ddtype = new javax.swing.JComboBox();
+        btnew = new javax.swing.JButton();
+        btclear = new javax.swing.JButton();
+        btlookup = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -209,14 +537,6 @@ public class LabelMaint extends javax.swing.JPanel {
 
         jLabel2.setText("Description:");
         jLabel2.setName("lbldesc"); // NOI18N
-
-        btget.setText("get");
-        btget.setName("btget"); // NOI18N
-        btget.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btgetActionPerformed(evt);
-            }
-        });
 
         btdelete.setText("delete");
         btdelete.setName("btdelete"); // NOI18N
@@ -242,11 +562,40 @@ public class LabelMaint extends javax.swing.JPanel {
             }
         });
 
+        tbkey.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tbkeyActionPerformed(evt);
+            }
+        });
+
         jLabel3.setText("Label ZPL File:");
         jLabel3.setName("lblzplfile"); // NOI18N
 
         jLabel4.setText("Label Type:");
         jLabel4.setName("lbltype"); // NOI18N
+
+        btnew.setText("New");
+        btnew.setName("btnew"); // NOI18N
+        btnew.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnewActionPerformed(evt);
+            }
+        });
+
+        btclear.setText("Clear");
+        btclear.setName("btclear"); // NOI18N
+        btclear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btclearActionPerformed(evt);
+            }
+        });
+
+        btlookup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
+        btlookup.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btlookupActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -262,29 +611,36 @@ public class LabelMaint extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addComponent(btadd)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(btdelete)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(btupdate))
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addComponent(tbcode, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(btget))
                         .addComponent(tbdesc, javax.swing.GroupLayout.DEFAULT_SIZE, 233, Short.MAX_VALUE)
                         .addComponent(tbfile))
-                    .addComponent(ddtype, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(36, Short.MAX_VALUE))
+                    .addComponent(ddtype, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btlookup, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnew)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btclear))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(btadd)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btdelete)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btupdate)))
+                .addContainerGap(62, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tbcode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btget)
-                    .addComponent(jLabel1))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel1)
+                        .addComponent(btnew)
+                        .addComponent(btclear))
+                    .addComponent(btlookup))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -302,162 +658,61 @@ public class LabelMaint extends javax.swing.JPanel {
                     .addComponent(btadd)
                     .addComponent(btdelete)
                     .addComponent(btupdate))
-                .addContainerGap(27, Short.MAX_VALUE))
+                .addContainerGap(53, Short.MAX_VALUE))
         );
 
         add(jPanel1);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btgetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btgetActionPerformed
-        getLabelFileCode(tbcode.getText());
-    }//GEN-LAST:event_btgetActionPerformed
-
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
-       try {
-
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                boolean proceed = true;
-                int i = 0;
-                
-                // check the site field
-                if (tbcode.getText().isEmpty()) {
-                    proceed = false;
-                    bsmf.MainFrame.show(getMessageTag(1024));
-                    tbcode.requestFocus();
-                    return;
-                }
-                
-                if (! isFile(tbfile.getText())) {
-                    proceed = false;
-                    bsmf.MainFrame.show(getMessageTag(1145,tbfile.getText()));
-                    tbfile.requestFocus();
-                    return;
-                }
-                
-                if (proceed) {
-
-                    res = st.executeQuery("SELECT lblz_code FROM  label_zebra where lblz_code = " + "'" + tbcode.getText() + "'" + ";");
-                    while (res.next()) {
-                        i++;
-                    }
-                    if (i == 0) {
-                        st.executeUpdate("insert into label_zebra "
-                            + "(lblz_code, lblz_desc, lblz_type, lblz_file) "
-                            + " values ( " + "'" + tbcode.getText() + "'" + ","
-                            + "'" + tbdesc.getText() + "'" + ","
-                            + "'" + ddtype.getSelectedItem().toString() + "'" + ","
-                            + "'" + tbfile.getText() + "'"
-                            + ")"
-                            + ";");
-                        bsmf.MainFrame.show(getMessageTag(1007));
-                    } else {
-                        bsmf.MainFrame.show(getMessageTag(1014));
-                    }
-
-                   initvars(null);
-                   
-                } // if proceed
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
+       if (! validateInput(dbaction.add)) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask(dbaction.add, new String[]{tbkey.getText()});
     }//GEN-LAST:event_btaddActionPerformed
 
     private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
-       try {
-            boolean proceed = true;
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            try {
-                   
-                // check the code field
-                if (tbcode.getText().isEmpty()) {
-                    proceed = false;
-                    bsmf.MainFrame.show(getMessageTag(1024));
-                    tbcode.requestFocus();
-                    return;
-                }
-                
-                if (! isFile(tbfile.getText())) {
-                    proceed = false;
-                    bsmf.MainFrame.show(getMessageTag(1145,tbfile.getText()));
-                    tbfile.requestFocus();
-                    return;
-                }
-                
-                if (proceed) {
-                    st.executeUpdate("update label_zebra set lblz_desc = " + "'" + tbdesc.getText() + "'" + ","
-                            + "lblz_file = " + "'" + tbfile.getText() + "'" + ","
-                            + "lblz_type = " + "'" + ddtype.getSelectedItem().toString() + "'"
-                            + " where lblz_code = " + "'" + tbcode.getText() + "'"                             
-                            + ";");
-                    bsmf.MainFrame.show(getMessageTag(1008));
-                    initvars(null);
-                } 
-         
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            } finally {
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
+        if (! validateInput(dbaction.update)) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask(dbaction.update, new String[]{tbkey.getText()});
     }//GEN-LAST:event_btupdateActionPerformed
 
     private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
          
-        boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
-        if (proceed) {
-        try {
-
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            try {
-              
-                   int i = st.executeUpdate("delete from label_zebra where lblz_code = " + "'" + tbcode.getText() + "'" + ";");
-                    if (i > 0) {
-                    bsmf.MainFrame.show(getMessageTag(1031,tbcode.getText()));
-                    initvars(null);
-                    }
-                } catch (SQLException s) {
-                    MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            } finally {
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-        }
+         if (! validateInput(dbaction.delete)) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask(dbaction.delete, new String[]{tbkey.getText()});   
     }//GEN-LAST:event_btdeleteActionPerformed
+
+    private void btlookupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btlookupActionPerformed
+        lookUpFrame();
+    }//GEN-LAST:event_btlookupActionPerformed
+
+    private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
+        newAction("");
+    }//GEN-LAST:event_btnewActionPerformed
+
+    private void btclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearActionPerformed
+        BlueSeerUtils.messagereset(); 
+        initvars(null);
+    }//GEN-LAST:event_btclearActionPerformed
+
+    private void tbkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkeyActionPerformed
+        executeTask(dbaction.get, new String[]{tbkey.getText()});
+    }//GEN-LAST:event_tbkeyActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
+    private javax.swing.JButton btclear;
     private javax.swing.JButton btdelete;
-    private javax.swing.JButton btget;
+    private javax.swing.JButton btlookup;
+    private javax.swing.JButton btnew;
     private javax.swing.JButton btupdate;
     private javax.swing.JComboBox ddtype;
     private javax.swing.JLabel jLabel1;
@@ -465,8 +720,8 @@ public class LabelMaint extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JTextField tbcode;
     private javax.swing.JTextField tbdesc;
     private javax.swing.JTextField tbfile;
+    private javax.swing.JTextField tbkey;
     // End of variables declaration//GEN-END:variables
 }

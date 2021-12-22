@@ -33,7 +33,10 @@ import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.ctr.cusData;
+import static com.blueseer.lbl.lblData.addLabelMstr;
+import com.blueseer.lbl.lblData.label_mstr;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import static com.blueseer.utl.BlueSeerUtils.setDateFormat;
 import com.blueseer.utl.OVData;
 import java.awt.Color;
 import java.awt.Component;
@@ -297,6 +300,46 @@ String shipcountry = "";
         
     }
     
+    public label_mstr createRecord() { 
+        java.util.Date now = new java.util.Date();
+        DateFormat dfdate = new SimpleDateFormat("MM/dd/yyyy");
+        DateFormat dftime = new SimpleDateFormat("hh:mm");
+        DateFormat dfdate2 = new SimpleDateFormat("yyyy-MM-dd");
+         label_mstr x = new label_mstr(null, 
+                 serialno_str, 
+                 partnumber, 
+                 custpart, 
+                 serialno_str, 
+                 "XX", 
+                 quantity, 
+                 ponbr, 
+                 ordernbr, 
+                 linenbr, 
+                 ref, 
+                 lot, 
+                 "0", 
+                 "0", 
+                 shipname, 
+                 shipaddr1, 
+                 shipaddr2, 
+                 shipcity, 
+                 shipstate, 
+                 shipstate, 
+                 shipzip, 
+                 shipcountry, 
+                 setDateFormat(now), 
+                 setDateFormat(now), 
+                 bsmf.MainFrame.userid, 
+                 ddprinter.getSelectedItem().toString(), 
+                 "LabelContPanel", 
+                 OVData.getDefaultSite(), 
+                 "", 
+                 "CONT"
+                );
+        return x;
+    }
+   
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -513,8 +556,7 @@ File f = new File(labelfile);
 if(f.exists() && !f.isDirectory()) { 
     
       // ok....apparently we have a label/printer match.... lets create the label_mstr record for this label
-        lblData.CreateLabelMstr(serialno_str, partnumber, custpart, serialno_str, "XX", quantity, ponbr, ordernbr, linenbr, ref, lot, "0", "0", shipname, shipaddr1, shipaddr2, shipcity, shipstate, shipstate, shipzip, shipcountry, dfdate2.format(now), dfdate2.format(now), bsmf.MainFrame.userid, ddprinter.getSelectedItem().toString(), "LabelContPanel", OVData.getDefaultSite(), "", "CONT");
-       
+      String[] x = addLabelMstr(createRecord()); 
     
     
 BufferedReader fsr = new BufferedReader(new FileReader(f));

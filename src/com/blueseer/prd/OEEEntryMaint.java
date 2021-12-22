@@ -54,6 +54,7 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import com.blueseer.sch.schData;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.awt.Component;
@@ -141,8 +142,8 @@ public class OEEEntryMaint extends javax.swing.JPanel {
     
     
     public void validateScan(String scan) {
-          if (OVData.isPlan(scan)) {
-       tbqty.setText(String.valueOf(OVData.getPlanSchedQty(scan)));
+          if (schData.isPlan(scan)) {
+       tbqty.setText(String.valueOf(schData.getPlanSchedQty(scan)));
      
       
        tbqty.requestFocus();

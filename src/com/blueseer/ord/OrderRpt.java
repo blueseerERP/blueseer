@@ -75,6 +75,7 @@ import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.ctr.cusData;
+import com.blueseer.sch.schData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
@@ -631,7 +632,7 @@ try {
                  
                 while (res.next()) {
                     
-                    planstatus = OVData.orderPlanStatus(res.getString("so_nbr"));
+                    planstatus = schData.orderPlanStatus(res.getString("so_nbr"));
                     
                     if (! cbopen.isSelected() && res.getString("so_status").equals("open"))
                         continue;

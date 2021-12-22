@@ -105,7 +105,7 @@ public class fapData {
                 vendinfo[4], //ap_bank
                 s[2], //ap_curr
                 basecurr, //ap_base_curr
-                "", //ap_check
+                String.valueOf(checknbr), //ap_check
                 String.valueOf(batchid), //ap_batch
                 s[1] //ap_site
                 );

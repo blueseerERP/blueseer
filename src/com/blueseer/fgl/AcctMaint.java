@@ -322,20 +322,20 @@ public class AcctMaint extends javax.swing.JPanel implements IBlueSeerT  {
         
                 if (ddcur.getSelectedItem() == null || ddcur.getSelectedItem().toString().isEmpty()) {
                     b = false;
-                    BlueSeerUtils.message(new String[] {"1", "must choose a currency"});
+                    bsmf.MainFrame.show(getMessageTag(1029));
                     return b;
                 }
                
                 if (tbdesc.getText().isEmpty()) {
                     b = false;
-                    BlueSeerUtils.message(new String[] {"1", "must enter a description"});
+                    bsmf.MainFrame.show(getMessageTag(1024));
                     tbdesc.requestFocus();
                     return b;
                 }
                 
                 if (tbkey.getText().isEmpty()) {
                     b = false;
-                    BlueSeerUtils.message(new String[] {"1", "must enter a code"});
+                    bsmf.MainFrame.show(getMessageTag(1024));
                     tbkey.requestFocus();
                     return b;
                 }

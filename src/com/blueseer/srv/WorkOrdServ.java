@@ -32,6 +32,7 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.inv.invData;
+import com.blueseer.sch.schData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.createMessage;
 import static com.blueseer.utl.BlueSeerUtils.createMessageJSON;
@@ -614,7 +615,7 @@ public class WorkOrdServ extends HttpServlet {
            return createMessage("Not a valid operation for this item", "fail", "0"); 
         }
         
-        if (OVData.getPlanStatus(workordernbr) != 0) {
+        if (schData.getPlanStatus(workordernbr) != 0) {
            return createMessage("Work Order is closed", "fail", "0"); 
         }
         
@@ -738,7 +739,7 @@ public class WorkOrdServ extends HttpServlet {
            return createMessage("Not a valid operation for this item", "fail", "0"); 
         }
         
-        if (OVData.getPlanStatus(workordernbr) != 0) {
+        if (schData.getPlanStatus(workordernbr) != 0) {
            return createMessage("Work Order is closed", "fail", "0"); 
         }
         

@@ -599,7 +599,7 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
                 currformatDouble(actamt).replace(defaultDecimalSeparator, '.'), // ap_base_amt
                 setDateFormat(dcdate.getDate()), // ap_effdate
                 setDateFormat(dcdate.getDate()), // ap_entdate
-                "", // ap_duedate        
+                setDateFormat(OVData.getDueDateFromTerms(dcdate.getDate(), terms)), // ap_duedate         
                 "V", // ap_type
                 tbrmks.getText(), //ap_rmks
                 tbinvoice.getText(), //ap_ref
