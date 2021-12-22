@@ -148,49 +148,42 @@ where shd_id =  $P{myid}]]>
 				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="81" y="16" width="100" height="11" uuid="780e4fa8-14ac-4057-92af-f71e667a90dc"/>
+				<reportElement x="29" y="16" width="136" height="11" uuid="780e4fa8-14ac-4057-92af-f71e667a90dc"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{cm_name}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="81" y="27" width="100" height="12" uuid="b9597315-e96a-483c-8c9a-753ff7bc0ac3"/>
+				<reportElement x="29" y="27" width="136" height="12" uuid="b9597315-e96a-483c-8c9a-753ff7bc0ac3"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{cm_line1}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="81" y="39" width="136" height="17" uuid="86590877-3129-4043-a34e-8fca5e40d2ad"/>
+				<reportElement x="29" y="39" width="136" height="17" uuid="86590877-3129-4043-a34e-8fca5e40d2ad"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{bill_csz}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="268" y="2" width="62" height="14" uuid="2d308b9b-b8e0-434a-8c1f-226e5fbb1a8a"/>
+				<reportElement x="219" y="2" width="151" height="14" uuid="2d308b9b-b8e0-434a-8c1f-226e5fbb1a8a"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{jasper.invoice.lblshipto}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="281" y="16" width="100" height="11" uuid="8337b8f0-509d-4326-9311-206093ec714c"/>
+				<reportElement x="232" y="16" width="138" height="11" uuid="8337b8f0-509d-4326-9311-206093ec714c"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{cms_name}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="281" y="27" width="100" height="10" uuid="92f0edcc-29a8-4a03-9eb5-df01dc9d576b"/>
-				<textElement>
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{cms_line1}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="281" y="39" width="136" height="17" uuid="271ba4d0-b5fb-418b-8e7a-f9b2fc19c7e8"/>
+				<reportElement x="232" y="39" width="138" height="17" uuid="271ba4d0-b5fb-418b-8e7a-f9b2fc19c7e8"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
@@ -261,7 +254,7 @@ where shd_id =  $P{myid}]]>
 				<textFieldExpression><![CDATA[$R{jasper.invoice.lblterms}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="66" y="3" width="62" height="17" uuid="1691e66d-5b7b-4d75-a07d-cd2a556fdf90"/>
+				<reportElement x="14" y="1" width="151" height="17" uuid="1691e66d-5b7b-4d75-a07d-cd2a556fdf90"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
@@ -276,7 +269,7 @@ where shd_id =  $P{myid}]]>
 				<textFieldExpression><![CDATA[$F{sh_rmks}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="280" y="27" width="100" height="12" uuid="68158bb2-f68a-4df8-b71e-53d1d13b26a8"/>
+				<reportElement x="231" y="27" width="139" height="12" uuid="68158bb2-f68a-4df8-b71e-53d1d13b26a8"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>

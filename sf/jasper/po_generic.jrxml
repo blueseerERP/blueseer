@@ -91,11 +91,11 @@
 				<textFieldExpression><![CDATA[$F{site_desc}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="128" y="14" width="100" height="12" uuid="4a0e1a7d-6e47-4eb4-b11f-9354c5c50d98"/>
+				<reportElement x="128" y="14" width="181" height="12" uuid="4a0e1a7d-6e47-4eb4-b11f-9354c5c50d98"/>
 				<textFieldExpression><![CDATA[$F{site_line1}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="128" y="24" width="100" height="12" uuid="1f7b82e5-6a70-4be0-9db0-b195f6365056"/>
+				<reportElement x="128" y="24" width="181" height="12" uuid="1f7b82e5-6a70-4be0-9db0-b195f6365056"/>
 				<textFieldExpression><![CDATA[$P{site_csz}]]></textFieldExpression>
 			</textField>
 		</band>
@@ -112,56 +112,56 @@
 				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="66" y="4" width="62" height="17" uuid="52fb9e22-fec4-4606-aa26-cf96ef16087b"/>
+				<reportElement x="16" y="4" width="112" height="17" uuid="52fb9e22-fec4-4606-aa26-cf96ef16087b"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{jasper.po.lblvendor}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="81" y="18" width="100" height="11" uuid="780e4fa8-14ac-4057-92af-f71e667a90dc"/>
+				<reportElement x="31" y="18" width="159" height="11" uuid="780e4fa8-14ac-4057-92af-f71e667a90dc"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{vd_name}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="81" y="29" width="100" height="12" uuid="b9597315-e96a-483c-8c9a-753ff7bc0ac3"/>
+				<reportElement x="31" y="29" width="159" height="12" uuid="b9597315-e96a-483c-8c9a-753ff7bc0ac3"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{vd_line1}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="81" y="41" width="136" height="17" uuid="86590877-3129-4043-a34e-8fca5e40d2ad"/>
+				<reportElement x="31" y="41" width="159" height="17" uuid="86590877-3129-4043-a34e-8fca5e40d2ad"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{vend_csz}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="268" y="4" width="62" height="14" uuid="0fa77a6b-9198-4bdc-9ebf-c47b60bd4069"/>
+				<reportElement x="213" y="4" width="114" height="14" uuid="0fa77a6b-9198-4bdc-9ebf-c47b60bd4069"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{jasper.po.lblshipto}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="281" y="18" width="100" height="11" uuid="8337b8f0-509d-4326-9311-206093ec714c"/>
+				<reportElement x="226" y="18" width="154" height="11" uuid="8337b8f0-509d-4326-9311-206093ec714c"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{site_desc}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="281" y="29" width="100" height="12" uuid="92f0edcc-29a8-4a03-9eb5-df01dc9d576b"/>
+				<reportElement x="226" y="29" width="154" height="12" uuid="92f0edcc-29a8-4a03-9eb5-df01dc9d576b"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{site_line1}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="280" y="41" width="136" height="17" uuid="271ba4d0-b5fb-418b-8e7a-f9b2fc19c7e8"/>
+				<reportElement x="225" y="41" width="155" height="17" uuid="271ba4d0-b5fb-418b-8e7a-f9b2fc19c7e8"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
@@ -265,14 +265,7 @@
 				<textFieldExpression><![CDATA[$R{jasper.po.lblquantity}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="109" y="0" width="72" height="20" uuid="f25b8d6a-f0cc-4846-a2d4-62f0519bd58f"/>
-				<textElement>
-					<font isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$R{jasper.po.lblvenditem}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="209" y="0" width="72" height="20" uuid="d5de8a00-b94f-4208-b9b4-00dcea491345"/>
+				<reportElement x="170" y="0" width="72" height="20" uuid="d5de8a00-b94f-4208-b9b4-00dcea491345"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
@@ -295,9 +288,9 @@
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="16" splitType="Stretch">
+		<band height="32" splitType="Stretch">
 			<textField>
-				<reportElement x="19" y="0" width="72" height="16" uuid="978682a3-4259-41c3-adae-54872ecfe90a"/>
+				<reportElement x="19" y="0" width="141" height="16" uuid="978682a3-4259-41c3-adae-54872ecfe90a"/>
 				<textFieldExpression><![CDATA[$F{pod_part}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.00">
@@ -309,15 +302,15 @@
 				<textFieldExpression><![CDATA[$F{pod_netprice}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="209" y="0" width="72" height="16" uuid="a33e94ca-e3f8-4f4f-9bd9-5152ed973656"/>
+				<reportElement x="170" y="0" width="168" height="16" uuid="a33e94ca-e3f8-4f4f-9bd9-5152ed973656"/>
 				<textFieldExpression><![CDATA[$F{it_desc}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="109" y="0" width="72" height="16" uuid="ee72a0da-c3b3-48c4-a45e-ef0e73f30c87"/>
-				<textFieldExpression><![CDATA[$F{pod_part}]]></textFieldExpression>
+				<reportElement x="19" y="16" width="141" height="16" uuid="ee72a0da-c3b3-48c4-a45e-ef0e73f30c87"/>
+				<textFieldExpression><![CDATA[$F{pod_vendpart}]]></textFieldExpression>
 			</textField>
 			<textField pattern="¤ #,##0.00">
-				<reportElement x="489" y="0" width="72" height="16" uuid="4d12e3fa-309d-4b3b-bef2-866f79abdd66"/>
+				<reportElement x="489" y="0" width="78" height="16" uuid="4d12e3fa-309d-4b3b-bef2-866f79abdd66"/>
 				<textFieldExpression><![CDATA[new Double($F{pod_ord_qty}.doubleValue() * $F{pod_netprice}.doubleValue())]]></textFieldExpression>
 			</textField>
 		</band>
@@ -328,7 +321,7 @@
 	<lastPageFooter>
 		<band height="28" splitType="Stretch">
 			<textField>
-				<reportElement x="19" y="8" width="109" height="20" uuid="b52b5abc-3057-4cf4-a3bd-2fd587288ada"/>
+				<reportElement x="19" y="8" width="209" height="20" uuid="b52b5abc-3057-4cf4-a3bd-2fd587288ada"/>
 				<textElement>
 					<font size="14"/>
 				</textElement>
@@ -339,7 +332,7 @@
 				<textFieldExpression><![CDATA[$R{jasper.po.lbltotalamount}]]></textFieldExpression>
 			</textField>
 			<textField pattern="¤ #,##0.00">
-				<reportElement x="438" y="0" width="100" height="20" uuid="378a8a9d-5625-4e24-8803-f36c873089fe"/>
+				<reportElement x="438" y="0" width="129" height="20" uuid="378a8a9d-5625-4e24-8803-f36c873089fe"/>
 				<textFieldExpression><![CDATA[$V{mysum}]]></textFieldExpression>
 			</textField>
 		</band>
