@@ -1979,7 +1979,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
         add(jTabbedPane1);
 
         jPanelSched.setBorder(javax.swing.BorderFactory.createTitledBorder("Schedule Releases"));
-        jPanelSched.setPreferredSize(new java.awt.Dimension(874, 627));
+        jPanelSched.setPreferredSize(new java.awt.Dimension(900, 627));
 
         tablesched.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -2000,7 +2000,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
             jPanelSchedLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelSchedLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 852, Short.MAX_VALUE))
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 878, Short.MAX_VALUE))
         );
         jPanelSchedLayout.setVerticalGroup(
             jPanelSchedLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2013,7 +2013,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
 
         jPanelMain.setBorder(javax.swing.BorderFactory.createTitledBorder("Order Maintenance"));
         jPanelMain.setName("panelmain"); // NOI18N
-        jPanelMain.setPreferredSize(new java.awt.Dimension(874, 627));
+        jPanelMain.setPreferredSize(new java.awt.Dimension(900, 627));
 
         jLabel76.setText("Key");
         jLabel76.setName("lblid"); // NOI18N
@@ -2180,7 +2180,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
                                     .addComponent(duedate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(ddtax, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addComponent(cbissourced))))
-                .addContainerGap(178, Short.MAX_VALUE))
+                .addContainerGap(191, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2515,7 +2515,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
                 .addGap(87, 87, 87))
             .addGroup(jPanelMainLayout.createSequentialGroup()
                 .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 823, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 836, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanelMainLayout.createSequentialGroup()
                         .addGap(474, 474, 474)
                         .addComponent(btprintorder)
@@ -2526,7 +2526,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btadd))
                     .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(39, Short.MAX_VALUE))
+                .addContainerGap(52, Short.MAX_VALUE))
         );
         jPanelMainLayout.setVerticalGroup(
             jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2583,7 +2583,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
 
         jPanelLines.setBorder(javax.swing.BorderFactory.createTitledBorder("Lines"));
         jPanelLines.setName("panellines"); // NOI18N
-        jPanelLines.setPreferredSize(new java.awt.Dimension(874, 627));
+        jPanelLines.setPreferredSize(new java.awt.Dimension(900, 627));
 
         btadditem.setText("Insert");
         btadditem.setName("btinsert"); // NOI18N
@@ -2991,7 +2991,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btsacdelete))
                     .addComponent(ddsactype, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 93, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 106, Short.MAX_VALUE)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 362, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -3089,7 +3089,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
                     .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jScrollPane8)
                     .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(48, Short.MAX_VALUE))
+                .addContainerGap(61, Short.MAX_VALUE))
         );
         jPanelLinesLayout.setVerticalGroup(
             jPanelLinesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

@@ -33,11 +33,14 @@ import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import static com.blueseer.adm.admData.addSiteMstr;
+import static com.blueseer.adm.admData.deleteSiteMstr;
+import static com.blueseer.adm.admData.getSiteMstr;
 import com.blueseer.adm.admData.site_mstr;
 import static com.blueseer.adm.admData.updateSiteMstr;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
@@ -50,7 +53,7 @@ import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import static com.blueseer.utl.BlueSeerUtils.lurb2;
 import com.blueseer.utl.DTData;
-import com.blueseer.utl.IBlueSeer;
+import com.blueseer.utl.IBlueSeerT;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -89,7 +92,7 @@ import javax.swing.SwingWorker;
  *
  * @author vaughnte
  */
-public class SiteMaint extends javax.swing.JPanel implements IBlueSeer {
+public class SiteMaint extends javax.swing.JPanel implements IBlueSeerT {
 
     // global variable declarations
                 boolean isLoad = false;
@@ -106,15 +109,15 @@ public class SiteMaint extends javax.swing.JPanel implements IBlueSeer {
 
     
       // interface functions implemented
-    public void executeTask(String x, String[] y) { 
+    public void executeTask(BlueSeerUtils.dbaction x, String[] y) { 
       
         class Task extends SwingWorker<String[], Void> {
        
           String type = "";
           String[] key = null;
           
-          public Task(String type, String[] key) { 
-              this.type = type;
+          public Task(BlueSeerUtils.dbaction type, String[] key) { 
+              this.type = type.name();
               this.key = key;
           } 
            
@@ -160,7 +163,6 @@ public class SiteMaint extends javax.swing.JPanel implements IBlueSeer {
            } else {
              initvars(null);  
            }
-           
             
             } catch (Exception e) {
                 MainFrame.bslog(e);
@@ -335,9 +337,9 @@ public class SiteMaint extends javax.swing.JPanel implements IBlueSeer {
         tbkey.requestFocus();
     }
     
-    public String[] setAction(int i) {
+    public void setAction(String[] x) {
         String[] m = new String[2];
-        if (i > 0) {
+        if (x[0].equals("0")) {
             m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
                    setPanelComponentState(this, true);
                    btadd.setEnabled(false);
@@ -347,10 +349,9 @@ public class SiteMaint extends javax.swing.JPanel implements IBlueSeer {
            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
                    tbkey.setForeground(Color.red); 
         }
-        return m;
     }
     
-    public boolean validateInput(String x) {
+    public boolean validateInput(dbaction x) {
         boolean b = true;
                
                 
@@ -378,7 +379,7 @@ public class SiteMaint extends javax.swing.JPanel implements IBlueSeer {
         btnew.setEnabled(true);
         btlookup.setEnabled(true);
          if (arg != null && arg.length > 0) {
-            executeTask("get",arg);
+            executeTask(dbaction.get,arg);
         } else {
             tbkey.setEnabled(true);
             tbkey.setEditable(true);
@@ -386,56 +387,25 @@ public class SiteMaint extends javax.swing.JPanel implements IBlueSeer {
         }
     }
         
-    public String[] getRecord(String[] x) {
-         String[] m = new String[2];
-        try {
-
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                
-                int i = 0;
-                res = st.executeQuery("select * from site_mstr where site_site = " + "'" + x[0] + "'" + ";");
-                while (res.next()) {
-                    i++;
-                    tbdesc.setText(res.getString("site_desc"));
-                    tbline1.setText(res.getString("site_line1"));
-                    tbline2.setText(res.getString("site_line2"));
-                    tbline3.setText(res.getString("site_line3"));
-                    tbcity.setText(res.getString("site_city"));
-                    ddstate.setSelectedItem(res.getString("site_state"));
-                    ddcountry.setSelectedItem(res.getString("site_country"));
-                    tbzip.setText(res.getString("site_zip"));
-                    tblogo.setText(res.getString("site_logo"));
-                    tb_iv_generic.setText(res.getString("site_iv_jasper"));
-                    tb_sh_generic.setText(res.getString("site_sh_jasper"));
-                    tb_po_generic.setText(res.getString("site_po_jasper"));
-                    tb_or_generic.setText(res.getString("site_or_jasper"));
-                    tb_pos_generic.setText(res.getString("site_pos_jasper"));
-                    tbkey.setText(x[0]);
-                }
-             
-               // set Action if Record found (i > 0)
-                m = setAction(i);
-                
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};  
-        }
-      return m;
+    public String[] getRecord(String[] key) {
+        site_mstr x = getSiteMstr(key);  
+        tbkey.setText(x.site_site());
+        tbdesc.setText(x.site_desc());
+        tbline1.setText(x.site_line1());
+        tbline2.setText(x.site_line2());
+        tbline3.setText(x.site_line3());
+        tbcity.setText(x.site_city());
+        ddstate.setSelectedItem(x.site_state());
+        ddcountry.setSelectedItem(x.site_country());
+        tbzip.setText(x.site_zip());
+        tblogo.setText(x.site_logo());
+        tb_iv_generic.setText(x.site_iv_jasper());
+        tb_sh_generic.setText(x.site_sh_jasper());
+        tb_po_generic.setText(x.site_po_jasper());
+        tb_or_generic.setText(x.site_or_jasper());
+        tb_pos_generic.setText(x.site_pos_jasper());
+        setAction(x.m());
+        return x.m();
     }
     
     public String[] addRecord(String[] x) {
@@ -452,38 +422,12 @@ public class SiteMaint extends javax.swing.JPanel implements IBlueSeer {
     String[] m = new String[2];
         boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
         if (proceed) {
-        try {
-
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                
-                   int i = st.executeUpdate("delete from site_mstr where site_site = " + "'" + tbkey.getText() + "'" + ";");
-                    if (i > 0) {
-                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
-                    initvars(null);
-                    }
-                } catch (SQLException s) {
-                 MainFrame.bslog(s); 
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordSQLError};  
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordConnError};
-        }
+         m = deleteSiteMstr(createRecord()); 
+         initvars(null);
         } else {
            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
         }
-     return m;
+         return m;
     }
    
     public site_mstr createRecord() {
@@ -903,27 +847,27 @@ public class SiteMaint extends javax.swing.JPanel implements IBlueSeer {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
-       if (! validateInput("updateRecord")) {
+       if (! validateInput(dbaction.update)) {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("update", new String[]{tbkey.getText()});
+        executeTask(dbaction.update, new String[]{tbkey.getText()});
     }//GEN-LAST:event_btupdateActionPerformed
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
-         if (! validateInput("addRecord")) {
+         if (! validateInput(dbaction.add)) {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("add", new String[]{tbkey.getText()});
+        executeTask(dbaction.add, new String[]{tbkey.getText()});
     }//GEN-LAST:event_btaddActionPerformed
 
     private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
-        if (! validateInput("deleteRecord")) {
+        if (! validateInput(dbaction.delete)) {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("delete" ,new String[]{tbkey.getText()});   
+        executeTask(dbaction.delete ,new String[]{tbkey.getText()});   
     }//GEN-LAST:event_btdeleteActionPerformed
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
@@ -931,7 +875,7 @@ public class SiteMaint extends javax.swing.JPanel implements IBlueSeer {
     }//GEN-LAST:event_btnewActionPerformed
 
     private void tbkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkeyActionPerformed
-        executeTask("get", new String[]{tbkey.getText()});
+        executeTask(dbaction.get, new String[]{tbkey.getText()});
     }//GEN-LAST:event_tbkeyActionPerformed
 
     private void btclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearActionPerformed

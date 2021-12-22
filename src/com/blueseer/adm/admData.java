@@ -146,6 +146,69 @@ public class admData {
         return m;
     }
     
+    public static site_mstr getSiteMstr(String[] x) {
+        site_mstr r = null;
+        String[] m = new String[2];
+        String sql = "select * from site_mstr where site_site = ? ;";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, x[0]);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new site_mstr(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new site_mstr(m, res.getString("site_site"), 
+                            res.getString("site_desc"),
+                            res.getString("site_line1"),
+                            res.getString("site_line2"),
+                            res.getString("site_line3"),
+                            res.getString("site_city"),
+                            res.getString("site_state"),
+                            res.getString("site_zip"),
+                            res.getString("site_country"),
+                            res.getString("site_phone"),
+                            res.getString("site_web"),
+                            res.getString("site_logo"),
+                            res.getString("site_iv_jasper"),
+                            res.getString("site_sh_jasper"),
+                            res.getString("site_sqename"),
+                            res.getString("site_sqephone"),
+                            res.getString("site_sqefax"),
+                            res.getString("site_sqeemail"),
+                            res.getString("site_po_jasper"),
+                            res.getString("site_or_jasper"),
+                            res.getString("site_pos_jasper")
+                        );
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new site_mstr(m);
+        }
+        return r;
+    }
+    
+    public static String[] deleteSiteMstr(site_mstr x) { 
+       String[] m = new String[2];
+        String sql = "delete from site_mstr where site_site = ?; ";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, x.site_site);
+        int rows = ps.executeUpdate();
+        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+    
+    
     public static String[] addUserMstr(user_mstr x) {
         String[] m = new String[2];
         String sqlSelect = "SELECT * FROM  user_mstr where user_id = ?";
