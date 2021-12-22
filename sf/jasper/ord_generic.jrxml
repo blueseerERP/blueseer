@@ -92,7 +92,7 @@ so_cust, so_create_date,  so_rmks, sod_po, sod_part, sod_custpart, sod_ord_qty, 
 				<imageExpression><![CDATA[new net.sf.jasperreports.components.barbecue.BarbecueRenderer(net.sourceforge.barbecue.BarcodeFactory.createCode39($F{sod_nbr}, false))]]></imageExpression>
 			</image>
 			<textField>
-				<reportElement x="369" y="-50" width="198" height="36" uuid="a7cde1bb-1086-48a2-9028-a66a015392fc"/>
+				<reportElement x="290" y="-60" width="277" height="36" uuid="a7cde1bb-1086-48a2-9028-a66a015392fc"/>
 				<textElement>
 					<font size="24"/>
 				</textElement>
@@ -124,49 +124,42 @@ so_cust, so_create_date,  so_rmks, sod_po, sod_part, sod_custpart, sod_ord_qty, 
 				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="81" y="16" width="100" height="11" uuid="780e4fa8-14ac-4057-92af-f71e667a90dc"/>
+				<reportElement x="21" y="16" width="149" height="11" uuid="780e4fa8-14ac-4057-92af-f71e667a90dc"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{cm_name}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="81" y="27" width="100" height="12" uuid="b9597315-e96a-483c-8c9a-753ff7bc0ac3"/>
+				<reportElement x="21" y="27" width="149" height="12" uuid="b9597315-e96a-483c-8c9a-753ff7bc0ac3"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{cm_line1}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="81" y="39" width="136" height="17" uuid="86590877-3129-4043-a34e-8fca5e40d2ad"/>
+				<reportElement x="21" y="39" width="149" height="17" uuid="86590877-3129-4043-a34e-8fca5e40d2ad"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{bill_csz}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="268" y="2" width="62" height="14" uuid="7f2e5f07-875b-4e3f-a987-31c29fa78c80"/>
+				<reportElement x="186" y="2" width="114" height="14" uuid="7f2e5f07-875b-4e3f-a987-31c29fa78c80"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{jasper.order.lblshipto}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="281" y="16" width="100" height="11" uuid="8337b8f0-509d-4326-9311-206093ec714c"/>
+				<reportElement x="199" y="16" width="188" height="11" uuid="8337b8f0-509d-4326-9311-206093ec714c"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{cms_name}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="281" y="27" width="100" height="10" uuid="92f0edcc-29a8-4a03-9eb5-df01dc9d576b"/>
-				<textElement>
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{cms_line1}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="281" y="39" width="136" height="17" uuid="271ba4d0-b5fb-418b-8e7a-f9b2fc19c7e8"/>
+				<reportElement x="199" y="39" width="188" height="17" uuid="271ba4d0-b5fb-418b-8e7a-f9b2fc19c7e8"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
@@ -237,7 +230,7 @@ so_cust, so_create_date,  so_rmks, sod_po, sod_part, sod_custpart, sod_ord_qty, 
 				<textFieldExpression><![CDATA[$R{jasper.order.lblmisc}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="66" y="3" width="62" height="17" uuid="7f96ddbc-e93b-48d6-bf59-0c83dd6c298a"/>
+				<reportElement x="6" y="3" width="124" height="17" uuid="7f96ddbc-e93b-48d6-bf59-0c83dd6c298a"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
@@ -252,7 +245,7 @@ so_cust, so_create_date,  so_rmks, sod_po, sod_part, sod_custpart, sod_ord_qty, 
 				<textFieldExpression><![CDATA[$F{so_rmks}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="280" y="27" width="100" height="12" uuid="68158bb2-f68a-4df8-b71e-53d1d13b26a8"/>
+				<reportElement x="198" y="27" width="189" height="12" uuid="68158bb2-f68a-4df8-b71e-53d1d13b26a8"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
@@ -267,7 +260,7 @@ so_cust, so_create_date,  so_rmks, sod_po, sod_part, sod_custpart, sod_ord_qty, 
 	<columnHeader>
 		<band height="26" splitType="Stretch">
 			<textField>
-				<reportElement x="19" y="0" width="72" height="20" uuid="525fc8e7-9c4e-437a-baf3-4878b9decf1d"/>
+				<reportElement x="0" y="0" width="100" height="20" uuid="525fc8e7-9c4e-437a-baf3-4878b9decf1d"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
@@ -277,7 +270,7 @@ so_cust, so_create_date,  so_rmks, sod_po, sod_part, sod_custpart, sod_ord_qty, 
 				<reportElement x="0" y="19" width="555" height="1" uuid="c9e36006-c5df-41ef-96b1-529b4e6ddb52"/>
 			</line>
 			<textField>
-				<reportElement x="109" y="0" width="72" height="20" uuid="81998038-e104-4d3b-92a6-33b4974ea7da"/>
+				<reportElement x="109" y="0" width="141" height="20" uuid="81998038-e104-4d3b-92a6-33b4974ea7da"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
@@ -323,7 +316,7 @@ so_cust, so_create_date,  so_rmks, sod_po, sod_part, sod_custpart, sod_ord_qty, 
 	<detail>
 		<band height="21" splitType="Stretch">
 			<textField>
-				<reportElement x="19" y="0" width="72" height="16" uuid="978682a3-4259-41c3-adae-54872ecfe90a"/>
+				<reportElement x="0" y="0" width="100" height="16" uuid="978682a3-4259-41c3-adae-54872ecfe90a"/>
 				<textFieldExpression><![CDATA[$F{sod_part}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.00">
