@@ -403,7 +403,7 @@ where shd_id =  $P{myid}]]>
 				<textFieldExpression><![CDATA[$F{shd_custpart}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="264" y="0" width="94" height="16" uuid="edbe7124-d60b-42b0-a896-8522f841a299"/>
+				<reportElement x="266" y="0" width="86" height="16" uuid="edbe7124-d60b-42b0-a896-8522f841a299"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>

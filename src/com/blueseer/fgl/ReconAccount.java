@@ -331,7 +331,7 @@ public class ReconAccount extends javax.swing.JPanel {
                 
               } catch (SQLException s) {
                   MainFrame.bslog(s);
-                  bsmf.MainFrame.show(getMessageTag(1016,this.getClass().getEnclosingMethod().getName()));
+                  bsmf.MainFrame.show(getMessageTag(1016,Thread.currentThread().getStackTrace()[1].getMethodName()));
             } finally {
                 if (res != null) {
                     res.close();
@@ -402,7 +402,7 @@ public class ReconAccount extends javax.swing.JPanel {
                 
               } catch (SQLException s) {
                   MainFrame.bslog(s);
-                  bsmf.MainFrame.show(getMessageTag(1016,this.getClass().getEnclosingMethod().getName()));
+                  bsmf.MainFrame.show(getMessageTag(1016,Thread.currentThread().getStackTrace()[1].getMethodName()));
             } finally {
                 if (res != null) {
                     res.close();
@@ -462,7 +462,7 @@ public class ReconAccount extends javax.swing.JPanel {
                 this.repaint();
 
             } catch (SQLException s) {
-                bsmf.MainFrame.show(getMessageTag(1016,this.getClass().getEnclosingMethod().getName()));
+                bsmf.MainFrame.show(getMessageTag(1016,Thread.currentThread().getStackTrace()[1].getMethodName()));
             } finally {
                 if (res != null) {
                     res.close();
@@ -1121,7 +1121,7 @@ try {
                 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016,this.getClass().getEnclosingMethod().getName()));
+                bsmf.MainFrame.show(getMessageTag(1016,Thread.currentThread().getStackTrace()[1].getMethodName()));
             } finally {
                 if (res != null) {
                     res.close();
@@ -1245,7 +1245,7 @@ try {
                     }
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016,this.getClass().getEnclosingMethod().getName()));
+                bsmf.MainFrame.show(getMessageTag(1016,Thread.currentThread().getStackTrace()[1].getMethodName()));
             } finally {
                 if (res != null) {
                     res.close();

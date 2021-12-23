@@ -404,7 +404,7 @@
 				<reportElement x="338" y="0" width="100" height="20" uuid="21d9fb28-5824-4c0b-9114-913f90eb34e1"/>
 				<textFieldExpression><![CDATA[$R{jasper.ps.lbltotalqty}]]></textFieldExpression>
 			</textField>
-			<textField pattern="¤ #,##0.00">
+			<textField pattern="###.00">
 				<reportElement x="438" y="0" width="100" height="20" uuid="378a8a9d-5625-4e24-8803-f36c873089fe"/>
 				<textFieldExpression><![CDATA[$V{mysum}]]></textFieldExpression>
 			</textField>

@@ -398,52 +398,50 @@ public class fglData {
        try {
              
             Connection con = DriverManager.getConnection(url + db, user, pass);
-        try {
-                Statement st = con.createStatement();
-       
-        st.executeUpdate("insert into gl_tran "
-                        + "( glt_acct, glt_cc, glt_effdate, glt_amt, glt_base_amt, glt_curr, glt_base_curr, glt_ref, glt_site, glt_type, glt_desc )"
-                        + " values ( " + "'" + acct_cr + "'" + ","
-                        + "'" + cc_cr + "'" + ","
-                        + "'" + date + "'" + ","
-                        + "'" + currformatDoubleUS(-1 * amt) + "'" + ","
-                        + "'" + currformatDoubleUS(-1 * baseamt) + "'" + ","        
-                        + "'" + curr + "'" + ","
-                        + "'" + basecurr + "'" + ","
-                        + "'" + ref + "'" + ","        
-                        + "'" + site + "'" + ","
-                        + "'" + type + "'"+ ","
-                        + "'" + desc + "'"
-                        + " )"
-                        + ";" );
-             
-        //      bsmf.MainFrame.show(acct_dr.toString() + "/" + cc_dr + "/" + date + "/" + amt.toString());
-              st.executeUpdate( "insert into gl_tran "
-                        + "(glt_acct, glt_cc, glt_effdate, glt_amt, glt_base_amt, glt_curr, glt_base_curr, glt_ref, glt_site, glt_type, glt_desc )"
-                        + " values ( " + "'" + acct_dr + "'" + ","
-                        + "'" + cc_dr + "'" + ","
-                        + "'" + date + "'" + ","
-                        + "'" + currformatDoubleUS(amt) + "'" + ","
-                        + "'" + currformatDoubleUS(baseamt) + "'" + ","  
-                        + "'" + curr + "'" + ","
-                        + "'" + basecurr + "'" + ","        
-                         + "'" + ref + "'" + ","
-                        + "'" + site + "'" + ","
-                        + "'" + type + "'"+ ","
-                        + "'" + desc + "'"
-                        + ")"
-                        + ";"
-                        );
-         
-        } catch (SQLException s) {
-            MainFrame.bslog(s);
-                bsmf.MainFrame.show("Cannot Write GL");
+            String sqlInsert = "insert into gl_tran "
+                            + "( glt_acct, glt_cc, glt_effdate, glt_amt, glt_base_amt, glt_curr, glt_base_curr, glt_ref, glt_site, glt_type, glt_desc ) " +
+                              " values (?,?,?,?,?,?,?,?,?,?,?) ";   
+            PreparedStatement ps = con.prepareStatement(sqlInsert); 
+            try {
+                ps.setString(1, acct_cr);
+                ps.setString(2, cc_cr);
+                ps.setString(3, date);
+                ps.setString(4, currformatDoubleUS(-1 * amt));
+                ps.setString(5, currformatDoubleUS(-1 * baseamt));
+                ps.setString(6, curr);
+                ps.setString(7, basecurr);
+                ps.setString(8, ref);
+                ps.setString(9, site);
+                ps.setString(10, type);
+                ps.setString(11, desc);
+                ps.executeUpdate();
+
+                ps.setString(1, acct_dr);
+                ps.setString(2, cc_dr);
+                ps.setString(3, date);
+                ps.setString(4, currformatDoubleUS(amt));
+                ps.setString(5, currformatDoubleUS(baseamt));
+                ps.setString(6, curr);
+                ps.setString(7, basecurr);
+                ps.setString(8, ref);
+                ps.setString(9, site);
+                ps.setString(10, type);
+                ps.setString(11, desc);
+                ps.executeUpdate();
+
+                ps.close();
+
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+            }  finally {
+                    if (ps != null) {
+                        ps.close();
+                    }
+                    con.close();
             }
-              
-        con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
-               }  
+        }  
        } // if amount does not equal 0
           
       }
@@ -478,42 +476,39 @@ public class fglData {
          
           String rndamt = "";
           
-       if ( amt != 0 ) {  
-        Statement st = bscon.createStatement();
-        st.executeUpdate("insert into gl_tran "
-                        + "( glt_acct, glt_cc, glt_effdate, glt_amt, glt_base_amt, glt_curr, glt_base_curr, glt_ref, glt_site, glt_type, glt_desc )"
-                        + " values ( " + "'" + acct_cr + "'" + ","
-                        + "'" + cc_cr + "'" + ","
-                        + "'" + date + "'" + ","
-                        + "'" + currformatDoubleUS(-1 * amt) + "'" + ","
-                        + "'" + currformatDoubleUS(-1 * baseamt) + "'" + ","        
-                        + "'" + curr + "'" + ","
-                        + "'" + basecurr + "'" + ","
-                        + "'" + ref + "'" + ","        
-                        + "'" + site + "'" + ","
-                        + "'" + type + "'"+ ","
-                        + "'" + desc + "'"
-                        + " )"
-                        + ";" );
-             
-        //      bsmf.MainFrame.show(acct_dr.toString() + "/" + cc_dr + "/" + date + "/" + amt.toString());
-              st.executeUpdate( "insert into gl_tran "
-                        + "(glt_acct, glt_cc, glt_effdate, glt_amt, glt_base_amt, glt_curr, glt_base_curr, glt_ref, glt_site, glt_type, glt_desc )"
-                        + " values ( " + "'" + acct_dr + "'" + ","
-                        + "'" + cc_dr + "'" + ","
-                        + "'" + date + "'" + ","
-                        + "'" + currformatDoubleUS(amt) + "'" + ","
-                        + "'" + currformatDoubleUS(baseamt) + "'" + ","  
-                        + "'" + curr + "'" + ","
-                        + "'" + basecurr + "'" + ","        
-                         + "'" + ref + "'" + ","
-                        + "'" + site + "'" + ","
-                        + "'" + type + "'"+ ","
-                        + "'" + desc + "'"
-                        + ")"
-                        + ";"
-                        );
-       st.close();       
+       if ( amt != 0 ) {
+        String sqlInsert = "insert into gl_tran "
+                        + "( glt_acct, glt_cc, glt_effdate, glt_amt, glt_base_amt, glt_curr, glt_base_curr, glt_ref, glt_site, glt_type, glt_desc ) " +
+                          " values (?,?,?,?,?,?,?,?,?,?,?) ";   
+        PreparedStatement ps = bscon.prepareStatement(sqlInsert);  
+            ps.setString(1, acct_cr);
+            ps.setString(2, cc_cr);
+            ps.setString(3, date);
+            ps.setString(4, currformatDoubleUS(-1 * amt));
+            ps.setString(5, currformatDoubleUS(-1 * baseamt));
+            ps.setString(6, curr);
+            ps.setString(7, basecurr);
+            ps.setString(8, ref);
+            ps.setString(9, site);
+            ps.setString(10, type);
+            ps.setString(11, desc);
+            ps.executeUpdate();
+            
+            ps.setString(1, acct_dr);
+            ps.setString(2, cc_dr);
+            ps.setString(3, date);
+            ps.setString(4, currformatDoubleUS(amt));
+            ps.setString(5, currformatDoubleUS(baseamt));
+            ps.setString(6, curr);
+            ps.setString(7, basecurr);
+            ps.setString(8, ref);
+            ps.setString(9, site);
+            ps.setString(10, type);
+            ps.setString(11, desc);
+            ps.executeUpdate();
+       
+            ps.close();
+       
        } // if amount does not equal 0
       }
           

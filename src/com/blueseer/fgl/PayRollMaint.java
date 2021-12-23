@@ -437,7 +437,7 @@ public class PayRollMaint extends javax.swing.JPanel {
               
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016,this.getClass().getEnclosingMethod().getName()));
+                bsmf.MainFrame.show(getMessageTag(1016,Thread.currentThread().getStackTrace()[1].getMethodName()));
             } finally {
                 if (res != null) {
                     res.close();
@@ -502,7 +502,7 @@ public class PayRollMaint extends javax.swing.JPanel {
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016,this.getClass().getEnclosingMethod().getName()));
+                bsmf.MainFrame.show(getMessageTag(1016,Thread.currentThread().getStackTrace()[1].getMethodName()));
             } finally {
                 if (res != null) {
                     res.close();
@@ -595,7 +595,7 @@ public class PayRollMaint extends javax.swing.JPanel {
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016,this.getClass().getEnclosingMethod().getName()));
+                bsmf.MainFrame.show(getMessageTag(1016,Thread.currentThread().getStackTrace()[1].getMethodName()));
             } finally {
                 if (res != null) {
                     res.close();
@@ -672,7 +672,7 @@ public class PayRollMaint extends javax.swing.JPanel {
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016,this.getClass().getEnclosingMethod().getName()));
+                bsmf.MainFrame.show(getMessageTag(1016,Thread.currentThread().getStackTrace()[1].getMethodName()));
             } finally {
                 if (res != null) {
                     res.close();
@@ -734,7 +734,7 @@ public class PayRollMaint extends javax.swing.JPanel {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 bsmf.MainFrame.show(getMessageTag(1016,this.getClass().getEnclosingMethod().getName()));
+                 bsmf.MainFrame.show(getMessageTag(1016,Thread.currentThread().getStackTrace()[1].getMethodName()));
             } finally {
                 if (res != null) {
                     res.close();
@@ -1671,7 +1671,7 @@ public class PayRollMaint extends javax.swing.JPanel {
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
-                 bsmf.MainFrame.show(getMessageTag(1016,this.getClass().getEnclosingMethod().getName()));
+                 bsmf.MainFrame.show(getMessageTag(1016,Thread.currentThread().getStackTrace()[1].getMethodName()));
                  
             } finally {
                 if (res != null) {
@@ -1782,10 +1782,10 @@ public class PayRollMaint extends javax.swing.JPanel {
            }
         } catch (SmbException ex) {
             ex.printStackTrace();
-            bsmf.MainFrame.show(getMessageTag(1055, this.getClass().getEnclosingMethod().getName()));
+            bsmf.MainFrame.show(getMessageTag(1055, Thread.currentThread().getStackTrace()[1].getMethodName()));
         } catch (IOException ex) {
             ex.printStackTrace();
-            bsmf.MainFrame.show(getMessageTag(1056, this.getClass().getEnclosingMethod().getName()));
+            bsmf.MainFrame.show(getMessageTag(1056, Thread.currentThread().getStackTrace()[1].getMethodName()));
         }
     }//GEN-LAST:event_btnachaActionPerformed
 

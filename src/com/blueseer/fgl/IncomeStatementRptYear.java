@@ -630,7 +630,7 @@ public class IncomeStatementRptYear extends javax.swing.JPanel {
                     sales[y - 1] = (-1 * sales[y - 1]);
                 } // y
 
-                mymodel.addRow(new Object[] { getClassLabelTag("lblsales", this.getClass().getEnclosingMethod().getName()), sales[0], sales[1], sales[2], sales[3], sales[4], sales[5], sales[6], sales[7], sales[8], sales[9], sales[10], sales[11]});
+                mymodel.addRow(new Object[] { getClassLabelTag("lblsales", Thread.currentThread().getStackTrace()[1].getMethodName()), sales[0], sales[1], sales[2], sales[3], sales[4], sales[5], sales[6], sales[7], sales[8], sales[9], sales[10], sales[11]});
 
                 
                 
@@ -664,14 +664,14 @@ public class IncomeStatementRptYear extends javax.swing.JPanel {
                     cogs[y - 1] = OVData.getGLICAddIn(includeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), cogs[y - 1]);
                 }
                 } // y
-                mymodel.addRow(new Object[] { getClassLabelTag("lblcogs", this.getClass().getEnclosingMethod().getName()), cogs[0], cogs[1], cogs[2], cogs[3], cogs[4], cogs[5], cogs[6], cogs[7], cogs[8], cogs[9], cogs[10], cogs[11]});
+                mymodel.addRow(new Object[] { getClassLabelTag("lblcogs", Thread.currentThread().getStackTrace()[1].getMethodName()), cogs[0], cogs[1], cogs[2], cogs[3], cogs[4], cogs[5], cogs[6], cogs[7], cogs[8], cogs[9], cogs[10], cogs[11]});
 
 
                 // Standard Margin = Sales - Cogs
                 for (int y = 1; y <= 12; y++) {
                 stdmargin[y -1] = sales[y -1] - cogs[y -1];
                 }
-                mymodel.addRow(new Object[] { getClassLabelTag("lblstdmargin", this.getClass().getEnclosingMethod().getName()), stdmargin[0], stdmargin[1], stdmargin[2], stdmargin[3], stdmargin[4], stdmargin[5], stdmargin[6], stdmargin[7], stdmargin[8], stdmargin[9], stdmargin[10], stdmargin[11]});
+                mymodel.addRow(new Object[] { getClassLabelTag("lblstdmargin", Thread.currentThread().getStackTrace()[1].getMethodName()), stdmargin[0], stdmargin[1], stdmargin[2], stdmargin[3], stdmargin[4], stdmargin[5], stdmargin[6], stdmargin[7], stdmargin[8], stdmargin[9], stdmargin[10], stdmargin[11]});
 
 
                
@@ -705,7 +705,7 @@ public class IncomeStatementRptYear extends javax.swing.JPanel {
                    mtlvar[y - 1] = OVData.getGLICAddIn(includeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), mtlvar[y - 1]);
                 }
                  } // y
-                mymodel.addRow(new Object[] { getClassLabelTag("lblmtlvar", this.getClass().getEnclosingMethod().getName()), mtlvar[0], mtlvar[1], mtlvar[2], mtlvar[3], mtlvar[4], mtlvar[5], mtlvar[6], mtlvar[7], mtlvar[8], mtlvar[9], mtlvar[10], mtlvar[11]});
+                mymodel.addRow(new Object[] { getClassLabelTag("lblmtlvar", Thread.currentThread().getStackTrace()[1].getMethodName()), mtlvar[0], mtlvar[1], mtlvar[2], mtlvar[3], mtlvar[4], mtlvar[5], mtlvar[6], mtlvar[7], mtlvar[8], mtlvar[9], mtlvar[10], mtlvar[11]});
                 
 
                 // Labor Variance
@@ -737,7 +737,7 @@ public class IncomeStatementRptYear extends javax.swing.JPanel {
                     lbrvar[y - 1] = OVData.getGLICAddIn(includeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), lbrvar[y - 1]);
                 }
                  } // y
-                 mymodel.addRow(new Object[] { getClassLabelTag("lbllbrvar", this.getClass().getEnclosingMethod().getName()), lbrvar[0], lbrvar[1], lbrvar[2], lbrvar[3], lbrvar[4], lbrvar[5], lbrvar[6], lbrvar[7], lbrvar[8], lbrvar[9], lbrvar[10], lbrvar[11]});
+                 mymodel.addRow(new Object[] { getClassLabelTag("lbllbrvar", Thread.currentThread().getStackTrace()[1].getMethodName()), lbrvar[0], lbrvar[1], lbrvar[2], lbrvar[3], lbrvar[4], lbrvar[5], lbrvar[6], lbrvar[7], lbrvar[8], lbrvar[9], lbrvar[10], lbrvar[11]});
                
                 
                
@@ -774,7 +774,7 @@ public class IncomeStatementRptYear extends javax.swing.JPanel {
                 }
                  } // y
                
-                mymodel.addRow(new Object[] { getClassLabelTag("lblbdnvar", this.getClass().getEnclosingMethod().getName()), bdnvar[0], bdnvar[1], bdnvar[2], bdnvar[3], bdnvar[4], bdnvar[5], bdnvar[6], bdnvar[7], bdnvar[8], bdnvar[9], bdnvar[10], bdnvar[11]});
+                mymodel.addRow(new Object[] { getClassLabelTag("lblbdnvar", Thread.currentThread().getStackTrace()[1].getMethodName()), bdnvar[0], bdnvar[1], bdnvar[2], bdnvar[3], bdnvar[4], bdnvar[5], bdnvar[6], bdnvar[7], bdnvar[8], bdnvar[9], bdnvar[10], bdnvar[11]});
                
                 
                
@@ -783,7 +783,7 @@ public class IncomeStatementRptYear extends javax.swing.JPanel {
                 for (int y = 1; y <= 12; y++) {
                 mfggrossmargin[y - 1] = stdmargin[y - 1] - mtlvar[y - 1] - lbrvar[y - 1] - bdnvar[y - 1];
                 } // y
-                mymodel.addRow(new Object[] { getClassLabelTag("lblmfggrossmargin", this.getClass().getEnclosingMethod().getName()), mfggrossmargin[0], mfggrossmargin[1], mfggrossmargin[2], mfggrossmargin[3], mfggrossmargin[4], mfggrossmargin[5], mfggrossmargin[6], mfggrossmargin[7], mfggrossmargin[8], mfggrossmargin[9], mfggrossmargin[10], mfggrossmargin[11]});
+                mymodel.addRow(new Object[] { getClassLabelTag("lblmfggrossmargin", Thread.currentThread().getStackTrace()[1].getMethodName()), mfggrossmargin[0], mfggrossmargin[1], mfggrossmargin[2], mfggrossmargin[3], mfggrossmargin[4], mfggrossmargin[5], mfggrossmargin[6], mfggrossmargin[7], mfggrossmargin[8], mfggrossmargin[9], mfggrossmargin[10], mfggrossmargin[11]});
 
                 
                 //ProdEng
@@ -815,14 +815,14 @@ public class IncomeStatementRptYear extends javax.swing.JPanel {
                     prodeng[y - 1] = OVData.getGLICAddIn(includeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), prodeng[y - 1]);
                 }
                 } // y
-                mymodel.addRow(new Object[] { getClassLabelTag("lblprodengineering", this.getClass().getEnclosingMethod().getName()), prodeng[0], prodeng[1], prodeng[2], prodeng[3], prodeng[4], prodeng[5], prodeng[6], prodeng[7], prodeng[8], prodeng[9], prodeng[10], prodeng[11]});
+                mymodel.addRow(new Object[] { getClassLabelTag("lblprodengineering", Thread.currentThread().getStackTrace()[1].getMethodName()), prodeng[0], prodeng[1], prodeng[2], prodeng[3], prodeng[4], prodeng[5], prodeng[6], prodeng[7], prodeng[8], prodeng[9], prodeng[10], prodeng[11]});
 
 
                 // Gross Margin
                 for (int y = 1; y <= 12; y++) {
                 grossmargin[y - 1] = mfggrossmargin[y - 1] - prodeng[y - 1];
                 } // y
-                mymodel.addRow(new Object[] { getClassLabelTag("lblgrossmargin", this.getClass().getEnclosingMethod().getName()), grossmargin[0], grossmargin[1], grossmargin[2], grossmargin[3], grossmargin[4], grossmargin[5], grossmargin[6], grossmargin[7], grossmargin[8], grossmargin[9], grossmargin[10], grossmargin[11]});
+                mymodel.addRow(new Object[] { getClassLabelTag("lblgrossmargin", Thread.currentThread().getStackTrace()[1].getMethodName()), grossmargin[0], grossmargin[1], grossmargin[2], grossmargin[3], grossmargin[4], grossmargin[5], grossmargin[6], grossmargin[7], grossmargin[8], grossmargin[9], grossmargin[10], grossmargin[11]});
 
 
                 //Marketing and sales
@@ -854,7 +854,7 @@ public class IncomeStatementRptYear extends javax.swing.JPanel {
                     marketingandsales[y - 1] = OVData.getGLICAddIn(includeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), marketingandsales[y - 1]);
                 }
                 } // y
-                mymodel.addRow(new Object[] { getClassLabelTag("lblsalesmarketing", this.getClass().getEnclosingMethod().getName()), marketingandsales[0], marketingandsales[1], marketingandsales[2], marketingandsales[3], marketingandsales[4], marketingandsales[5], marketingandsales[6], marketingandsales[7], marketingandsales[8], marketingandsales[9], marketingandsales[10], marketingandsales[11]});
+                mymodel.addRow(new Object[] { getClassLabelTag("lblsalesmarketing", Thread.currentThread().getStackTrace()[1].getMethodName()), marketingandsales[0], marketingandsales[1], marketingandsales[2], marketingandsales[3], marketingandsales[4], marketingandsales[5], marketingandsales[6], marketingandsales[7], marketingandsales[8], marketingandsales[9], marketingandsales[10], marketingandsales[11]});
 
 
                 //Gen and Admin
@@ -885,14 +885,14 @@ public class IncomeStatementRptYear extends javax.swing.JPanel {
                     generalandadmin[y - 1] = OVData.getGLICAddIn(includeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), generalandadmin[y - 1]);
                 }
                 } // y
-              mymodel.addRow(new Object[] { getClassLabelTag("lblgeneraladmin", this.getClass().getEnclosingMethod().getName()), generalandadmin[0], generalandadmin[1], generalandadmin[2], generalandadmin[3], generalandadmin[4], generalandadmin[5], generalandadmin[6], generalandadmin[7], generalandadmin[8], generalandadmin[9], generalandadmin[10], generalandadmin[11]});
+              mymodel.addRow(new Object[] { getClassLabelTag("lblgeneraladmin", Thread.currentThread().getStackTrace()[1].getMethodName()), generalandadmin[0], generalandadmin[1], generalandadmin[2], generalandadmin[3], generalandadmin[4], generalandadmin[5], generalandadmin[6], generalandadmin[7], generalandadmin[8], generalandadmin[9], generalandadmin[10], generalandadmin[11]});
 
 
                 // Profit Before Allocation
                 for (int y = 1; y <= 12; y++) {
                 profitbeforealloc[y - 1] = grossmargin[y - 1] - marketingandsales[y - 1] - generalandadmin[y - 1];
                 } // y
-                mymodel.addRow(new Object[] { getClassLabelTag("lblprofitbeforealloc", this.getClass().getEnclosingMethod().getName()), profitbeforealloc[0], profitbeforealloc[1], profitbeforealloc[2], profitbeforealloc[3], profitbeforealloc[4], profitbeforealloc[5], profitbeforealloc[6], profitbeforealloc[7], profitbeforealloc[8], profitbeforealloc[9], profitbeforealloc[10], profitbeforealloc[11]});
+                mymodel.addRow(new Object[] { getClassLabelTag("lblprofitbeforealloc", Thread.currentThread().getStackTrace()[1].getMethodName()), profitbeforealloc[0], profitbeforealloc[1], profitbeforealloc[2], profitbeforealloc[3], profitbeforealloc[4], profitbeforealloc[5], profitbeforealloc[6], profitbeforealloc[7], profitbeforealloc[8], profitbeforealloc[9], profitbeforealloc[10], profitbeforealloc[11]});
 
 
                 //Interest
@@ -923,7 +923,7 @@ public class IncomeStatementRptYear extends javax.swing.JPanel {
                     interest[y - 1] = OVData.getGLICAddIn(includeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), interest[y - 1]);
                 }
                 } // y
-                mymodel.addRow(new Object[] { getClassLabelTag("lblinterest", this.getClass().getEnclosingMethod().getName()), interest[0], interest[1], interest[2], interest[3], interest[4], interest[5], interest[6], interest[7], interest[8], interest[9], interest[10], interest[11]});
+                mymodel.addRow(new Object[] { getClassLabelTag("lblinterest", Thread.currentThread().getStackTrace()[1].getMethodName()), interest[0], interest[1], interest[2], interest[3], interest[4], interest[5], interest[6], interest[7], interest[8], interest[9], interest[10], interest[11]});
 
 
                 //Allocations
@@ -954,7 +954,7 @@ public class IncomeStatementRptYear extends javax.swing.JPanel {
                     alloc[y - 1] = OVData.getGLICAddIn(includeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), alloc[y - 1]);
                 }
                 } // y
-                mymodel.addRow(new Object[] { getClassLabelTag("lblallocations", this.getClass().getEnclosingMethod().getName()), alloc[0], alloc[1], alloc[2], alloc[3], alloc[4], alloc[5], alloc[6], alloc[7], alloc[8], alloc[9], alloc[10], alloc[11]});
+                mymodel.addRow(new Object[] { getClassLabelTag("lblallocations", Thread.currentThread().getStackTrace()[1].getMethodName()), alloc[0], alloc[1], alloc[2], alloc[3], alloc[4], alloc[5], alloc[6], alloc[7], alloc[8], alloc[9], alloc[10], alloc[11]});
 
 
                 //Management Fees
@@ -985,7 +985,7 @@ public class IncomeStatementRptYear extends javax.swing.JPanel {
                     mgtfees[y - 1] = OVData.getGLICAddIn(includeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), mgtfees[y - 1]);
                 }
                 } // y
-               mymodel.addRow(new Object[] { getClassLabelTag("lblmanagementfees", this.getClass().getEnclosingMethod().getName()), mgtfees[0], mgtfees[1], mgtfees[2], mgtfees[3], mgtfees[4], mgtfees[5], mgtfees[6], mgtfees[7], mgtfees[8], mgtfees[9], mgtfees[10], mgtfees[11]});
+               mymodel.addRow(new Object[] { getClassLabelTag("lblmanagementfees", Thread.currentThread().getStackTrace()[1].getMethodName()), mgtfees[0], mgtfees[1], mgtfees[2], mgtfees[3], mgtfees[4], mgtfees[5], mgtfees[6], mgtfees[7], mgtfees[8], mgtfees[9], mgtfees[10], mgtfees[11]});
 
 
                 //Bank Fees
@@ -1016,7 +1016,7 @@ public class IncomeStatementRptYear extends javax.swing.JPanel {
                     bankfees[y - 1] = OVData.getGLICAddIn(includeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), bankfees[y - 1]);
                 }
                 } // y
-                 mymodel.addRow(new Object[] { getClassLabelTag("lblbankfees", this.getClass().getEnclosingMethod().getName()), bankfees[0], bankfees[1], bankfees[2], bankfees[3], bankfees[4], bankfees[5], bankfees[6], bankfees[7], bankfees[8], bankfees[9], bankfees[10], bankfees[11]});
+                 mymodel.addRow(new Object[] { getClassLabelTag("lblbankfees", Thread.currentThread().getStackTrace()[1].getMethodName()), bankfees[0], bankfees[1], bankfees[2], bankfees[3], bankfees[4], bankfees[5], bankfees[6], bankfees[7], bankfees[8], bankfees[9], bankfees[10], bankfees[11]});
 
 
                 //Other income/expense
@@ -1047,14 +1047,14 @@ public class IncomeStatementRptYear extends javax.swing.JPanel {
                     other[y - 1] = OVData.getGLICAddIn(includeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), other[y - 1]);
                 }
                 } // y
-                mymodel.addRow(new Object[] { getClassLabelTag("lblotherincomeexpense", this.getClass().getEnclosingMethod().getName()), other[0], other[1], other[2], other[3], other[4], other[5], other[6], other[7], other[8], other[9], other[10], other[11]});
+                mymodel.addRow(new Object[] { getClassLabelTag("lblotherincomeexpense", Thread.currentThread().getStackTrace()[1].getMethodName()), other[0], other[1], other[2], other[3], other[4], other[5], other[6], other[7], other[8], other[9], other[10], other[11]});
 
 
                 // Operational Profit before taxes
                 for (int y = 1; y <= 12; y++) {
                 opprofitbeforetaxes[y - 1] = profitbeforealloc[y - 1] -interest[y - 1] - alloc[y - 1] - mgtfees[y - 1] - bankfees[y - 1] - other[y - 1];
                 } // y
-                mymodel.addRow(new Object[] { getClassLabelTag("lbloperationbeforetaxes", this.getClass().getEnclosingMethod().getName()), opprofitbeforetaxes[0], opprofitbeforetaxes[1], opprofitbeforetaxes[2], opprofitbeforetaxes[3], opprofitbeforetaxes[4], opprofitbeforetaxes[5], opprofitbeforetaxes[6], opprofitbeforetaxes[7], opprofitbeforetaxes[8], opprofitbeforetaxes[9], opprofitbeforetaxes[10], opprofitbeforetaxes[11]});
+                mymodel.addRow(new Object[] { getClassLabelTag("lbloperationbeforetaxes", Thread.currentThread().getStackTrace()[1].getMethodName()), opprofitbeforetaxes[0], opprofitbeforetaxes[1], opprofitbeforetaxes[2], opprofitbeforetaxes[3], opprofitbeforetaxes[4], opprofitbeforetaxes[5], opprofitbeforetaxes[6], opprofitbeforetaxes[7], opprofitbeforetaxes[8], opprofitbeforetaxes[9], opprofitbeforetaxes[10], opprofitbeforetaxes[11]});
 
 
                 //depreciation
@@ -1085,7 +1085,7 @@ public class IncomeStatementRptYear extends javax.swing.JPanel {
                     depreciation[y - 1] = OVData.getGLICAddIn(includeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), depreciation[y - 1]);
                 }
                 } // y
-                mymodel.addRow(new Object[] { getClassLabelTag("lbldepreciation", this.getClass().getEnclosingMethod().getName()), depreciation[0], depreciation[1], depreciation[2], depreciation[3], depreciation[4], depreciation[5], depreciation[6], depreciation[7], depreciation[8], depreciation[9], depreciation[10], depreciation[11]});
+                mymodel.addRow(new Object[] { getClassLabelTag("lbldepreciation", Thread.currentThread().getStackTrace()[1].getMethodName()), depreciation[0], depreciation[1], depreciation[2], depreciation[3], depreciation[4], depreciation[5], depreciation[6], depreciation[7], depreciation[8], depreciation[9], depreciation[10], depreciation[11]});
 
 
 
@@ -1101,7 +1101,7 @@ public class IncomeStatementRptYear extends javax.swing.JPanel {
                 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, this.getClass().getEnclosingMethod().getName()));
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             } finally {
                 if (res != null) {
                     res.close();
