@@ -8,3 +8,5 @@ patch=0
 # First release of 6.0
 patch=1
 # Bug fix(s) 1 - 16 included on version 6.0
+patch=2
+# Bug fix(s) 17-18 ...18 hotfix
