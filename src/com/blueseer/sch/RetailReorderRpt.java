@@ -58,18 +58,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
-import net.sf.jasperreports.engine.JasperExportManager;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.data.JRTableModelDataSource;
-import net.sf.jasperreports.view.JasperViewer;
 import static bsmf.MainFrame.checkperms; 
 import static bsmf.MainFrame.db;
-import static bsmf.MainFrame.driver;
-import static bsmf.MainFrame.menumap;
-import static bsmf.MainFrame.mydialog;
-import static bsmf.MainFrame.panelmap;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
@@ -81,9 +71,6 @@ import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.sql.Connection;
-import java.text.DecimalFormatSymbols;
-import java.util.Arrays;
-import java.util.Locale;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
@@ -103,7 +90,7 @@ public class RetailReorderRpt extends javax.swing.JPanel {
                         new String[]{
                             getGlobalColumnTag("select"), 
                             getGlobalColumnTag("item"), 
-                            getGlobalColumnTag("desc"), 
+                            getGlobalColumnTag("description"), 
                             getGlobalColumnTag("leadtime"), 
                             getGlobalColumnTag("qoh"), 
                             getGlobalColumnTag("uqoh"), 
@@ -128,13 +115,13 @@ public class RetailReorderRpt extends javax.swing.JPanel {
     
       DefaultTableModel demandmodel = new DefaultTableModel(new Object[][]{},
                         new String[]{getGlobalColumnTag("select"), 
-                            getGlobalColumnTag("ordernumber"), 
+                            getGlobalColumnTag("order"), 
                             getGlobalColumnTag("customer"), 
                             getGlobalColumnTag("name"), 
                             getGlobalColumnTag("po"), 
                             getGlobalColumnTag("duedate"), 
-                            getGlobalColumnTag("ordqty"), 
-                            getGlobalColumnTag("allocatedqty")})
+                            getGlobalColumnTag("orderqty"), 
+                            getGlobalColumnTag("allocated")})
              {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -152,7 +139,7 @@ public class RetailReorderRpt extends javax.swing.JPanel {
                             getGlobalColumnTag("vendor"), 
                             getGlobalColumnTag("name"), 
                             getGlobalColumnTag("po"), 
-                            getGlobalColumnTag("podate"), 
+                            getGlobalColumnTag("date"), 
                             getGlobalColumnTag("duedate"), 
                             getGlobalColumnTag("qty"), 
                             getGlobalColumnTag("recvqty")})
