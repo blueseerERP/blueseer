@@ -87,7 +87,7 @@ FreightMaint,,com.blueseer.ctr.FreightMaint,JMenuItem,frtm
 GenCodeBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,genb
 InventoryAdjustment,,com.blueseer.inv.InventoryMaint,JMenuItem,inva
 ItemMaint,,com.blueseer.inv.ItemMaint,JMenuItem,item
-ItemBrowse,Item Browse primary,com.blueseer.utl.ReportPanel,JMenuItem,itemb
+ItemBrowse,Item Browse,com.blueseer.inv.ItemBrowse,JMenuItem,itemb
 ItemRoutingRpt,,com.blueseer.inv.ItemMastRoutingRpt,JMenuItem,itrr
 LocationBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,locb
 LocationMaint,,com.blueseer.inv.LocationMaint,JMenuItem,locm
@@ -200,6 +200,7 @@ LabelBrowse,,com.blueseer.lbl.LabelBrowse,JMenuItem,lblb
 TransBrowse,,com.blueseer.prd.TransBrowse,JMenuItem,tran
 RetailReorderRpt,,com.blueseer.sch.RetailReorderRpt,JMenuItem,reor
 EDIPartnerMaint,,com.blueseer.edi.EDIPartnerMaint,JMenuItem,edtp
+EDIPartnerBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,edib
 EDIDocumentMaint,,com.blueseer.edi.EDIDocumentMaint,JMenuItem,eddm
 EDIPartnerDocMaint,,com.blueseer.edi.EDIPartnerDocMaint,JMenuItem,edpd
 EDIPartnerDocBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,edpb
@@ -239,7 +240,7 @@ ProdByWeekFGDollars,,com.blueseer.utl.ChartView,JMenuItem,prdr3
 DiscreteOrderPerWeekUnits,,com.blueseer.utl.ChartView,JMenuItem,orc1
 DiscreteOrderPerWeekDollars,,com.blueseer.utl.ChartView,JMenuItem,orc2
 ARPaymentBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,arpb
-VendBrowse,,com.blueseer.vdr.VendMstrBrowse,JMenuItem,venb
+VendBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,venb
 VendMaint,,com.blueseer.vdr.VendMaint,JMenuItem,venm
 ShipPerWeekDollarsChart,,com.blueseer.utl.ChartView,JMenuItem,shpr1
 ShipUnconfirm,,com.blueseer.shp.ShipUnConfirm,JMenuItem,uncf

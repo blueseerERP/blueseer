@@ -32,10 +32,11 @@ VendorMenu,VendControl,8,JMenuItem,Lieferantenkontrolle,,,,1,1
 EDIMenu,EDILoad,1,JMenuItem,EDI-Laden,,,,1,1
 EDIMenu,EDILog,2,JMenuItem,EDI-Protokoll,,,,1,1
 EDIMenu,EDIPartnerMaint,3,JMenuItem,EDI-Partnerpflege,,,,1,1
-EDIMenu,EDIPartnerDocMaint,4,JMenuItem,Partnertransaktionspflege,,,,1,1
-EDIMenu,EDIPartnerDocBrowse,5,JMenuItem,EDI-Partner-Transaktionen durchsuchen,,1,,1,1
-EDIMenu,EDIDocumentMaint,6,JMenuItem,Pflege der Dokumentenerkennung,,,,1,1
-EDIMenu,EDIControl,7,JMenuItem,EDI-Steuerung,,,,1,1
+EDIMenu,EDIPartnerBrowse,4,JMenuItem,EDI Partner durchsuchen,,,,1,1
+EDIMenu,EDIPartnerDocMaint,5,JMenuItem,Partnertransaktionspflege,,,,1,1
+EDIMenu,EDIPartnerDocBrowse,6,JMenuItem,EDI-Partner-Transaktionen durchsuchen,,1,,1,1
+EDIMenu,EDIDocumentMaint,7,JMenuItem,Pflege der Dokumentenerkennung,,,,1,1
+EDIMenu,EDIControl,8,JMenuItem,EDI-Steuerung,,,,1,1
 LabelMenu,LabelsContGeneric,1,JMenuItem,Behälteretiketten,,,,1,1
 LabelMenu,AddrLabel,2,JMenuItem,Adressetiketten,,,,1,1
 LabelMenu,LabelBrowse,3,JMenuItem,Label-Durchsuchen,,1,,1,1

@@ -194,6 +194,9 @@ public int[] mywidth;
         if (arg[0].equals("CustReport1")) {
              mymodel = DTData.getCustAddrInfoAll();
         }
+        if (arg[0].equals("VendBrowse")) {
+             mymodel = DTData.getVendorAll();
+        }
          if (arg[0].equals("MenuBrowse")) {
              mymodel = DTData.getMenusAll();
         }
@@ -215,7 +218,7 @@ public int[] mywidth;
          if (arg[0].equals("PayProfileBrowse")) {
              mymodel = DTData.getPayProfileAll(); 
         }
-        if (arg[0].equals("EDITPBrowse")) {
+        if (arg[0].equals("EDIPartnerBrowse")) {
              mymodel = DTData.getEDITPAll();
         }
         if (arg[0].equals("EDITPDocBrowse")) {
@@ -290,7 +293,7 @@ public int[] mywidth;
         setBackground(new java.awt.Color(0, 102, 204));
         setLayout(new java.awt.BorderLayout());
 
-        jScrollPaneReport.setBackground(new java.awt.Color(0, 102, 204));
+        jScrollPaneReport.setBorder(null);
         jScrollPaneReport.setPreferredSize(new java.awt.Dimension(500, 600));
 
         TableReport.setAutoCreateRowSorter(true);
@@ -431,6 +434,12 @@ public int[] mywidth;
                args = new String[]{TableReport.getValueAt(row, 1).toString()};
                reinitpanels(mypanel, true, args);
             }
+            if (TableReport.getName() != null && TableReport.getName().compareTo("VendBrowse") == 0) {
+                 mypanel = "VendMaint";
+                if (! checkperms(mypanel)) { return; }
+               args = new String[]{TableReport.getValueAt(row, 1).toString()};
+               reinitpanels(mypanel, true, args);
+            }
             if (TableReport.getName() != null && TableReport.getName().compareTo("TermsBrowse") == 0) {
                 mypanel = "TermsMaint";
                 if (! checkperms(mypanel)) { return; }
@@ -485,8 +494,8 @@ public int[] mywidth;
                args = new String[]{TableReport.getValueAt(row, 1).toString()};
                reinitpanels(mypanel, true, args);
             } 
-            if (TableReport.getName() != null && TableReport.getName().compareTo("EDITPBrowse") == 0) {
-                 mypanel = "EDITPMaint";
+            if (TableReport.getName() != null && TableReport.getName().compareTo("EDIPartnerBrowse") == 0) {
+                 mypanel = "EDIPartnerMaint";
                 if (! checkperms(mypanel)) { return; }
               args = new String[]{TableReport.getValueAt(row, 1).toString()};
                reinitpanels(mypanel, true, args);

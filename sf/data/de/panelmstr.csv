@@ -109,6 +109,7 @@ com.blueseer.inv.InventoryCtrl,,1
 com.blueseer.inv.InventoryMaint,,1
 com.blueseer.inv.ItemLevelMaint,,1
 com.blueseer.inv.ItemMaint,,1
+com.blueseer.inv.ItemBrowse,,1
 com.blueseer.inv.ItemMastRoutingRpt,,1
 com.blueseer.inv.JobPostScan,,1
 com.blueseer.inv.LocationMaint,,1

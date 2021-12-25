@@ -6563,9 +6563,8 @@ return mymodel;
                   new String[]{getGlobalColumnTag("select"), 
                       getGlobalColumnTag("id"), 
                       getGlobalColumnTag("name"), 
-                      getGlobalColumnTag("contact"), 
-                      getGlobalColumnTag("website"), 
-                      getGlobalColumnTag("phone")})
+                      getGlobalColumnTag("alias"), 
+                      getGlobalColumnTag("default")})
                   {
                   @Override  
                   public Class getColumnClass(int col) {  
@@ -6582,13 +6581,12 @@ return mymodel;
         ResultSet res = null;
         try{
 
-                  res = st.executeQuery("select * from editp_mstr order by editp_id;");
+                  res = st.executeQuery("select * from edp_partner inner join edpd_partner on edpd_parent = edp_id order by edp_id;");
                 while (res.next()) {
-                    mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("editp_id"),
-                               res.getString("editp_name"),
-                               res.getString("editp_contact"),
-                               res.getString("editp_web"),
-                               res.getString("editp_helpdesk")
+                    mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("edp_id"),
+                               res.getString("edp_desc"),
+                               res.getString("edpd_alias"),
+                               res.getString("edpd_default")
                     });
                 }
        }
@@ -6707,6 +6705,56 @@ return mymodel;
 
      }
 
+    public static DefaultTableModel getVendorAll() {
+          javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                  new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("code"), getGlobalColumnTag("name"), getGlobalColumnTag("addr1"), getGlobalColumnTag("city"), getGlobalColumnTag("state"), getGlobalColumnTag("zip")})
+                  {
+                  @Override  
+                  public Class getColumnClass(int col) {  
+                    if (col == 0)       
+                        return ImageIcon.class;  
+                    else return String.class;  //other columns accept String values  
+                  }  
+                    }; 
+
+  try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try{     
+                res = st.executeQuery("SELECT vd_addr, vd_name, vd_line1, vd_city, vd_state, vd_zip " +
+                    "from vd_mstr order by vd_addr ;");
+
+            while (res.next()) {
+
+                mymodel.addRow(new Object[]{ BlueSeerUtils.clickflag,
+                    res.getString("vd_addr"),
+                    res.getString("vd_name"),
+                     res.getString("vd_line1"),
+                      res.getString("vd_city"),
+                       res.getString("vd_state"),
+                        res.getString("vd_zip")
+                        });
+            }
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+          } finally {
+           if (res != null) res.close();
+           if (st != null) st.close();
+           if (con != null) con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+
+    }
+    return mymodel;
+
+     }
+
+    
     public static DefaultTableModel getFreightOrderQuotesTable(String order) {
           javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                   new String[]{getGlobalColumnTag("select"), 
