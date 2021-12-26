@@ -431,6 +431,9 @@ public class ItemBrowse extends javax.swing.JPanel {
 
     private void btRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRunActionPerformed
 
+        if (ddfromitem.getSelectedItem() == null || ddtoitem.getSelectedItem() == null) {
+            return;
+        }
     
 try {
             Connection con = DriverManager.getConnection(url + db, user, pass);
@@ -497,7 +500,7 @@ try {
     }//GEN-LAST:event_btRunActionPerformed
 
     private void btcsvActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcsvActionPerformed
-        if (tablereport != null)
+        if (tablereport != null && mymodel.getRowCount() > 0)
         OVData.exportCSV(tablereport);
     }//GEN-LAST:event_btcsvActionPerformed
 

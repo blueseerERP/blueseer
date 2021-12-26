@@ -109,7 +109,9 @@ public int[] mywidth;
         java.util.Date now = new java.util.Date();
        
         
-         
+        if (arg == null || arg.length < 1) {
+            return;
+        } 
          
         if (arg[0].equals("ReqPendingApproval")) {
              mymodel = DTData.getReqByApprover(bsmf.MainFrame.userid);
@@ -361,6 +363,12 @@ public int[] mywidth;
             }  
             if (TableReport.getName() != null && TableReport.getName().compareTo("ItemBrowse") == 0) {
                 mypanel = "ItemMaint";
+                if (! checkperms(mypanel)) { return; }
+               args = new String[]{TableReport.getValueAt(row, 1).toString()};
+               reinitpanels(mypanel, true, args);
+            }  
+            if (TableReport.getName() != null && TableReport.getName().compareTo("UserBrowse") == 0) {
+                mypanel = "UserMaint";
                 if (! checkperms(mypanel)) { return; }
                args = new String[]{TableReport.getValueAt(row, 1).toString()};
                reinitpanels(mypanel, true, args);

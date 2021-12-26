@@ -5421,7 +5421,14 @@ public class DTData {
     public static DefaultTableModel getUserAll() {
 
        javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                   new String[]{getGlobalColumnTag("userid"), getGlobalColumnTag("lastname"), getGlobalColumnTag("firstname"), getGlobalColumnTag("phone"), getGlobalColumnTag("cell"), getGlobalColumnTag("email")});
+                   new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("userid"), getGlobalColumnTag("lastname"), getGlobalColumnTag("firstname"), getGlobalColumnTag("phone"), getGlobalColumnTag("cell"), getGlobalColumnTag("email")}){
+                  @Override  
+                  public Class getColumnClass(int col) {  
+                    if (col == 0)       
+                        return ImageIcon.class;  
+                    else return String.class;  //other columns accept String values  
+                  }  
+                    };
 
       try{
 
@@ -5435,6 +5442,7 @@ public class DTData {
             while (res.next()) {
 
                 mymodel.addRow(new Object[]{
+                    BlueSeerUtils.clickflag,
                     res.getString("user_id"),
                     res.getString("user_lname"),
                     res.getString("user_fname"),

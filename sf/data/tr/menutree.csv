@@ -32,7 +32,7 @@ VendorMenu,VendControl,8,JMenuItem,Satıcı Kontrolü,,,,1,1
 EDIMenu,EDILoad,1,JMenuItem,EDI Yükü,,,,1,1
 EDIMenu,EDILog,2,JMenuItem,EDI Günlüğü,,,,1,1
 EDIMenu,EDIPartnerMaint,3,JMenuItem,EDI İş Ortağı Bakımı,,,,1,1
-EDIMenu,EDIPartnerBrowse,4,JMenuItem,EDI İş Ortağı Gözat,,,,1,1
+EDIMenu,EDIPartnerBrowse,4,JMenuItem,EDI İş Ortağı Gözat,,1,,1,1
 EDIMenu,EDIPartnerDocMaint,5,JMenuItem,İş Ortağı İşlem Bakımı,,,,1,1
 EDIMenu,EDIPartnerDocBrowse,6,JMenuItem,EDI İş Ortağı İşlemine Gözat,,1,,1,1
 EDIMenu,EDIDocumentMaint,7,JMenuItem,Belge Tanıma Bakımı,,,,1,1
