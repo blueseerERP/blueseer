@@ -156,7 +156,7 @@ public class fglData {
         String sqlSelect = "select * from bk_mstr where bk_id = ?";
         String sqlInsert = "insert into bk_mstr (bk_id, bk_site, bk_desc, bk_acct, bk_cur, " +
                 " bk_active, bk_route, bk_assignedID)  " +
-                " values (?,?,?,?,?); "; 
+                " values (?,?,?,?,?,?,?,?); "; 
         try (Connection con = DriverManager.getConnection(url + db, user, pass);
              PreparedStatement ps = con.prepareStatement(sqlSelect);) {
              ps.setString(1, x.id);
@@ -187,7 +187,7 @@ public class fglData {
     public static String[] updateBankMstr(BankMstr x) {
       String[] m = new String[2];
         String sql = "update bk_mstr set bk_site = ?, bk_desc = ?, bk_acct = ?, bk_cur = ?, " +
-                " bk_active = ?, bk_route = ?, bk_assignedID = ? where ac_id = ? ";
+                " bk_active = ?, bk_route = ?, bk_assignedID = ? where bk_id = ? ";
         try (Connection con = DriverManager.getConnection(url + db, user, pass);
 	PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, x.site);
@@ -241,7 +241,7 @@ public class fglData {
                             res.getString("bk_desc"),
                             res.getString("bk_acct"),
                             res.getString("bk_route"),
-                            res.getString("bk_assignID"),
+                            res.getString("bk_assignedID"),
                             res.getString("bk_cur"),    
                             res.getString("bk_active")
                         );
