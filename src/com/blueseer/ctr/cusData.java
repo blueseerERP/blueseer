@@ -423,10 +423,7 @@ public class cusData {
             } else {
             m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists};    
             }
-          } catch (SQLException s) {
-	       MainFrame.bslog(s);
-               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
-          }
+          } 
         } catch (SQLException s) {
 	       MainFrame.bslog(s);
                m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
@@ -986,13 +983,12 @@ public class cusData {
     public static String[] getCustInfo(String cust) {
            // get billto specific data
             // aracct, arcc, currency, bank, terms, carrier, onhold, site
-            String[] custinfo = new String[]{"","","","","","","", ""};
-         try{
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                res = st.executeQuery("select cm_ar_acct, cm_ar_cc, cm_curr, cm_bank, cm_terms, cm_carrier, cm_onhold, cm_site from cm_mstr where cm_code = " + "'" + cust + "'" + ";" );
+        String[] custinfo = new String[]{"","","","","","","", ""};
+        String sql = "select cm_ar_acct, cm_ar_cc, cm_curr, cm_bank, cm_terms, cm_carrier, cm_onhold, cm_site from cm_mstr where cm_code = ?;";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, cust);
+             try (ResultSet res = ps.executeQuery();) {
                while (res.next()) {
                custinfo[0] = res.getString("cm_ar_acct");
                custinfo[1] = res.getString("cm_ar_cc");
@@ -1004,20 +1000,9 @@ public class cusData {
                custinfo[7] = res.getString("cm_site");                   
                }
             }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
         }
-        catch (Exception e){
-            MainFrame.bslog(e);
+        catch (SQLException s){
+            MainFrame.bslog(s);
         }
         return custinfo;
     }
