@@ -125,12 +125,8 @@ public class EDI {
             
               */
                for (int i = 0; i < 38; i++) {
-                    if (i == 35 || i == 36 || i== 37 ||
-                         i == 9 || i == 10 || i == 11 ) {
-                        controlarray[i] = "0";
-                    } else {
-                    controlarray[i] = "";
-                    }
+                   controlarray[i] = (i == 35 || i == 36 || i == 37 ||
+                           i == 9 || i == 10 || i == 11) ? "0" : "";
                 }
                 return controlarray;
     }
@@ -342,13 +338,9 @@ public class EDI {
             Integer[] k = (Integer[])x[0];
           //  String doctype = (String)x[1];
           //  String docid = (String)x[2];
+                  
+         isInSet = (! allowed.contains((String)x[1])) ? false : true;
          
-         
-         if (! allowed.contains((String)x[1])) {
-             isInSet = false;
-         } else {
-             isInSet = true;
-         }
          m[2] = (String)x[1]; // set doctype here
          m[3] = c[0]; // set tradeid here
          if (isInSet) {
