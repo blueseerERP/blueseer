@@ -17252,38 +17252,6 @@ MainFrame.bslog(e);
         MainFrame.bslog(e);
     }
   }
-
-    public static Integer getSOMaxLine(String order) {
-      int myreturn = -1;
-      try {
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-             res = st.executeQuery("select max(sod_line) as sod_line from sod_det where sod_nbr = " + "'" + order + "'" 
-                     + " ;");
-           while (res.next()) {
-               myreturn = res.getInt("sod_line");
-           }
-
-        } catch (SQLException s) {
-            MainFrame.bslog(s);
-        } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-    } catch (Exception e) {
-        MainFrame.bslog(e);
-    }
-      return myreturn;
-  }
-
-    
     
     public static boolean isInvCtrlSerialize() {
    boolean myreturn = false;
