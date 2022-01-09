@@ -23,6 +23,8 @@ foreach ($line in $filecontent) {
 $jaronly = "blueseer.jaronly.zip"
 rm $wip\$jaronly
 compress-archive -update -path ..\dist\blueseer.jar -destinationpath $wip\$jaronly
+compress-archive -update -path ..\.patch -destinationpath $wip\$jaronly
+compress-archive -update -path instructions.txt -destinationpath $wip\$jaronly
 
 
 rm blueseer.patch.*.zip

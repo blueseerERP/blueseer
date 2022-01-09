@@ -1,0 +1,16 @@
+These instructions are for the jarfileonly zip file.   This is an easier patch
+install for core code changes that are specific to the application itself (the
+core blueseer.jar file).
+
+There are three files in the jarfileonly zip file, including this
+instructions.txt file.   
+
+1)  extract the blueseer.jar file from the zip and overwrite the
+BlueSeer/dist/blueseer.jar file with the extracted file.
+
+2)  extract the .patch file from the zip and overwrite the BlueSeer/.patch
+file with the extracted file.
+
+3)  Restart the application
+
+You're done.
