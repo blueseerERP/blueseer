@@ -1,8 +1,8 @@
-These instructions are for the jarfileonly zip file.   This is an easier patch
+These instructions are for the jaronly zip file.   This is an easier patch
 install for core code changes that are specific to the application itself (the
 core blueseer.jar file).
 
-There are three files in the jarfileonly zip file, including this
+There are three files in the blueseer.jaronly.zip file, including this
 instructions.txt file.   
 
 1)  extract the blueseer.jar file from the zip and overwrite the
