@@ -681,7 +681,7 @@ public class invData {
 
     public static String[] addRoutingMstr(wf_mstr x) {
         String[] m = new String[2];
-        String sqlSelect = "SELECT * FROM  wf_mstr where wf_id = ?";
+        String sqlSelect = "SELECT * FROM  wf_mstr where wf_id = ? and wf_op = ?";
         String sqlInsert = "insert into wf_mstr (wf_id, wf_desc, wf_site, "
                         + " wf_op, wf_assert, wf_op_desc, wf_cell, " +
                           " wf_setup_hours, wf_run_hours ) " 
@@ -689,6 +689,7 @@ public class invData {
         try (Connection con = DriverManager.getConnection(url + db, user, pass);
              PreparedStatement ps = con.prepareStatement(sqlSelect);) {
              ps.setString(1, x.wf_id);
+             ps.setString(2, x.wf_op);
           try (ResultSet res = ps.executeQuery();
                PreparedStatement psi = con.prepareStatement(sqlInsert);) {  
             if (! res.isBeforeFirst()) {
@@ -720,20 +721,20 @@ public class invData {
     public static String[] updateRoutingMstr(wf_mstr x) {
         String[] m = new String[2];
         String sql = "update wf_mstr set wf_desc = ?, wf_site = ?, "
-                        + " wf_op = ?, wf_assert = ?, wf_op_desc = ?, wf_cell = ?, " +
+                        + " wf_assert = ?, wf_op_desc = ?, wf_cell = ?, " +
                           " wf_setup_hours = ?, wf_run_hours = ? " 
-                        + " where wf_id = ? ;"; 
+                        + " where wf_id = ? and wf_op = ? ;"; 
          try (Connection con = DriverManager.getConnection(url + db, user, pass);
 	PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setString(9, x.wf_id);
+            ps.setString(8, x.wf_id);
+            ps.setString(9, x.wf_op);
             ps.setString(1, x.wf_desc);
             ps.setString(2, x.wf_site);
-            ps.setString(3, x.wf_op);
-            ps.setString(4, x.wf_assert);
-            ps.setString(5, x.wf_op_desc);
-            ps.setString(6, x.wf_cell);
-            ps.setString(7, x.wf_setup_hours);
-            ps.setString(8, x.wf_run_hours);
+            ps.setString(3, x.wf_assert);
+            ps.setString(4, x.wf_op_desc);
+            ps.setString(5, x.wf_cell);
+            ps.setString(6, x.wf_setup_hours);
+            ps.setString(7, x.wf_run_hours);
             int rows = ps.executeUpdate();
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
         } catch (SQLException s) {
