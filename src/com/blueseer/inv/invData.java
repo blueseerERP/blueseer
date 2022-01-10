@@ -1386,7 +1386,7 @@ public class invData {
                     myarray.add(arr); 
                     }
 
-                    res = st.executeQuery("select wf_id from wf_mstr order by wf_id ;" );
+                    res = st.executeQuery("select distinct wf_id from wf_mstr order by wf_id ;" );
                     while (res.next()) {
                     String[] arr = new String[]{"routing",res.getString("wf_id")};
                     myarray.add(arr); 
