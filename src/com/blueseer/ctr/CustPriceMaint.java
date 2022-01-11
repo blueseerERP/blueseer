@@ -47,6 +47,7 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import com.blueseer.fgl.fglData;
 import com.blueseer.inv.invData;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsformat;
@@ -231,7 +232,7 @@ public class CustPriceMaint extends javax.swing.JPanel {
         }
         
           ddcurr.removeAllItems();
-        ArrayList<String> mycurr = OVData.getCurrlist();
+        ArrayList<String> mycurr = fglData.getCurrlist();
         for (String code : mycurr) {
             ddcurr.addItem(code);
         }

@@ -52,6 +52,7 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import com.blueseer.fgl.fglData;
 import static com.blueseer.hrm.hrmData.addEmployeeMstr;
 import static com.blueseer.hrm.hrmData.deleteEmployeeMstr;
 import com.blueseer.hrm.hrmData.emp_exception;
@@ -427,7 +428,7 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeerT {
          
         dddept.removeAllItems();
         ArrayList<String> mylist = new ArrayList();
-        mylist = OVData.getdeptidlist();
+        mylist = fglData.getdeptidlist();
         for (String dept : mylist) {
             dddept.addItem(dept);
         }

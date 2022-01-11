@@ -29,6 +29,7 @@ package com.blueseer.far;
 import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.tags;
+import com.blueseer.fgl.fglData;
 import com.blueseer.shp.shpData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
@@ -328,7 +329,7 @@ public class InvoiceMaint extends javax.swing.JPanel {
        
        
         ddcurr.removeAllItems();
-        ArrayList<String> curr = OVData.getCurrlist();
+        ArrayList<String> curr = fglData.getCurrlist();
         for (int i = 0; i < curr.size(); i++) {
             ddcurr.addItem(curr.get(i));
         }

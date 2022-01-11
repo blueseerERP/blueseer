@@ -27,6 +27,7 @@ SOFTWARE.
 package com.blueseer.prd;
 
 import static bsmf.MainFrame.tags;
+import com.blueseer.fgl.fglData;
 import com.blueseer.inv.invData;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
@@ -169,7 +170,7 @@ public class ScrapMaint extends javax.swing.JPanel {
         }
         
         if (ddcell.getItemCount() == 0) {
-      ArrayList cells = OVData.getdeptidlist();
+      ArrayList cells = fglData.getdeptidlist();
     //    ArrayList cells = OVData.getdeptidlist();
         for (int i = 0; i < cells.size(); i++) {
             ddcell.addItem(cells.get(i));

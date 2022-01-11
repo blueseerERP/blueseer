@@ -33,6 +33,7 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import com.blueseer.fgl.fglData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
@@ -385,7 +386,7 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
         ddvend.setSelectedIndex(0);
           
         dddept.removeAllItems();
-        ArrayList mydept = OVData.getdeptidlist();
+        ArrayList mydept = fglData.getdeptidlist();
         for (int i = 0; i < mydept.size(); i++) {
             dddept.addItem(mydept.get(i));
         }  

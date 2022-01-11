@@ -2230,7 +2230,73 @@ public class fglData {
          }
        
         
-    
+     
+    public static ArrayList getCurrlist() {
+        ArrayList myarray = new ArrayList();
+        try {
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+                res = st.executeQuery("select cur_id from cur_mstr ;");
+                while (res.next()) {
+                    myarray.add(res.getString("cur_id"));
+
+                }
+
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                    con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return myarray;
+
+    }
+
+    public static ArrayList getdeptidlist() {
+        ArrayList myarray = new ArrayList();
+        try {
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+                res = st.executeQuery("select dept_id from dept_mstr ;");
+                while (res.next()) {
+                    myarray.add(res.getString("dept_id"));
+
+                }
+
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                    con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return myarray;
+
+    }
+
     
     
     public record AcctMstr(String[] m, String id, String desc, String type, String currency, String cbdisplay) {

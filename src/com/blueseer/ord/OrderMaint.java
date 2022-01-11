@@ -37,6 +37,7 @@ import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.ctr.cusData;
+import com.blueseer.fgl.fglData;
 import com.blueseer.inv.invData;
 import static com.blueseer.inv.invData.getItemQOHTotal;
 import static com.blueseer.ord.ordData.addOrderTransaction;
@@ -508,7 +509,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
         ddcurr.removeAllItems();
          ddcurr.insertItemAt("", 0);
          ddcurr.setSelectedIndex(0);
-        mylist = OVData.getCurrlist();
+        mylist = fglData.getCurrlist();
         for (String code : mylist) {
             ddcurr.addItem(code);
         }

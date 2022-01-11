@@ -35,6 +35,7 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import com.blueseer.fgl.fglData;
 import com.blueseer.inv.invData;
 import com.blueseer.ord.ordData;
 import static com.blueseer.pur.purData.addPOTransaction;
@@ -413,7 +414,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeer {
         ddcurr.removeAllItems();
          ddcurr.insertItemAt("", 0);
          ddcurr.setSelectedIndex(0);
-        mylist = OVData.getCurrlist();
+        mylist = fglData.getCurrlist();
         for (String code : mylist) {
             ddcurr.addItem(code);
         }

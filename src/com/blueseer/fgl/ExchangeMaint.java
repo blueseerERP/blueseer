@@ -194,7 +194,7 @@ public class ExchangeMaint extends javax.swing.JPanel {
           ratetable.setModel(exchangemodel);
           tbbasecode.setText(OVData.getDefaultCurrency());
           ddforeign.removeAllItems();
-           ArrayList<String> foreign_curr = OVData.getCurrlist();
+           ArrayList<String> foreign_curr = fglData.getCurrlist();
            for (String fc : foreign_curr) {
                if (! tbbasecode.getText().toUpperCase().equals(fc.toUpperCase())) {  // do not add base currency
                ddforeign.addItem(fc);

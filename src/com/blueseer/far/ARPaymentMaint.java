@@ -358,7 +358,7 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
         ddsite.setSelectedItem(OVData.getDefaultSite());
         
         ddcurr.removeAllItems();
-        ArrayList<String> curr = OVData.getCurrlist();
+        ArrayList<String> curr = fglData.getCurrlist();
         for (int i = 0; i < curr.size(); i++) {
             ddcurr.addItem(curr.get(i));
         }

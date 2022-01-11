@@ -215,7 +215,7 @@ public class GLTranMaint extends javax.swing.JPanel {
         ddcc.setSelectedItem(OVData.getDefaultCC());
        
         ddcurr.removeAllItems();
-        ArrayList cur = OVData.getCurrlist();
+        ArrayList cur = fglData.getCurrlist();
         for (int i = 0; i < cur.size(); i++) {
             ddcurr.addItem(cur.get(i));
         } 

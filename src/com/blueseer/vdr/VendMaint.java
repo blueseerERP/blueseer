@@ -33,6 +33,7 @@ import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.ctr.cusData;
+import com.blueseer.fgl.fglData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
@@ -356,7 +357,7 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeer {
         }
         
         ddcurr.removeAllItems();
-        ArrayList<String> curr = OVData.getCurrlist();
+        ArrayList<String> curr = fglData.getCurrlist();
         for (int i = 0; i < curr.size(); i++) {
             ddcurr.addItem(curr.get(i));
         }
