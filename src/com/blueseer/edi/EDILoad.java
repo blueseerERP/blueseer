@@ -29,6 +29,7 @@ package com.blueseer.edi;
  *
  * @author vaughnte
  */
+import static bsmf.MainFrame.tags;
 import com.blueseer.utl.EDData;
 import com.blueseer.utl.OVData;
 import java.io.*;
@@ -36,6 +37,8 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import jcifs.smb.NtlmPasswordAuthentication;
 import jcifs.smb.SmbException;
 import jcifs.smb.SmbFile;
@@ -55,6 +58,7 @@ public static void main(String args[]) {
                 }
             }
             bsmf.MainFrame.setConfig();
+            tags = ResourceBundle.getBundle("resources.bs", Locale.getDefault());
             String inDir = EDData.getEDIInDir();
             String inArch = EDData.getEDIInArch(); 
             String ErrorDir = EDData.getEDIErrorDir(); 
