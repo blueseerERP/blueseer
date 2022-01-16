@@ -31,6 +31,7 @@ package com.blueseer.edi;
  */
 import static bsmf.MainFrame.tags;
 import static com.blueseer.adm.admData.runClient;
+import static com.blueseer.utl.BlueSeerUtils.isParsableToInt;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -73,7 +74,8 @@ public static void main(String args[]) throws IOException {
     
     // set config
    // bsmf.MainFrame.setConfig();
-    
+    bsmf.MainFrame.setConfig();
+    tags = ResourceBundle.getBundle("resources.bs", Locale.getDefault());
     // lets process the arguments
     String[] vs = checkargs(args);
     String infile = vs[0].toString();
@@ -109,6 +111,9 @@ public static void main(String args[]) throws IOException {
         case "trafficDir" :
             trafficDir(indir, map);
             break;   
+        case "purgeDir" :
+            purgeDir(indir, map, isOverride);
+            break;      
         case "ftpClient" :
             ftpClient(map);
             break;       
@@ -125,7 +130,7 @@ public static void main(String args[]) throws IOException {
 
 
  public static String[] checkargs(String[] args) {
-        List<String> legitargs = Arrays.asList("-if", "-of", "-id", "-od", "-m", "-x", "-ff", "-fd", "-ad", "-td", "-tf", "-e", "-debug", "-ftp" );
+        List<String> legitargs = Arrays.asList("-if", "-of", "-id", "-od", "-m", "-x", "-ff", "-fd", "-ad", "-td", "-tf", "-e", "-debug", "-ftp", "-pd" );
      
         String[] vals = new String[9]; // last element is the program type (single or mulitiple)
         Arrays.fill(vals, "");
@@ -207,6 +212,12 @@ public static void main(String args[]) throws IOException {
                         vals[2] = args[i+1];
                         vals[7] = "trafficDir"; 
                         break;  
+                    case "-pd" :
+                        vals[2] = args[i+1];
+                        vals[4] = args[i+2];
+                        vals[5] = args[i+3];
+                        vals[7] = "purgeDir"; 
+                        break;      
                     case "-tf" :
                         vals[4] = args[i+1];
                         break;      
@@ -312,8 +323,7 @@ public static void main(String args[]) throws IOException {
  }
  
  public static void ftpClient(String key) {
-     bsmf.MainFrame.setConfig();
-     tags = ResourceBundle.getBundle("resources.bs", Locale.getDefault());
+     
      runClient(key); 
  }
  
@@ -571,6 +581,46 @@ public static void main(String args[]) throws IOException {
     
  }
  
- 
+ public static void purgeDir(String dir, String days, String flag) throws IOException {
+     
+        int daysBack = 0;
+        boolean isDelete = false;
+        if (flag != null && flag.equals("dElEtE")) {
+            isDelete = true;
+        }
+        if (isParsableToInt(days)) {
+            daysBack = Integer.valueOf(days);
+        } else {
+         System.out.println("parameter 2 is not an integer");
+         System.exit(1);
+        }
+        File folder = new File(dir);
+        if (! folder.isDirectory()) {
+         System.out.println("parameter 1 is not a valid directory");
+         System.exit(1);   
+        }
+        
+        File[] listOfFiles = folder.listFiles();
+        
+        long z = System.currentTimeMillis() - ((long)daysBack * 24L * 60L * 60L * 1000L);
+        int count = 0;
+        long dt = new Date().getTime();
+        
+        for (int i = 0; i < listOfFiles.length; i++) {
+            if (listOfFiles[i].isFile()) {
+                if (listOfFiles[i].lastModified() < z) {
+                    count++;
+                    if (isDelete) {
+                    Path filepath = Paths.get(dir + "\\" + listOfFiles[i].getName());
+                    Files.delete(filepath);
+                    }
+                }
+            }
+            
+        }
+        System.out.println("delete is set to: " + isDelete);
+        System.out.println("file count is: " + listOfFiles.length);
+        System.out.println("delete count is: " + count);
+ }
 } // class
 
