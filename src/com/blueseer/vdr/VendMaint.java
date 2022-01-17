@@ -50,6 +50,7 @@ import static com.blueseer.utl.BlueSeerUtils.lurb2;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeer;
 import static com.blueseer.vdr.venData.addVendMstr;
+import static com.blueseer.vdr.venData.deleteVendMstr;
 import static com.blueseer.vdr.venData.updateVendMstr;
 import com.blueseer.vdr.venData.vd_mstr;
 import java.awt.Color;
@@ -573,40 +574,16 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeer {
     }
     
     public String[] deleteRecord(String[] key) {
-        String[] m = new String[2];
-          boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
+       String[] m = new String[2];
+        boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
         if (proceed) {
-        try {
-
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            try {
-              
-                   int i = st.executeUpdate("delete from vd_mstr where vd_addr = " + "'" + tbkey.getText() + "'" + ";");
-                   st.executeUpdate("delete from vpr_mstr where vpr_vend = " + "'" + tbkey.getText() + "'" + ";");
-                   st.executeUpdate("delete from vdp_mstr where vdp_vend = " + "'" + tbkey.getText() + "'" + ";");
-                   st.executeUpdate("delete from vdc_det where vdc_code = " + "'" + tbkey.getText() + "'" + ";");
-                     if (i > 0) {
-                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
-                    initvars(null);
-                    }
-                } catch (SQLException s) {
-                 MainFrame.bslog(s); 
-                m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};  
-            } finally {
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1020, Thread.currentThread().getStackTrace()[1].getMethodName())};
-        }
+        m = deleteVendMstr(createRecord());
+        initvars(null);
+        return m;   
         } else {
-           m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
+           m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled};  
         }
-         return m;
+        return m;
     }
     
     public vd_mstr createRecord() { 

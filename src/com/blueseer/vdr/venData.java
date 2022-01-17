@@ -232,7 +232,7 @@ public class venData {
         return rows;
     }
     
-    public static String[] deleteCustMstr(vd_mstr x) {
+    public static String[] deleteVendMstr(vd_mstr x) {
         String[] m = new String[2];
         if (x == null) {
             return new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordError};
@@ -276,6 +276,18 @@ public class venData {
     private static void _deleteVendMstr(vd_mstr x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException { 
        
         String sql = "delete from vd_mstr where vd_addr = ?; ";
+        ps = con.prepareStatement(sql);
+        ps.setString(1, x.vd_addr);
+        ps.executeUpdate();
+        sql = "delete from vpr_mstr where vpr_vend = ?; ";
+        ps = con.prepareStatement(sql);
+        ps.setString(1, x.vd_addr);
+        ps.executeUpdate();
+        sql = "delete from vdp_mstr where vdp_vend = ?; ";
+        ps = con.prepareStatement(sql);
+        ps.setString(1, x.vd_addr);
+        ps.executeUpdate();
+        sql = "delete from vdc_det where vdc_code = ?; ";
         ps = con.prepareStatement(sql);
         ps.setString(1, x.vd_addr);
         ps.executeUpdate();
