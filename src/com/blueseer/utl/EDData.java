@@ -1914,7 +1914,36 @@ public class EDData {
         }
          
       }
-        
+    
+    public static void updateEDIIDXAcksAllGroup(String doctype, String groupid, String ackfile) {
+        // some 997s do not send ST specific...but GS (group specific)...update all doc of GS group ID
+            // keys is a string[] with doctype, groupctrlnum, ackfile 
+          try {
+            Class.forName(driver);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            try {
+                    st.executeUpdate("update edi_idx set " +
+                            " edx_ackfile = " + "'" + ackfile + "'" + "," +
+                            " edx_ack = '1' " +        
+                            " where edx_outdoctype = " + "'" + doctype + "'" +     
+                            " and edx_gsctrlnum = " + "'" + groupid + "'" +
+                            ";");
+                   
+                        
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+         
+      }
+    
+    
     public static ArrayList parseFile(char[] cbuf, String filename)   {
     ArrayList<String> doc = new ArrayList<String>();
     

@@ -1201,6 +1201,7 @@ public class EDI {
             System.out.println("Encountered 997...processing and return" + c[1] + "/" + gs02 + "/" + gs03);    
             }
             String[] m = process997(doc, c);
+            EDData.writeEDILog(c, m[0], m[1]);
             EDData.updateEDIIDXStatus(idxnbr, m[0]);
             continue;
           }   
@@ -2648,7 +2649,7 @@ public class EDI {
          String doctype = "";
          for (Object seg : docs) {
             String ea[] = seg.toString().split(EDI.escapeDelimiter(delimConvertIntToStr(c[10])), -1);
-            // in practice...should be only 1 AK1 and 1 or more AK2s
+            // in practice...should be only 1 AK1 and.... 1 or more AK2s (or no AK2s i.e. all docs of group)
             if (ea[0] != null && ea.length > 2 && ea[0].equals("AK1")) {
                 groupid = ea[2];
                 doctype = EDData.getEDIDocTypeFromStds(ea[1]);
@@ -2660,9 +2661,16 @@ public class EDI {
          }
          
          // find edi_idx record of groupid, doctype, and docid ...for each element of docids
-         EDData.updateEDIIDXAcks(docids);
-         if (groupid.isEmpty() || doctype.isEmpty() || docids.size() == 0) {
-             return new String[]{"error","unrecognized gscntrlnum or missing doc IDs"};
+         if (! docids.isEmpty()) {
+            EDData.updateEDIIDXAcks(docids);
+         } else {
+             // some 997s do not send ST specific...AK2,AK5...but GS (group specific) only AK1...update all doc of GS group ID
+            EDData.updateEDIIDXAcksAllGroup(doctype, groupid, c[24]);
+         }
+         if (groupid.isEmpty() || doctype.isEmpty()) {
+             return new String[]{"error","unrecognized gscntrlnum in AK1"};
+         } else if (docids.isEmpty()) {
+             return new String[]{"success","AK1 only...all docs acknowledged"};
          } else if (doctype.equals("??")) {
              return new String[]{"error","unknown doctype in 997"};
          } else {
