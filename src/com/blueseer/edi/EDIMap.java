@@ -854,82 +854,84 @@ public abstract class EDIMap implements EDIMapi {
      }
      
     public static LinkedHashMap<String, String[]> mapInput(String[] c, ArrayList<String> data, ArrayList<String[]> ISF) throws IOException {
-		 LinkedHashMap<String,String[]> mappedData = new LinkedHashMap<String,String[]>();
-			HashMap<String,Integer> groupcount = new HashMap<String,Integer>();
-			HashMap<String,Integer> set = new HashMap<String,Integer>();
-			String parenthead = "";
-			String groupkey = "";
-			String previouskey = "";
-			for (String s : data) {
-                                String[] x = null;
-                                if (c[28].equals("FF")) {
-                                    x = splitFFSegment(s);
-                                } else {
-                                    x = s.split("\\*",-1); // if x12
-                                }
-				
-				for (String[] z : ISF) {
-                                    // skip non-landmarks
-                                    if (! z[4].equals("yes")) {
-                                        continue;
-                                    }
-					if (x != null && (x.length > 1) && x[0].equals(z[0])) {
-						boolean foundit = false;
-						boolean hasloop = false;
-						String[] temp = parenthead.split(":");
-						for (int i = temp.length - 1; i >= 0; i--) {
-							if (z[1].compareTo(temp[i]) == 0) {
-								foundit = true;
-								String[] newarray = Arrays.copyOfRange(temp, 0, i + 1);
-								parenthead = String.join(":", newarray);							
-								break;
-							}
-						}
-						if (! foundit) {
-						continue;	
-						} else {
-							int loop = 1;
-							String groupparent = parenthead + ":" + x[0];
-							String keyparent = parenthead + ":" + x[0];
-							if (groupcount.containsKey(groupparent)) {
-								int g = groupcount.get(groupparent);
-								
-								if (previouskey.equals(parenthead + ":" + x[0] + "+" + g)) {
-									loop = set.get(parenthead + ":" + x[0] + "+" + groupcount.get(groupparent));	
-									hasloop = true;
-									loop++;
-									set.put(parenthead + ":" + x[0] + "+" + groupcount.get(groupparent), loop);
-								} else {
-									g++;	
-									groupcount.put(groupparent, g);
-								}
-							} else {
-								groupcount.put(groupparent, 1);
-							}
-							
-							previouskey = parenthead + ":" + x[0] + "+" + groupcount.get(groupparent);	
-							if (hasloop) {
-							    groupkey = parenthead + ":" + x[0] + "+" + groupcount.get(groupparent) + "+" + loop;
-							} else {
-								groupkey = parenthead + ":" + x[0] + "+" + groupcount.get(groupparent);
-							}
+        LinkedHashMap<String,String[]> mappedData = new LinkedHashMap<String,String[]>();
+        HashMap<String,Integer> groupcount = new HashMap<String,Integer>();
+        HashMap<String,Integer> set = new HashMap<String,Integer>();
+        String parenthead = "";
+        String groupkey = "";
+        String previouskey = "";
+        for (String s : data) {
+                String[] x = null;
+                if (c[28].equals("FF")) {
+                    x = splitFFSegment(s);
+                } else {
+                    x = s.split("\\*",-1); // if x12
+                }
 
-							set.put(groupkey, loop);
-							mappedData.put(parenthead + ":" + x[0] + "+" + groupcount.get(groupparent) + "+" + loop , x);
-							SegmentCounter.add(parenthead + ":" + x[0] + "+" + groupcount.get(groupparent));
-							if (z[3].equals("yes")) {
-								parenthead = parenthead + (":" + z[0]);
-							}
-							break;
-						}
-					}
-				}
-			}
-                        
-            
-                        
-			return mappedData;
-	 }
+                for (String[] z : ISF) {
+                    // skip non-landmarks
+                    if (! z[4].equals("yes")) {
+                        continue;
+                    }
+                        if (x != null && (x.length > 1) && x[0].equals(z[0])) {
+                                boolean foundit = false;
+                                boolean hasloop = false;
+                                String[] temp = parenthead.split(":");
+                                for (int i = temp.length - 1; i >= 0; i--) {
+                                        if (z[1].compareTo(temp[i]) == 0) {
+                                                foundit = true;
+                                                String[] newarray = Arrays.copyOfRange(temp, 0, i + 1);
+                                                parenthead = String.join(":", newarray);							
+                                                break;
+                                        }
+                                }
+                                if (! foundit) {
+                                continue;	
+                                } else {
+                                        int loop = 1;
+                                        String groupparent = parenthead + ":" + x[0];
+                                        if (groupcount.containsKey(groupparent)) {
+                                                int g = groupcount.get(groupparent);
+
+                                                if (previouskey.equals(parenthead + ":" + x[0] + "+" + g) && ! z[3].equals("yes")) {
+                                                        loop = set.get(parenthead + ":" + x[0] + "+" + groupcount.get(groupparent));	
+                                                        hasloop = true;
+                                                        loop++;
+                                                        set.put(parenthead + ":" + x[0] + "+" + groupcount.get(groupparent), loop);
+                                                } else {
+                                                        g++;	
+                                                        groupcount.put(groupparent, g);
+                                                }
+                                        } else {
+                                               // groupcount.put(groupparent, 1);
+                                               if (groupcount.get(parenthead) != null) {
+                                                  groupcount.put(groupparent, groupcount.get(parenthead)); 
+                                               } else {
+                                                  groupcount.put(groupparent, 1); 
+                                               }
+                                               
+                                        }
+
+                                        previouskey = parenthead + ":" + x[0] + "+" + groupcount.get(groupparent);	
+                                        if (hasloop) {
+                                            groupkey = parenthead + ":" + x[0] + "+" + groupcount.get(groupparent) + "+" + loop;
+                                        } else {
+                                            groupkey = parenthead + ":" + x[0] + "+" + groupcount.get(groupparent);
+                                        }
+
+                                        set.put(groupkey, loop);
+                                        mappedData.put(parenthead + ":" + x[0] + "+" + groupcount.get(groupparent) + "+" + loop , x);
+                                        SegmentCounter.add(parenthead + ":" + x[0] + "+" + groupcount.get(groupparent));
+                                        if (z[3].equals("yes")) {
+                                                parenthead = parenthead + (":" + z[0]);
+                                        }
+                                        break;
+                                }
+                        }
+                }
+        }
+        return mappedData;
+    }
 
     public static void debuginput(Map<String, String[]> mappedData) {
         if (GlobalDebug) {
@@ -946,11 +948,13 @@ public abstract class EDIMap implements EDIMapi {
                     int i = 0;
                     String fieldname = "";
                     for (String s : z.getValue()) {
-                     String[] j = mISF.get(key).get(i);
-                     if (j != null && j.length > 4) {
-                         fieldname = j[5];
-                     } else {
-                         fieldname = "unknown";
+                     if (mISF.get(key) != null && mISF.get(key).get(i) != null) {
+                         String[] j = mISF.get(key).get(i);
+                         if (j != null && j.length > 4) {
+                             fieldname = j[5];
+                         } else {
+                             fieldname = "unknown";
+                         }
                      }
                      System.out.println("mapInput: " + z.getKey() + " " + fieldname +  " / Field: " + i + " value: " + s);   
                      i++;
