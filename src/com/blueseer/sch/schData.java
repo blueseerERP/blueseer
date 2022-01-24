@@ -34,6 +34,7 @@ import static bsmf.MainFrame.user;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -47,36 +48,22 @@ public class schData {
     // misc functions 
     public static String getPlanItem(String serialno) {
 
-      // From perspective of "has it been scanned...or is there a 1 in lbl_scan which is set when label is scanned
-      // assume it's false i.e. hasn't been scanned.
-     String myreturn = "";
-
-      try {
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-             res = st.executeQuery("select plan_part from plan_mstr where plan_nbr = " + "'" + serialno + "'" 
-                     + " ;");
-           while (res.next()) {
-               myreturn = res.getString("plan_part");
-           }
-
-        } catch (SQLException s) {
-            MainFrame.bslog(s);
-        } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
+          // From perspective of "has it been scanned...or is there a 1 in lbl_scan which is set when label is scanned
+          // assume it's false i.e. hasn't been scanned.
+        String x = "";
+        String sql = "select plan_part from plan_mstr where plan_nbr = ? ;";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+            PreparedStatement ps = con.prepareStatement(sql);) {
+            ps.setString(1, serialno);  
+            try (ResultSet res = ps.executeQuery();) {
+               while (res.next()) {
+                   x = res.getString("plan_part");
+               }
             }
-    } catch (Exception e) {
-        MainFrame.bslog(e);
-    }
-      return myreturn;
+        } catch (SQLException e) {
+            MainFrame.bslog(e);
+        } 
+      return x;
   }
 
     public static double getPlanSchedQty(String serialno) {
