@@ -338,7 +338,7 @@ public class invData {
              rows = _addBomMstr(y, con);   
             }
             
-            if (rows > 0)
+           // if (rows > 0)
              rows = _addPBM(x, con);
             
             if (rows > 0) {
