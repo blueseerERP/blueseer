@@ -42,6 +42,7 @@ import com.blueseer.fgl.fglData;
 import com.blueseer.inv.calcCost;
 import com.blueseer.inv.invData;
 import com.blueseer.ord.ordData;
+import static com.blueseer.ord.ordData.getOrderTotalTax;
 import com.blueseer.sch.schData;
 import com.blueseer.shp.shpData;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
@@ -16052,6 +16053,7 @@ return myarray;
                 String site_csz = "";
                 String bill_csz = "";
                 String ship_csz = "";
+                double taxes = getOrderTotalTax(order);
                 res = st.executeQuery("select so_cust, so_site, " +
                         " cm_city, cm_state, cm_zip, cms_city, cms_state, cms_zip, site_city, site_state, site_zip " +
                         " from so_mstr " +
@@ -16086,6 +16088,7 @@ return myarray;
                 hm.put("bill_csz", bill_csz);
                 hm.put("ship_csz", ship_csz);
                 hm.put("imagepath", imagepath);
+                hm.put("taxes", taxes);
                 hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
                // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_part, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);

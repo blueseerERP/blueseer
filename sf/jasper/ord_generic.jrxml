@@ -23,18 +23,24 @@
 	<parameter name="site_csz" class="java.lang.String"/>
 	<parameter name="bill_csz" class="java.lang.String"/>
 	<parameter name="ship_csz" class="java.lang.String"/>
+	<parameter name="taxes" class="java.lang.Double"/>
 	<queryString>
 		<![CDATA[select so_nbr, sod_nbr, so_curr, sod_desc, 
 (select case when sum(sos_amt) is null then 0 else sum(sos_amt) end from sos_det where sos_nbr = $P{myid} and sos_amttype = 'amount' and sos_type <> 'tax') as charges, 
-(select case when sum(sos_amt) is null then 0 else sum(sos_amt)  end from sos_det where sos_nbr = $P{myid} and sos_amttype = 'amount' and sos_type = 'tax') as taxes,
-so_cust, so_create_date,  so_rmks, sod_po, sod_part, sod_custpart, sod_ord_qty, sod_netprice, sod_listprice, sod_taxamt, cm_code, cm_name, cm_line1, cm_line2,  cms_name, cms_line1, cms_line2,  site_desc, site_line1 from sod_det  inner join so_mstr on so_nbr = sod_nbr inner join cm_mstr on cm_code = so_cust left outer join cms_det on cms_code = so_cust and cms_shipto = so_ship inner join site_mstr on site_site = so_site where sod_nbr =  $P{myid}]]>
+so_cust, so_create_date,  so_rmks, sod_po, sod_part, sod_custpart, sod_ord_qty, 
+sod_netprice, sod_listprice, sod_taxamt, cm_code, cm_name, cm_line1, cm_line2,  
+cms_name, cms_line1, cms_line2,  site_desc, site_line1 
+from sod_det  
+inner join so_mstr on so_nbr = sod_nbr 
+inner join cm_mstr on cm_code = so_cust 
+left outer join cms_det on cms_code = so_cust and cms_shipto = so_ship 
+inner join site_mstr on site_site = so_site where sod_nbr =  $P{myid}]]>
 	</queryString>
 	<field name="so_nbr" class="java.lang.String"/>
 	<field name="sod_nbr" class="java.lang.String"/>
 	<field name="so_curr" class="java.lang.String"/>
 	<field name="sod_desc" class="java.lang.String"/>
 	<field name="charges" class="java.lang.Double"/>
-	<field name="taxes" class="java.lang.Double"/>
 	<field name="so_cust" class="java.lang.String"/>
 	<field name="so_create_date" class="java.lang.String"/>
 	<field name="so_rmks" class="java.lang.String"/>
@@ -58,7 +64,7 @@ so_cust, so_create_date,  so_rmks, sod_po, sod_part, sod_custpart, sod_ord_qty, 
 		<variableExpression><![CDATA[$F{sod_ord_qty}]]></variableExpression>
 	</variable>
 	<variable name="tax" class="java.lang.Double">
-		<variableExpression><![CDATA[new Double($F{taxes}.doubleValue())]]></variableExpression>
+		<variableExpression><![CDATA[new Double($P{taxes}.doubleValue())]]></variableExpression>
 	</variable>
 	<variable name="charges" class="java.lang.Double">
 		<variableExpression><![CDATA[new Double($F{charges}.doubleValue())]]></variableExpression>

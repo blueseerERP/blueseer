@@ -1183,6 +1183,55 @@ public class ordData {
 
     }
 
+    public static double getOrderTotalTax(String nbr) {
+       double tax = 0;
+     try{
+        Class.forName(driver).newInstance();
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            double ordertotal = 0;
+            
+            res = st.executeQuery("SELECT  sum(sod_listprice * sod_ord_qty) as mytotal  " +
+                                    " FROM  sod_det  " +
+                                    " where sod_nbr = " + "'" + nbr + "'" +       
+                                    ";");
+                while (res.next()) {
+                    ordertotal += res.getDouble("mytotal");
+                }
+            
+            res = st.executeQuery("SELECT * " +
+                                    " FROM  sos_det  " +
+                                    " where sos_nbr = " + "'" + nbr + "'" +
+                                    " and sos_type = 'tax' " +        
+                                    " ;");
+
+                double sosamt = 0;
+                while (res.next()) {
+                    sosamt = res.getDouble("sos_amt");
+                    if (res.getString("sos_amttype").equals("percent")) {
+                        if (sosamt > 0)
+                        tax += (ordertotal * (sosamt / 100)); 
+                    } else {
+                       tax += sosamt;
+                    }
+                }
+
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return tax;
+
+    }
+
+    
     public static ArrayList<String> getOrderLines(String order) {
         ArrayList<String> lines = new ArrayList<String>();
         try{
@@ -1234,8 +1283,7 @@ public class ordData {
     }
         return lines;
     }
-     
-    
+         
     public static String getOrderCurrency(String order) {
         String curr = "";
         try{
