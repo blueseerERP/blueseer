@@ -618,7 +618,7 @@ public class BlueSeerUtils {
     
     public static String bsFormatDouble5(double invalue) {
         String outvalue = "";
-        String pattern = "#0.00000"; 
+        String pattern = "#0.00###"; 
         DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.getDefault());    
         df.applyPattern(pattern);
         outvalue = df.format(invalue); 
