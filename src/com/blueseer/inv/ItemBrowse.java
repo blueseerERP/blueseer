@@ -441,14 +441,8 @@ try {
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
-                int qty = 0;
-                double dol = 0;
                 int i = 0;
-                
-                   
                  mymodel.setNumRows(0);
-                   
-               
                 tablereport.setModel(mymodel);
               Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
                  while (en.hasMoreElements()) {
