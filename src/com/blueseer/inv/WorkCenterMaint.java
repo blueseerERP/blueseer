@@ -39,6 +39,7 @@ import static com.blueseer.inv.invData.updateWorkCenterMstr;
 import com.blueseer.inv.invData.wc_mstr;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.currformat;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
@@ -447,9 +448,9 @@ public class WorkCenterMaint extends javax.swing.JPanel implements IBlueSeer {
                     ddsite.setSelectedItem(res.getString("wc_site"));
                     ddcc.setSelectedItem(res.getString("wc_cc"));
                     tarmks.setText(res.getString("wc_remarks"));
-                    tbrunrate.setText(res.getString("wc_run_rate").replace('.',defaultDecimalSeparator));
-                    tbsetuprate.setText(res.getString("wc_setup_rate").replace('.',defaultDecimalSeparator));
-                    tbbdnrate.setText(res.getString("wc_bdn_rate").replace('.',defaultDecimalSeparator));
+                    tbrunrate.setText(currformat(res.getString("wc_run_rate").replace('.',defaultDecimalSeparator)));
+                    tbsetuprate.setText(currformat(res.getString("wc_setup_rate").replace('.',defaultDecimalSeparator)));
+                    tbbdnrate.setText(currformat(res.getString("wc_bdn_rate").replace('.',defaultDecimalSeparator)));
                     tbruncrewsize.setText(res.getString("wc_run_crew").replace('.',defaultDecimalSeparator));
                     tbsetupcrewsize.setText(res.getString("wc_setup").replace('.',defaultDecimalSeparator));
                 }
