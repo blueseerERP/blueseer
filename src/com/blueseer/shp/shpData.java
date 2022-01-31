@@ -52,6 +52,7 @@ import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -717,21 +718,19 @@ public class shpData {
                 // lets wash out phantoms and add BOM to new ArrayList
                 ArrayList<String[]> newlist = new ArrayList<String[]>();
                 for (String[] sd : list) {
-                    if (sd[10].equals("1")) {
-                        String[] x = new String[12];
+                    if (sd[10].equals("1")) {  // if phantom...just BOM is added
                         ArrayList<String> bom = OVData.getBOM(sd[0], sd[11]);
                         for (String b : bom) {
-                            x = sd;
+                            String[] x = Arrays.copyOf(sd, sd.length);
                             x[0] = b;
                             newlist.add(x);
                         }
-                    } else {
+                    } else {  // if not phantom....just parent
                         newlist.add(sd);
                     }
                 }
                 
-                for (String[] sd : newlist) {
-                                        
+                for (String[] sd : newlist) {                
                     item = sd[0];
                     uom = sd[2];
                     loc = sd[3];
@@ -753,7 +752,7 @@ public class shpData {
                     double qoh = 0.00;
                   
                     if (! serialized) {  // if not serialized
-                   OVData._updateNonSerializedInventory(bscon, item, site, wh, loc, (-1 * baseqty), mydate);
+                    OVData._updateNonSerializedInventory(bscon, item, site, wh, loc, (-1 * baseqty), mydate);
                    } else if (serialized && ! serial.isEmpty()) {
                     res = st.executeQuery("select in_qoh, in_serial from in_mstr where "
                             + " in_part = " + "'" + item + "'" 
