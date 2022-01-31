@@ -65,6 +65,7 @@ JasperRptMaint,,com.blueseer.adm.JasperRptMaint,JMenuItem,jasp
 ItemLevelCalculate,,com.blueseer.inv.ItemLevelMaint,JMenuItem,mrpx
 LedgerBalanceExport,,com.blueseer.fgl.LedgerBalanceExport,JMenuItem,glbe
 About,,com.blueseer.adm.About,JMenuItem,about
+License,,com.blueseer.adm.License,JMenuItem,lic
 SysInfo,,com.blueseer.adm.About,JMenuItem,sysi
 AcctBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,accb
 AcctMaint,,com.blueseer.fgl.AcctMaint,JMenuItem,accm

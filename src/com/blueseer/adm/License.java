@@ -49,14 +49,14 @@ import oshi.software.os.OperatingSystem;
  *
  * @author vaughnte
  */
-public class About extends javax.swing.JPanel {
+public class License extends javax.swing.JPanel {
 
     
     String currenttext = "";
     /**
      * Creates new form AboutPanel
      */
-    public About() {
+    public License() {
         initComponents();
          currenttext = jTextArea2.getText();
     }
@@ -230,7 +230,7 @@ public class About extends javax.swing.JPanel {
         jTextArea2.setEditable(false);
         jTextArea2.setColumns(20);
         jTextArea2.setRows(5);
-        jTextArea2.setText("\nBlueSeer ERP was developed to provide the open source community with a free alternative to proprietary ERPs\nwith regards to both cost and customization capability.   For more information, you can visit the application project\nsite hosted on github or the primary website shown below.   There exists forums to submit issues, discussions, or feedback\nat these locations.\n\nWebsite:\t\twww.blueseer.com\nProject Site:\t\thttps://github.com/BlueSeerERP   \nCreator:\t\tTerry Evans Vaughn\nLanguage:\t\tJava\nSource:\t\thttps://github.com/BlueSeerERP/blueseer");
+        jTextArea2.setText("The MIT License (MIT)\n\nCopyright (c) Terry Evans Vaughn\n\nAll rights reserved.\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.");
         jScrollPane2.setViewportView(jTextArea2);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);

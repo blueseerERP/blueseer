@@ -257,13 +257,14 @@ yönetici,FTPMaint,20,JMenuItem,FTP Bakımı,,,,1,1
 yönetici,MassLoad,21,JMenuItem,Ana Verileri İçe Aktarma,,,,1,1
 yönetici,JasperRptMaint,22,JMenuItem,Jasper Rapor Bakımı,,,,1,1
 Yardım,About,1,JMenuItem,Hakkında,,,,1,1
-Yardım,Update,2,JMenuItem,Güncelleme,,,,1,1
-Yardım,PlantDirectoryMenu,3,JMenuItem,Tesis Rehberi,,1,,1,1
-Yardım,menuscreen,4,JMenuItem,Ekran çözünürlüğü,,,getScreenSize,1,1
-Yardım,NavCodeBrowse,5,JMenuItem,NAVCode Listesi,,1,,1,1
-Yardım,SchemaBrowse,6,JMenuItem,Şema,,1,,1,1
-Yardım,BrowseUtil,7,JMenuItem,,,1,,1,1
-Yardım,SysInfo,8,JMenuItem,Sistem Bilgisi,,1,,1,1
+Yardım,License,2,JMenuItem,Lisans,,,,1,1
+Yardım,Update,3,JMenuItem,Güncelleme,,,,1,1
+Yardım,PlantDirectoryMenu,4,JMenuItem,Tesis Rehberi,,1,,1,1
+Yardım,menuscreen,5,JMenuItem,Ekran çözünürlüğü,,,getScreenSize,1,1
+Yardım,NavCodeBrowse,6,JMenuItem,NAVCode Listesi,,1,,1,1
+Yardım,SchemaBrowse,7,JMenuItem,Şema,,1,,1,1
+Yardım,BrowseUtil,8,JMenuItem,,,1,,1,1
+Yardım,SysInfo,9,JMenuItem,Sistem Bilgisi,,1,,1,1
 root,Adres,1,JMenu,Adres,,,,1,1
 root,Satın alma,2,JMenu,Satın alma,,,,1,1
 root,Emir,3,JMenu,Emir,,,,1,1

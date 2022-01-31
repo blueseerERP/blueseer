@@ -257,13 +257,14 @@ Admin,FTPMaint,20,JMenuItem,Mantenimiento FTP,,,,1,1
 Admin,MassLoad,21,JMenuItem,Importación de datos maestros,,,,1,1
 Admin,JasperRptMaint,22,JMenuItem,Mantenimiento del informe Jasper,,,,1,1
 Ayudar,About,1,JMenuItem,Sobre,,,,1,1
-Ayudar,Update,2,JMenuItem,Actualizar,,,,1,1
-Ayudar,PlantDirectoryMenu,3,JMenuItem,Directorio de plantas,,1,,1,1
-Ayudar,menuscreen,4,JMenuItem,Resolución de la pantalla,,,getScreenSize,1,1
-Ayudar,NavCodeBrowse,5,JMenuItem,Lista de códigos NAV,,1,,1,1
-Ayudar,SchemaBrowse,6,JMenuItem,Esquema,,1,,1,1
-Ayudar,BrowseUtil,7,JMenuItem,NavegarUtil,,1,,1,1
-Ayudar,SysInfo,8,JMenuItem,SysInfo,,1,,1,1
+Ayudar,License,2,JMenuItem,Licencia,,,,1,1
+Ayudar,Update,3,JMenuItem,Actualizar,,,,1,1
+Ayudar,PlantDirectoryMenu,4,JMenuItem,Directorio de plantas,,1,,1,1
+Ayudar,menuscreen,5,JMenuItem,Resolución de la pantalla,,,getScreenSize,1,1
+Ayudar,NavCodeBrowse,6,JMenuItem,Lista de códigos NAV,,1,,1,1
+Ayudar,SchemaBrowse,7,JMenuItem,Esquema,,1,,1,1
+Ayudar,BrowseUtil,8,JMenuItem,NavegarUtil,,1,,1,1
+Ayudar,SysInfo,9,JMenuItem,SysInfo,,1,,1,1
 root,Dirección,1,JMenu,Dirección,,,,1,1
 root,Adquisitivo,2,JMenu,Adquisitivo,,,,1,1
 root,Pedido,3,JMenu,Pedido,,,,1,1

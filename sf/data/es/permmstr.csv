@@ -227,6 +227,7 @@ admin,ChangeUserid
 admin,changeDB
 admin,SystemControl
 admin,About
+admin,License
 admin,SysInfo
 admin,Update
 admin,PlantDirectoryMenu

@@ -257,13 +257,14 @@ Admin,FTPMaint,20,JMenuItem,FTP-Wartung,,,,1,1
 Admin,MassLoad,21,JMenuItem,Stammdatenimport,,,,1,1
 Admin,JasperRptMaint,22,JMenuItem,Wartung von Jasper-Berichten,,,,1,1
 Hilfe,About,1,JMenuItem,Über,,,,1,1
-Hilfe,Update,2,JMenuItem,Aktualisieren,,,,1,1
-Hilfe,PlantDirectoryMenu,3,JMenuItem,Pflanzenverzeichnis,,1,,1,1
-Hilfe,menuscreen,4,JMenuItem,Bildschirmauflösung,,,getScreenSize,1,1
-Hilfe,NavCodeBrowse,5,JMenuItem,NAVCode-Liste,,1,,1,1
-Hilfe,SchemaBrowse,6,JMenuItem,Schema,,1,,1,1
-Hilfe,BrowseUtil,7,JMenuItem,,,1,,1,1
-Hilfe,SysInfo,8,JMenuItem,SysInfo,,1,,1,1
+Hilfe,License,2,JMenuItem,Lizenz,,,,1,1
+Hilfe,Update,3,JMenuItem,Aktualisieren,,,,1,1
+Hilfe,PlantDirectoryMenu,4,JMenuItem,Pflanzenverzeichnis,,1,,1,1
+Hilfe,menuscreen,5,JMenuItem,Bildschirmauflösung,,,getScreenSize,1,1
+Hilfe,NavCodeBrowse,6,JMenuItem,NAVCode-Liste,,1,,1,1
+Hilfe,SchemaBrowse,7,JMenuItem,Schema,,1,,1,1
+Hilfe,BrowseUtil,8,JMenuItem,,,1,,1,1
+Hilfe,SysInfo,9,JMenuItem,SysInfo,,1,,1,1
 root,Die Anschrift,1,JMenu,Die Anschrift,,,,1,1
 root,Einkauf,2,JMenu,Einkauf,,,,1,1
 root,Befehl,3,JMenu,Befehl,,,,1,1

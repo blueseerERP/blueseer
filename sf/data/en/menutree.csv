@@ -257,13 +257,14 @@ Admin,FTPMaint,20,JMenuItem,FTP Maintenance,,,,1,1
 Admin,MassLoad,21,JMenuItem,Master Data Import,,,,1,1
 Admin,JasperRptMaint,22,JMenuItem,Jasper Report Maintenance,,,,1,1
 Help,About,1,JMenuItem,About,,,,1,1
-Help,Update,2,JMenuItem,Update,,,,1,1
-Help,PlantDirectoryMenu,3,JMenuItem,Plant Directory,,1,,1,1
-Help,menuscreen,4,JMenuItem,Screen Resolution,,,getScreenSize,1,1
-Help,NavCodeBrowse,5,JMenuItem,NAVCode List,,1,,1,1
-Help,SchemaBrowse,6,JMenuItem,Schema,,1,,1,1
-Help,BrowseUtil,7,JMenuItem,,,1,,1,1
-Help,SysInfo,8,JMenuItem,SysInfo,,1,,1,1
+Help,License,2,JMenuItem,License,,,,1,1
+Help,Update,3,JMenuItem,Update,,,,1,1
+Help,PlantDirectoryMenu,4,JMenuItem,Plant Directory,,1,,1,1
+Help,menuscreen,5,JMenuItem,Screen Resolution,,,getScreenSize,1,1
+Help,NavCodeBrowse,6,JMenuItem,NAVCode List,,1,,1,1
+Help,SchemaBrowse,7,JMenuItem,Schema,,1,,1,1
+Help,BrowseUtil,8,JMenuItem,,,1,,1,1
+Help,SysInfo,9,JMenuItem,SysInfo,,1,,1,1
 root,Address,1,JMenu,Address,,,,1,1
 root,Purchasing,2,JMenu,Purchasing,,,,1,1
 root,Order,3,JMenu,Order,,,,1,1
