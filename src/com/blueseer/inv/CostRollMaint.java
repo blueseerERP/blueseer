@@ -199,6 +199,7 @@ public class CostRollMaint extends javax.swing.JPanel {
     
     
     public void settoplowmodeltable() {
+        toplowmodel.setNumRows(0);
         ArrayList<Double> costs = new ArrayList<Double>();
         costs = invData.getItemCostElements(tbitem.getText(), "standard", thissite);
        
@@ -259,6 +260,7 @@ public class CostRollMaint extends javax.swing.JPanel {
     }
     
     public void setcostmodeltable() {
+        costmodel.setNumRows(0);
          ArrayList<String> costs = new ArrayList<String>();
         costs = OVData.rollCost(tbitem.getText());
         double total = 0.0;
