@@ -77,6 +77,7 @@ import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.sql.Connection;
 import java.text.DecimalFormatSymbols;
+import java.util.List;
 import java.util.Locale;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -101,12 +102,15 @@ public class ItemBrowse extends javax.swing.JPanel {
                             getGlobalColumnTag("description"), 
                             getGlobalColumnTag("code"), 
                             getGlobalColumnTag("uom"), 
-                            getGlobalColumnTag("status")})
+                            getGlobalColumnTag("status"),
+                            getGlobalColumnTag("qoh")})
              {
                       @Override  
                       public Class getColumnClass(int col) {  
                         if (col == 0)       
-                            return ImageIcon.class;   
+                            return ImageIcon.class;  
+                        else if (col == 6)
+                            return Double.class;
                         else return String.class;  //other columns accept String values  
                       }  
                         };
@@ -453,27 +457,35 @@ try {
                      tc.setCellRenderer(new ItemBrowse.SomeRenderer());
                  }
                  tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
-                     
-                 res = st.executeQuery("SELECT * from item_mstr " +
+                List<String[]> mylist = new ArrayList();     
+                res = st.executeQuery("SELECT * from item_mstr " +
                         " where it_item >= " + "'" + ddfromitem.getSelectedItem().toString()  + "'" + 
                         " AND it_item <= " + "'" + ddtoitem.getSelectedItem().toString() + "'" +
                          " AND it_code >= " + "'" + ddfromclass.getSelectedItem().toString() + "'" +
                          " AND it_code <= " + "'" + ddtoclass.getSelectedItem().toString() + "'" +
                          " AND it_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +
-                         " order by it_item;");    
-                 
-                 
+                         " order by it_item;");
                 while (res.next()) {
                     i++;
-                        mymodel.addRow(new Object[]{
-                                BlueSeerUtils.clickflag,
-                                res.getString("it_item"),
+                    mylist.add(new String[]{res.getString("it_item"),
                                 res.getString("it_desc"),
                                 res.getString("it_code"),
                                 res.getString("it_uom"),
                                 res.getString("it_status"),
+                                res.getString("it_site")});
+                }    
+                for (String[] s : mylist) {
+                        mymodel.addRow(new Object[]{
+                                BlueSeerUtils.clickflag,
+                                s[0],
+                                s[1],
+                                s[2],
+                                s[3],
+                                s[4],
+                                invData.getItemQOHTotal(s[0], s[5])
                             });
                 }
+                
                 labelcount.setText(String.valueOf(i));
                
             } catch (SQLException s) {
