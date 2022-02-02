@@ -3184,11 +3184,6 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
             }
         }
         
-        if (getmaxline() > 0) {
-            btadd.setEnabled(true);
-        } else {
-             btadd.setEnabled(false);
-        }
        
          refreshDisplayTotals();
     }//GEN-LAST:event_btdelitemActionPerformed
