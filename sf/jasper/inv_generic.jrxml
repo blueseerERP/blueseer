@@ -33,7 +33,7 @@
 ) as taxes,
 sh_cust, sh_confdate, sh_shipvia, sh_bol, sh_ref, sh_rmks, 
 sh_boxes, sh_pallets, shd_po, shd_part, shd_custpart, 
-shd_serial, shd_cont, shd_qty, shd_netprice, shd_listprice, 
+shd_serial, shd_cont, shd_qty, shd_netprice, shd_listprice, shd_uom, 
 shd_taxamt, shd_taxpercent, cm_code, cm_name, cm_line1, 
 cm_line2, 
 cms_name, cms_line1, cms_line2, 
@@ -78,6 +78,7 @@ where shd_id =  $P{myid}]]>
 	<field name="sh_ref" class="java.lang.String"/>
 	<field name="cm_terms" class="java.lang.String"/>
 	<field name="shd_serial" class="java.lang.String"/>
+	<field name="shd_uom" class="java.lang.String"/>
 	<variable name="mysum" class="java.lang.Double" calculation="Sum">
 		<variableExpression><![CDATA[$F{shd_qty}]]></variableExpression>
 	</variable>
@@ -350,7 +351,7 @@ where shd_id =  $P{myid}]]>
 				<textFieldExpression><![CDATA[$R{jasper.invoice.lblqty}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="406" y="1" width="45" height="20" uuid="cce099f1-590a-4911-a1a7-1d5e05e7770c"/>
+				<reportElement x="406" y="0" width="45" height="20" uuid="cce099f1-590a-4911-a1a7-1d5e05e7770c"/>
 				<textElement textAlignment="Right">
 					<font isBold="true"/>
 				</textElement>
@@ -364,7 +365,7 @@ where shd_id =  $P{myid}]]>
 				<textFieldExpression><![CDATA[$R{jasper.invoice.lblextprice}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="456" y="1" width="41" height="20" uuid="dc904d97-386c-4d18-b102-17b3427443bd"/>
+				<reportElement x="456" y="0" width="41" height="20" uuid="dc904d97-386c-4d18-b102-17b3427443bd"/>
 				<textElement textAlignment="Right">
 					<font isBold="true"/>
 				</textElement>
@@ -436,6 +437,13 @@ where shd_id =  $P{myid}]]>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{jasper.invoice.lblserial} + ": " + $F{shd_serial}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00">
+				<reportElement x="406" y="16" width="91" height="16" uuid="f61dd88f-697b-4d56-a6e2-1592323465ac"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["UOM: " + $F{shd_uom}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
