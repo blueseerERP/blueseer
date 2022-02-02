@@ -1581,78 +1581,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
         }
 
     }
-     
-    public void enableAllButAction() {
-        //tbhdrwh.setEnabled(true);
-        //cbissourced.setEnabled(true);
-        lblIsSourced.setEnabled(true);
-        lbqtyavailable.setEnabled(true);
-        lbqtyavailable.setBorder(new EtchedBorder(EtchedBorder.LOWERED));
-        tbkey.setEnabled(true);
-        ddcust.setEnabled(true);
-        ddship.setEnabled(true);
-        ddshipvia.setEnabled(true);
-        ddtax.setEnabled(true);
-        duedate.setEnabled(true);
-        orddate.setEnabled(true);
-        ponbr.setEnabled(true);
-        ddsite.setEnabled(true);
-        ddwh.setEnabled(true);
-        ddloc.setEnabled(true);
-        ddstatus.setEnabled(true);
-        cbblanket.setEnabled(true);
-        remarks.setEnabled(true);
-        ddpart.setEnabled(true);
-        dduom.setEnabled(true);
-        custnumber.setEnabled(true);
-        tbdesc.setEnabled(true);
-        qtyshipped.setEnabled(true);
-        listprice.setEnabled(true);
-       // netprice.setEnabled(true);   // leave disabled
-        discount.setEnabled(true);
-        tbtottax.setEnabled(true);
-        tbmisc.setEnabled(true);
-        orddet.setEnabled(true);
-       // ddcurr.setEnabled(true);  leave disabled
-        /*
-        tbshiptocode.setEnabled(true);
-        tbname.setEnabled(true);
-        tbaddr1.setEnabled(true);
-        tbaddr2.setEnabled(true);
-        tbcity.setEnabled(true);
-        tbzip.setEnabled(true);
-        tbphone.setEnabled(true);
-        tbemail.setEnabled(true);
-        tbcontact.setEnabled(true);
-        tbmisc1.setEnabled(true);
-        ddstate.setEnabled(true);
-        */
-        
-        
-         ddsactype.setEnabled(true);
-        tbsacdesc.setEnabled(true);
-        tbsacamt.setEnabled(true);
-        btsacadd.setEnabled(false);
-        btsacdelete.setEnabled(false);
-        
-        
-        totlines.setEnabled(true);
-        tbtotqty.setEnabled(true);
-        tbtotdollars.setEnabled(true);
-        
-        btlookup.setEnabled(false);
-       
-        
-        btnew.setEnabled(true);
-        btupdate.setEnabled(false);
-        btprintorder.setEnabled(true);
-        btinvoice.setEnabled(false);
-        btadd.setEnabled(false);
-        btadditem.setEnabled(false);
-        btdelitem.setEnabled(false);
-        btdelete.setEnabled(false);
-    }
-     
+         
     public void sumlinecount() {
          totlines.setText(String.valueOf(orddet.getRowCount()));
     }
