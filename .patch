@@ -17,3 +17,5 @@ patch=4
 patch=5
 # BOM field label adjustments and item browse column addition
 # Bug fix 24
+patch=6
+# invoice jasper update and bug fix 25
