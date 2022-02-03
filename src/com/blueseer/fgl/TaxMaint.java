@@ -709,7 +709,7 @@ public class TaxMaint extends javax.swing.JPanel implements IBlueSeer {
         jLabel4.setText("Percent");
         jLabel4.setName("lblpercent"); // NOI18N
 
-        ddtype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "OTHER", "FEDERAL", "STATE", "LOCAL" }));
+        ddtype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "OTHER", "MATERIAL", "FEDERAL", "STATE", "LOCAL" }));
 
         jLabel7.setText("Type");
         jLabel7.setName("lbltype"); // NOI18N
