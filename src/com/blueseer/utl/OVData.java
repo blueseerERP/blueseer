@@ -2168,7 +2168,6 @@ public class OVData {
         return taxpercent;
 
     }
-
     
     public static double getTaxAmtApplicableByItem(String item, double amt) {
         double taxamt = 0.00;
@@ -6829,6 +6828,11 @@ return myreturn;
                     if (type.toUpperCase().equals("OTHER") && !res.getString("arc_othertax_acct").isEmpty()) {
                         acct = res.getString("arc_othertax_acct");
                     }
+                    // need to move this post Version 6.0 to inside the TaxMaint
+                    // for now...material and other are synonymous
+                    if (type.toUpperCase().equals("MATERIAL") && !res.getString("arc_othertax_acct").isEmpty()) {
+                        acct = res.getString("arc_othertax_acct");
+                    }
                 }
 
                 // default to 'other' if no account is defined
@@ -7028,8 +7032,8 @@ return myitem;
 
 }
 
-    public static Double getExchangeBaseValue(String base, String foreign, Double invalue) {
-   Double outvalue = invalue;
+    public static double getExchangeBaseValue(String base, String foreign, double invalue) {
+   double outvalue = invalue;
  try{
 
    Connection con = DriverManager.getConnection(url + db, user, pass);
@@ -13923,12 +13927,11 @@ return myarray;
                     double baseamt = 0.00;
                     double taxamt = 0.00;
                     double basetaxamt = 0.00;
-                    double matltax = 0.00;
                    
                     res = st.executeQuery("select * from ship_det where shd_id = " + "'" + shipper + "'" +";");
                     while (res.next()) {
                     amt += (res.getDouble("shd_qty") * res.getDouble("shd_netprice"));
-                    matltax += OVData.getTaxAmtApplicableByItem(res.getString("shd_part"),res.getDouble("shd_qty") * res.getDouble("shd_netprice")); // line level matl tax
+                    taxamt += OVData.getTaxAmtApplicableByItem(res.getString("shd_part"),res.getDouble("shd_qty") * res.getDouble("shd_netprice")); // line level matl tax
                     }
                     res.close();
                     // lets retrieve any summary charges from orders associated with this shipment.

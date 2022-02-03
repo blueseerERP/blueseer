@@ -862,7 +862,7 @@ Connection con = DriverManager.getConnection(url + db, user, pass);
                               dfdate.format(createdate.getDate()).toString(),
                               remarks.getText().replace("'", ""),
                               "",
-                              "S" ); 
+                              "S", "" ); 
         ArrayList<String[]> detail = tableToArrayList();
         ArrayList<shpData.ship_det> shd = shpData.createShipDetJRTmin(detail, String.valueOf(shipperid), dfdate.format(createdate.getDate()).toString(), ddsite.getSelectedItem().toString());
         shpData.addShipperTransaction(shd, sh);

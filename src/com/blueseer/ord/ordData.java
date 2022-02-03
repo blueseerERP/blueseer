@@ -625,13 +625,14 @@ public class ordData {
        
     private static int _addOrderSummaryDet(sos_det x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
         int rows = 0;
-        String sqlSelect = "select * from sos_det where sos_nbr = ?";
+        String sqlSelect = "select * from sos_det where sos_nbr = ? and sos_desc = ?";
         String sqlInsert = "insert into sos_det (sos_nbr, sos_desc, sos_type, " 
                         + "sos_amttype, sos_amt ) "
                         + " values (?,?,?,?,?); "; 
        
           ps = con.prepareStatement(sqlSelect); 
           ps.setString(1, x.sos_nbr);
+          ps.setString(2, x.sos_desc);
           res = ps.executeQuery();
           ps = con.prepareStatement(sqlInsert); 
             if (! res.isBeforeFirst()) {
@@ -669,12 +670,13 @@ public class ordData {
     
     private static int _addOrderTaxMstr(so_tax x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
         int rows = 0;
-        String sqlSelect = "select * from so_tax where sot_nbr = ?";
+        String sqlSelect = "select * from so_tax where sot_nbr = ? and sot_desc = ?";
         String sqlInsert = "insert into so_tax (sot_nbr, sot_desc, sot_percent, sot_type ) " 
                         + " values (?,?,?,?); "; 
        
           ps = con.prepareStatement(sqlSelect); 
           ps.setString(1, x.sot_nbr);
+          ps.setString(2, x.sot_desc);
           res = ps.executeQuery();
           ps = con.prepareStatement(sqlInsert); 
             if (! res.isBeforeFirst()) {

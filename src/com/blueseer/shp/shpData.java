@@ -423,7 +423,7 @@ public class shpData {
     }
     
     
-    public static ship_mstr createShipMstrJRT(String nbr, String site, String bol, String billto, String shipto, String so, String po, String ref, String shipdate, String orddate, String remarks, String shipvia, String shiptype) {
+    public static ship_mstr createShipMstrJRT(String nbr, String site, String bol, String billto, String shipto, String so, String po, String ref, String shipdate, String orddate, String remarks, String shipvia, String shiptype, String taxcode) {
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
         cm_mstr cm = cusData.getCustMstr(new String[]{billto});
         String acct = cm.cm_ar_acct();
@@ -431,7 +431,9 @@ public class shpData {
         String terms = cm.cm_terms();
         String carrier = cm.cm_carrier();
         String onhold = cm.cm_onhold();
-        String taxcode = cm.cm_tax_code();
+        if (taxcode == null || taxcode.isEmpty()) {
+        taxcode = cm.cm_tax_code();
+        }
         String curr = cm.cm_curr();
         // logic for asset type shipment/sale
         if (shiptype.equals("A")) {

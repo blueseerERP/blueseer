@@ -1689,7 +1689,9 @@ public class fglData {
                     String uom = "";
                     String loc = "";
                     double netprice = 0.00;
+                    double matltax = 0.00;
                     double basenetprice = 0.00;
+                    double basematltax = 0.00;
                     
                     String taxcode = "";
                     String curr = "";
@@ -1717,16 +1719,20 @@ public class fglData {
                         loc = res.getString("shd_loc");
                         thisref = res.getString("shd_id");
                         baseqty = OVData.getUOMBaseQty(part, thissite, uom, qty);
-                        
-                        if (basecurr.toUpperCase().equals(curr.toUpperCase())) {
                         netprice = res.getDouble("shd_netprice"); 
+                        matltax += res.getDouble("shd_taxamt");
+                        if (basecurr.toUpperCase().equals(curr.toUpperCase())) {
+                        basenetprice = netprice;
+                        basematltax = matltax;
                         } else {
                         basenetprice = OVData.getExchangeBaseValue(basecurr, curr, res.getDouble("shd_netprice"));  
+                        basematltax += OVData.getExchangeBaseValue(basecurr, curr, res.getDouble("shd_taxamt"));
                         }
                         
                        
                         totamt += (qty * netprice);
                         basetotamt += (qty * basenetprice);
+                        
                         
                         i = 0;
                         
@@ -1860,13 +1866,23 @@ public class fglData {
                     
                     // Tax entry if tottax > 0 necessary
                     // we will credit sales (income) acct and debit (liability) appropriate tax account for each tax element in cm_tax_code
-                    tottax = OVData.getTaxAmtApplicableByCust(cust, totamt);
+                    tottax = shpData.getTaxAmtApplicableByShipper(shipper, totamt);
                     if (tottax > 0) {
                       ArrayList<String[]> taxelements = OVData.getTaxPercentElementsApplicableByTaxCode(taxcode);
+                          double taxvalue = 0;
+                          double basetaxvalue = 0;
                           for (String[] elements : taxelements) {
-                          glEntry(OVData.getDefaultSalesAcct(), OVData.getDefaultSalesCC(), OVData.getDefaultTaxAcctByType(elements[2]), OVData.getDefaultTaxCCByType(elements[2]), BlueSeerUtils.setDateFormat(effdate), ( totamt * ( bsParseDoubleUS(elements[1]) / 100 )), ( basetotamt * ( bsParseDoubleUS(elements[1]) / 100 )), curr, basecurr, thisref, thissite, thistype, "Tax: " + elements[2]);
+                              taxvalue = totamt * ( bsParseDoubleUS(elements[1]) / 100 );
+                              basetaxvalue = basetotamt * ( bsParseDoubleUS(elements[1]) / 100 );
+                           //   bsmf.MainFrame.show(taxvalue + "/" + basetaxvalue + "/" + totamt + "/" + basetotamt );
+                          glEntryXP(bscon, OVData.getDefaultSalesAcct(), OVData.getDefaultSalesCC(), OVData.getDefaultTaxAcctByType(elements[2]), OVData.getDefaultTaxCCByType(elements[2]), BlueSeerUtils.setDateFormat(effdate), taxvalue, basetaxvalue, curr, basecurr, thisref, thissite, thistype, "Tax: " + elements[2]);
                           }
+                          // now add matl tax at item level
                     }
+                    // now add matl tax at item level
+                    if (matltax > 0)
+                    glEntryXP(bscon, OVData.getDefaultSalesAcct(), OVData.getDefaultSalesCC(), OVData.getDefaultTaxAcctByType("MATERIAL"), OVData.getDefaultTaxCCByType("MATERIAL"), BlueSeerUtils.setDateFormat(effdate), matltax, basematltax, curr, basecurr, thisref, thissite, thistype, "Tax: Material ");
+                          
                     
                    // Trailer / Summary Charges
                     // we will credit sales and debit AR

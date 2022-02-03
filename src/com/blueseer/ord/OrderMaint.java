@@ -1246,7 +1246,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
                               dfdate.format(orddate.getDate()).toString(),
                               remarks.getText().replace("'", ""),
                               ddshipvia.getSelectedItem().toString(),
-                              "S" ); 
+                              "S", ddtax.getSelectedItem().toString() ); 
         ArrayList<String[]> detail = tableToArrayList();
         ArrayList<shpData.ship_det> shd = shpData.createShipDetJRT(detail, String.valueOf(shipperid), dfdate.format(orddate.getDate()).toString(), ddsite.getSelectedItem().toString());
         shpData.addShipperTransaction(shd, sh);
