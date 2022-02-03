@@ -322,6 +322,14 @@ public class ARControl extends javax.swing.JPanel implements IBlueSeerc {
                     tbsalescc.setText(res.getString("arc_sales_cc"));
                     tbasset.setText(res.getString("arc_asset_acct"));
                     tbassetcc.setText(res.getString("arc_asset_cc"));
+                    tbfederaltax.setText(res.getString("arc_fedtax_acct"));
+                    tbfederalcc.setText(res.getString("arc_fedtax_cc"));
+                    tbstatetax.setText(res.getString("arc_statetax_acct"));
+                    tbstatecc.setText(res.getString("arc_statetax_cc"));
+                    tblocaltax.setText(res.getString("arc_localtax_acct"));
+                    tblocalcc.setText(res.getString("arc_localtax_cc"));
+                    tbothertax.setText(res.getString("arc_othertax_acct"));
+                    tbothercc.setText(res.getString("arc_othertax_cc"));
                 }
                
                 // set Action if Record found (i > 0)
