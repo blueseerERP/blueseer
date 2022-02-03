@@ -19,3 +19,5 @@ patch=5
 # Bug fix 24
 patch=6
 # invoice jasper update and bug fix 25
+patch=7
+# tax related bug fixes (#26)
