@@ -720,7 +720,7 @@ public class BlueSeerUtils {
     
     public static String currformatDouble(double invalue) {
         String x = "";
-        String pattern = "#0.00###";
+        String pattern = "#0.00";
        // DecimalFormat df = new DecimalFormat("#0.00###", new DecimalFormatSymbols(Locale.getDefault())); 
         DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.getDefault());
         df.applyPattern(pattern);

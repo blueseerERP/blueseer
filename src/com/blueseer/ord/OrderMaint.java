@@ -3059,7 +3059,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
                 discount.getText(), netprice.getText(), 
                 "0", getGlobalProgTag("open"),
                 ddwh.getSelectedItem().toString(), ddloc.getSelectedItem().toString(), tbdesc.getText(), 
-                String.valueOf(OVData.getTaxAmtApplicableByItem(ddpart.getSelectedItem().toString(), (np * qty) )),
+                String.valueOf(bsFormatDouble(OVData.getTaxAmtApplicableByItem(ddpart.getSelectedItem().toString(), (np * qty) ))),
                 ddbom.getSelectedItem().toString()
             });
             

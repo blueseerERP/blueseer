@@ -39,6 +39,7 @@ import com.blueseer.ctr.cusData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
+import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.OVData;
@@ -372,11 +373,11 @@ public class ARAgingView extends javax.swing.JPanel {
                             res.getString("ar_type"),
                             res.getString("ar_effdate"),
                             res.getString("ar_duedate"),
-                            res.getDouble("0"),
-                            res.getDouble("30"),
-                            res.getDouble("60"),
-                            res.getDouble("90"),
-                            res.getDouble("90p")
+                            currformatDouble(res.getDouble("0")),
+                            currformatDouble(res.getDouble("30")),
+                            currformatDouble(res.getDouble("60")),
+                            currformatDouble(res.getDouble("90")),
+                            currformatDouble(res.getDouble("90p"))
                             });
                    }
                 
@@ -933,14 +934,14 @@ try {
                    qty = qty + 0;
                     i++;
                         modelsummary.addRow(new Object[]{
-                                BlueSeerUtils.clickbasket,
-                                res.getString("ar_cust"),
-                                res.getString("cm_name"),
-                                res.getDouble("0"),
-                            res.getDouble("30"),
-                            res.getDouble("60"),
-                            res.getDouble("90"),
-                            res.getDouble("90p")
+                            BlueSeerUtils.clickbasket,
+                            res.getString("ar_cust"),
+                            res.getString("cm_name"),
+                            currformatDouble(res.getDouble("0")),
+                            currformatDouble(res.getDouble("30")),
+                            currformatDouble(res.getDouble("60")),
+                            currformatDouble(res.getDouble("90")),
+                            currformatDouble(res.getDouble("90p"))
                             });
                 }
                  
@@ -958,7 +959,7 @@ try {
              } // for each customer in range
                  
                 labelcount.setText(String.valueOf(i));
-                labeldollar.setText(String.valueOf(bsFormatDouble(dol)));
+                labeldollar.setText(String.valueOf(currformatDouble(dol)));
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
