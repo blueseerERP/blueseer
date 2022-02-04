@@ -3847,7 +3847,7 @@ public class DTData {
             
     public static DefaultTableModel getARPaymentBrowseUtil( String str, int state, String myfield) {
              javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("customer"), getGlobalColumnTag("date"), getGlobalColumnTag("amount")})
+                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("batch"), getGlobalColumnTag("customer"), getGlobalColumnTag("date"), getGlobalColumnTag("amount")})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -3882,7 +3882,7 @@ public class DTData {
                         mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("ar_nbr"),
                                    res.getString("ar_cust"),
                                    res.getString("ar_effdate"),
-                                   res.getString("ar_amt")
+                                   currformatDouble(res.getDouble("ar_amt"))
                         });
                     }
            }
@@ -6103,7 +6103,7 @@ return mymodel;
            
     public static DefaultTableModel getARPaymentBrowse() {
               javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("number"), getGlobalColumnTag("customer"), getGlobalColumnTag("invoice"), getGlobalColumnTag("checknbr"), getGlobalColumnTag("applieddate"), getGlobalColumnTag("amount")}); 
+                      new String[]{getGlobalColumnTag("number"), getGlobalColumnTag("customer"), getGlobalColumnTag("invoice"), getGlobalColumnTag("checknbr"), getGlobalColumnTag("applied"), getGlobalColumnTag("amount")}); 
              
        try{
             
@@ -6111,15 +6111,15 @@ return mymodel;
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
-                       res = st.executeQuery("select ar_cust, ar_effdate, ar_id, ard_amt, ar_ref, ard_ref from ar_mstr inner join ard_mstr on ard_id = ar_nbr where ar_type = 'P'; ");
+                       res = st.executeQuery("select ar_cust, ar_effdate, ar_nbr, ard_amt, ar_ref, ard_ref from ar_mstr inner join ard_mstr on ard_id = ar_nbr where ar_type = 'P' order by ar_id desc; ");
                                
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {res.getString("ar_id"),
+                        mymodel.addRow(new Object[] {res.getString("ar_nbr"),
                                    res.getString("ar_cust"),
                                    res.getString("ard_ref"),
                                 res.getString("ar_ref"),
                                 res.getString("ar_effdate"),
-                                res.getDouble("ard_amt")
+                                currformatDouble(res.getDouble("ard_amt"))
                         });
                     }
            }

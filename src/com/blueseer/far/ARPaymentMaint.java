@@ -653,7 +653,7 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
         };
         luTable.addMouseListener(luml);
       
-        callDialog(getClassLabelTag("lblid", this.getClass().getSimpleName()), 
+        callDialog(getClassLabelTag("lblbatch", this.getClass().getSimpleName()), 
                 getClassLabelTag("lblbillto", this.getClass().getSimpleName()));  
         
         
