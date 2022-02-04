@@ -13927,13 +13927,16 @@ return myarray;
                     double baseamt = 0.00;
                     double taxamt = 0.00;
                     double basetaxamt = 0.00;
+                    double matltax = 0.00;
                    
                     res = st.executeQuery("select * from ship_det where shd_id = " + "'" + shipper + "'" +";");
                     while (res.next()) {
                     amt += (res.getDouble("shd_qty") * res.getDouble("shd_netprice"));
-                    taxamt += OVData.getTaxAmtApplicableByItem(res.getString("shd_part"),res.getDouble("shd_qty") * res.getDouble("shd_netprice")); // line level matl tax
+                    matltax += OVData.getTaxAmtApplicableByItem(res.getString("shd_part"),res.getDouble("shd_qty") * res.getDouble("shd_netprice")); // line level matl tax
                     }
                     res.close();
+                    
+                    taxamt = matltax;
                     // lets retrieve any summary charges from orders associated with this shipment.
                     res = st.executeQuery("select * from shs_det where shs_nbr = " + "'" + shipper + "'" + 
                             " and shs_type = 'charge' " +               
@@ -14022,6 +14025,18 @@ return myarray;
                                 + ")"
                                 + ";");
                           }
+                    }
+                    // now matl tax at the item level
+                    if (matltax > 0) {
+                         st.executeUpdate("insert into art_tax "
+                                + "(art_nbr, art_desc, art_type, art_amt, art_percent ) "
+                                + " values ( " + "'" + shipper + "'" + ","
+                                + "'" + "MATERIAL TAX" + "'" + ","
+                                + "'" + "MATERIAL" + "'" + ","
+                                + "'" + matltax + "'" + ","   // amount is currently 'foreign' ...not base
+                                + "'" + "0" + "'" 
+                                + ")"
+                                + ";"); 
                     }
                     
                   } // if type = "I"

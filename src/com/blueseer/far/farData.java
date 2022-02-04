@@ -208,6 +208,31 @@ public class farData {
     return m;
     }
     
+    // misc functions
+    
+    public static String[] getARTaxMaterialOnly(String ref) {
+           // get AR tax info
+            // art_nbr, art_desc, art_type, art_amt, art_percent
+        String[] taxinfo = new String[]{"","","","",""};
+        String sql = "select art_nbr, art_desc, art_type, art_amt, art_percent from art_tax where art_type = 'MATERIAL' and art_nbr = ?;";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, ref);
+             try (ResultSet res = ps.executeQuery();) {
+               while (res.next()) {
+               taxinfo[0] = res.getString("art_nbr");
+               taxinfo[1] = res.getString("art_desc");
+               taxinfo[2] = res.getString("art_type");
+               taxinfo[3] = res.getString("art_amt");
+               taxinfo[4] = res.getString("art_percent");             
+               }
+            }
+        }
+        catch (SQLException s){
+            MainFrame.bslog(s);
+        }
+        return taxinfo;
+    }
     
     public record ar_mstr(String[] m, String ar_nbr, String ar_cust, String ar_amt, String ar_base_amt, 
         String ar_type, String ar_curr, String ar_base_curr, String ar_ref, String ar_rmks,

@@ -31,6 +31,7 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.ctr.cusData;
+import static com.blueseer.far.farData.getARTaxMaterialOnly;
 import com.blueseer.shp.shpData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDoubleUS;
@@ -1241,6 +1242,7 @@ public class fglData {
                     }
                     res2.close();
                     if ( k > 0 ) {
+                        // order level tax
                         if (taxamt > 0 && basetaxamt > 0) {
                             if (! artaxcode.isEmpty()) {
                                  ArrayList<String[]> taxelements = OVData.getTaxPercentElementsApplicableByTaxCode(artaxcode);
@@ -1262,6 +1264,21 @@ public class fglData {
                               }
                             }
                         }
+                        // item level tax
+                        String[] taxinfo = getARTaxMaterialOnly(res.getString("ard_ref"));
+                        acct_cr.add(OVData.getDefaultTaxAcctByType(taxinfo[2]));
+                        acct_dr.add(res.getString("bk_acct"));
+                        cc_cr.add(OVData.getDefaultTaxCCByType(taxinfo[2]));
+                        cc_dr.add(res.getString("cm_ar_cc"));
+                        cost.add(bsParseDoubleUS(taxinfo[3]));  // problem here...need art_base_amt as well as art_amt...an issue only for material tax with regard to currency.
+                        basecost.add(bsParseDoubleUS(taxinfo[3]));  // base and non-base currency material tax is the same...needs to be addresssed.
+                        curr.add(res.getString("ard_curr"));
+                        basecurr.add(res.getString("ard_base_curr"));
+                        site.add(res.getString("ar_site"));
+                        ref.add(res.getString("ard_ref"));
+                        type.add(thistype);
+                        desc.add(thisdesc); 
+                        
                     }
                     
                      // now lets do foreign currency gain/loss for any closed invoices
