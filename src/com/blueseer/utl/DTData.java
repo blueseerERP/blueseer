@@ -3823,8 +3823,8 @@ public class DTData {
                                    res.getString("ap_vend"),
                                    res.getString("vod_rvdid"),
                                    res.getString("vod_invoice"),
-                                   res.getString("ap_amt"),
-                                   res.getString("vod_voprice"),
+                                   currformatDouble(res.getDouble("ap_amt")),
+                                   currformatDouble(res.getDouble("vod_voprice")),
                                    res.getString("vod_qty")
                         });
                     }
@@ -3939,7 +3939,7 @@ public class DTData {
                         mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("ap_nbr"),
                                    res.getString("ap_vend"),
                                    res.getString("ap_effdate"),
-                                   res.getString("ap_amt")
+                                   currformatDouble(res.getDouble("ap_amt"))
                         });
                     }
            }
