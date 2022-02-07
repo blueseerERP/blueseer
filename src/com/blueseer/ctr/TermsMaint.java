@@ -564,7 +564,7 @@ public class TermsMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel4.setText("Disc Due Days:");
         jLabel4.setName("lbldiscduedays"); // NOI18N
 
-        jLabel5.setText("Disc Percent%:");
+        jLabel5.setText("Disc Percent%");
         jLabel5.setName("lbldiscpercent"); // NOI18N
 
         btnew.setText("New");

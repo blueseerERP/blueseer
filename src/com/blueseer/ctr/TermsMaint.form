@@ -188,7 +188,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel5">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Disc Percent%:"/>
+            <Property name="text" type="java.lang.String" value="Disc Percent%"/>
             <Property name="name" type="java.lang.String" value="lbldiscpercent" noResource="true"/>
           </Properties>
         </Component>
