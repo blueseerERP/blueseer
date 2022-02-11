@@ -114,9 +114,9 @@ public class BOMMaint extends javax.swing.JPanel {
      javax.swing.table.DefaultTableModel matlmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                     new String[]{
                         getGlobalColumnTag("item"), 
-                        getGlobalColumnTag("type"), 
                         getGlobalColumnTag("operation"), 
                         getGlobalColumnTag("qtyper"), 
+                        getGlobalColumnTag("currentcost"),
                         getGlobalColumnTag("standardcost")});
       
       javax.swing.event.TableModelListener ml = new javax.swing.event.TableModelListener() {
@@ -874,6 +874,9 @@ public class BOMMaint extends javax.swing.JPanel {
        String site = invData.getItemSite(parent);
        
        double matlcost = 0.00;
+       calcCost cur = new calcCost();
+       matlcost = cur.getMtlCost(parent);
+       
        tbtotmaterial.setText(String.valueOf(matlcost));
         try {
            Connection con = DriverManager.getConnection(url + db, user, pass);
@@ -891,22 +894,23 @@ public class BOMMaint extends javax.swing.JPanel {
                 //          ReportPanel.TableReport.getColumn("CallID").setCellEditor(
                     //       new ButtonEditor(new JCheckBox()));
 
-               res = st.executeQuery("SELECT ps_child, ps_qty_per, ps_type, ps_op, itc_total " +
+               res = st.executeQuery("SELECT ps_child, ps_qty_per, ps_type, ps_op, a.itc_total as 'a.itc_total', b.itc_total as 'b.itc_total' " +
                         " FROM  pbm_mstr  " +
-                        " left outer join item_cost on itc_item = ps_child and itc_set = 'standard' and itc_site = " + "'" + site + "'" +
+                        " left outer join item_cost a on a.itc_item = ps_child and a.itc_set = 'standard' and a.itc_site = " + "'" + site + "'" +
+                        " left outer join item_cost b on b.itc_item = ps_child and b.itc_set = 'current' and b.itc_site = " + "'" + site + "'" +
                         " where ps_parent = " + "'" + parent + "'" + 
                         " and ps_bom = " + "'" + bomid + "'" +        
                         " order by ps_child ;");
 
                 while (res.next()) {
                     i++;
-                    matlcost += res.getDouble("ps_qty_per") * res.getDouble("itc_total");
+                  //  matlcost += res.getDouble("ps_qty_per") * res.getDouble("itc_total");
                     matlmodel.addRow(new Object[]{
                                 res.getString("ps_child"),
-                                res.getString("ps_type"),
                                 res.getString("ps_op"),
                                 res.getDouble("ps_qty_per"),
-                                res.getDouble("itc_total")
+                                res.getDouble("b.itc_total"),
+                                res.getDouble("a.itc_total")
                             });
               
                 }
