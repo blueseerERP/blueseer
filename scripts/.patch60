@@ -21,3 +21,5 @@ patch=6
 # invoice jasper update and bug fix 25
 patch=7
 # tax related bug fixes (#26)
+patch=8
+# bug fix #28, enhancement to BOMM
