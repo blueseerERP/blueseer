@@ -862,6 +862,79 @@ public class OVData {
         }
     }
 
+    public static void updateItemCostRec(String item, String site, String set, Double mtl, Double ovh, Double out, Double tot) {
+        try {
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+            st.executeUpdate("update item_cost set " +
+                  " itc_mtl_top = " + "'" + mtl + "'" + "," +
+                  " itc_ovh_top = " + "'" + ovh + "'" + "," +
+                  " itc_out_top = " + "'" + out + "'" + "," +
+                  " itc_total = " + "'" + tot + "'" +
+                  " where itc_item = " + "'" + item + "'" +
+                  " and itc_set = " + "'" + set + "'" +
+                  " and itc_site = " + "'" + site + "'" +
+                  ";");
+               
+            } // if proceed
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+    }
+
+    public static void updateItemCostRec(String item, String site, String set, Double mtl, Double lbr, Double bdn, Double ovh, Double out, Double tot) {
+        try {
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+            st.executeUpdate("update item_cost set " +
+                  " itc_mtl_top = " + "'" + mtl + "'" + "," +
+                  " itc_ovh_top = " + "'" + ovh + "'" + "," +
+                  " itc_out_top = " + "'" + out + "'" + "," +
+                  " itc_lbr_top = " + "'" + lbr + "'" + "," +
+                  " itc_bdn_top = " + "'" + bdn + "'" + "," +        
+                  " itc_total = " + "'" + tot + "'" +
+                  " where itc_item = " + "'" + item + "'" +
+                  " and itc_set = " + "'" + set + "'" +
+                  " and itc_site = " + "'" + site + "'" +
+                  ";");
+               
+            } // if proceed
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+    }
+
+    
     public static ArrayList getmenulist() {
         ArrayList myarray = new ArrayList();
         try {

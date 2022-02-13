@@ -39,6 +39,7 @@ import static com.blueseer.inv.invData.addPBM;
 import com.blueseer.inv.invData.bom_mstr;
 import static com.blueseer.inv.invData.deletePBM;
 import com.blueseer.inv.invData.pbm_mstr;
+import static com.blueseer.inv.invData.updateCurrentItemCost;
 import static com.blueseer.inv.invData.updatePBM;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
@@ -591,6 +592,7 @@ public class BOMMaint extends javax.swing.JPanel {
         bind_tree(tbkey.getText(), tbbomid.getText());
         getComponents(tbkey.getText(), tbbomid.getText());
         callSimulateCost();
+        updateCurrentItemCost(tbkey.getText());
         getCostSets(tbkey.getText().toString());
         return m;
     }
@@ -601,7 +603,9 @@ public class BOMMaint extends javax.swing.JPanel {
         bind_tree(tbkey.getText(), tbbomid.getText());
         getComponents(tbkey.getText(), tbbomid.getText());
         callSimulateCost();
+        updateCurrentItemCost(tbkey.getText());
         getCostSets(tbkey.getText().toString());
+        
         return m;
     }
     
@@ -615,7 +619,8 @@ public class BOMMaint extends javax.swing.JPanel {
       }
       if (proceed && comp != null) {
          m = deletePBM(createRecord(comp.toString()), createRecordBomMstr(), OVData.getBomPbmCount(BomID)); 
-        } else {
+         updateCurrentItemCost(tbkey.getText());  
+      } else {
            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
         }
      return m;
@@ -734,6 +739,7 @@ public class BOMMaint extends javax.swing.JPanel {
     }
 
     
+    
     public void getCostSets(String parent) {
        
         tbparentcostSTD.setText(String.valueOf(bsFormatDouble5(invData.getItemCost(parent, "STANDARD", OVData.getDefaultSite()))));
@@ -742,6 +748,9 @@ public class BOMMaint extends javax.swing.JPanel {
        
         ArrayList<Double> costlist = new ArrayList<Double>();
         costlist = cur.getTotalCost(parent, tbbomid.getText());
+        
+        
+        
       //  double current = costlist.get(0) + costlist.get(1) + costlist.get(2) + costlist.get(3) + costlist.get(4);
         tbparentcostCUR.setText(bsFormatDouble5(costlist.get(0) + costlist.get(1) + costlist.get(2) + costlist.get(3) + costlist.get(4)));
         tbtotoperational.setText(bsFormatDouble5(costlist.get(1) + costlist.get(2) + costlist.get(3) + costlist.get(4)));

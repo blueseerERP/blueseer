@@ -97,7 +97,12 @@ public class calcCost {
              getOutCostRecursive(part, 1);
              return outcost;
          }        
-         
+     
+    public double getTotalCostSum(String item, String bom) {
+        getTotalCostRecursive(item,1,bom);
+        return (lowermtlcost + uppermtlcost + lowerlbrcost + upperlbrcost + lowerbdncost + upperbdncost + lowerovhcost + upperovhcost + loweroutcost + upperoutcost );
+    }
+    
     public ArrayList getTotalCost(String part, String bom) {
              ArrayList mylist = new ArrayList();
              getTotalCostRecursive(part,1,bom);

@@ -36,6 +36,7 @@ import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import com.blueseer.utl.OVData;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -901,6 +902,12 @@ public class invData {
    
 
     /* misc functions */
+     public static void updateCurrentItemCost(String item) {
+        calcCost cur = new calcCost();
+        ArrayList<Double> costlist = cur.getTotalCost(item, OVData.getDefaultBomID(item) );
+        OVData.updateItemCostRec(item, invData.getItemSite(item), "current", costlist.get(0), costlist.get(1), costlist.get(2), costlist.get(3), costlist.get(4), costlist.get(0) + costlist.get(1) + costlist.get(2) + costlist.get(3) + costlist.get(4));
+    }
+    
     public static ArrayList getItemListFromCustCode(String cust) {
         ArrayList myarray = new ArrayList();   
         try {

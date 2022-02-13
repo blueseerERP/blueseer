@@ -39,6 +39,7 @@ import com.blueseer.inv.invData.item_mstr;
 import static com.blueseer.inv.invData.addItemMstr;
 import static com.blueseer.inv.invData.deleteItemMstr;
 import static com.blueseer.inv.invData.getItemMstr;
+import static com.blueseer.inv.invData.updateCurrentItemCost;
 import static com.blueseer.inv.invData.updateItemMstr;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsformat;
@@ -546,12 +547,29 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
             }
           // now add item cost record for later use
           OVData.addItemCostRec(tbkey.getText(), ddsite.getSelectedItem().toString(), "standard", mtlcost, ovhcost, outcost, (mtlcost + ovhcost + outcost));
-        return m;
+          OVData.addItemCostRec(tbkey.getText(), ddsite.getSelectedItem().toString(), "current", mtlcost, ovhcost, outcost, (mtlcost + ovhcost + outcost));
+          return m;
        
      }
    
     public String[] updateRecord(String[] x) {
       String[] m = updateItemMstr(createRecord());
+      
+            double mtlcost = 0;
+            if (! tbmtlcost.getText().isEmpty()) {
+                mtlcost = bsParseDouble(tbmtlcost.getText());
+            }
+             double ovhcost = 0;
+            if (! tbovhcost.getText().isEmpty()) {
+                ovhcost = bsParseDouble(tbovhcost.getText());
+            }
+             double outcost = 0;
+            if (! tboutcost.getText().isEmpty()) {
+                outcost = bsParseDouble(tboutcost.getText());
+            }
+          // now add item cost record for later use
+         // OVData.updateItemCostRec(tbkey.getText(), ddsite.getSelectedItem().toString(), "current", mtlcost, ovhcost, outcost, (mtlcost + ovhcost + outcost));
+          updateCurrentItemCost(tbkey.getText());
          return m;
     }
     
