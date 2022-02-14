@@ -81,6 +81,7 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Locale;
 import java.util.logging.Level;
@@ -553,23 +554,39 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
      }
    
     public String[] updateRecord(String[] x) {
-      String[] m = updateItemMstr(createRecord());
       
-            double mtlcost = 0;
-            if (! tbmtlcost.getText().isEmpty()) {
-                mtlcost = bsParseDouble(tbmtlcost.getText());
+      
+        double mtlcost = 0;
+        if (! tbmtlcost.getText().isEmpty()) {
+            mtlcost = bsParseDouble(tbmtlcost.getText());
+        }
+         double ovhcost = 0;
+        if (! tbovhcost.getText().isEmpty()) {
+            ovhcost = bsParseDouble(tbovhcost.getText());
+        }
+         double outcost = 0;
+        if (! tboutcost.getText().isEmpty()) {
+            outcost = bsParseDouble(tboutcost.getText());
+        }
+        // capture the current cost 'before' committing to table
+        calcCost cur = new calcCost();
+        double curcost = cur.getTotalCostSum(tbkey.getText(), OVData.getDefaultBomID(tbkey.getText()));
+        
+        // now update item master and current item cost record in item_cost
+        String[] m = updateItemMstr(createRecord());
+        updateCurrentItemCost(tbkey.getText());
+          
+        // if current item material cost has changed...blow back through all parents and set current price of parents
+        // bsmf.MainFrame.show(curcost + "/" + mtlcost + "/" + ovhcost + "/" + outcost);
+        if (curcost != (mtlcost + ovhcost + outcost)) {
+            ArrayList<String> parents = new ArrayList<String>();
+            parents = OVData.getpsmstrparents2(tbkey.getText());
+            // Collections.sort(parents);
+            for (String parent : parents) {
+                updateCurrentItemCost(parent);
             }
-             double ovhcost = 0;
-            if (! tbovhcost.getText().isEmpty()) {
-                ovhcost = bsParseDouble(tbovhcost.getText());
-            }
-             double outcost = 0;
-            if (! tboutcost.getText().isEmpty()) {
-                outcost = bsParseDouble(tboutcost.getText());
-            }
-          // now add item cost record for later use
-         // OVData.updateItemCostRec(tbkey.getText(), ddsite.getSelectedItem().toString(), "current", mtlcost, ovhcost, outcost, (mtlcost + ovhcost + outcost));
-          updateCurrentItemCost(tbkey.getText());
+        }
+         
          return m;
     }
     
