@@ -2648,11 +2648,9 @@ public class OVData {
                 if (st != null) {
                     st.close();
                 }
-                if (con != null) {
-                    con.close();
-                }
+                con.close();
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             MainFrame.bslog(e);
         }
         return myarray;
