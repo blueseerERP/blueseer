@@ -33,6 +33,8 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import com.blueseer.adm.admData;
+import static com.blueseer.adm.admData.addCodeMstr;
 import static com.blueseer.fap.fapData.VouchAndPayTransaction;
 import com.blueseer.fap.fapData.ap_mstr;
 import com.blueseer.fap.fapData.vod_mstr;
@@ -885,6 +887,11 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel2.setName("lblprofile"); // NOI18N
 
         btaddprofile.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/add.png"))); // NOI18N
+        btaddprofile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btaddprofileActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -1185,6 +1192,27 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeerT {
     private void btlookupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btlookupActionPerformed
         lookUpFrame();
     }//GEN-LAST:event_btlookupActionPerformed
+
+    private void btaddprofileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddprofileActionPerformed
+        String keyvalue = ddsite.getSelectedItem().toString() + "+" +
+                          ddvend.getSelectedItem().toString() + "+" +
+                ddacct.getSelectedItem().toString() + "+" +
+                ddcc.getSelectedItem().toString() + "+" +
+                tbqty.getText() + "+" +
+                tbprice.getText();
+        admData.code_mstr x = new admData.code_mstr(null, 
+                this.getClass().getName(),
+                tbitemservice.getText(),
+                keyvalue,
+                "1"
+                );
+        String[] r = addCodeMstr(x);
+        if (r[0].equals("0")) {
+            bsmf.MainFrame.show(getMessageTag(1007));
+        } else {
+            bsmf.MainFrame.show(getMessageTag(1022));
+        }
+    }//GEN-LAST:event_btaddprofileActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
