@@ -32,6 +32,7 @@ ARRptGroup,Müşteriye Göre AR Yaşlandırma Ayrıntısı,ARAgingDetailByCust,2
 ARRptGroup,Müşteri Tarihine Göre AR Ödemeleri,ARPaymentsByCustDate,3,L8
 APRptGroup,APNbr tarafından AP Girişleri,apByNbrRange,0,L11
 APRptGroup,Satıcıya Göre AP Girişleri,apByVendorRange,1,L11
+APRptGroup,Satıcı / Tarihe Göre Gider Raporu,expenseByVendorDate,2,L11
 HRRptGroup,EmpNbr tarafından Çalışan Raporu,employeeByEmpNbr,0,L8
 ShpRptGroup,ShipDate Aralığına göre Göndericiler,shippersByShipDateRange,0,L11
 ShpRptGroup,Numara Aralığına Göre Göndericiler,shippersByShipNbrRange,1,L11

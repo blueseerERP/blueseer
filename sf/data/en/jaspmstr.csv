@@ -32,6 +32,7 @@ ARRptGroup,AR Aging Detail by Customer,ARAgingDetailByCust,2,L2
 ARRptGroup,AR Payments by Customer Date,ARPaymentsByCustDate,3,L8
 APRptGroup,AP Entries by APNbr,apByNbrRange,0,L11
 APRptGroup,AP Entries by Vendor,apByVendorRange,1,L11
+APRptGroup,Expense Report by Vendor / Date,expenseByVendorDate,2,L11
 HRRptGroup,Employees Report by EmpNbr,employeeByEmpNbr,0,L8
 ShpRptGroup,Shippers by ShipDate Range,shippersByShipDateRange,0,L11
 ShpRptGroup,Shippers by Number Range,shippersByShipNbrRange,1,L11

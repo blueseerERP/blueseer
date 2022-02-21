@@ -553,7 +553,125 @@ public class APRptPicker extends javax.swing.JPanel {
                
     }
     
-   
+    /* Expense Maint By Date, By Vendor */
+    public void expenseByVendorDate (boolean input) {
+        
+        if (input) { // input...draw variable input panel
+           resetVariables();
+           hidePanels();
+           showPanels(new String[]{"tb1"});
+           showPanels(new String[]{"dc"});
+           lbkey1.setText(getClassLabelTag("lblfromcode", this.getClass().getSimpleName()));
+           lbkey2.setText(getClassLabelTag("lbltocode", this.getClass().getSimpleName()));
+           java.util.Date now = new java.util.Date();
+           dcdate1.setDate(now);
+           dcdate2.setDate(now);
+         } else { // output...fill report
+            // colect variables from input
+            String from = tbkey1.getText();
+            String to = tbkey2.getText();
+            String fromdate = BlueSeerUtils.setDateFormat(dcdate1.getDate());
+            String todate = BlueSeerUtils.setDateFormat(dcdate2.getDate());
+            // cleanup variables
+          
+            if (fromdate.isEmpty()) {
+                  fromdate = bsmf.MainFrame.lowdate;
+            }
+            if (todate.isEmpty()) {
+                  todate = bsmf.MainFrame.hidate;
+            }
+          
+            if (from.isEmpty()) {
+                  from = bsmf.MainFrame.lowchar;
+            }
+            if (to.isEmpty()) {
+                  to = bsmf.MainFrame.hichar;
+            }
+          
+            
+            
+            // create and fill tablemodel
+            // column 1 is always 'select' and always type ImageIcon
+            // the remaining columns are whatever you require
+             javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+            new String[]{getGlobalColumnTag("id"), 
+                getGlobalColumnTag("vendor"), 
+                getGlobalColumnTag("name"), 
+                getGlobalColumnTag("reference"), 
+                getGlobalColumnTag("effectivedate"), 
+                getGlobalColumnTag("duedate"), 
+                getGlobalColumnTag("amount"), 
+                getGlobalColumnTag("baseamount"), 
+                getGlobalColumnTag("status"), 
+                getGlobalColumnTag("currency"), 
+                getGlobalColumnTag("account")});
+            
+      try{
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{   
+                 res = st.executeQuery("select ap_id, ap_vend, vd_name, ap_type, " +
+                               " ap_ref, ap_effdate, ap_duedate, ap_amt, ap_base_amt,  " +
+                               " ap_status, ap_curr, ap_acct " +
+                               " from ap_mstr inner join vd_mstr on vd_addr = ap_vend " +
+                               " where ap_vend >= " + "'" + from + "'" +
+                               " and ap_vend <= " + "'" + to + "'" +
+                               " and ap_effdate >= " + "'" + fromdate + "'" +
+                               " and ap_effdate <= " + "'" + todate + "'" +
+                               " and ap_type = 'E' " +
+                               " and ap_status = 'c' " +
+                               ";");
+                               
+                    while (res.next()) {
+                        mymodel.addRow(new Object[] {
+                            res.getString("ap_id"),
+                            res.getString("ap_vend"),
+                            res.getString("vd_name"),
+                            res.getString("ap_ref"),
+                            res.getString("ap_type"),
+                            res.getString("ap_effdate"),
+                            BlueSeerUtils.currformat(res.getString("ap_amt")),
+                            BlueSeerUtils.currformat(res.getString("ap_base_amt")),
+                            res.getString("ap_status"),
+                            res.getString("ap_curr"),
+                            res.getString("ap_acct")
+                        });
+                    }
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+              } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+            
+        }
+      
+      // now assign tablemodel to table
+            tablereport.setModel(mymodel);
+            tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
+            Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
+              while (en.hasMoreElements()) {
+                 TableColumn tc = en.nextElement();
+                 if (mymodel.getColumnClass(tc.getModelIndex()).getSimpleName().equals("ImageIcon")) {
+                     continue;
+                 }
+                 tc.setCellRenderer(new APRptPicker.renderer1());
+             }
+        } // else run report
+               
+    }
+    
+    
     /* CUSTOM FUNCTIONS END */
     
     /**

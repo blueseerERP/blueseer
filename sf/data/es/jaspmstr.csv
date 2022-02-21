@@ -32,6 +32,7 @@ ARRptGroup,Detalle de envejecimiento de AR por cliente,ARAgingDetailByCust,2,L2
 ARRptGroup,Pagos AR por fecha del cliente,ARPaymentsByCustDate,3,L8
 APRptGroup,Entradas AP por APNbr,apByNbrRange,0,L11
 APRptGroup,Entradas de AP por proveedor,apByVendorRange,1,L11
+APRptGroup,Informe de gastos por proveedor/fecha,expenseByVendorDate,2,L11
 HRRptGroup,Informe de empleados por EmpNbr,employeeByEmpNbr,0,L8
 ShpRptGroup,Remitentes por rango de fecha de envío,shippersByShipDateRange,0,L11
 ShpRptGroup,Remitentes por rango de números,shippersByShipNbrRange,1,L11

@@ -32,6 +32,7 @@ ARRptGroup,AR-Alterungsdetails nach Kunden,ARAgingDetailByCust,2,L2
 ARRptGroup,AR-Zahlungen nach Kundendatum,ARPaymentsByCustDate,3,L8
 APRptGroup,AP-Einträge von APNbr,apByNbrRange,0,L11
 APRptGroup,AP-Einträge nach Anbieter,apByVendorRange,1,L11
+APRptGroup,Spesenabrechnung nach Anbieter / Datum,expenseByVendorDate,2,L11
 HRRptGroup,Mitarbeiterbericht von EmpNbr,employeeByEmpNbr,0,L8
 ShpRptGroup,Versender nach ShipDate Range,shippersByShipDateRange,0,L11
 ShpRptGroup,Versender nach Nummernkreis,shippersByShipNbrRange,1,L11
