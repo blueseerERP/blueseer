@@ -345,7 +345,15 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeerT {
         dcdate.setEnabled(true);
         dcdate.setDate(now);
         
-       
+       ddprofile.removeAllItems();
+        ArrayList<String> profiles = OVData.getCodeMstrKeyList(this.getClass().getName());
+        for (int i = 0; i < profiles.size(); i++) {
+            ddprofile.addItem(profiles.get(i)); 
+        }
+        ddprofile.insertItemAt("", 0);
+        ddprofile.setSelectedIndex(0);
+        
+        
         ddvend.removeAllItems();
         ArrayList myvend = venData.getVendMstrList();
         for (int i = 0; i < myvend.size(); i++) {
