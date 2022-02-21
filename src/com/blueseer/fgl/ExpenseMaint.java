@@ -346,7 +346,7 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeerT {
         dcdate.setDate(now);
         
        ddprofile.removeAllItems();
-        ArrayList<String> profiles = OVData.getCodeMstrKeyList(this.getClass().getName());
+        ArrayList<String> profiles = OVData.getCodeMstrKeyList(this.getClass().getSimpleName());
         for (int i = 0; i < profiles.size(); i++) {
             ddprofile.addItem(profiles.get(i)); 
         }
@@ -891,6 +891,12 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeerT {
             }
         });
 
+        ddprofile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ddprofileActionPerformed(evt);
+            }
+        });
+
         jLabel2.setText("Profile");
         jLabel2.setName("lblprofile"); // NOI18N
 
@@ -1202,14 +1208,14 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeerT {
     }//GEN-LAST:event_btlookupActionPerformed
 
     private void btaddprofileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddprofileActionPerformed
-        String keyvalue = ddsite.getSelectedItem().toString() + "+" +
-                          ddvend.getSelectedItem().toString() + "+" +
-                ddacct.getSelectedItem().toString() + "+" +
-                ddcc.getSelectedItem().toString() + "+" +
-                tbqty.getText() + "+" +
+        String keyvalue = ddsite.getSelectedItem().toString() + ":" +
+                          ddvend.getSelectedItem().toString() + ":" +
+                ddacct.getSelectedItem().toString() + ":" +
+                ddcc.getSelectedItem().toString() + ":" +
+                tbqty.getText() + ":" +
                 tbprice.getText();
         admData.code_mstr x = new admData.code_mstr(null, 
-                this.getClass().getName(),
+                this.getClass().getSimpleName(),
                 tbitemservice.getText(),
                 keyvalue,
                 "1"
@@ -1221,6 +1227,57 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeerT {
             bsmf.MainFrame.show(getMessageTag(1022));
         }
     }//GEN-LAST:event_btaddprofileActionPerformed
+
+    private void ddprofileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddprofileActionPerformed
+         if (ddprofile.getSelectedItem() != null && ! ddprofile.getSelectedItem().toString().isEmpty() && ! isLoad )
+        try {
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            String values = "";
+            try {
+                res = st.executeQuery("select code_key, code_value from code_mstr where code_code = " + "'" + this.getClass().getSimpleName() + "'" + 
+                        " and code_key = " + "'" + ddprofile.getSelectedItem().toString() + "'" + ";");
+                while (res.next()) {
+                    tbitemservice.setText(res.getString("code_key"));
+                    values = res.getString("code_value");
+                }
+                String[] s = values.split(":", -1);
+                ddsite.setSelectedItem(s[0]);
+                ddvend.setSelectedItem(s[1]);
+                ddacct.setSelectedItem(s[2]);
+                ddcc.setSelectedItem(s[3]);
+                tbqty.setText(s[4]);
+                tbprice.setText(s[5]);
+                
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+         
+          if (ddprofile.getSelectedItem() != null && ddprofile.getSelectedItem().toString().isEmpty() && ! isLoad ) {
+            ddsite.setSelectedIndex(0);
+            ddvend.setSelectedIndex(0);
+            ddacct.setSelectedIndex(0);
+            ddcc.setSelectedIndex(0);
+            tbqty.setText("");
+            tbprice.setText("");  
+          }
+        
+         
+         
+    }//GEN-LAST:event_ddprofileActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
