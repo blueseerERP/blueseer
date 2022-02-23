@@ -115,11 +115,12 @@ LedgerReportsMenu,ReconAccount,10,JMenuItem,Account Reconciliation,,1,,1,1
 Finance,PostGLTrans,3,JMenuItem,Post Transactions,,,,1,1
 Finance,GLTranMaint,4,JMenuItem,GL Transaction Maintenance,,,,1,1
 Finance,ExpenseMaint,5,JMenuItem,Expense Maintenance,,,,1,1
-Finance,IncomeMaint,5,JMenuItem,Income Maintenance,,,,1,1
-Finance,ARMenu,7,JMenu,Accounts Receivable Menu,,,,1,1
-Finance,APMenu,8,JMenu,Accounts Payable Menu,,,,1,1
-Finance,CashTransactionMenu,9,JMenu,Quick Cash Menu,,,,1,1
-Finance,PayRollMenu,10,JMenu,Payroll Menu,,,,1,1
+Finance,ExpenseBrowse,6,JMenuItem,Expense Browse,,,,1,1
+Finance,IncomeMaint,7,JMenuItem,Income Maintenance,,,,1,1
+Finance,ARMenu,8,JMenu,Accounts Receivable Menu,,,,1,1
+Finance,APMenu,9,JMenu,Accounts Payable Menu,,,,1,1
+Finance,CashTransactionMenu,10,JMenu,Quick Cash Menu,,,,1,1
+Finance,PayRollMenu,11,JMenu,Payroll Menu,,,,1,1
 ARMenu,ARPaymentMaint,1,JMenuItem,Payment Maintenance,,,,1,1
 ARMenu,ARPaymentBrowse,2,JMenuItem,Payment Browse,,1,,1,1
 ARMenu,ARMemoMaint,3,JMenuItem,Memo Maintenance,,,,1,1
