@@ -915,7 +915,7 @@ try {
                             
                                begbal = begbal - activity;
                                endbal = begbal + activity;
-                           
+                        if (ddtype.getSelectedItem().toString().equals(getGlobalProgTag("all"))) {       
                             mymodelCC.addRow(new Object[]{BlueSeerUtils.clickbasket, acctid, accttype, acctcurr,
                                 acctdesc,
                                 site,
@@ -924,9 +924,25 @@ try {
                                 currformatDouble(activity),
                                 currformatDouble(endbal)
                             });
-                 totendbal = totendbal + endbal;
-                 totbegbal = totbegbal + begbal;
-                 totactivity = totactivity + activity;
+                            totendbal = totendbal + endbal;
+                            totbegbal = totbegbal + begbal;
+                            totactivity = totactivity + activity;
+                        } else {
+                          if (accttype.equals(ddtype.getSelectedItem().toString()))  {
+                          mymodelCC.addRow(new Object[]{BlueSeerUtils.clickbasket, acctid, accttype, acctcurr,
+                            acctdesc,
+                            site,
+                            res.getString("acb_cc"),
+                            currformatDouble(begbal),
+                            currformatDouble(activity),
+                            currformatDouble(endbal)
+                            });
+                            totendbal = totendbal + endbal;
+                            totbegbal = totbegbal + begbal;
+                            totactivity = totactivity + activity;
+                          }
+                        }
+                 
                             
                        }
                        
@@ -966,7 +982,7 @@ try {
                             
                                begbal = begbal - activity;
                                endbal = begbal + activity;
-                           
+                    if (ddtype.getSelectedItem().toString().equals(getGlobalProgTag("all"))) {       
                             mymodelCC.addRow(new Object[]{BlueSeerUtils.clickbasket, acctid, accttype, acctcurr,
                                 acctdesc,
                                 site,
@@ -975,11 +991,26 @@ try {
                                 currformatDouble(activity),
                                 currformatDouble(endbal)
                             });
-                            
+                            totendbal = totendbal + endbal;
+                            totbegbal = totbegbal + begbal;
+                            totactivity = totactivity + activity;
+                    } else {
+                        if (accttype.equals(ddtype.getSelectedItem().toString())) {
+                        mymodelCC.addRow(new Object[]{BlueSeerUtils.clickbasket, acctid, accttype, acctcurr,
+                            acctdesc,
+                            site,
+                            res.getString("acb_cc"),
+                            currformatDouble(begbal),
+                            currformatDouble(activity),
+                            currformatDouble(endbal)
+                        });
+                        totendbal = totendbal + endbal;
+                        totbegbal = totbegbal + begbal;
+                        totactivity = totactivity + activity;
+                        }
+                    }       
                                   
-                 totendbal = totendbal + endbal;
-                 totbegbal = totbegbal + begbal;
-                 totactivity = totactivity + activity;
+                 
                             
                        }
                  
@@ -1090,22 +1121,38 @@ try {
                      continue ACCTS;
                  }
                  
-                 // now sum for the total labels display
-                 totendbal = totendbal + endbal;
-                 totbegbal = totbegbal + begbal;
-                 totactivity = totactivity + activity;
+                 
                  
                //  if (begbal == 0 && endbal == 0 && activity == 0)
                //      bsmf.MainFrame.show(account);
-               
-                    mymodel.addRow(new Object[]{BlueSeerUtils.clickbasket, acctid, accttype, acctcurr,
-                                acctdesc,
-                                site,
-                                currformatDouble(begbal),
-                                currformatDouble(activity),
-                                currformatDouble(endbal)
-                            });
-               
+               if (ddtype.getSelectedItem().toString().equals(getGlobalProgTag("all"))) {
+                   
+                mymodel.addRow(new Object[]{BlueSeerUtils.clickbasket, acctid, accttype, acctcurr,
+                            acctdesc,
+                            site,
+                            currformatDouble(begbal),
+                            currformatDouble(activity),
+                            currformatDouble(endbal)
+                        });
+                // now sum for the total labels display
+                 totendbal = totendbal + endbal;
+                 totbegbal = totbegbal + begbal;
+                 totactivity = totactivity + activity;
+               } else {
+                  if (accttype.equals(ddtype.getSelectedItem().toString())) {
+                  mymodel.addRow(new Object[]{BlueSeerUtils.clickbasket, acctid, accttype, acctcurr,
+                            acctdesc,
+                            site,
+                            currformatDouble(begbal),
+                            currformatDouble(activity),
+                            currformatDouble(endbal)
+                        }); 
+                      // now sum for the total labels display
+                     totendbal = totendbal + endbal;
+                     totbegbal = totbegbal + begbal;
+                     totactivity = totactivity + activity;
+                  }
+               }
              
                    
                 } // Accts   
