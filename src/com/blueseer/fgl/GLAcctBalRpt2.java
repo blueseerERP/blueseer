@@ -69,6 +69,7 @@ import static bsmf.MainFrame.user;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.sql.Connection;
 import java.text.DecimalFormatSymbols;
@@ -427,6 +428,14 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
             ddacctfrom.setSelectedIndex(0);
             ddacctto.setSelectedIndex(ddacctto.getItemCount() - 1);
         
+        ddtype.removeAllItems();
+        ddtype.addItem("A");
+        ddtype.addItem("L");
+        ddtype.addItem("I");
+        ddtype.addItem("E");
+        ddtype.addItem("O");
+        ddtype.insertItemAt(getGlobalProgTag("all"), 0);
+        ddtype.setSelectedIndex(0);
           
           
     }
@@ -463,6 +472,8 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
         ddacctfrom = new javax.swing.JComboBox();
         ddsite = new javax.swing.JComboBox();
         cbcc = new javax.swing.JCheckBox();
+        ddtype = new javax.swing.JComboBox<>();
+        jLabel9 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
         lblactbal = new javax.swing.JLabel();
@@ -574,6 +585,9 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
         cbcc.setText("CostCenter");
         cbcc.setName("cbcostcenter"); // NOI18N
 
+        jLabel9.setText("type");
+        jLabel9.setName("lbltype"); // NOI18N
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -587,7 +601,10 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(datelabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(132, 132, 132))
+                        .addGap(28, 28, 28)
+                        .addComponent(jLabel9)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(ddtype, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
                         .addComponent(ddyear, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -639,7 +656,11 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
                         .addComponent(cbcc)
                         .addComponent(cbzero, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(datelabel, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(datelabel, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(ddtype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel9)))
                 .addContainerGap())
         );
 
@@ -1167,6 +1188,7 @@ try {
     private javax.swing.JComboBox ddacctto;
     private javax.swing.JComboBox ddperiod;
     private javax.swing.JComboBox ddsite;
+    private javax.swing.JComboBox<String> ddtype;
     private javax.swing.JComboBox ddyear;
     private javax.swing.JPanel detailpanel;
     private javax.swing.JLabel jLabel1;
@@ -1177,6 +1199,7 @@ try {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
