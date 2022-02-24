@@ -115,11 +115,12 @@ LedgerReportsMenu,ReconAccount,10,JMenuItem,Kontenabstimmung,,1,,1,1
 Finanzen,PostGLTrans,3,JMenuItem,Transaktionen buchen,,,,1,1
 Finanzen,GLTranMaint,4,JMenuItem,GL-Transaktionspflege,,,,1,1
 Finanzen,ExpenseMaint,5,JMenuItem,Kostenerhaltung,,,,1,1
-Finanzen,IncomeMaint,5,JMenuItem,Einkommenserhaltung,,,,1,1
-Finanzen,ARMenu,7,JMenu,Debitorenmenü,,,,1,1
-Finanzen,APMenu,8,JMenu,Menü Kreditorenbuchhaltung,,,,1,1
-Finanzen,CashTransactionMenu,9,JMenu,Quick Cash Menü,,,,1,1
-Finanzen,PayRollMenu,10,JMenu,Gehaltsabrechnungsmenü,,,,1,1
+Finanzen,ExpenseBrowse,6,JMenuItem,Ausgaben durchsuchen,,,,1,1
+Finanzen,IncomeMaint,7,JMenuItem,Einkommenserhaltung,,,,1,1
+Finanzen,ARMenu,8,JMenu,Debitorenmenü,,,,1,1
+Finanzen,APMenu,9,JMenu,Menü Kreditorenbuchhaltung,,,,1,1
+Finanzen,CashTransactionMenu,10,JMenu,Quick Cash Menü,,,,1,1
+Finanzen,PayRollMenu,11,JMenu,Gehaltsabrechnungsmenü,,,,1,1
 ARMenu,ARPaymentMaint,1,JMenuItem,Zahlungswartung,,,,1,1
 ARMenu,ARPaymentBrowse,2,JMenuItem,Zahlung Durchsuchen,,1,,1,1
 ARMenu,ARMemoMaint,3,JMenuItem,Memo-Wartung,,,,1,1

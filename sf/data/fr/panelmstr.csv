@@ -73,6 +73,7 @@ com.blueseer.inv.UOMConvMaint,,1
 com.blueseer.fgl.DeptMaint,,1
 com.blueseer.fgl.ExchangeMaint,,1
 com.blueseer.fgl.ExpenseMaint,,1
+com.blueseer.fgl.ExpenseBrowse,,1
 com.blueseer.fgl.IncomeMaint,,1
 com.blueseer.fgl.GLAcctBalRpt1,,1
 com.blueseer.fgl.GLAcctBalRpt2,,1

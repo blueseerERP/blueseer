@@ -115,11 +115,12 @@ LedgerReportsMenu,ReconAccount,10,JMenuItem,Reconciliación de la cuenta,,1,,1,1
 Finanzas,PostGLTrans,3,JMenuItem,Publicar transacciones,,,,1,1
 Finanzas,GLTranMaint,4,JMenuItem,Mantenimiento de transacciones GL,,,,1,1
 Finanzas,ExpenseMaint,5,JMenuItem,Mantenimiento de gastos,,,,1,1
-Finanzas,IncomeMaint,5,JMenuItem,Mantenimiento de ingresos,,,,1,1
-Finanzas,ARMenu,7,JMenu,Menú de cuentas por cobrar,,,,1,1
-Finanzas,APMenu,8,JMenu,Menú de cuentas a pagar,,,,1,1
-Finanzas,CashTransactionMenu,9,JMenu,Menú de efectivo rápido,,,,1,1
-Finanzas,PayRollMenu,10,JMenu,Menú de nómina,,,,1,1
+Finanzas,ExpenseBrowse,6,JMenuItem,Navegación de gastos,,,,1,1
+Finanzas,IncomeMaint,7,JMenuItem,Mantenimiento de ingresos,,,,1,1
+Finanzas,ARMenu,8,JMenu,Menú de cuentas por cobrar,,,,1,1
+Finanzas,APMenu,9,JMenu,Menú de cuentas a pagar,,,,1,1
+Finanzas,CashTransactionMenu,10,JMenu,Menú de efectivo rápido,,,,1,1
+Finanzas,PayRollMenu,11,JMenu,Menú de nómina,,,,1,1
 ARMenu,ARPaymentMaint,1,JMenuItem,Mantenimiento de pagos,,,,1,1
 ARMenu,ARPaymentBrowse,2,JMenuItem,Navegación de pago,,1,,1,1
 ARMenu,ARMemoMaint,3,JMenuItem,Mantenimiento de notas,,,,1,1

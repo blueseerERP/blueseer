@@ -115,11 +115,12 @@ LedgerReportsMenu,ReconAccount,10,JMenuItem,Hesap mutabakatı,,1,,1,1
 Finans,PostGLTrans,3,JMenuItem,İşlem Sonrası,,,,1,1
 Finans,GLTranMaint,4,JMenuItem,GL İşlem Bakımı,,,,1,1
 Finans,ExpenseMaint,5,JMenuItem,Masraf Bakımı,,,,1,1
-Finans,IncomeMaint,5,JMenuItem,Gelir Bakımı,,,,1,1
-Finans,ARMenu,7,JMenu,Alacak Hesapları Menüsü,,,,1,1
-Finans,APMenu,8,JMenu,Borç Hesapları Menüsü,,,,1,1
-Finans,CashTransactionMenu,9,JMenu,Hızlı Nakit Menüsü,,,,1,1
-Finans,PayRollMenu,10,JMenu,Bordro Menüsü,,,,1,1
+Finans,ExpenseBrowse,6,JMenuItem,Masraf Gözat,,,,1,1
+Finans,IncomeMaint,7,JMenuItem,Gelir Bakımı,,,,1,1
+Finans,ARMenu,8,JMenu,Alacak Hesapları Menüsü,,,,1,1
+Finans,APMenu,9,JMenu,Borç Hesapları Menüsü,,,,1,1
+Finans,CashTransactionMenu,10,JMenu,Hızlı Nakit Menüsü,,,,1,1
+Finans,PayRollMenu,11,JMenu,Bordro Menüsü,,,,1,1
 ARMenu,ARPaymentMaint,1,JMenuItem,Ödeme Bakımı,,,,1,1
 ARMenu,ARPaymentBrowse,2,JMenuItem,Ödeme Gözat,,1,,1,1
 ARMenu,ARMemoMaint,3,JMenuItem,Not Bakımı,,,,1,1

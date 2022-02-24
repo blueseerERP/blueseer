@@ -124,6 +124,7 @@ admin,APMenu
 admin,VouchMaintPanel
 admin,PaymentMaint
 admin,ExpenseMaint
+admin,ExpenseBrowse
 admin,IncomeMaint
 admin,TrialBalanceRpt
 admin,ReconAccount

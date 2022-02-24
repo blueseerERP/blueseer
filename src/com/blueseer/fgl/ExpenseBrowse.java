@@ -174,7 +174,7 @@ public class ExpenseBrowse extends javax.swing.JPanel {
                 res = st.executeQuery("select ap_vend, sum(ap_amt) as 'sum' from ap_mstr " +
                              //  " ap_ref, ap_effdate, ap_duedate, ap_amt, ap_base_amt,  " +
                              //  " ap_status, ap_curr, vod_part, vod_expense_acct " +
-                            //  " from ap_mstr inner join vd_mstr on vd_addr = ap_vend " +
+                             //  " inner join vd_mstr on vd_addr = ap_vend " +
                                " inner join vod_mstr on vod_id = ap_nbr " + 
                                " where ap_vend >= " + "'" + ddfromvend.getSelectedItem().toString() + "'" +
                                " and ap_vend <= " + "'" + ddtovend.getSelectedItem().toString() + "'" +
@@ -199,7 +199,7 @@ public class ExpenseBrowse extends javax.swing.JPanel {
                   dataset.setValue(vend, amt);
                 }
                 
-        JFreeChart chart = ChartFactory.createPieChart(getTitleTag(5027), dataset, false, true, false);
+        JFreeChart chart = ChartFactory.createPieChart(getTitleTag(5027), dataset, false, false, false);
         PiePlot plot = (PiePlot) chart.getPlot();
       //  plot.setSectionPaint(KEY1, Color.green);
       //  plot.setSectionPaint(KEY2, Color.red);
@@ -212,7 +212,7 @@ public class ExpenseBrowse extends javax.swing.JPanel {
 
         try {
         
-        ChartUtilities.saveChartAsJPEG(new File(chartfilepath), chart, (int) (this.getWidth() / 2), (int) (this.getHeight() / 1.0));
+        ChartUtilities.saveChartAsJPEG(new File(chartfilepath), chart, (int) (this.getWidth() / 2), (int) (this.getHeight() / 1.2));
         } catch (IOException e) {
             MainFrame.bslog(e);
         }
@@ -292,6 +292,7 @@ public class ExpenseBrowse extends javax.swing.JPanel {
     public void initvars(String[] arg) {
         chartpanel.setVisible(false);
         bthidechart.setEnabled(false);
+        btchart.setEnabled(true);
         java.util.Date now = new java.util.Date();
          dcFrom.setDate(now);
          dcTo.setDate(now);
@@ -393,7 +394,6 @@ public class ExpenseBrowse extends javax.swing.JPanel {
 
         pielabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         pielabel.setToolTipText("");
-        pielabel.setVerticalAlignment(javax.swing.SwingConstants.TOP);
         chartpanel.add(pielabel, "card2");
 
         jPanel2.add(chartpanel);
@@ -414,6 +414,7 @@ public class ExpenseBrowse extends javax.swing.JPanel {
         dcTo.setDateFormatString("yyyy-MM-dd");
 
         btchart.setText("Chart");
+        btchart.setName("btchart"); // NOI18N
         btchart.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btchartActionPerformed(evt);

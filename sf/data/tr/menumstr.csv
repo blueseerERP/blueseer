@@ -260,6 +260,7 @@ piechart_salesbycust,,com.blueseer.utl.ChartView,JMenuItem,sales1
 piechart_custAR,,com.blueseer.utl.ChartView,JMenuItem,sales2
 pcOpenOrdersByCust,Open Orders By Customer,com.blueseer.utl.ChartView,JMenuItem,orc3
 ExpenseMaint,,com.blueseer.fgl.ExpenseMaint,JMenuItem,expm
+ExpenseBrowse,,com.blueseer.fgl.ExpenseBrowse,JMenuItem,expb
 IncomeMaint,,com.blueseer.fgl.IncomeMaint,JMenuItem,incm
 PayRollMaint,,com.blueseer.fgl.PayRollMaint,JMenuItem,pay
 PayRollBrowse,,com.blueseer.fgl.PayRollBrowse,JMenuItem,payb

@@ -115,11 +115,12 @@ LedgerReportsMenu,ReconAccount,10,JMenuItem,Rapprochement des comptes,,1,,1,1
 Finance,PostGLTrans,3,JMenuItem,Publier des transactions,,,,1,1
 Finance,GLTranMaint,4,JMenuItem,Gestion des transactions GL,,,,1,1
 Finance,ExpenseMaint,5,JMenuItem,Maintenance des dépenses,,,,1,1
-Finance,IncomeMaint,5,JMenuItem,Maintien du revenu,,,,1,1
-Finance,ARMenu,7,JMenu,Menu des comptes clients,,,,1,1
-Finance,APMenu,8,JMenu,Menu des comptes fournisseurs,,,,1,1
-Finance,CashTransactionMenu,9,JMenu,Menu rapide en espèces,,,,1,1
-Finance,PayRollMenu,10,JMenu,Menu Paie,,,,1,1
+Finance,ExpenseBrowse,6,JMenuItem,Parcourir des dépenses,,,,1,1
+Finance,IncomeMaint,7,JMenuItem,Maintien du revenu,,,,1,1
+Finance,ARMenu,8,JMenu,Menu des comptes clients,,,,1,1
+Finance,APMenu,9,JMenu,Menu des comptes fournisseurs,,,,1,1
+Finance,CashTransactionMenu,10,JMenu,Menu rapide en espèces,,,,1,1
+Finance,PayRollMenu,11,JMenu,Menu Paie,,,,1,1
 ARMenu,ARPaymentMaint,1,JMenuItem,Gestion des paiements,,,,1,1
 ARMenu,ARPaymentBrowse,2,JMenuItem,Paiement Parcourir,,1,,1,1
 ARMenu,ARMemoMaint,3,JMenuItem,Maintenance du mémo,,,,1,1
