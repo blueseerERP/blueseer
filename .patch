@@ -25,3 +25,5 @@ patch=8
 # bug fix #28, enhancement to BOMM
 patch=9
 # enhancement #29, addition of new Expense Report in APRptPicker
+patch=10
+# added ExpenseBrowse menu
