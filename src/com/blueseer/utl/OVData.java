@@ -2841,7 +2841,33 @@ public class OVData {
                 // insert into mrp_mstr (mrp_part, mrp_qty, mrp_date, mrp_type) select ps_child, sum(mrp_qty) as sum, mrp_date, 'demand' from mrp_mstr
                 // inner join pbm_mstr  on ps_parent = mrp_part  inner join item_mstr on it_item = ps_parent 
                 // where it_level = '0' group by ps_child, mrp_date order by ps_child, mrp_date;
-                st.executeUpdate(
+                    if (dbtype.equals("sqlite")) {
+                        st.executeUpdate(
+                        "insert into mrp_mstr (mrp_part, mrp_qty, mrp_date, mrp_type, mrp_site) "
+                        + " select ps_child, sum(mrp_qty * ps_qty_per) as sum, " 
+                        + " date(mrp_date, ('-' || it_leadtime || ' day')), 'derived', " + "'" + site + "'" + " from mrp_mstr "
+                        + " inner join pbm_mstr on ps_parent = mrp_part "
+                        + " inner join bom_mstr on bom_id = ps_bom and bom_primary = '1' "        
+                        + " inner join item_mstr on it_item = ps_parent "
+                        + " where it_mrp = '1' and it_level = " + "'" + level + "'"
+                        + " AND ps_child >= " + "'" + fromitem + "'"
+                        + " AND ps_child <= " + "'" + toitem + "'"
+                        + " group by ps_child, mrp_date order by ps_child, mrp_date; ");
+                    } else if (dbtype.equals("mysql")) {
+                        st.executeUpdate(
+                        "insert into mrp_mstr (mrp_part, mrp_qty, mrp_date, mrp_type, mrp_site) "
+                        + " select ps_child, sum(mrp_qty * ps_qty_per) as sum, " 
+                        + " date_add(mrp_date, concat('interval -',cast(it_itemlevel as varchar),' day')), " 
+                        + " 'derived', " + "'" + site + "'" + " from mrp_mstr "
+                        + " inner join pbm_mstr on ps_parent = mrp_part "
+                        + " inner join bom_mstr on bom_id = ps_bom and bom_primary = '1' "        
+                        + " inner join item_mstr on it_item = ps_parent "
+                        + " where it_mrp = '1' and it_level = " + "'" + level + "'"
+                        + " AND ps_child >= " + "'" + fromitem + "'"
+                        + " AND ps_child <= " + "'" + toitem + "'"
+                        + " group by ps_child, mrp_date order by ps_child, mrp_date; ");
+                    } else {
+                        st.executeUpdate(
                         "insert into mrp_mstr (mrp_part, mrp_qty, mrp_date, mrp_type, mrp_site) "
                         + " select ps_child, sum(mrp_qty * ps_qty_per) as sum, mrp_date, 'derived', " + "'" + site + "'" + " from mrp_mstr "
                         + " inner join pbm_mstr on ps_parent = mrp_part "
@@ -2851,6 +2877,7 @@ public class OVData {
                         + " AND ps_child >= " + "'" + fromitem + "'"
                         + " AND ps_child <= " + "'" + toitem + "'"
                         + " group by ps_child, mrp_date order by ps_child, mrp_date; ");
+                    }
             } catch (SQLException s) {
                 MainFrame.bslog(s);
             } finally {
