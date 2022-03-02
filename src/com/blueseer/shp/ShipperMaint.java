@@ -1210,7 +1210,7 @@ public class ShipperMaint extends javax.swing.JPanel {
       
         
         callDialog(getClassLabelTag("lblid", this.getClass().getSimpleName()), 
-                getClassLabelTag("lblcust", this.getClass().getSimpleName())); 
+                getClassLabelTag("lblbillto", this.getClass().getSimpleName())); 
         
     }
 
