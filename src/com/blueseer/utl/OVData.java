@@ -2830,66 +2830,47 @@ public class OVData {
 
     }
 
-    public static void createMRPByLevel(int level, String site, String fromitem, String toitem) {
-
-        try {
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            try {
-                /*
-                "insert into mrp_mstr (mrp_part, mrp_qty, mrp_date, mrp_type, mrp_site) "
-                        + " select ps_child, sum(mrp_qty * ps_qty_per) as sum, mrp_date, 'derived', " + "'" + site + "'" + " from mrp_mstr "
-                        + " inner join pbm_mstr on ps_parent = mrp_part "
-                        + " inner join bom_mstr on bom_id = ps_bom and bom_primary = '1' "        
-                        + " inner join item_mstr on it_item = ps_parent "
-                        + " where it_mrp = '1' and it_level = " + "'" + level + "'"
-                        + " AND ps_child >= " + "'" + fromitem + "'"
-                        + " AND ps_child <= " + "'" + toitem + "'"
-                        + " group by ps_child, mrp_date order by ps_child, mrp_date; ");
-                */  
-                if (dbtype.equals("sqlite")) {
-                        st.executeUpdate(
-                        "insert into mrp_mstr (mrp_part, mrp_qty, mrp_date, mrp_type, mrp_site) "
+    public static int createMRPByLevel(int level, String site, String fromitem, String toitem) {
+        int rows = 0;
+        String sql = "";
+        if (dbtype.equals("sqlite")) {
+                    sql =  "insert into mrp_mstr (mrp_part, mrp_qty, mrp_date, mrp_type, mrp_site) "
                         + " select ps_child, sum(mrp_qty * ps_qty_per) as sum, " 
-                        + " date(mrp_date, ('-' || it_leadtime || ' day')), 'derived', " + "'" + site + "'" + " from mrp_mstr "
+                        + " date(mrp_date, ('-' || it_leadtime || ' day')), 'derived', ? from mrp_mstr "
                         + " inner join pbm_mstr on ps_parent = mrp_part "
                         + " inner join bom_mstr on bom_id = ps_bom and bom_primary = '1' "        
                         + " inner join item_mstr on it_item = ps_parent "
-                        + " where it_mrp = '1' and it_level = " + "'" + level + "'"
-                        + " AND ps_child >= " + "'" + fromitem + "'"
-                        + " AND ps_child <= " + "'" + toitem + "'"
-                        + " group by ps_child, mrp_date order by ps_child, mrp_date; ");
+                        + " where it_mrp = '1' and it_level = ? "
+                        + " AND ps_child >= ? " 
+                        + " AND ps_child <= ? " 
+                        + " group by ps_child, mrp_date order by ps_child, mrp_date; ";
                     } else  {
-                        st.executeUpdate(
-                        "insert into mrp_mstr (mrp_part, mrp_qty, mrp_date, mrp_type, mrp_site) "
+                    sql = "insert into mrp_mstr (mrp_part, mrp_qty, mrp_date, mrp_type, mrp_site) "
                         + " select ps_child, sum(mrp_qty * ps_qty_per) as sum, " 
                         + " date_add(mrp_date, concat('interval -',cast(it_itemlevel as varchar),' day')), " 
-                        + " 'derived', " + "'" + site + "'" + " from mrp_mstr "
+                        + " 'derived', ? from mrp_mstr "
                         + " inner join pbm_mstr on ps_parent = mrp_part "
                         + " inner join bom_mstr on bom_id = ps_bom and bom_primary = '1' "        
                         + " inner join item_mstr on it_item = ps_parent "
-                        + " where it_mrp = '1' and it_level = " + "'" + level + "'"
-                        + " AND ps_child >= " + "'" + fromitem + "'"
-                        + " AND ps_child <= " + "'" + toitem + "'"
-                        + " group by ps_child, mrp_date order by ps_child, mrp_date; ");
+                        + " where it_mrp = '1' and it_level = ? " 
+                        + " AND ps_child >= ? " + "'" 
+                        + " AND ps_child <= ? " + "'" 
+                        + " group by ps_child, mrp_date order by ps_child, mrp_date; ";
                     } 
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-            } finally {
-                if (st != null) {
-                    st.close();
-                }
-                if (con != null) {
-                    con.close();
-                }
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, site);
+        ps.setString(2, String.valueOf(level));
+        ps.setString(3, fromitem);
+        ps.setString(4, toitem);
+        rows = ps.executeUpdate();
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
         }
-
+        return rows;
     }
 
+   
     public static int createMRPZeroLevel(String site) {
         int rows = 0;
         String sql = " insert into mrp_mstr (mrp_part, mrp_qty, mrp_date, mrp_ref, mrp_type, mrp_line, mrp_site ) "

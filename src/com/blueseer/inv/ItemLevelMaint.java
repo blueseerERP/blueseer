@@ -209,8 +209,8 @@ public class ItemLevelMaint extends javax.swing.JPanel {
         // create derived mrp records from zero level demand
         talog.append("Creating Derived MRP" + "\n");
         for (int i = 0; i < 8; i++) {
-            talog.append("MRP Level " + String.valueOf(i) + "\n");
-            OVData.createMRPByLevel(i, ddsite.getSelectedItem().toString(), fromitem, toitem);
+            rows = OVData.createMRPByLevel(i, ddsite.getSelectedItem().toString(), fromitem, toitem);
+            talog.append("MRP Level: " + String.valueOf(i) + " Rows: " + String.valueOf(rows) + "\n");
         }
 
         if (OVData.isInvCtrlDemdToPlan())
