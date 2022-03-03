@@ -2920,31 +2920,21 @@ public class OVData {
 
     }
 
-    public static void deleteAllMRP(String site, String fromitem, String toitem) {
-
-        try {
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            try {
-
-                st.executeUpdate(" delete from mrp_mstr where mrp_site = " + "'" + site + "'"
-                        + " AND mrp_part >= " + "'" + fromitem + "'"
-                        + " AND mrp_part <= " + "'" + toitem + "'" + ";");
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-            } finally {
-                if (st != null) {
-                    st.close();
-                }
-                if (con != null) {
-                    con.close();
-                }
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
+    public static int deleteAllMRP(String site, String fromitem, String toitem) {
+        int rows = 0;
+        String sql = " delete from mrp_mstr where mrp_site = ? " 
+                        + " AND mrp_part >= ? "
+                        + " AND mrp_part <= ? ;";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, site);
+        ps.setString(2, fromitem);
+        ps.setString(3, toitem);
+        rows = ps.executeUpdate();
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
         }
-
+        return rows;
     }
 
 

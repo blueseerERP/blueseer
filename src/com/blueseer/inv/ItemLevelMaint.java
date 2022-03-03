@@ -196,18 +196,19 @@ public class ItemLevelMaint extends javax.swing.JPanel {
             toitem = tbtoitem.getText();
         }
        
-      
+        talog.setText("");
         ArrayList<String> myarray = new ArrayList<String>();
         // delete all current MRP records...clean slate
           talog.append("Deleting all MRP" + "\n");
-          OVData.deleteAllMRP(ddsite.getSelectedItem().toString(), fromitem, toitem);
-        
+          int rows = OVData.deleteAllMRP(ddsite.getSelectedItem().toString(), fromitem, toitem);
+          talog.append("Deleted rows count: " + String.valueOf(rows) + "\n");
+          
         // create zero level demand
           talog.append("Creating Zero Level Demand" + "\n");
           OVData.createMRPZeroLevel(ddsite.getSelectedItem().toString());
         
         // create derived mrp records from zero level demand
-           talog.append("Creating Derived MRP" + "\n");
+        talog.append("Creating Derived MRP" + "\n");
         for (int i = 0; i < 8; i++) {
             talog.append("MRP Level " + String.valueOf(i) + "\n");
             OVData.createMRPByLevel(i, ddsite.getSelectedItem().toString(), fromitem, toitem);
@@ -250,7 +251,7 @@ public class ItemLevelMaint extends javax.swing.JPanel {
            // setperms(bsmf.MainFrame.userid);
           //  reinitpanels2("BackGroundPanel", "BackGroundPanel", false, "");
             bsmf.MainFrame.show(getMessageTag(1065));
-            talog.setText("");
+            
             MainProgressBar.setVisible(false);
              btlevel.setEnabled(true);
              btmrp.setEnabled(true);
