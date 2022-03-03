@@ -106,17 +106,17 @@ public class ItemLevelMaint extends javax.swing.JPanel {
     
     
     public void initvars(String[] arg) {
-         btlevel.setEnabled(true);
-         btmrp.setEnabled(true);
-       ddsite.removeAllItems();
-       ArrayList<String>  mylist = OVData.getSiteList();
+        btlevel.setEnabled(true);
+        btmrp.setEnabled(true);
+        ddsite.removeAllItems();
+        ArrayList<String>  mylist = OVData.getSiteList();
         for (String code : mylist) {
             ddsite.addItem(code);
         }
         ddsite.setSelectedItem(OVData.getDefaultSite());
         tbfromitem.setText("");
         tbtoitem.setText("");
-        
+        talog.setText("");
     }
    
        class TaskItemLevel extends SwingWorker<Void, Void> {
@@ -199,13 +199,12 @@ public class ItemLevelMaint extends javax.swing.JPanel {
         talog.setText("");
         ArrayList<String> myarray = new ArrayList<String>();
         // delete all current MRP records...clean slate
-          talog.append("Deleting all MRP" + "\n");
           int rows = OVData.deleteAllMRP(ddsite.getSelectedItem().toString(), fromitem, toitem);
-          talog.append("Deleted rows count: " + String.valueOf(rows) + "\n");
+          talog.append("Deleting all MRP: " + String.valueOf(rows) + "\n");
           
         // create zero level demand
-          talog.append("Creating Zero Level Demand" + "\n");
-          OVData.createMRPZeroLevel(ddsite.getSelectedItem().toString());
+          rows = OVData.createMRPZeroLevel(ddsite.getSelectedItem().toString());
+          talog.append("Creating Zero Level Demand: " + String.valueOf(rows) + "\n");
         
         // create derived mrp records from zero level demand
         talog.append("Creating Derived MRP" + "\n");

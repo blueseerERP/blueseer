@@ -2890,34 +2890,21 @@ public class OVData {
 
     }
 
-    public static void createMRPZeroLevel(String site) {
-
-        try {
-            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            try {
-
-                st.executeUpdate(
-                        " insert into mrp_mstr (mrp_part, mrp_qty, mrp_date, mrp_ref, mrp_type, mrp_line, mrp_site ) "
+    public static int createMRPZeroLevel(String site) {
+        int rows = 0;
+        String sql = " insert into mrp_mstr (mrp_part, mrp_qty, mrp_date, mrp_ref, mrp_type, mrp_line, mrp_site ) "
                         + " select sod_part, (sod_ord_qty - sod_shipped_qty), sod_due_date, sod_nbr, 'demand', sod_line, sod_site from sod_det "
                         + " inner join  item_mstr on sod_part = it_item and it_level = '0' where it_mrp = '1' " 
                         + " AND sod_status <> " + "'" + getGlobalProgTag("closed") + "'"
-                        + " and sod_site = " + "'" + site + "'" + ";");
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-            } finally {
-                if (st != null) {
-                    st.close();
-                }
-                if (con != null) {
-                    con.close();
-                }
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
+                        + " and sod_site = ? " + ";";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, site);
+        rows = ps.executeUpdate();
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
         }
-
+        return rows;
     }
 
     public static int deleteAllMRP(String site, String fromitem, String toitem) {
