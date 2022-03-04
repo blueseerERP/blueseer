@@ -3093,52 +3093,7 @@ public class OVData {
         }
         return mynode;
      }
-      
-    public static DefaultMutableTreeNode get_op_nodes(String mypart, String mybom)  {  
-       DefaultMutableTreeNode mynode = new DefaultMutableTreeNode(mypart);
-       ArrayList<String> myops = new ArrayList<String>();
-        myops = invData.getItemRoutingOPs(mypart);
-        for ( String myvalue : myops) {
-          //  DefaultMutableTreeNode thisop = new DefaultMutableTreeNode(myvalue);
-          //  mynode.add(thisop);
-            DefaultMutableTreeNode opnode = new DefaultMutableTreeNode(myvalue);
-            
-            opnode = OVData.get_nodes_by_op_stripped(mypart, mypart, myvalue);
-            mynode.add(opnode);
-        }
-       return mynode;
-      }
-       
-    public static DefaultMutableTreeNode get_nodes_by_op(String root, String mypart, String myop)  {
-        String myroot = "";
-            if (root.toLowerCase().equals(mypart.toLowerCase()))
-            myroot = myop;
-        else
-            myroot = mypart;
-         DefaultMutableTreeNode mynode = new DefaultMutableTreeNode(myroot);
-         
-        String[] newpart = mypart.split(" DESC=");
-        ArrayList<String> mylist = new ArrayList<String>();
-        mylist = OVData.getpsmstrlistbyopWCost(newpart[0], myop);
-     //   mylist = OVData.getpsmstrlist(newpart[0]);
-        for ( String myvalue : mylist) {
-            String[] value = myvalue.toUpperCase().split(",");
-              if (value[0].toUpperCase().compareTo(newpart[0].toUpperCase().toString()) == 0) {
-               
-                  if (value[2].toUpperCase().compareTo("M") == 0) {
-                    DefaultMutableTreeNode mfgnode = new DefaultMutableTreeNode();   
-                    mfgnode = get_nodes_by_op(root, value[1] + " DESC=" + value[4] + " QTY=" + bsFormatDouble5(bsParseDouble(value[3])) + " CST=" + bsFormatDouble5(bsParseDouble(value[5])),myop);
-                    mynode.add(mfgnode);
-                  } else {
-                  DefaultMutableTreeNode childnode = new DefaultMutableTreeNode(value[1] + " DESC=" + value[4] + " QTY=" + bsFormatDouble5(bsParseDouble(value[3])) + " CST=" + bsFormatDouble5(bsParseDouble(value[5])));   
-                 
-                  mynode.add(childnode);
-                  }
-              }
-        }
-        return mynode;
-     }
-       
+          
     public static DefaultMutableTreeNode get_nodes_by_op_stripped(String root, String mypart, String myop)  {
         String myroot = "";
             if (root.toLowerCase().equals(mypart.toLowerCase()))
