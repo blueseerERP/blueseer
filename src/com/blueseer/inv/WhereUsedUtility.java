@@ -101,7 +101,9 @@ String mystring = "";
     
     
     public void initvars(String[] arg) {
-        
+        buttonGroup1.add(rbtop);
+        buttonGroup1.add(rbimmediate);
+        rbtop.setSelected(true);
     }
     
        
@@ -115,6 +117,7 @@ String mystring = "";
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        buttonGroup1 = new javax.swing.ButtonGroup();
         jPanel2 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -123,6 +126,9 @@ String mystring = "";
         tbsearch = new javax.swing.JTextField();
         btWhereUsed = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        rbtop = new javax.swing.JRadioButton();
+        rbimmediate = new javax.swing.JRadioButton();
+        lbmessage = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -144,17 +150,36 @@ String mystring = "";
         jLabel1.setText("Component");
         jLabel1.setName("lblid"); // NOI18N
 
+        rbtop.setText("Top Parent");
+        rbtop.setName("lbltop"); // NOI18N
+
+        rbimmediate.setText("Immediate Parent");
+        rbimmediate.setName("lblimmediate"); // NOI18N
+
+        lbmessage.setText("Note:  Top parent items must be marked 'FG' in the Item Maintenance type field.");
+        lbmessage.setName("lblmessage"); // NOI18N
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap(27, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tbsearch, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btWhereUsed)
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(rbtop)
+                                .addGap(27, 27, 27)
+                                .addComponent(rbimmediate))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(tbsearch, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btWhereUsed)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(lbmessage, javax.swing.GroupLayout.DEFAULT_SIZE, 463, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -165,7 +190,12 @@ String mystring = "";
                     .addComponent(tbsearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btWhereUsed)
                     .addComponent(jLabel1))
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(rbtop)
+                    .addComponent(rbimmediate))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 5, Short.MAX_VALUE)
+                .addComponent(lbmessage))
         );
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -173,21 +203,18 @@ String mystring = "";
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 437, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(73, 73, 73)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jScrollPane2)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 403, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 415, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -212,7 +239,12 @@ String mystring = "";
         mystring = "";
        
         ArrayList<String> parents = new ArrayList<String>();
-        parents = OVData.getpsmstrparents2(tbsearch.getText());
+        if (rbimmediate.isSelected()) {
+            parents = OVData.getpsmstrparents(tbsearch.getText());
+        } else {
+            parents = OVData.getpsmstrparents2(tbsearch.getText()); 
+        }
+        
         Collections.sort(parents);
         
         for (String line : parents) {
@@ -227,11 +259,15 @@ String mystring = "";
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btWhereUsed;
+    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JLabel lbmessage;
+    private javax.swing.JRadioButton rbimmediate;
+    private javax.swing.JRadioButton rbtop;
     private javax.swing.JTextField tbsearch;
     private javax.swing.JTextArea textarea;
     // End of variables declaration//GEN-END:variables
