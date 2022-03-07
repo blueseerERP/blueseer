@@ -17522,7 +17522,7 @@ MainFrame.bslog(e);
                     st.close();
                 }
                 con.close();
-            }
+        }
     } catch (Exception e) {
         MainFrame.bslog(e);
     }
@@ -18062,8 +18062,6 @@ MainFrame.bslog(e);
     cal.getTime();
     int wk = getForecastWeek(cal.getTime());
     ArrayList<Date> dates = OVData.getForecastDates(String.valueOf(cal.get(Calendar.YEAR)));
-
-
      try{
 
             Connection con = DriverManager.getConnection(url + db, user, pass);
@@ -18122,23 +18120,6 @@ MainFrame.bslog(e);
                              a_line.add(line);
                              a_qty.add(qty);
                              a_duedate.add(duedate);
-                             /*
-                             recnumber++;
-                                int nbr = OVData.getNextNbr("plan");
-                                st3.executeUpdate("insert into plan_mstr "
-                                    + "(plan_nbr, plan_order, plan_line, plan_part, plan_qty_req, plan_date_create, plan_date_due, plan_type, plan_site ) "
-                                    + " values ( " + "'" + nbr + "'" + ","
-                                    + "'" + order + "'" + ","
-                                    + "'" + line + "'" + ","
-                                    + "'" + part + "'" + ","
-                                    + "'" + qty + "'" + ","
-                                    + "'" + df.format(cal.getTime()) + "'" + ","
-                                    + "'" + duedate + "'" + ","
-                                    + "'DEMD'" + ","
-                                    + "'" + site + "'"
-                                    + ")"
-                                    + ";");
-                             */
                          }
                 }  
 
@@ -18161,17 +18142,21 @@ MainFrame.bslog(e);
                                     + ")"
                                     + ";");
                 }
-
-
-
-       }
-        catch (SQLException s){
-             MainFrame.bslog(s);
-
+       } catch (SQLException s) {
+            MainFrame.bslog(s);
+        } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (res2 != null) {
+                    res2.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
         }
-        con.close();
-    }
-    catch (Exception e){
+    } catch (SQLException e){
         MainFrame.bslog(e);
 
     }

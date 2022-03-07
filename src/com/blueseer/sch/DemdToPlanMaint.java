@@ -130,44 +130,14 @@ public class DemdToPlanMaint extends javax.swing.JPanel {
          */
         @Override
         public Void doInBackground() {
-            
-       
-            
-       numberrecords = OVData.createPlanFromDemand(ddsite.getSelectedItem().toString()); 
-
-           /* 
-            Random random = new Random();
-            int progress = 0;
-            //Initialize progress property.
-            setProgress(0);
-            //Sleep for at least one second to simulate "startup".
-            try {
-                Thread.sleep(1000 + random.nextInt(2000));
-            } catch (InterruptedException ignore) {}
-            while (progress < 100) {
-                //Sleep for up to one second.
-                try {
-                    Thread.sleep(random.nextInt(1000));
-                } catch (InterruptedException ignore) {}
-                //Make random progress.
-                progress += random.nextInt(10);
-                setProgress(Math.min(progress, 100));
-            }
-            
-            */
-            
-            return null;
-           
-        }
+       numberrecords = OVData.createPlanFromDemand(ddsite.getSelectedItem().toString());
+       return null;
+       }
  
         /*
          * Executed in event dispatch thread
          */
         public void done() {
-           // Toolkit.getDefaultToolkit().beep();
-           // MainProgressBar.setVisible(false);
-           // setperms(bsmf.MainFrame.userid);
-          //  reinitpanels2("BackGroundPanel", "BackGroundPanel", false, "");
             bsmf.MainFrame.show(getMessageTag(1121,String.valueOf(numberrecords)));
             MainProgressBar.setEnabled(false);
             MainProgressBar.setIndeterminate(false);
