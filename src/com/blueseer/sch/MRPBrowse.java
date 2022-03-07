@@ -1528,15 +1528,13 @@ public class MRPBrowse extends javax.swing.JPanel {
                 }
                 con.close();
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             MainFrame.bslog(e);
         }
     }//GEN-LAST:event_btsearchActionPerformed
 
     private void btdetailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdetailActionPerformed
        PanelDetail.setVisible(false);
-       // tabledetail.setVisible(false);
-       // btdetail.setEnabled(false);
     }//GEN-LAST:event_btdetailActionPerformed
 
     private void tablereportMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablereportMouseClicked
@@ -1547,9 +1545,6 @@ public class MRPBrowse extends javax.swing.JPanel {
             modelorder.setNumRows(0);
             modeltrans.setNumRows(0);
             TableColumn tc = null;
-             
-            
-           
             getrecenttrans(tablereport.getValueAt(row, 1).toString());
             
             if (tablereport.getValueAt(row, 2).toString().equals("PLAN")) {
