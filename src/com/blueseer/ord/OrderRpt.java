@@ -587,20 +587,13 @@ try {
                 } else {
                     tocust = ddtocust.getSelectedItem().toString();
                 }
-               
-                 
-               //  ScrapReportPanel.MyTableModel mymodel = new ScrapReportPanel.MyTableModel(new Object[][]{},
-               //         new String[]{"Acct", "Description", "Amt"});
-               // tablescrap.setModel(mymodel);
-               
+              
                    
                  mymodel.setNumRows(0);
                    
                
                 tableorder.setModel(mymodel);
-               // tableorder.getColumnModel().getColumn(0).setCellRenderer(new OrderReport1.SomeRenderer());  
-              //  tableorder.getColumnModel().getColumn(7).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
-                Enumeration<TableColumn> en = tableorder.getColumnModel().getColumns();
+               Enumeration<TableColumn> en = tableorder.getColumnModel().getColumns();
                  while (en.hasMoreElements()) {
                      TableColumn tc = en.nextElement();
                      if (mymodel.getColumnClass(tc.getModelIndex()).getSimpleName().equals("ImageIcon")) {
@@ -608,11 +601,7 @@ try {
                      }
                      tc.setCellRenderer(new OrderRpt.SomeRenderer());
                  }
-                // TableColumnModel tcm = tablescrap.getColumnModel();
-               // tcm.getColumn(3).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());  
-             
-                 //   tableorder.getColumnModel().getColumn(0).setCellRenderer(new OrderReport1.ButtonRenderer());
-                tableorder.getColumnModel().getColumn(0).setMaxWidth(100);
+               tableorder.getColumnModel().getColumn(0).setMaxWidth(100);
                 tableorder.getColumnModel().getColumn(8).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
                  
                  DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
@@ -679,7 +668,7 @@ try {
                 }
                 con.close();
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             MainFrame.bslog(e);
         }
        
