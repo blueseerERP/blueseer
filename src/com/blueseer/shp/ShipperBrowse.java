@@ -636,16 +636,16 @@ try {
                 
                  
                  if (shipperfrom.isEmpty()) {
-                     shipperfrom = "0";
+                     shipperfrom = bsmf.MainFrame.lowchar;
                  }
                  if (shipperto.isEmpty()) {
-                     shipperto = "ZZZZZZZZ";
+                     shipperto = bsmf.MainFrame.hichar;
                  }
                  if (custfrom.isEmpty()) {
-                     custfrom = "0";
+                     custfrom = bsmf.MainFrame.lowchar;
                  }
                  if (custto.isEmpty()) {
-                     custto = "ZZZZZZZZ";
+                     custto = bsmf.MainFrame.hichar;
                  }
                  if (dcfrom.getDate() == null) {
                      fromdate = bsmf.MainFrame.lowdate;

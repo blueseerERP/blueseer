@@ -937,11 +937,7 @@ public class MRPBrowse extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btsearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btsearchActionPerformed
-       
-       // if (rberror.isSelected() && rbinfo.isSelected()) {
-      //     bsmf.MainFrame.show("Select either active OR inactive...not both");
-       //     return;
-       // }
+    
         
        
        // reinit tables
@@ -1011,17 +1007,8 @@ public class MRPBrowse extends javax.swing.JPanel {
                      }
                      tc.setCellRenderer(new MRPBrowse.MainRenderer());
                  }
-                // TableColumnModel tcm = tablereport.getColumnModel();
-              //  tcm.getColumn(2).setCellRenderer(BlueSeerUtils.NumberRenderer.getIntegerRenderer());
-                // tablereport.getColumnModel().getColumns().setCellRenderer(new MRPBrowse1.SomeRenderer());
-                // tablereport.getColumnModel().getColumn(3).setCellRenderer(new MRPBrowse1.SomeRenderer());       
-                 
-               // tablereport.getColumnModel().getColumn(0).setCellRenderer(new MRPBrowse1.ButtonRenderer());
-                tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
-                // ReportPanel.TableReport.getColumn("CallID").setCellRenderer(new ButtonRenderer());
-                //          ReportPanel.TableReport.getColumn("CallID").setCellEditor(
-                    //       new ButtonEditor(new JCheckBox()));
-        
+              tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
+              
                 int startday = 2;
                 int week = 0;
                 double qoh = 0;
