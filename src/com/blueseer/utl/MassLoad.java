@@ -226,6 +226,9 @@ public class MassLoad extends javax.swing.JPanel {
        public void done() {
             try {
             String[] message = get();
+            if (message[0] == null) {
+                message[0] = "1"; // cancel upload
+            }
             BlueSeerUtils.endTask(message);
             // initvars(null);  
              
@@ -378,11 +381,12 @@ public class MassLoad extends javax.swing.JPanel {
             }
             fsr.close();
              if (proceed) {
-                   if(! OVData.addItemMaster(list))
+                   if(! OVData.addItemMaster(list)) {
                        m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151, String.valueOf(i))};
                    } else {
-                  m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
-            }
+                       m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
+                   }
+             }
              return m;
     }
     
