@@ -562,8 +562,12 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
                         client.changeWorkingDirectory(splitLine[1]);
                         showServerReply(client);
                     }
-                    if (splitLine.length == 1 && splitLine[0].equals("dir")) {
-                        FTPFile[] ftpFiles = client.listFiles();
+                    if (splitLine.length >= 1 && (splitLine[0].equals("dir") || splitLine[0].equals("ls"))) {
+                        String x = "";
+                        if (splitLine.length == 2) {
+                         x = splitLine[1];
+                        }
+                        FTPFile[] ftpFiles = client.listFiles(x);
                         if (ftpFiles != null) {
                             for (FTPFile f : ftpFiles) {
                                 talog.append(f.getName() + "\n");
