@@ -705,6 +705,10 @@ public class admData {
     public static void runClient(String c) {
         ftp_mstr fm = admData.getFTPMstr(new String[]{c});
         
+        if (fm.m[0].equals(BlueSeerUtils.ErrorBit)) {
+            System.out.println(fm.m[1]);
+            return;
+        }
          FTPClient client = new FTPClient();
          FileOutputStream in = null;
          
