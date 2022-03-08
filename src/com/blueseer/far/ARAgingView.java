@@ -96,6 +96,7 @@ import net.sf.jasperreports.view.JasperViewer;
 public class ARAgingView extends javax.swing.JPanel {
     
     String selectedCustomer = "";
+    String selectedCustomerName = "";
  
      MyTableModel modelsummary = new ARAgingView.MyTableModel(new Object[][]{},
                         new String[]{
@@ -981,6 +982,7 @@ try {
          // select any field in a row grabs the vendor for that row...so open the possibility of payment for that row/vendor
         cbpaymentpanel.setEnabled(true);
         selectedCustomer = tablesummary.getValueAt(row, 1).toString();
+        selectedCustomerName = tablesummary.getValueAt(row, 2).toString();
         
         if ( col == 0) {
             
@@ -1138,6 +1140,8 @@ try {
         try {
                 HashMap hm = new HashMap();
                 hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
+                hm.put("customercode", selectedCustomer);
+                hm.put("customername", selectedCustomerName);
                 //hm.put("imagepath", "images/avmlogo.png");
                // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_part, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);

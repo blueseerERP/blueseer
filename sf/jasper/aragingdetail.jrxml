@@ -4,6 +4,8 @@
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
+	<parameter name="customercode" class="java.lang.String"/>
+	<parameter name="customername" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -25,16 +27,16 @@
 	<field name="COLUMN_5" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="COLUMN_6" class="java.lang.Double">
+	<field name="COLUMN_6" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="COLUMN_7" class="java.lang.Double">
+	<field name="COLUMN_7" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="COLUMN_8" class="java.lang.Double">
+	<field name="COLUMN_8" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="COLUMN_9" class="java.lang.Double"/>
+	<field name="COLUMN_9" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -58,6 +60,10 @@
 			<textField evaluationTime="Report">
 				<reportElement x="507" y="0" width="38" height="20" uuid="e3347eeb-bbb7-42d5-b9db-d8de409a7ae5"/>
 				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="3" width="201" height="18" uuid="4c27c6ef-933c-4998-8cc1-2c9f5197ada4"/>
+				<textFieldExpression><![CDATA[$P{customername}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
