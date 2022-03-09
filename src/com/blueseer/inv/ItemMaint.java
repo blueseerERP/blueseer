@@ -581,10 +581,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
         if (curcost != (mtlcost + ovhcost + outcost)) {
             ArrayList<String> parents = new ArrayList<String>();
             parents = OVData.getpsmstrparents2(tbkey.getText());
-            // Collections.sort(parents);
-            for (String parent : parents) {
-                updateCurrentItemCost(parent);
-            }
+            parents.stream().forEach((s) -> updateCurrentItemCost(s));
         }
          
          return m;
@@ -740,13 +737,10 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
     public void getItemImages(String item) {
         isLoad = true;
         imagelabel.setIcon(null);
-        ArrayList<String> images = new ArrayList();
         ddimage.removeAllItems();
         labelmessage.setText("");
-        images = invData.getItemImagesFile(item);
-        for (String code : images) {
-            ddimage.addItem(code);
-        }
+        ArrayList<String> images = invData.getItemImagesFile(item);
+        images.stream().forEach((s) -> ddimage.addItem(s));
         ddimage.insertItemAt("", 0);
         ddimage.setSelectedIndex(0);
         btdeleteimage.setEnabled(false);
@@ -2170,11 +2164,9 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
          if (ddwh.getSelectedItem() != null && ! isLoad) {
              ddloc.removeAllItems();
              ArrayList<String> loc = OVData.getLocationListByWarehouse(ddwh.getSelectedItem().toString());
-             for (String lc : loc) {
-                ddloc.addItem(lc);
-             }
-        ddloc.insertItemAt("", 0);
-        ddloc.setSelectedIndex(0);
+             loc.stream().forEach((s) -> ddloc.addItem(s));
+            ddloc.insertItemAt("", 0);
+            ddloc.setSelectedIndex(0);
         }
     }//GEN-LAST:event_ddwhActionPerformed
 
