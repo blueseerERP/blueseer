@@ -959,7 +959,7 @@ public class GLTranMaint extends javax.swing.JPanel {
                           thisyear++;
                           nextperiod = 1;
                       }
-                      ArrayList<String> nextcal = OVData.getGLCalByYearAndPeriod(String.valueOf(thisyear), String.valueOf(nextperiod));
+                      ArrayList<String> nextcal = fglData.getGLCalByYearAndPeriod(String.valueOf(thisyear), String.valueOf(nextperiod));
                       if (nextcal.isEmpty()) {
                        proceed = false;
                        bsmf.MainFrame.show(getMessageTag(1042));

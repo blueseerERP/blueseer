@@ -627,7 +627,7 @@ public class ReconAccount extends javax.swing.JPanel {
         int pmonth = cal.get(Calendar.MONTH) + 1;
         
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-        ArrayList glcal = OVData.getGLCalByYearAndPeriod(String.valueOf(pyear), String.valueOf(pmonth));
+        ArrayList glcal = fglData.getGLCalByYearAndPeriod(String.valueOf(pyear), String.valueOf(pmonth));
         java.util.Date prevenddate = dfdate.parse(glcal.get(3).toString());
         dcglprevious.setDate(prevenddate);
         dcto.setDate(now);
@@ -1102,7 +1102,7 @@ try {
                    
                 }
                
-              lbacctbal.setText(currformatDouble(OVData.getGLAcctBalAsOfDate(ddsite.getSelectedItem().toString(), ddacct.getSelectedItem().toString(), fromdate)));
+              lbacctbal.setText(currformatDouble(fglData.getGLAcctBalAsOfDate(ddsite.getSelectedItem().toString(), ddacct.getSelectedItem().toString(), fromdate)));
             
               sumAll(toggletotal);
                

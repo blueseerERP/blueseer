@@ -128,7 +128,7 @@ public class PostGL extends javax.swing.JPanel {
          */
         @Override
         public Void doInBackground() throws Exception {
-            OVData.PostGL();
+            fglData.PostGL();
             return null;
         }
  

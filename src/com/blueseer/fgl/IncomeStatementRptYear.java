@@ -405,7 +405,7 @@ public class IncomeStatementRptYear extends javax.swing.JPanel {
         }
         
         ddelements.removeAllItems();
-        ArrayList elements = OVData.getGLICDefsList();
+        ArrayList elements = fglData.getGLICDefsList();
         for (Object element : elements) {
             ddelements.addItem(element.toString());
         }
@@ -617,14 +617,14 @@ public class IncomeStatementRptYear extends javax.swing.JPanel {
                     }
 
                     // now lets back out accts excluded
-                    excludeaccts = OVData.getGLICAccts("sales", "out");
+                    excludeaccts = fglData.getGLICAccts("sales", "out");
                     for (int k = 0; k < excludeaccts.size(); k++) {
-                        sales[y - 1] = OVData.getGLICBackOut(excludeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), sales[y  - 1]);
+                        sales[y - 1] = fglData.getGLICBackOut(excludeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), sales[y  - 1]);
                     }
                     // now add accts that are included
-                    includeaccts = OVData.getGLICAccts("sales", "in");
+                    includeaccts = fglData.getGLICAccts("sales", "in");
                     for (int k = 0; k < includeaccts.size(); k++) {
-                        sales[y - 1] = OVData.getGLICAddIn(includeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), sales[y - 1]);
+                        sales[y - 1] = fglData.getGLICAddIn(includeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), sales[y - 1]);
                     }
 
                     sales[y - 1] = (-1 * sales[y - 1]);
@@ -654,14 +654,14 @@ public class IncomeStatementRptYear extends javax.swing.JPanel {
                     cogs[y - 1] += res.getDouble("sum");
                 }
                 // now lets back out accts excluded
-                excludeaccts = OVData.getGLICAccts("cogs", "out");
+                excludeaccts = fglData.getGLICAccts("cogs", "out");
                 for (int k = 0; k < excludeaccts.size(); k++) {
-                    cogs[y - 1] = OVData.getGLICBackOut(excludeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), cogs[y - 1]);
+                    cogs[y - 1] = fglData.getGLICBackOut(excludeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), cogs[y - 1]);
                 }
                 // now add accts that are included
-                includeaccts = OVData.getGLICAccts("cogs", "in");
+                includeaccts = fglData.getGLICAccts("cogs", "in");
                 for (int k = 0; k < includeaccts.size(); k++) {
-                    cogs[y - 1] = OVData.getGLICAddIn(includeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), cogs[y - 1]);
+                    cogs[y - 1] = fglData.getGLICAddIn(includeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), cogs[y - 1]);
                 }
                 } // y
                 mymodel.addRow(new Object[] { getClassLabelTag("lblcogs", Thread.currentThread().getStackTrace()[1].getMethodName()), cogs[0], cogs[1], cogs[2], cogs[3], cogs[4], cogs[5], cogs[6], cogs[7], cogs[8], cogs[9], cogs[10], cogs[11]});
@@ -695,14 +695,14 @@ public class IncomeStatementRptYear extends javax.swing.JPanel {
                     mtlvar[y - 1] += res.getDouble("sum");
                 }
                 // now lets back out accts excluded
-                excludeaccts = OVData.getGLICAccts("mtlvar", "out");
+                excludeaccts = fglData.getGLICAccts("mtlvar", "out");
                 for (int k = 0; k < excludeaccts.size(); k++) {
-                    mtlvar[y - 1] = OVData.getGLICBackOut(excludeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), mtlvar[y - 1]);
+                    mtlvar[y - 1] = fglData.getGLICBackOut(excludeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), mtlvar[y - 1]);
                 }
                 // now add accts that are included
-                includeaccts = OVData.getGLICAccts("mtlvar", "in");
+                includeaccts = fglData.getGLICAccts("mtlvar", "in");
                 for (int k = 0; k < includeaccts.size(); k++) {
-                   mtlvar[y - 1] = OVData.getGLICAddIn(includeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), mtlvar[y - 1]);
+                   mtlvar[y - 1] = fglData.getGLICAddIn(includeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), mtlvar[y - 1]);
                 }
                  } // y
                 mymodel.addRow(new Object[] { getClassLabelTag("lblmtlvar", Thread.currentThread().getStackTrace()[1].getMethodName()), mtlvar[0], mtlvar[1], mtlvar[2], mtlvar[3], mtlvar[4], mtlvar[5], mtlvar[6], mtlvar[7], mtlvar[8], mtlvar[9], mtlvar[10], mtlvar[11]});
@@ -727,14 +727,14 @@ public class IncomeStatementRptYear extends javax.swing.JPanel {
                     lbrvar[y - 1] += res.getDouble("sum");
                 }
                 // now lets back out accts excluded
-                excludeaccts = OVData.getGLICAccts("lbrvar", "out");
+                excludeaccts = fglData.getGLICAccts("lbrvar", "out");
                 for (int k = 0; k < excludeaccts.size(); k++) {
-                   lbrvar[y - 1] = OVData.getGLICBackOut(excludeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), lbrvar[y - 1]);
+                   lbrvar[y - 1] = fglData.getGLICBackOut(excludeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), lbrvar[y - 1]);
                 }
                 // now add accts that are included
-                includeaccts = OVData.getGLICAccts("lbrvar", "in");
+                includeaccts = fglData.getGLICAccts("lbrvar", "in");
                 for (int k = 0; k < includeaccts.size(); k++) {
-                    lbrvar[y - 1] = OVData.getGLICAddIn(includeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), lbrvar[y - 1]);
+                    lbrvar[y - 1] = fglData.getGLICAddIn(includeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), lbrvar[y - 1]);
                 }
                  } // y
                  mymodel.addRow(new Object[] { getClassLabelTag("lbllbrvar", Thread.currentThread().getStackTrace()[1].getMethodName()), lbrvar[0], lbrvar[1], lbrvar[2], lbrvar[3], lbrvar[4], lbrvar[5], lbrvar[6], lbrvar[7], lbrvar[8], lbrvar[9], lbrvar[10], lbrvar[11]});
@@ -763,14 +763,14 @@ public class IncomeStatementRptYear extends javax.swing.JPanel {
                     bdnvar[y - 1] += res.getDouble("sum");
                 }
                 // now lets back out accts excluded
-                excludeaccts = OVData.getGLICAccts("bdnvar", "out");
+                excludeaccts = fglData.getGLICAccts("bdnvar", "out");
                 for (int k = 0; k < excludeaccts.size(); k++) {
-                    bdnvar[y - 1] = OVData.getGLICBackOut(excludeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), bdnvar[y - 1]);
+                    bdnvar[y - 1] = fglData.getGLICBackOut(excludeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), bdnvar[y - 1]);
                 }
                 // now add accts that are included
-                includeaccts = OVData.getGLICAccts("bdnvar", "in");
+                includeaccts = fglData.getGLICAccts("bdnvar", "in");
                 for (int k = 0; k < includeaccts.size(); k++) {
-                    bdnvar[y - 1] = OVData.getGLICAddIn(includeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), bdnvar[y - 1]);
+                    bdnvar[y - 1] = fglData.getGLICAddIn(includeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), bdnvar[y - 1]);
                 }
                  } // y
                
@@ -805,14 +805,14 @@ public class IncomeStatementRptYear extends javax.swing.JPanel {
                     prodeng[y - 1] += res.getDouble("sum");
                 }
                 // now lets back out accts excluded
-                excludeaccts = OVData.getGLICAccts("prodeng", "out");
+                excludeaccts = fglData.getGLICAccts("prodeng", "out");
                 for (int k = 0; k < excludeaccts.size(); k++) {
-                    prodeng[y - 1] = OVData.getGLICBackOut(excludeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), prodeng[y - 1]);
+                    prodeng[y - 1] = fglData.getGLICBackOut(excludeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), prodeng[y - 1]);
                 }
                 // now add accts that are included
-                includeaccts = OVData.getGLICAccts("prodeng", "in");
+                includeaccts = fglData.getGLICAccts("prodeng", "in");
                 for (int k = 0; k < includeaccts.size(); k++) {
-                    prodeng[y - 1] = OVData.getGLICAddIn(includeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), prodeng[y - 1]);
+                    prodeng[y - 1] = fglData.getGLICAddIn(includeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), prodeng[y - 1]);
                 }
                 } // y
                 mymodel.addRow(new Object[] { getClassLabelTag("lblprodengineering", Thread.currentThread().getStackTrace()[1].getMethodName()), prodeng[0], prodeng[1], prodeng[2], prodeng[3], prodeng[4], prodeng[5], prodeng[6], prodeng[7], prodeng[8], prodeng[9], prodeng[10], prodeng[11]});
@@ -844,14 +844,14 @@ public class IncomeStatementRptYear extends javax.swing.JPanel {
                     marketingandsales[y - 1] += res.getDouble("sum");
                 }
                 // now lets back out accts excluded
-                excludeaccts = OVData.getGLICAccts("mktsales", "out");
+                excludeaccts = fglData.getGLICAccts("mktsales", "out");
                 for (int k = 0; k < excludeaccts.size(); k++) {
-                    marketingandsales[y - 1] = OVData.getGLICBackOut(excludeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), marketingandsales[y - 1]);
+                    marketingandsales[y - 1] = fglData.getGLICBackOut(excludeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), marketingandsales[y - 1]);
                 }
                 // now add accts that are included
-                includeaccts = OVData.getGLICAccts("mktsales", "in");
+                includeaccts = fglData.getGLICAccts("mktsales", "in");
                 for (int k = 0; k < includeaccts.size(); k++) {
-                    marketingandsales[y - 1] = OVData.getGLICAddIn(includeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), marketingandsales[y - 1]);
+                    marketingandsales[y - 1] = fglData.getGLICAddIn(includeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), marketingandsales[y - 1]);
                 }
                 } // y
                 mymodel.addRow(new Object[] { getClassLabelTag("lblsalesmarketing", Thread.currentThread().getStackTrace()[1].getMethodName()), marketingandsales[0], marketingandsales[1], marketingandsales[2], marketingandsales[3], marketingandsales[4], marketingandsales[5], marketingandsales[6], marketingandsales[7], marketingandsales[8], marketingandsales[9], marketingandsales[10], marketingandsales[11]});
@@ -875,14 +875,14 @@ public class IncomeStatementRptYear extends javax.swing.JPanel {
                     generalandadmin[y - 1] += res.getDouble("sum");
                 }
                 // now lets back out accts excluded
-                excludeaccts = OVData.getGLICAccts("g&a", "out");
+                excludeaccts = fglData.getGLICAccts("g&a", "out");
                 for (int k = 0; k < excludeaccts.size(); k++) {
-                    generalandadmin[y - 1] = OVData.getGLICBackOut(excludeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), generalandadmin[y - 1]);
+                    generalandadmin[y - 1] = fglData.getGLICBackOut(excludeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), generalandadmin[y - 1]);
                 }
                 // now add accts that are included
-                includeaccts = OVData.getGLICAccts("g&a", "in");
+                includeaccts = fglData.getGLICAccts("g&a", "in");
                 for (int k = 0; k < includeaccts.size(); k++) {
-                    generalandadmin[y - 1] = OVData.getGLICAddIn(includeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), generalandadmin[y - 1]);
+                    generalandadmin[y - 1] = fglData.getGLICAddIn(includeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), generalandadmin[y - 1]);
                 }
                 } // y
               mymodel.addRow(new Object[] { getClassLabelTag("lblgeneraladmin", Thread.currentThread().getStackTrace()[1].getMethodName()), generalandadmin[0], generalandadmin[1], generalandadmin[2], generalandadmin[3], generalandadmin[4], generalandadmin[5], generalandadmin[6], generalandadmin[7], generalandadmin[8], generalandadmin[9], generalandadmin[10], generalandadmin[11]});
@@ -913,14 +913,14 @@ public class IncomeStatementRptYear extends javax.swing.JPanel {
                     interest[y - 1] += res.getDouble("sum");
                 }
                 // now lets back out accts excluded
-                excludeaccts = OVData.getGLICAccts("interest", "out");
+                excludeaccts = fglData.getGLICAccts("interest", "out");
                 for (int k = 0; k < excludeaccts.size(); k++) {
-                    interest[y - 1] = OVData.getGLICBackOut(excludeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), interest[y - 1]);
+                    interest[y - 1] = fglData.getGLICBackOut(excludeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), interest[y - 1]);
                 }
                 // now add accts that are included
-                includeaccts = OVData.getGLICAccts("interest", "in");
+                includeaccts = fglData.getGLICAccts("interest", "in");
                 for (int k = 0; k < includeaccts.size(); k++) {
-                    interest[y - 1] = OVData.getGLICAddIn(includeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), interest[y - 1]);
+                    interest[y - 1] = fglData.getGLICAddIn(includeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), interest[y - 1]);
                 }
                 } // y
                 mymodel.addRow(new Object[] { getClassLabelTag("lblinterest", Thread.currentThread().getStackTrace()[1].getMethodName()), interest[0], interest[1], interest[2], interest[3], interest[4], interest[5], interest[6], interest[7], interest[8], interest[9], interest[10], interest[11]});
@@ -944,14 +944,14 @@ public class IncomeStatementRptYear extends javax.swing.JPanel {
                     alloc[y - 1] += res.getDouble("sum");
                 }
                 // now lets back out accts excluded
-                excludeaccts = OVData.getGLICAccts("alloc", "out");
+                excludeaccts = fglData.getGLICAccts("alloc", "out");
                 for (int k = 0; k < excludeaccts.size(); k++) {
-                    alloc[y - 1] = OVData.getGLICBackOut(excludeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), alloc[y - 1]);
+                    alloc[y - 1] = fglData.getGLICBackOut(excludeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), alloc[y - 1]);
                 }
                 // now add accts that are included
-                includeaccts = OVData.getGLICAccts("alloc", "in");
+                includeaccts = fglData.getGLICAccts("alloc", "in");
                 for (int k = 0; k < includeaccts.size(); k++) {
-                    alloc[y - 1] = OVData.getGLICAddIn(includeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), alloc[y - 1]);
+                    alloc[y - 1] = fglData.getGLICAddIn(includeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), alloc[y - 1]);
                 }
                 } // y
                 mymodel.addRow(new Object[] { getClassLabelTag("lblallocations", Thread.currentThread().getStackTrace()[1].getMethodName()), alloc[0], alloc[1], alloc[2], alloc[3], alloc[4], alloc[5], alloc[6], alloc[7], alloc[8], alloc[9], alloc[10], alloc[11]});
@@ -975,14 +975,14 @@ public class IncomeStatementRptYear extends javax.swing.JPanel {
                     mgtfees[y - 1] += res.getDouble("sum");
                 }
                 // now lets back out accts excluded
-                excludeaccts = OVData.getGLICAccts("mgtfee", "out");
+                excludeaccts = fglData.getGLICAccts("mgtfee", "out");
                 for (int k = 0; k < excludeaccts.size(); k++) {
-                    mgtfees[y - 1] = OVData.getGLICBackOut(excludeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), mgtfees[y - 1]);
+                    mgtfees[y - 1] = fglData.getGLICBackOut(excludeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), mgtfees[y - 1]);
                 }
                 // now add accts that are included
-                includeaccts = OVData.getGLICAccts("mgtfee", "in");
+                includeaccts = fglData.getGLICAccts("mgtfee", "in");
                 for (int k = 0; k < includeaccts.size(); k++) {
-                    mgtfees[y - 1] = OVData.getGLICAddIn(includeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), mgtfees[y - 1]);
+                    mgtfees[y - 1] = fglData.getGLICAddIn(includeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), mgtfees[y - 1]);
                 }
                 } // y
                mymodel.addRow(new Object[] { getClassLabelTag("lblmanagementfees", Thread.currentThread().getStackTrace()[1].getMethodName()), mgtfees[0], mgtfees[1], mgtfees[2], mgtfees[3], mgtfees[4], mgtfees[5], mgtfees[6], mgtfees[7], mgtfees[8], mgtfees[9], mgtfees[10], mgtfees[11]});
@@ -1006,14 +1006,14 @@ public class IncomeStatementRptYear extends javax.swing.JPanel {
                     bankfees[y - 1] += res.getDouble("sum");
                 }
                 // now lets back out accts excluded
-                excludeaccts = OVData.getGLICAccts("bankfees", "out");
+                excludeaccts = fglData.getGLICAccts("bankfees", "out");
                 for (int k = 0; k < excludeaccts.size(); k++) {
-                    bankfees[y - 1] = OVData.getGLICBackOut(excludeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), bankfees[y - 1]);
+                    bankfees[y - 1] = fglData.getGLICBackOut(excludeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), bankfees[y - 1]);
                 }
                 // now add accts that are included
-                includeaccts = OVData.getGLICAccts("bankfees", "in");
+                includeaccts = fglData.getGLICAccts("bankfees", "in");
                 for (int k = 0; k < includeaccts.size(); k++) {
-                    bankfees[y - 1] = OVData.getGLICAddIn(includeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), bankfees[y - 1]);
+                    bankfees[y - 1] = fglData.getGLICAddIn(includeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), bankfees[y - 1]);
                 }
                 } // y
                  mymodel.addRow(new Object[] { getClassLabelTag("lblbankfees", Thread.currentThread().getStackTrace()[1].getMethodName()), bankfees[0], bankfees[1], bankfees[2], bankfees[3], bankfees[4], bankfees[5], bankfees[6], bankfees[7], bankfees[8], bankfees[9], bankfees[10], bankfees[11]});
@@ -1037,14 +1037,14 @@ public class IncomeStatementRptYear extends javax.swing.JPanel {
                     other[y - 1] += res.getDouble("sum");
                 }
                 // now lets back out accts excluded
-                excludeaccts = OVData.getGLICAccts("otherie", "out");
+                excludeaccts = fglData.getGLICAccts("otherie", "out");
                 for (int k = 0; k < excludeaccts.size(); k++) {
-                    other[y - 1] = OVData.getGLICBackOut(excludeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), other[y - 1]);
+                    other[y - 1] = fglData.getGLICBackOut(excludeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), other[y - 1]);
                 }
                 // now add accts that are included
-                includeaccts = OVData.getGLICAccts("otherie", "in");
+                includeaccts = fglData.getGLICAccts("otherie", "in");
                 for (int k = 0; k < includeaccts.size(); k++) {
-                    other[y - 1] = OVData.getGLICAddIn(includeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), other[y - 1]);
+                    other[y - 1] = fglData.getGLICAddIn(includeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), other[y - 1]);
                 }
                 } // y
                 mymodel.addRow(new Object[] { getClassLabelTag("lblotherincomeexpense", Thread.currentThread().getStackTrace()[1].getMethodName()), other[0], other[1], other[2], other[3], other[4], other[5], other[6], other[7], other[8], other[9], other[10], other[11]});
@@ -1075,14 +1075,14 @@ public class IncomeStatementRptYear extends javax.swing.JPanel {
                     depreciation[y - 1] += res.getDouble("sum");
                 }
                 // now lets back out accts excluded
-                excludeaccts = OVData.getGLICAccts("depreciation", "out");
+                excludeaccts = fglData.getGLICAccts("depreciation", "out");
                 for (int k = 0; k < excludeaccts.size(); k++) {
-                    depreciation[y - 1] = OVData.getGLICBackOut(excludeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), depreciation[y - 1]);
+                    depreciation[y - 1] = fglData.getGLICBackOut(excludeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), depreciation[y - 1]);
                 }
                 // now add accts that are included
-                includeaccts = OVData.getGLICAccts("depreciation", "in");
+                includeaccts = fglData.getGLICAccts("depreciation", "in");
                 for (int k = 0; k < includeaccts.size(); k++) {
-                    depreciation[y - 1] = OVData.getGLICAddIn(includeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), depreciation[y - 1]);
+                    depreciation[y - 1] = fglData.getGLICAddIn(includeaccts.get(k).toString(), ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString(), String.valueOf(y), depreciation[y - 1]);
                 }
                 } // y
                 mymodel.addRow(new Object[] { getClassLabelTag("lbldepreciation", Thread.currentThread().getStackTrace()[1].getMethodName()), depreciation[0], depreciation[1], depreciation[2], depreciation[3], depreciation[4], depreciation[5], depreciation[6], depreciation[7], depreciation[8], depreciation[9], depreciation[10], depreciation[11]});

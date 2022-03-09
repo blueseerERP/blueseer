@@ -376,7 +376,7 @@ public class LedgerBalanceExport extends javax.swing.JPanel {
         ArrayList<String> mylist = new ArrayList<String>();
           String[] ac = null;
         double total = 0;
-        mylist = OVData.getGLBalByYearByPeriod(Integer.valueOf(ddfromyear.getSelectedItem().toString()), Integer.valueOf(ddtoyear.getSelectedItem().toString()), Integer.valueOf(ddfromper.getSelectedItem().toString()), Integer.valueOf(ddtoper.getSelectedItem().toString()), ddsite.getSelectedItem().toString(), cbzero.isSelected(), cbbs.isSelected());
+        mylist = fglData.getGLBalByYearByPeriod(Integer.valueOf(ddfromyear.getSelectedItem().toString()), Integer.valueOf(ddtoyear.getSelectedItem().toString()), Integer.valueOf(ddfromper.getSelectedItem().toString()), Integer.valueOf(ddtoper.getSelectedItem().toString()), ddsite.getSelectedItem().toString(), cbzero.isSelected(), cbbs.isSelected());
         mymodel.setNumRows(0);
         for (String rec : mylist) {
         ac = rec.split(",", -1);

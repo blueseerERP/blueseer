@@ -748,7 +748,7 @@ public class CashTran extends javax.swing.JPanel {
                     }
                
                     if (OVData.isAutoPost()) {
-                        OVData.PostGL();
+                        fglData.PostGL();
                     }
                     
                  //    initvars("0"); 
@@ -956,7 +956,7 @@ public class CashTran extends javax.swing.JPanel {
                    
                
                     if (OVData.isAutoPost()) {
-                        OVData.PostGL();
+                        fglData.PostGL();
                     }
                     
                   //   initvars("1"); 
@@ -1104,7 +1104,7 @@ public class CashTran extends javax.swing.JPanel {
                     }
                
                     if (OVData.isAutoPost()) {
-                        OVData.PostGL();
+                        fglData.PostGL();
                     }
                     
                 //     initvars("2"); 
@@ -1242,7 +1242,7 @@ public class CashTran extends javax.swing.JPanel {
                     }
                
                     if (OVData.isAutoPost()) {
-                        OVData.PostGL();
+                        fglData.PostGL();
                     }
                     
                 //     initvars("2"); 
@@ -1400,7 +1400,7 @@ public class CashTran extends javax.swing.JPanel {
                     
                     
                     if (OVData.isAutoPost()) {
-                        OVData.PostGL();
+                        fglData.PostGL();
                     }
                     
                      clearRecurExpense();

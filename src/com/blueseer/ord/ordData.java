@@ -1312,7 +1312,37 @@ public class ordData {
              return curr;
     }
     
-    
+    public static ArrayList getOpenOrdersList() {
+   ArrayList mylist = new ArrayList() ;
+
+    try{
+
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+            res = st.executeQuery("select so_nbr from so_mstr where so_status = " + "'" + getGlobalProgTag("open") + "'" + " or so_status = " + "'" + getGlobalProgTag("commit") + "'" + " or so_status = " + "'" + getGlobalProgTag("backorder") + "'" + " ;");
+                   while (res.next()) {
+                      mylist.add(res.getString(("so_nbr")));
+                   }
+
+       }
+        catch (SQLException s){
+             bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return mylist;
+
+}
+
     public record so_mstr(String[] m, String so_nbr, String so_cust, String so_ship, String so_site,
     String so_curr, String so_shipvia, String so_wh, String so_po, String so_due_date,
     String so_ord_date, String so_create_date, String so_userid, String so_status, String so_isallocated,

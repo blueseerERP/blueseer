@@ -35,6 +35,7 @@ import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.ctr.cusData;
+import com.blueseer.fgl.fglData;
 import com.blueseer.inv.invData;
 import static com.blueseer.ord.ordData.addServiceOrderTransaction;
 import static com.blueseer.ord.ordData.getServiceOrderLines;
@@ -876,7 +877,7 @@ Connection con = DriverManager.getConnection(url + db, user, pass);
         }
         // autopost
         if (OVData.isAutoPost()) {
-            OVData.PostGL();
+            fglData.PostGL();
         }        
         return message;
     }

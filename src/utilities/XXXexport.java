@@ -29,6 +29,7 @@ package utilities;
  *
  * @author vaughnte
  */
+import com.blueseer.fgl.fglData;
 import com.blueseer.utl.OVData;
 import java.io.*;
 import java.util.ArrayList;
@@ -42,7 +43,7 @@ public static void main(String args[]) {
               String detail = "";
               String delimiter = "__XXX__";
      
-              // lets do the Ledger Balance for 1516
+              // lets do the Ledger Balance for sample company 123
                File f = new File("LedgerBalances.csv");
                 if(f.exists()) {
                     f.delete();
@@ -59,7 +60,7 @@ public static void main(String args[]) {
               
                 ArrayList<String> mylist = new ArrayList<String>();
                 String[] ac = null;
-                mylist = OVData.getGLBalanceRangeXXXByCC(2014, 2015, "123"); 
+                mylist = fglData.getGLBalanceRangeXXXByCC(2014, 2015, "123"); 
                 for (String rec : mylist) {
                 ac = rec.split(",", -1);
                    detail = "XXX" + delimiter +
@@ -75,7 +76,7 @@ public static void main(String args[]) {
                output.close();
                
                
-                 // lets do the Ledger Balance for 1517 Premier
+                 // lets do the Ledger Balance for sample company 444
                f = new File("LedgerBalances.csv");
                 if(f.exists()) {
                     f.delete();
@@ -91,7 +92,7 @@ public static void main(String args[]) {
               output.write(myheader + '\n');
                mylist = new ArrayList<String>();
              
-                mylist = OVData.getGLBalanceRangeXXXByCC(2014, 2015, "123"); 
+                mylist = fglData.getGLBalanceRangeXXXByCC(2014, 2015, "444"); 
                 for (String rec : mylist) {
                 ac = rec.split(",", -1);
                    detail = "XXX" + delimiter +

@@ -145,7 +145,7 @@ public class YearEndClose extends javax.swing.JPanel {
             
        
             
-       values = OVData.getYearEndValues(ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString()); 
+       values = fglData.getYearEndValues(ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString()); 
 
           
             
@@ -180,7 +180,7 @@ public class YearEndClose extends javax.swing.JPanel {
             
        
             
-       OVData.setYearEndValues(ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString()); 
+       fglData.setYearEndValues(ddsite.getSelectedItem().toString(), ddyear.getSelectedItem().toString()); 
 
           
             

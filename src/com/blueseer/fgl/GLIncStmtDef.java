@@ -119,7 +119,7 @@ public class GLIncStmtDef extends javax.swing.JPanel {
     public void initvars(String[] vars) {
         
         ddcategory.removeAllItems();
-        ArrayList mylist = OVData.getGLICDefsList();
+        ArrayList mylist = fglData.getGLICDefsList();
         for (int i = 0; i < mylist.size(); i++) {
             ddcategory.addItem(mylist.get(i));
         }
@@ -348,15 +348,15 @@ public class GLIncStmtDef extends javax.swing.JPanel {
        if (ddcategory.getItemCount() > 0) {
         mymodelex.removeAllElements();
         mymodel.removeAllElements();
-        tbfrom.setText(OVData.getGLICDefsStart(ddcategory.getSelectedItem().toString()));
-        tbto.setText(OVData.getGLICDefsEnd(ddcategory.getSelectedItem().toString()));
+        tbfrom.setText(fglData.getGLICDefsStart(ddcategory.getSelectedItem().toString()));
+        tbto.setText(fglData.getGLICDefsEnd(ddcategory.getSelectedItem().toString()));
         
-        ArrayList mylistin = OVData.getGLICAccts(ddcategory.getSelectedItem().toString(),"in");
+        ArrayList mylistin = fglData.getGLICAccts(ddcategory.getSelectedItem().toString(),"in");
         for (int i = 0; i < mylistin.size(); i++) {
             mymodel.addElement(mylistin.get(i));
         }
         
-        ArrayList mylist = OVData.getGLICAccts(ddcategory.getSelectedItem().toString(),"out");
+        ArrayList mylist = fglData.getGLICAccts(ddcategory.getSelectedItem().toString(),"out");
         for (int i = 0; i < mylist.size(); i++) {
             mymodelex.addElement(mylist.get(i));
         }

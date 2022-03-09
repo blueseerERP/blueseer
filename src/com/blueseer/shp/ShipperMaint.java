@@ -36,6 +36,7 @@ import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.ctr.cusData;
 import com.blueseer.inv.invData;
+import com.blueseer.ord.ordData;
 import static com.blueseer.shp.shpData.addShipperTransaction;
 import static com.blueseer.shp.shpData.confirmShipperTransaction;
 import com.blueseer.shp.shpData.ship_det;
@@ -318,7 +319,7 @@ public class ShipperMaint extends javax.swing.JPanel {
          ddorder.insertItemAt("", 0);
          ddorder.insertItemAt("none",1);
         ddorder.setSelectedIndex(0);
-        ArrayList<String> myorders = OVData.getOpenOrdersList(); 
+        ArrayList<String> myorders = ordData.getOpenOrdersList(); 
         for (int i = 0; i < myorders.size(); i++) {
             ddorder.addItem(myorders.get(i));
         }
