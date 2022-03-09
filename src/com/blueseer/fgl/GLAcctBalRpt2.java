@@ -414,13 +414,13 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
         for (int i = 1 ; i <= 12; i++) {
             ddperiod.addItem(String.valueOf(i));
         }
-        String[] fromdatearray = OVData.getGLCalForDate(dfdate.format(now));
+        String[] fromdatearray = fglData.getGLCalForDate(dfdate.format(now));
         //int fromdateperiod = Integer.valueOf(fromdatearray.get(1).toString());
         ddperiod.setSelectedItem(fromdatearray[1].toString());
         ArrayList startend = OVData.getGLCalForPeriod(ddyear.getSelectedItem().toString(), ddperiod.getSelectedItem().toString());
         datelabel.setText(startend.get(0).toString() + " To " + startend.get(1).toString());
         
-        ArrayList myacct = OVData.getGLAcctList();
+        ArrayList myacct = fglData.getGLAcctList();
         for (int i = 0; i < myacct.size(); i++) {
             ddacctfrom.addItem(myacct.get(i));
             ddacctto.addItem(myacct.get(i));
@@ -844,8 +844,8 @@ try {
                  
                  ArrayList<String> ccamts = new ArrayList<String>();
                  
-                 ArrayList<String[]> accounts = OVData.getGLAcctListRangeWCurrTypeDesc(ddacctfrom.getSelectedItem().toString(), ddacctto.getSelectedItem().toString());
-                 ArrayList<String> ccs = OVData.getGLCCList();
+                 ArrayList<String[]> accounts = fglData.getGLAcctListRangeWCurrTypeDesc(ddacctfrom.getSelectedItem().toString(), ddacctto.getSelectedItem().toString());
+                 ArrayList<String> ccs = fglData.getGLCCList();
                  
                   totbegbal = 0.00;
                   totactivity = 0.00;

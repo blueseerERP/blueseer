@@ -229,7 +229,7 @@ public class GLTranRpt1 extends javax.swing.JPanel {
          dcTo.setDate(now);
          
          
-          ArrayList myacct = OVData.getGLAcctList();
+          ArrayList myacct = fglData.getGLAcctList();
         for (int i = 0; i < myacct.size(); i++) {
             ddacctfrom.addItem(myacct.get(i));
             ddacctto.addItem(myacct.get(i));

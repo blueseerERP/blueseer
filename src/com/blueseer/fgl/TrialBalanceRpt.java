@@ -405,7 +405,7 @@ public class TrialBalanceRpt extends javax.swing.JPanel {
         for (int i = 1 ; i <= 12; i++) {
             ddperiod.addItem(String.valueOf(i));
         }
-        String[] fromdatearray = OVData.getGLCalForDate(dfdate.format(now));
+        String[] fromdatearray = fglData.getGLCalForDate(dfdate.format(now));
         //int fromdateperiod = Integer.valueOf(fromdatearray.get(1).toString());
         ddperiod.setSelectedItem(fromdatearray[1].toString());
         ArrayList startend = OVData.getGLCalForPeriod(ddyear.getSelectedItem().toString(), ddperiod.getSelectedItem().toString());
@@ -755,10 +755,10 @@ try {
                  
                  ArrayList<String> ccamts = new ArrayList<String>();
                  
-                 ArrayList<String[]> accounts = OVData.getGLAcctListRangeWCurrTypeDesc("", "");
+                 ArrayList<String[]> accounts = fglData.getGLAcctListRangeWCurrTypeDesc("", "");
                 // ArrayList<String> accounts = OVData.getGLAcctList();
                  
-                 ArrayList<String> ccs = OVData.getGLCCList();
+                 ArrayList<String> ccs = fglData.getGLCCList();
                  
                   totbegbal = 0;
                   totactivity = 0;

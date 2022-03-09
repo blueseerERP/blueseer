@@ -2330,7 +2330,375 @@ public class fglData {
 
     }
 
+         
+    public static ArrayList getGLAcctList() {
+       ArrayList myarray = new ArrayList();
+        try{
+           
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+                res = st.executeQuery("select ac_id from ac_mstr order by ac_id ;");
+               while (res.next()) {
+                    myarray.add(res.getString("ac_id"));
+                    
+                }
+               
+           }
+            catch (SQLException s){
+                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return myarray;
+        
+    }
+          
+    public static ArrayList getGLAcctListByType(String type) {
+       ArrayList myarray = new ArrayList();
+        try{
+           
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+                res = st.executeQuery("select ac_id from ac_mstr where ac_type = " + "'" + type + "'" + " order by ac_id ;");
+               while (res.next()) {
+                    myarray.add(res.getString("ac_id"));
+                    
+                }
+               
+           }
+            catch (SQLException s){
+                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return myarray;
+        
+    }
+       
+    public static ArrayList getGLAcctExpenseDisplayOnly() {
+   ArrayList myarray = new ArrayList();
+    try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+            res = st.executeQuery("select ac_id from ac_mstr where ac_display = '1' and ac_type = " + "'" + 'e' + "'" + " order by ac_id ;");
+           while (res.next()) {
+                myarray.add(res.getString("ac_id"));
+
+            }
+
+       }
+        catch (SQLException s){
+             bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myarray;
+
+}
+
+    public static ArrayList getGLAcctIncomeDisplayOnly() {
+   ArrayList myarray = new ArrayList();
+    try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+            res = st.executeQuery("select ac_id from ac_mstr where ac_display = '1' and ac_type = " + "'" + 'I' + "'" + " order by ac_id ;");
+           while (res.next()) {
+                myarray.add(res.getString("ac_id"));
+
+            }
+
+       }
+        catch (SQLException s){
+             bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myarray;
+
+}
+
     
+    public static ArrayList getGLAcctListRange(String fromacct, String toacct) {
+   ArrayList myarray = new ArrayList();
+    try{
+
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+            res = st.executeQuery("select ac_id from ac_mstr where " +
+                     " ac_id >= " + "'" + fromacct + "'" + " AND " +
+                     " ac_id <= " + "'" +  toacct + "'" + "order by ac_id ;");
+           while (res.next()) {
+                myarray.add(res.getString("ac_id"));
+            }
+
+       }
+        catch (SQLException s){
+             bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myarray;
+
+}
+
+    public static ArrayList getGLAcctListRangeWTypeDesc(String fromacct, String toacct) {
+   ArrayList myarray = new ArrayList();
+    try{
+
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+            res = st.executeQuery("select ac_id, ac_type, ac_desc from ac_mstr where " +
+                     " ac_id >= " + "'" + fromacct + "'" + " AND " +
+                     " ac_id <= " + "'" +  toacct + "'" + "order by ac_id ;");
+           while (res.next()) {
+                myarray.add(res.getString("ac_id") + "," + res.getString("ac_type") + "," + res.getString("ac_desc"));
+            }
+
+       }
+        catch (SQLException s){
+             bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myarray;
+
+}
+
+    public static ArrayList<String[]> getGLAcctListRangeWCurrTypeDesc(String fromacct, String toacct) {
+   ArrayList<String[]> myarray = new ArrayList();
+
+    try{
+
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+            if (fromacct.isEmpty() && toacct.isEmpty()) {
+                res = st.executeQuery("select ac_id, ac_cur, ac_type, ac_desc from ac_mstr order by ac_id ;");
+            } else {
+            res = st.executeQuery("select ac_id, ac_cur, ac_type, ac_desc from ac_mstr where " +
+                     " ac_id >= " + "'" + fromacct + "'" + " AND " +
+                     " ac_id <= " + "'" +  toacct + "'" + "order by ac_id ;");
+            }
+           while (res.next()) {
+               String[] x = new String[4];
+               x[0] = res.getString("ac_id");
+               x[1] = res.getString("ac_cur");
+               x[2] = res.getString("ac_type");
+               x[3] = res.getString("ac_desc");
+                myarray.add(x);
+            }
+
+       }
+        catch (SQLException s){
+             bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myarray;
+
+}
+
+    public static String getGLAcctType(String acct) {
+  String myreturn = "";
+    try{
+
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+            res = st.executeQuery("select ac_type from ac_mstr where " +
+                     " ac_id = " + "'" + acct + "'" + ";");
+           while (res.next()) {
+                myreturn = res.getString("ac_type");
+            }
+
+       }
+        catch (SQLException s){
+             bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myreturn;
+
+}
+
+    public static String getGLAcctDesc(String acct) {
+  String myreturn = "";
+    try{
+
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+            res = st.executeQuery("select ac_desc from ac_mstr where " +
+                     " ac_id = " + "'" + acct + "'" + ";");
+           while (res.next()) {
+                myreturn = res.getString("ac_desc");
+            }
+
+       }
+        catch (SQLException s){
+             bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myreturn;
+
+}
+
+    public static ArrayList getGLCCList() {
+  ArrayList myarray = new ArrayList();
+    try{
+
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+            res = st.executeQuery("select dept_id from dept_mstr ;");
+           while (res.next()) {
+                myarray.add(res.getString("dept_id"));
+
+            }
+
+       }
+        catch (SQLException s){
+             bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myarray;
+
+}
+
+    public static String[] getGLCalForDate(String EffDate) {
+          // function returns a String array
+          // first element = year  
+          // second element = period 
+          // third element = startdate 
+          // fourth element = enddate 
+          // fifth element = status 
+  String[] x = new String[]{"","","","",""};        
+
+    try{
+
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+            res = st.executeQuery("select * from gl_cal where glc_start <= " +
+                    "'" + EffDate.toString() + "'" + 
+                    " AND glc_end >= " +
+                    "'" + EffDate.toString() + "'" + ";");
+           while (res.next()) {
+                x[0] = res.getString("glc_year");
+                x[1] = res.getString("glc_per");
+                x[2] = res.getString("glc_start");
+                x[3] = res.getString("glc_end");
+                x[4] = res.getString("glc_status");
+           }
+
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return x;
+
+}
+
+ 
     
     public record AcctMstr(String[] m, String id, String desc, String type, String currency, String cbdisplay) {
         public AcctMstr(String[] m) {

@@ -244,14 +244,14 @@ public class InventoryMaint extends javax.swing.JPanel {
         
         ArrayList<String> accts = new ArrayList();
         ddacct.removeAllItems();
-        accts = OVData.getGLAcctList();
+        accts = fglData.getGLAcctList();
         for (String code : accts) {
             ddacct.addItem(code);
         }
         
         ArrayList<String> ccs = new ArrayList();
         ddcc.removeAllItems();
-        ccs = OVData.getGLCCList();
+        ccs = fglData.getGLCCList();
         for (String code : ccs) {
             ddcc.addItem(code);
         }

@@ -748,7 +748,7 @@ public class CashTran extends javax.swing.JPanel {
                     }
                
                     if (OVData.isAutoPost()) {
-                        OVData.PostGL2();
+                        OVData.PostGL();
                     }
                     
                  //    initvars("0"); 
@@ -956,7 +956,7 @@ public class CashTran extends javax.swing.JPanel {
                    
                
                     if (OVData.isAutoPost()) {
-                        OVData.PostGL2();
+                        OVData.PostGL();
                     }
                     
                   //   initvars("1"); 
@@ -1104,7 +1104,7 @@ public class CashTran extends javax.swing.JPanel {
                     }
                
                     if (OVData.isAutoPost()) {
-                        OVData.PostGL2();
+                        OVData.PostGL();
                     }
                     
                 //     initvars("2"); 
@@ -1230,7 +1230,7 @@ public class CashTran extends javax.swing.JPanel {
                                 + "'" + (j + 1) + "'" + ","
                                 + "'" + incomeTable.getValueAt(j, 1).toString() + "'"  + ","      
                                 + "'" + incomeTable.getValueAt(j, 4).toString() + "'"  + "," 
-                                + "'" + incomeTable.getValueAt(j, 5).toString() + "/" + OVData.getGLAcctDesc(incomeTable.getValueAt(j, 5).toString()) + "'"  + ","        
+                                + "'" + incomeTable.getValueAt(j, 5).toString() + "/" + fglData.getGLAcctDesc(incomeTable.getValueAt(j, 5).toString()) + "'"  + ","        
                                 + "'" + incomeTable.getValueAt(j, 2).toString().replace(defaultDecimalSeparator, '.') + "'"  + ","   
                                 + "'" + incomeTable.getValueAt(j, 3).toString().replace(defaultDecimalSeparator, '.') + "'"  + ","
                                 + "'" + incomeTable.getValueAt(j, 3).toString().replace(defaultDecimalSeparator, '.') + "'" + "," 
@@ -1242,7 +1242,7 @@ public class CashTran extends javax.swing.JPanel {
                     }
                
                     if (OVData.isAutoPost()) {
-                        OVData.PostGL2();
+                        OVData.PostGL();
                     }
                     
                 //     initvars("2"); 
@@ -1400,7 +1400,7 @@ public class CashTran extends javax.swing.JPanel {
                     
                     
                     if (OVData.isAutoPost()) {
-                        OVData.PostGL2();
+                        OVData.PostGL();
                     }
                     
                      clearRecurExpense();
@@ -1893,7 +1893,7 @@ public class CashTran extends javax.swing.JPanel {
             ddentityExpense.setSelectedIndex(0);
             
         ArrayList accts = new ArrayList();
-        accts = OVData.getGLAcctExpenseDisplayOnly(); 
+        accts = fglData.getGLAcctExpenseDisplayOnly(); 
         ddaccountexpense.removeAllItems();
         for (int i = 0; i < accts.size(); i++) {
             ddaccountexpense.addItem(accts.get(i).toString());
@@ -1919,7 +1919,7 @@ public class CashTran extends javax.swing.JPanel {
       
             
         ArrayList accts = new ArrayList();
-        accts = OVData.getGLAcctIncomeDisplayOnly(); 
+        accts = fglData.getGLAcctIncomeDisplayOnly(); 
         ddaccountincome.removeAllItems();
         for (int i = 0; i < accts.size(); i++) {
             ddaccountincome.addItem(accts.get(i).toString());
@@ -2002,7 +2002,7 @@ public class CashTran extends javax.swing.JPanel {
         
             
          ArrayList accts = new ArrayList();
-        accts = OVData.getGLAcctExpenseDisplayOnly(); 
+        accts = fglData.getGLAcctExpenseDisplayOnly(); 
         ddrexpacct.removeAllItems();
         for (int i = 0; i < accts.size(); i++) {
             ddrexpacct.addItem(accts.get(i).toString());

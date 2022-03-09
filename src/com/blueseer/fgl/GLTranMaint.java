@@ -201,14 +201,14 @@ public class GLTranMaint extends javax.swing.JPanel {
         ddsite.setSelectedItem(OVData.getDefaultSite());
         
         ddacct.removeAllItems();
-        ArrayList myacct = OVData.getGLAcctList();
+        ArrayList myacct = fglData.getGLAcctList();
         for (int i = 0; i < myacct.size(); i++) {
             ddacct.addItem(myacct.get(i));
         }
             ddacct.setSelectedIndex(0);
         
         ddcc.removeAllItems();
-        ArrayList cc = OVData.getGLCCList();
+        ArrayList cc = fglData.getGLCCList();
         for (int i = 0; i < cc.size(); i++) {
             ddcc.addItem(cc.get(i));
         }
@@ -938,7 +938,7 @@ public class GLTranMaint extends javax.swing.JPanel {
                     return;
                 }
                    
-                String[] caldate = OVData.getGLCalForDate(dfdate.format(effdate.getDate()));
+                String[] caldate = fglData.getGLCalForDate(dfdate.format(effdate.getDate()));
                 if (caldate == null || caldate[0].isEmpty()) {
                     proceed = false;
                     bsmf.MainFrame.show(getMessageTag(1038));

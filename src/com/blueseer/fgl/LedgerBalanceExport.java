@@ -381,7 +381,7 @@ public class LedgerBalanceExport extends javax.swing.JPanel {
         for (String rec : mylist) {
         ac = rec.split(",", -1);
         total = total + bsParseDouble(ac[4]);
-        String desc = OVData.getGLAcctDesc(ac[0]);
+        String desc = fglData.getGLAcctDesc(ac[0]);
         mymodel.addRow(new Object[]{ddsite.getSelectedItem().toString(), ac[0],
                                 desc,
                                 ac[1],

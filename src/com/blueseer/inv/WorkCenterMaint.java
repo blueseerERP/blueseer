@@ -34,6 +34,7 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import com.blueseer.fgl.fglData;
 import static com.blueseer.inv.invData.addWorkCenterMstr;
 import static com.blueseer.inv.invData.updateWorkCenterMstr;
 import com.blueseer.inv.invData.wc_mstr;
@@ -281,7 +282,7 @@ public class WorkCenterMaint extends javax.swing.JPanel implements IBlueSeer {
         tbruncrewsize.setText("1");
         tbsetupcrewsize.setText("1");
         
-        OVData.getGLCCList().stream().forEach((s) -> ddcc.addItem(s));
+        fglData.getGLCCList().stream().forEach((s) -> ddcc.addItem(s));
         
         ddsite.removeAllItems();
         OVData.getSiteList().stream().forEach((s) -> ddsite.addItem(s));

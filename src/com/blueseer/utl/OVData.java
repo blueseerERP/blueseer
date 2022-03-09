@@ -4215,7 +4215,7 @@ public class OVData {
             DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
             Date now = new Date();
               
-            String[] calarray = OVData.getGLCalForDate(dfdate.format(now));
+            String[] calarray = fglData.getGLCalForDate(dfdate.format(now));
                     
                   try {
             
@@ -11528,136 +11528,7 @@ return mystring;
       /* end tran_mstr related functions */
      
       /* start gl related functions */
-      
-      
-      
    
-        
-        
-    public static ArrayList getGLAcctList() {
-       ArrayList myarray = new ArrayList();
-        try{
-           
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-
-                res = st.executeQuery("select ac_id from ac_mstr order by ac_id ;");
-               while (res.next()) {
-                    myarray.add(res.getString("ac_id"));
-                    
-                }
-               
-           }
-            catch (SQLException s){
-                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               con.close();
-            }
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myarray;
-        
-    }
-          
-    public static ArrayList getGLAcctListByType(String type) {
-       ArrayList myarray = new ArrayList();
-        try{
-           
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-
-                res = st.executeQuery("select ac_id from ac_mstr where ac_type = " + "'" + type + "'" + " order by ac_id ;");
-               while (res.next()) {
-                    myarray.add(res.getString("ac_id"));
-                    
-                }
-               
-           }
-            catch (SQLException s){
-                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               con.close();
-            }
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return myarray;
-        
-    }
-       
-    public static ArrayList getGLAcctExpenseDisplayOnly() {
-   ArrayList myarray = new ArrayList();
-    try{
-
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-
-            res = st.executeQuery("select ac_id from ac_mstr where ac_display = '1' and ac_type = " + "'" + 'e' + "'" + " order by ac_id ;");
-           while (res.next()) {
-                myarray.add(res.getString("ac_id"));
-
-            }
-
-       }
-        catch (SQLException s){
-             bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-        } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               con.close();
-        }
-    }
-    catch (Exception e){
-        MainFrame.bslog(e);
-    }
-    return myarray;
-
-}
-
-    public static ArrayList getGLAcctIncomeDisplayOnly() {
-   ArrayList myarray = new ArrayList();
-    try{
-
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-
-            res = st.executeQuery("select ac_id from ac_mstr where ac_display = '1' and ac_type = " + "'" + 'I' + "'" + " order by ac_id ;");
-           while (res.next()) {
-                myarray.add(res.getString("ac_id"));
-
-            }
-
-       }
-        catch (SQLException s){
-             bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-        } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               con.close();
-        }
-    }
-    catch (Exception e){
-        MainFrame.bslog(e);
-    }
-    return myarray;
-
-}
-
     public static boolean isValidTerms(String code) {
        boolean myreturn = false;
         try{
@@ -11892,250 +11763,7 @@ return mystring;
     return myreturn;
 
 }
-
-    public static ArrayList getGLAcctListRange(String fromacct, String toacct) {
-   ArrayList myarray = new ArrayList();
-    try{
-
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-
-            res = st.executeQuery("select ac_id from ac_mstr where " +
-                     " ac_id >= " + "'" + fromacct + "'" + " AND " +
-                     " ac_id <= " + "'" +  toacct + "'" + "order by ac_id ;");
-           while (res.next()) {
-                myarray.add(res.getString("ac_id"));
-            }
-
-       }
-        catch (SQLException s){
-             bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-        } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               con.close();
-            }
-    }
-    catch (Exception e){
-        MainFrame.bslog(e);
-    }
-    return myarray;
-
-}
-
-    public static ArrayList getGLAcctListRangeWTypeDesc(String fromacct, String toacct) {
-   ArrayList myarray = new ArrayList();
-    try{
-
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-
-            res = st.executeQuery("select ac_id, ac_type, ac_desc from ac_mstr where " +
-                     " ac_id >= " + "'" + fromacct + "'" + " AND " +
-                     " ac_id <= " + "'" +  toacct + "'" + "order by ac_id ;");
-           while (res.next()) {
-                myarray.add(res.getString("ac_id") + "," + res.getString("ac_type") + "," + res.getString("ac_desc"));
-            }
-
-       }
-        catch (SQLException s){
-             bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-        } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               con.close();
-            }
-    }
-    catch (Exception e){
-        MainFrame.bslog(e);
-    }
-    return myarray;
-
-}
-
-    public static ArrayList<String[]> getGLAcctListRangeWCurrTypeDesc(String fromacct, String toacct) {
-   ArrayList<String[]> myarray = new ArrayList();
-
-    try{
-
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-            if (fromacct.isEmpty() && toacct.isEmpty()) {
-                res = st.executeQuery("select ac_id, ac_cur, ac_type, ac_desc from ac_mstr order by ac_id ;");
-            } else {
-            res = st.executeQuery("select ac_id, ac_cur, ac_type, ac_desc from ac_mstr where " +
-                     " ac_id >= " + "'" + fromacct + "'" + " AND " +
-                     " ac_id <= " + "'" +  toacct + "'" + "order by ac_id ;");
-            }
-           while (res.next()) {
-               String[] x = new String[4];
-               x[0] = res.getString("ac_id");
-               x[1] = res.getString("ac_cur");
-               x[2] = res.getString("ac_type");
-               x[3] = res.getString("ac_desc");
-                myarray.add(x);
-            }
-
-       }
-        catch (SQLException s){
-             bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-        } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               con.close();
-            }
-    }
-    catch (Exception e){
-        MainFrame.bslog(e);
-    }
-    return myarray;
-
-}
-
-    public static String getGLAcctType(String acct) {
-  String myreturn = "";
-    try{
-
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-
-            res = st.executeQuery("select ac_type from ac_mstr where " +
-                     " ac_id = " + "'" + acct + "'" + ";");
-           while (res.next()) {
-                myreturn = res.getString("ac_type");
-            }
-
-       }
-        catch (SQLException s){
-             bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-        } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               con.close();
-            }
-    }
-    catch (Exception e){
-        MainFrame.bslog(e);
-    }
-    return myreturn;
-
-}
-
-    public static String getGLAcctDesc(String acct) {
-  String myreturn = "";
-    try{
-
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-
-            res = st.executeQuery("select ac_desc from ac_mstr where " +
-                     " ac_id = " + "'" + acct + "'" + ";");
-           while (res.next()) {
-                myreturn = res.getString("ac_desc");
-            }
-
-       }
-        catch (SQLException s){
-             bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-        } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               con.close();
-            }
-    }
-    catch (Exception e){
-        MainFrame.bslog(e);
-    }
-    return myreturn;
-
-}
-
-    public static ArrayList getGLCCList() {
-  ArrayList myarray = new ArrayList();
-    try{
-
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-
-            res = st.executeQuery("select dept_id from dept_mstr ;");
-           while (res.next()) {
-                myarray.add(res.getString("dept_id"));
-
-            }
-
-       }
-        catch (SQLException s){
-             bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-        } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               con.close();
-            }
-    }
-    catch (Exception e){
-        MainFrame.bslog(e);
-    }
-    return myarray;
-
-}
-
-    public static String[] getGLCalForDate(String EffDate) {
-          // function returns a String array
-          // first element = year  
-          // second element = period 
-          // third element = startdate 
-          // fourth element = enddate 
-          // fifth element = status 
-  String[] x = new String[]{"","","","",""};        
-
-    try{
-
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-
-            res = st.executeQuery("select * from gl_cal where glc_start <= " +
-                    "'" + EffDate.toString() + "'" + 
-                    " AND glc_end >= " +
-                    "'" + EffDate.toString() + "'" + ";");
-           while (res.next()) {
-                x[0] = res.getString("glc_year");
-                x[1] = res.getString("glc_per");
-                x[2] = res.getString("glc_start");
-                x[3] = res.getString("glc_end");
-                x[4] = res.getString("glc_status");
-           }
-
-       }
-        catch (SQLException s){
-             MainFrame.bslog(s);
-        } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               con.close();
-            }
-    }
-    catch (Exception e){
-        MainFrame.bslog(e);
-    }
-    return x;
-
-}
-
-    public static boolean isGLPeriodClosed(String EffDate) {
+   public static boolean isGLPeriodClosed(String EffDate) {
           // function returns a 5 items from the gl_cal record where a date matches
           // first element = year  as int
           // second element = period as int
@@ -12961,7 +12589,7 @@ return mystring;
           java.util.Date now = new java.util.Date();
           DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
           ArrayList<String> mylist = new ArrayList<String>();   
-          String[] fromdatearray = OVData.getGLCalForDate(dfdate.format(now));
+          String[] fromdatearray = fglData.getGLCalForDate(dfdate.format(now));
 
           int current_year = Integer.valueOf(fromdatearray[0].toString());
           int current_period = Integer.valueOf(fromdatearray[1].toString());
@@ -12988,7 +12616,7 @@ return mystring;
             String[] ac = null;
 
 
-             ArrayList<String> accounts = OVData.getGLAcctListRangeWTypeDesc("00000000", "9999999999");
+             ArrayList<String> accounts = fglData.getGLAcctListRangeWTypeDesc("00000000", "9999999999");
 
             for (int year = fromyear; year <= toyear ; year++) {
                   prioryear = year - 1;
@@ -13091,7 +12719,7 @@ return mystring;
           java.util.Date now = new java.util.Date();
           DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
           ArrayList<String> mylist = new ArrayList<String>();   
-          String[] fromdatearray = OVData.getGLCalForDate(dfdate.format(now));
+          String[] fromdatearray = fglData.getGLCalForDate(dfdate.format(now));
           int current_year = Integer.valueOf(fromdatearray[0].toString());
           int current_period = Integer.valueOf(fromdatearray[1].toString());
           try {
@@ -13117,7 +12745,7 @@ return mystring;
             String[] ac = null;
 
 
-             ArrayList<String> accounts = OVData.getGLAcctListRangeWTypeDesc("00000000", "9999999999");
+             ArrayList<String> accounts = fglData.getGLAcctListRangeWTypeDesc("00000000", "9999999999");
 
             for (int year = fromyear; year <= toyear ; year++) {
                   prioryear = year - 1;
@@ -13223,7 +12851,7 @@ return mystring;
           java.util.Date now = new java.util.Date();
           DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
           ArrayList<String> mylist = new ArrayList<String>();   
-          String[] fromdatearray = OVData.getGLCalForDate(dfdate.format(now));
+          String[] fromdatearray = fglData.getGLCalForDate(dfdate.format(now));
           int current_year = Integer.valueOf(fromdatearray[0].toString());
           int current_period = Integer.valueOf(fromdatearray[1].toString());
           try {
@@ -13257,8 +12885,8 @@ return mystring;
             String isfrom = glcontrol.get(2);
             String isto = glcontrol.get(3);
 
-             ArrayList<String> accounts = OVData.getGLAcctListRangeWTypeDesc(balfrom, isto);
-             ArrayList<String> cclist = OVData.getGLCCList();
+             ArrayList<String> accounts = fglData.getGLAcctListRangeWTypeDesc(balfrom, isto);
+             ArrayList<String> cclist = fglData.getGLCCList();
 
             for (int year = fromyear; year <= toyear ; year++) {
                   prioryear = year - 1;
@@ -13328,7 +12956,7 @@ return mystring;
           java.util.Date now = new java.util.Date();
           DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
           ArrayList<String> mylist = new ArrayList<String>();   
-          String[] fromdatearray = OVData.getGLCalForDate(dfdate.format(now));
+          String[] fromdatearray = fglData.getGLCalForDate(dfdate.format(now));
           int current_year = Integer.valueOf(fromdatearray[0].toString());
           int current_period = Integer.valueOf(fromdatearray[1].toString());
           try {
@@ -13363,8 +12991,8 @@ return mystring;
             String isfrom = glcontrol.get(2);
             String isto = glcontrol.get(3);
 
-             ArrayList<String> accounts = OVData.getGLAcctListRangeWTypeDesc(balfrom, isto);
-             ArrayList<String> cclist = OVData.getGLCCList();
+             ArrayList<String> accounts = fglData.getGLAcctListRangeWTypeDesc(balfrom, isto);
+             ArrayList<String> cclist = fglData.getGLCCList();
 
             for (int year = fromyear; year <= toyear ; year++) {
                   prioryear = year - 1;
@@ -13580,7 +13208,7 @@ return myarray;
          }
 
        // now post
-       OVData.PostGL2();
+       OVData.PostGL();
 
     } catch (SQLException s) {
         MainFrame.bslog(s);
@@ -13679,7 +13307,7 @@ return myarray;
         }
        }
 
-    public static void PostGL2() {
+    public static void PostGL() {
        try {
         ArrayList<Integer> gltran = new ArrayList();
 
@@ -13829,42 +13457,6 @@ return myarray;
     } catch (Exception e) {
         MainFrame.bslog(e);
     }
-   }
-
-    public static void PostGL() {
-
-       ArrayList<Integer> gltran = new ArrayList();
-       try {
-        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-            boolean proceed = true;
-
-            res = st.executeQuery("select * from gl_tran;");
-           while (res.next()) {
-            gltran.add(res.getInt("glt_id"));
-            }
-
-        } catch (SQLException s) {
-            MainFrame.bslog(s);
-        } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               con.close();
-            }
-
-    } catch (Exception e) {
-        MainFrame.bslog(e);
-    }
-
-       // now let's copy gl_tran to gl_hist and delete gl_tran
-       glCopyTranToHist(gltran);         
-
-
-
    }
 
     /* end gl related functions */

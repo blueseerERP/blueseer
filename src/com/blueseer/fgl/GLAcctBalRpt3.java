@@ -151,7 +151,7 @@ public class GLAcctBalRpt3 extends javax.swing.JPanel {
                 if(f.exists()) {
                     f.delete();
                 }
-              String acctdesc = OVData.getGLAcctDesc(acct);
+              String acctdesc = fglData.getGLAcctDesc(acct);
               DefaultCategoryDataset dataset = new DefaultCategoryDataset();  
               int i = 1;
               double doublevalue = 0;
@@ -339,7 +339,7 @@ public class GLAcctBalRpt3 extends javax.swing.JPanel {
             
        cbzero.setSelected(false);
         
-        ArrayList myacct = OVData.getGLAcctList();
+        ArrayList myacct = fglData.getGLAcctList();
         for (int i = 0; i < myacct.size(); i++) {
             ddacctfrom.addItem(myacct.get(i));
             ddacctto.addItem(myacct.get(i));
@@ -578,7 +578,7 @@ try {
                  Date p_datestart = null;
                  Date p_dateend = null;
                  
-                 ArrayList<String> accounts = OVData.getGLAcctListRangeWTypeDesc(ddacctfrom.getSelectedItem().toString(), ddacctto.getSelectedItem().toString());
+                 ArrayList<String> accounts = fglData.getGLAcctListRangeWTypeDesc(ddacctfrom.getSelectedItem().toString(), ddacctto.getSelectedItem().toString());
                 
                  
                  String acctid = "";

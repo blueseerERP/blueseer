@@ -165,7 +165,7 @@ public class GLAcctBalYTD extends javax.swing.JPanel {
          
          
           if (ddacctfrom.getItemCount() == 0) {
-        ArrayList myacct = OVData.getGLAcctList();
+        ArrayList myacct = fglData.getGLAcctList();
         for (int i = 0; i < myacct.size(); i++) {
             ddacctfrom.addItem(myacct.get(i));
             ddacctto.addItem(myacct.get(i));

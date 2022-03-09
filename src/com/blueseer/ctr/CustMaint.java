@@ -824,14 +824,14 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
         }
         
         ddaccount.removeAllItems();
-        ArrayList accounts = OVData.getGLAcctList();
+        ArrayList accounts = fglData.getGLAcctList();
         for (int i = 0; i < accounts.size(); i++) {
             ddaccount.addItem(accounts.get(i).toString());
         }
         ddaccount.setSelectedItem(OVData.getDefaultARAcct());
        
         ddcc.removeAllItems();
-        ArrayList ccs = OVData.getGLCCList();
+        ArrayList ccs = fglData.getGLCCList();
         for (int i = 0; i < ccs.size(); i++) {
             ddcc.addItem(ccs.get(i).toString());
         }

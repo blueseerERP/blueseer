@@ -365,15 +365,15 @@ public class IncomeMaint extends javax.swing.JPanel implements IBlueSeer {
         ddsite.setSelectedItem(OVData.getDefaultSite());
         
         ddacct.removeAllItems();
-        ArrayList<String> myaccts = OVData.getGLAcctListByType("I");
+        ArrayList<String> myaccts = fglData.getGLAcctListByType("I");
         for (String code : myaccts) {
             ddacct.addItem(code);
         }
         ddacct.setSelectedIndex(0);
-        lbacct.setText(OVData.getGLAcctDesc(cashacct));
+        lbacct.setText(fglData.getGLAcctDesc(cashacct));
         
            ddcc.removeAllItems();
-        ArrayList<String> mycc = OVData.getGLCCList();
+        ArrayList<String> mycc = fglData.getGLCCList();
         for (String code : mycc) {
             ddcc.addItem(code);
         }
@@ -892,7 +892,7 @@ public class IncomeMaint extends javax.swing.JPanel implements IBlueSeer {
 
     private void ddacctActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddacctActionPerformed
         if (ddacct.getSelectedItem() != null && ! isLoad ) {
-            lbacct.setText(OVData.getGLAcctDesc(ddacct.getSelectedItem().toString()));
+            lbacct.setText(fglData.getGLAcctDesc(ddacct.getSelectedItem().toString()));
         }
     }//GEN-LAST:event_ddacctActionPerformed
 

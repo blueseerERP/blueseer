@@ -876,7 +876,7 @@ Connection con = DriverManager.getConnection(url + db, user, pass);
         }
         // autopost
         if (OVData.isAutoPost()) {
-            OVData.PostGL2();
+            OVData.PostGL();
         }        
         return message;
     }

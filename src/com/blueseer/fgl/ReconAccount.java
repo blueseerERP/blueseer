@@ -662,7 +662,7 @@ public class ReconAccount extends javax.swing.JPanel {
                     //       new ButtonEditor(new JCheckBox()));
         
         
-        ArrayList<String> myacct = OVData.getGLAcctList();
+        ArrayList<String> myacct = fglData.getGLAcctList();
         for (int i = 0; i < myacct.size(); i++) {
             ddacct.addItem(myacct.get(i));
         }

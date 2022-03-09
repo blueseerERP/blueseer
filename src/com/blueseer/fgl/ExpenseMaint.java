@@ -370,13 +370,13 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeerT {
         ddsite.setSelectedItem(OVData.getDefaultSite());
         
            ddacct.removeAllItems();
-        ArrayList<String> myaccts = OVData.getGLAcctListByType("E");
+        ArrayList<String> myaccts = fglData.getGLAcctListByType("E");
         for (String code : myaccts) {
             ddacct.addItem(code);
         }
         
            ddcc.removeAllItems();
-        ArrayList<String> mycc = OVData.getGLCCList();
+        ArrayList<String> mycc = fglData.getGLCCList();
         for (String code : mycc) {
             ddcc.addItem(code);
         }

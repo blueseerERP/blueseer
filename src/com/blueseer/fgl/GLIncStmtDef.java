@@ -125,7 +125,7 @@ public class GLIncStmtDef extends javax.swing.JPanel {
         }
     
         ddacct.removeAllItems();
-        ArrayList accts = OVData.getGLAcctList();
+        ArrayList accts = fglData.getGLAcctList();
         for (int i = 0; i < accts.size(); i++) {
             ddacct.addItem(accts.get(i));
         }
@@ -364,7 +364,7 @@ public class GLIncStmtDef extends javax.swing.JPanel {
     }//GEN-LAST:event_ddcategoryActionPerformed
 
     private void ddacctActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddacctActionPerformed
-       acctname.setText(OVData.getGLAcctDesc(ddacct.getSelectedItem().toString()));
+       acctname.setText(fglData.getGLAcctDesc(ddacct.getSelectedItem().toString()));
     }//GEN-LAST:event_ddacctActionPerformed
 
     private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
