@@ -281,17 +281,13 @@ public class WorkCenterMaint extends javax.swing.JPanel implements IBlueSeer {
         tbruncrewsize.setText("1");
         tbsetupcrewsize.setText("1");
         
-         ArrayList cc = OVData.getGLCCList();
-        for (int i = 0; i < cc.size(); i++) {
-          ddcc.addItem(cc.get(i));
-        }
+        OVData.getGLCCList().stream().forEach((s) -> ddcc.addItem(s));
         
-           ddsite.removeAllItems();
-        ArrayList<String>mylist = OVData.getSiteList();
-        for (String code : mylist) {
-            ddsite.addItem(code);
-        }
+        ddsite.removeAllItems();
+        OVData.getSiteList().stream().forEach((s) -> ddsite.addItem(s));
         ddsite.setSelectedItem(OVData.getDefaultSite());
+        
+        
         
         
        isLoad = false;
@@ -572,7 +568,7 @@ public class WorkCenterMaint extends javax.swing.JPanel implements IBlueSeer {
         btdelete = new javax.swing.JButton();
         tbsetupcrewsize = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
-        ddsite = new javax.swing.JComboBox<>();
+        ddsite = new javax.swing.JComboBox();
         btnew = new javax.swing.JButton();
         btclear = new javax.swing.JButton();
         btlookup = new javax.swing.JButton();
@@ -955,7 +951,7 @@ public class WorkCenterMaint extends javax.swing.JPanel implements IBlueSeer {
     private javax.swing.JButton btnew;
     private javax.swing.JButton btupdate;
     private javax.swing.JComboBox ddcc;
-    private javax.swing.JComboBox<String> ddsite;
+    private javax.swing.JComboBox ddsite;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
