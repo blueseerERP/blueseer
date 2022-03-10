@@ -27,3 +27,5 @@ patch=9
 # enhancement #29, addition of new Expense Report in APRptPicker
 patch=10
 # added ExpenseBrowse menu
+patch=11
+# enhancements and bug fixes #30 - #36
