@@ -206,8 +206,9 @@ ScheduleMenu,forecast13weeks,7,JMenuItem,Affichage des prévisions 13 semaines,,
 ScheduleMenu,FcstToPlan,8,JMenuItem,Prévision pour planifier la synchronisation,,,,1,1
 ScheduleMenu,DemdToPlan,9,JMenuItem,Synchronisation de la demande vers le plan,,,,1,1
 MRPMenu,ItemLevelCalculate,1,JMenuItem,MRP Régénérer,,,,1,1
-MRPMenu,MRPBrowse,2,JMenuItem,Parcourir les MRP,,1,,1,1
-MRPMenu,RetailReorderRpt,3,JMenuItem,Rapport de réapprovisionnement au détail,,1,,1,1
+MRPMenu,MRPBrowse,2,JMenuItem,Parcourir MRP,,1,,1,1
+MRPMenu,ProjectionBrowse,3,JMenuItem,Parcourir projections,,1,,1,1
+MRPMenu,RetailReorderRpt,4,JMenuItem,Rapport de réapprovisionnement au détail,,1,,1,1
 CostReports,noStdCostBrowse,1,JMenuItem,Article sans coût standard,,1,,1,1
 Qualité,QPRMaint,1,JMenuItem,Maintenance QPR,,,,1,1
 Qualité,QPRBrowse,2,JMenuItem,Parcourir QPR,,1,,1,1

@@ -199,6 +199,7 @@ LabelsContGeneric,,com.blueseer.lbl.LabelContMaint,JMenuItem,lblc
 LabelBrowse,,com.blueseer.lbl.LabelBrowse,JMenuItem,lblb
 TransBrowse,,com.blueseer.prd.TransBrowse,JMenuItem,tran
 RetailReorderRpt,,com.blueseer.sch.RetailReorderRpt,JMenuItem,reor
+ProjectionBrowse,,com.blueseer.sch.ProjectionBrowse,JMenuItem,proj
 EDIPartnerMaint,,com.blueseer.edi.EDIPartnerMaint,JMenuItem,edtp
 EDIPartnerBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,edib
 EDIDocumentMaint,,com.blueseer.edi.EDIDocumentMaint,JMenuItem,eddm

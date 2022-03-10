@@ -207,7 +207,8 @@ ScheduleMenu,FcstToPlan,8,JMenuItem,Pronóstico para planificar la sincronizaci�
 ScheduleMenu,DemdToPlan,9,JMenuItem,Demanda para planificar la sincronización,,,,1,1
 MRPMenu,ItemLevelCalculate,1,JMenuItem,MRP Regenerar,,,,1,1
 MRPMenu,MRPBrowse,2,JMenuItem,Explorar MRP,,1,,1,1
-MRPMenu,RetailReorderRpt,3,JMenuItem,Informe de reabastecimiento minorista,,1,,1,1
+MRPMenu,ProjectionBrowse,3,JMenuItem,Proyección Examinar,,1,,1,1
+MRPMenu,RetailReorderRpt,4,JMenuItem,Informe de reabastecimiento minorista,,1,,1,1
 CostReports,noStdCostBrowse,1,JMenuItem,Artículo sin costo estándar,,1,,1,1
 Calidad,QPRMaint,1,JMenuItem,Mantenimiento QPR,,,,1,1
 Calidad,QPRBrowse,2,JMenuItem,Navegación QPR,,1,,1,1

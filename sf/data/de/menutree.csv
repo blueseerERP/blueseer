@@ -207,7 +207,8 @@ ScheduleMenu,FcstToPlan,8,JMenuItem,Prognose für die Synchronisierung planen,,,
 ScheduleMenu,DemdToPlan,9,JMenuItem,Bedarf an Plansynchronisierung,,,,1,1
 MRPMenu,ItemLevelCalculate,1,JMenuItem,MRP Regenerieren,,,,1,1
 MRPMenu,MRPBrowse,2,JMenuItem,MRP Durchsuchen,,1,,1,1
-MRPMenu,RetailReorderRpt,3,JMenuItem,Einzelhandelsauffüllungsbericht,,1,,1,1
+MRPMenu,ProjectionBrowse,3,JMenuItem,Projektion durchsuchen,,1,,1,1
+MRPMenu,RetailReorderRpt,4,JMenuItem,Einzelhandelsauffüllungsbericht,,1,,1,1
 CostReports,noStdCostBrowse,1,JMenuItem,Artikel ohne Standardkosten,,1,,1,1
 QualitÃ¤t,QPRMaint,1,JMenuItem,QPR-Wartung,,,,1,1
 QualitÃ¤t,QPRBrowse,2,JMenuItem,QPR Durchsuchen,,1,,1,1

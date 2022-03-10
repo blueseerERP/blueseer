@@ -173,6 +173,7 @@ com.blueseer.sch.ForecastBrowse,,1
 com.blueseer.sch.ForecastMaint,,1
 com.blueseer.sch.MRPBrowse,,1
 com.blueseer.sch.RetailReorderRpt,,1
+com.blueseer.sch.ProjectionBrowse,,1
 com.blueseer.sch.SchRptPicker,,1
 com.blueseer.shp.ShipConfirm,,1
 com.blueseer.shp.ShipperMaint,,1

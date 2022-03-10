@@ -207,7 +207,8 @@ ScheduleMenu,FcstToPlan,8,JMenuItem,Senkronizasyonu Planlamak İçin Tahmin,,,,1
 ScheduleMenu,DemdToPlan,9,JMenuItem,Senkronizasyonu Planlama Talebi,,,,1,1
 MRPMenu,ItemLevelCalculate,1,JMenuItem,MRP Yenileme,,,,1,1
 MRPMenu,MRPBrowse,2,JMenuItem,MRP Gözat,,1,,1,1
-MRPMenu,RetailReorderRpt,3,JMenuItem,Perakende İkmal Raporu,,1,,1,1
+MRPMenu,ProjectionBrowse,3,JMenuItem,Projeksiyon Gözat,,1,,1,1
+MRPMenu,RetailReorderRpt,4,JMenuItem,Perakende İkmal Raporu,,1,,1,1
 CostReports,noStdCostBrowse,1,JMenuItem,Std Maliyeti Olmayan Ürün,,1,,1,1
 Kalite,QPRMaint,1,JMenuItem,QPR Bakımı,,,,1,1
 Kalite,QPRBrowse,2,JMenuItem,QPR Gözat,,1,,1,1
