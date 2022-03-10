@@ -207,7 +207,8 @@ ScheduleMenu,FcstToPlan,8,JMenuItem,Forecast To Plan Sync,,,,1,1
 ScheduleMenu,DemdToPlan,9,JMenuItem,Demand To Plan Sync,,,,1,1
 MRPMenu,ItemLevelCalculate,1,JMenuItem,MRP Regenerate,,,,1,1
 MRPMenu,MRPBrowse,2,JMenuItem,MRP Browse,,1,,1,1
-MRPMenu,RetailReorderRpt,3,JMenuItem,Retail Replenishment Report,,1,,1,1
+MRPMenu,ProjectionBrowse,3,JMenuItem,Projection Browse,,1,,1,1
+MRPMenu,RetailReorderRpt,4,JMenuItem,Retail Replenishment Report,,1,,1,1
 CostReports,noStdCostBrowse,1,JMenuItem,Item Without Std Cost,,1,,1,1
 Quality,QPRMaint,1,JMenuItem,QPR Maintenance,,,,1,1
 Quality,QPRBrowse,2,JMenuItem,QPR Browse,,1,,1,1
