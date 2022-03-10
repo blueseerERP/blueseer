@@ -203,7 +203,7 @@ public class ProjectionBrowse extends javax.swing.JPanel {
         setLanguageTags(this);
     }
 
-    public void chartProj(DefaultCategoryDataset dataset) {
+    public void chartProjection(DefaultCategoryDataset dataset) {
         JFreeChart chart = ChartFactory.createBarChart(getTitleTag(5028), getGlobalColumnTag("week"), getGlobalColumnTag("totalqty"), dataset, PlotOrientation.VERTICAL, true, true, false);
         CategoryItemRenderer renderer = new CustomRenderer(); 
 
@@ -226,123 +226,7 @@ public class ProjectionBrowse extends javax.swing.JPanel {
         this.chartlabel.setIcon(myicon);
         this.repaint();
     }
-    
-   
-    public void chartProjection() {
          
-        String fromitem = bsmf.MainFrame.lowchar;
-        String toitem = bsmf.MainFrame.hichar;
-        
-        if (! tbfromitem.getText().isEmpty()) {
-            fromitem = tbfromitem.getText();
-        }
-        if (! tbtoitem.getText().isEmpty()) {
-            fromitem = tbtoitem.getText();
-        }
-        try {
-          
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                java.util.Date now = new java.util.Date();
-                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");       
-                Calendar cal = new GregorianCalendar();
-                cal.set(Calendar.DAY_OF_YEAR, 1);
-                LocalDate date = LocalDate.now();
-                TemporalField woy = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear(); 
-                int weekOfYear = date.get(woy) - 1;  // need to subtract 1 to match sqlite/mysql week calc
-                //int days = (int)( (dcTo.getDate().getTime() - dcFrom.getDate().getTime()) / (1000 * 60 * 60 * 24) );
-                int days = 365; 
-                if (bsmf.MainFrame.dbtype.equals("sqlite")) {
-                res = st.executeQuery("select strftime('%W',mrp_date) as 'w', " + 
-                        " sum(mrp_qty) as 'sum', " +
-                        " (select sum(in_qoh) from in_mstr where in_part = mrp_part) as 'qoh' " +
-                        " from mrp_mstr " +
-                        " inner join item_mstr on it_item = mrp_part " +
-                        " where mrp_part >= " + "'" + fromitem + "'" +
-                        " and mrp_part <= " + "'" + toitem + "'" +
-                        " and it_code = " + "'" + ddclass.getSelectedItem().toString() + "'" +
-                        " group by w;");
-               /*
-                res = st.executeQuery(" select c.d as 't', sum(mrp_qty) as 'sum' from ( select boo.mydate, strftime('%W',mydate) as 'd' " +
-                                     " from (select date(julianday( " + "'" + dfdate.format(now) + "' )" +
-                                     ", '-6 days', '+' || mock_nbr || ' days') as mydate " +
-                                     " from mock_mstr where mock_nbr <= " + "'" + days + "'" + " ) as boo group by d) as c " +
-                                     " left outer join mrp_mstr on strftime('%W',mrp_date) = c.d and mrp_part in (select it_item from item_mstr where it_code = 'P')  " +
-                                     //" where mock_nbr <= 10 " +
-                                     " group by c.d;");
-                */
-                } else {
-                  res = st.executeQuery(" select c.d as 't', sum(mrp_qty) as 'sum' from ( select boo.mydate, week(mydate) as 'd' " +
-                    " from (select date_add( " + "'" + dfdate.format(now) + "'" +
-                    ", interval mock_nbr day) as 'mydate' " +
-                    " from mock_mstr where mock_nbr <= " + "'" + days + "'" + " ) as boo group by d) as c " +
-                    " left outer join mrp_mstr on week(mrp_date) = c.d and mrp_part in (select it_item from item_mstr where it_code = 'P')  " +         
-                    " group by c.d;");
-                 }
-                  
-               
-             
-                DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-                
-                Map<String, String> hm = new HashMap<>();
-                Map<String, String> itemqoh = new HashMap<>();
-                double[] qty = new double[]{0,0,0,0,0,0,0,0,0,0,0,0};
-                while (res.next()) {
-                   hm.put(res.getString("w"), res.getString("sum"));
-                   if (! itemqoh.containsKey(res.getString("mrp_part"))) {
-			itemqoh.put(res.getString("mrp_part"), res.getString("qoh"));
-		   }
-                }
-                for (int i = weekOfYear; i <= weekOfYear+11 ; i++) {
-                          if (hm.containsKey(String.valueOf(i))) {
-                              qty[i - weekOfYear] = Double.valueOf(hm.get(String.valueOf(i)));
-                          } 
-                    dataset.setValue(Double.valueOf(qty[i - weekOfYear]), "Week Sum", String.valueOf((i - weekOfYear) + 1)); 
-                }
-               
-      JFreeChart chart = ChartFactory.createBarChart(getTitleTag(5028), getGlobalColumnTag("week"), getGlobalColumnTag("totalqty"), dataset, PlotOrientation.VERTICAL, true, true, false);
-                CategoryItemRenderer renderer = new CustomRenderer(); 
-
-                Font font = new Font("Dialog", Font.PLAIN, 30);
-                CategoryPlot p = chart.getCategoryPlot();
-
-                CategoryAxis axis = p.getDomainAxis();
-                 ValueAxis axisv = p.getRangeAxis();
-                 axis.setCategoryLabelPositions(CategoryLabelPositions.UP_90);
-                 axisv.setVerticalTickLabels(false);
-
-                 p.setRenderer(renderer);
-        try {
-        ChartUtilities.saveChartAsJPEG(new File(chartfilepath), chart, (int) (this.getWidth() / 2), (int) (this.getHeight() / 1.2));
-        } catch (IOException e) {
-            MainFrame.bslog(e);
-        }
-        ImageIcon myicon = new ImageIcon(chartfilepath);
-        myicon.getImage().flush();   
-        this.chartlabel.setIcon(myicon);
-        this.repaint();
-       
-       // bsmf.MainFrame.show("your chart is complete...go to chartview");
-                
-              } catch (SQLException s) {
-                  MainFrame.bslog(s);
-                  bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-    }
-       
     public void setLanguageTags(Object myobj) {
       // lblaccount.setText(labels.getString("LedgerAcctMstrPanel.labels.lblaccount"));
       
@@ -678,9 +562,9 @@ public class ProjectionBrowse extends javax.swing.JPanel {
                           } 
                           if (cbpo.isSelected() && pos.containsKey(s + "+" + String.valueOf(i))) {
                               if (Double.valueOf(pos.get(s + "+" + String.valueOf(i))) < 0)
-                                qty[i - weekOfYear] += Double.valueOf(pos.get(s + "+" + String.valueOf(i)));
-                              else
                                 qty[i - weekOfYear] -= Double.valueOf(pos.get(s + "+" + String.valueOf(i)));
+                              else
+                                qty[i - weekOfYear] += Double.valueOf(pos.get(s + "+" + String.valueOf(i)));
                           } 
                           dataset.setValue(Double.valueOf(qty[i - weekOfYear]), "Week Sum", String.valueOf((i - weekOfYear) + 1)); 
                         }
@@ -701,7 +585,7 @@ public class ProjectionBrowse extends javax.swing.JPanel {
                             qty[11]
                         });
                     }
-                    chartProj(dataset);
+                    chartProjection(dataset);
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
