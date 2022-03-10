@@ -681,7 +681,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeer {
                 bsdate.format(orddate.getDate()).toString(),
                 bsdate.format(duedate.getDate()).toString(),
                 remarks.getText(),
-                "", // shipvia
+                ddshipvia.getSelectedItem().toString(), // shipvia
                 ddstatus.getSelectedItem().toString(),
                 userid.getText(),
                 "", // type
