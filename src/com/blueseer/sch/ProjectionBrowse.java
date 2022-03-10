@@ -400,6 +400,8 @@ public class ProjectionBrowse extends javax.swing.JPanel {
         tbfromitem.setText("");
         tbtoitem.setText("");
         mymodel.setNumRows(0);
+        cbqoh.setSelected(false);
+        cbpo.setSelected(false);
         tablereport.setModel(mymodel);
         
         tablereport.getTableHeader().setReorderingAllowed(false);
