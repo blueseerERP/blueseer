@@ -294,3 +294,4 @@ admin,SchemaBrowse
 admin,ItemBrowse
 admin,RetailReorderRpt
 admin,ProjectionBrowse
+admin,ComponentDemandBrowse

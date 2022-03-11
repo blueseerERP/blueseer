@@ -541,7 +541,9 @@ public class ProjectionBrowse extends javax.swing.JPanel {
                     double rm = 0;
                     DefaultCategoryDataset dataset = new DefaultCategoryDataset();
                     for (String s : set) {
+                        if (itemqoh.containsKey(s) && itemqoh.get(s) != null) {
                         qoh = Double.valueOf(itemqoh.get(s));
+                        } 
                         rm = 0;
                         for (int i = 0; i < 12; i++) {
                             qty[i] = 0;

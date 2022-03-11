@@ -56,6 +56,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -264,7 +266,7 @@ DefaultTreeModel levelmodel = null;
           
         DefaultMutableTreeNode mynode = new DefaultMutableTreeNode(mypart);
         
-        ArrayList<String> mylist = new ArrayList<String>();
+        Set<String> mylist = new LinkedHashSet<String>();
         mylist = OVData.getpsmstrparents(mypart);
         if ( ! mylist.isEmpty()) {
         for ( String myvalue : mylist) {

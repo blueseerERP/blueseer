@@ -54,8 +54,10 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -132,9 +134,10 @@ public class MRPBrowse extends javax.swing.JPanel {
          
          double total = 0.00;
          
-          ArrayList<String> parents = new ArrayList<String>();
+        Set<String> parents = new LinkedHashSet<String>();
         parents = OVData.getpsmstrparents2(part);
-        Collections.sort(parents);
+        List<String> sortedList = new ArrayList<>(parents);
+        Collections.sort(sortedList);
          
         try {
 
@@ -147,8 +150,8 @@ public class MRPBrowse extends javax.swing.JPanel {
                 
                 
                 
-               if (! parents.isEmpty()) { 
-               for (String line : parents) {
+               if (! sortedList.isEmpty()) { 
+               for (String line : sortedList) {
                 res = st.executeQuery("select * from sod_det " +
                         " where sod_part = " + "'" + line + "'" + 
                         " and sod_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +

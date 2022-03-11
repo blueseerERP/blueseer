@@ -30,6 +30,9 @@ import com.blueseer.utl.OVData;
 import java.awt.Component;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -238,16 +241,16 @@ String mystring = "";
         textarea.setText("");
         mystring = "";
        
-        ArrayList<String> parents = new ArrayList<String>();
+        Set<String> parents = new LinkedHashSet<String>();
         if (rbimmediate.isSelected()) {
             parents = OVData.getpsmstrparents(tbsearch.getText());
         } else {
             parents = OVData.getpsmstrparents2(tbsearch.getText()); 
         }
+        List<String> sortedList = new ArrayList<>(parents);
+        Collections.sort(sortedList);
         
-        Collections.sort(parents);
-        
-        for (String line : parents) {
+        for (String line : sortedList) {
             mystring += (line + "\n");
         }
       //  MainFrame.show("total count=" + String.valueOf(parents.size()));

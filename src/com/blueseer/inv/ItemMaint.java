@@ -84,6 +84,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.print.PrintException;
@@ -579,8 +580,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
         // if current item material cost has changed...blow back through all parents and set current price of parents
         // bsmf.MainFrame.show(curcost + "/" + mtlcost + "/" + ovhcost + "/" + outcost);
         if (curcost != (mtlcost + ovhcost + outcost)) {
-            ArrayList<String> parents = new ArrayList<String>();
-            parents = OVData.getpsmstrparents2(tbkey.getText());
+            Set<String> parents = OVData.getpsmstrparents2(tbkey.getText());
             parents.stream().forEach((s) -> updateCurrentItemCost(s));
         }
          

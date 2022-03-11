@@ -108,6 +108,7 @@ import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.sql.PreparedStatement;
 import java.sql.Savepoint;
+import java.util.LinkedHashSet;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
@@ -3441,8 +3442,8 @@ public class OVData {
 
     }
  
-    public static ArrayList getpsmstrparents(String mypart) {
-        ArrayList myarray = new ArrayList();
+    public static Set<String> getpsmstrparents(String mypart) {
+        Set<String> myarray = new LinkedHashSet<String>();
         String mystring = "";
         try {
             
@@ -3482,7 +3483,7 @@ public class OVData {
 
     }
 
-    public static ArrayList getpsmstrparents2(String mypart) {
+    public static Set<String> getpsmstrparents2(String mypart) {
 
         ArrayList<String> myarray1 = new ArrayList<String>();
         ArrayList<String> myarray2 = new ArrayList<String>();
@@ -3490,7 +3491,8 @@ public class OVData {
         ArrayList<String> myarray4 = new ArrayList<String>();
         ArrayList<String> myarray5 = new ArrayList<String>();
 
-        ArrayList fg = new ArrayList();
+       // ArrayList fg = new ArrayList();
+        Set<String> fg = new LinkedHashSet<String>();
         String mystring = "";
         try {
             
