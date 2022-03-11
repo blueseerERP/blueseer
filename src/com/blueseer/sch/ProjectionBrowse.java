@@ -397,8 +397,10 @@ public class ProjectionBrowse extends javax.swing.JPanel {
         jLabel1.setName("lblclass"); // NOI18N
 
         cbqoh.setText("Reduce By QOH");
+        cbqoh.setName("reducebyqoh"); // NOI18N
 
         cbpo.setText("Reduce By POs");
+        cbpo.setName("reducebypo"); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);

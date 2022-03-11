@@ -242,11 +242,13 @@
         <Component class="javax.swing.JCheckBox" name="cbqoh">
           <Properties>
             <Property name="text" type="java.lang.String" value="Reduce By QOH"/>
+            <Property name="name" type="java.lang.String" value="reducebyqoh" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JCheckBox" name="cbpo">
           <Properties>
             <Property name="text" type="java.lang.String" value="Reduce By POs"/>
+            <Property name="name" type="java.lang.String" value="reducebypo" noResource="true"/>
           </Properties>
         </Component>
       </SubComponents>
