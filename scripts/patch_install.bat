@@ -6,7 +6,7 @@ echo "patch log report" >patch.log
 cls
 @echo ""
 @echo ""
-@echo "this patch is applicable to BlueSeer Version 6.0" 
+@echo "BlueSeer Patch/Upgrade Delivery Script" 
 @echo ""
 @echo ""
 
@@ -113,7 +113,7 @@ if /I "%DBTYPE%"=="1" (
 )
 if /I "%DBTYPE%"=="1" (
 @echo "  executing sqlite sql schema updates"
-..\..\data\sqlite3.exe ..\..\data\bsdb.db <.patchsqlv60 >>patch.log 2>&1
+..\..\data\sqlite3.exe ..\..\data\bsdb.db <.patchsqlv61 >>patch.log 2>&1
 ping -n 4 127.0.0.1 > nul
 @echo "return code: %ERRORLEVEL%" >>patch.log 2>&1
 ) else (
@@ -143,7 +143,7 @@ del mybs.cnf >nul 2>&1
 @echo local_infile = ON >>mybs.cnf 
 @echo "updating schema....."
 @echo "updating schema....." >>patch.log 
-mysql --defaults-extra-file=mybs.cnf -D bsdb -e "source .patchsqlv60;" >>patch.log 2>&1
+mysql --defaults-extra-file=mybs.cnf -D bsdb -e "source .patchsqlv61;" >>patch.log 2>&1
 if %errorlevel% NEQ 0 set /a "errors=%errors%+1"
 @echo "done with mysql changes....."
 ping -n 4 127.0.0.1 > nul

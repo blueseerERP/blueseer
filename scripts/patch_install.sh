@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "Patch Installation for BlueSeer Version 60" 
+echo "Patch Installation for BlueSeer Version 61" 
 
 echo ""
 echo ""
@@ -44,7 +44,7 @@ then
 	echo "loading sqlite relevant schema changes ..."
 	sleep 2
 	cd $datadir
-	./sqlite3 bsdb.db <.patchsqlv60
+	./sqlite3 bsdb.db <.patchsqlv61
 	cd $currdir
 else
 	echo "loading mysql relevant schema changes ..."
