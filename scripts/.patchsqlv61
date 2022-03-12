@@ -1,0 +1,16 @@
+/* sql updates for new classes introduced in v 6.1 */
+
+
+insert into menu_mstr (menu_id) select 'ProjectionBrowse' as menu_id from menu_mstr where not exists (select * from menu_mstr where menu_id = 'ProjectionBrowse') limit 1;
+update menu_mstr set menu_desc = '', menu_panel = 'com.blueseer.sch.ProjectionBrowse', menu_type = 'JMenuItem', menu_navcode = 'proj' where menu_id = 'ProjectionBrowse';
+insert into menu_tree (mt_par, mt_child) select 'MRPMenu' as mt_par, 'ProjectionBrowse' as mt_child where not exists (select * from menu_tree where mt_par = 'MRPMenu' and mt_child = 'ProjectionBrowse') limit 1;
+update menu_tree set mt_index = '3', mt_type = 'JMenuItem', mt_label = 'Projection Browse',mt_icon = '', mt_initvar = '', mt_func = '', mt_visible = '1', mt_enable = '1' where mt_par = 'MRPMenu' and mt_child = 'ProjectionBrowse';
+insert into perm_mstr (vperm_user, vperm_menu) select 'admin' as vperm_user, 'ProjectionBrowse' as vperm_menu from perm_mstr where not exists (select * from perm_mstr where perm_menu = 'ProjectionBrowse') limit 1;
+
+insert into menu_mstr (menu_id) select 'ComponentDemandBrowse' as menu_id from menu_mstr where not exists (select * from menu_mstr where menu_id = 'ComponentDemandBrowse') limit 1;
+update menu_mstr set menu_desc = '', menu_panel = 'com.blueseer.sch.ComponentDemandBrowse', menu_type = 'JMenuItem', menu_navcode = 'proj' where menu_id = 'ComponentDemandBrowse';
+insert into menu_tree (mt_par, mt_child) select 'MRPMenu' as mt_par, 'ComponentDemandBrowse' as mt_child where not exists (select * from menu_tree where mt_par = 'MRPMenu' and mt_child = 'ComponentDemandBrowse') limit 1;
+update menu_tree set mt_index = '4', mt_type = 'JMenuItem', mt_label = 'Component Demand Browse',mt_icon = '', mt_initvar = '', mt_func = '', mt_visible = '1', mt_enable = '1' where mt_par = 'MRPMenu' and mt_child = 'ComponentDemandBrowse';
+insert into perm_mstr (vperm_user, vperm_menu) select 'admin' as vperm_user, 'ComponentDemandBrowse' as vperm_menu from perm_mstr where not exists (select * from perm_mstr where perm_menu = 'ComponentDemandBrowse') limit 1;
+
+update menu_tree set mt_index = '5' where mt_par = 'MRPMenu' and mt_child = 'RetailReorderRpt';
