@@ -35,8 +35,13 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.tags;
+import com.blueseer.adm.admData;
+import static com.blueseer.adm.admData.addOrUpdateCodeMstr;
+import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.awt.Component;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -254,6 +259,21 @@ public class ItemLevelMaint extends javax.swing.JPanel {
             MainProgressBar.setVisible(false);
              btlevel.setEnabled(true);
              btmrp.setEnabled(true);
+             // record mrp runtime and userid
+             admData.code_mstr x = new admData.code_mstr(null, 
+                "mrpinfo",
+                "mrpruntime",
+                LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME),
+                "1"
+                );
+             addOrUpdateCodeMstr(x);
+             x = new admData.code_mstr(null, 
+                "mrpinfo",
+                "mrpuserid",
+                bsmf.MainFrame.userid,
+                "1"
+                );
+             addOrUpdateCodeMstr(x);
         }
     }  
     /**

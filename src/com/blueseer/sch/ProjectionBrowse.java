@@ -63,6 +63,7 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import com.blueseer.adm.admData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
@@ -287,7 +288,8 @@ public class ProjectionBrowse extends javax.swing.JPanel {
         cbqoh.setSelected(false);
         cbpo.setSelected(false);
         tablereport.setModel(mymodel);
-        
+        lblmrpruntime.setText("");
+        lblmrpuserid.setText("");
         tablereport.getTableHeader().setReorderingAllowed(false);
         
        //  tablereport.getColumnModel().getColumn(0).setCellRenderer(new GLAcctBalRpt3.ButtonRenderer());
@@ -322,6 +324,10 @@ public class ProjectionBrowse extends javax.swing.JPanel {
         tbtoitem = new javax.swing.JTextField();
         cbqoh = new javax.swing.JCheckBox();
         cbpo = new javax.swing.JCheckBox();
+        jLabel4 = new javax.swing.JLabel();
+        lblmrpruntime = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        lblmrpuserid = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -402,6 +408,10 @@ public class ProjectionBrowse extends javax.swing.JPanel {
         cbpo.setText("Reduce By POs");
         cbpo.setName("reducebypo"); // NOI18N
 
+        jLabel4.setText("MRP RunTime:");
+
+        jLabel5.setText("MRP Userid:");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -421,12 +431,20 @@ public class ProjectionBrowse extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(ddclass, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(173, 173, 173)
+                        .addGap(49, 49, 49)
                         .addComponent(btRun)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btchart)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(bthidechart))
+                        .addComponent(bthidechart)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblmrpruntime, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblmrpuserid, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(cbqoh)
                         .addGap(10, 10, 10)
@@ -438,15 +456,20 @@ public class ProjectionBrowse extends javax.swing.JPanel {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(btRun)
-                    .addComponent(bthidechart)
-                    .addComponent(btchart)
-                    .addComponent(ddclass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1)
-                    .addComponent(tbfromitem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel2)
+                        .addComponent(btRun)
+                        .addComponent(bthidechart)
+                        .addComponent(btchart)
+                        .addComponent(ddclass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel1)
+                        .addComponent(tbfromitem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel4)
+                    .addComponent(lblmrpruntime, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5)
+                    .addComponent(lblmrpuserid, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel3)
@@ -455,7 +478,7 @@ public class ProjectionBrowse extends javax.swing.JPanel {
                         .addComponent(cbqoh)
                         .addComponent(cbpo)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 428, Short.MAX_VALUE))
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 416, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -481,6 +504,13 @@ public class ProjectionBrowse extends javax.swing.JPanel {
         if (! tbtoitem.getText().isEmpty()) {
             fromitem = tbtoitem.getText();
         }
+        String runtime = OVData.getCodeValueByCodeKey("mrpinfo", "mrpruntime");
+        String shorttime = null;
+        if (! runtime.isEmpty()) {
+            shorttime = runtime.substring(0, 16);
+        }
+        lblmrpruntime.setText(shorttime);
+        lblmrpuserid.setText(OVData.getCodeValueByCodeKey("mrpinfo", "mrpuserid"));
         
         try {
             Connection con = DriverManager.getConnection(url + db, user, pass);
@@ -635,10 +665,14 @@ public class ProjectionBrowse extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblmrpruntime;
+    private javax.swing.JLabel lblmrpuserid;
     private javax.swing.JTable tablereport;
     private javax.swing.JTextField tbfromitem;
     private javax.swing.JTextField tbtoitem;

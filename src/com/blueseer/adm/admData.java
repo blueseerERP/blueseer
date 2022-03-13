@@ -516,6 +516,47 @@ public class admData {
         return m;
     }
 
+    public static String[] addOrUpdateCodeMstr(code_mstr x) {
+        String[] m = new String[2];
+        String sqlSelect = "SELECT * FROM  code_mstr where code_code = ? and code_key = ?";
+        String sqlInsert = "insert into code_mstr (code_code, code_key, code_value, code_internal) " 
+                        + " values (?,?,?,?); "; 
+        String sqlUpdate = "update code_mstr set code_value = ?, code_internal = ? " +   
+                          " where code_code = ? and code_key = ? ; ";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+             PreparedStatement ps = con.prepareStatement(sqlSelect);) {
+             ps.setString(1, x.code_code);
+             ps.setString(2, x.code_key);
+          try (ResultSet res = ps.executeQuery();
+               PreparedStatement psi = con.prepareStatement(sqlInsert);
+               PreparedStatement psu = con.prepareStatement(sqlUpdate);) {  
+            if (! res.isBeforeFirst()) {
+            psi.setString(1, x.code_code);
+            psi.setString(2, x.code_key);
+            psi.setString(3, x.code_value);
+            psi.setString(4, x.code_internal);
+            int rows = psi.executeUpdate();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+            } else {
+            psu.setString(3, x.code_code);
+            psu.setString(4, x.code_key);
+            psu.setString(1, x.code_value);
+            psu.setString(2, x.code_internal);
+            int rows = psu.executeUpdate();    
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};    
+            }
+          } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+          }
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+
+    
     public static String[] updateCodeMstr(code_mstr x) {
         String[] m = new String[2];
         String sql = "update code_mstr set code_value = ?, code_internal = ? " +   
