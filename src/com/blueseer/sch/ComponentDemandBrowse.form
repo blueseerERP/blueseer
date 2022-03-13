@@ -49,7 +49,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
                           <Component id="jPanel2" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="172" max="32767" attributes="0"/>
+                          <EmptySpace pref="199" max="32767" attributes="0"/>
                           <Component id="jPanel3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <Component id="tablepanel" alignment="0" max="32767" attributes="0"/>
@@ -229,8 +229,8 @@
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel6">
               <Properties>
-                <Property name="text" type="java.lang.String" value="From Item"/>
-                <Property name="name" type="java.lang.String" value="lblfromitem" noResource="true"/>
+                <Property name="text" type="java.lang.String" value="Item"/>
+                <Property name="name" type="java.lang.String" value="lblitem" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JComboBox" name="dditem">

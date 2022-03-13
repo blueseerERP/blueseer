@@ -268,6 +268,7 @@
         <Component class="javax.swing.JLabel" name="jLabel4">
           <Properties>
             <Property name="text" type="java.lang.String" value="MRP RunTime:"/>
+            <Property name="name" type="java.lang.String" value="mrpruntime" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lblmrpruntime">
@@ -275,6 +276,7 @@
         <Component class="javax.swing.JLabel" name="jLabel5">
           <Properties>
             <Property name="text" type="java.lang.String" value="MRP Userid:"/>
+            <Property name="name" type="java.lang.String" value="mrpuserid" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lblmrpuserid">

@@ -409,8 +409,10 @@ public class ProjectionBrowse extends javax.swing.JPanel {
         cbpo.setName("reducebypo"); // NOI18N
 
         jLabel4.setText("MRP RunTime:");
+        jLabel4.setName("mrpruntime"); // NOI18N
 
         jLabel5.setText("MRP Userid:");
+        jLabel5.setName("mrpuserid"); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
