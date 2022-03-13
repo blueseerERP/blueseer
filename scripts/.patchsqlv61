@@ -18,3 +18,4 @@ update menu_tree set mt_index = '4', mt_type = 'JMenuItem', mt_label = 'Componen
 insert into perm_mstr (vperm_user, vperm_menu) select 'admin' as vperm_user, 'ComponentDemandBrowse' as vperm_menu from perm_mstr where not exists (select * from perm_mstr where perm_menu = 'ComponentDemandBrowse') limit 1;
 
 update menu_tree set mt_index = '5' where mt_par = 'MRPMenu' and mt_child = 'RetailReorderRpt';
+update ov_ctrl set ov_version = '6.1';

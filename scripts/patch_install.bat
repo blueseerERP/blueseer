@@ -6,7 +6,7 @@ echo "patch log report" >patch.log
 cls
 @echo ""
 @echo ""
-@echo "BlueSeer Patch/Upgrade Delivery Script" 
+@echo "BlueSeer V6.1 Patch/Upgrade Delivery Script" 
 @echo ""
 @echo ""
 
@@ -157,6 +157,7 @@ goto eof
 @echo ""
 @echo ""
 @echo "  patch update completed with %errors% error"
+ping -n 5 127.0.0.1 > nul
 @echo ""
 @echo ""
 @echo ""
