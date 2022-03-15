@@ -64,6 +64,7 @@ import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.adm.admData;
+import com.blueseer.inv.invData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
@@ -234,16 +235,15 @@ public class ProjectionBrowse extends javax.swing.JPanel {
     public DefaultCategoryDataset setDataSet(String item, int row) {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         double qty = 0;
-       
+        double tcost = 0;
+        double cost = invData.getItemCost(item, "standard", OVData.getDefaultSite());
         for (int i = 0; i <= 11 ; i++) {
-          qty = -1 * bsParseDouble(tablereport.getValueAt(row, i + 3).toString());
+          qty = bsParseDouble(tablereport.getValueAt(row, i + 3).toString());
+          tcost += (qty * cost);
+          qty *= -1;
           dataset.setValue(qty, "Week Sum", String.valueOf(i + 1)); 
         }
-           /*            
-         for (int j = 0; j < tablereport.getRowCount(); j++) {
-             qty = qty + bsParseDouble(tablereport.getValueAt(j, 5).toString()); 
-         }
-         */
+        shortagecost.setText(currformatDouble(tcost));  
         return dataset;
     }
     
@@ -528,6 +528,7 @@ public class ProjectionBrowse extends javax.swing.JPanel {
 
     private void btRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRunActionPerformed
 
+        shortagecost.setText("0");
         String site = OVData.getDefaultSite();
         String fromitem = bsmf.MainFrame.lowchar;
         String toitem = bsmf.MainFrame.hichar;
@@ -555,7 +556,6 @@ public class ProjectionBrowse extends javax.swing.JPanel {
                    
                  mymodel.setNumRows(0);
                 tablereport.setModel(mymodel);
-            //    tablereport.getColumnModel().getColumn(6).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
                  
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
            
@@ -669,7 +669,7 @@ public class ProjectionBrowse extends javax.swing.JPanel {
                             }
                         }
                     }
-                    shortagecost.setText(String.valueOf(recoverycost));
+                    
                     chartpanel.setVisible(false);
                     bthidechart.setEnabled(false);
             } catch (SQLException s) {
