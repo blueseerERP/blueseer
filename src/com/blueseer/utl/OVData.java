@@ -4047,13 +4047,37 @@ public class OVData {
                 for (String rec : list) {
                     ld = rec.split(":", -1);
 
-                    res = st.executeQuery("select ps_parent from pbm_mstr where "
-                            + " ps_parent = " + "'" + ld[0] + "'"
-                            + " AND ps_child = " + "'" + ld[1] + "'"
-                            + " AND ps_op = " + "'" + ld[5] + "'"
-                            + " AND ps_bom = " + "'" + ld[10] + "'"        
+                    // do bom_mstr first
+                    res = st.executeQuery("select bom_id from bom_mstr where "
+                            + " bom_id = " + "'" + ld[0] + "'"
+                            + " AND bom_item = " + "'" + ld[2] + "'"     
                             + ";");
                     int j = 0;
+                    while (res.next()) {
+                        j++;
+                    }
+
+                    if (j == 0) {
+                        st.executeUpdate(" insert into bom_mstr "
+                                + "(bom_id, bom_desc, bom_item, bom_enabled, bom_primary ) "
+                                + " values ( "
+                                + "'" + ld[0] + "'" + ","
+                                + "'" + ld[1] + "'" + ","
+                                + "'" + ld[2] + "'" + ","
+                                + "'" + ld[3] + "'" + ","
+                                + "'" + ld[4] + "'"       
+                                + ");"
+                        );
+                    }
+                    
+                    // Now do pbm_mstr
+                    res = st.executeQuery("select ps_parent from pbm_mstr where "
+                            + " ps_parent = " + "'" + ld[5] + "'"
+                            + " AND ps_child = " + "'" + ld[6] + "'"
+                            + " AND ps_op = " + "'" + ld[10] + "'"
+                            + " AND ps_bom = " + "'" + ld[15] + "'"        
+                            + ";");
+                    j = 0;
                     while (res.next()) {
                         j++;
                     }
@@ -4062,17 +4086,17 @@ public class OVData {
                         st.executeUpdate(" insert into pbm_mstr "
                                 + "(ps_parent, ps_child, ps_type, ps_qty_per, ps_desc, ps_op, ps_sequence, ps_userid, ps_misc1, ps_ref, ps_bom ) "
                                 + " values ( "
-                                + "'" + ld[0] + "'" + ","
-                                + "'" + ld[1] + "'" + ","
-                                + "'" + ld[2] + "'" + ","
-                                + "'" + ld[3] + "'" + ","
-                                + "'" + ld[4] + "'" + ","
                                 + "'" + ld[5] + "'" + ","
                                 + "'" + ld[6] + "'" + ","
                                 + "'" + ld[7] + "'" + ","
                                 + "'" + ld[8] + "'" + ","
                                 + "'" + ld[9] + "'" + ","
-                                + "'" + ld[10] + "'"        
+                                + "'" + ld[10] + "'" + ","
+                                + "'" + ld[11] + "'" + ","
+                                + "'" + ld[12] + "'" + ","
+                                + "'" + ld[13] + "'" + ","
+                                + "'" + ld[14] + "'" + ","
+                                + "'" + ld[15] + "'"        
                                 + ");"
                         );
                     }

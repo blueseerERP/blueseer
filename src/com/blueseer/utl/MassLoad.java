@@ -393,6 +393,11 @@ public class MassLoad extends javax.swing.JPanel {
      // BOM master stuff
     public ArrayList<String> defineBOMMaster() {
         ArrayList<String> list = new ArrayList<String>();
+        list.add("bom_id,s,30,mandatory,unvalidated");
+        list.add("bom_desc,s,100,mandatory,unvalidated");
+        list.add("bom_item,s,18,mandatory,validated");
+        list.add("bom_enabled,b,1,mandatory,unvalidated");
+        list.add("bom_primary,b,1,mandatory,unvalidated");
         list.add("ps_parent,s,18,mandatory,validated");
         list.add("ps_child,s,18,mandatory,validated");
         list.add("ps_type,s,10,mandatory,validated (P or M or A)");
@@ -403,6 +408,7 @@ public class MassLoad extends javax.swing.JPanel {
         list.add("ps_userid,s,8,optional,unvalidated");
         list.add("ps_misc1,s,30,optional,unvalidated");
         list.add("ps_ref,s,30,optional,unvalidated");
+        list.add("ps_bom,s,30,optional,unvalidated");
         
         return list;
     }
