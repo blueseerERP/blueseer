@@ -3095,6 +3095,30 @@ public class invData {
     return qty;
 }
 
+    public static double getBOMComponentRecursive(String mypart, String comp, double perqty, String bom)  {
+        String[] newpart = mypart.split("___");
+        ArrayList<String> mylist = new ArrayList<String>();
+        if (! bom.isEmpty()) {
+        mylist = OVData.getpsmstrlist(newpart[0], bom);
+        } else {
+        mylist = OVData.getpsmstrlist(newpart[0]);    
+        }
+        double parentqty = 0;
+        for ( String myvalue : mylist) {
+            String[] value = myvalue.toUpperCase().split(",");
+              if (value[0].toUpperCase().compareTo(newpart[0].toUpperCase().toString()) == 0) {
+                  if (value[2].toUpperCase().compareTo("M") == 0) {
+                    parentqty = perqty * Double.valueOf(value[3]);
+                    getBOMComponentRecursive(value[1] + "___" + value[4] + "___" + value[3], comp, parentqty, "");
+                  } else {
+                    if (value[1].equals(comp))  {
+                       parentqty = perqty * Double.valueOf(value[3]);
+                    }
+                  }
+              } 
+        }
+       return parentqty;
+     }
     
     
                

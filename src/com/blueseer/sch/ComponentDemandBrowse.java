@@ -106,7 +106,8 @@ public class ComponentDemandBrowse extends javax.swing.JPanel {
                             getGlobalColumnTag("detail"), 
                             getGlobalColumnTag("item"), 
                             getGlobalColumnTag("description"), 
-                            getGlobalColumnTag("qty")})
+                            getGlobalColumnTag("qoh"),
+                            getGlobalColumnTag("qtyper")})
             {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -530,6 +531,7 @@ public class ComponentDemandBrowse extends javax.swing.JPanel {
 
     private void btRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRunActionPerformed
         Set<String> set = OVData.getpsmstrparents2(dditem.getSelectedItem().toString());
+        Map<String, Double> mx = new HashMap<String, Double>();
         try {
             Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
@@ -550,8 +552,13 @@ public class ComponentDemandBrowse extends javax.swing.JPanel {
                      tc.setCellRenderer(new ComponentDemandBrowse.SomeRenderer());
                  }
                 // tablereport.getColumnModel().getColumn(8).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
-              
+            double qtyper = 0; 
             for (String p : set) {
+              qtyper = invData.getBOMComponentRecursive(p, dditem.getSelectedItem().toString(), 1, OVData.getDefaultBomID(p));     
+              mx.put(p, qtyper);
+            }
+            for (String p : set) {
+                
                 lines++;
                 res = st.executeQuery("select it_item, it_desc, sum(in_qoh) as 'qoh' " +
                          " from item_mstr left outer join in_mstr on in_part = it_item  " +
@@ -561,7 +568,8 @@ public class ComponentDemandBrowse extends javax.swing.JPanel {
                     mymodel.addRow(new Object[]{BlueSeerUtils.clickbasket, 
                         res.getString("it_item"),
                         res.getString("it_desc"),
-                        res.getDouble("qoh")
+                        res.getDouble("qoh"),
+                        mx.get(p)
                         });
                 } // while   
             }   

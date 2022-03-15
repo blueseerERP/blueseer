@@ -120,7 +120,8 @@ public class ProjectionBrowse extends javax.swing.JPanel {
  
      String chartfilepath = OVData.getSystemTempDirectory() + "/" + "chartprojection.jpg";
     javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{getGlobalColumnTag("item"), 
+                        new String[]{getGlobalColumnTag("select"), 
+                getGlobalColumnTag("item"), 
                 getGlobalColumnTag("qoh"),            
                 getGlobalColumnTag("week+") + "1", 
                 getGlobalColumnTag("week+") + "2", 
@@ -138,7 +139,9 @@ public class ProjectionBrowse extends javax.swing.JPanel {
                       @Override  
                       public Class getColumnClass(int col) {  
                         if (col == 0  )       
-                            return String.class;  
+                            return ImageIcon.class;   
+                        else if (col == 1)
+                            return String.class;
                         else return Double.class;  //other columns accept String values  
                       }  
                         };
@@ -227,7 +230,23 @@ public class ProjectionBrowse extends javax.swing.JPanel {
         this.chartlabel.setIcon(myicon);
         this.repaint();
     }
-         
+    
+    public DefaultCategoryDataset setDataSet(String item, int row) {
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        double qty = 0;
+       
+        for (int i = 0; i <= 11 ; i++) {
+          qty = -1 * bsParseDouble(tablereport.getValueAt(row, i + 3).toString());
+          dataset.setValue(qty, "Week Sum", String.valueOf(i + 1)); 
+        }
+           /*            
+         for (int j = 0; j < tablereport.getRowCount(); j++) {
+             qty = qty + bsParseDouble(tablereport.getValueAt(j, 5).toString()); 
+         }
+         */
+        return dataset;
+    }
+    
     public void setLanguageTags(Object myobj) {
       // lblaccount.setText(labels.getString("LedgerAcctMstrPanel.labels.lblaccount"));
       
@@ -280,7 +299,6 @@ public class ProjectionBrowse extends javax.swing.JPanel {
     public void initvars(String[] arg) {
         chartpanel.setVisible(false);
         bthidechart.setEnabled(false);
-        btchart.setEnabled(true);
         java.util.Date now = new java.util.Date();
         tbfromitem.setText("");
         tbtoitem.setText("");
@@ -290,6 +308,7 @@ public class ProjectionBrowse extends javax.swing.JPanel {
         tablereport.setModel(mymodel);
         lblmrpruntime.setText("");
         lblmrpuserid.setText("");
+        shortagecost.setText("");
         tablereport.getTableHeader().setReorderingAllowed(false);
         
        //  tablereport.getColumnModel().getColumn(0).setCellRenderer(new GLAcctBalRpt3.ButtonRenderer());
@@ -317,7 +336,6 @@ public class ProjectionBrowse extends javax.swing.JPanel {
         chartlabel = new javax.swing.JLabel();
         bthidechart = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
-        btchart = new javax.swing.JButton();
         ddclass = new javax.swing.JComboBox<>();
         jLabel1 = new javax.swing.JLabel();
         tbfromitem = new javax.swing.JTextField();
@@ -328,6 +346,8 @@ public class ProjectionBrowse extends javax.swing.JPanel {
         lblmrpruntime = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         lblmrpuserid = new javax.swing.JLabel();
+        shortagecost = new javax.swing.JLabel();
+        lblshortagecost = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -361,6 +381,11 @@ public class ProjectionBrowse extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tablereport.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablereportMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tablereport);
 
         jPanel3.add(jScrollPane1, java.awt.BorderLayout.CENTER);
@@ -389,14 +414,6 @@ public class ProjectionBrowse extends javax.swing.JPanel {
         jLabel3.setText("To Item");
         jLabel3.setName("lbltoitem"); // NOI18N
 
-        btchart.setText("Chart");
-        btchart.setName("btchart"); // NOI18N
-        btchart.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btchartActionPerformed(evt);
-            }
-        });
-
         ddclass.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "P", "M" }));
 
         jLabel1.setText("Class");
@@ -413,6 +430,9 @@ public class ProjectionBrowse extends javax.swing.JPanel {
 
         jLabel5.setText("MRP Userid:");
         jLabel5.setName("mrpuserid"); // NOI18N
+
+        lblshortagecost.setText("Shortage Cost:");
+        lblshortagecost.setName("lblshortagecost"); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -436,21 +456,24 @@ public class ProjectionBrowse extends javax.swing.JPanel {
                         .addGap(49, 49, 49)
                         .addComponent(btRun)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btchart)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(bthidechart)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(75, 75, 75)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel4)
+                            .addComponent(lblshortagecost)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(cbqoh)
+                        .addGap(10, 10, 10)
+                        .addComponent(cbpo)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(lblmrpruntime, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lblmrpuserid, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(cbqoh)
-                        .addGap(10, 10, 10)
-                        .addComponent(cbpo)))
+                    .addComponent(shortagecost, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 1102, Short.MAX_VALUE)
         );
@@ -459,26 +482,34 @@ public class ProjectionBrowse extends javax.swing.JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel2)
-                        .addComponent(btRun)
-                        .addComponent(bthidechart)
-                        .addComponent(btchart)
-                        .addComponent(ddclass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel1)
-                        .addComponent(tbfromitem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel4)
-                    .addComponent(lblmrpruntime, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5)
-                    .addComponent(lblmrpuserid, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel3)
-                        .addComponent(tbtoitem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(cbqoh)
-                        .addComponent(cbpo)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel2)
+                                .addComponent(btRun)
+                                .addComponent(bthidechart)
+                                .addComponent(ddclass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel1)
+                                .addComponent(tbfromitem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel5)
+                            .addComponent(lblmrpuserid, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel3)
+                                .addComponent(tbtoitem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(cbqoh)
+                                .addComponent(cbpo))))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addComponent(jLabel4)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(lblshortagecost))
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addComponent(lblmrpruntime, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(shortagecost, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 416, Short.MAX_VALUE))
         );
@@ -497,6 +528,7 @@ public class ProjectionBrowse extends javax.swing.JPanel {
 
     private void btRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRunActionPerformed
 
+        String site = OVData.getDefaultSite();
         String fromitem = bsmf.MainFrame.lowchar;
         String toitem = bsmf.MainFrame.hichar;
         
@@ -531,16 +563,18 @@ public class ProjectionBrowse extends javax.swing.JPanel {
                 TemporalField woy = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear(); 
                 int weekOfYear = date.get(woy) - 1;  // need to subtract 1 to match sqlite/mysql week calc
             
-                res = st.executeQuery("select mrp_part, it_code, strftime('%W',mrp_date) as 'w', " + 
+                res = st.executeQuery("select mrp_part, it_code, itc_total, strftime('%W',mrp_date) as 'w', " + 
                         " sum(mrp_qty) as 'sum', " +
                         " (select sum(in_qoh) from in_mstr where in_part = mrp_part) as 'qoh' " +
                         " from mrp_mstr " +
                         " inner join item_mstr on it_item = mrp_part " +
+                        " inner join item_cost on it_item = itc_item and itc_set = 'standard' and itc_site = " + "'" + site + "'" +
                         " where mrp_part >= " + "'" + fromitem + "'" +
                         " and mrp_part <= " + "'" + toitem + "'" +
                         " group by w, mrp_part;");
                 Map<String, String> hm = new HashMap<>();
                 Map<String, String> itemqoh = new HashMap<>();
+                Map<String, String> itemcost = new HashMap<>();
                 Map<String, String> pos = new HashMap<>();
                 Set<String> set = new LinkedHashSet<String>();
                     while (res.next()) {
@@ -551,6 +585,9 @@ public class ProjectionBrowse extends javax.swing.JPanel {
                       set.add(res.getString("mrp_part"));
                       if (! itemqoh.containsKey(res.getString("mrp_part"))) {
 			itemqoh.put(res.getString("mrp_part"), res.getString("qoh"));
+		      }
+                      if (! itemcost.containsKey(res.getString("mrp_part"))) {
+			itemcost.put(res.getString("mrp_part"), res.getString("itc_total"));
 		      }
                     } 
                     
@@ -572,11 +609,17 @@ public class ProjectionBrowse extends javax.swing.JPanel {
                     
                     double[] qty = new double[]{0,0,0,0,0,0,0,0,0,0,0,0};
                     double qoh = 0;
+                    double cost = 0;
+                    double recoverycost = 0;
                     double rm = 0;
-                    DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+                    
                     for (String s : set) {
+                        qoh = 0;
                         if (itemqoh.containsKey(s) && itemqoh.get(s) != null) {
                         qoh = Double.valueOf(itemqoh.get(s));
+                        } 
+                        if (itemcost.containsKey(s) && itemcost.get(s) != null) {
+                        cost = Double.valueOf(itemcost.get(s));
                         } 
                         rm = 0;
                         for (int i = 0; i < 12; i++) {
@@ -598,13 +641,13 @@ public class ProjectionBrowse extends javax.swing.JPanel {
                           } 
                           if (cbpo.isSelected() && pos.containsKey(s + "+" + String.valueOf(i))) {
                               if (Double.valueOf(pos.get(s + "+" + String.valueOf(i))) < 0)
-                                qty[i - weekOfYear] -= Double.valueOf(pos.get(s + "+" + String.valueOf(i)));
-                              else
                                 qty[i - weekOfYear] += Double.valueOf(pos.get(s + "+" + String.valueOf(i)));
+                              else
+                                qty[i - weekOfYear] -= Double.valueOf(pos.get(s + "+" + String.valueOf(i)));
                           } 
-                          dataset.setValue(Double.valueOf(qty[i - weekOfYear]), "Week Sum", String.valueOf((i - weekOfYear) + 1)); 
                         }
                         mymodel.addRow(new Object[] {
+                            BlueSeerUtils.clickflag,
                             s,
                             qoh,
                             qty[0],
@@ -620,8 +663,15 @@ public class ProjectionBrowse extends javax.swing.JPanel {
                             qty[10],
                             qty[11]
                         });
+                        for (double q : qty) {
+                            if (q < 0) {
+                                recoverycost += (q * cost );
+                            }
+                        }
                     }
-                    chartProjection(dataset);
+                    shortagecost.setText(String.valueOf(recoverycost));
+                    chartpanel.setVisible(false);
+                    bthidechart.setEnabled(false);
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
@@ -644,20 +694,21 @@ public class ProjectionBrowse extends javax.swing.JPanel {
     private void bthidechartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bthidechartActionPerformed
        chartpanel.setVisible(false);
         bthidechart.setEnabled(false);
-        btchart.setEnabled(true);
     }//GEN-LAST:event_bthidechartActionPerformed
 
-    private void btchartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btchartActionPerformed
-       // chartProjection();
-        chartpanel.setVisible(true);
-        bthidechart.setEnabled(true);
-        btchart.setEnabled(false);
-    }//GEN-LAST:event_btchartActionPerformed
+    private void tablereportMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablereportMouseClicked
+        int row = tablereport.rowAtPoint(evt.getPoint());
+        int col = tablereport.columnAtPoint(evt.getPoint());
+        if ( col == 0) {
+                chartProjection(setDataSet(tablereport.getValueAt(row, 1).toString(), row));
+                bthidechart.setEnabled(true);
+                chartpanel.setVisible(true);
+        }
+    }//GEN-LAST:event_tablereportMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btRun;
-    private javax.swing.JButton btchart;
     private javax.swing.JButton bthidechart;
     private javax.swing.JCheckBox cbpo;
     private javax.swing.JCheckBox cbqoh;
@@ -675,6 +726,8 @@ public class ProjectionBrowse extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblmrpruntime;
     private javax.swing.JLabel lblmrpuserid;
+    private javax.swing.JLabel lblshortagecost;
+    private javax.swing.JLabel shortagecost;
     private javax.swing.JTable tablereport;
     private javax.swing.JTextField tbfromitem;
     private javax.swing.JTextField tbtoitem;

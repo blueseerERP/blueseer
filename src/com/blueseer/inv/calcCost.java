@@ -162,7 +162,6 @@ public class calcCost {
             
     public void getTotalCostRecursive(String mypart, double perqty, String bom)  {
         lastlevel++;
-       
         String[] newpart = mypart.split("___");
         ArrayList<String> mylist = new ArrayList<String>();
         if (lastlevel == 1 && ! bom.isEmpty()) {
