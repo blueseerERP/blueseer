@@ -2622,7 +2622,7 @@ public class OVData {
 
     }
 
-    public static ArrayList getpsmstrcomp(String mypart) {
+    public static ArrayList getpsmstrcomp(String item) {
         ArrayList myarray = new ArrayList();
 
         try {
@@ -2634,7 +2634,7 @@ public class OVData {
 
                 res = st.executeQuery("select ps_child from pbm_mstr "
                         + " inner join bom_mstr on bom_item = ps_parent and bom_primary = '1' "
-                        + " where ps_parent = " + "'" + mypart.toString() + "'"
+                        + " where ps_parent = " + "'" + item + "'"
                         + " AND ps_op <> '0' ;");
                 while (res.next()) {
                     myarray.add(res.getString("ps_child"));
@@ -2951,38 +2951,38 @@ public class OVData {
        return mynode;
       }
     
-    public static DefaultMutableTreeNode get_op_nodes_new(String mypart, String bomid)  {  
-       DefaultMutableTreeNode mynode = new DefaultMutableTreeNode(mypart);
+    public static DefaultMutableTreeNode get_op_nodes_new(String item, String bomid)  {  
+       DefaultMutableTreeNode mynode = new DefaultMutableTreeNode(item);
        ArrayList<String> myops = new ArrayList<String>();
         //myops = OVData.getItemRoutingOPs(mypart);  //based on itr_cost
-         myops = invData.getItemWFOPs(mypart);   // based on it_wf and wf_mstr
+         myops = invData.getItemWFOPs(item);   // based on it_wf and wf_mstr
         for ( String myvalue : myops) {
           //  DefaultMutableTreeNode thisop = new DefaultMutableTreeNode(myvalue);
           //  mynode.add(thisop);
             DefaultMutableTreeNode opnode = new DefaultMutableTreeNode(myvalue);
             
-            opnode = OVData.get_nodes_by_op_detail_new(mypart, mypart, myvalue, bomid);
+            opnode = OVData.get_nodes_by_op_detail_new(item, item, myvalue, bomid);
             mynode.add(opnode);
         }
        return mynode;
       }
     
-    public static DefaultMutableTreeNode get_nodes_by_op_detail_new(String root, String mypart, String myop, String rootbom)  {
+    public static DefaultMutableTreeNode get_nodes_by_op_detail_new(String root, String item, String myop, String rootbom)  {
         //  bsmf.MainFrame.show(root + "/" + mypart + "/" + myop);
         String myroot = "";
-            if (root.toLowerCase().equals(mypart.toLowerCase()))
+            if (root.toLowerCase().equals(item.toLowerCase()))
             myroot = myop;
         else
-            myroot = mypart;
+            myroot = item;
          DefaultMutableTreeNode mynode = new DefaultMutableTreeNode(myroot);
          
         
         ArrayList<String> mylist = new ArrayList<String>();
-        mylist = OVData.getpsmstrlistbyopnew(mypart, myop, rootbom);
+        mylist = OVData.getpsmstrlistbyopnew(item, myop, rootbom);
      //   mylist = OVData.getpsmstrlist(newpart[0]);
         for ( String myvalue : mylist) {
             String[] value = myvalue.toUpperCase().split(",");
-              if (value[0].toUpperCase().compareTo(mypart.toUpperCase().toString()) == 0) {
+              if (value[0].toUpperCase().compareTo(item.toUpperCase().toString()) == 0) {
                
                   if (value[2].toUpperCase().compareTo("M") == 0) {
                     DefaultMutableTreeNode mfgnode = new DefaultMutableTreeNode();   
@@ -2999,38 +2999,38 @@ public class OVData {
      } 
      
     
-    public static DefaultMutableTreeNode get_op_nodes(String mypart)  {  
-       DefaultMutableTreeNode mynode = new DefaultMutableTreeNode(mypart);
+    public static DefaultMutableTreeNode get_op_nodes(String item)  {  
+       DefaultMutableTreeNode mynode = new DefaultMutableTreeNode(item);
        ArrayList<String> myops = new ArrayList<String>();
         //myops = OVData.getItemRoutingOPs(mypart);  //based on itr_cost
-         myops = invData.getItemWFOPs(mypart);   // based on it_wf and wf_mstr
+         myops = invData.getItemWFOPs(item);   // based on it_wf and wf_mstr
         for ( String myvalue : myops) {
           //  DefaultMutableTreeNode thisop = new DefaultMutableTreeNode(myvalue);
           //  mynode.add(thisop);
             DefaultMutableTreeNode opnode = new DefaultMutableTreeNode(myvalue);
             
-            opnode = OVData.get_nodes_by_op_detail(mypart, mypart, myvalue);
+            opnode = OVData.get_nodes_by_op_detail(item, item, myvalue);
             mynode.add(opnode);
         }
        return mynode;
       }
       
-    public static DefaultMutableTreeNode get_nodes_by_op_detail(String root, String mypart, String myop)  {
+    public static DefaultMutableTreeNode get_nodes_by_op_detail(String root, String item, String myop)  {
         //  bsmf.MainFrame.show(root + "/" + mypart + "/" + myop);
         String myroot = "";
-            if (root.toLowerCase().equals(mypart.toLowerCase()))
+            if (root.toLowerCase().equals(item.toLowerCase()))
             myroot = myop;
         else
-            myroot = mypart;
+            myroot = item;
          DefaultMutableTreeNode mynode = new DefaultMutableTreeNode(myroot);
          
         
         ArrayList<String> mylist = new ArrayList<String>();
-        mylist = OVData.getpsmstrlistbyop(mypart, myop);
+        mylist = OVData.getpsmstrlistbyop(item, myop);
      //   mylist = OVData.getpsmstrlist(newpart[0]);
         for ( String myvalue : mylist) {
             String[] value = myvalue.toUpperCase().split(",");
-              if (value[0].toUpperCase().compareTo(mypart.toUpperCase().toString()) == 0) {
+              if (value[0].toUpperCase().compareTo(item.toUpperCase().toString()) == 0) {
                
                   if (value[2].toUpperCase().compareTo("M") == 0) {
                     DefaultMutableTreeNode mfgnode = new DefaultMutableTreeNode();   
@@ -3046,9 +3046,9 @@ public class OVData {
         return mynode;
      } 
       
-    public static DefaultMutableTreeNode get_nodes_by_op(String mypart, String myop)  {
+    public static DefaultMutableTreeNode get_nodes_by_op(String item, String myop)  {
        DefaultMutableTreeNode mynode = new DefaultMutableTreeNode(myop);
-        String[] newpart = mypart.split("___");
+        String[] newpart = item.split("___");
         ArrayList<String> mylist = new ArrayList<String>();
         mylist = OVData.getpsmstrlistbyopWCost(newpart[0], myop);
      //   mylist = OVData.getpsmstrlist(newpart[0]);
@@ -3071,15 +3071,15 @@ public class OVData {
         return mynode;
      }
       
-    public static DefaultMutableTreeNode get_nodes_without_op(String mypart)  {
-        DefaultMutableTreeNode mynode = new DefaultMutableTreeNode(mypart);
+    public static DefaultMutableTreeNode get_nodes_without_op(String item)  {
+        DefaultMutableTreeNode mynode = new DefaultMutableTreeNode(item);
         ArrayList<String> mylist = new ArrayList<String>();
         ArrayList<String> myops = new ArrayList<String>();
-        myops = OVData.getpsmstrlist(mypart);
-        mylist = OVData.getpsmstrlist(mypart);
+        myops = OVData.getpsmstrlist(item);
+        mylist = OVData.getpsmstrlist(item);
         for ( String myvalue : mylist) {
             String[] value = myvalue.toUpperCase().split(",");
-              if (value[0].toUpperCase().compareTo(mypart.toUpperCase().toString()) == 0) {
+              if (value[0].toUpperCase().compareTo(item.toUpperCase().toString()) == 0) {
                
                   if (value[2].toUpperCase().compareTo("M") == 0) {
                     DefaultMutableTreeNode mfgnode = new DefaultMutableTreeNode();   
@@ -3095,21 +3095,21 @@ public class OVData {
         return mynode;
      }
           
-    public static DefaultMutableTreeNode get_nodes_by_op_stripped(String root, String mypart, String myop)  {
+    public static DefaultMutableTreeNode get_nodes_by_op_stripped(String root, String item, String myop)  {
         String myroot = "";
-            if (root.toLowerCase().equals(mypart.toLowerCase()))
+            if (root.toLowerCase().equals(item.toLowerCase()))
             myroot = myop;
         else
-            myroot = mypart;
+            myroot = item;
          DefaultMutableTreeNode mynode = new DefaultMutableTreeNode(myroot);
          
         
         ArrayList<String> mylist = new ArrayList<String>();
-        mylist = OVData.getpsmstrlistbyop(mypart, myop);
+        mylist = OVData.getpsmstrlistbyop(item, myop);
      //   mylist = OVData.getpsmstrlist(newpart[0]);
         for ( String myvalue : mylist) {
             String[] value = myvalue.toUpperCase().split(",");
-              if (value[0].toUpperCase().compareTo(mypart.toUpperCase().toString()) == 0) {
+              if (value[0].toUpperCase().compareTo(item.toUpperCase().toString()) == 0) {
                
                   if (value[2].toUpperCase().compareTo("M") == 0) {
                     DefaultMutableTreeNode mfgnode = new DefaultMutableTreeNode();   
@@ -3126,7 +3126,7 @@ public class OVData {
      }
     // END of BOM Tree by Operation 
     
-    public static ArrayList getpsmstrlist(String mypart) {
+    public static ArrayList getpsmstrlist(String item) {
         ArrayList myarray = new ArrayList();
         String mystring = "";
         try {
@@ -3140,7 +3140,7 @@ public class OVData {
                         + " inner join bom_mstr on bom_id = ps_bom and bom_primary = '1' "
                         + " inner join item_mstr on it_item = ps_child "
                         + " inner join  item_cost on itc_item = it_item and itc_set = 'standard' "
-                        + " where ps_parent = " + "'" + mypart.toString() + "'" + ";");
+                        + " where ps_parent = " + "'" + item + "'" + ";");
                 while (res.next()) {
                     mystring = res.getString("ps_parent") + ","
                             + res.getString("ps_child") + ","
@@ -3172,7 +3172,7 @@ public class OVData {
 
     }
 
-    public static ArrayList getpsmstrlist(String mypart, String bom) {
+    public static ArrayList getpsmstrlist(String item, String bom) {
         ArrayList myarray = new ArrayList();
         String mystring = "";
         try {
@@ -3186,7 +3186,7 @@ public class OVData {
                         + " inner join bom_mstr on bom_id = ps_bom  "
                         + " inner join item_mstr on it_item = ps_child "
                         + " inner join  item_cost on itc_item = it_item and itc_set = 'standard' "
-                        + " where ps_parent = " + "'" + mypart + "'"
+                        + " where ps_parent = " + "'" + item + "'"
                         + " and ps_bom = " + "'" + bom + "'" + ";");
                 while (res.next()) {
                     mystring = res.getString("ps_parent") + ","
@@ -3220,7 +3220,7 @@ public class OVData {
     }
 
     
-    public static ArrayList getPsMstrCompOpOnly(String mypart) {
+    public static ArrayList getPsMstrCompOpOnly(String item) {
         ArrayList myarray = new ArrayList();
         String mystring = "";
         try {
@@ -3232,7 +3232,7 @@ public class OVData {
 
                 res = st.executeQuery("select ps_child, ps_type from pbm_mstr " +
                         " inner join bom_mstr on bom_id = ps_bom and bom_primary = '1' " +
-                        " where ps_parent = " + "'" + mypart + "'" + ";");
+                        " where ps_parent = " + "'" + item + "'" + ";");
                 while (res.next()) {
                     myarray.add(res.getString("ps_child") + "," + res.getString("ps_type"));
                 }
@@ -3257,7 +3257,7 @@ public class OVData {
 
     }
 
-    public static ArrayList getpsmstrlistwithOp(String mypart) {
+    public static ArrayList getpsmstrlistwithOp(String item) {
         ArrayList myarray = new ArrayList();
         String mystring = "";
         try {
@@ -3269,7 +3269,7 @@ public class OVData {
 
                 res = st.executeQuery("select ps_parent, ps_child, ps_type, ps_op from pbm_mstr "
                         + " inner join bom_mstr on bom_id = ps_bom and bom_primary = '1' "
-                        + " where ps_parent = " + "'" + mypart.toString() + "';");
+                        + " where ps_parent = " + "'" + item + "';");
                 while (res.next()) {
                     mystring = res.getString("ps_parent") + ","
                             + res.getString("ps_child") + ","
@@ -3299,7 +3299,7 @@ public class OVData {
 
     }
 
-    public static ArrayList getpsmstrlistbyop(String mypart, String myop) {
+    public static ArrayList getpsmstrlistbyop(String item, String myop) {
         ArrayList myarray = new ArrayList();
         String mystring = "";
         try {
@@ -3312,8 +3312,8 @@ public class OVData {
                 res = st.executeQuery("select ps_parent, ps_child, ps_type, ps_qty_per, it_desc from pbm_mstr "
                         + " inner join bom_mstr on bom_id = ps_bom and bom_primary = '1' "
                         + " inner join item_mstr on it_item = ps_child "
-                        + " where ps_parent = " + "'" + mypart.toString() + "'"
-                        + " and ps_op = " + "'" + myop.toString() + "'"       
+                        + " where ps_parent = " + "'" + item + "'"
+                        + " and ps_op = " + "'" + myop + "'"       
                         + ";");
                 while (res.next()) {
                     mystring = res.getString("ps_parent") + ","
@@ -3346,7 +3346,7 @@ public class OVData {
 
     }
 
-    public static ArrayList getpsmstrlistbyopnew(String mypart, String myop, String bomid) {
+    public static ArrayList getpsmstrlistbyopnew(String item, String myop, String bomid) {
         ArrayList myarray = new ArrayList();
         String mystring = "";
         try {
@@ -3359,8 +3359,8 @@ public class OVData {
                 res = st.executeQuery("select ps_parent, ps_child, ps_type, ps_qty_per, it_desc from pbm_mstr "
                         + " inner join bom_mstr on bom_id = ps_bom "
                         + " inner join item_mstr on it_item = ps_child "
-                        + " where ps_parent = " + "'" + mypart.toString() + "'"
-                        + " and ps_op = " + "'" + myop.toString() + "'"  
+                        + " where ps_parent = " + "'" + item + "'"
+                        + " and ps_op = " + "'" + myop + "'"  
                         + " and ps_bom = " + "'" + bomid + "'"        
                         + ";");
                 while (res.next()) {
@@ -3395,7 +3395,7 @@ public class OVData {
     }
 
     
-    public static ArrayList getpsmstrlistbyopWCost(String mypart, String myop) {
+    public static ArrayList getpsmstrlistbyopWCost(String item, String myop) {
         ArrayList myarray = new ArrayList();
         String mystring = "";
         try {
@@ -3408,8 +3408,8 @@ public class OVData {
                         + " inner join bom_mstr on bom_id = ps_bom and bom_primary = '1' "
                         + " inner join item_mstr on it_item = ps_child "
                         + " inner join  item_cost on itc_item = it_item and itc_set = 'standard' "
-                        + " where ps_parent = " + "'" + mypart.toString() + "'"
-                        + " and ps_op = " + "'" + myop.toString() + "'" + ";");
+                        + " where ps_parent = " + "'" + item + "'"
+                        + " and ps_op = " + "'" + myop + "'" + ";");
                 while (res.next()) {
                     mystring = res.getString("ps_parent") + ","
                             + res.getString("ps_child") + ","
@@ -3442,7 +3442,7 @@ public class OVData {
 
     }
  
-    public static Set<String> getpsmstrparents(String mypart) {
+    public static Set<String> getpsmstrparents(String item) {
         Set<String> myarray = new LinkedHashSet<String>();
         String mystring = "";
         try {
@@ -3454,7 +3454,7 @@ public class OVData {
 
                 res = st.executeQuery("select ps_parent from pbm_mstr "
                         + " inner join bom_mstr on bom_id = ps_bom and bom_primary = '1' "
-                        + " where ps_child = " + "'" + mypart.toString() + "';");
+                        + " where ps_child = " + "'" + item + "';");
                 // res = st.executeQuery("select ps_parent from pbm_mstr " +
                 //            " where ps_child = " + "'" + mypart.toString() + "';" );
                 while (res.next()) {
@@ -3483,7 +3483,7 @@ public class OVData {
 
     }
 
-    public static Set<String> getpsmstrparents2(String mypart) {
+    public static Set<String> getpsmstrparents2(String item) {
 
         ArrayList<String> myarray1 = new ArrayList<String>();
         ArrayList<String> myarray2 = new ArrayList<String>();
@@ -3504,7 +3504,7 @@ public class OVData {
                 res = st.executeQuery("select ps_parent, it_type from pbm_mstr "
                         + " inner join bom_mstr on bom_id = ps_bom and bom_primary = '1' "
                         + " inner join item_mstr on it_item = ps_parent "
-                        + " where ps_child = " + "'" + mypart.toString() + "';");
+                        + " where ps_child = " + "'" + item + "';");
                 // res = st.executeQuery("select ps_parent from pbm_mstr " +
                 //            " where ps_child = " + "'" + mypart.toString() + "';" );
                 while (res.next()) {
@@ -7212,7 +7212,7 @@ return outvalue;
 
 }
 
-    public static String getProdLineFromItem(String mypart) {
+    public static String getProdLineFromItem(String item) {
        String myitem = null;
      try{
 
@@ -7221,7 +7221,7 @@ return outvalue;
             ResultSet res = null;
             try {
 
-            res = st.executeQuery("select it_prodline from item_mstr inner join pl_mstr on pl_line = it_prodline where it_item = " + "'" + mypart.toString() + "';" );
+            res = st.executeQuery("select it_prodline from item_mstr inner join pl_mstr on pl_line = it_prodline where it_item = " + "'" + item + "';" );
            while (res.next()) {
             myitem = res.getString("it_prodline");                    
             }
@@ -7242,7 +7242,7 @@ return outvalue;
 
 }  
 
-    public static String getUOMFromItemSite(String mypart, String mysite) {
+    public static String getUOMFromItemSite(String item, String mysite) {
        String myitem = null;
      try{
 
@@ -7250,7 +7250,7 @@ return outvalue;
         Statement st = con.createStatement();
         ResultSet res = null;
         try{
-            res = st.executeQuery("select it_uom from item_mstr where it_item = " + "'" + mypart.toString() + "'" +
+            res = st.executeQuery("select it_uom from item_mstr where it_item = " + "'" + item + "'" +
                                   " AND it_site = " + "'" + mysite + "'" + ";" ); 
            while (res.next()) {
             myitem = res.getString("it_uom");                    
@@ -7276,7 +7276,7 @@ return outvalue;
 
 }  
 
-    public static Boolean isBaseUOMOfItem(String mypart, String mysite, String uom) {
+    public static Boolean isBaseUOMOfItem(String item, String mysite, String uom) {
        boolean isBase = false;
      try{
 
@@ -7285,7 +7285,7 @@ return outvalue;
             ResultSet res = null;
             try {
 
-            res = st.executeQuery("select it_uom from item_mstr where it_item = " + "'" + mypart.toString() + "'" +
+            res = st.executeQuery("select it_uom from item_mstr where it_item = " + "'" + item + "'" +
                                   " AND it_site = " + "'" + mysite + "'" + ";" ); 
            while (res.next()) {
                if (res.getString("it_uom").toUpperCase().equals(uom.toUpperCase())) {
@@ -8062,7 +8062,7 @@ return outvalue;
         
     }
       
-    public static String getPMCodeByItem(String mypart) {
+    public static String getPMCodeByItem(String item) {
        String myitem = "";
      try{
 
@@ -8071,7 +8071,7 @@ return outvalue;
             ResultSet res = null;
             try {
 
-            res = st.executeQuery("select it_code from item_mstr where it_item = " + "'" + mypart.toString() + "';" );
+            res = st.executeQuery("select it_code from item_mstr where it_item = " + "'" + item + "';" );
            while (res.next()) {
             myitem = (res.getString("it_code"));                    
             }
@@ -9383,7 +9383,7 @@ return myarray;
 
     /* stop here */
     
-    public static ArrayList getOperationsByItem(String mypart) {
+    public static ArrayList getOperationsByItem(String item) {
    ArrayList myarray = new ArrayList();
     try{
 
@@ -9392,7 +9392,7 @@ return myarray;
             Statement st = con.createStatement();
             ResultSet res = null;
 
-            res = st.executeQuery("select wf_op from wf_mstr inner join item_mstr on it_wf = wf_id where it_item = " + "'" + mypart + "'" + " order by wf_op ;");
+            res = st.executeQuery("select wf_op from wf_mstr inner join item_mstr on it_wf = wf_id where it_item = " + "'" + item + "'" + " order by wf_op ;");
            while (res.next()) {
                 myarray.add(res.getString("wf_op"));
             }
@@ -9410,7 +9410,7 @@ return myarray;
 
 }
 
-    public static int getFirstOpByItem(String mypart) {
+    public static int getFirstOpByItem(String item) {
        int myreturn = -1;
     try{
 
@@ -9419,7 +9419,7 @@ return myarray;
             Statement st = con.createStatement();
             ResultSet res = null;
 
-            res = st.executeQuery("select min(wf_op) as op from wf_mstr inner join item_mstr on it_wf = wf_id where it_item = " + "'" + mypart + "'" + 
+            res = st.executeQuery("select min(wf_op) as op from wf_mstr inner join item_mstr on it_wf = wf_id where it_item = " + "'" + item + "'" + 
                     " and wf_assert = '1' group by wf_assert order by wf_op desc;");
 
            while (res.next()) {
@@ -9439,7 +9439,7 @@ return myarray;
 
 }
 
-    public static int getLastOpByItem(String mypart) {
+    public static int getLastOpByItem(String item) {
        int myreturn = -1;
     try{
 
@@ -9448,7 +9448,7 @@ return myarray;
             Statement st = con.createStatement();
             ResultSet res = null;
 
-            res = st.executeQuery("select max(wf_op) from wf_mstr inner join item_mstr on it_wf = wf_id where it_item = " + "'" + mypart + "'" + 
+            res = st.executeQuery("select max(wf_op) from wf_mstr inner join item_mstr on it_wf = wf_id where it_item = " + "'" + item + "'" + 
                     " and wf_assert = '1' group by wf_assert order by wf_op desc;");
 
            while (res.next()) {
@@ -15836,7 +15836,7 @@ MainFrame.bslog(e);
     return week + 1;
 }
 
-    public static int createPlanFromFcst(String fromsite, String tosite, String frompart, String topart) {
+    public static int createPlanFromFcst(String fromsite, String tosite, String fromitem, String toitem) {
 
     int recnumber = 0;
 
@@ -15860,11 +15860,11 @@ MainFrame.bslog(e);
            String site = "";
              int k = 0;
 
-             if (frompart.isEmpty()) {
-                 frompart = bsmf.MainFrame.lowchar;
+             if (fromitem.isEmpty()) {
+                 fromitem = bsmf.MainFrame.lowchar;
              }
-             if (topart.isEmpty()) {
-                 topart = bsmf.MainFrame.hichar;
+             if (toitem.isEmpty()) {
+                 toitem = bsmf.MainFrame.hichar;
              }
               if (fromsite.isEmpty()) {
                  fromsite = bsmf.MainFrame.lowchar;
@@ -15876,8 +15876,8 @@ MainFrame.bslog(e);
              int qty = 0;
               res = st.executeQuery("select * from fct_mstr " +
                       " inner join item_mstr on it_item = fct_part " +
-                      " where fct_part >= " + "'" + frompart + "'" +
-                      " and fct_part <= " + "'" + topart + "'" + 
+                      " where fct_part >= " + "'" + fromitem + "'" +
+                      " and fct_part <= " + "'" + toitem + "'" + 
                       " and fct_site >= " + "'" + fromsite + "'" + 
                       " and fct_site <= " + "'" + tosite + "'" + 
                       " and it_plan = '1' " +

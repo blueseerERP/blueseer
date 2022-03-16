@@ -942,7 +942,7 @@ public class invData {
          return myarray;
     }
 
-    public static String getItemFromCustCItem(String cust, String custpart) {
+    public static String getItemFromCustCItem(String cust, String custitem) {
     String mystring = "";
     try{
        Class.forName(driver).newInstance();
@@ -953,7 +953,7 @@ public class invData {
             
 
             res = st.executeQuery("select cup_item from cup_mstr where cup_cust = " + "'" + cust + "'" + 
-                                  " AND cup_citem = " + "'" + custpart + "'" + ";");
+                                  " AND cup_citem = " + "'" + custitem + "'" + ";");
            while (res.next()) {
                mystring = res.getString("cup_item");
 
@@ -979,7 +979,7 @@ public class invData {
 
     }
 
-    public static double getItemPriceFromCust(String cust, String part, String uom, String curr) {
+    public static double getItemPriceFromCust(String cust, String item, String uom, String curr) {
     double price = 0;
     String pricecode = "";
 
@@ -1001,7 +1001,7 @@ public class invData {
              }
 
             res = st.executeQuery("select cpr_price from cpr_mstr where cpr_cust = " + "'" + cust + "'" + 
-                                  " AND cpr_item = " + "'" + part + "'" +
+                                  " AND cpr_item = " + "'" + item + "'" +
                                   " AND cpr_uom = " + "'" + uom + "'" +
                                   " AND cpr_curr = " + "'" + curr + "'" +
                                   " AND cpr_type = 'LIST' "+ ";");
@@ -1031,7 +1031,7 @@ public class invData {
 
     }
 
-    public static double getItemPriceFromListCode(String code, String part, String uom, String curr) {
+    public static double getItemPriceFromListCode(String code, String item, String uom, String curr) {
     double myreturn = 0;
     String pricecode = "";
 
@@ -1043,7 +1043,7 @@ public class invData {
     try{
       
         res = st.executeQuery("select cpr_price from cpr_mstr where cpr_cust = " + "'" + code + "'" + 
-                              " AND cpr_item = " + "'" + part + "'" +
+                              " AND cpr_item = " + "'" + item + "'" +
                               " AND cpr_uom = " + "'" + uom + "'" +
                               " AND cpr_curr = " + "'" + curr + "'" +        
                               " AND cpr_type = 'LIST' "+ ";");
@@ -1122,7 +1122,7 @@ public class invData {
 
     }
 
-    public static String getItemFromCustCItem2(String cust, String custpart) {
+    public static String getItemFromCustCItem2(String cust, String custitem) {
        String mystring = "";
         try{
             Class.forName(driver).newInstance();
@@ -1131,7 +1131,7 @@ public class invData {
             ResultSet res = null;
             try{
                 res = st.executeQuery("select cup_item from cup_mstr where cup_cust = " + "'" + cust + "'" + 
-                                      " AND cup_citem2 = " + "'" + custpart + "'" + ";");
+                                      " AND cup_citem2 = " + "'" + custitem + "'" + ";");
                while (res.next()) {
                    mystring = res.getString("cup_item");
 
@@ -1157,7 +1157,7 @@ public class invData {
 
     }
 
-    public static String getItemFromCustUpc(String cust, String custpart) {
+    public static String getItemFromCustUpc(String cust, String custitem) {
        String mystring = "";
         try{
             Class.forName(driver).newInstance();
@@ -1167,7 +1167,7 @@ public class invData {
             try{
               
                 res = st.executeQuery("select cup_item from cup_mstr where cup_cust = " + "'" + cust + "'" + 
-                                      " AND cup_upc = " + "'" + custpart + "'" + ";");
+                                      " AND cup_upc = " + "'" + custitem + "'" + ";");
                while (res.next()) {
                    mystring = res.getString("cup_item");
 
@@ -1193,7 +1193,7 @@ public class invData {
 
     }
 
-    public static double getItemPriceFromVend(String vend, String part, String uom, String curr) {
+    public static double getItemPriceFromVend(String vend, String item, String uom, String curr) {
        double myreturn = 0;
        String pricecode = "";
 
@@ -1214,7 +1214,7 @@ public class invData {
                  }
 
                 res = st.executeQuery("select vpr_price from vpr_mstr where vpr_vend = " + "'" + vend + "'" + 
-                                      " AND vpr_item = " + "'" + part + "'" +
+                                      " AND vpr_item = " + "'" + item + "'" +
                                       " AND vpr_uom = " + "'" + uom + "'" +
                                       " AND vpr_curr = " + "'" + curr + "'" +        
                                       " AND vpr_type = 'LIST' "+ ";");
@@ -1243,7 +1243,7 @@ public class invData {
 
     }
 
-    public static String[] getItemPrice(String type, String entity, String part, String uom, String curr) {
+    public static String[] getItemPrice(String type, String entity, String item, String uom, String curr) {
 
            // type is either 'c' for customer price or 'v' for vendor price      
 
@@ -1271,7 +1271,7 @@ public class invData {
                          }
 
                         res = st.executeQuery("select cpr_price from cpr_mstr where cpr_cust = " + "'" + entity + "'" + 
-                                              " AND cpr_item = " + "'" + part + "'" +
+                                              " AND cpr_item = " + "'" + item + "'" +
                                               " AND cpr_uom = " + "'" + uom + "'" +
                                               " AND cpr_curr = " + "'" + curr + "'" +
                                               " AND cpr_type = 'LIST' "+ ";");
@@ -1294,7 +1294,7 @@ public class invData {
                      }
 
                     res = st.executeQuery("select vpr_price from vpr_mstr where vpr_vend = " + "'" + entity + "'" + 
-                                          " AND vpr_item = " + "'" + part + "'" +
+                                          " AND vpr_item = " + "'" + item + "'" +
                                           " AND vpr_uom = " + "'" + uom + "'" +
                                           " AND vpr_curr = " + "'" + curr + "'" +        
                                           " AND vpr_type = 'LIST' "+ ";");
@@ -1309,9 +1309,9 @@ public class invData {
                    // if there is no customer specific price...then pull price from item master it_sell_price
                       if ( price.equals("0") ) {
                          if (type.equals("c")) { 
-                         res = st.executeQuery("select it_sell_price as itemprice from item_mstr where it_item = " + "'" + part + "'" + ";");
+                         res = st.executeQuery("select it_sell_price as itemprice from item_mstr where it_item = " + "'" + item + "'" + ";");
                          } else {
-                         res = st.executeQuery("select it_pur_price as itemprice from item_mstr where it_item = " + "'" + part + "'" + ";");    
+                         res = st.executeQuery("select it_pur_price as itemprice from item_mstr where it_item = " + "'" + item + "'" + ";");    
                          }
                          while (res.next()) {
                          price = res.getString("itemprice").replace('.', defaultDecimalSeparator);   
@@ -1451,7 +1451,7 @@ public class invData {
 
         }
 
-    public static String getItemCode(String mypart) {
+    public static String getItemCode(String item) {
       String myitem = "";
     try{
     Class.forName(driver).newInstance();
@@ -1460,7 +1460,7 @@ public class invData {
     ResultSet res = null;
     try{
      
-        res = st.executeQuery("select it_code from item_mstr where it_item = " + "'" + mypart.toString() + "';" );
+        res = st.executeQuery("select it_code from item_mstr where it_item = " + "'" + item + "';" );
        while (res.next()) {
         myitem = res.getString("it_code");                    
         }
@@ -1591,7 +1591,7 @@ public class invData {
     return days;  
     }
     
-    public static String getItemTypeByPart(String mypart) {
+    public static String getItemTypeByPart(String item) {
     String myitem = "";
     try{
     Class.forName(driver).newInstance();
@@ -1600,7 +1600,7 @@ public class invData {
     ResultSet res = null;
     try{
         
-        res = st.executeQuery("select it_type from item_mstr where it_item = " + "'" + mypart.toString() + "';" );
+        res = st.executeQuery("select it_type from item_mstr where it_item = " + "'" + item + "';" );
        while (res.next()) {
         myitem = res.getString("it_type");                    
         }
@@ -2434,7 +2434,7 @@ public class invData {
 
     }
 
-    public static String getItemStatusByPart(String mypart) {
+    public static String getItemStatusByPart(String item) {
            String myitem = "";
          try{
             Class.forName(driver).newInstance();
@@ -2443,7 +2443,7 @@ public class invData {
                     ResultSet res = null;
             try{
                 
-                res = st.executeQuery("select it_status from item_mstr where it_item = " + "'" + mypart.toString() + "';" );
+                res = st.executeQuery("select it_status from item_mstr where it_item = " + "'" + item + "';" );
                while (res.next()) {
                 myitem = res.getString("it_status");                    
                 }
@@ -2468,7 +2468,7 @@ public class invData {
 
     }
 
-    public static String getItemDesc(String mypart) {
+    public static String getItemDesc(String item) {
            String myitem = "";
          try{
             Class.forName(driver).newInstance();
@@ -2478,7 +2478,7 @@ public class invData {
             try{
                
 
-                res = st.executeQuery("select it_desc from item_mstr where it_item = " + "'" + mypart.toString() + "';" );
+                res = st.executeQuery("select it_desc from item_mstr where it_item = " + "'" + item + "';" );
                while (res.next()) {
                 myitem = res.getString("it_desc");                    
                 }
@@ -2503,7 +2503,7 @@ public class invData {
 
     }
 
-    public static String[] getItemDetail(String mypart) {
+    public static String[] getItemDetail(String item) {
            String[] x = new String[]{"","","","","","","","","","",""};
            int days = 0;
            Calendar caldate = Calendar.getInstance();
@@ -2513,7 +2513,7 @@ public class invData {
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
-                res = st.executeQuery("select it_item, it_desc, it_uom, it_prodline, it_code, it_rev, it_status, it_site, it_loc, it_wh, it_expiredays from item_mstr where it_item = " + "'" + mypart.toString() + "';" );
+                res = st.executeQuery("select it_item, it_desc, it_uom, it_prodline, it_code, it_rev, it_status, it_site, it_loc, it_wh, it_expiredays from item_mstr where it_item = " + "'" + item + "';" );
                while (res.next()) {
                    if (res.getString("it_expiredays") != null && ! res.getString("it_expiredays").isEmpty()) {
                    days = res.getInt("it_expiredays");
@@ -2980,7 +2980,7 @@ public class invData {
 
     }
 
-    public static double getItemLbrCost(String part, String op, String site, String set) {
+    public static double getItemLbrCost(String item, String op, String site, String set) {
              double labor = 0;
               try{
             Class.forName(driver).newInstance();
@@ -2991,7 +2991,7 @@ public class invData {
                
 
                 res = st.executeQuery("select itr_lbr_top, itr_lbr_low from itemr_cost inner join item_mstr on it_item = itr_item " + 
-                        " where itr_item = " + "'" + part + "'" +
+                        " where itr_item = " + "'" + item + "'" +
                         " AND itr_op = " + "'" + op + "'" + 
                         " AND itr_site = " + "'" + site + "'" + 
                         " AND itr_set = " + "'" + set + "'" +
@@ -3020,7 +3020,7 @@ public class invData {
              return labor;
          }
 
-    public static double getItemBdnCost(String part, String op, String site, String set) {
+    public static double getItemBdnCost(String item, String op, String site, String set) {
          double burden = 0;
            try{
         Class.forName(driver).newInstance();
@@ -3030,7 +3030,7 @@ public class invData {
         try{
            
             res = st.executeQuery("select itr_bdn_top, itr_bdn_low from itemr_cost inner join item_mstr on it_item = itr_item " + 
-                    " where itr_item = " + "'" + part + "'" +
+                    " where itr_item = " + "'" + item + "'" +
                     " AND itr_op = " + "'" + op + "'" + 
                     " AND itr_site = " + "'" + site + "'" + 
                     " AND itr_set = " + "'" + set + "'" +
@@ -3095,18 +3095,18 @@ public class invData {
     return qty;
 }
 
-    public static double getBOMComponentRecursive(String mypart, String comp, double perqty, String bom)  {
-        String[] newpart = mypart.split("___");
+    public static double getBOMComponentRecursive(String item, String comp, double perqty, String bom)  {
+        String[] newitem = item.split("___");
         ArrayList<String> mylist = new ArrayList<String>();
         if (! bom.isEmpty()) {
-        mylist = OVData.getpsmstrlist(newpart[0], bom);
+        mylist = OVData.getpsmstrlist(newitem[0], bom);
         } else {
-        mylist = OVData.getpsmstrlist(newpart[0]);    
+        mylist = OVData.getpsmstrlist(newitem[0]);    
         }
         double parentqty = 0;
         for ( String myvalue : mylist) {
             String[] value = myvalue.toUpperCase().split(",");
-              if (value[0].toUpperCase().compareTo(newpart[0].toUpperCase().toString()) == 0) {
+              if (value[0].toUpperCase().compareTo(newitem[0].toUpperCase().toString()) == 0) {
                   if (value[2].toUpperCase().compareTo("M") == 0) {
                     parentqty = perqty * Double.valueOf(value[3]);
                     getBOMComponentRecursive(value[1] + "___" + value[4] + "___" + value[3], comp, parentqty, "");
