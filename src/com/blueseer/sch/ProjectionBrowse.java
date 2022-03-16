@@ -119,6 +119,7 @@ import org.jfree.data.general.DefaultPieDataset;
  */
 public class ProjectionBrowse extends javax.swing.JPanel {
  
+     int thisrow = -1;
      String chartfilepath = OVData.getSystemTempDirectory() + "/" + "chartprojection.jpg";
     javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                         new String[]{getGlobalColumnTag("select"), 
@@ -245,6 +246,171 @@ public class ProjectionBrowse extends javax.swing.JPanel {
         }
         shortagecost.setText(currformatDouble(tcost));  
         return dataset;
+    }
+    
+    public void getData() {
+        shortagecost.setText("0");
+        String site = OVData.getDefaultSite();
+        String fromitem = bsmf.MainFrame.lowchar;
+        String toitem = bsmf.MainFrame.hichar;
+        
+        if (! tbfromitem.getText().isEmpty()) {
+            fromitem = tbfromitem.getText();
+        }
+        if (! tbtoitem.getText().isEmpty()) {
+            fromitem = tbtoitem.getText();
+        }
+        String runtime = OVData.getCodeValueByCodeKey("mrpinfo", "mrpruntime");
+        String shorttime = null;
+        if (! runtime.isEmpty()) {
+            shorttime = runtime.substring(0, 16);
+        }
+        lblmrpruntime.setText(shorttime);
+        lblmrpuserid.setText(OVData.getCodeValueByCodeKey("mrpinfo", "mrpuserid"));
+        
+        try {
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+                   
+                 mymodel.setNumRows(0);
+                tablereport.setModel(mymodel);
+                 
+                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+           
+                LocalDate date = LocalDate.now();
+                TemporalField woy = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear(); 
+                int weekOfYear = date.get(woy) - 1;  // need to subtract 1 to match sqlite/mysql week calc
+            
+                res = st.executeQuery("select mrp_part, it_code, itc_total, strftime('%W',mrp_date) as 'w', " + 
+                        " sum(mrp_qty) as 'sum', " +
+                        " (select sum(in_qoh) from in_mstr where in_part = mrp_part) as 'qoh' " +
+                        " from mrp_mstr " +
+                        " inner join item_mstr on it_item = mrp_part " +
+                        " inner join item_cost on it_item = itc_item and itc_set = 'standard' and itc_site = " + "'" + site + "'" +
+                        " where mrp_part >= " + "'" + fromitem + "'" +
+                        " and mrp_part <= " + "'" + toitem + "'" +
+                        " group by w, mrp_part;");
+                Map<String, String> hm = new HashMap<>();
+                Map<String, String> itemqoh = new HashMap<>();
+                Map<String, String> itemcost = new HashMap<>();
+                Map<String, String> pos = new HashMap<>();
+                Set<String> set = new LinkedHashSet<String>();
+                    while (res.next()) {
+                      if (! res.getString("it_code").equals(ddclass.getSelectedItem().toString())) {
+                          continue;
+                      }
+                      hm.put(res.getString("mrp_part") + "+" + res.getString("w"), res.getString("sum"));
+                      set.add(res.getString("mrp_part"));
+                      if (! itemqoh.containsKey(res.getString("mrp_part"))) {
+			itemqoh.put(res.getString("mrp_part"), res.getString("qoh"));
+		      }
+                      if (! itemcost.containsKey(res.getString("mrp_part"))) {
+			itemcost.put(res.getString("mrp_part"), res.getString("itc_total"));
+		      }
+                    } 
+                    
+                    // now POs
+                    res = st.executeQuery("select pod_part, it_code, strftime('%W',pod_due_date) as 'w', " + 
+                        " sum(pod_ord_qty) as 'sum' " +
+                        " from pod_mstr " +
+                        " inner join item_mstr on it_item = pod_part " +    
+                        " where pod_part >= " + "'" + fromitem + "'" +
+                        " and pod_part <= " + "'" + toitem + "'" +
+                        " and pod_status <> 'closed' " +
+                        " group by w, pod_part;");
+                    while (res.next()) {
+                      if (! res.getString("it_code").equals(ddclass.getSelectedItem().toString())) {
+                          continue;
+                      }
+                      pos.put(res.getString("pod_part") + "+" + res.getString("w"), res.getString("sum"));
+                    } 
+                    
+                    double[] qty = new double[]{0,0,0,0,0,0,0,0,0,0,0,0};
+                    double qoh = 0;
+                    double cost = 0;
+                    double recoverycost = 0;
+                    double rm = 0;
+                    
+                    for (String s : set) {
+                        qoh = 0;
+                        if (itemqoh.containsKey(s) && itemqoh.get(s) != null) {
+                        qoh = Double.valueOf(itemqoh.get(s));
+                        } 
+                        if (itemcost.containsKey(s) && itemcost.get(s) != null) {
+                        cost = Double.valueOf(itemcost.get(s));
+                        } 
+                        rm = 0;
+                        for (int i = 0; i < 12; i++) {
+                            qty[i] = 0;
+                        }
+                        for (int i = weekOfYear; i <= weekOfYear+11 ; i++) {
+                          if (hm.containsKey(s + "+" + String.valueOf(i))) {
+                              qty[i - weekOfYear] = Double.valueOf(hm.get(s + "+" + String.valueOf(i)));
+                              if (cbqoh.isSelected() && qoh > 0) {
+                                  rm = qty[i-weekOfYear] - qoh;
+                                  if (rm >= 0) {
+                                      qty[i-weekOfYear] = rm;
+                                      qoh = 0;
+                                  } else {
+                                      qty[i-weekOfYear] = 0;
+                                      qoh = rm;
+                                  }
+                              }
+                          } 
+                          if (cbpo.isSelected() && pos.containsKey(s + "+" + String.valueOf(i))) {
+                              if (Double.valueOf(pos.get(s + "+" + String.valueOf(i))) < 0)
+                                qty[i - weekOfYear] += Double.valueOf(pos.get(s + "+" + String.valueOf(i)));
+                              else
+                                qty[i - weekOfYear] -= Double.valueOf(pos.get(s + "+" + String.valueOf(i)));
+                          } 
+                        }
+                        mymodel.addRow(new Object[] {
+                            BlueSeerUtils.clickflag,
+                            s,
+                            qoh,
+                            qty[0],
+                            qty[1],
+                            qty[2],
+                            qty[3],
+                            qty[4],
+                            qty[5],
+                            qty[6],
+                            qty[7],
+                            qty[8],
+                            qty[9],
+                            qty[10],
+                            qty[11]
+                        });
+                        for (double q : qty) {
+                            if (q < 0) {
+                                recoverycost += (q * cost );
+                            }
+                        }
+                    }
+                if (thisrow >= 0) {
+                    chartProjection(setDataSet(tablereport.getValueAt(thisrow, 1).toString(), thisrow));
+                }    
+                //    chartpanel.setVisible(false);
+                //    bthidechart.setEnabled(false);
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+  
     }
     
     public void setLanguageTags(Object myobj) {
@@ -421,9 +587,19 @@ public class ProjectionBrowse extends javax.swing.JPanel {
 
         cbqoh.setText("Reduce By QOH");
         cbqoh.setName("reducebyqoh"); // NOI18N
+        cbqoh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbqohActionPerformed(evt);
+            }
+        });
 
         cbpo.setText("Reduce By POs");
         cbpo.setName("reducebypo"); // NOI18N
+        cbpo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbpoActionPerformed(evt);
+            }
+        });
 
         jLabel4.setText("MRP RunTime:");
         jLabel4.setName("mrpruntime"); // NOI18N
@@ -527,168 +703,7 @@ public class ProjectionBrowse extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRunActionPerformed
-
-        shortagecost.setText("0");
-        String site = OVData.getDefaultSite();
-        String fromitem = bsmf.MainFrame.lowchar;
-        String toitem = bsmf.MainFrame.hichar;
-        
-        if (! tbfromitem.getText().isEmpty()) {
-            fromitem = tbfromitem.getText();
-        }
-        if (! tbtoitem.getText().isEmpty()) {
-            fromitem = tbtoitem.getText();
-        }
-        String runtime = OVData.getCodeValueByCodeKey("mrpinfo", "mrpruntime");
-        String shorttime = null;
-        if (! runtime.isEmpty()) {
-            shorttime = runtime.substring(0, 16);
-        }
-        lblmrpruntime.setText(shorttime);
-        lblmrpuserid.setText(OVData.getCodeValueByCodeKey("mrpinfo", "mrpuserid"));
-        
-        try {
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-
-                   
-                 mymodel.setNumRows(0);
-                tablereport.setModel(mymodel);
-                 
-                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-           
-                LocalDate date = LocalDate.now();
-                TemporalField woy = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear(); 
-                int weekOfYear = date.get(woy) - 1;  // need to subtract 1 to match sqlite/mysql week calc
-            
-                res = st.executeQuery("select mrp_part, it_code, itc_total, strftime('%W',mrp_date) as 'w', " + 
-                        " sum(mrp_qty) as 'sum', " +
-                        " (select sum(in_qoh) from in_mstr where in_part = mrp_part) as 'qoh' " +
-                        " from mrp_mstr " +
-                        " inner join item_mstr on it_item = mrp_part " +
-                        " inner join item_cost on it_item = itc_item and itc_set = 'standard' and itc_site = " + "'" + site + "'" +
-                        " where mrp_part >= " + "'" + fromitem + "'" +
-                        " and mrp_part <= " + "'" + toitem + "'" +
-                        " group by w, mrp_part;");
-                Map<String, String> hm = new HashMap<>();
-                Map<String, String> itemqoh = new HashMap<>();
-                Map<String, String> itemcost = new HashMap<>();
-                Map<String, String> pos = new HashMap<>();
-                Set<String> set = new LinkedHashSet<String>();
-                    while (res.next()) {
-                      if (! res.getString("it_code").equals(ddclass.getSelectedItem().toString())) {
-                          continue;
-                      }
-                      hm.put(res.getString("mrp_part") + "+" + res.getString("w"), res.getString("sum"));
-                      set.add(res.getString("mrp_part"));
-                      if (! itemqoh.containsKey(res.getString("mrp_part"))) {
-			itemqoh.put(res.getString("mrp_part"), res.getString("qoh"));
-		      }
-                      if (! itemcost.containsKey(res.getString("mrp_part"))) {
-			itemcost.put(res.getString("mrp_part"), res.getString("itc_total"));
-		      }
-                    } 
-                    
-                    // now POs
-                    res = st.executeQuery("select pod_part, it_code, strftime('%W',pod_due_date) as 'w', " + 
-                        " sum(pod_ord_qty) as 'sum' " +
-                        " from pod_mstr " +
-                        " inner join item_mstr on it_item = pod_part " +    
-                        " where pod_part >= " + "'" + fromitem + "'" +
-                        " and pod_part <= " + "'" + toitem + "'" +
-                        " and pod_status <> 'closed' " +
-                        " group by w, pod_part;");
-                    while (res.next()) {
-                      if (! res.getString("it_code").equals(ddclass.getSelectedItem().toString())) {
-                          continue;
-                      }
-                      pos.put(res.getString("pod_part") + "+" + res.getString("w"), res.getString("sum"));
-                    } 
-                    
-                    double[] qty = new double[]{0,0,0,0,0,0,0,0,0,0,0,0};
-                    double qoh = 0;
-                    double cost = 0;
-                    double recoverycost = 0;
-                    double rm = 0;
-                    
-                    for (String s : set) {
-                        qoh = 0;
-                        if (itemqoh.containsKey(s) && itemqoh.get(s) != null) {
-                        qoh = Double.valueOf(itemqoh.get(s));
-                        } 
-                        if (itemcost.containsKey(s) && itemcost.get(s) != null) {
-                        cost = Double.valueOf(itemcost.get(s));
-                        } 
-                        rm = 0;
-                        for (int i = 0; i < 12; i++) {
-                            qty[i] = 0;
-                        }
-                        for (int i = weekOfYear; i <= weekOfYear+11 ; i++) {
-                          if (hm.containsKey(s + "+" + String.valueOf(i))) {
-                              qty[i - weekOfYear] = Double.valueOf(hm.get(s + "+" + String.valueOf(i)));
-                              if (cbqoh.isSelected() && qoh > 0) {
-                                  rm = qty[i-weekOfYear] - qoh;
-                                  if (rm >= 0) {
-                                      qty[i-weekOfYear] = rm;
-                                      qoh = 0;
-                                  } else {
-                                      qty[i-weekOfYear] = 0;
-                                      qoh = rm;
-                                  }
-                              }
-                          } 
-                          if (cbpo.isSelected() && pos.containsKey(s + "+" + String.valueOf(i))) {
-                              if (Double.valueOf(pos.get(s + "+" + String.valueOf(i))) < 0)
-                                qty[i - weekOfYear] += Double.valueOf(pos.get(s + "+" + String.valueOf(i)));
-                              else
-                                qty[i - weekOfYear] -= Double.valueOf(pos.get(s + "+" + String.valueOf(i)));
-                          } 
-                        }
-                        mymodel.addRow(new Object[] {
-                            BlueSeerUtils.clickflag,
-                            s,
-                            qoh,
-                            qty[0],
-                            qty[1],
-                            qty[2],
-                            qty[3],
-                            qty[4],
-                            qty[5],
-                            qty[6],
-                            qty[7],
-                            qty[8],
-                            qty[9],
-                            qty[10],
-                            qty[11]
-                        });
-                        for (double q : qty) {
-                            if (q < 0) {
-                                recoverycost += (q * cost );
-                            }
-                        }
-                    }
-                    
-                    chartpanel.setVisible(false);
-                    bthidechart.setEnabled(false);
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-  
-       
+        getData(); 
     }//GEN-LAST:event_btRunActionPerformed
 
     private void bthidechartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bthidechartActionPerformed
@@ -698,6 +713,7 @@ public class ProjectionBrowse extends javax.swing.JPanel {
 
     private void tablereportMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablereportMouseClicked
         int row = tablereport.rowAtPoint(evt.getPoint());
+        thisrow = row;
         int col = tablereport.columnAtPoint(evt.getPoint());
         if ( col == 0) {
                 chartProjection(setDataSet(tablereport.getValueAt(row, 1).toString(), row));
@@ -705,6 +721,14 @@ public class ProjectionBrowse extends javax.swing.JPanel {
                 chartpanel.setVisible(true);
         }
     }//GEN-LAST:event_tablereportMouseClicked
+
+    private void cbqohActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbqohActionPerformed
+        getData();
+    }//GEN-LAST:event_cbqohActionPerformed
+
+    private void cbpoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbpoActionPerformed
+        getData();
+    }//GEN-LAST:event_cbpoActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
