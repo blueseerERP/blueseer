@@ -3832,7 +3832,7 @@ public class OVData {
           } finally {
                if (res != null) res.close();
                if (st != null) st.close();
-               if (con != null) con.close();
+               con.close();
             }
         } catch (Exception e) {
             MainFrame.bslog(e);
@@ -4168,7 +4168,7 @@ public class OVData {
            } finally {
                if (res != null) res.close();
                if (st != null) st.close();
-               if (con != null) con.close();
+               con.close();
             }
         } catch (Exception e) {
             MainFrame.bslog(e);
@@ -4234,7 +4234,7 @@ public class OVData {
                   return myreturn;
              } 
            
-     public static boolean addGLAcctBalances(ArrayList<String> list) {
+    public static boolean addGLAcctBalances(ArrayList<String> list) {
             boolean myreturn = false;
                   
             
@@ -4280,8 +4280,6 @@ public class OVData {
         }  
                   return myreturn;
        } 
-    
-   
                
     public static boolean addInvAdjustments(ArrayList<String> list) {
                    boolean myreturn = false;
@@ -4566,7 +4564,122 @@ public class OVData {
         return myreturn;
     }
 
-    
+    public static boolean addRoutingMaster(ArrayList<String> list) {
+                 boolean myreturn = false;
+                  try {
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+                
+                int i = 0;
+                String[] ld = null;
+                             
+                               
+                // now loop through colon delimited list and insert into routing master table
+                // skip if already in table.....keys are wf_id and wf_op
+                for (String rec : list) {
+                    ld = rec.split(":", -1);
+                    
+                   res =  st.executeQuery("select wf_id from wf_mstr where " +
+                                    " wf_id = " + "'" + ld[0] + "'" +
+                                    " and wf_op = " + "'" + ld[3] + "'" + ";");
+                    int j = 0;
+                    while (res.next()) {
+                        j++;
+                    }
+                    
+                    if (j == 0) {
+                    st.executeUpdate(" insert into wf_mstr " 
+                      + "(wf_id, wf_desc, wf_site, wf_op, wf_assert, wf_op_desc, wf_cell, wf_setup_hours, wf_run_hours ) "
+                   + " values ( " + 
+                    "'" +  ld[0] + "'" + "," + 
+                    "'" +  ld[1] + "'" + "," +
+                    "'" +  ld[2] + "'" + "," +  
+                    "'" +  ld[3] + "'" + "," +  
+                    "'" +  ld[4] + "'" + "," +  
+                    "'" +  ld[5] + "'" + "," +  
+                    "'" +  ld[6] + "'" + "," +  
+                    "'" +  ld[7] + "'" + "," +
+                    "'" +  ld[8] + "'" +  ");"
+                   );     
+                   }
+                }    
+            } // if proceed
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+                myreturn = true;
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
+        } catch (SQLException e) {
+            MainFrame.bslog(e);
+        }  
+                  return myreturn;
+             } 
+   
+    public static boolean addWorkCenterMaster(ArrayList<String> list) {
+                 boolean myreturn = false;
+                  try {
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+                
+                int i = 0;
+                String[] ld = null;
+                             
+                               
+                // now loop through colon delimited list and insert into workcenter master table
+                // skip if already in table.....keys are wf_id and wf_op
+                for (String rec : list) {
+                    ld = rec.split(":", -1);
+                    
+                   res =  st.executeQuery("select wc_cell from wc_mstr where " +
+                                    " wc_cell = " + "'" + ld[0] + "'" + ";");
+                    int j = 0;
+                    while (res.next()) {
+                        j++;
+                    }
+                    
+                    if (j == 0) {
+                    st.executeUpdate(" insert into wc_mstr " 
+                      + "(wc_cell, wc_desc, wc_site, wc_cc, wc_run_rate, wc_run_crew, wc_setup_rate, wc_setup, wc_bdn_rate, wc_remarks) "
+                   + " values ( " + 
+                    "'" +  ld[0] + "'" + "," + 
+                    "'" +  ld[1] + "'" + "," +
+                    "'" +  ld[2] + "'" + "," +  
+                    "'" +  ld[3] + "'" + "," +  
+                    "'" +  ld[4] + "'" + "," +  
+                    "'" +  ld[5] + "'" + "," +  
+                    "'" +  ld[6] + "'" + "," +  
+                    "'" +  ld[7] + "'" + "," +
+                    "'" +  ld[8] + "'" + "," +        
+                    "'" +  ld[9] + "'" +  ");"
+                   );     
+                   }
+                }    
+            } // if proceed
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+                myreturn = true;
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
+        } catch (SQLException e) {
+            MainFrame.bslog(e);
+        }  
+                  return myreturn;
+             } 
+   
     
         
               

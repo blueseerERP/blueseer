@@ -1,0 +1,5 @@
+AssyCell:Assembly Cell:1000:9999:15.00:1:0:0:10.00:Assembly Line
+PaintCell:Paint Cell:1000:9999:15.00:1:0:0:10.00:Paint Line
+DecalCell:Decaling Misc Cell:1000:9999:15.00:1:0:0:10.00:Decal Line
+PackageCell:Packaging Cell:1000:9999:15.00:1:0:0:10.00:Packaging Line
+WheelCell:Wheel Assembly Cell:1000:9999:15.00:1:0:0:10.00:Wheel Assembly

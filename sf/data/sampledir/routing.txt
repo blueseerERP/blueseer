@@ -1,0 +1,5 @@
+defaultBicycle:Bicycle default operations:1000:10:0:Assembly:AssyCell:0:1
+defaultBicycle:Bicycle default operations:1000:20:0:Paint:PaintCell:0:1
+defaultBicycle:Bicycle default operations:1000:30:0:Decaling:DecalCell:0:15
+defaultBicycle:Bicycle default operations:1000:40:1:Packaging:PackageCell:0:5
+WheelAssembly:Wheel Assembly operation:1000:10:1:Wheel Assembly:WheelCell:0:2

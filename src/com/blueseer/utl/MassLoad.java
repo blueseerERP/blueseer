@@ -1866,6 +1866,205 @@ public class MassLoad extends javax.swing.JPanel {
             
     }
     
+    // Routing master stuff
+    public ArrayList<String> defineRoutingMaster() {
+        ArrayList<String> list = new ArrayList<String>();
+        list.add("wf_id,s,30,mandatory,unvalidated");
+        list.add("wf_desc,s,100,optional,unvalidated");
+        list.add("wf_site,s,10,mandatory,validated");
+        list.add("wf_op,i,8,mandatory,unvalidated");
+        list.add("wf_assert,b,1,mandatory,unvalidated");
+        list.add("wf_op_desc,s,100,optional,unvalidated");
+        list.add("wf_cell,s,20,mandator,validated");
+        list.add("wf_setup_hours,d,13,optional,unvalidated");
+        list.add("wf_run_hours,d,13,optional,unvalidated");
+        return list;
+    }
+    
+    public boolean checkRoutingMaster(String[] rs, int i) {
+        boolean proceed = true;
+        
+        ArrayList<String> list = defineRoutingMaster();
+        if (rs.length != list.size()) {
+                   tacomments.append("line " + i + " does not have correct number of fields. " + String.valueOf(rs.length) + "\n" );
+                   proceed = false;
+        }
+        
+       
+        
+         if (rs.length == list.size()) {
+            
+            String[] ld = null;
+            int j = 0;
+            for (String rec : list) {
+            ld = rec.split(",", -1);
+                if (rs[j].length() > Integer.valueOf(ld[2])) {
+                    tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " field length too long" + "\n" );
+                       proceed = false;
+                }
+                if (ld[1].compareTo("i") == 0 && ! BlueSeerUtils.isParsableToInt(rs[j])) {
+                    tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " field must be of type integer" + "\n" );
+                       proceed = false;
+                }
+                if (ld[1].compareTo("b") == 0 && ! BlueSeerUtils.isParsableToInt(rs[j])) {
+                    tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " must be integer 1 or 0...(true or false)" + "\n" );
+                       proceed = false;
+                }
+                if (ld[1].compareTo("d") == 0 && ! BlueSeerUtils.isParsableToDouble(rs[j])) {
+                    tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " field must be of type double" + "\n" );
+                       proceed = false;
+                }
+                if (ld[0].compareTo("it_site") == 0 && ! OVData.isValidSite(rs[j]) && ! cboverride.isSelected()) {
+                    tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " must be valid site" + "\n" );
+                       proceed = false;
+                }
+               
+                // bsmf.MainFrame.show(rs[j] + " " + String.valueOf(proceed));
+                j++;
+                
+               
+            }
+           
+                   
+        }
+        
+        
+        return proceed;
+    }
+    
+    public String[] processRoutingMaster (File myfile) throws FileNotFoundException, IOException {
+            String[] m = new String[2];
+            tacomments.setText("");
+            boolean proceed = true;
+            boolean temp = true;
+            ArrayList<String> list = new ArrayList<String>();
+            BufferedReader fsr = new BufferedReader(new FileReader(myfile));
+            String line = "";
+            int i = 0;
+            while ((line = fsr.readLine()) != null) {
+                i++;
+                list.add(line);
+               String[] recs = line.split(":", -1);
+               if (ddtable.getSelectedItem().toString().compareTo("Routing Master") == 0) {
+                   temp = checkRoutingMaster(recs, i);
+                   if (! temp) {
+                       proceed = false;
+                       m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
+                   }
+               }
+            }
+            fsr.close();
+             if (proceed) {
+                   if(! OVData.addRoutingMaster(list)) { 
+                       m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151, String.valueOf(i))};
+                   } else {
+                       m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
+                   }
+             }
+             return m;
+    }
+    
+    // WorkCenter master stuff
+    public ArrayList<String> defineWorkCenterMaster() {
+        ArrayList<String> list = new ArrayList<String>();
+        list.add("wc_cell,s,20,mandatory,unvalidated");
+        list.add("wc_desc,s,100,optional,unvalidated");
+        list.add("wc_site,s,10,mandatory,validated");
+        list.add("wc_cc,s,10,mandatory,unvalidated");
+        list.add("wc_run_rate,d,5,mandatory,unvalidated");
+        list.add("wc_run_crew,d,5,mandatory,unvalidated");
+        list.add("wc_setup_rate,d,5,mandatory,unvalidated");
+        list.add("wc_setup,d,5,mandatory,unvalidated");
+        list.add("wc_bdn_rate,d,5,mandatory,unvalidated");
+        list.add("wc_remarks,s,50,optional,unvalidated");
+        return list;
+    }
+    
+    public boolean checkWorkCenterMaster(String[] rs, int i) {
+        boolean proceed = true;
+        
+        ArrayList<String> list = defineWorkCenterMaster();
+        if (rs.length != list.size()) {
+                   tacomments.append("line " + i + " does not have correct number of fields. " + String.valueOf(rs.length) + "\n" );
+                   proceed = false;
+        }
+        
+       
+        
+         if (rs.length == list.size()) {
+            
+            String[] ld = null;
+            int j = 0;
+            for (String rec : list) {
+            ld = rec.split(",", -1);
+                if (rs[j].length() > Integer.valueOf(ld[2])) {
+                    tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " field length too long" + "\n" );
+                       proceed = false;
+                }
+                if (ld[1].compareTo("i") == 0 && ! BlueSeerUtils.isParsableToInt(rs[j])) {
+                    tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " field must be of type integer" + "\n" );
+                       proceed = false;
+                }
+                if (ld[1].compareTo("b") == 0 && ! BlueSeerUtils.isParsableToInt(rs[j])) {
+                    tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " must be integer 1 or 0...(true or false)" + "\n" );
+                       proceed = false;
+                }
+                if (ld[1].compareTo("d") == 0 && ! BlueSeerUtils.isParsableToDouble(rs[j])) {
+                    tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " field must be of type double" + "\n" );
+                       proceed = false;
+                }
+                if (ld[0].compareTo("it_site") == 0 && ! OVData.isValidSite(rs[j]) && ! cboverride.isSelected()) {
+                    tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " must be valid site" + "\n" );
+                       proceed = false;
+                }
+               
+                // bsmf.MainFrame.show(rs[j] + " " + String.valueOf(proceed));
+                j++;
+                
+               
+            }
+           
+                   
+        }
+        
+        
+        return proceed;
+    }
+    
+    public String[] processWorkCenterMaster (File myfile) throws FileNotFoundException, IOException {
+            String[] m = new String[2];
+            tacomments.setText("");
+            boolean proceed = true;
+            boolean temp = true;
+            ArrayList<String> list = new ArrayList<String>();
+            BufferedReader fsr = new BufferedReader(new FileReader(myfile));
+            String line = "";
+            int i = 0;
+            while ((line = fsr.readLine()) != null) {
+                i++;
+                list.add(line);
+               String[] recs = line.split(":", -1);
+               if (ddtable.getSelectedItem().toString().compareTo("WorkCenter Master") == 0) {
+                   temp = checkWorkCenterMaster(recs, i);
+                   if (! temp) {
+                       proceed = false;
+                       m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
+                   }
+               }
+            }
+            fsr.close();
+             if (proceed) {
+                   if(! OVData.addWorkCenterMaster(list)) { 
+                       m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151, String.valueOf(i))};
+                   } else {
+                       m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
+                   }
+             }
+             return m;
+    }
+    
+    
+    
     
     public void auditOnly(File myfile) throws FileNotFoundException, IOException { 
             
@@ -1886,6 +2085,18 @@ public class MassLoad extends javax.swing.JPanel {
                String[] recs = line.split(":", -1);
                if (ddtable.getSelectedItem().toString().compareTo("Item Master") == 0) {
                    temp = checkItemMaster(recs, i);
+                   if (! temp) {
+                       proceed = false;
+                   }
+               }
+               if (ddtable.getSelectedItem().toString().compareTo("Routing Master") == 0) {
+                   temp = checkRoutingMaster(recs, i);
+                   if (! temp) {
+                       proceed = false;
+                   }
+               }
+               if (ddtable.getSelectedItem().toString().compareTo("WorkCenter Master") == 0) {
+                   temp = checkWorkCenterMaster(recs, i);
                    if (! temp) {
                        proceed = false;
                    }
@@ -1993,6 +2204,12 @@ public class MassLoad extends javax.swing.JPanel {
                if (x.compareTo("Item Master") == 0) {
                  m = processItemMaster(myfile);
                }
+               if (x.compareTo("Routing Master") == 0) {
+                 m = processRoutingMaster(myfile);
+               }
+               if (x.compareTo("WorkCenter Master") == 0) {
+                 m = processWorkCenterMaster(myfile);
+               }
                if (x.compareTo("Customer Xref") == 0) {
                 m =  processCustXref(myfile);
                }
@@ -2073,6 +2290,12 @@ public class MassLoad extends javax.swing.JPanel {
         
         if (key.compareTo("Item Master") == 0) { 
              list = defineItemMaster();
+         }
+        if (key.compareTo("Routing Master") == 0) { 
+             list = defineRoutingMaster();
+         }
+        if (key.compareTo("WorkCenter Master") == 0) { 
+             list = defineWorkCenterMaster();
          }
         if (key.compareTo("Generic Code") == 0) { 
              list = defineGenericCode();
@@ -2163,7 +2386,7 @@ public class MassLoad extends javax.swing.JPanel {
         jLabel1.setText("Master Table:");
         jLabel1.setName("lblid"); // NOI18N
 
-        ddtable.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item Master", "BOM Master", "Customer Master", "Customer ShipTo Master", "Customer Xref", "Customer Price List", "Vendor Master", "Vendor Xref", "Vendor Price List", "Inventory Adjustment", "GL Account Balances", "Generic Code", "EDI Partners", "EDI Partner Transactions", "EDI Document Structures", "Carrier Master" }));
+        ddtable.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item Master", "BOM Master", "Customer Master", "Customer ShipTo Master", "Customer Xref", "Customer Price List", "Vendor Master", "Vendor Xref", "Vendor Price List", "Inventory Adjustment", "GL Account Balances", "Generic Code", "EDI Partners", "EDI Partner Transactions", "EDI Document Structures", "Carrier Master", "Routing Master", "WorkCenter Master" }));
         ddtable.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ddtableActionPerformed(evt);
