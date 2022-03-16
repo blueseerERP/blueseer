@@ -124,6 +124,7 @@ public class ProjectionBrowse extends javax.swing.JPanel {
     javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                         new String[]{getGlobalColumnTag("select"), 
                 getGlobalColumnTag("item"), 
+                getGlobalColumnTag("description"),
                 getGlobalColumnTag("qoh"),            
                 getGlobalColumnTag("week+") + "1", 
                 getGlobalColumnTag("week+") + "2", 
@@ -142,7 +143,7 @@ public class ProjectionBrowse extends javax.swing.JPanel {
                       public Class getColumnClass(int col) {  
                         if (col == 0  )       
                             return ImageIcon.class;   
-                        else if (col == 1)
+                        else if (col == 1 || col == 2)
                             return String.class;
                         else return Double.class;  //other columns accept String values  
                       }  
@@ -370,6 +371,7 @@ public class ProjectionBrowse extends javax.swing.JPanel {
                         mymodel.addRow(new Object[] {
                             BlueSeerUtils.clickflag,
                             s,
+                            invData.getItemDesc(s),
                             qoh,
                             qty[0],
                             qty[1],
