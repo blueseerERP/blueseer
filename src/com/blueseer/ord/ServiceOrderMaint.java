@@ -743,7 +743,7 @@ Connection con = DriverManager.getConnection(url + db, user, pass);
     public void itemChangeEvent(String myitem) {
           
          lbdesc.setText(invData.getItemDesc(dditem.getSelectedItem().toString()));
-         tbprice.setText(BlueSeerUtils.bsformat("",String.valueOf(invData.getItemPOSPrice(dditem.getSelectedItem().toString())).replace('.', defaultDecimalSeparator),"2"));
+         tbprice.setText(BlueSeerUtils.bsformat("",String.valueOf(invData.getItemPrice(dditem.getSelectedItem().toString())).replace('.', defaultDecimalSeparator),"2"));
          dduom.setSelectedItem(OVData.getUOMFromItemSite(myitem, ddsite.getSelectedItem().toString()));
      }
      

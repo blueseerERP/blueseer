@@ -4685,6 +4685,8 @@ public class OVData {
    
     public static boolean createSalesOrderData() {
             boolean myreturn = false;
+            ArrayList<String[]> items = invData.getItemsAndPriceByType("FG");
+            
             try {
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
@@ -4697,6 +4699,8 @@ public class OVData {
                 String now = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                 
                 int qty = 0;
+                int count = 0;
+                int itempos = 0;
                 for (int k = 0; k < 15; k++) {
                     duedate[k] = date.plusDays(k + 7);
                 }
@@ -4728,28 +4732,32 @@ public class OVData {
                     "'" +  "1000" + "'" + "," +       
                     "'" +  "0" + "'" +  ");"
                    );  
-                qty = (int) (Math.random() * (200 - 10)) + 10;    
+                count = (int) (Math.random() * (5 - 1)) + 1;
+                
+                for (int z = 0; z <= count; z++ ) {
+                qty = (int) (Math.random() * (200 - 10)) + 10;   
+                itempos = (int) (Math.random() * (5 - 0)) + 0;
                 st.executeUpdate("insert into sod_det "
                             + "(sod_nbr, sod_part, sod_site, sod_po, sod_ord_qty, sod_netprice, "
                             + " sod_listprice, sod_disc, sod_due_date, "
                             + "sod_shipped_qty, sod_custpart, sod_status, sod_line) "
                     + " values ( " + 
                     "'" +  String.valueOf(i + 50100) + "'" + "," + 
-                    "'" +  "10-1001" + "'" + "," +
+                    "'" +  items.get(itempos)[0] + "'" + "," +
                     "'" +  "1000" + "'" + "," +  
                     "'" +  "testpo" + String.valueOf(i + 50100) + "'" + "," +  
                     "'" +  qty + "'" + "," +  
-                    "'" +  "85.50" + "'" + "," +  
-                    "'" +  "85.50" + "'" + "," +  
+                    "'" +  items.get(itempos)[1] + "'" + "," +  
+                    "'" +  items.get(itempos)[1] + "'" + "," +  
                     "'" +  "0" + "'" + "," +
                     "'" +  sduedate + "'" + "," +      
                     "'" +  "0" + "'" + "," + 
                     "'" +  "" + "'" + "," + 
                     "'" +  "open" + "'" + "," +    
-                    "'" +  "1" + "'" +  ");"
-                   );         
-                 
-                }    
+                    "'" +  String.valueOf(z + 1) + "'" +  ");"
+                   );    
+                } // for each sales order det random z
+                } // for each sales order   
             } // if proceed
             catch (SQLException s) {
                 MainFrame.bslog(s);

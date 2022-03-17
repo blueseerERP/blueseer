@@ -198,17 +198,16 @@ public class MassLoad extends javax.swing.JPanel {
     }
     
     
-    public void executeTask(String x, File y) { 
+    public void executeTask(String x, File y, String type) { 
       
-        class Task extends SwingWorker<String[], Void> {
+        class Task extends SwingWorker<String[], Void> { 
        
           String type = "";
           String[] key = null;
           
         
-          public Task(String x, File y) { 
+          public Task(String x, File y, String type) { 
               this.type = type;
-              this.key = key;
           }
            
         @Override
@@ -217,8 +216,11 @@ public class MassLoad extends javax.swing.JPanel {
             message[0] = "";
             message[1] = "";
             
+            if (type.equals("testdata")) {
+            message = loadTestData();    
+            } else {
             message = processfile(x, y);
-             
+            }
             
             return message;
         }
@@ -241,7 +243,7 @@ public class MassLoad extends javax.swing.JPanel {
     }  
       
        BlueSeerUtils.startTask(new String[]{"","Running..."});
-       Task z = new Task(x,y); 
+       Task z = new Task(x,y,type); 
        z.execute(); 
        
     }
@@ -2352,6 +2354,48 @@ public class MassLoad extends javax.swing.JPanel {
             tacomments.setCaretPosition(0);
     }
     
+    public String[] loadTestData() {
+        String[] m = new String[2];
+         boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
+        if (proceed) {
+            String filename = "c:\\bs\\blueseer\\sf\\data\\sampledir\\workcenter.txt";
+            File file = new File(filename);
+             try {
+                 processWorkCenterMaster(file);
+             } catch (IOException ex) {
+                 bsmf.MainFrame.show(getMessageTag(1145,filename));
+             }
+            filename = "c:\\bs\\blueseer\\sf\\data\\sampledir\\routing.txt";
+            file = new File(filename);
+             try {
+                 processRoutingMaster(file);
+             } catch (IOException ex) {
+                 bsmf.MainFrame.show(getMessageTag(1145,filename));
+             }
+             filename = "c:\\bs\\blueseer\\sf\\data\\sampledir\\itemmstr.txt";
+            file = new File(filename);
+             try {
+                 processItemMaster(file);
+             } catch (IOException ex) {
+                 bsmf.MainFrame.show(getMessageTag(1145,filename));
+             }
+             filename = "c:\\bs\\blueseer\\sf\\data\\sampledir\\bommstr.txt";
+            file = new File(filename);
+             try {
+                 processBOMMaster(file);
+             } catch (IOException ex) {
+                 bsmf.MainFrame.show(getMessageTag(1145,filename));
+             }
+             
+            
+             if (createSalesOrderData()) {
+                 m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+             } else {
+                 m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordError};
+             }
+        }
+        return m;
+    }
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -2469,7 +2513,7 @@ public class MassLoad extends javax.swing.JPanel {
     private void btuploadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btuploadActionPerformed
         File myfile = getfile();
         setPanelComponentState(this, false);
-        executeTask(ddtable.getSelectedItem().toString(), myfile);
+        executeTask(ddtable.getSelectedItem().toString(), myfile, "");
         setPanelComponentState(this, true);
     }//GEN-LAST:event_btuploadActionPerformed
 
@@ -2482,39 +2526,9 @@ public class MassLoad extends javax.swing.JPanel {
     }//GEN-LAST:event_btdescribeActionPerformed
 
     private void bttestdataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bttestdataActionPerformed
-         boolean proceed = bsmf.MainFrame.warn("Are you sure you want to load default test data?");
-        if (proceed) {
-            String filename = "c:\\bs\\blueseer\\sf\\data\\sampledir\\workcenter.txt";
-            File file = new File(filename);
-             try {
-                 processWorkCenterMaster(file);
-             } catch (IOException ex) {
-                 bsmf.MainFrame.show("file not found: " + filename);
-             }
-            filename = "c:\\bs\\blueseer\\sf\\data\\sampledir\\routing.txt";
-            file = new File(filename);
-             try {
-                 processRoutingMaster(file);
-             } catch (IOException ex) {
-                 bsmf.MainFrame.show("file not found: " + filename);
-             }
-             filename = "c:\\bs\\blueseer\\sf\\data\\sampledir\\itemmstr.txt";
-            file = new File(filename);
-             try {
-                 processItemMaster(file);
-             } catch (IOException ex) {
-                 bsmf.MainFrame.show("file not found: " + filename);
-             }
-             filename = "c:\\bs\\blueseer\\sf\\data\\sampledir\\bommstr.txt";
-            file = new File(filename);
-             try {
-                 processBOMMaster(file);
-             } catch (IOException ex) {
-                 bsmf.MainFrame.show("file not found: " + filename);
-             }
-             
-             createSalesOrderData();
-        }
+      setPanelComponentState(this, false);
+        executeTask("", null, "testdata");
+        setPanelComponentState(this, true);  
     }//GEN-LAST:event_bttestdataActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

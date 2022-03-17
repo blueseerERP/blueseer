@@ -149,7 +149,7 @@ public class POSMaint extends javax.swing.JPanel {
             String mypart = "";
             if (dditem.getItemCount() > 0) {
                 mypart = dditem.getSelectedItem().toString();
-                tblistprice.setText(currformatDouble(invData.getItemPOSPrice(dditem.getSelectedItem().toString())));
+                tblistprice.setText(currformatDouble(invData.getItemPrice(dditem.getSelectedItem().toString())));
                 tbdisc.setText(currformatDouble(invData.getItemPOSDisc(dditem.getSelectedItem().toString())));
                 dditem.setForeground(Color.blue);
                 setnetprice();

@@ -1342,6 +1342,38 @@ public class invData {
 
         }
 
+    public static double getItemPrice(String item) {
+       double price = 0;
+     try{
+        Class.forName(driver).newInstance();
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+            ResultSet res = null;
+        try{
+            res = st.executeQuery("select it_sell_price from item_mstr where it_item = " + "'" + item + "'" + ";" );
+           while (res.next()) {
+            price = res.getDouble("it_sell_price");                    
+            }
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+          }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return price;
+
+    }
+    
     public static ArrayList getItemMaintInit() {
                ArrayList myarray = new ArrayList();
              try{
@@ -1624,7 +1656,7 @@ public class invData {
     return myitem;
 
     }
-
+    
     public static String getItemSite(String item) {
     String myreturn = "";
     try{
@@ -1895,38 +1927,7 @@ public class invData {
 
     }    
 
-    public static double getItemPOSPrice(String item) {
-       double price = 0;
-     try{
-        Class.forName(driver).newInstance();
-        Connection con = DriverManager.getConnection(url + db, user, pass);
-        Statement st = con.createStatement();
-            ResultSet res = null;
-        try{
-            res = st.executeQuery("select it_sell_price from item_mstr where it_item = " + "'" + item + "'" + ";" );
-           while (res.next()) {
-            price = res.getDouble("it_sell_price");                    
-            }
-       }
-        catch (SQLException s){
-             MainFrame.bslog(s);
-        } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-          }
-    }
-    catch (Exception e){
-        MainFrame.bslog(e);
-    }
-    return price;
-
-    }
-
+    
     public static double getItemPOSDisc(String item) {
        double price = 0;
      try{
@@ -2811,6 +2812,41 @@ public class invData {
 
                 }
 
+           }
+            catch (SQLException s){
+                  MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+          }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return myarray;
+
+    }
+
+    public static ArrayList<String[]> getItemsAndPriceByType(String type) {
+       ArrayList<String[]> myarray = new ArrayList<String[]>();
+        try{
+           Class.forName(driver).newInstance();
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+                    ResultSet res = null;
+            try{
+              
+                res = st.executeQuery("select it_item, it_sell_price from item_mstr where it_type = " + "'" + type + "'" +
+                        " order by it_item ;");
+
+               while (res.next()) {
+                    myarray.add(new String[]{res.getString("it_item"), res.getString("it_sell_price")});
+                }
            }
             catch (SQLException s){
                   MainFrame.bslog(s);
