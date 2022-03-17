@@ -32,6 +32,7 @@ import com.blueseer.inv.invData;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import static com.blueseer.utl.OVData.createSalesOrderData;
 import java.awt.Component;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -2370,6 +2371,7 @@ public class MassLoad extends javax.swing.JPanel {
         tacomments = new javax.swing.JTextArea();
         btdescribe = new javax.swing.JButton();
         cboverride = new javax.swing.JCheckBox();
+        bttestdata = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -2408,6 +2410,14 @@ public class MassLoad extends javax.swing.JPanel {
         cboverride.setText("Menu Integrity Override");
         cboverride.setName("cboverride"); // NOI18N
 
+        bttestdata.setText("Test Data");
+        bttestdata.setName("bttestdata"); // NOI18N
+        bttestdata.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bttestdataActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -2422,6 +2432,9 @@ public class MassLoad extends javax.swing.JPanel {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(20, 20, 20)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(bttestdata)
+                                .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(cboverride)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -2445,7 +2458,9 @@ public class MassLoad extends javax.swing.JPanel {
                     .addComponent(btupload)
                     .addComponent(btdescribe)
                     .addComponent(cboverride))
-                .addGap(30, 30, 30))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(bttestdata)
+                .addContainerGap())
         );
 
         add(jPanel1);
@@ -2466,8 +2481,45 @@ public class MassLoad extends javax.swing.JPanel {
        describeFile(ddtable.getSelectedItem().toString());
     }//GEN-LAST:event_btdescribeActionPerformed
 
+    private void bttestdataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bttestdataActionPerformed
+         boolean proceed = bsmf.MainFrame.warn("Are you sure you want to load default test data?");
+        if (proceed) {
+            String filename = "c:\\bs\\blueseer\\sf\\data\\sampledir\\workcenter.txt";
+            File file = new File(filename);
+             try {
+                 processWorkCenterMaster(file);
+             } catch (IOException ex) {
+                 bsmf.MainFrame.show("file not found: " + filename);
+             }
+            filename = "c:\\bs\\blueseer\\sf\\data\\sampledir\\routing.txt";
+            file = new File(filename);
+             try {
+                 processRoutingMaster(file);
+             } catch (IOException ex) {
+                 bsmf.MainFrame.show("file not found: " + filename);
+             }
+             filename = "c:\\bs\\blueseer\\sf\\data\\sampledir\\itemmstr.txt";
+            file = new File(filename);
+             try {
+                 processItemMaster(file);
+             } catch (IOException ex) {
+                 bsmf.MainFrame.show("file not found: " + filename);
+             }
+             filename = "c:\\bs\\blueseer\\sf\\data\\sampledir\\bommstr.txt";
+            file = new File(filename);
+             try {
+                 processBOMMaster(file);
+             } catch (IOException ex) {
+                 bsmf.MainFrame.show("file not found: " + filename);
+             }
+             
+             createSalesOrderData();
+        }
+    }//GEN-LAST:event_bttestdataActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btdescribe;
+    private javax.swing.JButton bttestdata;
     private javax.swing.JButton btupload;
     private javax.swing.JCheckBox cboverride;
     private javax.swing.JComboBox ddtable;

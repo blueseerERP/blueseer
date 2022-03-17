@@ -108,6 +108,9 @@ import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.sql.PreparedStatement;
 import java.sql.Savepoint;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.LinkedHashSet;
 import java.util.Map.Entry;
 import java.util.TreeMap;
@@ -4680,7 +4683,140 @@ public class OVData {
                   return myreturn;
              } 
    
-    
+    public static boolean createSalesOrderData() {
+            boolean myreturn = false;
+            try {
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+                
+                LocalDate date = LocalDate.now();
+                LocalDate[] duedate = new LocalDate[15];
+                String now = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                
+                int qty = 0;
+                for (int k = 0; k < 15; k++) {
+                    duedate[k] = date.plusDays(k + 7);
+                }
+                String sduedate = duedate[0].format(DateTimeFormatter.ofPattern("yyyy-MM-dd")); ;
+                for (int i = 0; i <= 100; i++) {
+                    if ((i % 7) == 0) {
+                      sduedate = duedate[i / 7].format(DateTimeFormatter.ofPattern("yyyy-MM-dd")); 
+                    } 
+                    st.executeUpdate(" insert into so_mstr " 
+                    + "(so_nbr, so_cust, so_ship, so_po, so_ord_date, so_due_date, " 
+                    + "so_create_date, so_userid, so_status,"
+                    + "so_rmks, so_terms, so_ar_acct, so_ar_cc, so_shipvia, so_type, so_site, so_onhold ) "
+                    + " values ( " + 
+                    "'" +  String.valueOf(i + 50100) + "'" + "," + 
+                    "'" +  "cash" + "'" + "," +
+                    "'" +  "cash" + "'" + "," +  
+                    "'" +  "testpo" + String.valueOf(i + 50100) + "'" + "," +  
+                    "'" +  now + "'" + "," +  
+                    "'" +  sduedate + "'" + "," +  
+                    "'" +  now + "'" + "," +  
+                    "'" +  "admin" + "'" + "," +
+                    "'" +  "open" + "'" + "," +      
+                    "'" +  "" + "'" + "," + 
+                    "'" +  "N30" + "'" + "," + 
+                    "'" +  "20000000" + "'" + "," + 
+                    "'" +  "9999" + "'" + "," + 
+                    "'" +  "" + "'" + "," + 
+                    "'" +  "DISCRETE" + "'" + "," + 
+                    "'" +  "1000" + "'" + "," +       
+                    "'" +  "0" + "'" +  ");"
+                   );  
+                qty = (int) (Math.random() * (200 - 10)) + 10;    
+                st.executeUpdate("insert into sod_det "
+                            + "(sod_nbr, sod_part, sod_site, sod_po, sod_ord_qty, sod_netprice, "
+                            + " sod_listprice, sod_disc, sod_due_date, "
+                            + "sod_shipped_qty, sod_custpart, sod_status, sod_line) "
+                    + " values ( " + 
+                    "'" +  String.valueOf(i + 50100) + "'" + "," + 
+                    "'" +  "10-1001" + "'" + "," +
+                    "'" +  "1000" + "'" + "," +  
+                    "'" +  "testpo" + String.valueOf(i + 50100) + "'" + "," +  
+                    "'" +  qty + "'" + "," +  
+                    "'" +  "85.50" + "'" + "," +  
+                    "'" +  "85.50" + "'" + "," +  
+                    "'" +  "0" + "'" + "," +
+                    "'" +  sduedate + "'" + "," +      
+                    "'" +  "0" + "'" + "," + 
+                    "'" +  "" + "'" + "," + 
+                    "'" +  "open" + "'" + "," +    
+                    "'" +  "1" + "'" +  ");"
+                   );         
+                 
+                }    
+            } // if proceed
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+                myreturn = true;
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
+        } catch (SQLException e) {
+            MainFrame.bslog(e);
+        }  
+                  return myreturn;
+             } 
+   
+    public static boolean addSalesOrderDetail(ArrayList<String> list) {
+                 boolean myreturn = false;
+                  try {
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+                
+                int i = 0;
+                String[] ld = null;
+               
+                for (String rec : list) {
+                    ld = rec.split(":", -1);
+                    st.executeUpdate("insert into sod_det "
+                            + "(sod_nbr, sod_part, sod_site, sod_po, sod_ord_qty, sod_netprice, "
+                            + " sod_listprice, sod_disc, sod_due_date, "
+                            + "sod_shipped_qty, sod_custpart, sod_status, sod_line) "
+                    + " values ( " + 
+                    "'" +  ld[0] + "'" + "," + 
+                    "'" +  ld[1] + "'" + "," +
+                    "'" +  ld[2] + "'" + "," +  
+                    "'" +  ld[3] + "'" + "," +  
+                    "'" +  ld[4] + "'" + "," +  
+                    "'" +  ld[5] + "'" + "," +  
+                    "'" +  ld[6] + "'" + "," +  
+                    "'" +  ld[7] + "'" + "," +
+                    "'" +  ld[8] + "'" + "," +      
+                    "'" +  ld[9] + "'" + "," + 
+                    "'" +  ld[10] + "'" + "," + 
+                    "'" +  ld[11] + "'" + "," +    
+                    "'" +  ld[12] + "'" +  ");"
+                   );     
+                 
+                }    
+            } // if proceed
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+                myreturn = true;
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
+        } catch (SQLException e) {
+            MainFrame.bslog(e);
+        }  
+                  return myreturn;
+             } 
+   
         
               
                
