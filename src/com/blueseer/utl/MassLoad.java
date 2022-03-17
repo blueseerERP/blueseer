@@ -2356,8 +2356,6 @@ public class MassLoad extends javax.swing.JPanel {
     
     public String[] loadTestData() {
         String[] m = new String[2];
-         boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
-        if (proceed) {
             String filename = "c:\\bs\\blueseer\\sf\\data\\sampledir\\workcenter.txt";
             File file = new File(filename);
              try {
@@ -2393,7 +2391,7 @@ public class MassLoad extends javax.swing.JPanel {
              } else {
                  m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordError};
              }
-        }
+       
         return m;
     }
     
@@ -2526,9 +2524,12 @@ public class MassLoad extends javax.swing.JPanel {
     }//GEN-LAST:event_btdescribeActionPerformed
 
     private void bttestdataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bttestdataActionPerformed
-      setPanelComponentState(this, false);
+       boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
+        if (proceed) {
+        setPanelComponentState(this, false);
         executeTask("", null, "testdata");
         setPanelComponentState(this, true);  
+        }
     }//GEN-LAST:event_bttestdataActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

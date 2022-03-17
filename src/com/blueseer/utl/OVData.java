@@ -4684,7 +4684,7 @@ public class OVData {
              } 
    
     public static boolean createSalesOrderData() {
-            boolean myreturn = false;
+            boolean myreturn = true;
             ArrayList<String[]> items = invData.getItemsAndPriceByType("FG");
             
             try {
@@ -4693,19 +4693,21 @@ public class OVData {
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
-                
-                LocalDate date = LocalDate.now();
-                LocalDate[] duedate = new LocalDate[15];
+                LocalDate lt = LocalDate.now();
+                int year = lt.getYear(); 
+                LocalDate date = lt.ofYearDay(year, 1);
+               // LocalDate date = LocalDate.parse("2022-01-01");
+                LocalDate[] duedate = new LocalDate[53];
                 String now = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                 
                 int qty = 0;
                 int count = 0;
                 int itempos = 0;
-                for (int k = 0; k < 15; k++) {
-                    duedate[k] = date.plusDays(k + 7);
+                for (int k = 0; k < 53; k++) {
+                    duedate[k] = date.plusDays(k * 7);
                 }
                 String sduedate = duedate[0].format(DateTimeFormatter.ofPattern("yyyy-MM-dd")); ;
-                for (int i = 0; i <= 100; i++) {
+                for (int i = 0; i <= 365; i++) {
                     if ((i % 7) == 0) {
                       sduedate = duedate[i / 7].format(DateTimeFormatter.ofPattern("yyyy-MM-dd")); 
                     } 
@@ -4762,7 +4764,7 @@ public class OVData {
             catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-                myreturn = true;
+                myreturn = false;
            } finally {
                if (res != null) res.close();
                if (st != null) st.close();
@@ -4770,6 +4772,7 @@ public class OVData {
             }
         } catch (SQLException e) {
             MainFrame.bslog(e);
+            myreturn = false;
         }  
                   return myreturn;
              } 
