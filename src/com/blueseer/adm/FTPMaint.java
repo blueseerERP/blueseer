@@ -162,6 +162,8 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
              tbkey.requestFocus();
            } else if (this.type.equals("get") && message[0].equals("0")) {
              tbkey.requestFocus();
+           } else if (this.type.equals("update") && message[0].equals("0")) {
+             initvars(key);    
            } else {
              initvars(null);  
            }
@@ -497,7 +499,7 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
          FTPClient client = new FTPClient();
          
         
-         talog.setText("");
+         
          
          FileOutputStream in = null;
          
@@ -999,6 +1001,7 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
     }//GEN-LAST:event_btlookupActionPerformed
 
     private void btrunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btrunActionPerformed
+        talog.setText("");
         runClient(tbkey.getText());
     }//GEN-LAST:event_btrunActionPerformed
 
