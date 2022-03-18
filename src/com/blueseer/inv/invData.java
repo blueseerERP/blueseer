@@ -2841,11 +2841,23 @@ public class invData {
                     ResultSet res = null;
             try{
               
-                res = st.executeQuery("select it_item, it_sell_price from item_mstr where it_type = " + "'" + type + "'" +
+                res = st.executeQuery("select it_item, it_code, it_sell_price, it_pur_price, it_uom, it_desc from item_mstr where it_type = " + "'" + type + "'" +
                         " order by it_item ;");
 
                while (res.next()) {
-                    myarray.add(new String[]{res.getString("it_item"), res.getString("it_sell_price")});
+                    if (res.getString("it_code").equals("P")) {
+                     myarray.add(new String[]{res.getString("it_item"), 
+                         res.getString("it_pur_price"),
+                         res.getString("it_uom"),
+                         res.getString("it_desc")
+                     });
+                    } else {
+                     myarray.add(new String[]{res.getString("it_item"), 
+                         res.getString("it_sell_price"),
+                         res.getString("it_uom"),
+                         res.getString("it_desc")
+                     });   
+                    }
                 }
            }
             catch (SQLException s){
@@ -3131,29 +3143,28 @@ public class invData {
     return qty;
 }
 
-    public static double getBOMComponentRecursive(String item, String comp, double perqty, String bom)  {
+    public static double getBOMComponentRecursive(String item, String comp, String bom)  { 
         String[] newitem = item.split("___");
         ArrayList<String> mylist = new ArrayList<String>();
         if (! bom.isEmpty()) {
         mylist = OVData.getpsmstrlist(newitem[0], bom);
         } else {
-        mylist = OVData.getpsmstrlist(newitem[0]);    
+        mylist = OVData.getpsmstrlist(newitem[0]);     
         }
-        double parentqty = 0;
+        double perqty = 0;
         for ( String myvalue : mylist) {
             String[] value = myvalue.toUpperCase().split(",");
               if (value[0].toUpperCase().compareTo(newitem[0].toUpperCase().toString()) == 0) {
-                  if (value[2].toUpperCase().compareTo("M") == 0) {
-                    parentqty = perqty * Double.valueOf(value[3]);
-                    getBOMComponentRecursive(value[1] + "___" + value[4] + "___" + value[3], comp, parentqty, "");
+                   if (value[2].toUpperCase().compareTo("M") == 0) {
+                    perqty += (getBOMComponentRecursive(value[1] + "___" + value[4] + "___" + value[3], comp, "") * Double.valueOf(value[3]));
                   } else {
                     if (value[1].equals(comp))  {
-                       parentqty = perqty * Double.valueOf(value[3]);
+                       perqty += Double.valueOf(value[3]);
                     }
                   }
               } 
         }
-       return parentqty;
+       return perqty;
      }
     
     

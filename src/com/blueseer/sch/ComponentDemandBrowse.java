@@ -560,7 +560,7 @@ public class ComponentDemandBrowse extends javax.swing.JPanel {
                 // tablereport.getColumnModel().getColumn(8).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
             double qtyper = 0; 
             for (String p : set) {
-              qtyper = invData.getBOMComponentRecursive(p, dditem.getSelectedItem().toString(), 1, OVData.getDefaultBomID(p));     
+              qtyper = invData.getBOMComponentRecursive(p, dditem.getSelectedItem().toString(), OVData.getDefaultBomID(p));     
               mx.put(p, qtyper);
             }
             for (String p : set) {

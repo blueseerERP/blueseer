@@ -4683,7 +4683,7 @@ public class OVData {
                   return myreturn;
              } 
    
-    public static boolean createSalesOrderData() {
+    public static boolean createTestData() {
             boolean myreturn = true;
             ArrayList<String[]> items = invData.getItemsAndPriceByType("FG");
             
@@ -4741,7 +4741,7 @@ public class OVData {
                 itempos = (int) (Math.random() * (5 - 0)) + 0;
                 st.executeUpdate("insert into sod_det "
                             + "(sod_nbr, sod_part, sod_site, sod_po, sod_ord_qty, sod_netprice, "
-                            + " sod_listprice, sod_disc, sod_due_date, "
+                            + " sod_listprice, sod_disc, sod_due_date, sod_uom, sod_desc, "
                             + "sod_shipped_qty, sod_custpart, sod_status, sod_line) "
                     + " values ( " + 
                     "'" +  String.valueOf(i + 50100) + "'" + "," + 
@@ -4752,14 +4752,74 @@ public class OVData {
                     "'" +  items.get(itempos)[1] + "'" + "," +  
                     "'" +  items.get(itempos)[1] + "'" + "," +  
                     "'" +  "0" + "'" + "," +
-                    "'" +  sduedate + "'" + "," +      
+                    "'" +  sduedate + "'" + "," +   
+                    "'" +  items.get(itempos)[2] + "'" + "," +
+                    "'" +  items.get(itempos)[3] + "'" + "," +        
                     "'" +  "0" + "'" + "," + 
                     "'" +  "" + "'" + "," + 
                     "'" +  "open" + "'" + "," +    
                     "'" +  String.valueOf(z + 1) + "'" +  ");"
                    );    
                 } // for each sales order det random z
-                } // for each sales order   
+                } // for each sales order 
+                
+                // Now lets do Purchase Orders
+                items = invData.getItemsAndPriceByType("RAW");
+                for (int i = 0; i <= 365; i++) {
+                    if ((i % 7) == 0) {
+                      sduedate = duedate[i / 7].format(DateTimeFormatter.ofPattern("yyyy-MM-dd")); 
+                    } 
+                    st.executeUpdate(" insert into po_mstr " 
+                    + "(po_nbr, po_vend, po_site, po_type, " 
+                        + " po_curr, po_buyer, po_due_date, "
+                        + " po_ord_date, po_userid, po_status,"
+                        + " po_terms, po_ap_acct, po_ap_cc, po_rmks ) "
+                    + " values ( " + 
+                    "'" +  String.valueOf(i + 70100) + "'" + "," + 
+                    "'" +  "cash" + "'" + "," +
+                    "'" +  "1000" + "'" + "," +  
+                    "'" +  "DISCRETE" + "'" + "," + 
+                    "'" +  OVData.getDefaultCurrency() + "'" + "," +   
+                    "'" +  "admin" + "'" + "," +  
+                    "'" +  sduedate + "'" + "," +  
+                    "'" +  now + "'" + "," +  
+                    "'" +  "admin" + "'" + "," +
+                    "'" +  "open" + "'" + "," + 
+                    "'" +  "N30" + "'" + "," + 
+                    "'" +  "30000000" + "'" + "," + 
+                    "'" +  "9999" + "'" + "," + 
+                    "'" +  "someremarks" + "'" +  ");"
+                   );  
+                count = (int) (Math.random() * (5 - 1)) + 1;
+                for (int z = 0; z <= count; z++ ) {
+                qty = (int) (Math.random() * (200 - 10)) + 10;   
+                itempos = (int) (Math.random() * (10 - 0)) + 0;
+                st.executeUpdate("insert into pod_mstr "
+                            + "(pod_nbr, pod_line, pod_part, pod_vendpart, "
+                            + " pod_ord_qty, pod_uom, pod_listprice, pod_disc, "
+                            + " pod_netprice, pod_ord_date, pod_due_date, "
+                            + "pod_rcvd_qty, pod_status, pod_site, pod_desc) "
+                    + " values ( " + 
+                    "'" +  String.valueOf(i + 70100) + "'" + "," + 
+                    "'" +  String.valueOf(z + 1) + "'" + "," + 
+                    "'" +  items.get(itempos)[0] + "'" + "," +
+                    "'" +  "" + "'" + "," + 
+                    "'" +  qty + "'" + "," +  
+                    "'" +  items.get(itempos)[2] + "'" + "," + 
+                    "'" +  items.get(itempos)[1] + "'" + "," + 
+                    "'" +  "0" + "'" + "," +        
+                    "'" +  items.get(itempos)[1] + "'" + "," +  
+                    "'" +  now + "'" + "," +
+                    "'" +  sduedate + "'" + "," +        
+                    "'" +  "0" + "'" + "," + 
+                    "'" +  "open" + "'" + "," +   
+                    "'" +  "1000" + "'" + "," +        
+                    "'" +  items.get(itempos)[3] + "'" +  ");"
+                   );    
+                } // for each purchase order det random z
+                } // for each purchase order 
+                
+                
             } // if proceed
             catch (SQLException s) {
                 MainFrame.bslog(s);

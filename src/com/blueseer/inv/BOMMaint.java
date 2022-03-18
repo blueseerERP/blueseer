@@ -614,10 +614,11 @@ public class BOMMaint extends javax.swing.JPanel {
         boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
       DefaultMutableTreeNode comp = null;  
       Object o = jTree1.getLastSelectedPathComponent();
-      if (o != null && (level((TreeNode)jTree1.getModel().getRoot(), (TreeNode)o) == 2)) {
+  //    if (o != null && (level((TreeNode)jTree1.getModel().getRoot(), (TreeNode)o) == 2)) {
+      if (o != null) {
        comp = (DefaultMutableTreeNode)o;
       }
-      if (proceed && comp != null) {
+      if (proceed && comp != null && comp.getLevel() == 2) {
          m = deletePBM(createRecord(comp.toString()), createRecordBomMstr(), OVData.getBomPbmCount(BomID)); 
          updateCurrentItemCost(tbkey.getText());  
       } else {
@@ -1813,8 +1814,8 @@ public class BOMMaint extends javax.swing.JPanel {
      //   bsmf.MainFrame.show("root:" + jTree1.getModel().getRoot());
      //   bsmf.MainFrame.show("isLeaf:" + jTree1.getModel().isLeaf(jTree1.getLastSelectedPathComponent()));
          
-     //   Integer level = level((TreeNode)jTree1.getModel().getRoot(), (TreeNode)jTree1.getLastSelectedPathComponent());
-     //   bsmf.MainFrame.show("Level:" + level);
+    //    Integer level = level((TreeNode)jTree1.getModel().getRoot(), (TreeNode)jTree1.getLastSelectedPathComponent());
+    //    bsmf.MainFrame.show("Level:" + level);
      
      
             tbrunrate.setText("");
@@ -1839,7 +1840,7 @@ public class BOMMaint extends javax.swing.JPanel {
        if (o != null) {
         DefaultMutableTreeNode node = (DefaultMutableTreeNode)o;
         DefaultMutableTreeNode parent = (DefaultMutableTreeNode)node.getParent();
-        
+      //  bsmf.MainFrame.show(node.getLevel() + "/" + node.getDepth());
         // let's lookup Operation elements if parent operation is clicked on
         if (parent != null && (level((TreeNode)jTree1.getModel().getRoot(), (TreeNode)o) == 1) && (parent.toString().equals(tbkey.getText()))) {
             String[] e = OVData.getBOMParentOpElements(parent.toString(), node.toString());
@@ -1874,7 +1875,8 @@ public class BOMMaint extends javax.swing.JPanel {
         }
         
          // let's set child selection fields and enable update/delete for immediate children only
-        if (parent != null && (level((TreeNode)jTree1.getModel().getRoot(), (TreeNode)o) == 2) ) {
+      //  if (parent != null && (level((TreeNode)jTree1.getModel().getRoot(), (TreeNode)o) == 2) && (parent.toString().equals(tbkey.getText())) ) {
+          if (parent != null && node.getLevel() == 2) {
            btupdate.setEnabled(true);
            btdelete.setEnabled(true);
            setcomponentattributes(tbkey.getText(), node.toString(), parent.toString(), tbbomid.getText());

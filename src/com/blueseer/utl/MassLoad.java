@@ -32,7 +32,7 @@ import com.blueseer.inv.invData;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
-import static com.blueseer.utl.OVData.createSalesOrderData;
+import static com.blueseer.utl.OVData.createTestData;
 import java.awt.Component;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -197,6 +197,9 @@ public class MassLoad extends javax.swing.JPanel {
        isLoad = false;
     }
     
+    public void setState() {
+        setPanelComponentState(this, true);
+    }
     
     public void executeTask(String x, File y, String type) { 
       
@@ -221,7 +224,6 @@ public class MassLoad extends javax.swing.JPanel {
             } else {
             message = processfile(x, y);
             }
-            
             return message;
         }
  
@@ -233,18 +235,17 @@ public class MassLoad extends javax.swing.JPanel {
                 message[0] = "1"; // cancel upload
             }
             BlueSeerUtils.endTask(message);
-            // initvars(null);  
-             
+            setState(); 
             } catch (Exception e) {
                 MainFrame.bslog(e);
             } 
-           
         }
     }  
       
        BlueSeerUtils.startTask(new String[]{"","Running..."});
        Task z = new Task(x,y,type); 
-       z.execute(); 
+       z.execute();
+       
        
     }
    
@@ -2386,7 +2387,7 @@ public class MassLoad extends javax.swing.JPanel {
              }
              
             
-             if (createSalesOrderData()) {
+             if (createTestData()) { 
                  m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
              } else {
                  m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordError};
@@ -2512,7 +2513,6 @@ public class MassLoad extends javax.swing.JPanel {
         File myfile = getfile();
         setPanelComponentState(this, false);
         executeTask(ddtable.getSelectedItem().toString(), myfile, "");
-        setPanelComponentState(this, true);
     }//GEN-LAST:event_btuploadActionPerformed
 
     private void ddtableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddtableActionPerformed
@@ -2528,7 +2528,7 @@ public class MassLoad extends javax.swing.JPanel {
         if (proceed) {
         setPanelComponentState(this, false);
         executeTask("", null, "testdata");
-        setPanelComponentState(this, true);  
+        
         }
     }//GEN-LAST:event_bttestdataActionPerformed
 
