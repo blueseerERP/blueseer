@@ -318,6 +318,7 @@ public class ComponentDemandBrowse extends javax.swing.JPanel {
         detailpanel.setVisible(false);
         
        isLoad = false;
+       if (dditem.getItemCount() > 0)
        dditem.setSelectedIndex(0);
           
     }
