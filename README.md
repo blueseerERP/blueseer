@@ -2,8 +2,8 @@
 <!-- <img class="logo" width="100px" height="100px" src="https://www.blueseer.com/img/bs.png" alt="Free ERP"> -->
 <a href="https://foojay.io/today/works-with-openjdk"><img align="right" src="https://github.com/foojayio/badges/raw/main/works_with_openjdk/Works-with-OpenJDK.png" width="100"></a>
 <h3>Developer: Terry Vaughn</h3>
-<h3>latest release version: 6.0</h3>
-<h3>latest release date: 2021-12-01</h3>
+<h3>latest release version: 6.1</h3>
+<h3>latest release date: 2021-03-21</h3>
 <h3>programming language: Java programming language</h3> 
 <h3>operating system: Cross-Platform</h3>
 <h3>genre:  Enterprise Resource Planning (ERP), EDI, Accounting, Personal Finance</h3> 
@@ -20,7 +20,7 @@ extendable while providing generic functionality that is typically observed in
 most manufacturing environments.  BlueSeer also provides a fully functional EDI mapping tool for EDI translations and file traffic monitoring. 
 BlueSeer is released for free use under the MIT License.   The application and source code
 are available for download at github.com.  The development of BlueSeer
-began in 2005, and the latest 'stable' release of version 6.0 was released on December 1st 2021.</br>
+began in 2005, and the latest 'stable' release of version 6.1 was released on March 21st 2022.</br>
 
 <h1>Functionality</h1>
 
