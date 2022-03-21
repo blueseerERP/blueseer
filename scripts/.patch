@@ -1,31 +1,8 @@
-# Version 6.0 Patch file
+# Version 6.1 Patch file
 #
 # bszip.ps1 maintains a running account of patches.   All lines in the patch file will be commented out except the
 # current patch.   There can only be one line starting with 'patch=' in the .patch file rolling forward.
 # Once a new patch is added with comments...the previous patch= is commented out
 #
 patch=0
-# First release of 6.0
-patch=1
-# Bug fix(s) 1 - 16 included on version 6.0
-patch=2
-# Bug fix(s) 17-18 ...18 hotfix
-patch=3
-# Bug fix(s) 19-20 ...
-patch=4
-# Bug fix 21-23
-patch=5
-# BOM field label adjustments and item browse column addition
-# Bug fix 24
-patch=6
-# invoice jasper update and bug fix 25
-patch=7
-# tax related bug fixes (#26)
-patch=8
-# bug fix #28, enhancement to BOMM
-patch=9
-# enhancement #29, addition of new Expense Report in APRptPicker
-patch=10
-# added ExpenseBrowse menu
-patch=11
-# enhancements and bug fixes #30 - #36
+# First release of 6.1

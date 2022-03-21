@@ -377,6 +377,7 @@ CREATE TABLE IF NOT EXISTS `ftp_mstr` (
   `ftp_indir` varchar(100) NOT NULL  DEFAULT '',
   `ftp_outdir` varchar(100) NOT NULL  DEFAULT '',
   `ftp_ip` varchar(30) NOT NULL  DEFAULT '',
+  `ftp_port` varchar(6) NOT NULL  DEFAULT '',
   `ftp_login` varchar(50) NOT NULL  DEFAULT '',
   `ftp_passwd` varchar(50) NOT NULL  DEFAULT '',
   `ftp_commands` varchar(1000) NOT NULL  DEFAULT '',

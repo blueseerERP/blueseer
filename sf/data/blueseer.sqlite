@@ -436,6 +436,7 @@ CREATE TABLE "ftp_mstr" (
   "ftp_indir" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
   "ftp_outdir" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
   "ftp_ip" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "ftp_port" varchar(6) NOT NULL COLLATE NOCASE DEFAULT '',
   "ftp_login" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
   "ftp_passwd" varchar(50) NOT NULL COLLATE NOCASE  DEFAULT '',
   "ftp_commands" varchar(1000) NOT NULL COLLATE NOCASE DEFAULT '',
