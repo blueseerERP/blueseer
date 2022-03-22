@@ -4379,6 +4379,8 @@ public class OVData {
                     
                    res =  st.executeQuery("select cpr_item from cpr_mstr where " +
                                     " cpr_cust = " + "'" + ld[0] + "'" +
+                                    " and cpr_uom = " + "'" + ld[8] + "'" +
+                                    " and cpr_curr = " + "'" + ld[9] + "'" +        
                                     " and cpr_item = " + "'" + ld[1] + "'" + ";");
                     int j = 0;
                     while (res.next()) {
@@ -4388,7 +4390,7 @@ public class OVData {
                     
                     if (j == 0) {
                     st.executeUpdate(" insert into cpr_mstr " 
-                      + "(cpr_cust, cpr_item, cpr_desc, cpr_type, cpr_price, cpr_volqty, cpr_volprice, cpr_disc, cpr_uom, cpr_userid, cpr_mod_date ) "
+                      + "(cpr_cust, cpr_item, cpr_desc, cpr_type, cpr_price, cpr_volqty, cpr_volprice, cpr_disc, cpr_uom, cpr_curr, cpr_userid, cpr_mod_date ) "
                    + " values ( " + 
                     "'" +  ld[0] + "'" + "," + 
                     "'" +  ld[1] + "'" + "," +
@@ -4398,7 +4400,8 @@ public class OVData {
                             "'" +  ld[5] + "'" + "," +  
                             "'" +  ld[6] + "'" + "," +  
                             "'" +  ld[7] + "'" + "," +
-                            "'" +  ld[8] + "'" + "," +        
+                            "'" +  ld[8] + "'" + "," +     
+                            "'" +  ld[9] + "'" + "," +        
                             "'" +  bsmf.MainFrame.userid + "'" + "," +
                             "'" +  BlueSeerUtils.setDateFormat(new java.util.Date()) + "'" +
                             " );"

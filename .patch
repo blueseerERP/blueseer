@@ -6,3 +6,5 @@
 #
 patch=0
 # First release of 6.1
+patch=1
+# Bug fix #39 Site Master deletion issue and #40 customer price mass load issue

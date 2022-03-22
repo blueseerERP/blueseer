@@ -1314,6 +1314,7 @@ public class MassLoad extends javax.swing.JPanel {
         list.add("cpr_volprice,d,12,optional,unvalidated");
         list.add("cpr_disc,d,12,optional,unvalidated");
         list.add("cpr_uom,s,3,mandatory,unvalidated");
+        list.add("cpr_curr,s,3,mandatory,unvalidated");
         return list;
     }
     

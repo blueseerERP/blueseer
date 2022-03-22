@@ -1,1 +1,1 @@
-ACME:1000:ACME Coffee:111 somedrive:::Boulder City:NV:89005:USA:::0:0:FEDEX:N30::::::20000000:9999:blah::BK:USD:::::444-444-4444:asdf@asdf.com
+Acme:1000:ACME Sporting Goods:111 somedrive:::Boulder City:NV:89005:USA:::0:0:FEDEX:N30::::::20000000:9999:blah::BK:USD:::::444-444-4444:asdf@asdf.com
