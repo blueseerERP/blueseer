@@ -192,9 +192,15 @@ public class DefaultMaint extends javax.swing.JPanel implements IBlueSeerc {
     public boolean validateInput(String x) {
         boolean b = true;
                                 
-                if (tbsite.getText().isEmpty() || ! OVData.isValidSite(tbsite.getText())) {
+                if (tbsite.getText().isEmpty()) {
                     b = false;
                     bsmf.MainFrame.show(getMessageTag(1024));
+                    tbsite.requestFocus();
+                    return b;
+                }
+                if (! OVData.isValidSite(tbsite.getText())) {
+                    b = false;
+                    bsmf.MainFrame.show(getMessageTag(1026));
                     tbsite.requestFocus();
                     return b;
                 }

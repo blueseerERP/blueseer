@@ -65,6 +65,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -353,18 +354,98 @@ public class SiteMaint extends javax.swing.JPanel implements IBlueSeerT {
     
     public boolean validateInput(dbaction x) {
         boolean b = true;
-               
-                
-                if (tbdesc.getText().isEmpty()) {
+        
+                if (tbkey.getText().isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show(getMessageTag(1024));
+                    tbkey.requestFocus();
+                    return b;
+                }
+        
+                if (tbdesc.getText().isEmpty() && ! x.toString().equals("delete")) {
                     b = false;
                     bsmf.MainFrame.show(getMessageTag(1024));
                     tbdesc.requestFocus();
                     return b;
                 }
-                
-                 if (tbkey.getText().isEmpty()) {
+                if (tblogo.getText().isEmpty() && ! x.toString().equals("delete")) {
                     b = false;
                     bsmf.MainFrame.show(getMessageTag(1024));
+                    tblogo.requestFocus();
+                    return b;
+                }
+                if (! tblogo.getText().isEmpty() && ! x.toString().equals("delete") && ! ifImageExists(tblogo.getText())) {
+                    b = false;
+                    bsmf.MainFrame.show(getMessageTag(1145, tblogo.getText()));
+                    tblogo.requestFocus();
+                    return b;
+                }
+                if (tb_iv_generic.getText().isEmpty() && ! x.toString().equals("delete")) {
+                    b = false;
+                    bsmf.MainFrame.show(getMessageTag(1024));
+                    tb_iv_generic.requestFocus();
+                    return b;
+                }
+                if (! tb_iv_generic.getText().isEmpty() && ! x.toString().equals("delete") && ! ifFileExists(tb_iv_generic.getText())) {
+                    b = false;
+                    bsmf.MainFrame.show(getMessageTag(1145, tb_iv_generic.getText()));
+                    tb_iv_generic.requestFocus();
+                    return b;
+                }
+                if (tb_sh_generic.getText().isEmpty() && ! x.toString().equals("delete")) {
+                    b = false;
+                    bsmf.MainFrame.show(getMessageTag(1024));
+                    tb_sh_generic.requestFocus();
+                    return b;
+                }
+                if (! tb_sh_generic.getText().isEmpty() && ! x.toString().equals("delete") && ! ifFileExists(tb_sh_generic.getText())) {
+                    b = false;
+                    bsmf.MainFrame.show(getMessageTag(1145, tb_sh_generic.getText()));
+                    tb_sh_generic.requestFocus();
+                    return b;
+                }
+                
+                if (tb_po_generic.getText().isEmpty() && ! x.toString().equals("delete")) {
+                    b = false;
+                    bsmf.MainFrame.show(getMessageTag(1024));
+                    tb_po_generic.requestFocus();
+                    return b;
+                }
+                if (! tb_po_generic.getText().isEmpty() && ! x.toString().equals("delete") && ! ifFileExists(tb_po_generic.getText())) {
+                    b = false;
+                    bsmf.MainFrame.show(getMessageTag(1145, tb_po_generic.getText()));
+                    tb_po_generic.requestFocus();
+                    return b;
+                }
+                if (tb_pos_generic.getText().isEmpty() && ! x.toString().equals("delete")) {
+                    b = false;
+                    bsmf.MainFrame.show(getMessageTag(1024));
+                    tb_pos_generic.requestFocus();
+                    return b;
+                }
+                if (! tb_pos_generic.getText().isEmpty() && ! x.toString().equals("delete") && ! ifFileExists(tb_pos_generic.getText())) {
+                    b = false;
+                    bsmf.MainFrame.show(getMessageTag(1145, tb_pos_generic.getText()));
+                    tb_pos_generic.requestFocus();
+                    return b;
+                }
+                if (tb_or_generic.getText().isEmpty() && ! x.toString().equals("delete")) {
+                    b = false;
+                    bsmf.MainFrame.show(getMessageTag(1024));
+                    tb_or_generic.requestFocus();
+                    return b;
+                }
+                if (! tb_or_generic.getText().isEmpty() && ! x.toString().equals("delete") && ! ifFileExists(tb_or_generic.getText())) {
+                    b = false;
+                    bsmf.MainFrame.show(getMessageTag(1145, tb_or_generic.getText()));
+                    tb_or_generic.requestFocus();
+                    return b;
+                }
+                
+                
+                if (tbkey.getText().equals(OVData.getDefaultSite()) && x.toString().equals("delete") ) {
+                    b = false;
+                    bsmf.MainFrame.show(getMessageTag(1171));
                     tbkey.requestFocus();
                     return b;
                 }
@@ -497,7 +578,15 @@ public class SiteMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
 
     
-     
+    public boolean ifFileExists(String filename) {
+        File file = new File("jasper/" + filename);
+        return file.exists();
+    } 
+    
+    public boolean ifImageExists(String filename) {
+        File file = new File("images/" + filename);
+        return file.exists();
+    }
 
     
     /**
@@ -699,6 +788,9 @@ public class SiteMaint extends javax.swing.JPanel implements IBlueSeerT {
                 .addContainerGap())
         );
 
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Jasper and Image Defaults"));
+        jPanel3.setName("paneljasper"); // NOI18N
+
         jLabel10.setText("Generic Invoice:");
         jLabel10.setName("lblinvoice"); // NOI18N
 
@@ -825,7 +917,7 @@ public class SiteMaint extends javax.swing.JPanel implements IBlueSeerT {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
