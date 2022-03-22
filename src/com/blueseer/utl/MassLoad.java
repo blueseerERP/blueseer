@@ -2525,11 +2525,11 @@ public class MassLoad extends javax.swing.JPanel {
     }//GEN-LAST:event_btdescribeActionPerformed
 
     private void bttestdataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bttestdataActionPerformed
-       boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
+       bsmf.MainFrame.show(getMessageTag(1172));
+        boolean proceed = bsmf.MainFrame.warn(getMessageTag(1173));
         if (proceed) {
         setPanelComponentState(this, false);
         executeTask("", null, "testdata");
-        
         }
     }//GEN-LAST:event_bttestdataActionPerformed
 
