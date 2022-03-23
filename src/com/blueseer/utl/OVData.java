@@ -4141,7 +4141,7 @@ public class OVData {
                     
                    res =  st.executeQuery("select cup_item from cup_mstr where " +
                                     " cup_cust = " + "'" + ld[0] + "'" +
-                                    " and cup_citem = " + "'" + ld[2] + "'" + ";");
+                                    " and cup_item = " + "'" + ld[1] + "'" + ";");
                     int j = 0;
                     while (res.next()) {
                         j++;
@@ -4161,7 +4161,18 @@ public class OVData {
                             "'" +  ld[6] + "'" + "," +  
                             "'" +  bsmf.MainFrame.userid + "'" +  ");"
                            );     
-                   }
+                   } else {
+                     st.executeUpdate(" update cup_mstr " 
+                      + "set " +
+                        " cup_citem = " + "'" + ld[2] + "'" + "," +        
+                        " cup_citem2 = " + "'" + ld[3] + "'" + "," +
+                        " cup_upc = " + "'" + ld[4] + "'" + "," +
+                        " cup_sku = " + "'" + ld[5] + "'" + "," +
+                        " cup_misc = " + "'" + ld[6] + "'" + "," +
+                        " cup_userid = " + "'" + bsmf.MainFrame.userid + "'" +
+                        " where cup_cust = " + "'" + ld[0] + "'" +
+                        " and cup_item = " + "'" + ld[1] + "'"  + ";");
+                    }
                 }    
             } // if proceed
             catch (SQLException s) {
@@ -4419,7 +4430,6 @@ public class OVData {
                         " and cpr_uom = " + "'" + ld[8] + "'" +
                         " and cpr_curr = " + "'" + ld[9] + "'" +        
                         " and cpr_item = " + "'" + ld[1] + "'" + ";");
-                           
                     }
                 }    
             } // if proceed
