@@ -1,1 +1,2 @@
-Acme:10-1001:My Price List:LIST:12.00:0:0:0:EA:USD
+Acme:10-1001:My Price List:LIST:87.55:0:0:0:EA:USD
+Acme:10-1001:My Price List:LIST:66.00:0:0:0:PC:EUR

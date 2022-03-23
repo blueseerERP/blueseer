@@ -4406,7 +4406,21 @@ public class OVData {
                             "'" +  BlueSeerUtils.setDateFormat(new java.util.Date()) + "'" +
                             " );"
                            );     
-                   }
+                   } else {
+                     st.executeUpdate(" update cpr_mstr " 
+                      + "set " +
+                        " cpr_price = " + "'" + ld[4] + "'" + "," +        
+                        " cpr_volqty = " + "'" + ld[5] + "'" + "," +
+                        " cpr_volprice = " + "'" + ld[6] + "'" + "," +
+                        " cpr_disc = " + "'" + ld[7] + "'" + "," +        
+                        " cpr_userid = " + "'" + bsmf.MainFrame.userid + "'" + "," +  
+                        " cpr_mod_date = " + "'" + BlueSeerUtils.setDateFormat(new java.util.Date()) + "'" +        
+                        " where cpr_cust = " + "'" + ld[0] + "'" +
+                        " and cpr_uom = " + "'" + ld[8] + "'" +
+                        " and cpr_curr = " + "'" + ld[9] + "'" +        
+                        " and cpr_item = " + "'" + ld[1] + "'" + ";");
+                           
+                    }
                 }    
             } // if proceed
             catch (SQLException s) {
