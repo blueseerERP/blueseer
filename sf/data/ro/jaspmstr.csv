@@ -1,43 +1,43 @@
-CusRptGroup,Customer Addr Info By ID,custAddrInfoByRange,0,L6
-CusRptGroup,Customer Phone Email By ID,custPhoneEmailByRange,1,P4
-CusRptGroup,Customer Finance setup By ID,custFinanceInfoByRange,2,L8
-CusRptGroup,Customer Shipto list By cust,custShipTosByRange,3,L8
-CusRptGroup,Customer Total Sales By Range,custTotalSalesByRange,4,P5C
-CusRptGroup,Customer Item Xref By cust,custXrefByRange,5,L8
-OrdRptGroup,Orders By Due Date Range,ordersDueDateByRange,0,L8C
-OrdRptGroup,Orders By Order Date Range,ordersOrdDateByRange,1,L8C
-OrdRptGroup,Orders By Cust/Date Range,ordersCustDateByRange,2,L8C
-OrdRptGroup,Open Orders By Cust,ordersOpenByCust,3,L8C
-OrdRptGroup,Open Orders Detail By Cust,ordersOpenDetailByCust,4,L8
-OrdRptGroup,Orders OnHold By Cust,ordersOnHoldByCust,5,L8C
-OrdRptGroup,Order Shipments By PO,ordersShippedDetailByPO,6,L8
-InvRptGroup,Item Info By Item Range,iteminfoByItemRange,0,L2
-InvRptGroup,Item Info By ProdLine Range,itemByProdLineRange,1,L2
-InvRptGroup,Item Costs By Item Range,itemCostsRange,2,L8
-InvRptGroup,Item Cust Price By Item,itemCustPriceRange,3,L8
-InvRptGroup,Item Inventory By Item,itemInventoryRange,4,L7
-InvRptGroup,Item QOH By Item,itemQOHRange,5,L6
-InvRptGroup,Order Allocations By Item,itemAllocatedToOrder,6,L7
+﻿CusRptGroup,Informații despre adresa clientului după ID,custAddrInfoByRange,0,L6
+CusRptGroup,Telefonul clientului E-mail prin ID,custPhoneEmailByRange,1,P4
+CusRptGroup,Configurare Finanțe clienți După ID,custFinanceInfoByRange,2,L8
+CusRptGroup,Lista de expediere a clienților După client,custShipTosByRange,3,L8
+CusRptGroup,Vânzări totale ale clienților după interval,custTotalSalesByRange,4,P5C
+CusRptGroup,Articol client Xref După client,custXrefByRange,5,L8
+OrdRptGroup,Comenzi după intervalul de scadență,ordersDueDateByRange,0,L8C
+OrdRptGroup,Comenzi după intervalul de date al comenzii,ordersOrdDateByRange,1,L8C
+OrdRptGroup,Comenzi după client/interval de date,ordersCustDateByRange,2,L8C
+OrdRptGroup,Comenzi deschise după client,ordersOpenByCust,3,L8C
+OrdRptGroup,Deschideți detaliile comenzilor după client,ordersOpenDetailByCust,4,L8
+OrdRptGroup,Comenzi în așteptare de către client,ordersOnHoldByCust,5,L8C
+OrdRptGroup,Comandați expedieri prin PO,ordersShippedDetailByPO,6,L8
+InvRptGroup,Informații despre articol după intervalul de articole,iteminfoByItemRange,0,L2
+InvRptGroup,Informații despre articol după gama ProdLine,itemByProdLineRange,1,L2
+InvRptGroup,Costurile articolelor în funcție de intervalul de articole,itemCostsRange,2,L8
+InvRptGroup,Articol Preț personalizat după articol,itemCustPriceRange,3,L8
+InvRptGroup,Inventar de articole după articol,itemInventoryRange,4,L7
+InvRptGroup,Articol QOH după articol,itemQOHRange,5,L6
+InvRptGroup,Comandă alocările după articol,itemAllocatedToOrder,6,L7
 VenRptGroup,Vendor Master By Vend Code,vendAddrInfoByRange,0,L8
-VenRptGroup,Vendor Contact Info By Code,vendPhoneEmailByRange,1,L8
-VenRptGroup,Vendor Finance Info By Code,vendFinanceInfoByRange,2,L8
-VenRptGroup,Vendor Total Purchases By Code/Date,vendTotalPurchasesByRange,3,L8
-PurRptGroup,POs By PO Date,poByOrdDateRange,0,L8
-PurRptGroup,POs By Vendor,poByVendRange,1,L8
-PurRptGroup,POs By Vend / PO Date,poByVendOrdDateRange,2,L8
-PurRptGroup,POs By PO Detail By Vend,poDetailByVendRange,3,L8
-ARRptGroup,AR Entries by Customer,AREntriesByCust,0,L2
-ARRptGroup,AR Aging by Customer,ARAgingByCust,1,L7
-ARRptGroup,AR Aging Detail by Customer,ARAgingDetailByCust,2,L2
-ARRptGroup,AR Payments by Customer Date,ARPaymentsByCustDate,3,L8
-APRptGroup,AP Entries by APNbr,apByNbrRange,0,L11
-APRptGroup,AP Entries by Vendor,apByVendorRange,1,L11
-APRptGroup,Expense Report by Vendor / Date,expenseByVendorDate,2,L11
-HRRptGroup,Employees Report by EmpNbr,employeeByEmpNbr,0,L8
-ShpRptGroup,Shippers by ShipDate Range,shippersByShipDateRange,0,L11
-ShpRptGroup,Shippers by Number Range,shippersByShipNbrRange,1,L11
-ShpRptGroup,Shippers by Customer Date Range,shippersByCustDateRange,2,L11
-ShpRptGroup,Shipper Detail by Customer Date,shipperDetailByCustDateRange,3,L8
-ShpRptGroup,Shipper Detail by Purchase Order,shipperDetailByPO,4,L8
-SchRptGroup,Plan Orders By Item,planOrdersByItem,0,L11
-SchRptGroup,Plan Orders By Sales Order,planOrdersBySalesOrder,1,L11
+VenRptGroup,Informații de contact ale vânzătorului prin cod,vendPhoneEmailByRange,1,L8
+VenRptGroup,Informații privind finanțarea furnizorului prin cod,vendFinanceInfoByRange,2,L8
+VenRptGroup,Total achiziții ale furnizorului după cod/dată,vendTotalPurchasesByRange,3,L8
+PurRptGroup,OP-uri după data OP,poByOrdDateRange,0,L8
+PurRptGroup,OP-uri de către furnizor,poByVendRange,1,L8
+PurRptGroup,OP-uri după vânzare/data OP,poByVendOrdDateRange,2,L8
+PurRptGroup,OP-uri După OP Detaliu După Vend,poDetailByVendRange,3,L8
+ARRptGroup,Intrări AR de către client,AREntriesByCust,0,L2
+ARRptGroup,Îmbătrânirea AR de către client,ARAgingByCust,1,L7
+ARRptGroup,Detaliu privind îmbătrânirea AR de către client,ARAgingDetailByCust,2,L2
+ARRptGroup,Plăți AR după data clientului,ARPaymentsByCustDate,3,L8
+APRptGroup,Intrări AP de APNbr,apByNbrRange,0,L11
+APRptGroup,Intrări AP de către furnizor,apByVendorRange,1,L11
+APRptGroup,Raport de cheltuieli după furnizor / dată,expenseByVendorDate,2,L11
+HRRptGroup,Raportul angajaților de EmpNbr,employeeByEmpNbr,0,L8
+ShpRptGroup,Expeditori în funcție de intervalul ShipDate,shippersByShipDateRange,0,L11
+ShpRptGroup,Expeditori după intervalul de numere,shippersByShipNbrRange,1,L11
+ShpRptGroup,Expeditori în funcție de intervalul de date al clientului,shippersByCustDateRange,2,L11
+ShpRptGroup,Detalii despre expeditor după data clientului,shipperDetailByCustDateRange,3,L8
+ShpRptGroup,Detalii despre expeditor prin comanda de achiziție,shipperDetailByPO,4,L8
+SchRptGroup,Planificați comenzile după articol,planOrdersByItem,0,L11
+SchRptGroup,Planificați comenzile după comandă de vânzare,planOrdersBySalesOrder,1,L11
