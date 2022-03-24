@@ -39,10 +39,10 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 [Components]
 Name: "english"; Description: "English"; Flags: exclusive
 Name: "french"; Description: "French"; Flags: exclusive
-Name: "spanish"; Description: "Spanish"; Flags: exclusive
-Name: "turkish"; Description: "Turkish"; Flags: exclusive
 Name: "german"; Description: "German"; Flags: exclusive
 Name: "romanian"; Description: "Romanian"; Flags: exclusive
+Name: "spanish"; Description: "Spanish"; Flags: exclusive
+Name: "turkish"; Description: "Turkish"; Flags: exclusive
 
 [Files]
 Source: "C:\bs\blueseer\scripts\login.bat"; DestDir: "{app}"; Flags: ignoreversion
