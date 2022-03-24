@@ -94,7 +94,7 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
                 double baseamt = 0.00;
                 double rcvamt = 0.00;
                 String curr = "";
-                String basecurr = "";
+                String basecurr = OVData.getDefaultCurrency();
                 
     
     // global datatablemodel declarations 
@@ -551,7 +551,7 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
     
     public ar_mstr createRecord() { 
         java.util.Date now = new java.util.Date(); 
-        basecurr = OVData.getDefaultCurrency();
+        
                 if (basecurr.toUpperCase().equals(ddcurr.getSelectedItem().toString().toUpperCase())) {
                   baseamt = actamt;  
                 } else {
