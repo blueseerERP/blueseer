@@ -846,6 +846,17 @@ public class OVData {
                             + "'" + tot + "'"
                             + ")"
                             + ";");
+                } else {
+                    st.executeUpdate("update item_cost set " 
+                            + "itc_mtl_top = " + "'" + mtl + "'" + ","
+                            + "itc_ovh_top = " + "'" + ovh + "'" + ","
+                            + "itc_out_top = " + "'" + out + "'" + ","
+                            + "itc_total = " + "'" + tot + "'"
+                            + " where "        
+                            + "itc_item = " + "'" + item + "'" + " AND "
+                            + "itc_set = " + "'" + set + "'" + " AND "
+                            + "itc_site = " + "'" + site + "'" 
+                            + ";");
                 }
             } // if proceed
             catch (SQLException s) {
@@ -3789,10 +3800,10 @@ public class OVData {
                             + "it_drawing, it_rev, it_custrev, it_comments, "
                             + "it_uom, it_net_wt, it_ship_wt, "
                             + "it_leadtime, it_safestock, it_minordqty, it_mrp, it_sched, it_plan, it_wf, it_status ) "  
-                   + " values ( " + 
-                    "'" +  ld[0] + "'" + "," + 
-                    "'" +  ld[1] + "'" + "," +
-                    "'" +  ld[2] + "'" + "," +  
+                            + " values ( " + 
+                            "'" +  ld[0] + "'" + "," + 
+                            "'" +  ld[1] + "'" + "," +
+                            "'" +  ld[2] + "'" + "," +  
                             "'" +  ld[3] + "'" + "," +  
                             "'" +  ld[4] + "'" + "," +  
                             "'" +  ld[5] + "'" + "," +  
@@ -3822,10 +3833,44 @@ public class OVData {
                             "'" +  ld[28] + "'" + ",'ACTIVE'" + ");"
                            );
                     
+                    } else {
+                        st.executeUpdate(" update item_mstr set " +                      
+                            " it_desc = " + "'" + ld[1] + "'" + "," +
+                            " it_site = " + "'" +  ld[2] + "'" + "," +  
+                            " it_code = " + "'" +  ld[3] + "'" + "," +  
+                            " it_prodline = " +"'" +  ld[4] + "'" + "," +  
+                            " it_loc = " + "'" +  ld[5] + "'" + "," +  
+                            " it_wh = " + "'" +  ld[6] + "'" + "," +          
+                            " it_lotsize = " + "'" +  ld[7].replace(defaultDecimalSeparator, '.') + "'" + "," +  
+                            " it_createdate = " + "'" +  dfdate.format(now) + "'" + "," + 
+                            " it_sell_price = " + "'" +  ld[8].replace(defaultDecimalSeparator, '.') + "'" + "," +  
+                            " it_pur_price = " + "'" +  ld[9].replace(defaultDecimalSeparator, '.') + "'" + "," +  
+                            " it_mtl_cost = " + "'" +  ld[10].replace(defaultDecimalSeparator, '.') + "'" + "," +  
+                            " it_ovh_cost = " + "'" +  ld[11].replace(defaultDecimalSeparator, '.') + "'" + "," +  
+                            " it_out_cost = " + "'" +  ld[12].replace(defaultDecimalSeparator, '.') + "'" + "," +  
+                            " it_type = " + "'" +  ld[13] + "'" + "," +  
+                            " it_group = " + "'" +  ld[14] + "'" + "," +  
+                            " it_drawing = " + "'" +  ld[15] + "'" + "," +  
+                            " it_rev = " + "'" +  ld[16] + "'" + "," +  
+                            " it_custrev = " + "'" +  ld[17] + "'" + "," +  
+                            " it_comments = " + "'" +  ld[18] + "'" + "," +  
+                            " it_uom = " + "'" +  ld[19] + "'" + "," +  
+                            " it_net_wt = " + "'" +  ld[20].replace(defaultDecimalSeparator, '.') + "'" + "," +
+                            " it_ship_wt = " + "'" +  ld[21].replace(defaultDecimalSeparator, '.') + "'" + "," +  
+                            " it_leadtime = " + "'" +  ld[22].replace(defaultDecimalSeparator, '.') + "'" + "," +  
+                            " it_safestock = " + "'" +  ld[23].replace(defaultDecimalSeparator, '.') + "'" + "," +  
+                            " it_minordqty = " + "'" +  ld[24].replace(defaultDecimalSeparator, '.') + "'" + "," +  
+                            " it_mrp = " + "'" +  ld[25] + "'" + "," +  
+                            " it_sched = " + "'" +  ld[26] + "'" + "," +  
+                            " it_plan = " + "'" +  ld[27] + "'" + "," + 
+                            " it_wf = " + "'" +  ld[28] + "'" + "," +
+                            " it_status = " + "'ACTIVE'" +
+                            " where it_item = " + "'" + ld[0] + "'"
+                           );
+                    }
                     OVData.addItemCostRec(ld[0], ld[2], "standard", 
                             bsParseDouble(ld[10]), bsParseDouble(ld[11]), bsParseDouble(ld[12]), 
                             (bsParseDouble(ld[10]) + bsParseDouble(ld[11]) + bsParseDouble(ld[12])));
-                    }
                 }    
             } // if proceed
             catch (SQLException s) {
