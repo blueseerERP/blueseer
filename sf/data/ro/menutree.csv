@@ -1,0 +1,294 @@
+CustomerMenu,CustMaint,1,JMenuItem,Customer Maintenance,,,,1,1
+CustomerMenu,CustReport1,2,JMenuItem,Customer Browse,,1,,1,1
+CustomerMenu,CustXrefMaint,3,JMenuItem,Customer Xref Maint,,,,1,1
+CustomerMenu,CustXrefBrowse,4,JMenuItem,Customer Xref Browse,,,,1,1
+CustomerMenu,CustPriceMaint,5,JMenuItem,Customer Price Maintenance,,,,1,1
+CustomerMenu,CustPriceReport,6,JMenuItem,Customer Price Browse,,,,1,1
+CustomerMenu,CusRptPicker,7,JMenuItem,Customer Report Selector,,,,1,1
+CustomerMenu,CustomerReports,8,JMenu,Other Customer Reports,,,,1,1
+CustomerMenu,CustControl,9,JMenuItem,Customer Control,,,,1,1
+Adresa,CustomerMenu,1,JMenu,Customer Menu,,,,1,1
+Adresa,VendorMenu,2,JMenu,Vendor Menu,,,,1,1
+Adresa,EDIMenu,3,JMenu,EDI Menu,,,,1,1
+Adresa,LabelMenu,4,JMenu,Label Menu,,,,1,1
+Adresa,CarrierMaint,5,JMenuItem,Carrier Maintenance,,,,1,1
+Adresa,CarrierBrowse,6,JMenuItem,Carrier Browse,,1,,1,1
+Adresa,FreightMaint,7,JMenuItem,Freight Maintenance,,,,1,1
+Adresa,FreightBrowse,8,JMenuItem,Freight Browse,,1,,1,1
+Adresa,TermsMaint,9,JMenuItem,Terms Maintenance,,,,1,1
+Adresa,TermsBrowse,10,JMenuItem,Terms Browse,,1,,1,1
+Adresa,TaxMaint,11,JMenuItem,Tax Maintenance,,,,1,1
+Adresa,TaxBrowse,12,JMenuItem,Tax Browse,,1,,1,1
+CustomerReports,piechart_salesbycust,1,JMenuItem,Sales By Customer (PieChart),,1,,1,1
+CustomerReports,piechart_custAR,2,JMenuItem,Receivables By Customer (PieChart),,1,,1,1
+VendorMenu,VendMaint,1,JMenuItem,Vendor Maintenance,,,,1,1
+VendorMenu,VendBrowse,2,JMenuItem,Vendor Browse,,1,,1,1
+VendorMenu,VendXrefMaint,3,JMenuItem,Vendor Xref Maintenance,,,,1,1
+VendorMenu,VendXrefRpt1,4,JMenuItem,Vendor Xref Browse,,,,1,1
+VendorMenu,VendPriceMaint,5,JMenuItem,Vendor Price Maintenance,,,,1,1
+VendorMenu,VendPriceRpt1,6,JMenuItem,Vendor Price Browse,,,,1,1
+VendorMenu,VenRptPicker,7,JMenuItem,Vendor Report Selector,,,,1,1
+VendorMenu,VendControl,8,JMenuItem,Vendor Control,,,,1,1
+EDIMenu,EDILoad,1,JMenuItem,EDI Load,,,,1,1
+EDIMenu,EDILog,2,JMenuItem,EDI Log,,,,1,1
+EDIMenu,EDIPartnerMaint,3,JMenuItem,EDI Partner Maintenance,,,,1,1
+EDIMenu,EDIPartnerBrowse,4,JMenuItem,EDI Partner Browse,,1,,1,1
+EDIMenu,EDIPartnerDocMaint,5,JMenuItem,Partner Transaction Maintenance,,,,1,1
+EDIMenu,EDIPartnerDocBrowse,6,JMenuItem,EDI Partner Transaction Browse,,1,,1,1
+EDIMenu,EDIDocumentMaint,7,JMenuItem,Document Recognition Maintenance,,,,1,1
+EDIMenu,EDIControl,8,JMenuItem,EDI Control,,,,1,1
+LabelMenu,LabelsContGeneric,1,JMenuItem,Container Labels,,,,1,1
+LabelMenu,AddrLabel,2,JMenuItem,Address Labels,,,,1,1
+LabelMenu,LabelBrowse,3,JMenuItem,Label Browse,,1,,1,1
+LabelMenu,LabelFileMaint,4,JMenuItem,Label File Maintenance,,,,1,1
+LabelMenu,LabelFileBrowse,5,JMenuItem,Label File Browse,,1,,1,1
+Achizitie,POMaintMenu,1,JMenuItem,Purchase Order Maintenance,,,,1,1
+Achizitie,POBrowse,2,JMenuItem,Purchase Order Browse,,1,,1,1
+Achizitie,ReceiverMaintMenu,3,JMenuItem,Receiver Maintenance,,,,1,1
+Achizitie,RecvBrowse,4,JMenuItem,Receiver Browse,,1,,1,1
+Achizitie,RecvByPOBrowse,5,JMenuItem,Receiver By PO Browse,,1,,1,1
+Achizitie,PurRptPicker,6,JMenuItem,Purchasing Report Selector,,1,,1,1
+Achizitie,RequisitionMenu,7,JMenu,Requisition Menu,,,,1,1
+Achizitie,POControl,8,JMenuItem,PO Control,,1,,1,1
+RequisitionMenu,ReqMaint,1,JMenuItem,Requisition Maintenance,,,,1,1
+RequisitionMenu,ReqBrowseAll,2,JMenuItem,Requisition Browse,,1,,1,1
+RequisitionMenu,PendReqRpt1,5,JMenuItem,Pending Requisitions,,1,,1,1
+RequisitionMenu,ApprovedReqBrowse,3,JMenuItem,Approved Requisitions,,1,,1,1
+RequisitionMenu,ReqPendingApproval,4,JMenuItem,Pending By Approver,,1,,1,1
+RequisitionMenu,ReqByUserRpt,6,JMenuItem,Requistions By User,,1,,1,1
+RequisitionMenu,ReqChartsMenu,7,JMenu,Chart Menu,,,,1,1
+ReqChartsMenu,ReqAmtByDeptChart,1,JMenuItem,Dollars By Dept,,1,,1,1
+ReqChartsMenu,ReqFreqByUserChart,2,JMenuItem,Requisitions by User,,1,,1,1
+ReqChartsMenu,ReqAmtByAcctChart,3,JMenuItem,Dollars By Acct,,1,,1,1
+Vânzări,OrderMaint,1,JMenuItem,Order Maintenance,,,,1,1
+Vânzări,OrderBrowse,2,JMenuItem,Order Browse,,1,,1,1
+Vânzări,ServiceOrderMaint,3,JMenuItem,Service Order Maintenance,,,,1,1
+Vânzări,ServiceOrderBrowse,4,JMenuItem,Service Order Browse,,,,1,1
+Vânzări,OrderSourceBrowse,5,JMenuItem,Order Source Browse,,1,,1,1
+Vânzări,OrdLineBrowse,6,JMenuItem,Order Line Browse,,1,,1,1
+Vânzări,SchedOrdBrowse,7,JMenuItem,Sched Order Browse,,1,,1,1
+Vânzări,FileOrderLoad,8,JMenuItem,Order Load By CSV File,,,,1,1
+Vânzări,OrdRptPicker,9,JMenuItem,Order Report Selector,,,,1,1
+Vânzări,OrderReports,10,JMenu,Other Reports,,,,1,1
+Vânzări,POSMenu,11,JMenu,POS Menu,,,,1,1
+Vânzări,DOMenu,12,JMenu,Distribution Menu,,,,1,1
+Vânzări,OrderSource,13,JMenuItem,Order Source,,,,1,1
+Vânzări,OrderControl,14,JMenuItem,Order Control,,,,1,1
+OrderReports,pcOpenOrdersByCust,1,JMenuItem,Open Orders By Cust By DueDate (PieChart),,1,,1,1
+OrderReports,DiscreteOrderPerWeekUnits,2,JMenuItem,Order Units By Week (BarChart),,1,,1,1
+OrderReports,DiscreteOrderPerWeekDollars,3,JMenuItem,Order Sales By Week (BarChart),,1,,1,1
+Transport,ShipMaint,1,JMenuItem,Shipper Maintenance,,,,1,1
+Transport,ShipMaintSerial,2,JMenuItem,Shipper Maintenance (Serialized),,,,1,1
+Transport,ShipperBrowse,3,JMenuItem,Shipper Browse ,,1,,1,1
+Transport,ShipperBrowseDet,4,JMenuItem,Shipper Detail Browse,,1,,1,1
+Transport,ShipConfirm,5,JMenuItem,Shipper Confirm,,,,1,1
+Transport,ShipUnconfirm,6,JMenuItem,Shipper UnConfirm,,,,1,1
+Transport,TransportationMenu,7,JMenu,Transportation Menu,,,,1,1
+Transport,ShpRptPicker,8,JMenuItem,Shipping Report Selector,,,,1,1
+Transport,ShipReports,9,JMenu,Other Reports,,,,1,1
+Transport,ShipperControl,10,JMenuItem,Shipper Control,,,,1,1
+ShipReports,ShipPerWeekDollarsChart,1,JMenuItem,Shipment Dollars Per Week (BarChart),,1,,1,1
+Finanţe,LedgerSetupMenu,1,JMenu,Ledger Setup,,,,1,1
+LedgerSetupMenu,AcctMaint,1,JMenuItem,Account Maintenance,,,,1,1
+LedgerSetupMenu,AcctBrowse,2,JMenuItem,Account Browse,,1,,1,1
+LedgerSetupMenu,DeptMaint,3,JMenuItem,Dept/CC Maintenance,,,,1,1
+LedgerSetupMenu,DeptBrowse,4,JMenuItem,Dept/CC Browse,,1,,1,1
+LedgerSetupMenu,GLCalMaint,5,JMenuItem,Ledger Calendar,,,,1,1
+LedgerSetupMenu,CalendarBrowse,6,JMenuItem,Ledger Calendar Browse,,1,,1,1
+LedgerSetupMenu,BankMaint,7,JMenuItem,Bank Maintenance,,,,1,1
+LedgerSetupMenu,BankBrowse,8,JMenuItem,Bank Browse,,1,,1,1
+LedgerSetupMenu,CurrencyMaint,9,JMenuItem,Currency Maintenance,,,,1,1
+LedgerSetupMenu,ExchangeMaint,10,JMenuItem,Exchange Rate Maintenance,,,,1,1
+LedgerSetupMenu,GLControl,11,JMenuItem,GL Control,,,,1,1
+LedgerSetupMenu,GLIncStmtDef,12,JMenuItem,Income Statement Definition,,,,1,1
+Finanţe,LedgerReportsMenu,2,JMenu,Ledger Reports,,,,1,1
+LedgerReportsMenu,GLAcctBalSummaryByPeriod,1,JMenuItem,Account Balance Report,,,,1,1
+LedgerReportsMenu,TrialBalanceRpt,2,JMenuItem,Trial Balance Report,,,,1,1
+LedgerReportsMenu,GLAcctBalSummaryByYear,3,JMenuItem,Account Activity (Year),,,,1,1
+LedgerReportsMenu,AcctBalSumYTD,4,JMenuItem,Account Balance YTD,,,,1,1
+LedgerReportsMenu,UnPostedTransRpt,5,JMenuItem,Unposted Transactions,,1,,1,1
+LedgerReportsMenu,GLTranRpt1,6,JMenuItem,Ledger Transaction Report,,1,,1,1
+LedgerReportsMenu,LedgerBalanceExport,7,JMenuItem,Ledger Balance View/Export,,,,1,1
+LedgerReportsMenu,IncomeStatement1,8,JMenuItem,Income Statement,,1,,1,1
+LedgerReportsMenu,IncomeStatementYear,9,JMenuItem,Income Statement(Year),,1,,1,1
+LedgerReportsMenu,ReconAccount,10,JMenuItem,Account Reconciliation,,1,,1,1
+Finanţe,PostGLTrans,3,JMenuItem,Post Transactions,,,,1,1
+Finanţe,GLTranMaint,4,JMenuItem,GL Transaction Maintenance,,,,1,1
+Finanţe,ExpenseMaint,5,JMenuItem,Expense Maintenance,,,,1,1
+Finanţe,ExpenseBrowse,6,JMenuItem,Expense Browse,,,,1,1
+Finanţe,IncomeMaint,7,JMenuItem,Income Maintenance,,,,1,1
+Finanţe,ARMenu,8,JMenu,Accounts Receivable Menu,,,,1,1
+Finanţe,APMenu,9,JMenu,Accounts Payable Menu,,,,1,1
+Finanţe,CashTransactionMenu,10,JMenu,Quick Cash Menu,,,,1,1
+Finanţe,PayRollMenu,11,JMenu,Payroll Menu,,,,1,1
+ARMenu,ARPaymentMaint,1,JMenuItem,Payment Maintenance,,,,1,1
+ARMenu,ARPaymentBrowse,2,JMenuItem,Payment Browse,,1,,1,1
+ARMenu,ARMemoMaint,3,JMenuItem,Memo Maintenance,,,,1,1
+ARMenu,ARAgingView,4,JMenuItem,AR Aging View,,,,1,1
+ARMenu,ARTranRpt1,5,JMenuItem,AR Transacation Report,,1,,1,1
+ARMenu,InvoiceMaint,6,JMenuItem,Invoice View / Maintenance,,,,1,1
+ARMenu,InvoiceBrowse,7,JMenuItem,Invoice Browse ,,1,,1,1
+ARMenu,ARRptPicker,8,JMenuItem,AR Report Selector,,1,,1,1
+ARMenu,ARControl,9,JMenuItem,AR Control,,,,1,1
+PayRollMenu,PayRollMaint,1,JMenuItem,Payroll Maintenance,,,,1,1
+PayRollMenu,PayRollBrowse,2,JMenuItem,PayRoll Browse,,1,,1,1
+PayRollMenu,PayProfileMaint,3,JMenuItem,Pay Profile Maintenance,,,,1,1
+PayRollMenu,PayProfileBrowse,4,JMenuItem,Pay Profile Browse,,1,,1,1
+PayRollMenu,PayControl,5,JMenuItem,PayRoll Control,,1,,1,1
+CashTransactionMenu,CashTran,1,JMenuItem,Quick Cash Transaction,,,,1,1
+CashTransactionMenu,CashTranBrowse,2,JMenuItem,Quick Cash Browse,,,,1,1
+APMenu,VouchMaintPanel,1,JMenuItem,Voucher Maintenance,,,,1,1
+APMenu,VoucherBrowse,2,JMenuItem,Voucher Browse,,,,1,1
+APMenu,PaymentMaint,3,JMenuItem,Payment Maintenance,,,,1,1
+APMenu,APAgingView,4,JMenuItem,AP Aging View,,,,1,1
+APMenu,APRptPicker,5,JMenuItem,AP Report Selector,,,,1,1
+APMenu,APControl,6,JMenuItem,AP Control,,,,1,1
+Inventar,ProdCodeMaint,1,JMenuItem,Product Code Maintenance,,,,1,1
+Inventar,ProdCodeBrowse,2,JMenuItem,Product Code Browse,,1,,1,1
+Inventar,WareHouseMaint,3,JMenuItem,Warehouse Maintenance,,,,1,1
+Inventar,WareHouseBrowse,4,JMenuItem,Warehouse Browse,,1,,1,1
+Inventar,LocationMaint,5,JMenuItem,Location Maintenance,,,,1,1
+Inventar,LocationBrowse,6,JMenuItem,Location Browse,,1,,1,1
+Inventar,ItemMenu,7,JMenu,Item Menu,,,,1,1
+Inventar,RoutingMenu,8,JMenu,Routing Menu,,,,1,1
+Inventar,BOMMenu,9,JMenu,BOM Menu,,,,1,1
+Inventar,ProductionMenu,10,JMenu,Production Menu,,,,1,1
+Inventar,ScrapMenu,11,JMenu,Scrap Menu,,,,1,1
+Inventar,InvAdjustmentsMenu,12,JMenu,Inventory Adjustments Menu,,,,1,1
+Inventar,ScheduleMenu,13,JMenu,Schedule Menu,,,,1,1
+Inventar,MRPMenu,14,JMenu,MRP Menu,,,,1,1
+Inventar,InvRptPicker,15,JMenuItem,Inventory Report Selector,,1,,1,1
+Inventar,InventoryReportsMenu,16,JMenu,Inventory Misc Reports,,,,1,1
+Inventar,InventoryCtrl,17,JMenuItem,Inventory Control,,,,1,1
+InvAdjustmentsMenu,LocationTransfer,1,JMenuItem,Location Transfer,,,,1,1
+InvAdjustmentsMenu,InventoryAdjustment,2,JMenuItem,Inventory Adjustment,,,,1,1
+InventoryReportsMenu,TransBrowse,1,JMenuItem,Transaction Browse,,1,,1,1
+ItemMenu,ItemMaint,1,JMenuItem,Item Maintenance,,,,1,1
+ItemMenu,ItemBrowse,2,JMenuItem,Item Browse,,1,,1,1
+ItemMenu,UOMMaint,3,JMenuItem,UOM Maintenance,,,,1,1
+ItemMenu,UOMConvMaint,4,JMenuItem,UOM Conversion Maintenance,,,,1,1
+ItemMenu,CostRoll,5,JMenuItem,Cost Maintenance,,,,1,1
+ItemMenu,CostRollRange,6,JMenuItem,Cost Roll By Range,,,,1,1
+ItemMenu,CostReports,7,JMenu,Cost Reports,,,,1,1
+RoutingMenu,WorkCellMaint,1,JMenuItem,Work Cell Maintenance,,,,1,1
+RoutingMenu,WorkCellBrowse,2,JMenuItem,Work Cell Browse,,1,,1,1
+RoutingMenu,RoutingMaint,3,JMenuItem,Routing Maintenance,,,,1,1
+RoutingMenu,RoutingBrowse,4,JMenuItem,Routing Browse,,1,,1,1
+RoutingMenu,ItemRoutingRpt,5,JMenuItem,Item Routing Report,,,,1,1
+BOMMenu,BOMMaint,1,JMenuItem,BOM Maintenance,,,,1,1
+BOMMenu,BOMBrowse,2,JMenuItem,BOM Browse,,1,,1,1
+BOMMenu,BOMTree,3,JMenuItem,BOM Tree,,,,1,1
+BOMMenu,WhereUsedUtility,4,JMenuItem,Where Used Utility,,,,1,1
+ProductionMenu,ProdEntryMaint,1,JMenuItem,Production Entry,,,,1,1
+ProductionMenu,ProdEntryByPlan,2,JMenuItem,Production Entry By Plan,,,,1,1
+ProductionMenu,OEEEntry,3,JMenuItem,OEE Entry,,,,1,1
+ProductionMenu,ProductionReports,4,JMenu,Production Reports,,,,1,1
+ProductionReports,ProdDetRpt,1,JMenuItem,Production Report Detail,,1,,1,1
+ProductionReports,ProdByWeekFGUnits,2,JMenuItem,Weekly FG Production Units (BarChart),,1,,1,1
+ProductionReports,ProdByWeekFGDollars,3,JMenuItem,Weekly FG Production Dollars (BarChart),,1,,1,1
+ScrapMenu,ScrapEntry,1,JMenuItem,Scrap Entry,,,,1,1
+ScrapMenu,ScrapReports,2,JMenu,Scrap Reports,,,,1,1
+ScrapReports,ScrapRpt1,1,JMenuItem,Scrap Report,,1,,1,1
+ScrapReports,ScrapChartQtyByCode,2,JMenuItem,Scrap Qty By Code (BarChart),,1,,1,1
+ScrapReports,ScrapChartQtyByPart,3,JMenuItem,Scrap Qty By Part (BarChart),,1,,1,1
+ScrapReports,ScrapChartQtyByDept,4,JMenuItem,Scrap Qty By Dept (BarChart),,1,,1,1
+ScrapReports,ScrapChartDolByCode,5,JMenuItem,Scrap Dollars By Code (BarChart),,1,,1,1
+ScrapReports,ScrapChartDolByPart,6,JMenuItem,Scrap Dollars By Part (BarChart),,1,,1,1
+ScrapReports,ScrapChartDolByDept,7,JMenuItem,Scrap Dollars By Dept (BarChart),,1,,1,1
+ScrapReports,ScrapPerWeek,8,JMenuItem,Scrap Per Week (BarChart),,1,,1,1
+ScheduleMenu,Scheduler,1,JMenuItem,Scheduler,,,,1,1
+ScheduleMenu,SchRptPicker,2,JMenuItem,Schedule Report Selector,,1,,1,1
+ScheduleMenu,ProdSchedRpt1,3,JMenuItem,Scheduled Plan Report,,1,,1,1
+ScheduleMenu,PlanMiscMaint,4,JMenuItem,Misc Plan Maintenance,,,,1,1
+ScheduleMenu,ForecastMaint,5,JMenuItem,Forecast Maintenance,,,,1,1
+ScheduleMenu,ForecastBrowse,6,JMenuItem,Forecast Browse,,1,,1,1
+ScheduleMenu,forecast13weeks,7,JMenuItem,Forecast View 13 Weeks,,1,,1,1
+ScheduleMenu,FcstToPlan,8,JMenuItem,Forecast To Plan Sync,,,,1,1
+ScheduleMenu,DemdToPlan,9,JMenuItem,Demand To Plan Sync,,,,1,1
+MRPMenu,ItemLevelCalculate,1,JMenuItem,MRP Regenerate,,,,1,1
+MRPMenu,MRPBrowse,2,JMenuItem,MRP Browse,,1,,1,1
+MRPMenu,ProjectionBrowse,3,JMenuItem,Projection Browse,,1,,1,1
+MRPMenu,ComponentDemandBrowse,4,JMenuItem,Component Demand Browse,,1,,1,1
+MRPMenu,RetailReorderRpt,5,JMenuItem,Retail Replenishment Report,,1,,1,1
+CostReports,noStdCostBrowse,1,JMenuItem,Item Without Std Cost,,1,,1,1
+Calitate,QPRMaint,1,JMenuItem,QPR Maintenance,,,,1,1
+Calitate,QPRBrowse,2,JMenuItem,QPR Browse,,1,,1,1
+HR,EmployeeMaster,1,JMenuItem,Employee Maintenance,,,,1,1
+HR,EmpBrowse,2,JMenuItem,Employee Browse,,1,,1,1
+HR,HRRptPicker,3,JMenuItem,HR Report Selector,,1,,1,1
+HR,ShiftMaintenance,4,JMenuItem,Shift Maintenance,,,,1,1
+HR,ShiftBrowse,5,JMenuItem,Shift Browse,,1,,1,1
+HR,HRTrainingMenu,6,JMenu,Training Menu,,,,1,1
+HR,TimeClockMenu,7,JMenu,Time Clock Menu,,,,1,1
+HRTrainingMenu,TrainingMaint,1,JMenuItem,Training Maintenance,,,,1,1
+HRTrainingMenu,TrainingRpt1,2,JMenuItem,Training Report,,1,,1,1
+TimeClockMenu,TimeClockEntry,1,JMenuItem,TimeClock,,,,1,1
+TimeClockMenu,TCAdminMenu,2,JMenu,Administration,,,,1,1
+TCAdminMenu,ClockApprovalMaint,1,JMenuItem,Supervisor Approval,,,,1,1
+TCAdminMenu,ClockAutoMaint,2,JMenuItem,Auto Clock Maintenance,,,,1,1
+TCAdminMenu,TimeClockAdjust,3,JMenuItem,Clock Record Maintenance,,,,1,1
+TCAdminMenu,ClockCodeMaint,4,JMenuItem,Clock Code Maintenance,,,,1,1
+TCAdminMenu,ClockCodeBrowse,5,JMenuItem,Clock Code Browse,,1,,1,1
+TCAdminMenu,ClockControl,6,JMenuItem,Clock Control,,,,1,1
+TimeClockMenu,TCReportsMenu,3,JMenu,Reports,,,,1,1
+TCReportsMenu,ClockDetailRpt,1,JMenuItem,Clock Detail Report,,1,,1,1
+TCReportsMenu,ClockCode66Browse,2,JMenuItem,Code 66 Report,,1,,1,1
+TCReportsMenu,ClockChartByDept,3,JMenuItem,Hours By Dept (Chart),,1,,1,1
+TCReportsMenu,ClockChartByCode,4,JMenuItem,Hours By Code (Chart),,1,,1,1
+TCReportsMenu,ClockChartByEmp,5,JMenuItem,Hours By Employee (Chart),,1,,1,1
+TCReportsMenu,ClockChartByWeek,6,JMenuItem,Total Hours By Week (Chart),,1,,1,1
+Admin,DefaultMaint,1,JMenuItem,Default Maintenance,,,,1,1
+Admin,SiteMaint,2,JMenuItem,Site Maintenance,,,,1,1
+Admin,SiteBrowse,3,JMenuItem,Site Browse,,1,,1,1
+Admin,UserMaint,4,JMenuItem,User Maintenance,,,,1,1
+Admin,UserPermsMaint,5,JMenuItem,User Perms Maintenance,,,,1,1
+Admin,UserBrowse,6,JMenuItem,User Browse,,1,,1,1
+Admin,PanelMaint,7,JMenuItem,Class Register,,,,1,1
+Admin,PanelBrowse,8,JMenuItem,Class Browse,,1,,1,1
+Admin,MenuMaint,9,JMenuItem,Menu Maintenance,,,,1,1
+Admin,MenuBrowse,10,JMenuItem,Menu Browse,,1,,1,1
+Admin,GenericCodeMaint,11,JMenuItem,Generic Code Maintenance,,,,1,1
+Admin,GenCodeBrowse,12,JMenuItem,Generic Code Browse,,1,,1,1
+Admin,KeyMaint,13,JMenuItem,Key Maintenance,,,,1,1
+Admin,PrinterMaint,14,JMenuItem,Printer Maintenance,,,,1,1
+Admin,PrinterBrowse,15,JMenuItem,Printer Browse,,1,,1,1
+Admin,ChangeUserid,16,JMenuItem,Change Userid,,,changeUserID,1,1
+Admin,changeDB,17,JMenuItem,Change IP:DB,,,changeIPandDB,1,1
+Admin,SystemControl,18,JMenuItem,System Control,,,,1,1
+Admin,TreeMaint,19,JMenuItem,Menu Tree Maintenance,,,,1,1
+Admin,FTPMaint,20,JMenuItem,FTP Maintenance,,,,1,1
+Admin,MassLoad,21,JMenuItem,Master Data Import,,,,1,1
+Admin,JasperRptMaint,22,JMenuItem,Jasper Report Maintenance,,,,1,1
+Ajutor,About,1,JMenuItem,About,,,,1,1
+Ajutor,License,2,JMenuItem,License,,,,1,1
+Ajutor,Update,3,JMenuItem,Update,,,,1,1
+Ajutor,PlantDirectoryMenu,4,JMenuItem,Plant Directory,,1,,1,1
+Ajutor,menuscreen,5,JMenuItem,Screen Resolution,,,getScreenSize,1,1
+Ajutor,NavCodeBrowse,6,JMenuItem,NAVCode List,,1,,1,1
+Ajutor,SchemaBrowse,7,JMenuItem,Schema,,1,,1,1
+Ajutor,BrowseUtil,8,JMenuItem,,,1,,1,1
+Ajutor,SysInfo,9,JMenuItem,SysInfo,,1,,1,1
+root,Adresa,1,JMenu,Adresa,,,,1,1
+root,Achizitie,2,JMenu,Achizitie,,,,1,1
+root,Vânzări,3,JMenu,Vânzări,,,,1,1
+root,Transport,4,JMenu,Transport,,,,1,1
+root,Finanţe,5,JMenu,Finanţe,,,,1,1
+root,Inventar,6,JMenu,Inventar,,,,1,1
+root,Inginerie,7,JMenu,Inginerie,,,,1,1
+root,Calitate,8,JMenu,Calitate,,,,1,1
+root,Personalizat,9,JMenu,Personalizat,,,,1,0
+root,HR,10,JMenu,HR,,,,1,1
+root,Admin,11,JMenu,Admin,,,,1,1
+root,Ajutor,12,JMenu,Ajutor,,,,1,1
+POSMenu,POSMaint,1,JMenuItem,POS Entry,,,,1,1
+POSMenu,POSControlMaint,3,JMenuItem,POS Control,,,,1,1
+POSMenu,POSBrowse,2,JMenuItem,POS Browse,,1,,1,1
+DOMenu,DOMaint,1,JMenuItem,Dist Order Maintenance,,,,1,1
+DOMenu,DOBrowse,2,JMenuItem,Dist Order Browse,,,,1,1
+TransportationMenu,FOMaint,1,JMenuItem,Freight Order Maintenance,,,,1,1
+TransportationMenu,FOBrowse,2,JMenuItem,Freight Order Browse,,,,1,1
+RequisitionMenu,ReqControl,8,JMenuItem,Req Control,,,,1,1
+Inginerie,ECNMaint,1,JMenuItem,ECN Maintenance,,,,1,1
+Inginerie,ECNBrowse,2,JMenuItem,ECN Browse,,1,,1,1
+Inginerie,TaskMaint,3,JMenuItem,Task Maintenance,,,,1,1
+Inginerie,TaskBrowse,4,JMenuItem,Task Browse,,1,,1,1
