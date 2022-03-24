@@ -60,20 +60,20 @@ RequisitionMenu,ReqChartsMenu,7,JMenu,Meniu diagramă,,,,1,1
 ReqChartsMenu,ReqAmtByDeptChart,1,JMenuItem,dolari pe departament,,1,,1,1
 ReqChartsMenu,ReqFreqByUserChart,2,JMenuItem,Cereri de către utilizator,,1,,1,1
 ReqChartsMenu,ReqAmtByAcctChart,3,JMenuItem,Dolari prin act,,1,,1,1
-VÃ¢nzÄƒri,OrderMaint,1,JMenuItem,Întreținerea comenzii,,,,1,1
-VÃ¢nzÄƒri,OrderBrowse,2,JMenuItem,Comanda Răsfoiește,,1,,1,1
-VÃ¢nzÄƒri,ServiceOrderMaint,3,JMenuItem,Întreținerea comenzilor de service,,,,1,1
-VÃ¢nzÄƒri,ServiceOrderBrowse,4,JMenuItem,Răsfoire comanda de servicii,,,,1,1
-VÃ¢nzÄƒri,OrderSourceBrowse,5,JMenuItem,Răsfoire sursă de comandă,,1,,1,1
-VÃ¢nzÄƒri,OrdLineBrowse,6,JMenuItem,Răsfoire în linia de comandă,,1,,1,1
-VÃ¢nzÄƒri,SchedOrdBrowse,7,JMenuItem,Răsfoire comanda programată,,1,,1,1
-VÃ¢nzÄƒri,FileOrderLoad,8,JMenuItem,Comandă Încărcare după fișier CSV,,,,1,1
-VÃ¢nzÄƒri,OrdRptPicker,9,JMenuItem,Selector de rapoarte de comandă,,,,1,1
-VÃ¢nzÄƒri,OrderReports,10,JMenu,Alte Rapoarte,,,,1,1
-VÃ¢nzÄƒri,POSMenu,11,JMenu,Meniul POS,,,,1,1
-VÃ¢nzÄƒri,DOMenu,12,JMenu,Meniul de distribuție,,,,1,1
-VÃ¢nzÄƒri,OrderSource,13,JMenuItem,Sursa comenzii,,,,1,1
-VÃ¢nzÄƒri,OrderControl,14,JMenuItem,Controlul comenzii,,,,1,1
+Vânzări,OrderMaint,1,JMenuItem,Întreținerea comenzii,,,,1,1
+Vânzări,OrderBrowse,2,JMenuItem,Comanda Răsfoiește,,1,,1,1
+Vânzări,ServiceOrderMaint,3,JMenuItem,Întreținerea comenzilor de service,,,,1,1
+Vânzări,ServiceOrderBrowse,4,JMenuItem,Răsfoire comanda de servicii,,,,1,1
+Vânzări,OrderSourceBrowse,5,JMenuItem,Răsfoire sursă de comandă,,1,,1,1
+Vânzări,OrdLineBrowse,6,JMenuItem,Răsfoire în linia de comandă,,1,,1,1
+Vânzări,SchedOrdBrowse,7,JMenuItem,Răsfoire comanda programată,,1,,1,1
+Vânzări,FileOrderLoad,8,JMenuItem,Comandă Încărcare după fișier CSV,,,,1,1
+Vânzări,OrdRptPicker,9,JMenuItem,Selector de rapoarte de comandă,,,,1,1
+Vânzări,OrderReports,10,JMenu,Alte Rapoarte,,,,1,1
+Vânzări,POSMenu,11,JMenu,Meniul POS,,,,1,1
+Vânzări,DOMenu,12,JMenu,Meniul de distribuție,,,,1,1
+Vânzări,OrderSource,13,JMenuItem,Sursa comenzii,,,,1,1
+Vânzări,OrderControl,14,JMenuItem,Controlul comenzii,,,,1,1
 OrderReports,pcOpenOrdersByCust,1,JMenuItem,Comenzi deschise după client după data scadenței (PieChart),,1,,1,1
 OrderReports,DiscreteOrderPerWeekUnits,2,JMenuItem,Comandă unitățile pe săptămână (Grafic cu bare),,1,,1,1
 OrderReports,DiscreteOrderPerWeekDollars,3,JMenuItem,Vânzări de comandă pe săptămână (Grafic cu bare),,1,,1,1
@@ -88,7 +88,7 @@ Transport,ShpRptPicker,8,JMenuItem,Selector de rapoarte de expediere,,,,1,1
 Transport,ShipReports,9,JMenu,Alte Rapoarte,,,,1,1
 Transport,ShipperControl,10,JMenuItem,Controlul expeditorului,,,,1,1
 ShipReports,ShipPerWeekDollarsChart,1,JMenuItem,Livrare dolari pe săptămână (BarChart),,1,,1,1
-FinanÅ£e,LedgerSetupMenu,1,JMenu,Configurare registru,,,,1,1
+Finanţe,LedgerSetupMenu,1,JMenu,Configurare registru,,,,1,1
 LedgerSetupMenu,AcctMaint,1,JMenuItem,Întreținerea contului,,,,1,1
 LedgerSetupMenu,AcctBrowse,2,JMenuItem,Răsfoire cont,,1,,1,1
 LedgerSetupMenu,DeptMaint,3,JMenuItem,Departament/CC întreținere,,,,1,1
@@ -101,7 +101,7 @@ LedgerSetupMenu,CurrencyMaint,9,JMenuItem,Întreținerea valutei,,,,1,1
 LedgerSetupMenu,ExchangeMaint,10,JMenuItem,Întreținerea cursului de schimb,,,,1,1
 LedgerSetupMenu,GLControl,11,JMenuItem,Control GL,,,,1,1
 LedgerSetupMenu,GLIncStmtDef,12,JMenuItem,Definiția declarației de venit,,,,1,1
-FinanÅ£e,LedgerReportsMenu,2,JMenu,Rapoarte contabile,,,,1,1
+Finanţe,LedgerReportsMenu,2,JMenu,Rapoarte contabile,,,,1,1
 LedgerReportsMenu,GLAcctBalSummaryByPeriod,1,JMenuItem,Raportul soldului contului,,,,1,1
 LedgerReportsMenu,TrialBalanceRpt,2,JMenuItem,Raportul balanței de verificare,,,,1,1
 LedgerReportsMenu,GLAcctBalSummaryByYear,3,JMenuItem,Activitatea contului (an),,,,1,1
@@ -112,15 +112,15 @@ LedgerReportsMenu,LedgerBalanceExport,7,JMenuItem,Vizualizare/Exportare sold con
 LedgerReportsMenu,IncomeStatement1,8,JMenuItem,Adeverinta de venit,,1,,1,1
 LedgerReportsMenu,IncomeStatementYear,9,JMenuItem,Declarație de venit (an),,1,,1,1
 LedgerReportsMenu,ReconAccount,10,JMenuItem,Reconcilierea contului,,1,,1,1
-FinanÅ£e,PostGLTrans,3,JMenuItem,Postați tranzacții,,,,1,1
-FinanÅ£e,GLTranMaint,4,JMenuItem,GL Tranzacție întreținere,,,,1,1
-FinanÅ£e,ExpenseMaint,5,JMenuItem,Întreținerea cheltuielilor,,,,1,1
-FinanÅ£e,ExpenseBrowse,6,JMenuItem,Parcurgere cheltuieli,,,,1,1
-FinanÅ£e,IncomeMaint,7,JMenuItem,Menținerea veniturilor,,,,1,1
-FinanÅ£e,ARMenu,8,JMenu,Meniul Conturi de încasat,,,,1,1
-FinanÅ£e,APMenu,9,JMenu,Meniu Conturi de plată,,,,1,1
-FinanÅ£e,CashTransactionMenu,10,JMenu,Meniu de numerar rapid,,,,1,1
-FinanÅ£e,PayRollMenu,11,JMenu,Meniul de salarizare,,,,1,1
+Finanţe,PostGLTrans,3,JMenuItem,Postați tranzacții,,,,1,1
+Finanţe,GLTranMaint,4,JMenuItem,GL Tranzacție întreținere,,,,1,1
+Finanţe,ExpenseMaint,5,JMenuItem,Întreținerea cheltuielilor,,,,1,1
+Finanţe,ExpenseBrowse,6,JMenuItem,Parcurgere cheltuieli,,,,1,1
+Finanţe,IncomeMaint,7,JMenuItem,Menținerea veniturilor,,,,1,1
+Finanţe,ARMenu,8,JMenu,Meniul Conturi de încasat,,,,1,1
+Finanţe,APMenu,9,JMenu,Meniu Conturi de plată,,,,1,1
+Finanţe,CashTransactionMenu,10,JMenu,Meniu de numerar rapid,,,,1,1
+Finanţe,PayRollMenu,11,JMenu,Meniul de salarizare,,,,1,1
 ARMenu,ARPaymentMaint,1,JMenuItem,Menținerea plății,,,,1,1
 ARMenu,ARPaymentBrowse,2,JMenuItem,Plăți Navigare,,1,,1,1
 ARMenu,ARMemoMaint,3,JMenuItem,Întreținere Memo,,,,1,1
@@ -270,9 +270,9 @@ Ajutor,BrowseUtil,8,JMenuItem,,,1,,1,1
 Ajutor,SysInfo,9,JMenuItem,SysInfo,,1,,1,1
 root,Adresa,1,JMenu,Adresa,,,,1,1
 root,Achizitie,2,JMenu,Achizitie,,,,1,1
-root,VÃ¢nzÄƒri,3,JMenu,VÃ¢nzÄƒri,,,,1,1
+root,Vânzări,3,JMenu,Vânzări,,,,1,1
 root,Transport,4,JMenu,Transport,,,,1,1
-root,FinanÅ£e,5,JMenu,FinanÅ£e,,,,1,1
+root,Finanţe,5,JMenu,Finanţe,,,,1,1
 root,Inventar,6,JMenu,Inventar,,,,1,1
 root,Inginerie,7,JMenu,Inginerie,,,,1,1
 root,Calitate,8,JMenu,Calitate,,,,1,1
