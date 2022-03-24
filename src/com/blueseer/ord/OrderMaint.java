@@ -3051,16 +3051,23 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
         line++;
         
         boolean canproceed = validateDetail();
-        
+        String bom = "";
+        if (ddbom.getSelectedItem() != null) {
+            bom = ddbom.getSelectedItem().toString();
+        }
+        String uom = "";
+        if (dduom.getSelectedItem() != null) {
+            uom = dduom.getSelectedItem().toString();
+        }
         //    "Line", "Part", "CustPart", "SO", "PO", "Qty", "UOM", "ListPrice", "Discount", "NetPrice"
         if (canproceed) {
             myorddetmodel.addRow(new Object[]{line, ddpart.getSelectedItem().toString(), custnumber.getText(), tbkey.getText(), ponbr.getText(), 
-                qtyshipped.getText(), dduom.getSelectedItem().toString(), listprice.getText(), 
+                qtyshipped.getText(), uom, listprice.getText(), 
                 discount.getText(), netprice.getText(), 
                 "0", getGlobalProgTag("open"),
                 ddwh.getSelectedItem().toString(), ddloc.getSelectedItem().toString(), tbdesc.getText(), 
                 String.valueOf(bsFormatDouble(OVData.getTaxAmtApplicableByItem(ddpart.getSelectedItem().toString(), (np * qty) ))),
-                ddbom.getSelectedItem().toString()
+                bom
             });
             
             // lets collect tax elements for each item
