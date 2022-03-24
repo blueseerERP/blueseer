@@ -1000,12 +1000,6 @@ public class CustPriceMaint extends javax.swing.JPanel {
             ResultSet res = null;
             try {
                 boolean proceed = true;
-                int i = 0;
-                
-                         
-                
-            
-             
                 if (proceed) {
                     st.executeUpdate("update cpr_mstr "
                         + " set cpr_disc = " + "'" + tbdisc.getText().replace(defaultDecimalSeparator, '.') + "'"
@@ -1016,7 +1010,6 @@ public class CustPriceMaint extends javax.swing.JPanel {
 
                     bsmf.MainFrame.show(getMessageTag(1008));
                     initvars(null);
-                    // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {
                 MainFrame.bslog(s);
@@ -1076,9 +1069,6 @@ public class CustPriceMaint extends javax.swing.JPanel {
             try {
                 boolean proceed = true;
                 int i = 0;
-                
-           
-             
              
                 if (proceed) {
                     st.executeUpdate("update cpr_mstr "
@@ -1092,7 +1082,6 @@ public class CustPriceMaint extends javax.swing.JPanel {
 
                     bsmf.MainFrame.show(getMessageTag(1008));
                     initvars(null);
-                    // btQualProbAdd.setEnabled(false);
                 } // if proceed
             } catch (SQLException s) {
                 MainFrame.bslog(s);
