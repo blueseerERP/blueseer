@@ -3,13 +3,13 @@ Discounts,Freight,Freight,0
 Discounts,Volume,Volume,0
 Discounts,Other,Other,0
 Discounts,Promo,Promo,0
-orderstatus,cancel,,1
-orderstatus,closed,,0
-orderstatus,error,,1
-orderstatus,hold,,1
-orderstatus,open,,1
-orderstatus,commit,,1
-orderstatus,backorder,,0
+orderstatus,anulare,,1
+orderstatus,închis,,0
+orderstatus,eroare,,1
+orderstatus,in asteptare,,1
+orderstatus,deschis,,1
+orderstatus,comite,,1
+orderstatus,comandă în așteptare,,0
 engineer,frank,,0
 ItemType,CONT,Container,0
 ItemType,FG,Finished Goods,0
