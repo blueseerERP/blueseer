@@ -1191,8 +1191,6 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
        // "Reference" "Amount"
          int[] rows = referencedet.getSelectedRows();
         for (int i : rows) {
-            
-            
            armodel.addRow(new Object[] { referencedet.getModel().getValueAt(i, 0),
                                               referencedet.getModel().getValueAt(i, 5),
                                               referencedet.getModel().getValueAt(i, 6),
@@ -1248,7 +1246,9 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
             actamt += bsParseDouble(referencedet.getModel().getValueAt(i,5).toString());
             
            armodel.addRow(new Object[] { referencedet.getModel().getValueAt(i, 0),
-                                              referencedet.getModel().getValueAt(i, 5)
+                                              referencedet.getModel().getValueAt(i, 5),
+                                              referencedet.getModel().getValueAt(i, 6),
+                                              referencedet.getModel().getValueAt(i, 7)
                                               });
         }
         
