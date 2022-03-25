@@ -110,6 +110,7 @@ public class OrderRpt extends javax.swing.JPanel {
                             getGlobalColumnTag("duedate"), 
                             getGlobalColumnTag("qty"), 
                             getGlobalColumnTag("amount"), 
+                            getGlobalColumnTag("currency"),
                             getGlobalColumnTag("status"), 
                             getGlobalColumnTag("planstatus")})
              {
@@ -156,14 +157,13 @@ public class OrderRpt extends javax.swing.JPanel {
          
         @Override  
           public Class getColumnClass(int col) {  
-            if (col == 7)       
-                return Integer.class;  
-            else if (col == 8)
-                return Double.class;
-            else if (col == 0)
+            if (col == 7 || col == 8) {      
+                return Double.class; 
+            } else if (col == 0) {
                 return ImageIcon.class;
-
-            else return String.class;  //other columns accept String values  
+            } else {
+                return String.class;
+            }  //other columns accept String values  
           
 // return String.class;
         }  
@@ -607,7 +607,7 @@ try {
                  DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
 
                      
-                 res = st.executeQuery("SELECT so_nbr, so_rmks, so_cust, so_po, so_ord_date, so_due_date, so_status, " +
+                 res = st.executeQuery("SELECT so_nbr, so_rmks, so_cust, so_curr, so_po, so_ord_date, so_due_date, so_status, " +
                         " sum(sod_ord_qty) as totqty, sum(sod_ord_qty * sod_netprice) as totdol " +
                         " FROM  so_mstr left outer join sod_det on sod_nbr = so_nbr " +
                         " where so_ord_date >= " + "'" + dfdate.format(dcFrom.getDate())  + "'" + 
@@ -646,6 +646,7 @@ try {
                                 res.getString("so_due_date"),
                                 res.getInt("totqty"),
                                 bsParseDouble(currformatDouble(res.getDouble("totdol"))),
+                                res.getString("so_curr"),
                                 res.getString("so_status"),
                                 planstatus
                             });
