@@ -100,7 +100,8 @@ public class ItemBrowse extends javax.swing.JPanel {
                             getGlobalColumnTag("select"),
                             getGlobalColumnTag("item"),
                             getGlobalColumnTag("description"), 
-                            getGlobalColumnTag("code"), 
+                            getGlobalColumnTag("code"),
+                            getGlobalColumnTag("type"),
                             getGlobalColumnTag("uom"), 
                             getGlobalColumnTag("status"),
                             getGlobalColumnTag("qoh")})
@@ -109,7 +110,7 @@ public class ItemBrowse extends javax.swing.JPanel {
                       public Class getColumnClass(int col) {  
                         if (col == 0)       
                             return ImageIcon.class;  
-                        else if (col == 6)
+                        else if (col == 7)
                             return Double.class;
                         else return String.class;  //other columns accept String values  
                       }  
@@ -470,6 +471,7 @@ try {
                     mylist.add(new String[]{res.getString("it_item"),
                                 res.getString("it_desc"),
                                 res.getString("it_code"),
+                                res.getString("it_type"), 
                                 res.getString("it_uom"),
                                 res.getString("it_status"),
                                 res.getString("it_site")});
@@ -482,7 +484,8 @@ try {
                                 s[2],
                                 s[3],
                                 s[4],
-                                invData.getItemQOHTotal(s[0], s[5])
+                                s[5],
+                                invData.getItemQOHTotal(s[0], s[6])
                             });
                 }
                 
