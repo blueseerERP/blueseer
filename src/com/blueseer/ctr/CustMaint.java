@@ -709,6 +709,7 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
        
     ddshipstate.removeAllItems();
         ArrayList states = OVData.getCodeMstrKeyList("state");
+        ddshipstate.addItem("");
         for (int i = 0; i < states.size(); i++) {
             ddshipstate.addItem(states.get(i).toString());
         }
@@ -838,6 +839,7 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
         
         ddstate.removeAllItems();
         ArrayList states = OVData.getCodeMstrKeyList("state");
+        ddstate.addItem("");
         for (int i = 0; i < states.size(); i++) {
             ddstate.addItem(states.get(i).toString());
         }

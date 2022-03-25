@@ -11,3 +11,5 @@ patch=1
 #
 patch=2
 # lang pack updates
+patch=3
+# introduction of romanian lang and bug fix for #44 foreign currency issue; several data imports routines allowed 'update' capability #42

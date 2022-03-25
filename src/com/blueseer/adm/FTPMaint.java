@@ -66,6 +66,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.net.SocketException;
+import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Connection;
@@ -511,12 +512,7 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
         ftp_mstr fm = admData.getFTPMstr(new String[]{c[0]});
         String[] m = new String[]{"",""};
          FTPClient client = new FTPClient();
-         
-        
-         
-         
          FileOutputStream in = null;
-         
            try {
                
                String homeIn = EDData.getEDIInDir();
@@ -624,7 +620,7 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
                             for (FTPFile f : ftpFiles) {
                                 String x = ("\\Q" + splitLine[1] + "\\E").replace("*", "\\E.*\\Q");
                                 if (f.getName().matches(x)) {
-                                Path inpath = Paths.get(homeIn + "\\" + f.getName());
+                                Path inpath = FileSystems.getDefault().getPath(homeIn + "/" + f.getName());
 	              		in = new FileOutputStream(inpath.toFile());
                                 talog.append("retrieving file: " + f.getName() + " size:" + f.getSize() + "\n");
                                 client.retrieveFile(f.getName(), in);
@@ -988,9 +984,7 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lblstatus, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 455, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 0, 0)
-                        .addComponent(btrun)))
+                    .addComponent(btrun))
                 .addGap(40, 40, 40))
         );
         jPanel1Layout.setVerticalGroup(
@@ -1011,7 +1005,7 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jScrollPane1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel12)
                             .addComponent(lblstatus, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)

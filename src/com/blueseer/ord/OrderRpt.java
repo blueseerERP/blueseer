@@ -691,6 +691,7 @@ try {
             
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 HashMap hm = new HashMap();
+                hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
                 File mytemplate = new File("jasper/orderbrowsesumary.jasper");
                 
                 JasperPrint jasperPrint = JasperFillManager.fillReport(mytemplate.getPath(), hm, new JRTableModelDataSource(tableorder.getModel()) );

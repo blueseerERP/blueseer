@@ -303,6 +303,7 @@ public class SiteMaint extends javax.swing.JPanel implements IBlueSeerT {
          
         ddstate.removeAllItems();
         ArrayList states = OVData.getCodeMstrKeyList("state");
+        ddstate.addItem("");
         for (int i = 0; i < states.size(); i++) {
             ddstate.addItem(states.get(i).toString());
         }
