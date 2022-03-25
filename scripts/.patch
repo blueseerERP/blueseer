@@ -14,4 +14,4 @@ patch=2
 patch=3
 # introduction of romanian lang and bug fix for #44 foreign currency issue; several data imports routines allowed 'update' capability #42
 patch=4
-# bug fix for #45 and added type field to item master browse menu
+# bug fix for #45 and added type field to item master browse menu; patch for #46
