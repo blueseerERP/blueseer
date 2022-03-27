@@ -36,6 +36,7 @@
 	</field>
 	<field name="COLUMN_9" class="java.lang.String"/>
 	<field name="COLUMN_10" class="java.lang.String"/>
+	<field name="COLUMN_11" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -115,31 +116,31 @@
 		<band height="42" splitType="Stretch">
 			<textField>
 				<reportElement x="19" y="0" width="72" height="16" uuid="978682a3-4259-41c3-adae-54872ecfe90a"/>
-				<textFieldExpression><![CDATA[$F{COLUMN_1}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{COLUMN_2}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="126" y="16" width="158" height="16" uuid="edbe7124-d60b-42b0-a896-8522f841a299"/>
-				<textFieldExpression><![CDATA[$F{COLUMN_4}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{COLUMN_5}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="163" y="0" width="127" height="16" uuid="a33e94ca-e3f8-4f4f-9bd9-5152ed973656"/>
-				<textFieldExpression><![CDATA[$F{COLUMN_3}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{COLUMN_4}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="91" y="0" width="72" height="16" uuid="ee72a0da-c3b3-48c4-a45e-ef0e73f30c87"/>
-				<textFieldExpression><![CDATA[$F{COLUMN_2}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{COLUMN_3}]]></textFieldExpression>
 			</textField>
 			<textField pattern="¤ #,##0.00">
 				<reportElement x="476" y="0" width="89" height="16" uuid="e2325093-90b1-4cc7-8ece-4f84cb1267f3"/>
-				<textFieldExpression><![CDATA[$F{COLUMN_8}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{COLUMN_9}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.00">
 				<reportElement x="392" y="0" width="84" height="16" uuid="c281268d-e4eb-4cb4-a536-bc03727f0846"/>
-				<textFieldExpression><![CDATA[$F{COLUMN_7}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{COLUMN_8}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0">
 				<reportElement x="300" y="0" width="64" height="16" uuid="9f9b5c69-c98b-4654-b0ec-3eb1b2275694"/>
-				<textFieldExpression><![CDATA[$F{COLUMN_6}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{COLUMN_7}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="284" y="16" width="56" height="16" uuid="b65b871c-5bca-47c2-a06c-aac3bf5768d5"/>
@@ -150,7 +151,7 @@
 			</textField>
 			<textField pattern="###0">
 				<reportElement x="340" y="16" width="64" height="16" uuid="fbda784b-b88c-4f80-82bc-a8a06cc41191"/>
-				<textFieldExpression><![CDATA[$F{COLUMN_10}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{COLUMN_11}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="420" y="16" width="56" height="16" uuid="77b4ad49-0cf1-4724-a020-260fff003af1"/>
@@ -161,7 +162,7 @@
 			</textField>
 			<textField pattern="###0">
 				<reportElement x="476" y="16" width="64" height="16" uuid="660b4942-16ce-4a98-8912-e8df66c30003"/>
-				<textFieldExpression><![CDATA[$F{COLUMN_9}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{COLUMN_10}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="60" y="16" width="56" height="16" uuid="3433cd02-8b56-4faf-a1ec-3b73566e0c40"/>
