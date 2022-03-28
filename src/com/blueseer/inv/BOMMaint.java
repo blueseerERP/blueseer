@@ -630,7 +630,7 @@ public class BOMMaint extends javax.swing.JPanel {
     public pbm_mstr createRecord() {
         pbm_mstr x = new pbm_mstr(null, tbkey.getText().toString(),
                 ddcomp.getSelectedItem().toString(),
-                bsformat("d", tbqtyper.getText(), "0").replace(defaultDecimalSeparator, '.'),
+                bsformat("d", tbqtyper.getText(), "5").replace(defaultDecimalSeparator, '.'),
                 ddop.getSelectedItem().toString(),
                 tbref.getText(),
                 tbcomptype.getText(), tbbomid.getText());
@@ -640,7 +640,7 @@ public class BOMMaint extends javax.swing.JPanel {
     public pbm_mstr createRecord(String comp) {
         pbm_mstr x = new pbm_mstr(null, tbkey.getText().toString(),
                 comp,
-                bsformat("d", tbqtyper.getText(), "0").replace(defaultDecimalSeparator, '.'),
+                bsformat("d", tbqtyper.getText(), "5").replace(defaultDecimalSeparator, '.'),
                 ddop.getSelectedItem().toString(),
                 tbref.getText(),
                 tbcomptype.getText(), tbbomid.getText());

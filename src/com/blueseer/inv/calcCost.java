@@ -197,6 +197,12 @@ public class calcCost {
             lowerlbrcost = lowerlbrcost + (parentqty * OVData.getLaborAllOps(newpart[0]));
             //lowerbdncost = lowerbdncost + OVData.getBurdenAllOps(newpart[0]); 
             lowerbdncost = lowerbdncost + (parentqty * OVData.getBurdenAllOps(newpart[0]));
+            thisovhcost = (parentqty * invData.getItemOvhCost(newpart[0]));
+            
+            ovhcost = ovhcost + thisovhcost;
+            thisoutcost = (parentqty * invData.getItemOutCost(newpart[0]));
+            outcost = outcost + thisoutcost;
+            //bsmf.MainFrame.show(newpart[0] + "/" + lastlevel + "/" + ovhcost);
            
         }
         
@@ -224,7 +230,6 @@ public class calcCost {
                   ovhcost = ovhcost + thisovhcost;
                   thisoutcost = (parentqty * invData.getItemOutCost(value[1]));
                   outcost = outcost + thisoutcost;
-                  
                   }
            
               } 

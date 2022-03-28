@@ -2335,10 +2335,8 @@ public class invData {
     Class.forName(driver).newInstance();
     Connection con = DriverManager.getConnection(url + db, user, pass);
     Statement st = con.createStatement();
-                    ResultSet res = null;
+    ResultSet res = null;
     try{
-       
-
         res = st.executeQuery("select it_ovh_cost from item_mstr where it_item = " + "'" + item + "'" + ";" );
        while (res.next()) {
         cost = res.getDouble("it_ovh_cost");                    
