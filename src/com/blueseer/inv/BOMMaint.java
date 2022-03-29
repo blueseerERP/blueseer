@@ -38,6 +38,7 @@ import static bsmf.MainFrame.user;
 import static com.blueseer.inv.invData.addPBM;
 import com.blueseer.inv.invData.bom_mstr;
 import static com.blueseer.inv.invData.deletePBM;
+import static com.blueseer.inv.invData.getBOMMstr;
 import static com.blueseer.inv.invData.getItemOutCost;
 import static com.blueseer.inv.invData.getItemOvhCost;
 import com.blueseer.inv.invData.pbm_mstr;
@@ -113,6 +114,7 @@ public class BOMMaint extends javax.swing.JPanel {
                 String BomID = "";
                 boolean bomexist = false;
                 boolean newbomid = false;
+                public static bom_mstr x = null;
                 
      javax.swing.table.DefaultTableModel matlmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                     new String[]{
@@ -180,16 +182,20 @@ public class BOMMaint extends javax.swing.JPanel {
        public void done() {
             try {
             String[] message = get();
-           
+            
             BlueSeerUtils.endTask(message);
            if (this.type.equals("delete")) {
-             getRecord(new String[]{tbkey.getText()});  
+             getRecord(new String[]{tbkey.getText(), ""}); 
+             updateFormAddUpdate();
            } else if (this.type.equals("get") && message[0].equals("1")) {
+             updateForm();
              tbkey.requestFocus();
            } else if (this.type.equals("get") && message[0].equals("0")) {
+             updateForm();  
              tbkey.requestFocus();
            } else {
-             getRecord(new String[]{tbkey.getText()});
+             getRecord(new String[]{this.key[0], this.key[1]});  // add and update
+             updateFormAddUpdate();
            }
            
             
@@ -392,14 +398,14 @@ public class BOMMaint extends javax.swing.JPanel {
         tbkey.requestFocus();
     }
     
-    public String[] setAction(int i) {
+    public void setAction(String[] x) {
         String[] m = new String[2];
         setPanelComponentState(this, true);
         btdelete.setEnabled(false);
         btupdate.setEnabled(false);
         btadd.setEnabled(false);
         tbbomid.setEnabled(false);
-        if (i > 0) {
+        if (x[0].equals("0")) {
             m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess}; 
            tbkey.setEditable(false);
            tbkey.setForeground(Color.blue);
@@ -407,7 +413,7 @@ public class BOMMaint extends javax.swing.JPanel {
            btadd.setEnabled(true);
            bomexist = true;
           
-        } else if (i == 0) {
+        } else if (x[0].equals("1")) {
            m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1146)};  // no bom found
                    tbkey.setForeground(Color.red); 
                    btlookupbom.setEnabled(false);
@@ -421,7 +427,6 @@ public class BOMMaint extends javax.swing.JPanel {
                     btadd.setEnabled(false);
                     bomexist = false;
         }
-        return m;
     }
     
     public boolean validateInput(String x) {
@@ -516,99 +521,33 @@ public class BOMMaint extends javax.swing.JPanel {
        
     }
     
-    public String[] getRecord(String[] x) {
-         String[] m = new String[2];
-         
-             boolean hasRouting =  getRouting(x[0]);
-             int i = 0;
-         
-        try {
-
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
+    public String[] getRecord(String[] key) {
+                         
+        // lets first determine if there are any BOMs default or alternates
+        BomID = OVData.getDefaultBomID(key[0]);
                 
-                // lets first determine if there are any BOMs default or alternates
-                BomID = OVData.getDefaultBomID(x[0]);
-                
-                // override with 2nd parameter from lookupUPBOM when we know exactly which BOM ID we want
-                if (x.length > 1 && ! x[1].isEmpty()) {
-                 BomID = x[1];
-                }
-                
-                res = st.executeQuery("select * from bom_mstr " +
-                        " where bom_item = " + "'" + x[0] + "'" +
-                        " and bom_id = " + "'" + BomID + "'" + ";");
-                while (res.next()) {
-                    cbdefault.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("bom_primary")));
-                    cbenabled.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("bom_enabled")));
-                    tbbomdesc.setText(res.getString("bom_desc"));
-                    i++;
-                }
-                res.close();
-                st.close();
-                
-                tbkey.setText(x[0]);
-                getOPs(x[0]);
-                
-               
-                  site = OVData.getDefaultSite();
-                  parent = x[0];
-                  tblotsize.setText(invData.getItemLotSize(x[0]));
-                  tbbomid.setText(BomID);
-                  getComponents(x[0], BomID);
-                  bind_tree(x[0], BomID);
-                  callSimulateCost();
-                  getCostSets(x[0]);
-                  ddcomp.removeItem(tbkey.getText());  // remove parent from component list
-               
-             
-              if (! hasRouting) {
-                  i = -1;
-             } 
-               // set Action if Record found (i > 0)
-                m = setAction(i);
-                
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};  
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1020, Thread.currentThread().getStackTrace()[1].getMethodName())};  
+        // override with 2nd parameter from lookupUPBOM when we know exactly which BOM ID we want
+        if (key.length > 1 && ! key[1].isEmpty()) {
+         BomID = key[1];
         }
-      return m;
+        if (key.length > 1 && key[1].isEmpty() && ! BomID.isEmpty()) {
+            key[1] = BomID;
+        }
+        bom_mstr z = getBOMMstr(key);
+        x = z;     
+        
+        return x.m();         
     }
     
     public String[] addRecord(String[] x) {
         String[] m = new String[2];
         m = addPBM(createRecord(), createRecordBomMstr(), true);
-        bind_tree(tbkey.getText(), tbbomid.getText());
-        getComponents(tbkey.getText(), tbbomid.getText());
-        callSimulateCost();
-        updateCurrentItemCost(tbkey.getText());
-        getCostSets(tbkey.getText().toString());
         return m;
     }
     
     public String[] updateRecord(String[] x) {
      String[] m = new String[2];
         m = updatePBM(createRecord(), createRecordBomMstr());
-        bind_tree(tbkey.getText(), tbbomid.getText());
-        getComponents(tbkey.getText(), tbbomid.getText());
-        callSimulateCost();
-        updateCurrentItemCost(tbkey.getText());
-        getCostSets(tbkey.getText().toString());
-        
         return m;
     }
     
@@ -658,8 +597,7 @@ public class BOMMaint extends javax.swing.JPanel {
                 BlueSeerUtils.boolToString(cbdefault.isSelected()));
         return x;
     } 
-    
-    
+        
     public void lookUpFrame() {
         
         luinput.removeActionListener(lual);
@@ -742,6 +680,54 @@ public class BOMMaint extends javax.swing.JPanel {
         
     }
 
+    public String[] updateForm() {
+      tbkey.setText(x.bom_item());
+      cbdefault.setSelected(BlueSeerUtils.ConvertStringToBool(x.bom_primary()));
+      cbenabled.setSelected(BlueSeerUtils.ConvertStringToBool(x.bom_enabled()));
+      tbbomdesc.setText(x.bom_desc());
+      getOPs(x.bom_item());
+      site = OVData.getDefaultSite();
+      parent = x.bom_item();
+      tblotsize.setText(invData.getItemLotSize(x.bom_item()));
+      tbbomid.setText(BomID);
+      getComponents(x.bom_item(), BomID);
+      bind_tree(x.bom_item(), BomID);
+      callSimulateCost();
+      getCostSets(x.bom_item());
+      ddcomp.removeItem(tbkey.getText());  // remove parent from component list
+      
+       String[] message = new String[2];
+            message[0] = "";
+            message[1] = "";
+       
+       message = x.m();
+       boolean hasRouting =  getRouting(x.bom_item());
+        if (! hasRouting) {
+          message[1] = "-1";
+        } 
+       setAction(message);
+       
+      return x.m();
+    }
+    
+    public void updateFormAddUpdate() {
+        bind_tree(tbkey.getText(), tbbomid.getText());
+        getComponents(tbkey.getText(), tbbomid.getText());
+        callSimulateCost();
+        updateCurrentItemCost(tbkey.getText());
+        getCostSets(tbkey.getText().toString());
+        
+        String[] message = new String[2];
+        message[0] = "";
+        message[1] = "";
+        message = x.m();
+       boolean hasRouting =  getRouting(x.bom_item());
+        if (! hasRouting) {
+          message[1] = "-1";
+        } 
+       setAction(message);
+        
+    }
     
     
     public void getCostSets(String parent) {
@@ -1787,7 +1773,7 @@ public class BOMMaint extends javax.swing.JPanel {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("add", new String[]{tbkey.getText()});
+        executeTask("add", new String[]{tbkey.getText(), ""});
     }//GEN-LAST:event_btaddActionPerformed
 
     private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
@@ -1795,7 +1781,7 @@ public class BOMMaint extends javax.swing.JPanel {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("delete" ,new String[]{tbkey.getText()});   
+        executeTask("delete" ,new String[]{tbkey.getText(), ""});   
     }//GEN-LAST:event_btdeleteActionPerformed
 
     private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
@@ -1803,7 +1789,7 @@ public class BOMMaint extends javax.swing.JPanel {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("update", new String[]{tbkey.getText()});
+        executeTask("update", new String[]{tbkey.getText(), ""});
     }//GEN-LAST:event_btupdateActionPerformed
 
     private void tbkeyFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbkeyFocusLost
@@ -1921,7 +1907,7 @@ public class BOMMaint extends javax.swing.JPanel {
     }//GEN-LAST:event_jTree1ValueChanged
 
     private void tbkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkeyActionPerformed
-        executeTask("get", new String[]{tbkey.getText()});
+        executeTask("get", new String[]{tbkey.getText(), ""});
     }//GEN-LAST:event_tbkeyActionPerformed
 
     private void btclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearActionPerformed

@@ -120,7 +120,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
 
     // global variable declarations
                 boolean isLoad = false;
-    
+                public static item_mstr x = null;
    
                 
    // global datatablemodel declarations    
@@ -189,7 +189,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
        public void done() {
             try {
             String[] message = get();
-           
+            updateForm();
             BlueSeerUtils.endTask(message);
            if (this.type.equals("delete")) {
              initvars(null);  
@@ -599,50 +599,9 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
      }
     
     public String[] getRecord(String[] key) {
-        
-        item_mstr x = getItemMstr(key);  
-       
-        tbkey.setText(x.it_item());
-        tbdesc.setText(x.it_desc());
-        ddprodcode.setSelectedItem(x.it_prodline());
-        ddstatus.setSelectedItem(x.it_status());
-        ddcode.setSelectedItem(x.it_code());
-        dduom.setSelectedItem(x.it_uom());
-        ddtax.setSelectedItem(x.it_taxcode());
-        ddtype.setSelectedItem(x.it_type());
-        comments.setText(x.it_comments());
-        tbdrawing.setText(x.it_drawing());
-        tbcreatedate.setText(x.it_createdate());
-        ddwh.setSelectedItem(x.it_wh());
-        ddloc.setSelectedItem(x.it_loc());
-        ddrouting.setSelectedItem(x.it_wf());
-        revlevel.setText(x.it_rev());
-        tbdefaultcont.setText(x.it_cont());
-        tbcontqty.setText(x.it_contqty());
-        tbshipwt.setText(x.it_ship_wt());
-        tbnetwt.setText(x.it_net_wt());
-        ddsite.setSelectedItem(x.it_site());
-        tbminordqty.setText(x.it_minordqty());
-        tbsafestock.setText(x.it_safestock());
-        tbleadtime.setText(x.it_leadtime());
-        cbmrp.setSelected(BlueSeerUtils.ConvertStringToBool(x.it_mrp()));
-        cbplan.setSelected(BlueSeerUtils.ConvertStringToBool(x.it_plan()));
-        cbschedule.setSelected(BlueSeerUtils.ConvertStringToBool(x.it_sched())); 
-        cbphantom.setSelected(BlueSeerUtils.ConvertStringToBool(x.it_phantom())); 
-        tblotsize.setText(x.it_lotsize());
-        tbsellprice.setText(currformat(x.it_sell_price()));
-        tbpurchprice.setText(currformat(x.it_pur_price()));
-        tbmtlcost.setText(currformat(x.it_mtl_cost()));
-        tbovhcost.setText(currformat(x.it_ovh_cost()));
-        tboutcost.setText(currformat(x.it_out_cost()));
-        tbexpiredays.setText(x.it_expiredays());
-        dcexpire.setDate(BlueSeerUtils.parseDate(x.it_expire()));
-        bind_tree_op(key[0]);                    
-        getrecenttrans(key[0]);                    
-        getlocqty(key[0]);                    
-        getItemImages(key[0]);
-        setAction(x.m());
-        return x.m();
+        item_mstr z = getItemMstr(key);  
+        x = z;
+       return x.m();
     }
     
     public item_mstr createRecord() { 
@@ -690,8 +649,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 );
         return x;
     }
-    
-    
+        
     public void lookUpFrame() {
         
         luinput.removeActionListener(lual);
@@ -733,6 +691,49 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
         
     }
    
+    public String[] updateForm() {
+        tbkey.setText(x.it_item());
+        tbdesc.setText(x.it_desc());
+        ddprodcode.setSelectedItem(x.it_prodline());
+        ddstatus.setSelectedItem(x.it_status());
+        ddcode.setSelectedItem(x.it_code());
+        dduom.setSelectedItem(x.it_uom());
+        ddtax.setSelectedItem(x.it_taxcode());
+        ddtype.setSelectedItem(x.it_type());
+        comments.setText(x.it_comments());
+        tbdrawing.setText(x.it_drawing());
+        tbcreatedate.setText(x.it_createdate());
+        ddwh.setSelectedItem(x.it_wh());
+        ddloc.setSelectedItem(x.it_loc());
+        ddrouting.setSelectedItem(x.it_wf());
+        revlevel.setText(x.it_rev());
+        tbdefaultcont.setText(x.it_cont());
+        tbcontqty.setText(x.it_contqty());
+        tbshipwt.setText(x.it_ship_wt());
+        tbnetwt.setText(x.it_net_wt());
+        ddsite.setSelectedItem(x.it_site());
+        tbminordqty.setText(x.it_minordqty());
+        tbsafestock.setText(x.it_safestock());
+        tbleadtime.setText(x.it_leadtime());
+        cbmrp.setSelected(BlueSeerUtils.ConvertStringToBool(x.it_mrp()));
+        cbplan.setSelected(BlueSeerUtils.ConvertStringToBool(x.it_plan()));
+        cbschedule.setSelected(BlueSeerUtils.ConvertStringToBool(x.it_sched())); 
+        cbphantom.setSelected(BlueSeerUtils.ConvertStringToBool(x.it_phantom())); 
+        tblotsize.setText(x.it_lotsize());
+        tbsellprice.setText(currformat(x.it_sell_price()));
+        tbpurchprice.setText(currformat(x.it_pur_price()));
+        tbmtlcost.setText(currformat(x.it_mtl_cost()));
+        tbovhcost.setText(currformat(x.it_ovh_cost()));
+        tboutcost.setText(currformat(x.it_out_cost()));
+        tbexpiredays.setText(x.it_expiredays());
+        dcexpire.setDate(BlueSeerUtils.parseDate(x.it_expire()));
+        bind_tree_op(x.it_item());                    
+        getrecenttrans(x.it_item());                    
+        getlocqty(x.it_item());                    
+        getItemImages(x.it_item());
+        setAction(x.m());
+        return x.m();
+    }
     // custom functions  
     public void getItemImages(String item) {
         isLoad = true;

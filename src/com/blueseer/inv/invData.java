@@ -899,6 +899,37 @@ public class invData {
         return m;
     }
 
+    public static bom_mstr getBOMMstr(String[] x) {
+        bom_mstr r = null;
+        String[] m = new String[2];
+        String sql = "select * from bom_mstr where bom_item = ? and bom_id = ? ;";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, x[0]);
+        ps.setString(2, x[1]);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new bom_mstr(m);  // minimum return
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new bom_mstr(m, res.getString("bom_id"),
+                                res.getString("bom_desc"),
+                                res.getString("bom_item"),
+                                res.getString("bom_enabled"),
+                                res.getString("bom_primary"));
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getClassName() + "." + Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new bom_mstr(m);
+        }
+        return r;
+    }
+  
    
 
     /* misc functions */

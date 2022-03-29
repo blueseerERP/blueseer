@@ -93,6 +93,7 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
     // global variable declarations
      boolean editmode = false;
      boolean isLoad = false;
+     public static cm_mstr k = null;
     
     // global datatablemodel declarations 
     javax.swing.table.DefaultTableModel contactmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
@@ -157,7 +158,7 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
        public void done() {
             try {
             String[] message = get();
-           
+            updateForm();
             BlueSeerUtils.endTask(message);
            if (this.type.equals("delete")) {
              initvars(null);  
@@ -395,44 +396,8 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
      }
     
     public String[] getRecord(String[] x) {
-        cm_mstr k = getCustMstr(x);
-        tbkey.setText(k.cm_code());
-        tbname.setText(k.cm_name());
-        tbline1.setText(k.cm_line1());
-        tbline2.setText(k.cm_line2());
-        tbline3.setText(k.cm_line3());
-        tbcity.setText(k.cm_city());
-        ddstate.setSelectedItem(k.cm_state());
-        ddcountry.setSelectedItem(k.cm_country());
-        tbzip.setText(k.cm_zip());
-        tbdateadded.setText(k.cm_dateadd());
-        tbdatemod.setText(k.cm_datemod());
-        tbgroup.setText(k.cm_group());
-        tbmarket.setText(k.cm_market());
-        tbcreditlimit.setText(k.cm_creditlimit());
-        cbonhold.setSelected(BlueSeerUtils.ConvertStringToBool(k.cm_onhold()));
-        ddcarrier.setSelectedItem(k.cm_carrier());
-        ddbank.setSelectedItem(k.cm_bank());
-        ddcurr.setSelectedItem(k.cm_curr());
-        ddlabel.setSelectedItem(k.cm_label());
-        tbinvformat.setText(k.cm_iv_jasper());
-        tbshpformat.setText(k.cm_ps_jasper());
-        ddfreightterms.setSelectedItem(k.cm_freight_type());
-        ddterms.setSelectedItem(k.cm_terms());
-        tbpricecode.setText(k.cm_price_code());
-        tbdisccode.setText(k.cm_disc_code());
-        ddtax.setSelectedItem(k.cm_tax_code());
-        tbsalesrep.setText(k.cm_salesperson());
-        ddaccount.setSelectedItem(k.cm_ar_acct());
-        ddcc.setSelectedItem(k.cm_ar_cc());
-        tbremarks.setText(k.cm_remarks());
-        tbmainphone.setText(k.cm_phone());
-        tbmainemail.setText(k.cm_email());
-        contactmodel.setRowCount(0);
-        clearShipTo();
-        clearContacts();
-        refreshContactTable(x[0]);
-        setAction(k.m());
+        cm_mstr z = getCustMstr(x);
+        k = z;
         return k.m();
     }
      
@@ -620,6 +585,46 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
         
     }
 
+    public String[] updateForm() {
+      tbkey.setText(k.cm_code());
+        tbname.setText(k.cm_name());
+        tbline1.setText(k.cm_line1());
+        tbline2.setText(k.cm_line2());
+        tbline3.setText(k.cm_line3());
+        tbcity.setText(k.cm_city());
+        ddstate.setSelectedItem(k.cm_state());
+        ddcountry.setSelectedItem(k.cm_country());
+        tbzip.setText(k.cm_zip());
+        tbdateadded.setText(k.cm_dateadd());
+        tbdatemod.setText(k.cm_datemod());
+        tbgroup.setText(k.cm_group());
+        tbmarket.setText(k.cm_market());
+        tbcreditlimit.setText(k.cm_creditlimit());
+        cbonhold.setSelected(BlueSeerUtils.ConvertStringToBool(k.cm_onhold()));
+        ddcarrier.setSelectedItem(k.cm_carrier());
+        ddbank.setSelectedItem(k.cm_bank());
+        ddcurr.setSelectedItem(k.cm_curr());
+        ddlabel.setSelectedItem(k.cm_label());
+        tbinvformat.setText(k.cm_iv_jasper());
+        tbshpformat.setText(k.cm_ps_jasper());
+        ddfreightterms.setSelectedItem(k.cm_freight_type());
+        ddterms.setSelectedItem(k.cm_terms());
+        tbpricecode.setText(k.cm_price_code());
+        tbdisccode.setText(k.cm_disc_code());
+        ddtax.setSelectedItem(k.cm_tax_code());
+        tbsalesrep.setText(k.cm_salesperson());
+        ddaccount.setSelectedItem(k.cm_ar_acct());
+        ddcc.setSelectedItem(k.cm_ar_cc());
+        tbremarks.setText(k.cm_remarks());
+        tbmainphone.setText(k.cm_phone());
+        tbmainemail.setText(k.cm_email());
+        contactmodel.setRowCount(0);
+        clearShipTo();
+        clearContacts();
+        refreshContactTable(k.cm_code());
+        setAction(k.m());
+        return k.m();  
+    }
     
     // additional functions 
     public void overrideComponentState() {

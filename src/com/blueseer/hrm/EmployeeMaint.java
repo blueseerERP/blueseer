@@ -240,7 +240,7 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 } catch (TimeoutException ex) {
                     MainFrame.bslog(ex);
                 }
-           getRecordUpdateForm();
+           updateForm();
            BlueSeerUtils.endTask(m);
            if (this.type.equals("delete")) {
              initvars(null);  
@@ -691,7 +691,7 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeerT  {
     
     // custom funcs
     
-    public String[] getRecordUpdateForm() {
+    public String[] updateForm() {
         tbkey.setText(x.emp_nbr());
         lastname.setText(x.emp_lname());
         firstname.setText(x.emp_fname());
