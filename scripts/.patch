@@ -19,3 +19,5 @@ patch=5
 # UI improvements with enhancement #48
 patch=6
 # BOM updates to costing issues ; rounding problem
+patch=7
+# Freeze UI issue fix for ItemMaint, BOMMaint, CustMaint
