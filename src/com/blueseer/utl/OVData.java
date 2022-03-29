@@ -9667,10 +9667,9 @@ return myarray;
     try{
 
         Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
         try{
-            Statement st = con.createStatement();
-            ResultSet res = null;
-
             res = st.executeQuery("select wf_op from wf_mstr inner join item_mstr on it_wf = wf_id where it_item = " + "'" + item + "'" + " order by wf_op ;");
            while (res.next()) {
                 myarray.add(res.getString("wf_op"));
@@ -9679,8 +9678,11 @@ return myarray;
        }
         catch (SQLException s){
              MainFrame.bslog(s);
+        } finally {
+            if (res != null) res.close();
+            if (st != null) st.close();
+            con.close();
         }
-        con.close();
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -9694,10 +9696,9 @@ return myarray;
     try{
 
         Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
         try{
-            Statement st = con.createStatement();
-            ResultSet res = null;
-
             res = st.executeQuery("select min(wf_op) as op from wf_mstr inner join item_mstr on it_wf = wf_id where it_item = " + "'" + item + "'" + 
                     " and wf_assert = '1' group by wf_assert order by wf_op desc;");
 
@@ -9705,11 +9706,13 @@ return myarray;
                 myreturn = res.getInt("op");
             }
 
-       }
-        catch (SQLException s){
+       } catch (SQLException s){
              MainFrame.bslog(s);
+        } finally {
+            if (res != null) res.close();
+            if (st != null) st.close();
+            con.close();
         }
-        con.close();
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -9723,9 +9726,10 @@ return myarray;
     try{
 
         Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
         try{
-            Statement st = con.createStatement();
-            ResultSet res = null;
+            
 
             res = st.executeQuery("select max(wf_op) from wf_mstr inner join item_mstr on it_wf = wf_id where it_item = " + "'" + item + "'" + 
                     " and wf_assert = '1' group by wf_assert order by wf_op desc;");
@@ -9737,8 +9741,11 @@ return myarray;
        }
         catch (SQLException s){
              MainFrame.bslog(s);
+        } finally {
+            if (res != null) res.close();
+            if (st != null) st.close();
+            con.close();
         }
-        con.close();
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -9755,9 +9762,10 @@ return myarray;
          try{
 
         Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
         try{
-            Statement st = con.createStatement();
-            ResultSet res = null;
+            
 
             res = st.executeQuery("select it_lotsize, wc_run_crew, wf_run_hours, wf_setup_hours, wc_run_rate, wc_setup_rate, wc_bdn_rate from wf_mstr " + 
                     " inner join item_mstr on it_wf = wf_id " + 
@@ -9771,8 +9779,11 @@ return myarray;
        }
         catch (SQLException s){
             MainFrame.bslog(s);
+        } finally {
+            if (res != null) res.close();
+            if (st != null) st.close();
+            con.close();
         }
-        con.close();
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -9787,9 +9798,10 @@ return myarray;
          try{
 
         Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
         try{
-            Statement st = con.createStatement();
-            ResultSet res = null;
+            
 
             res = st.executeQuery("select it_lotsize, wf_run_hours, wc_setup_rate, wf_setup_hours, wc_run_rate, wc_run_crew from wf_mstr " + 
                     " inner join item_mstr on it_wf = wf_id " + 
@@ -9813,8 +9825,11 @@ return myarray;
        }
         catch (SQLException s){
           MainFrame.bslog(s);
+        } finally {
+            if (res != null) res.close();
+            if (st != null) st.close();
+            con.close();
         }
-        con.close();
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -9830,9 +9845,10 @@ return myarray;
          try{
 
         Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
         try{
-            Statement st = con.createStatement();
-            ResultSet res = null;
+            
 
             res = st.executeQuery("select it_lotsize, wf_run_hours, wc_setup_rate, wf_setup_hours, wc_bdn_rate, wc_run_crew from wf_mstr " + 
                     " inner join item_mstr on it_wf = wf_id " + 
@@ -9852,8 +9868,11 @@ return myarray;
        }
         catch (SQLException s){
             MainFrame.bslog(s);
+        } finally {
+            if (res != null) res.close();
+            if (st != null) st.close();
+            con.close();
         }
-        con.close();
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -9868,9 +9887,10 @@ return myarray;
           try{
 
         Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
-            Statement st = con.createStatement();
+        Statement st = con.createStatement();
             ResultSet res = null;
+        try{
+            
 
             res = st.executeQuery("select it_lotsize, wc_run_crew, wf_run_hours, wf_setup_hours, wc_run_rate, wc_setup_rate, wc_bdn_rate from wf_mstr " + 
                     " inner join item_mstr on it_wf = wf_id " + 
@@ -9885,8 +9905,11 @@ return myarray;
         catch (SQLException s){
         MainFrame.bslog(s);
 
+        } finally {
+            if (res != null) res.close();
+            if (st != null) st.close();
+            con.close();
         }
-        con.close();
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -9907,9 +9930,10 @@ return myarray;
 
 
         Connection con = DriverManager.getConnection(url + db, user, pass);
-        try {
-            Statement st = con.createStatement();
+        Statement st = con.createStatement();
             ResultSet res = null;
+        try {
+            
             boolean proceed = true;
 
             int i = 0;
@@ -9989,8 +10013,11 @@ return myarray;
         } // if proceed
         catch (SQLException s) {
             MainFrame.bslog(s);
+        } finally {
+            if (res != null) res.close();
+            if (st != null) st.close();
+            con.close();
         }
-        con.close();
     } catch (Exception e) {
         MainFrame.bslog(e);
     }  
@@ -10018,11 +10045,12 @@ return myarray;
          try{
 
         Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
-            Statement st = con.createStatement();
+        Statement st = con.createStatement();
             Statement st2 = con.createStatement();
             ResultSet res = null;
             ResultSet res2 = null;
+        try{
+            
 
             // lets first get standard cost of this item for comparison
             res = st.executeQuery("select itc_total from item_cost where itc_set = 'standard' and itc_item = " + "'" + item + "';" );
@@ -10112,8 +10140,12 @@ return myarray;
         catch (SQLException s){
             MainFrame.bslog(s);
              bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+        } finally {
+            if (res != null) res.close();
+            if (res2 != null) res2.close();
+            if (st != null) st.close();
+            con.close();
         }
-        con.close();
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -10142,11 +10174,12 @@ return myarray;
               try{
 
         Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
-            Statement st = con.createStatement();
+        Statement st = con.createStatement();
             Statement st2 = con.createStatement();
             ResultSet res = null;
             ResultSet res2 = null;
+        try{
+            
 
 
              // now lets get all operational costs for this parent item and affiliated variables ...and grab matl cost for each operation
@@ -10217,8 +10250,12 @@ return myarray;
         catch (SQLException s){
             MainFrame.bslog(s);
              bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+        } finally {
+            if (res != null) res.close();
+            if (res2 != null) res2.close();
+            if (st != null) st.close();
+            con.close();
         }
-        con.close();
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -10232,9 +10269,10 @@ return myarray;
           try{
 
         Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
-            Statement st = con.createStatement();
+        Statement st = con.createStatement();
             ResultSet res = null;
+        try{
+            
            java.util.Date now = new java.util.Date();
             DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
             DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
@@ -10250,8 +10288,11 @@ return myarray;
         catch (SQLException s){
              MainFrame.bslog(s);
 
+        } finally {
+            if (res != null) res.close();
+            if (st != null) st.close();
+            con.close();
         }
-        con.close();
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -10265,9 +10306,10 @@ return myarray;
           try{
 
         Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
-            Statement st = con.createStatement();
+        Statement st = con.createStatement();
             ResultSet res = null;
+        try{
+            
                   // select statement will return all 'unique' warehouses assigned to source the order
                   res = st.executeQuery("select sod_wh from sod_det where sod_nbr = " + "'" + order + "'" +" group by sod_wh ;");
                 while (res.next()) {
@@ -10277,8 +10319,11 @@ return myarray;
         catch (SQLException s){
              MainFrame.bslog(s);
 
+        } finally {
+            if (res != null) res.close();
+            if (st != null) st.close();
+            con.close();
         }
-        con.close();
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -10292,9 +10337,10 @@ return myarray;
           try{
 
         Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
-            Statement st = con.createStatement();
+        Statement st = con.createStatement();
             ResultSet res = null;
+        try{
+            
 
                   // select statement will return all 'unique' warehouses assigned to source the order
                   res = st.executeQuery("select fo_carrier_assigned from fo_mstr where fo_nbr = " + "'" + order + "'" +";");
@@ -10305,8 +10351,11 @@ return myarray;
         catch (SQLException s){
              MainFrame.bslog(s);
 
+        } finally {
+            if (res != null) res.close();
+            if (st != null) st.close();
+            con.close();
         }
-        con.close();
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -10320,9 +10369,10 @@ return myarray;
           try{
 
         Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
-            Statement st = con.createStatement();
+        Statement st = con.createStatement();
             ResultSet res = null;
+        try{
+            
 
                   res = st.executeQuery("select fo_nbr from fo_mstr where fo_custfo = " + "'" + custfo + "'" +";");
                   while (res.next()) {
@@ -10332,8 +10382,11 @@ return myarray;
         catch (SQLException s){
              MainFrame.bslog(s);
 
+        } finally {
+            if (res != null) res.close();
+            if (st != null) st.close();
+            con.close();
         }
-        con.close();
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -10373,8 +10426,11 @@ return myarray;
         catch (SQLException s){
              MainFrame.bslog(s);
 
+        } finally {
+            if (res != null) res.close();
+            if (st != null) st.close();
+            con.close();
         }
-        con.close();
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -10416,8 +10472,11 @@ return myarray;
         catch (SQLException s){
              MainFrame.bslog(s);
 
+        } finally {
+            if (res != null) res.close();
+            if (st != null) st.close();
+            con.close();
         }
-        con.close();
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -10474,8 +10533,11 @@ return myarray;
         catch (SQLException s){
              MainFrame.bslog(s);
 
+        } finally {
+            if (res != null) res.close();
+            if (st != null) st.close();
+            con.close();
         }
-        con.close();
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -10513,8 +10575,11 @@ return myarray;
         catch (SQLException s){
              MainFrame.bslog(s);
 
+        } finally {
+            if (res != null) res.close();
+            if (st != null) st.close();
+            con.close();
         }
-        con.close();
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -10561,8 +10626,11 @@ try{
     catch (SQLException s){
          MainFrame.bslog(s);
 
-    }
-    con.close();
+    } finally {
+            if (res != null) res.close();
+            if (st != null) st.close();
+            con.close();
+        }
 }
 catch (Exception e){
     MainFrame.bslog(e);
@@ -10577,9 +10645,10 @@ return detail;
 try{
 
     Connection con = DriverManager.getConnection(url + db, user, pass);
-    try{
-        Statement st = con.createStatement();
+    Statement st = con.createStatement();
         ResultSet res = null;
+    try{
+        
        java.util.Date now = new java.util.Date();
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
         DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
@@ -10604,8 +10673,11 @@ try{
     catch (SQLException s){
          MainFrame.bslog(s);
 
-    }
-    con.close();
+    } finally {
+            if (res != null) res.close();
+            if (st != null) st.close();
+            con.close();
+        }
 }
 catch (Exception e){
     MainFrame.bslog(e);
@@ -10624,12 +10696,13 @@ return mystring;
     try{
 
         Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
-            Statement st = con.createStatement();
+        Statement st = con.createStatement();
             Statement st2 = con.createStatement();
             Statement st3 = con.createStatement();
             ResultSet res = null;
             ResultSet nres = null;
+        try{
+            
 
             java.util.Date now = new java.util.Date();
             DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
@@ -10705,8 +10778,14 @@ return mystring;
         catch (SQLException s){
              MainFrame.bslog(s);
              myerror = true;
+        } finally {
+            if (res != null) res.close();
+            if (nres != null) nres.close();
+            if (st != null) st.close();
+            if (st2 != null) st2.close();
+            if (st3 != null) st3.close();
+            con.close();
         }
-        con.close();
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -10833,14 +10912,15 @@ return mystring;
     try{
 
         Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
-            Statement st = con.createStatement();
+        Statement st = con.createStatement();
             Statement st2 = con.createStatement();
             Statement st3 = con.createStatement();
             Statement st4 = con.createStatement();
             ResultSet res = null;
             ResultSet res2 = null;
             ResultSet nres = null;
+        try{
+            
 
            java.util.Date now = new java.util.Date();
             DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
@@ -10962,8 +11042,16 @@ return mystring;
         catch (SQLException s){
              MainFrame.bslog(s);
              myerror = true;
+        } finally {
+            if (res != null) res.close();
+            if (res2 != null) res2.close();
+            if (nres != null) nres.close();
+            if (st != null) st.close();
+            if (st2 != null) st2.close();
+            if (st3 != null) st3.close();
+            if (st4 != null) st4.close();
+            con.close();
         }
-        con.close();
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -10978,12 +11066,13 @@ return mystring;
     try{
 
         Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
-            Statement st = con.createStatement();
+        Statement st = con.createStatement();
             Statement st2 = con.createStatement();
             Statement st3 = con.createStatement();
             ResultSet res = null;
             ResultSet nres = null;
+        try{
+            
 
            java.util.Date now = new java.util.Date();
             DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
@@ -11075,8 +11164,14 @@ return mystring;
         catch (SQLException s){
              MainFrame.bslog(s);
              myerror = true;
+        } finally {
+            if (res != null) res.close();
+            if (nres != null) nres.close();
+            if (st != null) st.close();
+            if (st2 != null) st2.close();
+            if (st3 != null) st3.close();
+            con.close();
         }
-        con.close();
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -11151,8 +11246,9 @@ return mystring;
         try {
 
         Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
         try {
-            Statement st = con.createStatement();
+            
 
             for (int i = 0 ; i < mytable.getRowCount(); i++) {
                 count++;
@@ -11173,8 +11269,10 @@ return mystring;
           } catch (SQLException s) {
            MainFrame.bslog(s);
            count = 0;
+        } finally {
+            if (st != null) st.close();
+            con.close();
         }
-        con.close();
     } catch (Exception e) {
            MainFrame.bslog(e);
            count = 0;
@@ -11191,10 +11289,11 @@ return mystring;
     try{
 
         Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
-            Statement st = con.createStatement();
+        Statement st = con.createStatement();
             Statement st2 = con.createStatement();
             ResultSet res = null;
+        try{
+            
 
 
            java.util.Date now = new java.util.Date();
@@ -11292,8 +11391,12 @@ return mystring;
         catch (SQLException s){
              MainFrame.bslog(s);
              myerror = true;
+        } finally {
+            if (res != null) res.close();
+            if (st != null) st.close();
+            if (st2 != null) st2.close();
+            con.close();
         }
-        con.close();
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -11393,10 +11496,11 @@ return mystring;
         try{
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
-            try{
-                Statement st = con.createStatement();
+            Statement st = con.createStatement();
                 Statement st2 = con.createStatement();
                 ResultSet res = null;
+            try{
+                
                 
                 
                java.util.Date now = new java.util.Date();
@@ -11495,8 +11599,12 @@ return mystring;
             catch (SQLException s){
                  MainFrame.bslog(s);
                  myerror = true;
-            }
+            } finally {
+            if (res != null) res.close();
+            if (st != null) st.close();
+            if (st2 != null) st2.close();
             con.close();
+        }
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -11713,7 +11821,7 @@ return mystring;
                while (res.next()) {
                     mytrkey = String.valueOf(res.getInt(1));
                 }
-              
+              res.close();
                   /* we need to consume material component inventory
                    and gl cost of this item through all unreported operations since last 
                   reported Operation */
@@ -11799,7 +11907,7 @@ return mystring;
                while (res.next()) {
                     mytrkey = String.valueOf(res.getInt(1));
                 }
-              
+                res.close();
                   /* we need to consume material component inventory
                    and gl cost of this item through all unreported operations since last 
                   reported Operation */
@@ -11844,7 +11952,7 @@ return mystring;
                while (res.next()) {
                     mytrkey = String.valueOf(res.getInt(1));
                 }
-              
+              res.close();
                   /* we need to consume material component inventory
                    and gl cost of this item through all unreported operations since last 
                   reported Operation */
@@ -11862,8 +11970,10 @@ return mystring;
                 // con.rollback();
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            }
-        con.close();
+            } finally {
+            if (st != null) st.close();
+            con.close();
+        }
         } catch (Exception e) {
             MainFrame.bslog(e);
         }  
@@ -11879,8 +11989,9 @@ return mystring;
         try{
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
             try{
-                Statement st2 = con.createStatement();
+                
                 
                 // NOTE:  all inventory transactions done at base uom level
                 
@@ -11890,7 +12001,7 @@ return mystring;
                 String mydate = dfdate.format(now);
                 String uom = OVData.getUOMFromItemSite(item, site);
                                            
-                st2.executeUpdate("insert into tran_mstr "
+                st.executeUpdate("insert into tran_mstr "
                                 + "(tr_site, tr_part, tr_qty, tr_base_qty, tr_uom, tr_op, tr_ent_date, tr_eff_date, "
                                 + " tr_userid, tr_ref, tr_addrcode, tr_type, tr_rmks, tr_nbr, "
                                 + " tr_acct, tr_cc, tr_lot, tr_serial, tr_program, tr_loc, tr_wh, tr_expire, "
@@ -11932,8 +12043,10 @@ return mystring;
             catch (SQLException s){
                  MainFrame.bslog(s);
                  myerror = true;
-            }
+            } finally {
+            if (st != null) st.close();
             con.close();
+        }
         }
         catch (Exception e){
             MainFrame.bslog(e);

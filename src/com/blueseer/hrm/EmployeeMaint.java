@@ -86,6 +86,11 @@ import java.sql.Connection;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.BorderFactory;
@@ -107,11 +112,11 @@ import javax.swing.text.StyledDocument;
  *
  * @author vaughnte
  */
-public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeerT {
+public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeerT  {
 
      // global variable declarations
                 boolean isLoad = false;
-    
+                public static emp_mstr x = null;
     // global datatablemodel declarations
     javax.swing.table.DefaultTableModel excmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
@@ -184,9 +189,10 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeerT {
 
     
     // interface functions implemented
+   
     public void executeTask(dbaction x, String[] y) { 
       
-        class Task extends SwingWorker<String[], Void> {
+       class Task extends SwingWorker<String[], Void> {
        
           String type = "";
           String[] key = null;
@@ -201,7 +207,7 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeerT {
             String[] message = new String[2];
             message[0] = "";
             message[1] = "";
-            
+           
             
              switch(this.type) {
                 case "add":
@@ -219,27 +225,34 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeerT {
                 default:
                     message = new String[]{"1", "unknown action"};
             }
-            
+                  //Thread current = Thread.currentThread();
+                 // System.out.printf("ID: %d, Name: %s%n", current.getId(), current.getName());
+                 // System.out.println("Active Count: " + Thread.activeCount());
             return message;
         }
  
         
        public void done() {
             try {
-            String[] message = get();
-           
-            BlueSeerUtils.endTask(message);
+            String[] m = null;
+                try {
+                    m = get(5L, TimeUnit.MILLISECONDS);
+                } catch (TimeoutException ex) {
+                    MainFrame.bslog(ex);
+                }
+           getRecordUpdateForm();
+           BlueSeerUtils.endTask(m);
            if (this.type.equals("delete")) {
              initvars(null);  
-           } else if (this.type.equals("get") && message[0].equals("1")) {
+           } else if (this.type.equals("get") && m[0].equals("1")) {
              tbkey.requestFocus();
-           } else if (this.type.equals("get") && message[0].equals("0")) {
+           } else if (this.type.equals("get") && m[0].equals("0")) {
              tbkey.requestFocus();
            } else {
              initvars(null);  
            }
             
-            } catch (Exception e) {
+            } catch (InterruptedException | ExecutionException e) {
                 MainFrame.bslog(e);
             } 
            
@@ -250,8 +263,10 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeerT {
        Task z = new Task(x, y); 
        z.execute(); 
        
+       
     }
    
+    
     public void setPanelComponentState(Object myobj, boolean b) {
         JPanel panel = null;
         JTabbedPane tabpane = null;
@@ -468,7 +483,7 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
     
     public void newAction(String x) {
-       setPanelComponentState(this, true);
+        setPanelComponentState(this, true);
         setComponentDefaultValues();
         BlueSeerUtils.message(new String[]{"0",BlueSeerUtils.addRecordInit});
         btupdate.setEnabled(false);
@@ -583,61 +598,11 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeerT {
      }
       
     public String[] getRecord(String[] key) {
-       
-        emp_mstr x = getEmployeeMstr(key);  
-        tbkey.setText(x.emp_nbr());
-        lastname.setText(x.emp_lname());
-        firstname.setText(x.emp_fname());
-        middlename.setText(x.emp_mname());
-        dddept.setSelectedItem(x.emp_dept());
-        ddstatus.setSelectedItem(x.emp_status());
-        ddshift.setSelectedItem(x.emp_shift());
-        ddtype.setSelectedItem(x.emp_type());
-        ddstate.setSelectedItem(x.emp_state());
-        ddcountry.setSelectedItem(x.emp_country());
-        ddgender.setSelectedItem(x.emp_gender());
-        hiredate.setDate(BlueSeerUtils.parseDate(x.emp_startdate()));
-        termdate.setDate(BlueSeerUtils.parseDate(x.emp_termdate()));
-        tbline1.setText(x.emp_addrline1());
-        tbline2.setText(x.emp_addrline2());
-        tbcity.setText(x.emp_city());
-        tbzip.setText(x.emp_zip());
-        tbvacdays.setText(x.emp_vac_days());
-        tbvactaken.setText(x.emp_vac_taken());
-        tbphone.setText(x.emp_phone());
-        tbemercontact.setText(x.emp_emer_contact());
-        tbemernumber.setText(x.emp_emer_phone());
-        tbssn.setText(x.emp_ssn());
-        tbrate.setText(x.emp_rate().replace('.',defaultDecimalSeparator));
-        tbtitle.setText(x.emp_jobtitle());
-        tbefladays.setText(x.emp_efla_days());
-        tbprofile.setText(x.emp_profile());
-        tbaccount.setText(x.emp_acct());
-        tbroute.setText(x.emp_routing());
-        ddpayfrequency.setSelectedItem(x.emp_payfrequency());
-        tbsupervisor.setText(x.emp_supervisor());
-        cbautoclock.setSelected(BlueSeerUtils.ConvertStringToBool(x.emp_autoclock()));
-        cbactive.setSelected(BlueSeerUtils.ConvertStringToBool(x.emp_active()));
-        if (x.emp_clockin().equals("1")) {
-        tbclockin.setText("yes");
-        } else {
-        tbclockin.setText("no");    
-        }
-        dcdob.setDate(BlueSeerUtils.parseDate(x.emp_dob()));
-      
-        // lets get the exceptions specific to this employee and pay records
-        if (! x.emp_nbr().isEmpty()) {
-        ArrayList<emp_exception> list = getEmployeeExceptions(new String[]{x.emp_nbr()});   
-        for (emp_exception e : list) {
-          excmodel.addRow(new Object[]{ e.empx_type(), e.empx_desc(), e.empx_amttype(), e.empx_amt().replace('.',defaultDecimalSeparator)});  
-        }
-        getPayRecords(x.emp_nbr()); 
-        }
-        
-       setAction(x.m());
+       emp_mstr z = getEmployeeMstr(key);  
+       x = z;
        return x.m();
     }
-    
+   
     public emp_mstr createRecord() { 
         emp_mstr x = new emp_mstr(null, 
                 tbkey.getText().toString(),
@@ -725,6 +690,61 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeerT {
 
     
     // custom funcs
+    
+    public String[] getRecordUpdateForm() {
+        tbkey.setText(x.emp_nbr());
+        lastname.setText(x.emp_lname());
+        firstname.setText(x.emp_fname());
+        middlename.setText(x.emp_mname());
+        dddept.setSelectedItem(x.emp_dept());
+        ddstatus.setSelectedItem(x.emp_status());
+        ddshift.setSelectedItem(x.emp_shift());
+        ddtype.setSelectedItem(x.emp_type());
+        ddstate.setSelectedItem(x.emp_state());
+        ddcountry.setSelectedItem(x.emp_country());
+        ddgender.setSelectedItem(x.emp_gender());
+        hiredate.setDate(BlueSeerUtils.parseDate(x.emp_startdate()));
+        termdate.setDate(BlueSeerUtils.parseDate(x.emp_termdate()));
+        tbline1.setText(x.emp_addrline1());
+        tbline2.setText(x.emp_addrline2());
+        tbcity.setText(x.emp_city());
+        tbzip.setText(x.emp_zip());
+        tbvacdays.setText(x.emp_vac_days());
+        tbvactaken.setText(x.emp_vac_taken());
+        tbphone.setText(x.emp_phone());
+        tbemercontact.setText(x.emp_emer_contact());
+        tbemernumber.setText(x.emp_emer_phone());
+        tbssn.setText(x.emp_ssn());
+        tbrate.setText(x.emp_rate().replace('.',defaultDecimalSeparator));
+        tbtitle.setText(x.emp_jobtitle());
+        tbefladays.setText(x.emp_efla_days());
+        tbprofile.setText(x.emp_profile());
+        tbaccount.setText(x.emp_acct());
+        tbroute.setText(x.emp_routing());
+        ddpayfrequency.setSelectedItem(x.emp_payfrequency());
+        tbsupervisor.setText(x.emp_supervisor());
+        cbautoclock.setSelected(BlueSeerUtils.ConvertStringToBool(x.emp_autoclock()));
+        cbactive.setSelected(BlueSeerUtils.ConvertStringToBool(x.emp_active()));
+        if (x.emp_clockin().equals("1")) {
+        tbclockin.setText("yes");
+        } else {
+        tbclockin.setText("no");    
+        }
+        dcdob.setDate(BlueSeerUtils.parseDate(x.emp_dob()));
+      
+        // lets get the exceptions specific to this employee and pay records
+        if (! x.emp_nbr().isEmpty()) {
+        ArrayList<emp_exception> list = getEmployeeExceptions(new String[]{x.emp_nbr()});   
+        for (emp_exception e : list) {
+          excmodel.addRow(new Object[]{ e.empx_type(), e.empx_desc(), e.empx_amttype(), e.empx_amt().replace('.',defaultDecimalSeparator)});  
+        }
+        getPayRecords(x.emp_nbr()); 
+        }
+        
+       setAction(x.m());
+       return x.m();
+    }
+    
     public void getEarnings(String empnbr, String checknbr) {
           modelearnings.setNumRows(0);
           jtpEarnings.setText("");
