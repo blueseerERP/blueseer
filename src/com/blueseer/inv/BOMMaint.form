@@ -682,25 +682,21 @@
                                   </Group>
                               </Group>
                           </Group>
+                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="1" attributes="0">
+                              <Component id="jLabel22" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel26" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel25" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel27" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" attributes="0">
-                                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="1" attributes="0">
-                                      <Component id="jLabel26" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jLabel25" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jLabel22" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="tbparentcostsim" alignment="1" min="-2" pref="72" max="-2" attributes="0"/>
-                                      <Component id="tbtotmaterialsim" alignment="1" min="-2" pref="72" max="-2" attributes="0"/>
-                                      <Component id="tbtotoperationalsim" alignment="1" min="-2" pref="72" max="-2" attributes="0"/>
-                                  </Group>
+                              <Group type="103" alignment="0" groupAlignment="0" attributes="0">
+                                  <Component id="tbovhout" alignment="1" min="-2" pref="72" max="-2" attributes="0"/>
+                                  <Component id="tbtotmaterialsim" alignment="1" min="-2" pref="72" max="-2" attributes="0"/>
+                                  <Component id="tbtotoperationalsim" alignment="1" min="-2" pref="72" max="-2" attributes="0"/>
                               </Group>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
-                                  <Component id="jLabel27" min="-2" max="-2" attributes="0"/>
-                              </Group>
+                              <Component id="tbparentcostsim" alignment="1" min="-2" pref="72" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
@@ -729,14 +725,15 @@
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="tbparentcostCUR" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel16" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jLabel22" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="tbparentcostsim" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="tbovhout" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel27" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="tbparentcostSTD" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel21" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jLabel27" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="tbparentcostsim" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel22" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
@@ -780,7 +777,7 @@
                     <Property name="name" type="java.lang.String" value="lbloperational" noResource="true"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JTextField" name="tbparentcostsim">
+                <Component class="javax.swing.JTextField" name="tbovhout">
                 </Component>
                 <Component class="javax.swing.JTextField" name="tbparentcostCUR">
                 </Component>
@@ -800,10 +797,12 @@
                 </Component>
                 <Component class="javax.swing.JTextField" name="tbtotmaterialsim">
                 </Component>
+                <Component class="javax.swing.JTextField" name="tbparentcostsim">
+                </Component>
                 <Component class="javax.swing.JLabel" name="jLabel27">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="(Default BOM)"/>
-                    <Property name="name" type="java.lang.String" value="lbldefault" noResource="true"/>
+                    <Property name="text" type="java.lang.String" value="Ovh/Out:"/>
+                    <Property name="name" type="java.lang.String" value="lblovhout" noResource="true"/>
                   </Properties>
                 </Component>
               </SubComponents>

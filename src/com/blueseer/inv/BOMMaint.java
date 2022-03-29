@@ -38,6 +38,8 @@ import static bsmf.MainFrame.user;
 import static com.blueseer.inv.invData.addPBM;
 import com.blueseer.inv.invData.bom_mstr;
 import static com.blueseer.inv.invData.deletePBM;
+import static com.blueseer.inv.invData.getItemOutCost;
+import static com.blueseer.inv.invData.getItemOvhCost;
 import com.blueseer.inv.invData.pbm_mstr;
 import static com.blueseer.inv.invData.updateCurrentItemCost;
 import static com.blueseer.inv.invData.updatePBM;
@@ -341,6 +343,7 @@ public class BOMMaint extends javax.swing.JPanel {
         tbtotmaterialsim.setText("");
         tbtotoperationalsim.setText("");
         tbparentcostsim.setText("");
+        tbovhout.setText("");
         tbcompcost.setText("");
         tbcomptype.setText("");
         
@@ -830,11 +833,14 @@ public class BOMMaint extends javax.swing.JPanel {
         // now add material
         double matl = 0.00;
         for (int j = 0; j < matltable.getRowCount(); j++) {
-             matl = matl + (bsParseDouble(matltable.getValueAt(j, 3).toString()) * bsParseDouble(matltable.getValueAt(j, 4).toString()) ); 
+             matl = matl + (bsParseDouble(matltable.getValueAt(j, 2).toString()) * bsParseDouble(matltable.getValueAt(j, 4).toString()) ); 
          }
         tbtotoperationalsim.setText(String.valueOf(bsFormatDouble5(totalcost)));
         totalcost += matl;
         tbtotmaterialsim.setText(String.valueOf(bsFormatDouble5(matl)));
+        double ovhout = getItemOvhCost(tbkey.getText()) + getItemOutCost(tbkey.getText());
+        totalcost += ovhout;
+        tbovhout.setText(String.valueOf(bsFormatDouble5(ovhout)));
         tbparentcostsim.setText(String.valueOf(bsFormatDouble5(totalcost)));
                 
     }
@@ -1156,12 +1162,13 @@ public class BOMMaint extends javax.swing.JPanel {
         tbtotoperationalsim = new javax.swing.JTextField();
         jLabel16 = new javax.swing.JLabel();
         jLabel24 = new javax.swing.JLabel();
-        tbparentcostsim = new javax.swing.JTextField();
+        tbovhout = new javax.swing.JTextField();
         tbparentcostCUR = new javax.swing.JTextField();
         jLabel26 = new javax.swing.JLabel();
         tbtotmaterial = new javax.swing.JTextField();
         jLabel21 = new javax.swing.JLabel();
         tbtotmaterialsim = new javax.swing.JTextField();
+        tbparentcostsim = new javax.swing.JTextField();
         jLabel27 = new javax.swing.JLabel();
         btroll = new javax.swing.JButton();
         btlookup = new javax.swing.JButton();
@@ -1487,8 +1494,8 @@ public class BOMMaint extends javax.swing.JPanel {
         jLabel21.setText("Default BOM:");
         jLabel21.setName("lblstandardcost"); // NOI18N
 
-        jLabel27.setText("(Default BOM)");
-        jLabel27.setName("lbldefault"); // NOI18N
+        jLabel27.setText("Ovh/Out:");
+        jLabel27.setName("lblovhout"); // NOI18N
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -1513,21 +1520,19 @@ public class BOMMaint extends javax.swing.JPanel {
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(tbtotmaterial, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(tbtotoperational, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel22)
+                    .addComponent(jLabel26)
+                    .addComponent(jLabel25)
+                    .addComponent(jLabel27))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel26)
-                            .addComponent(jLabel25)
-                            .addComponent(jLabel22))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(tbparentcostsim, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tbtotmaterialsim, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tbtotoperationalsim, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGap(4, 4, 4)
-                        .addComponent(jLabel27)))
+                    .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(tbovhout, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(tbtotmaterialsim, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(tbtotoperationalsim, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(tbparentcostsim, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
         jPanel6Layout.setVerticalGroup(
@@ -1550,13 +1555,14 @@ public class BOMMaint extends javax.swing.JPanel {
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbparentcostCUR, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel16)
-                    .addComponent(jLabel22)
-                    .addComponent(tbparentcostsim, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(tbovhout, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel27))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbparentcostSTD, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel21)
-                    .addComponent(jLabel27))
+                    .addComponent(tbparentcostsim, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel22))
                 .addContainerGap())
         );
 
@@ -2140,6 +2146,7 @@ public class BOMMaint extends javax.swing.JPanel {
     private javax.swing.JTextField tbcrewsizesim;
     private javax.swing.JTextField tbkey;
     private javax.swing.JTextField tblotsize;
+    private javax.swing.JTextField tbovhout;
     private javax.swing.JTextField tbparentcostCUR;
     private javax.swing.JTextField tbparentcostSTD;
     private javax.swing.JTextField tbparentcostsim;

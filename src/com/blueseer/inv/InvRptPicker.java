@@ -52,6 +52,7 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble5;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import com.blueseer.utl.DTData;
@@ -579,7 +580,7 @@ public class InvRptPicker extends javax.swing.JPanel {
                              getGlobalColumnTag("select"),
                              getGlobalColumnTag("item"), 
                              getGlobalColumnTag("description"),
-                             getGlobalColumnTag("mat") , 
+                             getGlobalColumnTag("mtl") , 
                              getGlobalColumnTag("lbr"), 
                              getGlobalColumnTag("bdn"), 
                              getGlobalColumnTag("ovh"),  
@@ -612,12 +613,12 @@ public class InvRptPicker extends javax.swing.JPanel {
                     mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, 
                         res.getString("it_item"),
                         res.getString("it_desc"),
-                        res.getDouble("itc_mtl_low") + res.getDouble("itc_mtl_top"),
-                        res.getDouble("itc_lbr_low") + res.getDouble("itc_lbr_top"),
-                        res.getDouble("itc_bdn_low") + res.getDouble("itc_bdn_top"),
-                        res.getDouble("itc_ovh_low") + res.getDouble("itc_ovh_top"),
-                        res.getDouble("itc_out_low") + res.getDouble("itc_out_top"),
-                        res.getDouble("itc_total")
+                        bsFormatDouble5(res.getDouble("itc_mtl_low") + res.getDouble("itc_mtl_top")),
+                        bsFormatDouble5(res.getDouble("itc_lbr_low") + res.getDouble("itc_lbr_top")),
+                        bsFormatDouble5(res.getDouble("itc_bdn_low") + res.getDouble("itc_bdn_top")),
+                        bsFormatDouble5(res.getDouble("itc_ovh_low") + res.getDouble("itc_ovh_top")),
+                        bsFormatDouble5(res.getDouble("itc_out_low") + res.getDouble("itc_out_top")),
+                        bsFormatDouble5(res.getDouble("itc_total"))
                                 });
                 }
            }

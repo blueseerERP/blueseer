@@ -46,6 +46,7 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble5;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
@@ -100,12 +101,14 @@ public class CostRollMaint extends javax.swing.JPanel {
                 getGlobalColumnTag("mtl"), 
                 getGlobalColumnTag("ovh"), 
                 getGlobalColumnTag("out"), 
+                /*
                 getGlobalColumnTag("setuprate"), 
                 getGlobalColumnTag("laborrate"), 
                 getGlobalColumnTag("burdenrate"), 
                 getGlobalColumnTag("setuphours"), 
                 getGlobalColumnTag("runhours"), 
                 getGlobalColumnTag("lotsize"), 
+                */
                 getGlobalColumnTag("rollcost"), 
                 getGlobalColumnTag("standardcost")
             });
@@ -245,18 +248,18 @@ public class CostRollMaint extends javax.swing.JPanel {
         double totcur = curmtl + curlbr + curbdn + curovh + curout;
         double totstd = stdmtl + stdlbr + stdbdn + stdovh + stdout;
         
-        toplowmodel.addRow(new Object[] {"Material", currformatDouble(curmtllow), currformatDouble(stdmtllow), currformatDouble(curmtltop), currformatDouble(stdmtltop), currformatDouble(curmtl), currformatDouble(stdmtl) });
-        toplowmodel.addRow(new Object[] {"Labor", currformatDouble(curlbrlow), currformatDouble(stdlbrlow), currformatDouble(curlbrtop), currformatDouble(stdlbrtop), currformatDouble(curlbr), currformatDouble(stdlbr) });
-        toplowmodel.addRow(new Object[] {"Burden", currformatDouble(curbdnlow), currformatDouble(stdbdnlow), currformatDouble(curbdntop), currformatDouble(stdbdntop), currformatDouble(curbdn), currformatDouble(stdbdn) });
-        toplowmodel.addRow(new Object[] {"Overhead", currformatDouble(curovhlow), currformatDouble(stdovhlow), currformatDouble(curovhtop), currformatDouble(stdovhtop), currformatDouble(curovh), currformatDouble(stdovh) });
-        toplowmodel.addRow(new Object[] {"Outside", currformatDouble(curoutlow), currformatDouble(stdoutlow), currformatDouble(curouttop), currformatDouble(stdouttop), currformatDouble(curout), currformatDouble(stdout) });
-        toplowmodel.addRow(new Object[] {"Total", "", "" , "" , "" , currformatDouble(totcur), currformatDouble(totstd) });
+        toplowmodel.addRow(new Object[] {"Material", bsFormatDouble5(curmtllow), bsFormatDouble5(stdmtllow), bsFormatDouble5(curmtltop), bsFormatDouble5(stdmtltop), bsFormatDouble5(curmtl), bsFormatDouble5(stdmtl) });
+        toplowmodel.addRow(new Object[] {"Labor", bsFormatDouble5(curlbrlow), bsFormatDouble5(stdlbrlow), bsFormatDouble5(curlbrtop), bsFormatDouble5(stdlbrtop), bsFormatDouble5(curlbr), bsFormatDouble5(stdlbr) });
+        toplowmodel.addRow(new Object[] {"Burden", bsFormatDouble5(curbdnlow), bsFormatDouble5(stdbdnlow), bsFormatDouble5(curbdntop), bsFormatDouble5(stdbdntop), bsFormatDouble5(curbdn), bsFormatDouble5(stdbdn) });
+        toplowmodel.addRow(new Object[] {"Overhead", bsFormatDouble5(curovhlow), bsFormatDouble5(stdovhlow), bsFormatDouble5(curovhtop), bsFormatDouble5(stdovhtop), bsFormatDouble5(curovh), bsFormatDouble5(stdovh) });
+        toplowmodel.addRow(new Object[] {"Outside", bsFormatDouble5(curoutlow), bsFormatDouble5(stdoutlow), bsFormatDouble5(curouttop), bsFormatDouble5(stdouttop), bsFormatDouble5(curout), bsFormatDouble5(stdout) });
+        toplowmodel.addRow(new Object[] {"Total", "", "" , "" , "" , bsFormatDouble5(totcur), bsFormatDouble5(totstd) });
         
         
         toplowtable.setModel(toplowmodel);
         
-        labelcost.setText(String.valueOf(currformatDouble(totcur)));
-        labelstandard.setText(String.valueOf(currformatDouble(totstd)));
+        labelcost.setText(String.valueOf(bsFormatDouble5(totcur)));
+        labelstandard.setText(String.valueOf(bsFormatDouble5(totstd)));
     }
     
     public void setcostmodeltable() {
@@ -287,20 +290,22 @@ public class CostRollMaint extends javax.swing.JPanel {
                       elements[3],
                       elements[4],
                       elements[5],
-                      currformatDouble(bsParseDouble(elements[6].toString())),
-                      currformatDouble(bsParseDouble(elements[7].toString())),
-                      currformatDouble(bsParseDouble(elements[8].toString())),
-                      currformatDouble(bsParseDouble(elements[9].toString())),
-                      currformatDouble(bsParseDouble(elements[10].toString())),
-                      currformatDouble(bsParseDouble(elements[11].toString())),
+                      bsFormatDouble5(bsParseDouble(elements[6].toString())),
+                      bsFormatDouble5(bsParseDouble(elements[7].toString())),
+                      bsFormatDouble5(bsParseDouble(elements[8].toString())),
+                      bsFormatDouble5(bsParseDouble(elements[9].toString())),
+                      bsFormatDouble5(bsParseDouble(elements[10].toString())),
+                      bsFormatDouble5(bsParseDouble(elements[11].toString())),
+                      /*
                       currformatDouble(bsParseDouble(elements[12].toString())),
                       currformatDouble(bsParseDouble(elements[13].toString())),
                       currformatDouble(bsParseDouble(elements[14].toString())),
                       currformatDouble(bsParseDouble(elements[15].toString())),
                       currformatDouble(bsParseDouble(elements[16].toString())),
                       currformatDouble(bsParseDouble(elements[17].toString())),
-                      currformatDouble(bsParseDouble(elements[18].toString())),
-                      currformatDouble(bsParseDouble(elements[19].toString()))
+                      */
+                      bsFormatDouble5(bsParseDouble(elements[18].toString())),
+                      bsFormatDouble5(bsParseDouble(elements[19].toString()))
                       
                       });
           } 
@@ -312,11 +317,11 @@ public class CostRollMaint extends javax.swing.JPanel {
                       "",
                       "",
                       "",
-                      currformatDouble(totmtl),
-                      currformatDouble(totlbr),
-                      currformatDouble(totbdn),
-                      currformatDouble(totovh),
-                      currformatDouble(totout),
+                      bsFormatDouble5(totmtl),
+                      bsFormatDouble5(totlbr),
+                      bsFormatDouble5(totbdn),
+                      bsFormatDouble5(totovh),
+                      bsFormatDouble5(totout),
                       "",
                       "",
                       "",
