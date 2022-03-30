@@ -78,7 +78,7 @@ public class DefaultMaint extends javax.swing.JPanel implements IBlueSeerc {
     
     // global variable declarations
         boolean isLoad = false;
-    
+        public static ov_mstr x = null;
     
     // interface functions implemented
     public void executeTask(String x, String[] y) { 
@@ -118,6 +118,8 @@ public class DefaultMaint extends javax.swing.JPanel implements IBlueSeerc {
        public void done() {
             try {
             String[] message = get();
+            getRecord(key); 
+            updateForm();
             BlueSeerUtils.endTask(message);
             } catch (Exception e) {
                 MainFrame.bslog(e);
@@ -231,16 +233,19 @@ public class DefaultMaint extends javax.swing.JPanel implements IBlueSeerc {
     }
     
     public String[] getRecord(String[] key) {
-       ov_mstr x = getOVMstr(key);
+       ov_mstr z = getOVMstr(key);
+       x = z;
+      return x.m();  
+    }
+    
+    public String[] updateForm() {
       tbsite.setText(x.ov_site());
       tbcc.setText(x.ov_cc());
       tbwh.setText(x.ov_wh());
       tbcurrency.setText(x.ov_currency());
-      tblabelprinter.setText(x.ov_labelprinter());
-     // setAction(x.m());  no need to call for default record panels
-      return x.m();  
+      tblabelprinter.setText(x.ov_labelprinter()); 
+      return x.m();
     }
-    
     
    
     /**

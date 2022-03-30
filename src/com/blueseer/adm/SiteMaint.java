@@ -97,7 +97,7 @@ public class SiteMaint extends javax.swing.JPanel implements IBlueSeerT {
 
     // global variable declarations
                 boolean isLoad = false;
-    
+                public static site_mstr x = null;
      
                 
    // global datatablemodel declarations    
@@ -153,7 +153,7 @@ public class SiteMaint extends javax.swing.JPanel implements IBlueSeerT {
        public void done() {
             try {
             String[] message = get();
-           
+            updateForm();
             BlueSeerUtils.endTask(message);
            if (this.type.equals("delete")) {
              initvars(null);  
@@ -470,23 +470,8 @@ public class SiteMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
         
     public String[] getRecord(String[] key) {
-        site_mstr x = getSiteMstr(key);  
-        tbkey.setText(x.site_site());
-        tbdesc.setText(x.site_desc());
-        tbline1.setText(x.site_line1());
-        tbline2.setText(x.site_line2());
-        tbline3.setText(x.site_line3());
-        tbcity.setText(x.site_city());
-        ddstate.setSelectedItem(x.site_state());
-        ddcountry.setSelectedItem(x.site_country());
-        tbzip.setText(x.site_zip());
-        tblogo.setText(x.site_logo());
-        tb_iv_generic.setText(x.site_iv_jasper());
-        tb_sh_generic.setText(x.site_sh_jasper());
-        tb_po_generic.setText(x.site_po_jasper());
-        tb_or_generic.setText(x.site_or_jasper());
-        tb_pos_generic.setText(x.site_pos_jasper());
-        setAction(x.m());
+        site_mstr z = getSiteMstr(key);  
+        x = z;
         return x.m();
     }
     
@@ -578,6 +563,24 @@ public class SiteMaint extends javax.swing.JPanel implements IBlueSeerT {
         
     }
 
+    public void updateForm() {
+        tbkey.setText(x.site_site());
+        tbdesc.setText(x.site_desc());
+        tbline1.setText(x.site_line1());
+        tbline2.setText(x.site_line2());
+        tbline3.setText(x.site_line3());
+        tbcity.setText(x.site_city());
+        ddstate.setSelectedItem(x.site_state());
+        ddcountry.setSelectedItem(x.site_country());
+        tbzip.setText(x.site_zip());
+        tblogo.setText(x.site_logo());
+        tb_iv_generic.setText(x.site_iv_jasper());
+        tb_sh_generic.setText(x.site_sh_jasper());
+        tb_po_generic.setText(x.site_po_jasper());
+        tb_or_generic.setText(x.site_or_jasper());
+        tb_pos_generic.setText(x.site_pos_jasper());
+        setAction(x.m());
+    }
     
     public boolean ifFileExists(String filename) {
         File file = new File("jasper/" + filename);
