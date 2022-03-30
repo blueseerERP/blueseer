@@ -42,8 +42,10 @@ import com.blueseer.inv.invData;
 import static com.blueseer.inv.invData.getItemQOHTotal;
 import static com.blueseer.ord.ordData.addOrderTransaction;
 import static com.blueseer.ord.ordData.deleteOrderLines;
+import static com.blueseer.ord.ordData.getOrderDet;
 import static com.blueseer.ord.ordData.getOrderItemAllocatedQty;
 import static com.blueseer.ord.ordData.getOrderLines;
+import static com.blueseer.ord.ordData.getOrderMstr;
 import com.blueseer.ord.ordData.sod_det;
 import com.blueseer.ord.ordData.so_mstr;
 import com.blueseer.ord.ordData.so_tax;
@@ -143,6 +145,11 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
                 boolean custitemonly = true;
                 boolean autoallocate = false;
                 String allocationStatus = "";
+                public static so_mstr so = null;
+                public static ArrayList<sod_det> sodlist = null;
+                public static ArrayList<sos_det> soslist = null;
+                public static ArrayList<sod_tax> sodtaxlist = null;
+                public static ArrayList<so_tax> sotaxlist = null;
                 
                 Map<Integer, ArrayList<String[]>> linetax = new HashMap<Integer, ArrayList<String[]>>();
                 ArrayList<String[]> headertax = new ArrayList<String[]>();
@@ -279,8 +286,10 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
            if (this.type.equals("delete")) {
              initvars(null);  
            } else if (this.type.equals("get") && message[0].equals("1")) {
+             updateForm();
              tbkey.requestFocus();
            } else if (this.type.equals("get") && message[0].equals("0")) {
+             updateForm();
              tbkey.requestFocus();
            } else if (this.type.equals("add") && message[0].equals("0")) {
              initvars(key);
@@ -613,13 +622,17 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
                     if (ddstatus.getSelectedItem().toString().compareTo(getGlobalProgTag("closed")) == 0) {
                              lblstatus.setText(getMessageTag(1097));
                              lblstatus.setForeground(Color.blue);
-                             setPanelComponentState(this, false);
+                             setPanelComponentState(this, true);  //allowed to see but not update
                              btnew.setEnabled(true);
                              btlookup.setEnabled(true);
                              btclear.setEnabled(true);
                              btprintinvoice.setEnabled(true);
                              btprintps.setEnabled(true);
                              btprintorder.setEnabled(true);
+                             btadd.setEnabled(false);
+                             btupdate.setEnabled(false);
+                             btdelete.setEnabled(false);
+                             btinvoice.setEnabled(false);
                     } else {
                              
                              lblstatus.setText(getMessageTag(1098));
@@ -815,101 +828,12 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
      return m;
      }
       
-    public String[] getRecord(String[] x) {
-       String[] m = new String[2];
-       
-        try {
-
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                int i = 0;
-                res = st.executeQuery("select * from so_mstr where so_nbr = " + "'" + x[0] + "'" + ";");
-                while (res.next()) {
-                    i++;
-                    tbkey.setText(x[0]);
-                    tbkey.setEditable(false);
-                    ddcust.setSelectedItem(res.getString("so_cust"));
-                    ddcust.setEnabled(false);
-                    cbissourced.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("so_issourced")));
-                    ddstatus.setSelectedItem(res.getString("so_status"));
-                    ddcurr.setSelectedItem(res.getString("so_curr"));
-                    ddshipvia.setSelectedItem(res.getString("so_shipvia"));
-                    ddtax.setSelectedItem(res.getString("so_taxcode"));
-                    ddsite.setSelectedItem(res.getString("so_site"));
-                    if (ddship.getItemCount() > 0)
-                    ddship.setSelectedItem(res.getString("so_ship"));
-                    ddship.setEditable(true);
-                    ponbr.setText(res.getString("so_po"));
-                    remarks.setText(res.getString("so_rmks"));
-                    tbhdrwh.setText(res.getString("so_wh"));
-                    duedate.setDate(bsmf.MainFrame.dfdate.parse(res.getString("so_due_date")));
-                    orddate.setDate(bsmf.MainFrame.dfdate.parse(res.getString("so_ord_date")));
-                    
-                    if (res.getString("so_isallocated").equals("c")) {
-                        cbisallocated.setSelected(true);
-                        cbisallocated.setText(tags.getString(this.getClass().getSimpleName() +".label.cballocation"));
-                    } 
-                    else if (res.getString("so_isallocated").equals("p")) {
-                        cbisallocated.setSelected(true);
-                        cbisallocated.setText(tags.getString(this.getClass().getSimpleName() +".label.cballocationpartial"));
-                    } else {
-                        cbisallocated.setSelected(false);
-                        cbisallocated.setText(tags.getString(this.getClass().getSimpleName() +".label.cballocation"));
-                    }
-                    
-                    if (res.getString("so_type").compareTo("BLANKET") == 0) {
-                    cbblanket.setSelected(true);
-                    cbblanket.setEnabled(false);
-                    } else {
-                    cbblanket.setSelected(false);
-                    cbblanket.setEnabled(false);
-                    }
-                }
-               
-               
-                 // myorddetmodel  "Line", "Part", "CustPart", "SO", "PO", "Qty", "UOM", "ListPrice", "Discount", "NetPrice", "QtyShip", "Status"
-                res = st.executeQuery("select * from sod_det where sod_nbr = " + "'" + x[0] + "'" + ";");
-                while (res.next()) {
-                    myorddetmodel.addRow(new Object[]{res.getString("sod_line"), res.getString("sod_part"),
-                      res.getString("sod_custpart"), res.getString("sod_nbr"), 
-                      res.getString("sod_po"), 
-                      bsNumber(res.getString("sod_ord_qty")), 
-                      res.getString("sod_uom"), 
-                      priceformat(res.getString("sod_listprice")),
-                      priceformat(res.getString("sod_disc")), 
-                      priceformat(res.getString("sod_netprice")), 
-                      bsNumber(res.getString("sod_shipped_qty")), 
-                      res.getString("sod_status"),
-                      res.getString("sod_wh"), 
-                      res.getString("sod_loc"), 
-                      res.getString("sod_desc"), 
-                      bsNumber(res.getString("sod_taxamt")),
-                      res.getString("sod_bom")
-                  });
-                }
-                
-                // set Action if Record found (i > 0)
-                m = setAction(i);
-                
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};  
-        }
-      return m;
+    public String[] getRecord(String[] key) {
+      so_mstr z = getOrderMstr(key);  
+      so = z;
+      ArrayList<sod_det> zlist = getOrderDet(key);
+      sodlist = zlist;
+      return so.m();
     }
     
     public so_mstr createRecord() { 
@@ -933,6 +857,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
         } else {
            ordertype = "DISCRETE";
         }
+                
         so_mstr x = new so_mstr(null, tbkey.getText().toString(),
                  ddcust.getSelectedItem().toString(),
                  ddship.getSelectedItem().toString(),
@@ -952,7 +877,8 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
                  arcc,
                  remarks.getText(),
                  ordertype,
-                 ddtax.getSelectedItem().toString()
+                 ddtax.getSelectedItem().toString(),
+                String.valueOf(BlueSeerUtils.boolToInt(cbissourced.isSelected()))
                 );
         return x;
     }
@@ -1228,6 +1154,108 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
         
     }
     
+    public void updateForm() throws ParseException {
+        tbkey.setText(so.so_nbr());
+        tbkey.setEditable(false);
+        ddcust.setSelectedItem(so.so_cust());
+        ddcust.setEnabled(false);
+        cbissourced.setSelected(BlueSeerUtils.ConvertStringToBool(so.so_issourced()));
+        ddstatus.setSelectedItem(so.so_status());
+        ddcurr.setSelectedItem(so.so_curr());
+        ddshipvia.setSelectedItem(so.so_shipvia());
+        ddtax.setSelectedItem(so.so_taxcode());
+        ddsite.setSelectedItem(so.so_site());
+        if (ddship.getItemCount() > 0)
+        ddship.setSelectedItem(so.so_ship());
+        ddship.setEditable(true);
+        ponbr.setText(so.so_po());
+        remarks.setText(so.so_rmks());
+        tbhdrwh.setText(so.so_wh());
+        duedate.setDate(bsmf.MainFrame.dfdate.parse(so.so_due_date()));
+        orddate.setDate(bsmf.MainFrame.dfdate.parse(so.so_ord_date()));
+
+        if (so.so_isallocated().equals("c")) {
+            cbisallocated.setSelected(true);
+            cbisallocated.setText(tags.getString(this.getClass().getSimpleName() +".label.cballocation"));
+        } 
+        else if (so.so_isallocated().equals("p")) {
+            cbisallocated.setSelected(true);
+            cbisallocated.setText(tags.getString(this.getClass().getSimpleName() +".label.cballocationpartial"));
+        } else {
+            cbisallocated.setSelected(false);
+            cbisallocated.setText(tags.getString(this.getClass().getSimpleName() +".label.cballocation"));
+        }
+
+        if (so.so_type().compareTo("BLANKET") == 0) {
+        cbblanket.setSelected(true);
+        cbblanket.setEnabled(false);
+        } else {
+        cbblanket.setSelected(false);
+        cbblanket.setEnabled(false);
+        } 
+        
+        // now detail
+        for (sod_det sod : sodlist) {
+                    myorddetmodel.addRow(new Object[]{
+                      sod.sod_line(), 
+                      sod.sod_part(),
+                      sod.sod_custpart(), 
+                      sod.sod_nbr(), 
+                      sod.sod_po(), 
+                      bsNumber(sod.sod_ord_qty()), 
+                      sod.sod_uom(), 
+                      priceformat(sod.sod_listprice()),
+                      priceformat(sod.sod_disc()), 
+                      priceformat(sod.sod_netprice()), 
+                      bsNumber(sod.sod_shipped_qty()), 
+                      sod.sod_status(),
+                      sod.sod_wh(), 
+                      sod.sod_loc(), 
+                      sod.sod_desc(), 
+                      bsNumber(sod.sod_taxamt()),
+                      sod.sod_bom()
+                  });
+                }
+        
+        // summary charges and discounts
+        if (soslist != null) {
+        for (sos_det sos : soslist) {
+            sacmodel.addRow(new Object[]{
+                      sos.sos_nbr(), 
+                      sos.sos_desc(),
+                      sos.sos_type(),
+                      sos.sos_amttype(),
+                      sos.sos_amt()});
+        }
+        }
+        
+        // line tax
+        linetax.clear();
+        if (sodtaxlist != null) {
+        for (sod_tax sodt : sodtaxlist) {
+           ArrayList<String[]> list = OVData.getTaxPercentElementsApplicableByItem(ordData.getOrderItem(sodt.sodt_nbr(), sodt.sodt_line()));
+           if (list != null) {
+               if (! linetax.containsKey(Integer.valueOf(sodt.sodt_line()))) {
+                   linetax.put(Integer.valueOf(sodt.sodt_line()), list); 
+               }
+           }
+        }
+        }
+        
+        // header tax
+        /* done by ddtax change event when ddtax is assigned above
+        headertax = OVData.getTaxPercentElementsApplicableByTaxCode(ddtax.getSelectedItem().toString());
+        */
+        
+        if (so.m()[0].equals("0") && sodlist != null && sodlist.size() > 0) {
+           setAction(1); 
+        } else {
+           setAction(0);
+        }
+        
+        so = null;
+        sodlist = null;
+    }
    
     // custom funcs 
     public String[] autoInvoiceOrder() {
@@ -1609,7 +1637,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
     public void sumdollars() {
         double dol = 0;
         double summaryTaxPercent = 0;
-        double headertax = 0;
+        double headertaxamt = 0;
         double matltax = 0;
         double totaltax = 0;
         
@@ -1630,9 +1658,9 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
         }
          
          if (summaryTaxPercent > 0) {
-              headertax = (dol * (summaryTaxPercent / 100) );
+              headertaxamt = (dol * (summaryTaxPercent / 100) );
          }
-         totaltax = headertax + matltax;  // combine header tax and matl tax
+         totaltax = headertaxamt + matltax;  // combine header tax and matl tax
          
          
          // add tax to total
