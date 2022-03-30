@@ -32,6 +32,8 @@ import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import static com.blueseer.adm.admData.addUserMstr;
+import static com.blueseer.adm.admData.deleteUserMstr;
+import static com.blueseer.adm.admData.getUserMstr;
 import static com.blueseer.adm.admData.updateUserMstr;
 import com.blueseer.adm.admData.user_mstr;
 import com.blueseer.utl.BlueSeerUtils;
@@ -84,7 +86,8 @@ public class UserMaint extends javax.swing.JPanel implements IBlueSeer {
 
     
     // global variable declarations
-                boolean isLoad = false;
+        boolean isLoad = false;
+        public static user_mstr x = null;
     
     // global datatablemodel declarations      
 
@@ -137,7 +140,7 @@ public class UserMaint extends javax.swing.JPanel implements IBlueSeer {
        public void done() {
             try {
             String[] message = get();
-           
+            updateForm();
             BlueSeerUtils.endTask(message);
            if (this.type.equals("delete")) {
              initvars(null);  
@@ -379,82 +382,20 @@ public class UserMaint extends javax.swing.JPanel implements IBlueSeer {
      
     public String[] deleteRecord(String[] x) {
      String[] m = new String[2];
-        boolean proceed = bsmf.MainFrame.warn("Are you sure?");
+        boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
         if (proceed) {
-        try {
-
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            try {
-                   int i = st.executeUpdate("delete from user_mstr where user_id = " + "'" + tbkey.getText() + "'" + ";");
-                    if (i > 0) {
-                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
-                    initvars(null);
-                    }
-                } catch (SQLException s) {
-                 MainFrame.bslog(s); 
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordSQLError};  
-            } finally {
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordConnError};
-        }
+         m = deleteUserMstr(createRecord()); 
+         initvars(null);
         } else {
            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
         }
-     return m;
+         return m;
      }
       
-    public String[] getRecord(String[] x) {
-       String[] m = new String[2];
-       
-        try {
-
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                int i = 0;
-                res = st.executeQuery("SELECT * FROM  user_mstr where user_id = " + "'" + x[0] + "'" + ";");
-                    while (res.next()) {
-                        i++;
-                        tbUMLastName.setText(res.getString("user_lname"));
-                        tbUMFirstName.setText(res.getString("user_fname"));
-                        tbkey.setText(res.getString("user_id"));
-                        tbemail.setText(res.getString("user_email"));
-                        tbphone.setText(res.getString("user_phone"));
-                        tbcell.setText(res.getString("user_cell"));
-                        tarmks.setText(res.getString("user_rmks"));
-                        tbpassword.setText(bsmf.MainFrame.PassWord("1", res.getString("user_passwd").toCharArray()));
-                        ddsite.setSelectedItem(res.getString("user_site"));
-                    }
-
-               
-                // set Action if Record found (i > 0)
-                m = setAction(i);
-                
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};  
-        }
-      return m;
+    public String[] getRecord(String[] key) {
+       user_mstr z = getUserMstr(key);  
+        x = z;
+        return x.m();
     }
     
     public user_mstr createRecord() {
@@ -515,6 +456,23 @@ public class UserMaint extends javax.swing.JPanel implements IBlueSeer {
         
     }
 
+    public void updateForm() {
+        tbUMLastName.setText(x.user_lname());
+        tbUMFirstName.setText(x.user_fname());
+        tbkey.setText(x.user_id());
+        tbemail.setText(x.user_email());
+        tbphone.setText(x.user_phone());
+        tbcell.setText(x.user_cell());
+        tarmks.setText(x.user_rmks());
+        tbpassword.setText(bsmf.MainFrame.PassWord("1", x.user_passwd().toCharArray()));
+        ddsite.setSelectedItem(x.user_site());
+        if (x.m()[0].equals("1")) {
+          setAction(0);  
+        } else {
+          setAction(1);   
+        }
+        
+    }
     
     // custom funcs and classes
     class ButtonRenderer extends JButton implements TableCellRenderer {

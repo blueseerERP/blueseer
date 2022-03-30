@@ -274,7 +274,59 @@ public class admData {
         }
         return m;
     }
+
+    public static user_mstr getUserMstr(String[] x) {
+        user_mstr r = null;
+        String[] m = new String[2];
+        String sql = "select * from user_mstr where user_id = ? ;";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, x[0]);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new user_mstr(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new user_mstr(m, res.getString("user_id"), 
+                            res.getString("user_site"),
+                            res.getString("user_lname"),
+                            res.getString("user_fname"),
+                            res.getString("user_mname"),
+                            res.getString("user_email"),
+                            res.getString("user_phone"),
+                            res.getString("user_cell"),
+                            res.getString("user_rmks"),
+                            res.getString("user_passwd")
+                        );
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new user_mstr(m);
+        }
+        return r;
+    }
+    
+    public static String[] deleteUserMstr(user_mstr x) { 
+       String[] m = new String[2];
+        String sql = "delete from user_mstr where user_id = ?; ";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, x.user_id);
+        int rows = ps.executeUpdate();
+        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
         
+    
     public static String[] addUpdateOVMstr(ov_mstr x) {
         int rows = 0;
         String[] m = new String[2];
