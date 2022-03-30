@@ -20,4 +20,4 @@ patch=5
 patch=6
 # BOM updates to costing issues ; rounding problem
 patch=7
-# Freeze UI issue fix for ItemMaint, BOMMaint, CustMaint
+# Freeze UI issue fix for ItemMaint, BOMMaint, CustMaint, OrderMaint, POMaint, SiteMstr, UserMstr, DefaultMstr

@@ -471,7 +471,34 @@ public class purData {
         }
         return r;
     }
-                             
+    
+    public static ArrayList<pod_mstr> getPODet(String[] x) {
+        ArrayList<pod_mstr> list = new ArrayList<pod_mstr>();
+        pod_mstr r = null;
+        String[] m = new String[2];
+        String sql = "select * from pod_mstr where pod_nbr = ? ;";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, x[0]);
+             try (ResultSet res = ps.executeQuery();) {
+                    while(res.next()) {
+                    m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                    r = new pod_mstr(m, res.getString("pod_nbr"), res.getString("pod_line"), res.getString("pod_part"),
+                    res.getString("pod_vendpart"), res.getString("pod_ord_qty"), res.getString("pod_rcvd_qty"), 
+                    res.getString("pod_netprice"), res.getString("pod_disc"),res.getString("pod_listprice"), 
+                    res.getString("pod_due_date"), res.getString("pod_status"), res.getString("pod_site"), 
+                    res.getString("pod_ord_date"), res.getString("pod_uom"), res.getString("pod_desc") );
+                    list.add(r);
+                    }
+                
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s); 
+        }
+        return list;
+    }
+        
+    
     private static int _addPODet(pod_mstr x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
         int rows = 0;
         String sqlSelect = "select * from pod_mstr where pod_nbr = ? and pod_line = ?";

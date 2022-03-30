@@ -1255,6 +1255,8 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
         
         so = null;
         sodlist = null;
+        soslist = null;
+        sodtaxlist = null;
     }
    
     // custom funcs 

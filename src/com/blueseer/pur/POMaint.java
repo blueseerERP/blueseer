@@ -39,7 +39,9 @@ import com.blueseer.fgl.fglData;
 import com.blueseer.inv.invData;
 import com.blueseer.ord.ordData;
 import static com.blueseer.pur.purData.addPOTransaction;
+import static com.blueseer.pur.purData.getPODet;
 import static com.blueseer.pur.purData.getPOLines;
+import static com.blueseer.pur.purData.getPOMstr;
 import com.blueseer.pur.purData.po_mstr;
 import com.blueseer.pur.purData.pod_mstr;
 import static com.blueseer.pur.purData.updatePOTransaction;
@@ -96,6 +98,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.sql.Connection;
 import java.text.DecimalFormatSymbols;
+import java.text.ParseException;
 import java.util.Locale;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -124,8 +127,9 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeer {
      String cc = "";
      String blanket = "";
      String status = "";
-      boolean venditemonly = true;  
-     
+     boolean venditemonly = true;  
+     public static po_mstr po = null;
+     public static ArrayList<pod_mstr> podlist = null;
    
      
      // global datatablemodel declarations  
@@ -229,8 +233,10 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeer {
            if (this.type.equals("delete")) {
              initvars(null);  
            } else if (this.type.equals("get") && message[0].equals("1")) {
+             updateForm();
              tbkey.requestFocus();
            } else if (this.type.equals("get") && message[0].equals("0")) {
+             updateForm();
              tbkey.requestFocus();
            } else if (this.type.equals("add") && message[0].equals("0")) {
              initvars(key);
@@ -595,84 +601,12 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeer {
      return m;
     }
          
-    public String[] getRecord(String[] x) {
-        String[] m = new String[2];
-         myorddetmodel.setRowCount(0);
-        
-        try {
-
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                int i = 0;
-                String blanket = "";
-                res = st.executeQuery("select * from po_mstr where po_nbr = " + "'" + x[0] + "'" + ";");
-                while (res.next()) {
-                    i++;
-                    tbkey.setText(x[0]);
-                    ddvend.setSelectedItem(res.getString("po_vend"));
-                    ddvend.setEnabled(false);
-                    ddstatus.setSelectedItem(res.getString("po_status"));
-                    ddcurr.setSelectedItem(res.getString("po_curr"));
-                    ddshipvia.setSelectedItem(res.getString("po_shipvia"));
-                    remarks.setText(res.getString("po_rmks"));
-                    duedate.setDate(bsmf.MainFrame.dfdate.parse(res.getString("po_due_date")));
-                    blanket = res.getString("po_type");
-                    if (blanket != null && blanket.compareTo("BLANKET") == 0)
-                    cbblanket.setSelected(true);
-                    else
-                    cbblanket.setSelected(false);
-                    cbblanket.setEnabled(false);
-                }
-                
-                 // myorddetmodel  "Line", "Part", "CustPart",  "PO", "Qty", UOM", "ListPrice", "Discount", "NetPrice", "QtyShip", "Status"
-                res = st.executeQuery("select pod_line, pod_part, pod_desc, " +
-                        " pod_vendpart, pod_nbr, pod_ord_qty, pod_uom, pod_listprice, " +
-                        " pod_disc, pod_netprice, pod_rcvd_qty, pod_status " +
-                        " from pod_mstr where pod_nbr = " + "'" + x[0] + "'" + ";");
-                while (res.next()) {
-                  myorddetmodel.addRow(new Object[]{res.getString("pod_line"), 
-                      res.getString("pod_part"),
-                      res.getString("pod_desc"), 
-                      res.getString("pod_vendpart"), 
-                      res.getString("pod_nbr"), 
-                      bsNumber(res.getString("pod_ord_qty")), 
-                      res.getString("pod_uom"), 
-                      priceformat(res.getString("pod_listprice")),
-                      priceformat(res.getString("pod_disc")),
-                      priceformat(res.getString("pod_netprice")),
-                      bsNumber(res.getString("pod_rcvd_qty")),  
-                      res.getString("pod_status")});
-                }
-               
-                 
-               // set Action if Record found (i > 0)
-                m = setAction(i);
-                
-                sumqty();
-                sumdollars();
-                sumlinecount();
-               
-               
-
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};   
-        }
-     return m;
+    public String[] getRecord(String[] key) {
+      po_mstr z = getPOMstr(key);  
+      po = z;
+      ArrayList<pod_mstr> zlist = getPODet(key);
+      podlist = zlist;
+      return po.m();
     }
     
     public po_mstr createRecord() {
@@ -937,6 +871,48 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeer {
         
     }
  
+    public void updateForm() throws ParseException {
+        tbkey.setText(po.po_nbr());
+        ddvend.setSelectedItem(po.po_vend());
+        ddvend.setEnabled(false);
+        ddstatus.setSelectedItem(po.po_status());
+        ddcurr.setSelectedItem(po.po_curr());
+        ddshipvia.setSelectedItem(po.po_shipvia());
+        remarks.setText(po.po_rmks());
+        duedate.setDate(bsmf.MainFrame.dfdate.parse(po.po_due_date()));
+        blanket = po.po_type();
+        if (blanket != null && blanket.compareTo("BLANKET") == 0)
+        cbblanket.setSelected(true);
+        else
+        cbblanket.setSelected(false);
+        cbblanket.setEnabled(false);
+        
+        // now detail
+        for (pod_mstr pod : podlist) {
+        myorddetmodel.addRow(new Object[]{pod.pod_line(), 
+                      pod.pod_part(),
+                      pod.pod_desc(), 
+                      pod.pod_vendpart(), 
+                      pod.pod_nbr(), 
+                      bsNumber(pod.pod_ord_qty()), 
+                      pod.pod_uom(), 
+                      priceformat(pod.pod_listprice()),
+                      priceformat(pod.pod_disc()),
+                      priceformat(pod.pod_netprice()),
+                      bsNumber(pod.pod_rcvd_qty()),  
+                      pod.pod_status()});
+        }
+        
+        if (po.m()[0].equals("0") && podlist != null && podlist.size() > 0) {
+           setAction(1); 
+        } else {
+           setAction(0);
+        }
+        
+        po = null;
+        podlist = null;
+        
+    }
        
      // additional functions
     public void setPrice() {
