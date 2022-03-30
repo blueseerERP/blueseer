@@ -39,12 +39,12 @@ cd %~dp0
 @echo "Checking if blueseer patch directory structure is correct"
 if exist ..\..\dist (
 @echo "BlueSeer directory structure is correct...continuing"
-ping -n 3 127.0.0.1 > nul
+ping -n 7 127.0.0.1 > nul
 ) else (
 @echo "blueseer patch structure is incorrect...exiting"
 @echo "patch must be unzipped and placed in blueseer\patches folder as blueseer\patches\<newpatchdir>"
 @echo "blueseer patch structure is incorrect...exiting" >>patch.log 2>&1
-ping -n 5 127.0.0.1 > nul
+ping -n 7 127.0.0.1 > nul
 exit
 )
 
@@ -114,7 +114,7 @@ if /I "%DBTYPE%"=="1" (
 if /I "%DBTYPE%"=="1" (
 @echo "  executing sqlite sql schema updates"
 ..\..\data\sqlite3.exe ..\..\data\bsdb.db <.patchsqlv61 >>patch.log 2>&1
-ping -n 4 127.0.0.1 > nul
+ping -n 7 127.0.0.1 > nul
 @echo "return code: %ERRORLEVEL%" >>patch.log 2>&1
 ) else (
 goto mysqlinstall
@@ -146,7 +146,7 @@ del mybs.cnf >nul 2>&1
 mysql --defaults-extra-file=mybs.cnf -D bsdb -e "source .patchsqlv61;" >>patch.log 2>&1
 if %errorlevel% NEQ 0 set /a "errors=%errors%+1"
 @echo "done with mysql changes....."
-ping -n 4 127.0.0.1 > nul
+ping -n 7 127.0.0.1 > nul
 rem clean up mybs.cnf
 del mybs.cnf >nul 2>&1
 goto eof
@@ -157,7 +157,7 @@ goto eof
 @echo ""
 @echo ""
 @echo "  patch update completed with %errors% error"
-ping -n 5 127.0.0.1 > nul
+ping -n 7 127.0.0.1 > nul
 @echo ""
 @echo ""
 @echo ""

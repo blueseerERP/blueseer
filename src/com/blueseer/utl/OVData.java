@@ -6228,8 +6228,8 @@ return myreturn;
 }
     
     public static String getSystemFileServerType() {
- String myreturn = "";
- try{
+    String myreturn = "";
+    try{
 
     Connection con = DriverManager.getConnection(url + db, user, pass);
     Statement st = con.createStatement();
@@ -6240,7 +6240,7 @@ return myreturn;
         myreturn = res.getString("ov_fileservertype");                    
         }
 
-   }
+    }
     catch (SQLException s){
          MainFrame.bslog(s);
     } finally {
@@ -6248,14 +6248,44 @@ return myreturn;
                if (st != null) st.close();
                con.close();
             }
-}
-catch (Exception e){
-    MainFrame.bslog(e);
-}
-return myreturn;
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return myreturn;
 
 }   
   
+    public static String getVersion() {
+    String x = "";
+    try{
+
+    Connection con = DriverManager.getConnection(url + db, user, pass);
+    Statement st = con.createStatement();
+    ResultSet res = null;
+    try{
+        res = st.executeQuery("select ov_version from ov_ctrl;" );
+       while (res.next()) {
+        x = res.getString("ov_version");                    
+        }
+
+    }
+    catch (SQLException s){
+         MainFrame.bslog(s);
+    } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return x;
+
+}   
+  
+    
     public static String getDefaultSite() {
            String myitem = null;
          try{

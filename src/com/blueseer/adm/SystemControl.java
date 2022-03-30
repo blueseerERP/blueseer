@@ -41,6 +41,20 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.GradientPaint;
 import java.awt.Window;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.channels.Channels;
+import java.nio.channels.FileChannel;
+import java.nio.channels.ReadableByteChannel;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -48,6 +62,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -427,6 +445,85 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
         
     }
    
+    // custom
+    public static File newFile(File destinationDir, ZipEntry zipEntry) throws IOException {
+	    File destFile = new File(destinationDir, zipEntry.getName());
+
+	    String destDirPath = destinationDir.getCanonicalPath();
+	    String destFilePath = destFile.getCanonicalPath();
+
+	    if (!destFilePath.startsWith(destDirPath + File.separator)) {
+	        throw new IOException("Entry is outside of the target dir: " + zipEntry.getName());
+	    }
+
+	    return destFile;
+	}
+    
+    public void getPatch() throws MalformedURLException, IOException {
+        
+        String version = OVData.getVersion();
+        String v = version.replace(".", "");
+        String url = "https://github.com/blueseerERP/blueseer/releases/download/" +
+                "v" + version + "/blueseer.patch.ver." + v + ".zip";
+			
+        Path currentRelativePath = Paths.get("");
+        String s = currentRelativePath.toAbsolutePath().toString();
+        Path patchdir = FileSystems.getDefault().getPath(s + "/patches");
+
+        String patchfile = "";
+        if (Files.exists(patchdir) && Files.isDirectory(patchdir)) {
+           patchfile = s + "/patches/patch.zip";
+           Path patch = FileSystems.getDefault().getPath(patchfile); 
+           ReadableByteChannel readableByteChannel = Channels.newChannel(new URL(url).openStream());
+            FileOutputStream fileOutputStream = new FileOutputStream(patch.toFile());
+            FileChannel fileChannel = fileOutputStream.getChannel();
+            fileChannel.transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
+            fileOutputStream.close();
+            
+            if (Files.exists(patch)) {
+                bsmf.MainFrame.show("Patch Downloaded...go to patches directory and execute install script");
+            } else {
+                bsmf.MainFrame.show("Unable to download patch");
+            }
+        }	
+	
+        
+        // now extract zip into patches directory
+        String fileZip = patchfile.toString();
+        File destDir = new File(patchdir.toString());
+        byte[] buffer = new byte[1024];
+        ZipInputStream zis = new ZipInputStream(new FileInputStream(fileZip));
+        ZipEntry zipEntry = zis.getNextEntry();
+        while (zipEntry != null) {
+            File newFile = newFile(destDir, zipEntry);
+            if (zipEntry.isDirectory()) {
+                if (!newFile.isDirectory() && !newFile.mkdirs()) {
+                    throw new IOException("Failed to create zip directory " + newFile);
+                }
+            } else {
+                // fix for Windows-created archives
+                File parent = newFile.getParentFile();
+                if (!parent.isDirectory() && !parent.mkdirs()) {
+                    throw new IOException("Failed to create zip directory " + parent);
+                }
+                
+                // write file content
+                FileOutputStream fos = new FileOutputStream(newFile);
+                int len;
+                while ((len = zis.read(buffer)) > 0) {
+                    fos.write(buffer, 0, len);
+                }
+                fos.close();
+            }
+        zipEntry = zis.getNextEntry();
+       }
+        zis.closeEntry();
+        zis.close();
+       
+        
+    }
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -482,6 +579,7 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
         jLabel16 = new javax.swing.JLabel();
         tblocale = new javax.swing.JTextField();
         jLabel17 = new javax.swing.JLabel();
+        btpatch = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -706,6 +804,13 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
         jLabel17.setText("Locale");
         jLabel17.setName("lbllocale"); // NOI18N
 
+        btpatch.setText("Patch");
+        btpatch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btpatchActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -736,13 +841,15 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(104, 104, 104)
                         .addComponent(panelCopySite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(18, 18, 18)
-                        .addComponent(btupdate)))
+                        .addComponent(btupdate)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btpatch)))
                 .addGap(42, 42, 42))
         );
         jPanel1Layout.setVerticalGroup(
@@ -779,14 +886,17 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(39, 39, 39)
-                        .addComponent(panelCopySite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(24, 24, 24)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(btupdate)
-                            .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(22, Short.MAX_VALUE))
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(btupdate)
+                                .addComponent(btpatch))
+                            .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(22, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(39, 39, 39)
+                        .addComponent(panelCopySite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
 
         add(jPanel1);
@@ -809,9 +919,18 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
        }
     }//GEN-LAST:event_btcopyActionPerformed
 
+    private void btpatchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btpatchActionPerformed
+                    try {
+                        getPatch();
+                    } catch (IOException ex) {
+                        MainFrame.bslog(ex);
+                    }
+    }//GEN-LAST:event_btpatchActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btcopy;
+    private javax.swing.JButton btpatch;
     private javax.swing.JButton btupdate;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JCheckBox cbcustom;
