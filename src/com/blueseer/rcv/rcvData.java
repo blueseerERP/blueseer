@@ -300,6 +300,101 @@ public class rcvData {
         ps.executeUpdate();
     }
     
+    public static Receiver getReceiverMstrSet(String[] x ) {
+        Receiver r = null;
+        String[] m = new String[2];
+        Connection bscon = null;
+        PreparedStatement ps = null;
+        ResultSet res = null;
+        try { 
+            bscon = DriverManager.getConnection(url + db, user, pass);
+            
+            recv_mstr rv = _getReceiverMstr(x, bscon, ps, res);
+            ArrayList<recv_det> rvd = _getReceiverDet(x, bscon, ps, res);
+            
+            
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+            r = new Receiver(m, rv, rvd);
+            
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};
+             r = new Receiver(m);
+        } finally {
+            if (res != null) {
+                try {
+                    res.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (bscon != null) {
+                try {
+                    bscon.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return r;
+    }
+    
+    private static recv_mstr _getReceiverMstr(String[] x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+        recv_mstr r = null;
+        String[] m = new String[2];
+        String sqlSelect = "select * from recv_mstr where rv_id = ?";
+          ps = con.prepareStatement(sqlSelect); 
+          ps.setString(1, x[0]);
+          res = ps.executeQuery();
+            if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};
+                r = new recv_mstr(m);
+            } else {
+                while(res.next()) {
+                    m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                    r = new recv_mstr(m, res.getString("rv_id"), res.getString("rv_vend"), res.getString("rv_recvdate"),
+                    res.getString("rv_status"), res.getString("rv_packingslip"), res.getString("rv_userid"), 
+                    res.getString("rv_ap_acct"), res.getString("rv_ap_cc"), res.getString("rv_terms"), 
+                    res.getString("rv_site"), res.getString("rv_confdate"), res.getString("rv_ref"), 
+                    res.getString("rv_rmks"));
+                }
+            }
+            return r;
+    }
+    
+    private static ArrayList<recv_det> _getReceiverDet(String[] x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+        ArrayList<recv_det> list = new ArrayList<recv_det>();
+        recv_det r = null;
+        String[] m = new String[2];
+        String sqlSelect = "select * from recv_det where rvd_id = ?";
+          ps = con.prepareStatement(sqlSelect); 
+          ps.setString(1, x[0]);
+          res = ps.executeQuery();
+            if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};
+                r = new recv_det(m);
+            } else {
+                while(res.next()) {
+                    m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                    r = new recv_det(m, res.getString("rvd_id"), res.getString("rvd_po"), res.getString("rvd_poline"),
+                    res.getString("rvd_packingslip"), res.getString("rvd_part"), res.getString("rvd_qty"), res.getString("rvd_date"), res.getString("rvd_listprice"),
+                    res.getString("rvd_netprice"), res.getString("rvd_disc"), res.getString("rvd_lot"), res.getString("rvd_wh"), res.getString("rvd_serial"),
+                    res.getString("rvd_loc"), res.getString("rvd_jobnbr"), res.getString("rvd_site"), res.getString("rvd_status"), 
+                    res.getString("rvd_rline"), res.getString("rvd_voqty"), res.getString("rvd_cost"), res.getString("rvd_uom") );
+                    list.add(r);
+                    }
+            }
+            return list;
+    }
+    
+    
     // misc functions
     public static boolean isReceived(String x) {
            boolean r = false;
@@ -368,6 +463,13 @@ public class rcvData {
     }
         return lines;
     }
+    
+    public record Receiver(String[] m, recv_mstr rv, ArrayList<recv_det> rvd) {
+        public Receiver(String[] m) {
+            this (m, null, null);
+        }
+    }
+    
     
     public record recv_mstr(String[] m, String rv_id, String rv_vend, String rv_recvdate, 
         String rv_status, String rv_packingslip, String rv_userid, String rv_ap_acct, 

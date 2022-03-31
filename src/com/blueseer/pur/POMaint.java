@@ -42,8 +42,10 @@ import static com.blueseer.pur.purData.addPOTransaction;
 import static com.blueseer.pur.purData.getPODet;
 import static com.blueseer.pur.purData.getPOLines;
 import static com.blueseer.pur.purData.getPOMstr;
+import static com.blueseer.pur.purData.getPOMstrSet;
 import com.blueseer.pur.purData.po_mstr;
 import com.blueseer.pur.purData.pod_mstr;
+import com.blueseer.pur.purData.purchaseOrder;
 import static com.blueseer.pur.purData.updatePOTransaction;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsNumber;
@@ -602,11 +604,10 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeer {
     }
          
     public String[] getRecord(String[] key) {
-      po_mstr z = getPOMstr(key);  
-      po = z;
-      ArrayList<pod_mstr> zlist = getPODet(key);
-      podlist = zlist;
-      return po.m();
+      purchaseOrder z = getPOMstrSet(key);
+      po = z.po();
+      podlist = z.pod();
+      return z.m();
     }
     
     public po_mstr createRecord() {

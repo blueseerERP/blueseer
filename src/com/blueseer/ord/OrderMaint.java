@@ -1202,6 +1202,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         } 
         
         // now detail
+        myorddetmodel.setRowCount(0);
         for (sod_det sod : sodlist) {
                     myorddetmodel.addRow(new Object[]{
                       sod.sod_line(), 

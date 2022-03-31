@@ -440,7 +440,55 @@ public class purData {
         ps.executeUpdate();
         ps.close();
     }
-      
+    
+    public static purchaseOrder getPOMstrSet(String[] x ) {
+        purchaseOrder r = null;
+        String[] m = new String[2];
+        Connection bscon = null;
+        PreparedStatement ps = null;
+        ResultSet res = null;
+        try { 
+            bscon = DriverManager.getConnection(url + db, user, pass);
+            
+            // order master
+            po_mstr po = _getPOMstr(x, bscon, ps, res);
+            ArrayList<pod_mstr> pod = _getPODet(x, bscon, ps, res);
+           
+            
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+            r = new purchaseOrder(m, po, pod);
+            
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};
+             r = new purchaseOrder(m);
+        } finally {
+            if (res != null) {
+                try {
+                    res.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (bscon != null) {
+                try {
+                    bscon.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return r;
+    }
+    
+    
     public static po_mstr getPOMstr(String[] x) {
         po_mstr r = null;
         String[] m = new String[2];
@@ -472,6 +520,30 @@ public class purData {
         return r;
     }
     
+    private static po_mstr _getPOMstr(String[] x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+        po_mstr r = null;
+        String[] m = new String[2];
+        String sqlSelect = "select * from po_mstr where po_nbr = ?";
+          ps = con.prepareStatement(sqlSelect); 
+          ps.setString(1, x[0]);
+          res = ps.executeQuery();
+            if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};
+                r = new po_mstr(m);
+            } else {
+                while(res.next()) {
+                    m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                    r = new po_mstr(m, res.getString("po_nbr"), res.getString("po_vend"), 
+                        res.getString("po_ord_date"), res.getString("po_due_date"), res.getString("po_rmks"), 
+                        res.getString("po_shipvia"), res.getString("po_status"), res.getString("po_userid"), 
+                        res.getString("po_type"), res.getString("po_curr"), res.getString("po_terms"), 
+                        res.getString("po_site"), res.getString("po_buyer"), res.getString("po_ap_acct"), 
+                        res.getString("po_ap_cc"));
+                }
+            }
+            return r;
+    }
+       
     public static ArrayList<pod_mstr> getPODet(String[] x) {
         ArrayList<pod_mstr> list = new ArrayList<pod_mstr>();
         pod_mstr r = null;
@@ -498,6 +570,30 @@ public class purData {
         return list;
     }
         
+    private static ArrayList<pod_mstr> _getPODet(String[] x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+        ArrayList<pod_mstr> list = new ArrayList<pod_mstr>();
+        pod_mstr r = null;
+        String[] m = new String[2];
+        String sqlSelect = "select * from pod_mstr where pod_nbr = ?";
+          ps = con.prepareStatement(sqlSelect); 
+          ps.setString(1, x[0]);
+          res = ps.executeQuery();
+            if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};
+                r = new pod_mstr(m);
+            } else {
+                while(res.next()) {
+                    m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                    r = new pod_mstr(m, res.getString("pod_nbr"), res.getString("pod_line"), res.getString("pod_part"),
+                    res.getString("pod_vendpart"), res.getString("pod_ord_qty"), res.getString("pod_rcvd_qty"), 
+                    res.getString("pod_netprice"), res.getString("pod_disc"),res.getString("pod_listprice"), 
+                    res.getString("pod_due_date"), res.getString("pod_status"), res.getString("pod_site"), 
+                    res.getString("pod_ord_date"), res.getString("pod_uom"), res.getString("pod_desc") );
+                    list.add(r);
+                    }
+            }
+            return list;
+    }
     
     private static int _addPODet(pod_mstr x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
         int rows = 0;
@@ -681,6 +777,12 @@ public class purData {
 
    }
  
+    public record purchaseOrder(String[] m, po_mstr po, ArrayList<pod_mstr> pod) {
+        public purchaseOrder(String[] m) {
+            this (m, null, null);
+        }
+    }
+    
     
     public record po_mstr(String[] m, String po_nbr, String po_vend, 
      String po_ord_date, String po_due_date, String po_rmks, String po_shipvia,
