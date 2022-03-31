@@ -627,7 +627,7 @@ public class BOMMaint extends javax.swing.JPanel {
                 int column = target.getSelectedColumn();
                 if ( column == 0) {
                 ludialog.dispose();
-                initvars(new String[]{target.getValueAt(row,1).toString()});
+                initvars(new String[]{target.getValueAt(row,1).toString(), ""});
                 }
             }
         };
