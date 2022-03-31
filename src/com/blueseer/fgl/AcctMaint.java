@@ -79,6 +79,7 @@ public class AcctMaint extends javax.swing.JPanel implements IBlueSeerT  {
     
     // global variable declarations
                 boolean isLoad = false;
+                public static AcctMstr x = null;
     
    // global datatablemodel declarations   
    
@@ -137,8 +138,10 @@ public class AcctMaint extends javax.swing.JPanel implements IBlueSeerT  {
            if (this.type.equals("delete")) {
              initvars(null);  
            } else if (this.type.equals("get") && message[0].equals("1")) {
+             updateForm();
              tbkey.requestFocus();
            } else if (this.type.equals("get") && message[0].equals("0")) {
+             updateForm();  
              tbkey.requestFocus();
            } else {
              initvars(null);  
@@ -369,13 +372,8 @@ public class AcctMaint extends javax.swing.JPanel implements IBlueSeerT  {
     }
    
     public String[] getRecord(String[] key) {
-        AcctMstr x = getAcctMstr(key);  
-        tbdesc.setText(x.desc());
-        tbkey.setText(x.id());
-        ddcur.setSelectedItem(x.currency());
-        cbdisplay.setSelected(BlueSeerUtils.ConvertStringToBool(String.valueOf(x.cbdisplay())));
-        ddtype.setSelectedItem(x.type());
-        setAction(x.m());
+        AcctMstr z = getAcctMstr(key);  
+        x = z;
         return x.m();
     }
     
@@ -452,6 +450,14 @@ public class AcctMaint extends javax.swing.JPanel implements IBlueSeerT  {
         
     }
 
+    public void updateForm() {
+        tbdesc.setText(x.desc());
+        tbkey.setText(x.id());
+        ddcur.setSelectedItem(x.currency());
+        cbdisplay.setSelected(BlueSeerUtils.ConvertStringToBool(String.valueOf(x.cbdisplay())));
+        ddtype.setSelectedItem(x.type());
+        setAction(x.m()); 
+    }
     
     /**
      * This method is called from within the constructor to initialize the form.

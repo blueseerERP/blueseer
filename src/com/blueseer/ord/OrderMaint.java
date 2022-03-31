@@ -43,9 +43,11 @@ import static com.blueseer.inv.invData.getItemQOHTotal;
 import static com.blueseer.ord.ordData.addOrderTransaction;
 import static com.blueseer.ord.ordData.deleteOrderLines;
 import static com.blueseer.ord.ordData.getOrderDet;
+import static com.blueseer.ord.ordData.getOrderDetTax;
 import static com.blueseer.ord.ordData.getOrderItemAllocatedQty;
 import static com.blueseer.ord.ordData.getOrderLines;
 import static com.blueseer.ord.ordData.getOrderMstr;
+import static com.blueseer.ord.ordData.getOrderSOS;
 import com.blueseer.ord.ordData.sod_det;
 import com.blueseer.ord.ordData.so_mstr;
 import com.blueseer.ord.ordData.so_tax;
@@ -60,6 +62,7 @@ import static com.blueseer.utl.BlueSeerUtils.bsNumber;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
+import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
@@ -75,6 +78,7 @@ import static com.blueseer.utl.BlueSeerUtils.lurb2;
 import static com.blueseer.utl.BlueSeerUtils.priceformat;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeer;
+import com.blueseer.utl.IBlueSeerT;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -132,7 +136,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author vaughnte
  */
-public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
+public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
 
     // global variable declarations
                 boolean isLoad = false;
@@ -238,15 +242,15 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
     }
    
      // interface functions implemented  
-    public void executeTask(String x, String[] y) { 
+    public void executeTask(dbaction x, String[] y) { 
       
         class Task extends SwingWorker<String[], Void> {
        
           String type = "";
           String[] key = null;
           
-          public Task(String type, String[] key) { 
-              this.type = type;
+          public Task(dbaction type, String[] key) { 
+              this.type = type.name();
               this.key = key;
           } 
            
@@ -440,7 +444,8 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
         lblshiptoaddr.setText("");
         lblcurr.setText("");
         ddsactype.setSelectedIndex(0);
-        
+        tbsacdesc.setText("");
+        tbsacamt.setText("");
         duedate.setDate(now);
         orddate.setDate(now);
         
@@ -606,10 +611,10 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
         tbkey.requestFocus();
     }
     
-    public String[] setAction(int i) {
-        String[] m = new String[2];
-        if (i > 0) {
-            m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
+    public void setAction(String[] x) {
+        
+        if (x[0].equals("0")) {
+           
                    setPanelComponentState(this, true);
                    btadd.setEnabled(false);
                    tbkey.setEditable(false);
@@ -650,13 +655,12 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
                    
                    
         } else {
-           m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
                    tbkey.setForeground(Color.red); 
         }
-        return m;
+       
     }
     
-    public boolean validateInput(String x) {
+    public boolean validateInput(dbaction x) {
         boolean b = true;
                 
                 if (tbkey.getText().isEmpty()) {
@@ -746,7 +750,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
         
         
         if (arg != null && arg.length > 0) {
-            executeTask("get", arg);
+            executeTask(dbaction.get, arg);
         } else {
             tbkey.setEnabled(true);
             tbkey.setEditable(true);
@@ -831,8 +835,12 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
     public String[] getRecord(String[] key) {
       so_mstr z = getOrderMstr(key);  
       so = z;
-      ArrayList<sod_det> zlist = getOrderDet(key);
-      sodlist = zlist;
+      ArrayList<sod_det> _sodlist = getOrderDet(key);
+      sodlist = _sodlist;
+      ArrayList<sos_det> _soslist = getOrderSOS(key);
+      soslist = _soslist;
+      ArrayList<sod_tax> _sodtaxlist = getOrderDetTax(key);
+      sodtaxlist = _sodtaxlist;
       return so.m();
     }
     
@@ -1221,9 +1229,8 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
         if (soslist != null) {
         for (sos_det sos : soslist) {
             sacmodel.addRow(new Object[]{
-                      sos.sos_nbr(), 
+                      sos.sos_type(), 
                       sos.sos_desc(),
-                      sos.sos_type(),
                       sos.sos_amttype(),
                       sos.sos_amt()});
         }
@@ -1247,11 +1254,9 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
         headertax = OVData.getTaxPercentElementsApplicableByTaxCode(ddtax.getSelectedItem().toString());
         */
         
-        if (so.m()[0].equals("0") && sodlist != null && sodlist.size() > 0) {
-           setAction(1); 
-        } else {
-           setAction(0);
-        }
+        
+        setAction(so.m()); 
+       
         
         so = null;
         sodlist = null;
@@ -3120,11 +3125,11 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
     }//GEN-LAST:event_btadditemActionPerformed
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
-        if (! validateInput("addRecord")) {
+        if (! validateInput(dbaction.add)) {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("add", new String[]{tbkey.getText()});  
+        executeTask(dbaction.add, new String[]{tbkey.getText()});  
     }//GEN-LAST:event_btaddActionPerformed
 
     private void ddcustActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddcustActionPerformed
@@ -3155,11 +3160,11 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
     }//GEN-LAST:event_btdelitemActionPerformed
 
     private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
-          if (! validateInput("updateRecord")) {
+          if (! validateInput(dbaction.update)) {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("update", new String[]{tbkey.getText()});
+        executeTask(dbaction.update, new String[]{tbkey.getText()});
     }//GEN-LAST:event_btupdateActionPerformed
 
     private void netpriceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_netpriceActionPerformed
@@ -3292,7 +3297,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
     }//GEN-LAST:event_discountFocusLost
 
     private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
-       executeTask("delete", new String[]{tbkey.getText()});
+       executeTask(dbaction.delete, new String[]{tbkey.getText()});
     }//GEN-LAST:event_btdeleteActionPerformed
 
     private void tbmiscActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbmiscActionPerformed
@@ -3505,7 +3510,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
          if (message[0].equals("1")) { // if error
            bsmf.MainFrame.show(message[1]);
          } else {
-           executeTask("get", new String[]{tbkey.getText()});
+           executeTask(dbaction.get, new String[]{tbkey.getText()});
          }
     }//GEN-LAST:event_btinvoiceActionPerformed
 
@@ -3514,7 +3519,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeer {
     }//GEN-LAST:event_btprintorderActionPerformed
 
     private void tbkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkeyActionPerformed
-       executeTask("get", new String[]{tbkey.getText()});
+       executeTask(dbaction.get, new String[]{tbkey.getText()});
     }//GEN-LAST:event_tbkeyActionPerformed
 
     private void listpriceFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_listpriceFocusGained

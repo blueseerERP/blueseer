@@ -1467,6 +1467,8 @@ public class ordData {
 
 }
 
+    
+    
     public record so_mstr(String[] m, String so_nbr, String so_cust, String so_ship, String so_site,
     String so_curr, String so_shipvia, String so_wh, String so_po, String so_due_date,
     String so_ord_date, String so_create_date, String so_userid, String so_status, String so_isallocated,
