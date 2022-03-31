@@ -47,7 +47,9 @@ import static com.blueseer.ord.ordData.getOrderDetTax;
 import static com.blueseer.ord.ordData.getOrderItemAllocatedQty;
 import static com.blueseer.ord.ordData.getOrderLines;
 import static com.blueseer.ord.ordData.getOrderMstr;
+import static com.blueseer.ord.ordData.getOrderMstrSet;
 import static com.blueseer.ord.ordData.getOrderSOS;
+import com.blueseer.ord.ordData.salesOrder;
 import com.blueseer.ord.ordData.sod_det;
 import com.blueseer.ord.ordData.so_mstr;
 import com.blueseer.ord.ordData.so_tax;
@@ -833,15 +835,12 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
      }
       
     public String[] getRecord(String[] key) {
-      so_mstr z = getOrderMstr(key);  
-      so = z;
-      ArrayList<sod_det> _sodlist = getOrderDet(key);
-      sodlist = _sodlist;
-      ArrayList<sos_det> _soslist = getOrderSOS(key);
-      soslist = _soslist;
-      ArrayList<sod_tax> _sodtaxlist = getOrderDetTax(key);
-      sodtaxlist = _sodtaxlist;
-      return so.m();
+      salesOrder z = getOrderMstrSet(key);
+      so = z.so();
+      sodlist = z.sod();
+      soslist = z.sos();
+      sodtaxlist = z.sodtax();
+      return z.m();
     }
     
     public so_mstr createRecord() { 

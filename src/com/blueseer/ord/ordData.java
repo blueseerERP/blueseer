@@ -548,7 +548,56 @@ public class ordData {
         ps.executeUpdate();
         ps.close();
     }
-        
+    
+    public static salesOrder getOrderMstrSet(String[] x ) {
+        salesOrder r = null;
+        String[] m = new String[2];
+        Connection bscon = null;
+        PreparedStatement ps = null;
+        ResultSet res = null;
+        try { 
+            bscon = DriverManager.getConnection(url + db, user, pass);
+            
+            // order master
+            so_mstr so = _getOrderMstr(x, bscon, ps, res);
+            ArrayList<sod_det> sod = _getOrderDet(x, bscon, ps, res);
+            ArrayList<sos_det> sos = _getOrderSOS(x, bscon, ps, res);
+            ArrayList<sod_tax> sotd = _getOrderDetTax(x, bscon, ps, res);
+            ArrayList<so_tax> sot = _getOrderTax(x, bscon, ps, res);
+            
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+            r = new salesOrder(m, so, sod, sos, sotd, sot);
+            
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};
+             r = new salesOrder(m);
+        } finally {
+            if (res != null) {
+                try {
+                    res.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (bscon != null) {
+                try {
+                    bscon.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return r;
+    }
+    
     public static so_mstr getOrderMstr(String[] x) {
         so_mstr r = null;
         String[] m = new String[2];
@@ -580,7 +629,31 @@ public class ordData {
         }
         return r;
     }
-      
+    
+    private static so_mstr _getOrderMstr(String[] x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+        so_mstr r = null;
+        String[] m = new String[2];
+        String sqlSelect = "select * from so_mstr where so_nbr = ?";
+          ps = con.prepareStatement(sqlSelect); 
+          ps.setString(1, x[0]);
+          res = ps.executeQuery();
+            if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};
+                r = new so_mstr(m);
+            } else {
+                while(res.next()) {
+                    m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                    r = new so_mstr(m, res.getString("so_nbr"), res.getString("so_cust"), res.getString("so_ship"),
+                res.getString("so_site"), res.getString("so_curr"), res.getString("so_shipvia"), res.getString("so_wh"), res.getString("so_po"),
+                res.getString("so_due_date"), res.getString("so_ord_date"), res.getString("so_create_date"), res.getString("so_userid"), res.getString("so_status"),
+                res.getString("so_isallocated"), res.getString("so_terms"), res.getString("so_ar_acct"), res.getString("so_ar_cc"), 
+                res.getString("so_rmks"), res.getString("so_type"), res.getString("so_taxcode"), res.getString("so_issourced"));
+                }
+            }
+            return r;
+    }
+    
+    
     public static ArrayList<sod_det> getOrderDet(String[] x) {
         ArrayList<sod_det> list = new ArrayList<sod_det>();
         sod_det r = null;
@@ -607,6 +680,32 @@ public class ordData {
         return list;
     }
     
+    private static ArrayList<sod_det> _getOrderDet(String[] x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+        ArrayList<sod_det> list = new ArrayList<sod_det>();
+        sod_det r = null;
+        String[] m = new String[2];
+        String sqlSelect = "select * from sod_det where sod_nbr = ?";
+          ps = con.prepareStatement(sqlSelect); 
+          ps.setString(1, x[0]);
+          res = ps.executeQuery();
+            if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};
+                r = new sod_det(m);
+            } else {
+                while(res.next()) {
+                    m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                    r = new sod_det(m, res.getString("sod_nbr"), res.getString("sod_line"), res.getString("sod_part"),
+                    res.getString("sod_custpart"), res.getString("sod_po"), res.getString("sod_ord_qty"), res.getString("sod_uom"), res.getString("sod_all_qty"),
+                    res.getString("sod_listprice"), res.getString("sod_disc"), res.getString("sod_netprice"), res.getString("sod_ord_date"), res.getString("sod_due_date"),
+                    res.getString("sod_shipped_qty"), res.getString("sod_status"), res.getString("sod_wh"), res.getString("sod_loc"), 
+                    res.getString("sod_desc"), res.getString("sod_taxamt"), res.getString("sod_site"), res.getString("sod_bom") );
+                    list.add(r);
+                    }
+            }
+            return list;
+    }
+    
+    
     public static ArrayList<sos_det> getOrderSOS(String[] x) {
         ArrayList<sos_det> list = new ArrayList<sos_det>();
         sos_det r = null;
@@ -629,7 +728,31 @@ public class ordData {
         return list;
     }
     
-    public static so_tax getOrderTaxMstr(String[] x) {
+    private static ArrayList<sos_det> _getOrderSOS(String[] x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+        ArrayList<sos_det> list = new ArrayList<sos_det>();
+        sos_det r = null;
+        String[] m = new String[2];
+        String sqlSelect = "select * from sos_det where sos_nbr = ?";
+          ps = con.prepareStatement(sqlSelect); 
+          ps.setString(1, x[0]);
+          res = ps.executeQuery();
+            if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};
+                r = new sos_det(m);
+            } else {
+                while(res.next()) {
+                    m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                    r = new sos_det(m, res.getString("sos_nbr"), res.getString("sos_desc"), res.getString("sos_type"),
+                    res.getString("sos_amttype"), res.getString("sos_amt") );
+                    list.add(r);
+                }
+            }
+            return list;
+    }
+    
+    
+    
+    public static so_tax getOrderTax(String[] x) {
         so_tax r = null;
         String[] m = new String[2];
         String sql = "select * from so_tax where sot_nbr = ? ;";
@@ -655,7 +778,30 @@ public class ordData {
         }
         return r;
     }
-        
+    
+    private static ArrayList<so_tax> _getOrderTax(String[] x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+        ArrayList<so_tax> list = new ArrayList<so_tax>();
+        so_tax r = null;
+        String[] m = new String[2];
+        String sqlSelect = "select * from so_tax where sot_nbr = ?";
+          ps = con.prepareStatement(sqlSelect); 
+          ps.setString(1, x[0]);
+          res = ps.executeQuery();
+            if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};
+                r = new so_tax(m);
+            } else {
+                while(res.next()) {
+                    m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                     r = new so_tax(m, res.getString("sot_nbr"), res.getString("sot_desc"), res.getString("sot_percent"),
+                    res.getString("sot_type"));
+                    list.add(r);
+                }
+            }
+            return list;
+    }
+    
+    
     public static ArrayList<sod_tax> getOrderDetTax(String[] x) {
         ArrayList<sod_tax> list = new ArrayList<sod_tax>();
         sod_tax r = null;
@@ -676,6 +822,28 @@ public class ordData {
 	       MainFrame.bslog(s); 
         }
         return list;
+    }
+    
+    private static ArrayList<sod_tax> _getOrderDetTax(String[] x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+        ArrayList<sod_tax> list = new ArrayList<sod_tax>();
+        sod_tax r = null;
+        String[] m = new String[2];
+        String sqlSelect = "select * from sod_tax where sodt_nbr = ?";
+          ps = con.prepareStatement(sqlSelect); 
+          ps.setString(1, x[0]);
+          res = ps.executeQuery();
+            if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};
+                r = new sod_tax(m);
+            } else {
+                while(res.next()) {
+                    m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                    r = new sod_tax(m, res.getString("sodt_nbr"), res.getString("sodt_line"), res.getString("sodt_desc"),
+                    res.getString("sodt_percent"), res.getString("sodt_type") );
+                    list.add(r);
+                }
+            }
+            return list;
     }
     
     
@@ -1293,7 +1461,7 @@ public class ordData {
             ResultSet res = null;
             double ordertotal = 0;
             
-            res = st.executeQuery("SELECT  sum(sod_listprice * sod_ord_qty) as mytotal  " +
+            res = st.executeQuery("SELECT  sum(sod_netprice * sod_ord_qty) as mytotal  " +
                                     " FROM  sod_det  " +
                                     " where sod_nbr = " + "'" + nbr + "'" +       
                                     ";");
@@ -1331,6 +1499,74 @@ public class ordData {
 
     }
 
+    public static double getOrderTotal(String nbr) {
+       double tax = 0;
+       double disc = 0;
+       double charge = 0;
+       double ordertotal = 0;
+     try{
+        Class.forName(driver).newInstance();
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            
+            res = st.executeQuery("SELECT  sum(sod_netprice * sod_ord_qty) as mytotal  " +
+                                    " FROM  sod_det  " +
+                                    " where sod_nbr = " + "'" + nbr + "'" +       
+                                    ";");
+                while (res.next()) {
+                    ordertotal += res.getDouble("mytotal");
+                }
+            
+            res = st.executeQuery("SELECT * " +
+                                    " FROM  sos_det  " +
+                                    " where sos_nbr = " + "'" + nbr + "'" +
+                                    " and sos_type = 'tax' " +        
+                                    " ;");
+
+                double sosamt = 0;
+                while (res.next()) {
+                    sosamt = res.getDouble("sos_amt");
+                    if (res.getString("sos_amttype").equals("percent")) {
+                        if (sosamt > 0)
+                        tax += (ordertotal * (sosamt / 100)); 
+                    } else {
+                       tax += sosamt;
+                    }
+                }
+            
+                res = st.executeQuery("SELECT * " +
+                                    " FROM  sos_det  " +
+                                    " where sos_nbr = " + "'" + nbr + "'" +
+                                    " and sos_type <> 'tax' " +        
+                                    " ;");
+
+                sosamt = 0;
+                while (res.next()) {
+                    sosamt = res.getDouble("sos_amt");
+                    if (res.getString("sos_type").equals("charge")) {
+                       charge += sosamt; 
+                    }
+                    if (res.getString("sos_type").equals("discount")) {
+                       if (sosamt > 0)
+                        disc += (ordertotal * (sosamt / 100)); 
+                    }
+                }
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return ordertotal + charge + tax;
+
+    }
+
+    
     public static String getOrderItem(String order, String line) {
         String item = "";
         try{
@@ -1467,7 +1703,12 @@ public class ordData {
 
 }
 
-    
+    public record salesOrder(String[] m, so_mstr so, ArrayList<sod_det> sod,
+        ArrayList<sos_det> sos, ArrayList<sod_tax> sodtax, ArrayList<so_tax> sotax) {
+        public salesOrder(String[] m) {
+            this (m, null, null, null, null, null);
+        }
+    }
     
     public record so_mstr(String[] m, String so_nbr, String so_cust, String so_ship, String so_site,
     String so_curr, String so_shipvia, String so_wh, String so_po, String so_due_date,

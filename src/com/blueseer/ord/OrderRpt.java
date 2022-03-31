@@ -70,6 +70,7 @@ import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.ctr.cusData;
+import static com.blueseer.ord.ordData.getOrderTotal;
 import com.blueseer.sch.schData;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
@@ -138,7 +139,7 @@ public class OrderRpt extends javax.swing.JPanel {
                             getGlobalColumnTag("item"), 
                             getGlobalColumnTag("price"), 
                             getGlobalColumnTag("orderqty"), 
-                            getGlobalColumnTag("shippedqty"), 
+                            getGlobalColumnTag("shipqty"), 
                             getGlobalColumnTag("status")});
     
      class ButtonRenderer extends JButton implements TableCellRenderer {
@@ -696,6 +697,7 @@ try {
              
              int qty = 0;
                 double dol = 0;
+                double total = 0;
                 int i = 0;
                 String fromcust = "";
                 String tocust = "";
@@ -756,8 +758,8 @@ try {
                     if (! cberror.isSelected() && res.getString("so_status").equals("error"))
                         continue;                       
 
-                    
-                    dol = dol + res.getDouble("totdol");
+                    total = getOrderTotal(res.getString("so_nbr"));
+                    dol = dol + total;
                     qty = qty + res.getInt("totqty");
                     i++;
                         mymodel.addRow(new Object[]{
@@ -770,7 +772,7 @@ try {
                                 res.getString("so_ord_date"),
                                 res.getString("so_due_date"),
                                 res.getInt("totqty"),
-                                bsParseDouble(currformatDouble(res.getDouble("totdol"))),
+                                bsParseDouble(currformatDouble(total)),
                                 res.getString("so_curr"),
                                 res.getString("so_status"),
                                 planstatus
