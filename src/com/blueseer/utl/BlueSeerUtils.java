@@ -597,6 +597,10 @@ public class BlueSeerUtils {
          pattern = "#0.0000";   
         } else if (precision.equals("5")) {
          pattern = "#0.00000";    
+        } else if (precision.equals("6")) {
+         pattern = "#0.000000";  
+        } else if (precision.equals("7")) {
+         pattern = "#0.0000000";    
          } else if (precision.equals("0")) {
          pattern = "#0";    
         } else {

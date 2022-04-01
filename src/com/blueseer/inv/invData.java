@@ -1044,6 +1044,44 @@ public class invData {
         return r;
     }
   
+    public static wf_mstr getWFMstr(String[] x) {
+        wf_mstr r = null;
+        String[] m = new String[2];
+        String sql = "";
+        if (x.length == 1) {
+            sql = "select * from wf_mstr where wf_id = ? ;";
+        } else {
+            sql = "select * from wf_mstr where wf_id = ? and wf_op = ? ;";
+        }
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, x[0]);
+        if (x.length > 1) {
+        ps.setString(2, x[1]);
+        }
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new wf_mstr(m);  // minimum return
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new wf_mstr(m, res.getString("wf_id"), res.getString("wf_desc"),
+                        res.getString("wf_site"), res.getString("wf_op"),
+                        res.getString("wf_assert"), res.getString("wf_op_desc"),
+                        res.getString("wf_cell"), res.getString("wf_setup_hours"),
+                        res.getString("wf_run_hours"));
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getClassName() + "." + Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new wf_mstr(m);
+        }
+        return r;
+    }
+  
    
 
     /* misc functions */

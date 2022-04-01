@@ -309,7 +309,7 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeerT {
     
     
     public void setComponentDefaultValues() {
-       isLoad = true;
+        isLoad = true;
         tbkey.setText("");
       
          terms = "";
@@ -474,6 +474,7 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeerT {
        setPanelComponentState(this, false); 
        setComponentDefaultValues();
         btnew.setEnabled(true);
+        btclear.setEnabled(true);
         btlookup.setEnabled(true);
         
         if (arg != null && arg.length > 0) {

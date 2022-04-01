@@ -343,14 +343,12 @@ public class SiteMaint extends javax.swing.JPanel implements IBlueSeerT {
     
     public void setAction(String[] x) {
         String[] m = new String[2];
-        if (x[0].equals("0")) {
-            m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
+        if (x[0].equals("0")) { 
                    setPanelComponentState(this, true);
                    btadd.setEnabled(false);
                    tbkey.setEditable(false);
                    tbkey.setForeground(Color.blue);
         } else {
-           m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
                    tbkey.setForeground(Color.red); 
         }
     }
@@ -462,7 +460,7 @@ public class SiteMaint extends javax.swing.JPanel implements IBlueSeerT {
        setComponentDefaultValues();
         btnew.setEnabled(true);
         btlookup.setEnabled(true);
-         if (arg != null && arg.length > 0) {
+        if (arg != null && arg.length > 0) {
             executeTask(dbaction.get,arg);
         } else {
             tbkey.setEnabled(true);

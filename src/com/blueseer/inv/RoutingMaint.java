@@ -36,11 +36,14 @@ import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import static com.blueseer.inv.invData.addRoutingMstr;
+import static com.blueseer.inv.invData.getWFMstr;
 import static com.blueseer.inv.invData.updateRoutingMstr;
 import com.blueseer.inv.invData.wf_mstr;
+import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
+import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
@@ -52,6 +55,7 @@ import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeer;
+import com.blueseer.utl.IBlueSeerT;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -83,10 +87,11 @@ import javax.swing.SwingWorker;
  *
  * @author vaughnte
  */
-public class RoutingMaint extends javax.swing.JPanel implements IBlueSeer {
+public class RoutingMaint extends javax.swing.JPanel implements IBlueSeerT {
 
     // global variable declarations
                 boolean isLoad = false;
+                public static wf_mstr x = null;
     
    // global datatablemodel declarations   
                 
@@ -96,15 +101,15 @@ public class RoutingMaint extends javax.swing.JPanel implements IBlueSeer {
     }
 
      // interface functions implemented
-    public void executeTask(String x, String[] y) { 
+    public void executeTask(dbaction x, String[] y) { 
       
         class Task extends SwingWorker<String[], Void> {
        
           String type = "";
           String[] key = null;
           
-          public Task(String type, String[] key) { 
-              this.type = type;
+          public Task(dbaction type, String[] key) { 
+              this.type = type.name();
               this.key = key;
           } 
            
@@ -143,10 +148,10 @@ public class RoutingMaint extends javax.swing.JPanel implements IBlueSeer {
             BlueSeerUtils.endTask(message);
            if (this.type.equals("delete")) {
              initvars(null);  
-           } else if (this.type.equals("get") && message[0].equals("1")) {
+           } else if (this.type.equals("get")) {
+             updateForm();
              tbkey.requestFocus();
-           } else if (this.type.equals("get") && message[0].equals("0")) {
-             tbkey.requestFocus();
+          
            } else {
              initvars(null);  
            }
@@ -317,22 +322,19 @@ public class RoutingMaint extends javax.swing.JPanel implements IBlueSeer {
         tbkey.requestFocus();
     }
     
-    public String[] setAction(int i) {
+    public void setAction(String[] x) {
         String[] m = new String[2];
-        if (i > 0) {
-            m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
+        if (x[0].equals("0")) {
                    setPanelComponentState(this, true);
                    btadd.setEnabled(false);
                    tbkey.setEditable(false);
                    tbkey.setForeground(Color.blue);
         } else {
-           m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
                    tbkey.setForeground(Color.red); 
         }
-        return m;
     }
     
-    public boolean validateInput(String x) {
+    public boolean validateInput(dbaction x) {
         boolean b = true;
                 if (ddsite.getSelectedItem() == null || ddsite.getSelectedItem().toString().isEmpty()) {
                     b = false;
@@ -385,7 +387,7 @@ public class RoutingMaint extends javax.swing.JPanel implements IBlueSeer {
         btlookup.setEnabled(true);
         
         if (arg != null && arg.length > 0) {
-            executeTask("get",arg);
+            executeTask(dbaction.get,arg);
         } else {
             tbkey.setEnabled(true);
             tbkey.setEditable(true);
@@ -442,76 +444,11 @@ public class RoutingMaint extends javax.swing.JPanel implements IBlueSeer {
      return m;
      }
       
-    public String[] getRecord(String[] x) {
-       String[] m = new String[2];
-       
-        try {
-
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                
-                double runhours = 0;
-                double setuphours = 0;
-                int i = 0;
-                 if (x == null && x.length < 1) { return new String[]{}; };
-                 
-                 // lets first get all the ops for this routing ID to populate ddop
-                 assignOPs(x[0]);
-                 
-                 
-                // two key system....make accomodation for first key action performed returning first record where it exists..else grab specific rec with both keys
-                if (x.length == 1) {
-                res = st.executeQuery("select * from wf_mstr where wf_id = " + "'" + x[0] + "'"  + " limit 1 ;"); 
-                } else {
-                 res = st.executeQuery("select * from wf_mstr where wf_id = " + "'" + x[0] + "'"  + 
-                        " and wf_op = " + "'" + x[1] + "'" +
-                        ";");   
-                }
-               
-                        
-                while (res.next()) {
-                    i++;
-                    
-                    if (res.getDouble("wf_run_hours") > 0)
-                        runhours = 1 / res.getDouble("wf_run_hours");
-                    else
-                        runhours = 0;
-                    
-                    
-                    
-                    tbkey.setText(res.getString("wf_id"));
-                    ddwc.setSelectedItem(res.getString("wf_cell"));
-                    tbopdesc.setText(res.getString("wf_desc"));
-                    ddsite.setSelectedItem(res.getString("wf_site"));
-                    ddop.setSelectedItem(res.getString("wf_op"));
-                    tbrunhours.setText(res.getString("wf_run_hours").replace('.',defaultDecimalSeparator));
-                    tbsetuphours.setText(res.getString("wf_setup_hours").replace('.',defaultDecimalSeparator));
-                    tbrunhoursinverted.setText(String.valueOf(currformatDouble(runhours)).replace('.',defaultDecimalSeparator));
-                    cbmilestone.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("wf_assert")));
-                }
-               
-                // set Action if Record found (i > 0)
-                m = setAction(i);
-                
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};  
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1020, Thread.currentThread().getStackTrace()[1].getMethodName())};  
-        }
-      return m;
+    public String[] getRecord(String[] key) {
+        if (key == null && key.length < 1) { return new String[]{}; };
+        wf_mstr z = getWFMstr(key);  
+        x = z;
+        return x.m();
     }
     
     public wf_mstr createRecord() {
@@ -612,6 +549,26 @@ public class RoutingMaint extends javax.swing.JPanel implements IBlueSeer {
         
     }
 
+    public void updateForm() {
+        
+        double runhours = 0;
+        assignOPs(x.wf_id());
+                 
+        if (Double.valueOf(x.wf_run_hours()) > 0)
+            runhours = (1 / Double.valueOf(x.wf_run_hours()));
+        else
+            runhours = 0;
+        tbkey.setText(x.wf_id());
+        ddwc.setSelectedItem(x.wf_cell());
+        tbopdesc.setText(x.wf_desc());
+        ddsite.setSelectedItem(x.wf_site());
+        ddop.setSelectedItem(x.wf_op());
+        tbrunhours.setText(x.wf_run_hours().replace('.',defaultDecimalSeparator));
+        tbsetuphours.setText(x.wf_setup_hours().replace('.',defaultDecimalSeparator));
+        tbrunhoursinverted.setText(bsFormatDouble(runhours,"0").replace('.',defaultDecimalSeparator));
+        cbmilestone.setSelected(BlueSeerUtils.ConvertStringToBool(x.wf_assert()));
+        setAction(x.m());      
+    }
     
     // custom funcs
     public void assignOPs(String routing) {
@@ -953,47 +910,31 @@ public class RoutingMaint extends javax.swing.JPanel implements IBlueSeer {
     }//GEN-LAST:event_ddopActionPerformed
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
-       if (! validateInput("addRecord")) {
+       if (! validateInput(dbaction.add)) {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("add", new String[]{tbkey.getText()});
+        executeTask(dbaction.add, new String[]{tbkey.getText()});
     }//GEN-LAST:event_btaddActionPerformed
 
     private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
-       if (! validateInput("updateRecord")) {
+       if (! validateInput(dbaction.update)) {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("update", new String[]{tbkey.getText(), ddop.getSelectedItem().toString()});
+        executeTask(dbaction.update, new String[]{tbkey.getText(), ddop.getSelectedItem().toString()});
     }//GEN-LAST:event_btupdateActionPerformed
 
     private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
         setPanelComponentState(this, false);
-        executeTask("delete", new String[]{tbkey.getText(), ddop.getSelectedItem().toString()});   
+        executeTask(dbaction.delete, new String[]{tbkey.getText(), ddop.getSelectedItem().toString()});   
     }//GEN-LAST:event_btdeleteActionPerformed
 
     private void tbrunhoursinvertedFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbrunhoursinvertedFocusLost
         if (! tbrunhoursinverted.getText().isEmpty() && bsParseDouble(tbrunhoursinverted.getText()) > 0)
-        tbrunhours.setText(currformatDouble(1 / bsParseDouble(tbrunhoursinverted.getText())));
+        tbrunhours.setText(bsFormatDouble(1 / bsParseDouble(tbrunhoursinverted.getText()), "7"));
         else
-            tbrunhours.setText("0");
-        
-          String x = BlueSeerUtils.bsformat("", tbrunhoursinverted.getText(), "2");
-        if (x.equals("error")) {
-            tbrunhoursinverted.setText("");
-            tbrunhoursinverted.setBackground(Color.yellow);
-            bsmf.MainFrame.show(getMessageTag(1000));
-            tbrunhoursinverted.requestFocus();
-        } else {
-            tbrunhoursinverted.setText(x);
-            tbrunhoursinverted.setBackground(Color.white);
-        }
-        if (tbrunhoursinverted.getText().isEmpty()) {
-            tbrunhoursinverted.setText("0");
-        }
-        
-        
+        tbrunhours.setText("0");
     }//GEN-LAST:event_tbrunhoursinvertedFocusLost
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
@@ -1022,7 +963,7 @@ public class RoutingMaint extends javax.swing.JPanel implements IBlueSeer {
     }//GEN-LAST:event_btclearActionPerformed
 
     private void tbkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkeyActionPerformed
-        executeTask("get", new String[]{tbkey.getText()});
+        executeTask(dbaction.get, new String[]{tbkey.getText()});
     }//GEN-LAST:event_tbkeyActionPerformed
 
     private void btlookupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btlookupActionPerformed
