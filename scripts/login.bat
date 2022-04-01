@@ -1,4 +1,46 @@
 @echo off
-set mypath=%cd%
+
+if exist .update set /P PATCH=<.update
+
+set PATCHDIR="%~dp0\patches\%PATCH%"
+
+if exist .update (
+call :patchInstall
+) else (
+@echo "no patch file...proceeding"
+)
+
 cd %~dp0
 start jre17\bin\javaw -D"java.util.logging.config.file=bslogging.properties" -cp "dist\*" bsmf.MainFrame
+
+goto :eof
+
+:patchInstall
+@echo "patch trigger found..." >patchlog.txt
+if exist %PATCHDIR%\blueseer.jar (
+   if exist dist\ (
+   copy %PATCHDIR%\blueseer.jar dist\
+   @echo "copying blueseer.jar to dist folder" >>patchlog.txt
+   ) else (
+   @echo "no dist directory exists" >>patchlog.txt
+   )
+) 
+if exist %PATCHDIR%\.patch (
+   copy %PATCHDIR%\.patch .patch 2>&1
+   @echo "copying .patch file" >>patchlog.txt
+) 
+if exist %PATCHDIR%\jasper (
+   xcopy %PATCHDIR%\jasper jasper /E /I /Y /Q 2>&1
+   @echo "copying jasper folder content" >>patchlog.txt
+) 
+if exist %PATCHDIR%\zebra (
+   xcopy %PATCHDIR%\zebra zebra /E /I /Y /Q 2>&1
+   @echo "copying zebra folder content" >>patchlog.txt
+) 
+@echo "done with patchInstall..." >>patchlog.txt
+del /F /Q .update
+exit /b
+
+
+
+

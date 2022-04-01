@@ -50,6 +50,7 @@ import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -64,6 +65,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import javax.swing.BorderFactory;
@@ -489,11 +491,12 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
 	
         
         // now extract zip into patches directory
-        String fileZip = patchfile.toString();
+        String fileZip = patchfile;
         File destDir = new File(patchdir.toString());
         byte[] buffer = new byte[1024];
         ZipInputStream zis = new ZipInputStream(new FileInputStream(fileZip));
         ZipEntry zipEntry = zis.getNextEntry();
+        String root = zipEntry.getName().split(Pattern.quote("\\"),-1)[0];
         while (zipEntry != null) {
             File newFile = newFile(destDir, zipEntry);
             if (zipEntry.isDirectory()) {
@@ -519,7 +522,9 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
        }
         zis.closeEntry();
         zis.close();
-       
+        
+        // now leave file patch trigger for login.bat script
+        Files.write(Paths.get(".update"), root.getBytes(StandardCharsets.UTF_8));
         
     }
     
