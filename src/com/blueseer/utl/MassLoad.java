@@ -28,7 +28,9 @@ package com.blueseer.utl;
 
 import bsmf.MainFrame;
 import static bsmf.MainFrame.tags;
+import static com.blueseer.ctr.cusData.addCustMstrMass;
 import com.blueseer.inv.invData;
+import static com.blueseer.inv.invData.addItemMasterMass;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -385,7 +387,7 @@ public class MassLoad extends javax.swing.JPanel {
             }
             fsr.close();
              if (proceed) {
-                   if(! OVData.addItemMaster(list)) {
+                   if(! addItemMasterMass(list)) {
                        m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151, String.valueOf(i))};
                    } else {
                        m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
@@ -1759,7 +1761,7 @@ public class MassLoad extends javax.swing.JPanel {
             }
             fsr.close();
              if (proceed) {
-                   if(! OVData.addCustMstrWShipTo(list))
+                   if(! addCustMstrMass(list))
                        m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151,String.valueOf(i))};
                    } else {
                   m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 

@@ -41,6 +41,7 @@ import com.blueseer.ctr.cusData;
 import com.blueseer.fgl.fglData;
 import com.blueseer.inv.calcCost;
 import com.blueseer.inv.invData;
+import com.blueseer.inv.invData.item_mstr;
 import com.blueseer.ord.ordData;
 import static com.blueseer.ord.ordData.getOrderTotalTax;
 import com.blueseer.sch.schData;
@@ -3830,7 +3831,7 @@ public class OVData {
                             "'" +  ld[25] + "'" + "," +  
                             "'" +  ld[26] + "'" + "," +  
                             "'" +  ld[27] + "'" + "," + 
-                            "'" +  ld[28] + "'" + ",'ACTIVE'" + ");"
+                            "'" +  ld[28] + "'" + "," + "'" + "ACTIVE" + "'" + ");"
                            );
                     
                     } else {

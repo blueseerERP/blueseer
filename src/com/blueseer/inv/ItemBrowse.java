@@ -72,6 +72,8 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
+import static com.blueseer.utl.BlueSeerUtils.currformat;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -103,14 +105,15 @@ public class ItemBrowse extends javax.swing.JPanel {
                             getGlobalColumnTag("code"),
                             getGlobalColumnTag("type"),
                             getGlobalColumnTag("uom"), 
-                            getGlobalColumnTag("status"),
+                            getGlobalColumnTag("cost"),
+                            getGlobalColumnTag("price"),
                             getGlobalColumnTag("qoh")})
              {
                       @Override  
                       public Class getColumnClass(int col) {  
                         if (col == 0)       
                             return ImageIcon.class;  
-                        else if (col == 7)
+                        else if (col == 6 || col == 7 || col == 8)
                             return Double.class;
                         else return String.class;  //other columns accept String values  
                       }  
@@ -458,6 +461,8 @@ try {
                      tc.setCellRenderer(new ItemBrowse.SomeRenderer());
                  }
                  tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
+                 tablereport.getColumnModel().getColumn(6).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+                 tablereport.getColumnModel().getColumn(7).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
                 List<String[]> mylist = new ArrayList();     
                 res = st.executeQuery("SELECT * from item_mstr " +
                         " where it_item >= " + "'" + ddfromitem.getSelectedItem().toString()  + "'" + 
@@ -473,7 +478,8 @@ try {
                                 res.getString("it_code"),
                                 res.getString("it_type"), 
                                 res.getString("it_uom"),
-                                res.getString("it_status"),
+                                res.getString("it_mtl_cost"),
+                                res.getString("it_sell_price"), 
                                 res.getString("it_site")});
                 }    
                 for (String[] s : mylist) {
@@ -484,8 +490,9 @@ try {
                                 s[2],
                                 s[3],
                                 s[4],
-                                s[5],
-                                invData.getItemQOHTotal(s[0], s[6])
+                                bsParseDouble(s[5]),
+                                bsParseDouble(s[6]),
+                                invData.getItemQOHTotal(s[0], s[7])
                             });
                 }
                 

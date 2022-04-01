@@ -188,10 +188,10 @@ public class BOMMaint extends javax.swing.JPanel {
              getRecord(new String[]{tbkey.getText(), ""}); 
              updateFormAddUpdate();
            } else if (this.type.equals("get") && message[0].equals("1")) {
-             updateForm();
+             updateForm(this.key[0]);
              tbkey.requestFocus();
            } else if (this.type.equals("get") && message[0].equals("0")) {
-             updateForm();  
+             updateForm(this.key[0]);  
              tbkey.requestFocus();
            } else {
              getRecord(new String[]{this.key[0], this.key[1]});  // add and update
@@ -680,28 +680,42 @@ public class BOMMaint extends javax.swing.JPanel {
         
     }
 
-    public String[] updateForm() {
-      tbkey.setText(x.bom_item());
-      cbdefault.setSelected(BlueSeerUtils.ConvertStringToBool(x.bom_primary()));
-      cbenabled.setSelected(BlueSeerUtils.ConvertStringToBool(x.bom_enabled()));
-      tbbomdesc.setText(x.bom_desc());
-      getOPs(x.bom_item());
+    public String[] updateForm(String key) {
+      boolean hasRouting =  false;
       site = OVData.getDefaultSite();
-      parent = x.bom_item();
-      tblotsize.setText(invData.getItemLotSize(x.bom_item()));
-      tbbomid.setText(BomID);
-      getComponents(x.bom_item(), BomID);
-      bind_tree(x.bom_item(), BomID);
-      callSimulateCost();
-      getCostSets(x.bom_item());
-      ddcomp.removeItem(tbkey.getText());  // remove parent from component list
+        
+      // initial x could be blank because of no BOM....need to manually set with key  
+      if (x.bom_item().isBlank()) {
+          tbkey.setText(key);
+          getOPs(key);
+          parent = key;
+          tblotsize.setText(invData.getItemLotSize(key));
+          ddcomp.removeItem(key);  // remove parent from component list
+          hasRouting =  getRouting(key);
+      }  else {
+          tbkey.setText(x.bom_item());
+          getOPs(x.bom_item());
+          parent = x.bom_item();
+          tblotsize.setText(invData.getItemLotSize(x.bom_item()));
+          ddcomp.removeItem(tbkey.getText());  // remove parent from component list
+          tbbomid.setText(BomID);
+          getComponents(x.bom_item(), BomID);
+          bind_tree(x.bom_item(), BomID);
+          callSimulateCost();
+          getCostSets(x.bom_item());
+          cbdefault.setSelected(BlueSeerUtils.ConvertStringToBool(x.bom_primary()));
+          cbenabled.setSelected(BlueSeerUtils.ConvertStringToBool(x.bom_enabled()));
+          tbbomdesc.setText(x.bom_desc());
+          hasRouting =  getRouting(x.bom_item());
+      }
+      
       
        String[] message = new String[2];
             message[0] = "";
             message[1] = "";
        
        message = x.m();
-       boolean hasRouting =  getRouting(x.bom_item());
+       
         if (! hasRouting) {
           message[1] = "-1";
         } 

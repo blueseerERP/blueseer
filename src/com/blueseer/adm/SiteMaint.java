@@ -153,13 +153,15 @@ public class SiteMaint extends javax.swing.JPanel implements IBlueSeerT {
        public void done() {
             try {
             String[] message = get();
-            updateForm();
+            
             BlueSeerUtils.endTask(message);
            if (this.type.equals("delete")) {
              initvars(null);  
            } else if (this.type.equals("get") && message[0].equals("1")) {
+               updateForm();
              tbkey.requestFocus();
            } else if (this.type.equals("get") && message[0].equals("0")) {
+               updateForm();
              tbkey.requestFocus();
            } else {
              initvars(null);  

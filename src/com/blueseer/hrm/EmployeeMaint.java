@@ -240,13 +240,15 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 } catch (TimeoutException ex) {
                     MainFrame.bslog(ex);
                 }
-           updateForm();
+           
            BlueSeerUtils.endTask(m);
            if (this.type.equals("delete")) {
              initvars(null);  
            } else if (this.type.equals("get") && m[0].equals("1")) {
+               updateForm();
              tbkey.requestFocus();
            } else if (this.type.equals("get") && m[0].equals("0")) {
+               updateForm();
              tbkey.requestFocus();
            } else {
              initvars(null);  

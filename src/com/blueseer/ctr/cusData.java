@@ -59,7 +59,7 @@ public class cusData {
         ResultSet res = null;
         try { 
             con = DriverManager.getConnection(url + db, user, pass);
-            int rows = _addCustMstr(x, con, ps, res);  // add cms_det
+            int rows = _addCustMstr(x, con, ps, res, false);  // add cms_det
             if (rows > 0) {
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
             } else {
@@ -103,7 +103,7 @@ public class cusData {
         try { 
             con = DriverManager.getConnection(url + db, user, pass);
             con.setAutoCommit(false);
-            _addCustMstr(cm, con, ps, res);  // add cm_mstr
+            _addCustMstr(cm, con, ps, res, false);  // add cm_mstr
             _deleteCMCDetAll(cm.cm_code, con, ps, res);    // delete cmc_det
             
             for (String[] s : list) {  
@@ -118,7 +118,7 @@ public class cusData {
                 );
             _addCMCDet(z, con, ps, res);  // add cmc_det
             }
-            _addCMSDet(cms, con, ps, res);  // add cms_det
+            _addCMSDet(cms, con, ps, res, false);  // add cms_det
             con.commit();
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
         } catch (SQLException s) {
@@ -155,8 +155,65 @@ public class cusData {
     return m;
     }
      
+     public static boolean addCustMstrMass(ArrayList<String> list) {
+        boolean r = false;
+        String[] ld = null;
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet res = null;
+        try { 
+            con = DriverManager.getConnection(url + db, user, pass);
+   
+            for (String rec : list) {
+                ld = rec.split(":", -1);
+                cm_mstr x = new cm_mstr(null, 
+                ld[0], ld[2], ld[3], ld[4],
+                    ld[5], ld[6], ld[7], ld[8],
+                    ld[9], BlueSeerUtils.setDateFormat(new java.util.Date()), BlueSeerUtils.setDateFormat(new java.util.Date()), 
+                    bsmf.MainFrame.userid, ld[10], ld[11], ld[12], ld[13], 
+                    ld[14], ld[15], ld[16], ld[17], 
+                    ld[18], ld[19], ld[20], 
+                    ld[21], ld[22], ld[25], ld[26], ld[23], 
+                    ld[30], ld[28], ld[29], ld[31], ld[32]
+                );
+                _addCustMstr(x, con, ps, res, true);
+                cms_det y = new cms_det(null, 
+                ld[0], ld[0], ld[2], ld[3], ld[4],
+                    ld[5], ld[6], ld[7], ld[8],
+                    ld[9] );
+                _addCMSDet(y,  con, ps, res, true);
+            }
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+        } finally {
+            if (res != null) {
+                try {
+                    res.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            
+        }
+    return r;
+    }
     
-    private static int _addCustMstr(cm_mstr x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+    
+    private static int _addCustMstr(cm_mstr x, Connection con, PreparedStatement ps, ResultSet res, boolean addupdate) throws SQLException {
         int rows = 0;
         String sqlSelect = "select * from cm_mstr where cm_code = ?";
         String sqlInsert = "insert into cm_mstr (cm_code, cm_name, cm_line1, cm_line2, " 
@@ -168,10 +225,21 @@ public class cusData {
                         + "cm_ar_acct, cm_ar_cc, cm_bank, cm_curr, cm_remarks, " 
                         + "cm_label, cm_ps_jasper, cm_iv_jasper, cm_phone, cm_email ) "
                         + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
+        String sqlUpdate = "update cm_mstr set " 
+                + " cm_name = ?, cm_line1 = ?, cm_line2 = ?, "
+                + "cm_line3 = ?, cm_city = ?, cm_state = ?, cm_zip = ?, "
+                + "cm_country = ?, cm_dateadd = ?, cm_datemod = ?, cm_usermod = ?, "
+                + "cm_group = ?, cm_market = ?, cm_creditlimit = ?, cm_onhold = ?, "
+                + "cm_carrier = ?, cm_terms = ?, cm_freight_type = ?, cm_price_code = ?, "
+                + "cm_disc_code = ?, cm_tax_code = ?, cm_salesperson = ?, "
+                + "cm_ar_acct = ?, cm_ar_cc = ?, cm_bank = ?, cm_curr = ?, cm_remarks = ?, " 
+                + "cm_label = ?, cm_ps_jasper = ?, cm_iv_jasper = ?, cm_phone = ?, cm_email = ? "
+                + " where cm_code = ? ; ";  
           ps = con.prepareStatement(sqlSelect);
           ps.setString(1, x.cm_code);
           res = ps.executeQuery();
-          ps = con.prepareStatement(sqlInsert);  
+          ps = con.prepareStatement(sqlInsert); 
+          PreparedStatement psu = con.prepareStatement(sqlUpdate); 
             if (! res.isBeforeFirst()) {
             ps.setString(1, x.cm_code);
             ps.setString(2, x.cm_name);
@@ -207,6 +275,44 @@ public class cusData {
             ps.setString(32,x.cm_phone);
             ps.setString(33,x.cm_email);
             rows = ps.executeUpdate();
+            } else {
+                if (addupdate) {
+                 psu.setString(33, x.cm_code);
+                psu.setString(1, x.cm_name);
+                psu.setString(2, x.cm_line1);
+                psu.setString(3, x.cm_line2);
+                psu.setString(4, x.cm_line3);
+                psu.setString(5, x.cm_city);
+                psu.setString(6, x.cm_state);
+                psu.setString(7, x.cm_zip);
+                psu.setString(8, x.cm_country);
+                psu.setString(9, x.cm_dateadd);
+                psu.setString(10, x.cm_datemod);
+                psu.setString(11, x.cm_usermod);
+                psu.setString(12, x.cm_group);
+                psu.setString(13, x.cm_market);
+                psu.setString(14, x.cm_creditlimit);
+                psu.setString(15, x.cm_onhold);
+                psu.setString(16, x.cm_carrier);
+                psu.setString(17, x.cm_terms);
+                psu.setString(18, x.cm_freight_type);
+                psu.setString(19, x.cm_price_code);
+                psu.setString(20,x.cm_disc_code);
+                psu.setString(21,x.cm_tax_code);
+                psu.setString(22,x.cm_salesperson);
+                psu.setString(23,x.cm_ar_acct);
+                psu.setString(24,x.cm_ar_cc);
+                psu.setString(25,x.cm_bank);
+                psu.setString(26,x.cm_curr);
+                psu.setString(27,x.cm_remarks);
+                psu.setString(28,x.cm_label);
+                psu.setString(29,x.cm_ps_jasper);
+                psu.setString(30,x.cm_iv_jasper);
+                psu.setString(31,x.cm_phone);
+                psu.setString(32,x.cm_email); 
+                rows = psu.executeUpdate();
+                psu.close();
+                }
             } 
             return rows;
     }
@@ -509,7 +615,7 @@ public class cusData {
         ResultSet res = null;
         try { 
             con = DriverManager.getConnection(url + db, user, pass);
-            _addCMSDet(x, con, ps, res);  // add cms_det
+            _addCMSDet(x, con, ps, res, false);  // add cms_det
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
         } catch (SQLException s) {
              MainFrame.bslog(s);
@@ -540,12 +646,23 @@ public class cusData {
     return m;
     }
     
-    private static void _addCMSDet(cms_det x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+    private static void _addCMSDet(cms_det x, Connection con, PreparedStatement ps, ResultSet res, boolean addupdate) throws SQLException {
         if (x == null) return;
+        String sqlSelect = "select * from cms_det where cms_code = ? and cms_shipto = ?";
         String sqlInsert = "insert into cms_det (cms_code, cms_shipto, cms_name, cms_line1, cms_line2, " 
                         + "cms_line3, cms_city, cms_state, cms_zip, cms_country ) "
                         + " values (?,?,?,?,?,?,?,?,?,?); "; 
+        String sqlUpdate = "update cms_det set " 
+                + " cms_name = ?, cms_line1 = ?, cms_line2 = ?, "
+                + "cms_line3 = ?, cms_city = ?, cms_state = ?, cms_zip = ?, "
+                + "cms_country = ? "
+                + " where cms_code = ? and cms_shipto = ? ; ";
+            ps = con.prepareStatement(sqlSelect);
+            ps.setString(1, x.cms_code);
+            ps.setString(1, x.cms_shipto);
+            res = ps.executeQuery();
             ps = con.prepareStatement(sqlInsert);
+             if (! res.isBeforeFirst()) {
             ps.setString(1, x.cms_code);
             ps.setString(2, x.cms_shipto);
             ps.setString(3, x.cms_name);
@@ -557,6 +674,21 @@ public class cusData {
             ps.setString(9, x.cms_zip);
             ps.setString(10, x.cms_country);
             int rows = ps.executeUpdate();
+            } else {
+                 if (addupdate) {
+                    ps.setString(9, x.cms_code);
+                    ps.setString(10, x.cms_shipto);
+                    ps.setString(1, x.cms_name);
+                    ps.setString(2, x.cms_line1);
+                    ps.setString(3, x.cms_line2);
+                    ps.setString(4, x.cms_line3);
+                    ps.setString(5, x.cms_city);
+                    ps.setString(6, x.cms_state);
+                    ps.setString(7, x.cms_zip);
+                    ps.setString(8, x.cms_country);
+                    ps.executeUpdate();    
+                 }
+             }
     }
         
     public static String[] updateCMSDet(cms_det x) {

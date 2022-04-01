@@ -34,6 +34,7 @@ import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
+import static com.blueseer.utl.BlueSeerUtils.bsformat;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.OVData;
@@ -47,6 +48,7 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 import javax.swing.JOptionPane;
 
@@ -56,6 +58,69 @@ import javax.swing.JOptionPane;
  */
 public class invData {
     
+    public static boolean addItemMasterMass(ArrayList<String> list) {
+        boolean r = false;
+        String[] ld = null;
+        Connection con = null;
+        try { 
+            con = DriverManager.getConnection(url + db, user, pass);
+    
+            for (String rec : list) {
+                ld = rec.split(":", -1);
+                item_mstr x = new item_mstr(null, ld[0],
+                ld[1].toUpperCase(),
+                bsformat("i", ld[7], "").replace(defaultDecimalSeparator, '.'),
+                bsformat("d", ld[8], "5").replace(defaultDecimalSeparator, '.'),
+                bsformat("d", ld[9], "5").replace(defaultDecimalSeparator, '.'),
+                bsformat("d", ld[11], "5").replace(defaultDecimalSeparator, '.'),
+                bsformat("d", ld[12], "5").replace(defaultDecimalSeparator, '.'),
+                bsformat("d", ld[10], "5").replace(defaultDecimalSeparator, '.'),
+                ld[3],
+                ld[13],
+                ld[14],
+                ld[4],
+                ld[15],
+                ld[16],
+                ld[17],
+                ld[6],
+                ld[5],        
+                ld[2],
+                ld[18],
+                "ACTIVE",
+                ld[19],
+                bsformat("d", ld[20], "2").replace(defaultDecimalSeparator, '.'),
+                bsformat("d", ld[21], "2").replace(defaultDecimalSeparator, '.'),
+                "", //default cont
+                "0", // default cont qty
+                bsformat("d", ld[22], "0").replace(defaultDecimalSeparator, '.'),
+                bsformat("d", ld[23], "0").replace(defaultDecimalSeparator, '.'),
+                bsformat("d", ld[24], "0").replace(defaultDecimalSeparator, '.'),
+                ld[25],
+                ld[26],
+                ld[27],
+                ld[28], // routing
+                "", // tax
+                bsmf.MainFrame.dfdate.format(new Date()),
+                "", // expire date
+                "0", // expire days
+                "0" // phantom boolean
+                );
+                invData._addItemMstr(x, con, true);
+            }
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+        } finally {
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return r;
+    }
+        
     public static String[] addItemMstr(item_mstr x) {
         String[] m = new String[2];
         if (x == null) {
@@ -64,7 +129,7 @@ public class invData {
         Connection con = null;
         try { 
             con = DriverManager.getConnection(url + db, user, pass);
-            int rows = _addItemMstr(x, con);  
+            int rows = _addItemMstr(x, con, false);  
             if (rows > 0) {
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
             } else {
@@ -85,7 +150,7 @@ public class invData {
     return m;
     }
     
-    private static int _addItemMstr(item_mstr x, Connection con) throws SQLException {
+    private static int _addItemMstr(item_mstr x, Connection con, boolean addupdate) throws SQLException {
         int rows = 0;
         String sqlSelect = "select * from item_mstr where it_item = ?";
         String sqlInsert = "insert into item_mstr (it_item, it_desc, it_lotsize, " 
@@ -94,11 +159,18 @@ public class invData {
                         + "it_status, it_uom, it_net_wt, it_ship_wt, it_cont, it_contqty, "
                         + "it_leadtime, it_safestock, it_minordqty, it_mrp, it_sched, it_plan, it_wf, it_taxcode, it_createdate, it_expire, it_expiredays, it_phantom ) "
                         + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
-       
+        String sqlUpdate = "update item_mstr set it_desc = ?, it_lotsize = ?, " +
+                "it_sell_price = ?, it_pur_price = ?, it_ovh_cost = ?, it_out_cost = ?, it_mtl_cost = ?, it_code = ?, it_type = ?, it_group = ?, " +
+                "it_prodline = ?, it_drawing = ?, it_rev = ?, it_custrev = ?, it_wh = ?, it_loc = ?, it_site = ?, it_comments = ?, " +
+                "it_status = ?, it_uom = ?, it_net_wt = ?, it_ship_wt = ?, it_cont = ?, it_contqty = ?, " +
+                "it_leadtime = ?, it_safestock = ?, it_minordqty = ?, it_mrp = ?, it_sched = ?, it_plan = ?, it_wf = ?, it_taxcode = ?, it_createdate = ?, " +
+                "it_expire = ?, it_expiredays = ?, it_phantom = ? " +
+                " where it_item = ? ; ";
             PreparedStatement ps = con.prepareStatement(sqlSelect);
             ps.setString(1, x.it_item);
             ResultSet res = ps.executeQuery();
-            PreparedStatement psi = con.prepareStatement(sqlInsert);  
+            PreparedStatement psi = con.prepareStatement(sqlInsert);
+            PreparedStatement psu = con.prepareStatement(sqlUpdate);
             if (! res.isBeforeFirst()) {
             psi.setString(1, x.it_item);
             psi.setString(2, x.it_desc);
@@ -138,7 +210,49 @@ public class invData {
             psi.setString(36, x.it_expiredays);
             psi.setString(37, x.it_phantom);
             rows = psi.executeUpdate();
-            } 
+            } else {
+                if (addupdate) {
+                  psu.setString(37, x.it_item);
+            psu.setString(1, x.it_desc);
+            psu.setString(2, x.it_lotsize);
+            psu.setString(3, x.it_sell_price);
+            psu.setString(4, x.it_pur_price);
+            psu.setString(5, x.it_ovh_cost);
+            psu.setString(6, x.it_out_cost);
+            psu.setString(7, x.it_mtl_cost);
+            psu.setString(8, x.it_code);
+            psu.setString(9, x.it_type);
+            psu.setString(10, x.it_group);
+            psu.setString(11, x.it_prodline);
+            psu.setString(12, x.it_drawing);
+            psu.setString(13, x.it_rev);
+            psu.setString(14, x.it_custrev);
+            psu.setString(15, x.it_wh);
+            psu.setString(16, x.it_loc);
+            psu.setString(17, x.it_site);
+            psu.setString(18, x.it_comments);
+            psu.setString(19, x.it_status);
+            psu.setString(20, x.it_uom);
+            psu.setString(21, x.it_net_wt);
+            psu.setString(22, x.it_ship_wt);
+            psu.setString(23, x.it_cont);
+            psu.setString(24, x.it_contqty);
+            psu.setString(25, x.it_leadtime);
+            psu.setString(26, x.it_safestock);
+            psu.setString(27, x.it_minordqty);
+            psu.setString(28, x.it_mrp);
+            psu.setString(29, x.it_sched);
+            psu.setString(30, x.it_plan);
+            psu.setString(31, x.it_wf);
+            psu.setString(32, x.it_taxcode);
+            psu.setString(33, x.it_createdate);
+            psu.setString(34, x.it_expire);
+            psu.setString(35, x.it_expiredays);
+            psu.setString(36, x.it_phantom);
+            rows = psu.executeUpdate();
+                }
+            }
+            psu.close();
             ps.close();
             psi.close();
             res.close();
@@ -184,7 +298,7 @@ public class invData {
                 "it_expire = ?, it_expiredays = ?, it_phantom = ? " +
                 " where it_item = ? ; ";
         PreparedStatement psu = con.prepareStatement(sql);
-        psu.setString(37, x.it_item);
+            psu.setString(37, x.it_item);
             psu.setString(1, x.it_desc);
             psu.setString(2, x.it_lotsize);
             psu.setString(3, x.it_sell_price);
