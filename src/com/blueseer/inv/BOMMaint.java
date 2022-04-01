@@ -737,7 +737,8 @@ public class BOMMaint extends javax.swing.JPanel {
         message = x.m();
        boolean hasRouting =  getRouting(x.bom_item());
         if (! hasRouting) {
-          message[1] = "-1";
+          message[0] = "-1";
+          message[1] = "No BOM found";
         } 
        setAction(message);
         
