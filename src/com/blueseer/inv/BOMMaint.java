@@ -187,11 +187,8 @@ public class BOMMaint extends javax.swing.JPanel {
            if (this.type.equals("delete")) {
              getRecord(new String[]{tbkey.getText(), ""}); 
              updateFormAddUpdate();
-           } else if (this.type.equals("get") && message[0].equals("1")) {
+           } else if (this.type.equals("get")) {
              updateForm(this.key[0]);
-             tbkey.requestFocus();
-           } else if (this.type.equals("get") && message[0].equals("0")) {
-             updateForm(this.key[0]);  
              tbkey.requestFocus();
            } else {
              getRecord(new String[]{this.key[0], this.key[1]});  // add and update
@@ -536,7 +533,16 @@ public class BOMMaint extends javax.swing.JPanel {
         bom_mstr z = getBOMMstr(key);
         x = z;     
         
-        return x.m();         
+        boolean hasRouting =  getRouting(key[0]);
+        String[] message = x.m();
+        if (! hasRouting) {
+          message[0] = "-1";
+          message[1] = "No Routing found";
+        } 
+        
+        
+        
+        return message;         
     }
     
     public String[] addRecord(String[] x) {
@@ -681,17 +687,16 @@ public class BOMMaint extends javax.swing.JPanel {
     }
 
     public String[] updateForm(String key) {
-      boolean hasRouting =  false;
+     
       site = OVData.getDefaultSite();
         
       // initial x could be blank because of no BOM....need to manually set with key  
-      if (x.bom_item().isBlank()) {
+      if (x.bom_item().isEmpty()) {
           tbkey.setText(key);
           getOPs(key);
           parent = key;
           tblotsize.setText(invData.getItemLotSize(key));
           ddcomp.removeItem(key);  // remove parent from component list
-          hasRouting =  getRouting(key);
       }  else {
           tbkey.setText(x.bom_item());
           getOPs(x.bom_item());
@@ -706,20 +711,11 @@ public class BOMMaint extends javax.swing.JPanel {
           cbdefault.setSelected(BlueSeerUtils.ConvertStringToBool(x.bom_primary()));
           cbenabled.setSelected(BlueSeerUtils.ConvertStringToBool(x.bom_enabled()));
           tbbomdesc.setText(x.bom_desc());
-          hasRouting =  getRouting(x.bom_item());
+          
       }
       
-      
-       String[] message = new String[2];
-            message[0] = "";
-            message[1] = "";
-       
-       message = x.m();
-       
-        if (! hasRouting) {
-          message[1] = "-1";
-        } 
-       setAction(message);
+        
+       setAction(x.m());
        
       return x.m();
     }
@@ -730,7 +726,7 @@ public class BOMMaint extends javax.swing.JPanel {
         callSimulateCost();
         updateCurrentItemCost(tbkey.getText());
         getCostSets(tbkey.getText().toString());
-        
+      /*  
         String[] message = new String[2];
         message[0] = "";
         message[1] = "";
@@ -740,7 +736,8 @@ public class BOMMaint extends javax.swing.JPanel {
           message[0] = "-1";
           message[1] = "No BOM found";
         } 
-       setAction(message);
+        */
+       setAction(x.m());
         
     }
     
