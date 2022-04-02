@@ -483,7 +483,7 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
             fileOutputStream.close();
             
             if (Files.exists(patch)) {
-                bsmf.MainFrame.show("Patch Downloaded...go to patches directory and execute install script");
+                bsmf.MainFrame.show("patch downloaded...restart application.");
             } else {
                 bsmf.MainFrame.show("Unable to download patch");
             }
@@ -525,7 +525,7 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
         
         // now leave file patch trigger for login.bat script
         Files.write(Paths.get(".update"), root.getBytes(StandardCharsets.UTF_8));
-        
+        System.exit(0);
     }
     
     

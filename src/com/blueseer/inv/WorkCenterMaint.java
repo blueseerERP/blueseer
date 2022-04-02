@@ -36,11 +36,13 @@ import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.fgl.fglData;
 import static com.blueseer.inv.invData.addWorkCenterMstr;
+import static com.blueseer.inv.invData.getWCMstr;
 import static com.blueseer.inv.invData.updateWorkCenterMstr;
 import com.blueseer.inv.invData.wc_mstr;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.currformat;
+import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
@@ -52,6 +54,7 @@ import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeer;
+import com.blueseer.utl.IBlueSeerT;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -80,10 +83,11 @@ import javax.swing.SwingWorker;
  *
  * @author vaughnte
  */
-public class WorkCenterMaint extends javax.swing.JPanel implements IBlueSeer {
+public class WorkCenterMaint extends javax.swing.JPanel implements IBlueSeerT {
 
      // global variable declarations
                 boolean isLoad = false;
+                public static wc_mstr x = null;
     
    // global datatablemodel declarations    
                 
@@ -94,15 +98,15 @@ public class WorkCenterMaint extends javax.swing.JPanel implements IBlueSeer {
     }
 
      // interface functions implemented
-    public void executeTask(String x, String[] y) { 
+    public void executeTask(dbaction x, String[] y) { 
       
         class Task extends SwingWorker<String[], Void> {
        
           String type = "";
           String[] key = null;
           
-          public Task(String type, String[] key) { 
-              this.type = type;
+          public Task(dbaction type, String[] key) { 
+              this.type = type.name();
               this.key = key;
           } 
            
@@ -141,9 +145,8 @@ public class WorkCenterMaint extends javax.swing.JPanel implements IBlueSeer {
             BlueSeerUtils.endTask(message);
            if (this.type.equals("delete")) {
              initvars(null);  
-           } else if (this.type.equals("get") && message[0].equals("1")) {
-             tbkey.requestFocus();
-           } else if (this.type.equals("get") && message[0].equals("0")) {
+           } else if (this.type.equals("get")) {
+             updateForm();
              tbkey.requestFocus();
            } else {
              initvars(null);  
@@ -310,22 +313,19 @@ public class WorkCenterMaint extends javax.swing.JPanel implements IBlueSeer {
         tbkey.requestFocus();
     }
     
-    public String[] setAction(int i) {
+    public void setAction(String[] x) {
         String[] m = new String[2];
-        if (i > 0) {
-            m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
+        if (x[0].equals("0")) { 
                    setPanelComponentState(this, true);
                    btadd.setEnabled(false);
                    tbkey.setEditable(false);
                    tbkey.setForeground(Color.blue);
         } else {
-           m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
                    tbkey.setForeground(Color.red); 
         }
-        return m;
     }
     
-    public boolean validateInput(String x) {
+    public boolean validateInput(dbaction x) {
         boolean b = true;
                 if (ddsite.getSelectedItem() == null || ddsite.getSelectedItem().toString().isEmpty()) {
                     b = false;
@@ -369,7 +369,7 @@ public class WorkCenterMaint extends javax.swing.JPanel implements IBlueSeer {
         btlookup.setEnabled(true);
         
         if (arg != null && arg.length > 0) {
-            executeTask("get",arg);
+            executeTask(dbaction.get,arg);
         } else {
             tbkey.setEnabled(true);
             tbkey.setEditable(true);
@@ -426,52 +426,10 @@ public class WorkCenterMaint extends javax.swing.JPanel implements IBlueSeer {
      return m;
      }
       
-    public String[] getRecord(String[] x) {
-       String[] m = new String[2];
-       
-        try {
-
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                int i = 0;
-                res = st.executeQuery("select * from wc_mstr where wc_cell = " + "'" + x[0] + "'" + ";");
-                        
-                while (res.next()) {
-                    i++;
-                    tbkey.setText(res.getString("wc_cell"));
-                    tbdesc.setText(res.getString("wc_desc"));
-                    ddsite.setSelectedItem(res.getString("wc_site"));
-                    ddcc.setSelectedItem(res.getString("wc_cc"));
-                    tarmks.setText(res.getString("wc_remarks"));
-                    tbrunrate.setText(currformat(res.getString("wc_run_rate").replace('.',defaultDecimalSeparator)));
-                    tbsetuprate.setText(currformat(res.getString("wc_setup_rate").replace('.',defaultDecimalSeparator)));
-                    tbbdnrate.setText(currformat(res.getString("wc_bdn_rate").replace('.',defaultDecimalSeparator)));
-                    tbruncrewsize.setText(res.getString("wc_run_crew").replace('.',defaultDecimalSeparator));
-                    tbsetupcrewsize.setText(res.getString("wc_setup").replace('.',defaultDecimalSeparator));
-                }
-               
-                // set Action if Record found (i > 0)
-                m = setAction(i);
-                
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};  
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1020, Thread.currentThread().getStackTrace()[1].getMethodName())};  
-        }
-      return m;
+    public String[] getRecord(String[] key) {
+       wc_mstr z = getWCMstr(key);  
+        x = z;
+        return x.m();
     }
     
     public wc_mstr createRecord() {
@@ -531,7 +489,19 @@ public class WorkCenterMaint extends javax.swing.JPanel implements IBlueSeer {
         
     }
 
-    
+    public void updateForm() {
+        tbkey.setText(x.wc_cell());
+        tbdesc.setText(x.wc_desc());
+        ddsite.setSelectedItem(x.wc_site());
+        ddcc.setSelectedItem(x.wc_cc());
+        tarmks.setText(x.wc_remarks());
+        tbrunrate.setText(currformat(x.wc_run_rate().replace('.',defaultDecimalSeparator)));
+        tbsetuprate.setText(currformat(x.wc_setup_rate().replace('.',defaultDecimalSeparator)));
+        tbbdnrate.setText(currformat(x.wc_bdn_rate().replace('.',defaultDecimalSeparator)));
+        tbruncrewsize.setText(x.wc_run_crew().replace('.',defaultDecimalSeparator));
+        tbsetupcrewsize.setText(x.wc_setup().replace('.',defaultDecimalSeparator));
+        setAction(x.m());  
+    }
     
     
     
@@ -823,27 +793,27 @@ public class WorkCenterMaint extends javax.swing.JPanel implements IBlueSeer {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
-       if (! validateInput("addRecord")) {
+       if (! validateInput(dbaction.add)) {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("add", new String[]{tbkey.getText()});
+        executeTask(dbaction.add, new String[]{tbkey.getText()});
     }//GEN-LAST:event_btaddActionPerformed
 
     private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
-        if (! validateInput("updateRecord")) {
+        if (! validateInput(dbaction.update)) {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("update", new String[]{tbkey.getText()});
+        executeTask(dbaction.update, new String[]{tbkey.getText()});
     }//GEN-LAST:event_btupdateActionPerformed
 
     private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
-       if (! validateInput("deleteRecord")) {
+       if (! validateInput(dbaction.delete)) {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("delete", new String[]{tbkey.getText()});    
+        executeTask(dbaction.delete, new String[]{tbkey.getText()});    
     }//GEN-LAST:event_btdeleteActionPerformed
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
@@ -936,7 +906,7 @@ public class WorkCenterMaint extends javax.swing.JPanel implements IBlueSeer {
     }//GEN-LAST:event_btclearActionPerformed
 
     private void tbkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkeyActionPerformed
-        executeTask("get", new String[]{tbkey.getText()});
+        executeTask(dbaction.get, new String[]{tbkey.getText()});
     }//GEN-LAST:event_tbkeyActionPerformed
 
     private void btlookupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btlookupActionPerformed

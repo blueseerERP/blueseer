@@ -34,8 +34,15 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.ctr.cusData.addCarrierMstr;
+import static com.blueseer.ctr.cusData.addUpdateCarrierDet;
+import com.blueseer.ctr.cusData.car_mstr;
+import static com.blueseer.ctr.cusData.deleteCarrierMstr;
+import static com.blueseer.ctr.cusData.getCarrierMstr;
+import static com.blueseer.ctr.cusData.updateCarrierMstr;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
@@ -47,6 +54,7 @@ import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeer;
+import com.blueseer.utl.IBlueSeerT;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -76,10 +84,11 @@ import javax.swing.SwingWorker;
  *
  * @author vaughnte
  */
-public class CarrierMaint extends javax.swing.JPanel implements IBlueSeer {
+public class CarrierMaint extends javax.swing.JPanel implements IBlueSeerT {
 
     // global variable declarations
                 boolean isLoad = false;
+                public static car_mstr x = null; 
     
    // global datatablemodel declarations  
      DefaultListModel mymodel = new DefaultListModel() ;
@@ -90,15 +99,15 @@ public class CarrierMaint extends javax.swing.JPanel implements IBlueSeer {
     }
 
      // interface functions implemented
-    public void executeTask(String x, String[] y) { 
+    public void executeTask(dbaction x, String[] y) { 
       
         class Task extends SwingWorker<String[], Void> {
        
           String type = "";
           String[] key = null;
           
-          public Task(String type, String[] key) { 
-              this.type = type;
+          public Task(dbaction type, String[] key) { 
+              this.type = type.name();
               this.key = key;
           } 
            
@@ -137,9 +146,8 @@ public class CarrierMaint extends javax.swing.JPanel implements IBlueSeer {
             BlueSeerUtils.endTask(message);
            if (this.type.equals("delete")) {
              initvars(null);  
-           } else if (this.type.equals("get") && message[0].equals("1")) {
-             tbkey.requestFocus();
-           } else if (this.type.equals("get") && message[0].equals("0")) {
+           } else if (this.type.equals("get")) {
+             updateForm();  
              tbkey.requestFocus();
            } else {
              initvars(null);  
@@ -268,15 +276,20 @@ public class CarrierMaint extends javax.swing.JPanel implements IBlueSeer {
     
     public void setComponentDefaultValues() {
        isLoad = true;
-         tbkey.setText("");
+        buttonGroup1.add(rbcarrier);
+        buttonGroup1.add(rbgroup);
+        rbcarrier.setSelected(true);
+        
+        tbkey.setText("");
         tbdesc.setText("");
         tbphone.setText("");
         tbcontact.setText("");
         tbacct.setText("");  
         tbscaccode.setText("");
         mymodel.removeAllElements();
+        carrierlist.setModel(mymodel);
         ddcarrier.removeAllItems();
-        rbcarrier.setSelected(true);
+        
         ArrayList<String> mylist = OVData.getScacCarrierOnly();
         for (int i = 0; i < mylist.size(); i++) {
             ddcarrier.addItem(mylist.get(i));
@@ -301,22 +314,19 @@ public class CarrierMaint extends javax.swing.JPanel implements IBlueSeer {
         tbkey.requestFocus();
     }
     
-    public String[] setAction(int i) {
+    public void setAction(String[] x) {
         String[] m = new String[2];
-        if (i > 0) {
-            m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
+        if (x[0].equals("0")) { 
                    setPanelComponentState(this, true);
                    btadd.setEnabled(false);
                    tbkey.setEditable(false);
                    tbkey.setForeground(Color.blue);
         } else {
-           m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
                    tbkey.setForeground(Color.red); 
         }
-        return m;
     }
     
-    public boolean validateInput(String x) {
+    public boolean validateInput(dbaction x) {
         boolean b = true;
                
                 
@@ -348,7 +358,7 @@ public class CarrierMaint extends javax.swing.JPanel implements IBlueSeer {
         btlookup.setEnabled(true);
         
         if (arg != null && arg.length > 0) {
-            executeTask("get",arg);
+            executeTask(dbaction.get,arg);
         } else {
             tbkey.setEnabled(true);
             tbkey.setEditable(true);
@@ -357,140 +367,26 @@ public class CarrierMaint extends javax.swing.JPanel implements IBlueSeer {
     }
     
     public String[] addRecord(String[] x) {
-     String[] m = new String[2];
-     
-     try {
-
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                boolean proceed = true;
-                int i = 0;
-                String cartype = "";
-                proceed = validateInput("addRecord");
-                
-                if (proceed) {
-
-                    res = st.executeQuery("SELECT car_code FROM  car_mstr where car_code = " + "'" + x[0] + "'" + ";");
-                    while (res.next()) {
-                        i++;
-                    }
-                    if (i == 0) {
-                        if (rbgroup.isSelected()) {
-                           cartype = "group";
-                        } else {
-                           cartype = "carrier";
-                        }
-                        st.executeUpdate("insert into car_mstr "
-                            + "(car_code, car_desc, car_scac, car_acct, car_phone, car_type, car_contact) " 
-                            + " values ( " + "'" + tbkey.getText().toString() + "'" + ","
-                            + "'" + tbdesc.getText().toString() + "'" + ","
-                            + "'" + tbscaccode.getText().toString() + "'" + ","
-                            + "'" + tbacct.getText().toString() + "'" + ","
-                            + "'" + tbphone.getText().toString() + "'" + ","
-                            + "'" + cartype + "'" + ","
-                            + "'" + tbcontact.getText().toString() + "'"
-                            + ")"
-                            + ";");
-                        
-                        if (rbgroup.isSelected()) {
-                           for (int j = 0; j < mymodel.getSize(); j++) {
-                           st.executeUpdate("insert into car_det "
-                            + "(card_code, card_carrier ) "
-                            + " values ( " + "'" + tbkey.getText() + "'" + ","
-                            + "'" + mymodel.getElementAt(j) + "'" 
-                            + ")"
-                            + ";");
-                           }
-                        }
-                        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
-                    } else {
-                       m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists}; 
-                    }
-
-                   initvars(null);
-                   
-                } // if proceed
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordSQLError};  
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordConnError};
-        }
-     
+     ArrayList<String> k = new ArrayList<String>();
+     if (mymodel.getSize() > 0) {
+         for (int j = 0; j < mymodel.getSize(); j++) {
+             k.add(mymodel.getElementAt(j).toString());
+         }
+         addUpdateCarrierDet(x[0], k);
+     }
+     String[] m = addCarrierMstr(createRecord());
      return m;
      }
      
     public String[] updateRecord(String[] x) {
-     String[] m = new String[2];
-     
-     try {
-            boolean proceed = true;
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            try {
-                   
-               proceed = validateInput("updateRecord");
-                
-                if (proceed) {
-                    String cartype = "";
-                    if (rbgroup.isSelected()) {
-                        cartype = "group";
-                    } else {
-                        cartype = "carrier";
-                    }
-                     st.executeUpdate("update car_mstr set car_desc = " + "'" + tbdesc.getText() + "'" + ","
-                            + "car_acct = " + "'" + tbacct.getText() + "'" + ","
-                            + "car_scac = " + "'" + tbscaccode.getText() + "'" + ","
-                            + "car_contact = " + "'" + tbcontact.getText() + "'" + ","
-                            + "car_type = " + "'" + cartype + "'" + ","
-                            + "car_phone = " + "'" + tbphone.getText() + "'"
-                            + " where car_code = " + "'" + tbkey.getText() + "'"                             
-                            + ";");
-                    
-                    
-                     // erase all assigned carriers to group if this is a group type
-                      if (rbgroup.isSelected()) {
-                      st.executeUpdate("delete from car_det where card_code = " + "'" + tbkey.getText() + "'" + ";");
-                    
-                       for (int j = 0; j < mymodel.getSize(); j++) {
-                        st.executeUpdate("insert into car_det "
-                            + "(card_code, card_carrier ) "
-                            + " values ( " + "'" + tbkey.getText() + "'" + ","
-                            + "'" + mymodel.getElementAt(j) + "'" 
-                            + ")"
-                            + ";");
-                       }
-                      }
-                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
-                    initvars(null);
-                } 
-         
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError};  
-            } finally {
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordConnError};
-        }
-     
+     ArrayList<String> k = new ArrayList<String>();
+     if (mymodel.getSize() > 0) {
+         for (int j = 0; j < mymodel.getSize(); j++) {
+             k.add(mymodel.getElementAt(j).toString());
+         }
+         addUpdateCarrierDet(x[0], k);
+     }
+     String[] m = updateCarrierMstr(createRecord());
      return m;
      }
      
@@ -498,97 +394,40 @@ public class CarrierMaint extends javax.swing.JPanel implements IBlueSeer {
      String[] m = new String[2];
         boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
         if (proceed) {
-        try {
-
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            try {
-              
-                   int i = st.executeUpdate("delete from car_mstr where car_code = " + "'" + tbkey.getText() + "'" + ";");
-                   if (rbgroup.isSelected()) {
-                       st.executeUpdate("delete from car_det where card_code = " + "'" + tbkey.getText() + "'" + ";");
-                   }
-                    if (i > 0) {
-                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
-                    initvars(null);
-                    }
-                } catch (SQLException s) {
-                 MainFrame.bslog(s); 
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordSQLError};  
-            } finally {
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordConnError};
-        }
+         m = deleteCarrierMstr(createRecord()); 
+         initvars(null);
         } else {
            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
         }
-     return m;
+         return m;
      }
       
-    public String[] getRecord(String[] x) {
-       String[] m = new String[2];
-       
-        try {
-
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                int i = 0;
-               res = st.executeQuery("select * from car_mstr where car_code = " + "'" + x[0] + "'" + ";");
-                while (res.next()) {
-                    i++;
-                    tbdesc.setText(res.getString("car_desc"));
-                    tbacct.setText(res.getString("car_acct"));
-                    tbscaccode.setText(res.getString("car_scac"));
-                    tbphone.setText(res.getString("car_phone"));
-                    tbcontact.setText(res.getString("car_contact"));
-                    tbkey.setText(res.getString("car_code"));
-                    if (res.getString("car_type").equals("group")) {
-                        rbgroup.setSelected(true);
-                        rbcarrier.setSelected(false);
-                    } else {
-                        rbgroup.setSelected(false);
-                        rbcarrier.setSelected(true);
-                    }
-                }
-                
-                if (rbgroup.isSelected()) {
-                   
-                 mymodel.removeAllElements();
-                ArrayList mylist = OVData.getScacsOfGroup(x[0]);
-                for (int j = 0; j < mylist.size(); j++) {
-                 mymodel.addElement(mylist.get(j));
-                }
-                }
-               
-                // set Action if Record found (i > 0)
-                m = setAction(i);
-                
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};  
-        }
-      return m;
+    public String[] getRecord(String[] key) {
+       car_mstr z = getCarrierMstr(key);  
+        x = z;
+        return x.m();
     }
+
+    public car_mstr createRecord() {
+        String cartype = "";
+        if (rbgroup.isSelected()) {
+           cartype = "group";
+        } else {
+           cartype = "carrier";
+        }
+        car_mstr x = new car_mstr(null, 
+           tbkey.getText(),
+           tbdesc.getText(),
+           tbscaccode.getText(),
+            tbphone.getText(),
+            "", // email
+            tbcontact.getText(),
+            cartype,
+            tbacct.getText()
+        );
+        return x;
+    }
+    
     
     public void lookUpFrame() {
         
@@ -631,7 +470,30 @@ public class CarrierMaint extends javax.swing.JPanel implements IBlueSeer {
         
     }
 
-    
+    public void updateForm() {
+        tbdesc.setText(x.car_desc());
+        tbacct.setText(x.car_acct());
+        tbscaccode.setText(x.car_scac());
+        tbphone.setText(x.car_phone());
+        tbcontact.setText(x.car_contact());
+        tbkey.setText(x.car_code());
+        if (x.car_type().equals("group")) {
+            rbgroup.setSelected(true);
+            rbcarrier.setSelected(false);
+        } else {
+            rbgroup.setSelected(false);
+            rbcarrier.setSelected(true);
+        }
+        
+        if (rbgroup.isSelected()) {
+            mymodel.removeAllElements();
+            ArrayList mylist = OVData.getScacsOfGroup(x.car_code());
+            for (int j = 0; j < mylist.size(); j++) {
+             mymodel.addElement(mylist.get(j));
+            }
+        }
+        setAction(x.m());
+    }
   
     
     /**
@@ -764,7 +626,7 @@ public class CarrierMaint extends javax.swing.JPanel implements IBlueSeer {
             }
         });
 
-        btlookup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/find.png"))); // NOI18N
+        btlookup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
         btlookup.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btlookupActionPerformed(evt);
@@ -885,27 +747,27 @@ public class CarrierMaint extends javax.swing.JPanel implements IBlueSeer {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
-       if (! validateInput("addRecord")) {
+       if (! validateInput(dbaction.add)) {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("add", new String[]{tbkey.getText()});
+        executeTask(dbaction.add, new String[]{tbkey.getText()});
     }//GEN-LAST:event_btaddActionPerformed
 
     private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
-       if (! validateInput("updateRecord")) {
+       if (! validateInput(dbaction.update)) {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("update", new String[]{tbkey.getText()});
+        executeTask(dbaction.update, new String[]{tbkey.getText()});
     }//GEN-LAST:event_btupdateActionPerformed
 
     private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
-        if (! validateInput("deleteRecord")) {
+        if (! validateInput(dbaction.delete)) {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("delete", new String[]{tbkey.getText()});     
+        executeTask(dbaction.delete, new String[]{tbkey.getText()});     
     }//GEN-LAST:event_btdeleteActionPerformed
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
@@ -929,7 +791,7 @@ public class CarrierMaint extends javax.swing.JPanel implements IBlueSeer {
     }//GEN-LAST:event_btclearActionPerformed
 
     private void tbkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkeyActionPerformed
-        executeTask("get", new String[]{tbkey.getText()});
+        executeTask(dbaction.get, new String[]{tbkey.getText()});
     }//GEN-LAST:event_tbkeyActionPerformed
 
     private void btlookupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btlookupActionPerformed

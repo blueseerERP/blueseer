@@ -1082,6 +1082,38 @@ public class invData {
         return r;
     }
   
+    public static wc_mstr getWCMstr(String[] x) {
+        wc_mstr r = null;
+        String[] m = new String[2];
+        String sql = "select * from wc_mstr where wc_cell = ? ;";
+        
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, x[0]);
+       
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new wc_mstr(m);  // minimum return
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new wc_mstr(m, res.getString("wc_cell"), res.getString("wc_desc"),
+                        res.getString("wc_site"), res.getString("wc_cc"),
+                        res.getString("wc_run_rate"), res.getString("wc_setup_rate"),
+                        res.getString("wc_bdn_rate"), res.getString("wc_run_crew"),
+                        res.getString("wc_setup"), res.getString("wc_remarks"));
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getClassName() + "." + Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new wc_mstr(m);
+        }
+        return r;
+    }
+  
    
 
     /* misc functions */
