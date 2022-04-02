@@ -51,6 +51,7 @@ compress-archive -update -path ..\sf\patches,..\sf\temp,..\sf\jasper,..\sf\data,
 compress-archive -update -path ..\dist -destinationpath $wip\$myzip
 compress-archive -update -path mysql_install.bat -destinationpath $wip\$myzip
 compress-archive -update -path login.bat -destinationpath $wip\$myzip
+compress-archive -update -path sclnk.vbs -destinationpath $wip\$myzip
 compress-archive -update -path bslogging.properties -destinationpath $wip\$myzip
 compress-archive -update -path ..\.patch -destinationpath $wip\$myzip
 compress-archive -update -path ..\jre17 -destinationpath $wip\$myzip

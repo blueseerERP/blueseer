@@ -46,6 +46,7 @@ Name: "turkish"; Description: "Turkish"; Flags: exclusive
 
 [Files]
 Source: "C:\bs\blueseer\scripts\login.bat"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\bs\blueseer\scripts\sclnk.vbs"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\bs\blueseer\scripts\bslogging.properties"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\bs\blueseer\.patch"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\bs\blueseer\scripts\bs.cfg.sqlite"; DestDir: "{app}"; DestName: "{#bsconfig}"; Flags: ignoreversion
