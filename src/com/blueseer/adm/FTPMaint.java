@@ -103,6 +103,7 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
     
     // global variable declarations
                 boolean isLoad = false;
+                public static ftp_mstr x = null;
     
     // global datatablemodel declarations       
     
@@ -162,9 +163,8 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
             BlueSeerUtils.endTask(message);
            if (this.type.equals("delete")) {
              initvars(null);  
-           } else if (this.type.equals("get") && message[0].equals("1")) {
-             tbkey.requestFocus();
-           } else if (this.type.equals("get") && message[0].equals("0")) {
+           } else if (this.type.equals("get")) {
+             updateForm();  
              tbkey.requestFocus();
            } else if (this.type.equals("update") && message[0].equals("0")) {
              initvars(key);
@@ -429,22 +429,8 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
      }
       
     public String[] getRecord(String[] key) {
-       ftp_mstr x = getFTPMstr(key);  
-        tbkey.setText(x.ftp_id());
-        tbdesc.setText(x.ftp_desc());
-        tbip.setText(x.ftp_ip());
-        tbport.setText(x.ftp_port());
-        tblogin.setText(x.ftp_login());
-        tbpasswd.setText(x.ftp_passwd());
-        tacommands.setText(x.ftp_commands());      
-        tbindir.setText(x.ftp_indir());
-        tboutdir.setText(x.ftp_outdir());
-        cbpassive.setSelected(BlueSeerUtils.ConvertStringToBool(String.valueOf(x.ftp_passive())));
-        cbdelete.setSelected(BlueSeerUtils.ConvertStringToBool(String.valueOf(x.ftp_delete())));
-        cbbinary.setSelected(BlueSeerUtils.ConvertStringToBool(String.valueOf(x.ftp_binary())));
-        tbtimeout.setText(x.ftp_timeout());
-        setAction(x.m());
-        return x.m();
+       x = getFTPMstr(key);
+       return x.m();
     }
     
     public ftp_mstr createRecord() { 
@@ -507,6 +493,22 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
         
     }
 
+    public void updateForm() {
+        tbkey.setText(x.ftp_id());
+        tbdesc.setText(x.ftp_desc());
+        tbip.setText(x.ftp_ip());
+        tbport.setText(x.ftp_port());
+        tblogin.setText(x.ftp_login());
+        tbpasswd.setText(x.ftp_passwd());
+        tacommands.setText(x.ftp_commands());      
+        tbindir.setText(x.ftp_indir());
+        tboutdir.setText(x.ftp_outdir());
+        cbpassive.setSelected(BlueSeerUtils.ConvertStringToBool(String.valueOf(x.ftp_passive())));
+        cbdelete.setSelected(BlueSeerUtils.ConvertStringToBool(String.valueOf(x.ftp_delete())));
+        cbbinary.setSelected(BlueSeerUtils.ConvertStringToBool(String.valueOf(x.ftp_binary())));
+        tbtimeout.setText(x.ftp_timeout());
+        setAction(x.m());
+    }
     // misc
     public String[] runClient(String[] c) {
         ftp_mstr fm = admData.getFTPMstr(new String[]{c[0]});
