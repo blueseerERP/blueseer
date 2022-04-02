@@ -92,6 +92,7 @@ public class GenCodeMaint extends javax.swing.JPanel implements IBlueSeerT    {
 
     // global variable declarations
     boolean isLoad = false;
+    public static code_mstr x = null;
     
     // lookup variables
     public static javax.swing.table.DefaultTableModel lookUpModel = null;
@@ -160,9 +161,8 @@ public class GenCodeMaint extends javax.swing.JPanel implements IBlueSeerT    {
             BlueSeerUtils.endTask(message);
            if (this.type.equals("delete")) {
              initvars(null);  
-           } else if (this.type.equals("get") && message[0].equals("1")) {
-             tbkey.requestFocus();
-           } else if (this.type.equals("get") && message[0].equals("0")) {
+           } else if (this.type.equals("get")) {
+             updateForm();
              tbkey.requestFocus();
            } else {
              initvars(null);  
@@ -394,12 +394,7 @@ public class GenCodeMaint extends javax.swing.JPanel implements IBlueSeerT    {
     }
         
     public String[] getRecord(String[] key) {
-        code_mstr x = getCodeMstr(key); 
-        tbkey.setText(x.code_code());
-        tbkey2.setText(x.code_key());
-        tbvalue.setText(x.code_value());
-        cbsystem.setSelected(BlueSeerUtils.ConvertStringToBool(String.valueOf(x.code_internal())));
-        setAction(x.m());
+        x = getCodeMstr(key);
         return x.m();
     }
     
@@ -454,6 +449,13 @@ public class GenCodeMaint extends javax.swing.JPanel implements IBlueSeerT    {
         
     }
 
+    public void updateForm() {
+        tbkey.setText(x.code_code());
+        tbkey2.setText(x.code_key());
+        tbvalue.setText(x.code_value());
+        cbsystem.setSelected(BlueSeerUtils.ConvertStringToBool(String.valueOf(x.code_internal())));
+        setAction(x.m());
+    }
     
     /**
      * This method is called from within the constructor to initialize the form.

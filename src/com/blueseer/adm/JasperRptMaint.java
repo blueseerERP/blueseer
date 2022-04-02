@@ -85,7 +85,7 @@ public class JasperRptMaint extends javax.swing.JPanel implements IBlueSeerT {
    
     // global variable declarations
                 boolean isLoad = false;
-    
+                public static jasp_mstr x = null;
     // global datatablemodel declarations       
                 
                 
@@ -144,9 +144,8 @@ public class JasperRptMaint extends javax.swing.JPanel implements IBlueSeerT {
             BlueSeerUtils.endTask(message);
            if (this.type.equals("delete")) {
              initvars(null);  
-           } else if (this.type.equals("get") && message[0].equals("1")) {
-             ddgroup.requestFocus();
-           } else if (this.type.equals("get") && message[0].equals("0")) {
+           } else if (this.type.equals("get")) {
+             updateForm();
              ddgroup.requestFocus();
            } else {
              initvars(null);  
@@ -363,14 +362,8 @@ public class JasperRptMaint extends javax.swing.JPanel implements IBlueSeerT {
      }
       
     public String[] getRecord(String[] key) {
-       jasp_mstr x = getJaspMstr(key); 
-        ddgroup.setSelectedItem(x.jasp_group());
-        tbsequence.setText(x.jasp_sequence());
-        tbdesc.setText(x.jasp_desc());
-        tbfunc.setText(x.jasp_func());
-        ddformat.setSelectedItem(x.jasp_format());
-        setAction(x.m());
-        return x.m();
+       x = getJaspMstr(key);
+       return x.m();
     }
     
     public jasp_mstr createRecord() { 
@@ -424,7 +417,14 @@ public class JasperRptMaint extends javax.swing.JPanel implements IBlueSeerT {
                 getClassLabelTag("lblrpttitle", this.getClass().getSimpleName()));
     }
 
-   
+    public void updateForm() {
+        ddgroup.setSelectedItem(x.jasp_group());
+        tbsequence.setText(x.jasp_sequence());
+        tbdesc.setText(x.jasp_desc());
+        tbfunc.setText(x.jasp_func());
+        ddformat.setSelectedItem(x.jasp_format());
+        setAction(x.m());
+    }
    
     /**
      * This method is called from within the constructor to initialize the form.
