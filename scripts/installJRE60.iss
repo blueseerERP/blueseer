@@ -70,10 +70,10 @@ Source: "C:\java\jre17\*"; DestDir: "{app}\jre17"; Flags: ignoreversion recurses
 [Icons]
 ;Name: "{commonprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}" ; WorkingDir: "{app}";
 ;english
-Name: "{commonprograms}\{#MyAppName}"; components: english; Filename: "{app}\jre17\bin\javaw.exe"; WorkingDir: "{app}"; Parameters: "-Djava.util.logging.config.file=bslogging.properties -Duser.language=en -Duser.country=US -cp dist/* bsmf.MainFrame" ; Tasks: desktopicon ; IconFilename: "{app}\images\bs.ico"
-Name: "{commondesktop}\{#MyAppName}";  components: english; Filename: "{app}\jre17\bin\javaw.exe"; WorkingDir: "{app}"; Parameters: "-Djava.util.logging.config.file=bslogging.properties -Duser.language=en -Duser.country=US -cp dist/* bsmf.MainFrame" ; Tasks: desktopicon ; IconFilename: "{app}\images\bs.ico"
-;Name: "{commonprograms}\{#MyAppName}";  components: english; Filename: "{app}\login.bat"; WorkingDir: "{app}"; Parameters: "" ; Tasks: desktopicon ; IconFilename: "{app}\images\bs.ico"
-;Name: "{commondesktop}\{#MyAppName}";  components: english; Filename: "{app}\login.bat"; WorkingDir: "{app}"; Parameters: "" ; Tasks: desktopicon ; IconFilename: "{app}\images\bs.ico"
+;Name: "{commonprograms}\{#MyAppName}"; components: english; Filename: "{app}\jre17\bin\javaw.exe"; WorkingDir: "{app}"; Parameters: "-Djava.util.logging.config.file=bslogging.properties -Duser.language=en -Duser.country=US -cp dist/* bsmf.MainFrame" ; Tasks: desktopicon ; IconFilename: "{app}\images\bs.ico"
+;Name: "{commondesktop}\{#MyAppName}";  components: english; Filename: "{app}\jre17\bin\javaw.exe"; WorkingDir: "{app}"; Parameters: "-Djava.util.logging.config.file=bslogging.properties -Duser.language=en -Duser.country=US -cp dist/* bsmf.MainFrame" ; Tasks: desktopicon ; IconFilename: "{app}\images\bs.ico"
+Name: "{commonprograms}\{#MyAppName}";  components: english; Filename: "{app}\sclnk.vbs"; WorkingDir: "{app}"; Parameters: "" ; Tasks: desktopicon ; IconFilename: "{app}\images\bs.ico"
+Name: "{commondesktop}\{#MyAppName}";  components: english; Filename: "{app}\sclnk.vbs"; WorkingDir: "{app}"; Parameters: "" ; Tasks: desktopicon ; IconFilename: "{app}\images\bs.ico"
 
 ;french
 Name: "{commonprograms}\{#MyAppName}"; components: french; Filename: "{app}\jre17\bin\javaw.exe"; WorkingDir: "{app}"; Parameters: "-Djava.util.logging.config.file=bslogging.properties -Duser.language=fr -Duser.country=FR -cp dist/* bsmf.MainFrame" ; Tasks: desktopicon ; IconFilename: "{app}\images\bs.ico"
