@@ -833,8 +833,8 @@ public class admData {
 
     public static String[] updateCounter(counter x) {
         String[] m = new String[2];
-        String sql = "update counter set counter_desc = ?, counter_prefix = ?, counter_from = ? " +   
-                          " counter_to = ?, counter_id = ? where counter_name ; ";
+        String sql = "update counter set counter_desc = ?, counter_prefix = ?, counter_from = ?, " +   
+                          " counter_to = ?, counter_id = ? where counter_name = ? ; ";
         try (Connection con = DriverManager.getConnection(url + db, user, pass);
 	PreparedStatement ps = con.prepareStatement(sql)) {
         ps.setString(1, x.counter_desc);
