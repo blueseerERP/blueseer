@@ -44,6 +44,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -253,6 +255,10 @@ public class MassLoad extends javax.swing.JPanel {
    
     
     public void initvars(String[] arg) {
+      if (! ddtable.getItemAt(0).equals("")) {
+          ddtable.insertItemAt("", 0);
+      }  
+      
       tacomments.setText("");
     }
     
@@ -2359,34 +2365,39 @@ public class MassLoad extends javax.swing.JPanel {
     }
     
     public String[] loadTestData() {
+        
+        // set ddtable to index 0 for testdata
+        ddtable.setSelectedIndex(0);
+        
         String[] m = new String[2];
-            String filename = "c:\\bs\\blueseer\\sf\\data\\sampledir\\workcenter.txt";
-            File file = new File(filename);
+           // String filename = "c:\\bs\\blueseer\\sf\\data\\sampledir\\workcenter.txt";
+            Path filename = FileSystems.getDefault().getPath("data/sampledir/workcenter.txt");
+            File file = new File(filename.toString());
              try {
                  processWorkCenterMaster(file);
              } catch (IOException ex) {
-                 bsmf.MainFrame.show(getMessageTag(1145,filename));
+                 bsmf.MainFrame.show(getMessageTag(1145,filename.toString()));
              }
-            filename = "c:\\bs\\blueseer\\sf\\data\\sampledir\\routing.txt";
-            file = new File(filename);
+            filename = FileSystems.getDefault().getPath("data/sampledir/routing.txt");
+            file = new File(filename.toString());
              try {
                  processRoutingMaster(file);
              } catch (IOException ex) {
-                 bsmf.MainFrame.show(getMessageTag(1145,filename));
+                 bsmf.MainFrame.show(getMessageTag(1145,filename.toString()));
              }
-             filename = "c:\\bs\\blueseer\\sf\\data\\sampledir\\itemmstr.txt";
-            file = new File(filename);
+             filename = FileSystems.getDefault().getPath("data/sampledir/itemmstr.txt");
+            file = new File(filename.toString());
              try {
                  processItemMaster(file);
              } catch (IOException ex) {
-                 bsmf.MainFrame.show(getMessageTag(1145,filename));
+                 bsmf.MainFrame.show(getMessageTag(1145,filename.toString()));
              }
-             filename = "c:\\bs\\blueseer\\sf\\data\\sampledir\\bommstr.txt";
-            file = new File(filename);
+             filename = FileSystems.getDefault().getPath("data/sampledir/bommstr.txt");
+            file = new File(filename.toString());
              try {
                  processBOMMaster(file);
              } catch (IOException ex) {
-                 bsmf.MainFrame.show(getMessageTag(1145,filename));
+                 bsmf.MainFrame.show(getMessageTag(1145,filename.toString()));
              }
              
             
