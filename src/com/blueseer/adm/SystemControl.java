@@ -483,7 +483,7 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
             fileOutputStream.close();
             
             if (Files.exists(patch)) {
-                bsmf.MainFrame.show("patch downloaded...application will close...restart application.");
+                bsmf.MainFrame.show("patch downloaded...restart application.");
             } else {
                 bsmf.MainFrame.show("Unable to download patch");
             }

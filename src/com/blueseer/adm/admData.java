@@ -730,7 +730,7 @@ public class admData {
         ps.setString(2, x.jasp_func);
         ps.setString(3, x.jasp_format);
         ps.setString(4, x.jasp_group);
-        ps.setString(4, x.jasp_sequence);
+        ps.setString(5, x.jasp_sequence);
         int rows = ps.executeUpdate();
         m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
         } catch (SQLException s) {
@@ -796,6 +796,109 @@ public class admData {
         }
         return r;
     }
+    
+    public static String[] addCounter(counter x) {
+        String[] m = new String[2];
+        String sqlSelect = "SELECT * FROM  counter where counter_name = ?";
+        String sqlInsert = "insert into counter (counter_name, counter_desc, counter_prefix, "
+                        + " counter_from, counter_to, counter_id ) "
+                        + " values (?,?,?,?,?,?); "; 
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+             PreparedStatement ps = con.prepareStatement(sqlSelect);) {
+             ps.setString(1, x.counter_name);
+          try (ResultSet res = ps.executeQuery();
+               PreparedStatement psi = con.prepareStatement(sqlInsert);) {  
+            if (! res.isBeforeFirst()) {
+            psi.setString(1, x.counter_name);
+            psi.setString(2, x.counter_desc);
+            psi.setString(3, x.counter_prefix);
+            psi.setString(4, x.counter_from);
+            psi.setString(5, x.counter_to);
+            psi.setString(6, x.counter_id);
+            int rows = psi.executeUpdate();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+            } else {
+            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists};    
+            }
+          } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+          }
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+
+    public static String[] updateCounter(counter x) {
+        String[] m = new String[2];
+        String sql = "update counter set counter_desc = ?, counter_prefix = ?, counter_from = ? " +   
+                          " counter_to = ?, counter_id = ? where counter_name ; ";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, x.counter_desc);
+        ps.setString(2, x.counter_prefix);
+        ps.setString(3, x.counter_from);
+        ps.setString(4, x.counter_to);
+        ps.setString(5, x.counter_id);
+        ps.setString(6, x.counter_name);
+        int rows = ps.executeUpdate();
+        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+    
+    public static String[] deleteCounter(counter x) { 
+       String[] m = new String[2];
+        String sql = "delete from counter where counter_name = ?; ";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, x.counter_name);
+        int rows = ps.executeUpdate();
+        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+    
+    public static counter getCounter(String[] x) {
+        counter r = null;
+        String[] m = new String[2];
+        String sql = "select * from counter where counter_name = ? ;";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, x[0]);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new counter(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new counter(m, res.getString("counter_name"), 
+                            res.getString("counter_desc"),
+                            res.getString("counter_prefix"),
+                            res.getString("counter_from"),    
+                            res.getString("counter_to"),
+                            res.getString("counter_id")
+                        );
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new counter(m);
+        }
+        return r;
+    }
+    
     
     // misc
     public static void runClient(String c) {
@@ -1092,5 +1195,34 @@ public class admData {
             this(m, "", "", "", "", "");
         }
     }
+    
+    public record counter(String[] m, String counter_name, String counter_desc, String counter_prefix, 
+        String counter_from, String counter_to, String counter_id ) {
+        public counter(String[] m) {
+            this(m, "", "", "", "", "", "");
+        }
+    }
+    
+    public record menu_mstr(String[] m, String menu_id, String menu_desc, String menu_type, 
+        String menu_panel, String menu_navcode ) {
+        public menu_mstr(String[] m) {
+            this(m, "", "", "", "", "");
+        }
+    }
+    
+    public record panel_mstr(String[] m, String panel_id, String panel_desc, String panel_core ) {
+        public panel_mstr(String[] m) {
+            this(m, "", "", "");
+        }
+    }
+    
+    
+    public record prt_mstr(String[] m, String prt_id, String prt_desc, String prt_type, 
+        String prt_ip, String prt_port ) {
+        public prt_mstr(String[] m) {
+            this(m, "", "", "", "", "");
+        }
+    }
+            
     
 }
