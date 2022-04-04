@@ -899,6 +899,296 @@ public class admData {
         return r;
     }
     
+    public static String[] addMenuMstr(menu_mstr x) {
+        String[] m = new String[2];
+        String sqlSelect = "SELECT * FROM  menu_mstr where menu_id = ?";
+        String sqlInsert = "insert into menu_mstr (menu_id, menu_desc, menu_type, "
+                        + " menu_panel, menu_navcode ) "
+                        + " values (?,?,?,?,?); "; 
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+             PreparedStatement ps = con.prepareStatement(sqlSelect);) {
+             ps.setString(1, x.menu_id);
+          try (ResultSet res = ps.executeQuery();
+               PreparedStatement psi = con.prepareStatement(sqlInsert);) {  
+            if (! res.isBeforeFirst()) {
+            psi.setString(1, x.menu_id);
+            psi.setString(2, x.menu_desc);
+            psi.setString(3, x.menu_type);
+            psi.setString(4, x.menu_panel);
+            psi.setString(5, x.menu_navcode);
+            int rows = psi.executeUpdate();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+            } else {
+            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists};    
+            }
+          } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+          }
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+
+    public static String[] updateMenuMstr(menu_mstr x) {
+        String[] m = new String[2];
+        String sql = "update menu_mstr set menu_desc = ?, menu_type = ?, menu_panel = ?, " +   
+                          " menu_navcode = ? where menu_id = ? ; ";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, x.menu_desc);
+        ps.setString(2, x.menu_type);
+        ps.setString(3, x.menu_panel);
+        ps.setString(4, x.menu_navcode);
+        ps.setString(5, x.menu_id);
+        int rows = ps.executeUpdate();
+        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+        
+    public static menu_mstr getMenuMstr(String[] x) {
+        menu_mstr r = null;
+        String[] m = new String[2];
+        String sql = "select * from menu_mstr where menu_id = ? ;";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, x[0]);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new menu_mstr(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new menu_mstr(m, res.getString("menu_id"), 
+                            res.getString("menu_desc"),
+                            res.getString("menu_type"),
+                            res.getString("menu_panel"),    
+                            res.getString("menu_navcode")
+                        );
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new menu_mstr(m);
+        }
+        return r;
+    }
+    
+    public static String[] deleteMenuMstr(menu_mstr x) { 
+       String[] m = new String[2];
+        String sql = "delete from menu_mstr where menu_id = ?; ";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, x.menu_id);
+        int rows = ps.executeUpdate();
+        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+    
+    public static String[] addPanelMstr(panel_mstr x) {
+        String[] m = new String[2];
+        String sqlSelect = "SELECT * FROM  panel_mstr where panel_id = ?";
+        String sqlInsert = "insert into panel_mstr (panel_id, panel_desc, panel_core ) "
+                        + " values (?,?,?); "; 
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+             PreparedStatement ps = con.prepareStatement(sqlSelect);) {
+             ps.setString(1, x.panel_id);
+          try (ResultSet res = ps.executeQuery();
+               PreparedStatement psi = con.prepareStatement(sqlInsert);) {  
+            if (! res.isBeforeFirst()) {
+            psi.setString(1, x.panel_id);
+            psi.setString(2, x.panel_desc);
+            psi.setString(3, x.panel_core);
+            int rows = psi.executeUpdate();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+            } else {
+            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists};    
+            }
+          } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+          }
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+
+    public static String[] updatePanelMstr(panel_mstr x) {
+        String[] m = new String[2];
+        String sql = "update panel_mstr set panel_desc = ?, panel_core = ? " +   
+                          " where panel_id = ? ; ";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, x.panel_desc);
+        ps.setString(2, x.panel_core);
+        ps.setString(3, x.panel_id);
+        int rows = ps.executeUpdate();
+        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+        
+    public static panel_mstr getPanelMstr(String[] x) {
+        panel_mstr r = null;
+        String[] m = new String[2];
+        String sql = "select * from panel_mstr where panel_id = ? ;";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, x[0]);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new panel_mstr(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new panel_mstr(m, res.getString("panel_id"), 
+                            res.getString("panel_desc"),
+                            res.getString("panel_core")
+                        );
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new panel_mstr(m);
+        }
+        return r;
+    }
+    
+    public static String[] deletePanelMstr(panel_mstr x) { 
+       String[] m = new String[2];
+        String sql = "delete from panel_mstr where panel_id = ?; ";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, x.panel_id);
+        int rows = ps.executeUpdate();
+        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+    
+    public static String[] addPrtMstr(prt_mstr x) {
+        String[] m = new String[2];
+        String sqlSelect = "SELECT * FROM  prt_mstr where prt_id = ?";
+        String sqlInsert = "insert into prt_mstr (prt_id, prt_desc, prt_type, "
+                        + " prt_ip, prt_port ) "
+                        + " values (?,?,?,?,?); "; 
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+             PreparedStatement ps = con.prepareStatement(sqlSelect);) {
+             ps.setString(1, x.prt_id);
+          try (ResultSet res = ps.executeQuery();
+               PreparedStatement psi = con.prepareStatement(sqlInsert);) {  
+            if (! res.isBeforeFirst()) {
+            psi.setString(1, x.prt_id);
+            psi.setString(2, x.prt_desc);
+            psi.setString(3, x.prt_type);
+            psi.setString(4, x.prt_ip);
+            psi.setString(5, x.prt_port);
+            int rows = psi.executeUpdate();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+            } else {
+            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists};    
+            }
+          } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+          }
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+
+    public static String[] updatePrtMstr(prt_mstr x) {
+        String[] m = new String[2];
+        String sql = "update prt_mstr set prt_desc = ?, prt_type = ?, prt_ip = ?, " +   
+                          " prt_ip = ? where prt_id = ? ; ";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, x.prt_desc);
+        ps.setString(2, x.prt_type);
+        ps.setString(3, x.prt_ip);
+        ps.setString(4, x.prt_ip);
+        ps.setString(5, x.prt_id);
+        int rows = ps.executeUpdate();
+        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+        
+    public static prt_mstr getPrtMstr(String[] x) {
+        prt_mstr r = null;
+        String[] m = new String[2];
+        String sql = "select * from prt_mstr where prt_id = ? ;";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, x[0]);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new prt_mstr(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new prt_mstr(m, res.getString("prt_id"), 
+                            res.getString("prt_desc"),
+                            res.getString("prt_type"),
+                            res.getString("prt_ip"),    
+                            res.getString("prt_port")
+                        );
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new prt_mstr(m);
+        }
+        return r;
+    }
+    
+    public static String[] deleteMenuMstr(prt_mstr x) { 
+       String[] m = new String[2];
+        String sql = "delete from prt_mstr where prt_id = ?; ";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, x.prt_id);
+        int rows = ps.executeUpdate();
+        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+    
     
     // misc
     public static void runClient(String c) {
