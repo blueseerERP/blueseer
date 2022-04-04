@@ -34,8 +34,14 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.inv.invData.addPLMstr;
+import static com.blueseer.inv.invData.deletePLMstr;
+import static com.blueseer.inv.invData.getPLMstr;
+import com.blueseer.inv.invData.pl_mstr;
+import static com.blueseer.inv.invData.updatePLMstr;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
@@ -47,6 +53,7 @@ import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeer;
+import com.blueseer.utl.IBlueSeerT;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -76,10 +83,11 @@ import javax.swing.SwingWorker;
  *
  * @author vaughnte
  */
-public class ProdCodeMaint extends javax.swing.JPanel implements IBlueSeer {
+public class ProdCodeMaint extends javax.swing.JPanel implements IBlueSeerT {
 
    // global variable declarations
                 boolean isLoad = false;
+                private static pl_mstr x = null;
     
    // global datatablemodel declarations    s new form ProdCodeMaintPanel
      
@@ -92,15 +100,15 @@ public class ProdCodeMaint extends javax.swing.JPanel implements IBlueSeer {
 
     
     // interface functions implemented
-    public void executeTask(String x, String[] y) { 
+    public void executeTask(dbaction x, String[] y) { 
       
         class Task extends SwingWorker<String[], Void> {
        
           String type = "";
           String[] key = null;
           
-          public Task(String type, String[] key) { 
-              this.type = type;
+          public Task(dbaction type, String[] key) { 
+              this.type = type.name();
               this.key = key;
           } 
            
@@ -139,9 +147,8 @@ public class ProdCodeMaint extends javax.swing.JPanel implements IBlueSeer {
             BlueSeerUtils.endTask(message);
            if (this.type.equals("delete")) {
              initvars(null);  
-           } else if (this.type.equals("get") && message[0].equals("1")) {
-             tbkey.requestFocus();
-           } else if (this.type.equals("get") && message[0].equals("0")) {
+           } else if (this.type.equals("get")) {
+             updateForm();
              tbkey.requestFocus();
            } else {
              initvars(null);  
@@ -319,22 +326,19 @@ public class ProdCodeMaint extends javax.swing.JPanel implements IBlueSeer {
         tbkey.requestFocus();
     }
     
-    public String[] setAction(int i) {
+    public void setAction(String[] x) {
         String[] m = new String[2];
-        if (i > 0) {
-            m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
+        if (x[0].equals("0")) {
                    setPanelComponentState(this, true);
                    btadd.setEnabled(false);
                    tbkey.setEditable(false);
                    tbkey.setForeground(Color.blue);
         } else {
-           m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
                    tbkey.setForeground(Color.red); 
         }
-        return m;
     }
     
-    public boolean validateInput(String x) {
+    public boolean validateInput(dbaction x) {
         boolean b = true;
         
                         
@@ -523,7 +527,7 @@ public class ProdCodeMaint extends javax.swing.JPanel implements IBlueSeer {
         btlookup.setEnabled(true);
         
         if (arg != null && arg.length > 0) {
-            executeTask("get",arg);
+            executeTask(dbaction.get,arg);
         } else {
             tbkey.setEnabled(true);
             tbkey.setEditable(true);
@@ -532,243 +536,66 @@ public class ProdCodeMaint extends javax.swing.JPanel implements IBlueSeer {
     }
     
     public String[] addRecord(String[] x) {
-     String[] m = new String[2];
-     
-     try {
-
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                boolean proceed = true;
-                int i = 0;
-                
-                proceed = validateInput("addRecord");
-                
-                if (proceed) {
-
-                    res = st.executeQuery("SELECT pl_line FROM  pl_mstr where pl_line = " + "'" + tbkey.getText() + "'" + ";");
-                    while (res.next()) {
-                        i++;
-                    }
-                    if (i == 0) {
-                        st.executeUpdate("insert into pl_mstr "
-                            + "(pl_line, pl_desc, pl_inventory, pl_inv_discr, "
-                            + "pl_scrap, pl_wip, pl_wip_var, pl_inv_change, pl_sales, pl_sales_disc, "
-                            + "pl_cogs_mtl, pl_cogs_lbr, pl_cogs_bdn, pl_cogs_ovh, pl_cogs_out, "
-                            + "pl_purchases, pl_po_rcpt, pl_po_ovh, pl_po_pricevar, pl_ap_usage, pl_ap_ratevar, "
-                            + "pl_job_stock, pl_mtl_usagevar, pl_mtl_ratevar, pl_mix_var, pl_cop, pl_out_usagevar, pl_out_ratevar )"
-                            + " values ( " + "'" + tbkey.getText().toString() + "'" + ","
-                            + "'" + tbdesc.getText().toString() + "'" + ","
-                            + "'" + tbinvacct.getText().toString() + "'" + ","
-                            + "'" + tbinvdescrepancyacct.getText().toString() + "'" + ","
-                            + "'" + tbscrapacct.getText().toString() + "'" + ","
-                            + "'" + tbwipacct.getText().toString() + "'" + ","
-                            + "'" + tbwipvaracct.getText().toString() + "'" + ","
-                            + "'" + tbinvchangeacct.getText().toString() + "'" + ","
-                            + "'" + tbsalesacct.getText().toString() + "'" + ","
-                            + "'" + tbsalesdiscacct.getText().toString() + "'" + ","
-                            + "'" + tbcogsmtlacct.getText().toString() + "'" + ","
-                            + "'" + tbcogslbracct.getText().toString() + "'" + ","
-                            + "'" + tbcogsbdnacct.getText().toString() + "'" + ","
-                            + "'" + tbcogsovhacct.getText().toString() + "'" + ","
-                            + "'" + tbcogsoutacct.getText().toString() + "'" + ","
-                            + "'" + tbpurchacct.getText().toString() + "'" + ","
-                            + "'" + tbporcptacct.getText().toString() + "'" + ","
-                            + "'" + tbpoovhacct.getText().toString() + "'" + ","
-                            + "'" + tbpopricevaracct.getText().toString() + "'" + ","
-                            + "'" + tbapusageacct.getText().toString() + "'" + ","
-                            + "'" + tbapratevaracct.getText().toString() + "'" + ","
-                            + "'" + tbjobstockacct.getText().toString() + "'" + ","
-                            + "'" + tbmtlusagevaracct.getText().toString() + "'" + ","
-                            + "'" + tbmtlratevaracct.getText().toString() + "'" + ","
-                            + "'" + tbmixedvaracct.getText().toString() + "'" + ","
-                            + "'" + tbcopacct.getText().toString() + "'" + ","
-                            + "'" + tboutusgvaracct.getText().toString() + "'" + ","
-                            + "'" + tboutratevaracct.getText().toString() + "'"
-                            + ")"
-                            + ";");
-                        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
-                    } else {
-                       m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists}; 
-                    }
-
-                   initvars(null);
-                   
-                } // if proceed
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                 m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};  
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-             m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1020, Thread.currentThread().getStackTrace()[1].getMethodName())};
-        }
-     
+    String[] m = addPLMstr(createRecord());
      return m;
      }
      
     public String[] updateRecord(String[] x) {
-     String[] m = new String[2];
-     
-     try {
-            boolean proceed = true;
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-               proceed = validateInput("updateRecord");
-                
-                if (proceed) {
-                    st.executeUpdate("update pl_mstr set "
-                            + "pl_desc = " + "'" + tbdesc.getText().toString() + "'" + ","
-                            + "pl_inventory = " + "'" + tbinvacct.getText().toString() + "'" + ","
-                            + "pl_inv_discr = " + "'" + tbinvdescrepancyacct.getText().toString() + "'" + ","
-                            + "pl_scrap = " + "'" + tbscrapacct.getText().toString() + "'" + ","
-                            + "pl_wip = " + "'" + tbwipacct.getText().toString() + "'" + ","
-                            + "pl_wip_var = " + "'" + tbwipvaracct.getText().toString() + "'" + ","
-                            + "pl_inv_change = " + "'" + tbinvchangeacct.getText().toString() + "'" + ","
-                            + "pl_sales = " + "'" + tbsalesacct.getText().toString() + "'" + ","
-                            + "pl_sales_disc = " + "'" + tbsalesdiscacct.getText().toString() + "'" + ","
-                            + "pl_cogs_mtl = " + "'" + tbcogsmtlacct.getText().toString() + "'" + ","
-                            + "pl_cogs_lbr = " + "'" + tbcogslbracct.getText().toString() + "'" + ","
-                            + "pl_cogs_bdn = " + "'" + tbcogsbdnacct.getText().toString() + "'" + ","
-                            + "pl_cogs_ovh = " + "'" + tbcogsovhacct.getText().toString() + "'" + ","
-                            + "pl_cogs_out = " + "'" + tbcogsoutacct.getText().toString() + "'" + ","
-                            + "pl_purchases = " + "'" + tbpurchacct.getText().toString() + "'" + ","
-                            + "pl_po_rcpt = " + "'" + tbporcptacct.getText().toString() + "'" + ","
-                            + "pl_po_ovh = " + "'" + tbpoovhacct.getText().toString() + "'" + ","
-                            + "pl_po_pricevar = " + "'" + tbpopricevaracct.getText().toString() + "'" + ","
-                            + "pl_ap_usage = " + "'" + tbapusageacct.getText().toString() + "'" + ","
-                            + "pl_ap_ratevar = " + "'" + tbapratevaracct.getText().toString() + "'" + ","
-                            + "pl_job_stock = " + "'" + tbjobstockacct.getText().toString() + "'" + ","
-                            + "pl_mtl_usagevar = " + "'" + tbmtlusagevaracct.getText().toString() + "'" + ","
-                            + "pl_mtl_ratevar = " + "'" + tbmtlratevaracct.getText().toString() + "'" + ","
-                            + "pl_mix_var = " + "'" + tbmixedvaracct.getText().toString() + "'" + ","
-                            + "pl_cop = " + "'" + tbcopacct.getText().toString() + "'" + ","
-                            + "pl_out_usagevar = " + "'" + tboutusgvaracct.getText().toString() + "'" + ","
-                            + "pl_out_ratevar = " + "'" + tboutratevaracct.getText().toString() + "'"
-                            + " where pl_line = " + "'" + tbkey.getText().toString() + "'"
-                            + ";");
-                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
-                    initvars(null);
-                } 
-         
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};  
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1020, Thread.currentThread().getStackTrace()[1].getMethodName())};
-        }
-     
+    String[] m = updatePLMstr(createRecord());
      return m;
      }
      
     public String[] deleteRecord(String[] x) {
      String[] m = new String[2];
-        boolean proceed = bsmf.MainFrame.warn("Are you sure?");
+        boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
         if (proceed) {
-        try {
-
-           Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                   int i = st.executeUpdate("delete from pl_mstr where pl_line = " + "'" + tbkey.getText() + "'" +  ";");
-                    if (i > 0) {
-                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
-                    initvars(null);
-                    }
-                } catch (SQLException s) {
-                 MainFrame.bslog(s); 
-                m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};  
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1020, Thread.currentThread().getStackTrace()[1].getMethodName())};
-        }
+         m = deletePLMstr(createRecord()); 
+         initvars(null);
         } else {
            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
         }
-     return m;
+         return m;
      }
       
-    public String[] getRecord(String[] x) {
-       String[] m = new String[2];
-       
-        try {
-
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                
-                int i = 0;
-                res = st.executeQuery("SELECT * FROM  pl_mstr where pl_line = " + "'" + x[0] + "'" + ";");
-                    while (res.next()) {
-                        i++;
-                         tbkey.setText(res.getString("pl_line"));
-                         tbdesc.setText(res.getString("pl_desc"));
-                         tbinvacct.setText(res.getString("pl_inventory"));
-                         tbinvdescrepancyacct.setText(res.getString("pl_inv_discr"));
-                         tbscrapacct.setText(res.getString("pl_scrap"));
-                         tbwipacct.setText(res.getString("pl_wip"));
-                         tbwipvaracct.setText(res.getString("pl_wip_var"));
-                         tbinvchangeacct.setText(res.getString("pl_inv_change"));
-                         tbsalesacct.setText(res.getString("pl_sales"));
-                         tbsalesdiscacct.setText(res.getString("pl_sales_disc"));
-                         tbcogsmtlacct.setText(res.getString("pl_cogs_mtl"));
-                         tbcogslbracct.setText(res.getString("pl_cogs_lbr"));
-                         tbcogsbdnacct.setText(res.getString("pl_cogs_bdn"));
-                         tbcogsovhacct.setText(res.getString("pl_cogs_ovh"));
-                         tbcogsoutacct.setText(res.getString("pl_cogs_out"));
-                         tbpurchacct.setText(res.getString("pl_purchases"));
-                         tbporcptacct.setText(res.getString("pl_po_rcpt"));
-                         tbpoovhacct.setText(res.getString("pl_po_ovh"));
-                         tbpopricevaracct.setText(res.getString("pl_po_pricevar"));
-                         tbapusageacct.setText(res.getString("pl_ap_usage"));
-                         tbapratevaracct.setText(res.getString("pl_ap_ratevar"));
-                         tbjobstockacct.setText(res.getString("pl_job_stock"));
-                         tbmtlusagevaracct.setText(res.getString("pl_mtl_usagevar"));
-                         tbmtlratevaracct.setText(res.getString("pl_mtl_ratevar"));
-                         tbmixedvaracct.setText(res.getString("pl_mix_var"));
-                         tbcopacct.setText(res.getString("pl_cop"));
-                         tboutusgvaracct.setText(res.getString("pl_out_usagevar"));
-                         tboutratevaracct.setText(res.getString("pl_out_ratevar"));
-                    }
-               
-                // set Action if Record found (i > 0)
-                m = setAction(i);
-                
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};  
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1020, Thread.currentThread().getStackTrace()[1].getMethodName())};  
-        }
-      return m;
+    public String[] getRecord(String[] key) {
+       x = getPLMstr(key);
+        return x.m();
     }
     
+    public pl_mstr createRecord() {
+        pl_mstr x = new pl_mstr(null, 
+            tbkey.getText(),
+            tbdesc.getText(),
+            tbinvacct.getText(),
+            tbinvdescrepancyacct.getText(),
+            tbscrapacct.getText(),
+            tbwipacct.getText(),
+            tbwipvaracct.getText(),
+            tbinvchangeacct.getText(),
+            tbsalesacct.getText(),
+            tbsalesdiscacct.getText(),
+            tbcogsmtlacct.getText(),
+            tbcogslbracct.getText(),
+            tbcogsbdnacct.getText(),
+            tbcogsovhacct.getText(),
+            tbcogsoutacct.getText(),    
+            tbpurchacct.getText(),
+            tbporcptacct.getText(),
+            tbpoovhacct.getText(),
+            tbpopricevaracct.getText(),
+            tbapusageacct.getText(),
+            tbapratevaracct.getText(),
+            tbjobstockacct.getText(),
+            tbmtlusagevaracct.getText(),
+            tbmtlratevaracct.getText(),
+            tbmixedvaracct.getText(),
+            tbcopacct.getText(),
+            tboutusgvaracct.getText(),
+            tboutratevaracct.getText()
+        );
+        return x;
+    }
+        
     public void lookUpFrame() {
         
         luinput.removeActionListener(lual);
@@ -810,6 +637,38 @@ public class ProdCodeMaint extends javax.swing.JPanel implements IBlueSeer {
         
     }
 
+    public void updateForm() {
+        tbkey.setText(x.pl_line());
+         tbdesc.setText(x.pl_desc());
+         tbinvacct.setText(x.pl_inventory());
+         tbinvdescrepancyacct.setText(x.pl_inv_discr());
+         tbscrapacct.setText(x.pl_scrap());
+         tbwipacct.setText(x.pl_wip());
+         tbwipvaracct.setText(x.pl_wip_var());
+         tbinvchangeacct.setText(x.pl_inv_change());
+         tbsalesacct.setText(x.pl_sales());
+         tbsalesdiscacct.setText(x.pl_sales_disc());
+         tbcogsmtlacct.setText(x.pl_cogs_mtl());
+         tbcogslbracct.setText(x.pl_cogs_lbr());
+         tbcogsbdnacct.setText(x.pl_cogs_bdn());
+         tbcogsovhacct.setText(x.pl_cogs_ovh());
+         tbcogsoutacct.setText(x.pl_cogs_out());
+         tbpurchacct.setText(x.pl_purchases());
+         tbporcptacct.setText(x.pl_po_rcpt());
+         tbpoovhacct.setText(x.pl_po_ovh());
+         tbpopricevaracct.setText(x.pl_po_pricevar());
+         tbapusageacct.setText(x.pl_ap_usage());
+         tbapratevaracct.setText(x.pl_ap_ratevar());
+         tbjobstockacct.setText(x.pl_job_stock());
+         tbmtlusagevaracct.setText(x.pl_mtl_usagevar());
+         tbmtlratevaracct.setText(x.pl_mtl_ratevar());
+         tbmixedvaracct.setText(x.pl_mix_var());
+         tbcopacct.setText(x.pl_cop());
+         tboutusgvaracct.setText(x.pl_out_usagevar());
+         tboutratevaracct.setText(x.pl_out_ratevar());
+         setAction(x.m());
+    }
+    
     // custom funcs
     
     
@@ -1270,19 +1129,19 @@ public class ProdCodeMaint extends javax.swing.JPanel implements IBlueSeer {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
-        if (! validateInput("addRecord")) {
+        if (! validateInput(dbaction.add)) {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("add", new String[]{tbkey.getText()});
+        executeTask(dbaction.add, new String[]{tbkey.getText()});
     }//GEN-LAST:event_btaddActionPerformed
 
     private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
-          if (! validateInput("updateRecord")) {
+          if (! validateInput(dbaction.update)) {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("update", new String[]{tbkey.getText()});
+        executeTask(dbaction.update, new String[]{tbkey.getText()});
     }//GEN-LAST:event_btupdateActionPerformed
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
@@ -1290,15 +1149,15 @@ public class ProdCodeMaint extends javax.swing.JPanel implements IBlueSeer {
     }//GEN-LAST:event_btnewActionPerformed
 
     private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
-        if (! validateInput("deleteRecord")) {
+        if (! validateInput(dbaction.delete)) {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("delete", new String[]{tbkey.getText()});   
+        executeTask(dbaction.delete, new String[]{tbkey.getText()});   
     }//GEN-LAST:event_btdeleteActionPerformed
 
     private void tbkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkeyActionPerformed
-       executeTask("get", new String[]{tbkey.getText()});
+       executeTask(dbaction.get, new String[]{tbkey.getText()});
     }//GEN-LAST:event_tbkeyActionPerformed
 
     private void btclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearActionPerformed

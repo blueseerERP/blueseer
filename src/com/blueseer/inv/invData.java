@@ -1254,6 +1254,185 @@ public class invData {
     }
     
     
+    public static String[] addPLMstr(pl_mstr x) {
+        String[] m = new String[2];
+        String sqlSelect = "SELECT * FROM  pl_mstr where pl_line = ?";
+        String sqlInsert = "insert into pl_mstr "
+            + "(pl_line, pl_desc, pl_inventory, pl_inv_discr, "
+            + "pl_scrap, pl_wip, pl_wip_var, pl_inv_change, pl_sales, pl_sales_disc, "
+            + "pl_cogs_mtl, pl_cogs_lbr, pl_cogs_bdn, pl_cogs_ovh, pl_cogs_out, "
+            + "pl_purchases, pl_po_rcpt, pl_po_ovh, pl_po_pricevar, pl_ap_usage, pl_ap_ratevar, "
+            + "pl_job_stock, pl_mtl_usagevar, pl_mtl_ratevar, pl_mix_var, pl_cop, pl_out_usagevar, pl_out_ratevar )"
+                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+             PreparedStatement ps = con.prepareStatement(sqlSelect);) {
+             ps.setString(1, x.pl_line);
+          try (ResultSet res = ps.executeQuery();
+               PreparedStatement psi = con.prepareStatement(sqlInsert);) {  
+            if (! res.isBeforeFirst()) {
+            psi.setString(1, x.pl_line);
+            psi.setString(2, x.pl_desc);
+            psi.setString(3, x.pl_inventory);
+            psi.setString(4, x.pl_inv_discr);
+            psi.setString(5, x.pl_scrap);
+            psi.setString(6, x.pl_wip);
+            psi.setString(7, x.pl_wip_var);
+            psi.setString(8, x.pl_inv_change);
+            psi.setString(9, x.pl_sales);
+            psi.setString(10, x.pl_sales_disc);
+            psi.setString(11, x.pl_cogs_mtl);
+            psi.setString(12, x.pl_cogs_lbr);
+            psi.setString(13, x.pl_cogs_bdn);
+            psi.setString(14, x.pl_cogs_ovh);
+            psi.setString(15, x.pl_cogs_out);
+            psi.setString(16, x.pl_purchases);
+            psi.setString(17, x.pl_po_rcpt);
+            psi.setString(18, x.pl_po_ovh);
+            psi.setString(19, x.pl_po_pricevar);
+            psi.setString(20, x.pl_ap_usage);
+            psi.setString(21, x.pl_ap_ratevar);
+            psi.setString(22, x.pl_job_stock);
+            psi.setString(23, x.pl_mtl_usagevar);
+            psi.setString(24, x.pl_mtl_ratevar);
+            psi.setString(25, x.pl_mix_var);
+            psi.setString(26, x.pl_cop);
+            psi.setString(27, x.pl_out_usagevar);
+            psi.setString(28, x.pl_out_ratevar);
+            int rows = psi.executeUpdate();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+            } else {
+            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists};    
+            }
+          } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+          }
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+
+    public static String[] updatePLMstr(pl_mstr x) {
+        String[] m = new String[2];
+        String sql = "update pl_mstr set  pl_desc = ?,  pl_inventory = ?, " +
+        "pl_inv_discr = ?,  pl_scrap = ?,  pl_wip = ?,  pl_wip_var = ?,  pl_inv_change = ?, " +
+        "pl_sales = ?,  pl_sales_disc = ?,  pl_cogs_mtl = ?,  pl_cogs_lbr = ?," +
+        "pl_cogs_bdn = ?,  pl_cogs_ovh = ?,  pl_cogs_out = ?,  pl_purchases = ?," +
+        "pl_po_rcpt = ?,  pl_po_ovh = ?,  pl_po_pricevar = ?,  pl_ap_usage = ?," +
+        "pl_ap_ratevar = ?,  pl_job_stock = ?,  pl_mtl_usagevar = ?,  pl_mtl_ratevar = ?," +
+        "pl_mix_var = ?,  pl_cop = ?,  pl_out_usagevar = ?,  pl_out_ratevar = ? " +
+        " where pl_line = ? ;"; 
+         try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(28, x.pl_line);
+            ps.setString(1, x.pl_desc);
+            ps.setString(2, x.pl_inventory);
+            ps.setString(3, x.pl_inv_discr);
+            ps.setString(4, x.pl_scrap);
+            ps.setString(5, x.pl_wip);
+            ps.setString(6, x.pl_wip_var);
+            ps.setString(7, x.pl_inv_change);
+            ps.setString(8, x.pl_sales);
+            ps.setString(9, x.pl_sales_disc);
+            ps.setString(10, x.pl_cogs_mtl);
+            ps.setString(11, x.pl_cogs_lbr);
+            ps.setString(12, x.pl_cogs_bdn);
+            ps.setString(13, x.pl_cogs_ovh);
+            ps.setString(14, x.pl_cogs_out);
+            ps.setString(15, x.pl_purchases);
+            ps.setString(16, x.pl_po_rcpt);
+            ps.setString(17, x.pl_po_ovh);
+            ps.setString(18, x.pl_po_pricevar);
+            ps.setString(19, x.pl_ap_usage);
+            ps.setString(20, x.pl_ap_ratevar);
+            ps.setString(21, x.pl_job_stock);
+            ps.setString(22, x.pl_mtl_usagevar);
+            ps.setString(23, x.pl_mtl_ratevar);
+            ps.setString(24, x.pl_mix_var);
+            ps.setString(25, x.pl_cop);
+            ps.setString(26, x.pl_out_usagevar);
+            ps.setString(27, x.pl_out_ratevar);
+            int rows = ps.executeUpdate();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+
+    public static String[] deletePLMstr(pl_mstr x) { 
+       String[] m = new String[2];
+        String sql = "delete from pl_mstr where pl_line = ?; ";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, x.pl_line);
+        int rows = ps.executeUpdate();
+        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+    
+    public static pl_mstr getPLMstr(String[] x) {
+        pl_mstr r = null;
+        String[] m = new String[2];
+        String sql = "select * from pl_mstr where pl_line = ? ;";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, x[0]);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new pl_mstr(m);
+                } else {   
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new pl_mstr(m, res.getString("pl_line"), 
+                            res.getString("pl_desc"),
+                            res.getString("pl_inventory"),
+                            res.getString("pl_inv_discr"),    
+                            res.getString("pl_scrap"),
+                            res.getString("pl_wip"),
+                            res.getString("pl_wip_var"),
+                            res.getString("pl_inv_change"),
+                            res.getString("pl_sales"), 
+                            res.getString("pl_sales_disc"),
+                            res.getString("pl_cogs_mtl"),
+                            res.getString("pl_cogs_lbr"),
+                            res.getString("pl_cogs_bdn"),
+                            res.getString("pl_cogs_ovh"),
+                            res.getString("pl_cogs_out"),
+                            res.getString("pl_purchases"),
+                            res.getString("pl_po_rcpt"),
+                            res.getString("pl_po_ovh"),
+                            res.getString("pl_po_pricevar"),
+                            res.getString("pl_ap_usage"),
+                            res.getString("pl_ap_ratevar"),
+                            res.getString("pl_job_stock"),
+                            res.getString("pl_mtl_usagevar"),
+                            res.getString("pl_mtl_ratevar"),
+                            res.getString("pl_mix_var"),
+                            res.getString("pl_cop"),
+                            res.getString("pl_out_usagevar"),
+                            res.getString("pl_out_ratevar")
+                        );
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new pl_mstr(m);
+        }
+        return r;
+    }
+    
+    
     
     
     
@@ -3594,6 +3773,20 @@ public class invData {
         }
     }
 
-
+    public record pl_mstr(String[] m, String pl_line, String pl_desc, String pl_inventory, 
+        String pl_inv_discr, String pl_scrap, String pl_wip, String pl_wip_var, String pl_inv_change, 
+        String pl_sales, String pl_sales_disc, String pl_cogs_mtl, String pl_cogs_lbr, 
+        String pl_cogs_bdn, String pl_cogs_ovh, String pl_cogs_out, String pl_purchases, 
+        String pl_po_rcpt, String pl_po_ovh, String pl_po_pricevar, String pl_ap_usage, 
+        String pl_ap_ratevar, String pl_job_stock, String pl_mtl_usagevar, String pl_mtl_ratevar, 
+        String pl_mix_var, String pl_cop, String pl_out_usagevar, String pl_out_ratevar) {
+        public pl_mstr(String[] m) {
+            this(m, "", "", "", "", "", "", "", "", "", "",
+                    "", "", "", "", "", "", "", "", "", "",
+                    "", "", "", "", "", "", "", "");
+        }
+    }
+    
+         
 
 }
