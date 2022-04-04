@@ -1029,10 +1029,11 @@ public class invData {
   
     public static String[] deleteRoutingMstr(wf_mstr x) {
         String[] m;
-        String sqlDelete = "delete from wf_mstr where wf_id = ? ;"; 
+        String sqlDelete = "delete from wf_mstr where wf_id = ? and wf_op = ? ;"; 
         try (Connection con = DriverManager.getConnection(url + db, user, pass);
              PreparedStatement ps = con.prepareStatement(sqlDelete);) {
              ps.setString(1, x.wf_id);
+             ps.setString(1, x.wf_op);
              int rows = ps.executeUpdate();
              if (rows > 0) {
                 m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess}; 
