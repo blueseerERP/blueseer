@@ -26,18 +26,16 @@ SOFTWARE.
 package com.blueseer.inv;
 
 import bsmf.MainFrame;
-import static bsmf.MainFrame.db;
-import static bsmf.MainFrame.pass;
-import com.blueseer.utl.OVData;
-import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
-import static bsmf.MainFrame.url;
-import static bsmf.MainFrame.user;
+import com.blueseer.utl.OVData;
 import static com.blueseer.inv.invData.addWareHouseMstr;
+import static com.blueseer.inv.invData.deleteWareHouseMstr;
+import static com.blueseer.inv.invData.getWareHouseMstr;
 import static com.blueseer.inv.invData.updateWareHouseMstr;
 import com.blueseer.inv.invData.wh_mstr;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
@@ -48,18 +46,13 @@ import static com.blueseer.utl.BlueSeerUtils.luinput;
 import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import com.blueseer.utl.DTData;
-import com.blueseer.utl.IBlueSeer;
+import com.blueseer.utl.IBlueSeerT;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -77,11 +70,12 @@ import javax.swing.SwingWorker;
  *
  * @author vaughnte
  */
-public class WareHouseMaint extends javax.swing.JPanel implements IBlueSeer {
+public class WareHouseMaint extends javax.swing.JPanel implements IBlueSeerT {
 
     
     // global variable declarations
                 boolean isLoad = false;
+                private static wh_mstr x = null;
     
    // global datatablemodel declarations    
                 
@@ -94,15 +88,15 @@ public class WareHouseMaint extends javax.swing.JPanel implements IBlueSeer {
 
     
     // interface functions implemented
-    public void executeTask(String x, String[] y) { 
+    public void executeTask(dbaction x, String[] y) { 
       
         class Task extends SwingWorker<String[], Void> {
        
           String type = "";
           String[] key = null;
           
-          public Task(String type, String[] key) { 
-              this.type = type;
+          public Task(dbaction type, String[] key) { 
+              this.type = type.name();
               this.key = key;
           } 
            
@@ -141,9 +135,8 @@ public class WareHouseMaint extends javax.swing.JPanel implements IBlueSeer {
             BlueSeerUtils.endTask(message);
            if (this.type.equals("delete")) {
              initvars(null);  
-           } else if (this.type.equals("get") && message[0].equals("1")) {
-             tbkey.requestFocus();
-           } else if (this.type.equals("get") && message[0].equals("0")) {
+           } else if (this.type.equals("get")) {
+             updateForm();
              tbkey.requestFocus();
            } else {
              initvars(null);  
@@ -325,22 +318,19 @@ public class WareHouseMaint extends javax.swing.JPanel implements IBlueSeer {
         tbkey.requestFocus();
     }
     
-    public String[] setAction(int i) {
+    public void setAction(String[] x) {
         String[] m = new String[2];
-        if (i > 0) {
-            m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
+        if (x[0].equals("0")) {
                    setPanelComponentState(this, true);
                    btadd.setEnabled(false);
                    tbkey.setEditable(false);
                    tbkey.setForeground(Color.blue);
         } else {
-           m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
                    tbkey.setForeground(Color.red); 
         }
-        return m;
     }
     
-    public boolean validateInput(String x) {
+    public boolean validateInput(dbaction x) {
         boolean b = true;
                 if (ddsite.getSelectedItem() == null || ddsite.getSelectedItem().toString().isEmpty()) {
                     b = false;
@@ -379,7 +369,7 @@ public class WareHouseMaint extends javax.swing.JPanel implements IBlueSeer {
         btlookup.setEnabled(true);
         
         if (arg != null && arg.length > 0) {
-            executeTask("get",arg);
+            executeTask(dbaction.get,arg);
         } else {
             tbkey.setEnabled(true);
             tbkey.setEditable(true);
@@ -399,102 +389,37 @@ public class WareHouseMaint extends javax.swing.JPanel implements IBlueSeer {
      
     public String[] deleteRecord(String[] x) {
      String[] m = new String[2];
-        boolean proceed = bsmf.MainFrame.warn("Are you sure?");
+        boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
         if (proceed) {
-        try {
-
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            try {
-              
-                   int i = st.executeUpdate("delete from wh_mstr where wh_id = " + "'" + x[0] + "'" + ";");
-                    if (i > 0) {
-                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
-                    initvars(null);
-                    }
-                } catch (SQLException s) {
-                 MainFrame.bslog(s); 
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordSQLError};  
-            } finally {
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordConnError};
-        }
+         m = deleteWareHouseMstr(createRecord()); 
+         initvars(null);
         } else {
            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
         }
-     return m;
+         return m;
      }
       
-    public String[] getRecord(String[] x) {
-       String[] m = new String[2];
-       
-        try {
-
-           Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-               
-                int i = 0;
-                res = st.executeQuery("select * from wh_mstr where wh_id = " + "'" + x[0] + "'" + ";");
-                while (res.next()) {
-                    i++;
-                    tbkey.setText(x[0]);
-                    tbname.setText(res.getString("wh_name"));
-                    tbaddr1.setText(res.getString("wh_addr1"));
-                    tbaddr2.setText(res.getString("wh_addr2"));
-                    tbcity.setText(res.getString("wh_city"));
-                    tbzip.setText(res.getString("wh_zip"));
-                    ddsite.setSelectedItem(res.getString("wh_site"));
-                    ddstate.setSelectedItem(res.getString("wh_state"));
-                    ddcountry.setSelectedItem(res.getString("wh_country"));
-                }
-               
-                // set Action if Record found (i > 0)
-                m = setAction(i);
-                
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};  
-        }
-      return m;
+    public String[] getRecord(String[] key) {
+      x = getWareHouseMstr(key);
+        return x.m();
     }
     
     public wh_mstr createRecord() {
         wh_mstr x = new wh_mstr(null, 
-           tbkey.getText().toString(), 
+           tbkey.getText(), 
             ddsite.getSelectedItem().toString(),
-            tbname.getText().toString(),
-            tbaddr1.getText().toString(),
-            tbaddr2.getText().toString(),
-            tbcity.getText().toString(),
+            tbname.getText(),
+            tbaddr1.getText(),
+            tbaddr2.getText(),
+            tbcity.getText(),
             ddstate.getSelectedItem().toString(),
-            tbzip.getText().toString(),
+            tbzip.getText(),
             ddcountry.getSelectedItem().toString()
         );
         return x;
     }
-    
-    
-     public void lookUpFrame() {
+        
+    public void lookUpFrame() {
         
         luinput.removeActionListener(lual);
         lual = new ActionListener() {
@@ -535,7 +460,18 @@ public class WareHouseMaint extends javax.swing.JPanel implements IBlueSeer {
         
     }
 
-   
+    public void updateForm() {
+        tbkey.setText(x.wh_id());
+        ddsite.setSelectedItem(x.wh_site());
+        tbname.setText(x.wh_name());
+        tbaddr1.setText(x.wh_addr1());
+        tbaddr2.setText(x.wh_addr2());
+        tbcity.setText(x.wh_city());
+        ddstate.setSelectedItem(x.wh_state());
+        tbzip.setText(x.wh_zip());
+        ddcountry.setSelectedItem(x.wh_country());
+        setAction(x.m());
+    }
    
     /**
      * This method is called from within the constructor to initialize the form.
@@ -762,27 +698,27 @@ public class WareHouseMaint extends javax.swing.JPanel implements IBlueSeer {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
-      if (! validateInput("addRecord")) {
+      if (! validateInput(dbaction.add)) {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("add", new String[]{tbkey.getText()});
+        executeTask(dbaction.add, new String[]{tbkey.getText()});
     }//GEN-LAST:event_btaddActionPerformed
 
     private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
-         if (! validateInput("updateRecord")) {
+         if (! validateInput(dbaction.update)) {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("update", new String[]{tbkey.getText()});
+        executeTask(dbaction.update, new String[]{tbkey.getText()});
     }//GEN-LAST:event_btupdateActionPerformed
 
     private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
-       if (! validateInput("deleteRecord")) {
+       if (! validateInput(dbaction.delete)) {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("delete", new String[]{tbkey.getText()});   
+        executeTask(dbaction.delete, new String[]{tbkey.getText()});   
     }//GEN-LAST:event_btdeleteActionPerformed
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
@@ -795,7 +731,7 @@ public class WareHouseMaint extends javax.swing.JPanel implements IBlueSeer {
     }//GEN-LAST:event_btclearActionPerformed
 
     private void tbkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkeyActionPerformed
-       executeTask("get", new String[]{tbkey.getText()});
+       executeTask(dbaction.get, new String[]{tbkey.getText()});
     }//GEN-LAST:event_tbkeyActionPerformed
 
     private void btlookupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btlookupActionPerformed

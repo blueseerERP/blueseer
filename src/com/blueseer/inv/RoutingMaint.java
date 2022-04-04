@@ -36,7 +36,8 @@ import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import static com.blueseer.inv.invData.addRoutingMstr;
-import static com.blueseer.inv.invData.getWFMstr;
+import static com.blueseer.inv.invData.deleteRoutingMstr;
+import static com.blueseer.inv.invData.getRoutingMstr;
 import static com.blueseer.inv.invData.updateRoutingMstr;
 import com.blueseer.inv.invData.wf_mstr;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
@@ -409,45 +410,17 @@ public class RoutingMaint extends javax.swing.JPanel implements IBlueSeerT {
      String[] m = new String[2];
         boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
         if (proceed) {
-        try {
-
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-              
-                   int i = st.executeUpdate("delete from wf_mstr where wf_id = " + "'" + x[0] + "'" + " AND " +
-                           " wf_op = " + "'" + x[1] + "'" + ";");
-                    if (i > 0) {
-                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
-                    initvars(null);
-                    }
-                } catch (SQLException s) {
-                 MainFrame.bslog(s); 
-                m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};  
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1020, Thread.currentThread().getStackTrace()[1].getMethodName())};
-        }
+         m = deleteRoutingMstr(createRecord());  
+         initvars(null);
         } else {
            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
         }
-     return m;
+         return m;
      }
       
     public String[] getRecord(String[] key) {
         if (key == null && key.length < 1) { return new String[]{}; };
-        wf_mstr z = getWFMstr(key);  
-        x = z;
+        x = getRoutingMstr(key);
         return x.m();
     }
     

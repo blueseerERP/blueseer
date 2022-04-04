@@ -542,8 +542,7 @@ public class invData {
             res.close();
         return rows;
     }
-    
-    
+        
     public static String[] updatePBM(pbm_mstr x, bom_mstr y) {
         String[] m = new String[2];
         if (x == null) {
@@ -673,6 +672,37 @@ public class invData {
         ps.close();
     }
     
+    public static bom_mstr getBOMMstr(String[] x) {
+        bom_mstr r = null;
+        String[] m = new String[2];
+        String sql = "select * from bom_mstr where bom_item = ? and bom_id = ? ;";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, x[0]);
+        ps.setString(2, x[1]);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new bom_mstr(m);  // minimum return
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new bom_mstr(m, res.getString("bom_id"),
+                                res.getString("bom_desc"),
+                                res.getString("bom_item"),
+                                res.getString("bom_enabled"),
+                                res.getString("bom_primary"));
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getClassName() + "." + Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new bom_mstr(m);
+        }
+        return r;
+    }
+  
     
     public static String[] addWorkCenterMstr(wc_mstr x) {
         String[] m = new String[2];
@@ -740,6 +770,59 @@ public class invData {
         return m;
     }
 
+    public static wc_mstr getWorkCenterMstr(String[] x) {
+        wc_mstr r = null;
+        String[] m = new String[2];
+        String sql = "select * from wc_mstr where wc_cell = ? ;";
+        
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, x[0]);
+       
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new wc_mstr(m);  // minimum return
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new wc_mstr(m, res.getString("wc_cell"), res.getString("wc_desc"),
+                        res.getString("wc_site"), res.getString("wc_cc"),
+                        res.getString("wc_run_rate"), res.getString("wc_setup_rate"),
+                        res.getString("wc_bdn_rate"), res.getString("wc_run_crew"),
+                        res.getString("wc_setup"), res.getString("wc_remarks"));
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getClassName() + "." + Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new wc_mstr(m);
+        }
+        return r;
+    }
+  
+    public static String[] deleteWorkCenterMstr(wc_mstr x) {
+        String[] m;
+        String sqlDelete = "delete from wc_mstr where wc_cell = ? ;"; 
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+             PreparedStatement ps = con.prepareStatement(sqlDelete);) {
+             ps.setString(1, x.wc_cell);
+             int rows = ps.executeUpdate();
+             if (rows > 0) {
+                m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess}; 
+             } else {
+                m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordError}; 
+             }
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+    
+    
+    
     public static String[] addLocationMstr(loc_mstr x) {
         String[] m = new String[2];
         String sqlSelect = "SELECT * FROM  loc_mstr where loc_loc = ?";
@@ -794,6 +877,53 @@ public class invData {
         return m;
     }
 
+    public static String[] deleteLocationMstr(loc_mstr x) { 
+       String[] m = new String[2];
+        String sql = "delete from loc_mstr where loc_loc = ?; ";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, x.loc_loc);
+        int rows = ps.executeUpdate();
+        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+    
+    public static loc_mstr getLocationMstr(String[] x) {
+        loc_mstr r = null;
+        String[] m = new String[2];
+        String sql = "select * from loc_mstr where loc_loc = ? ;";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, x[0]);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new loc_mstr(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new loc_mstr(m, res.getString("loc_loc"), 
+                            res.getString("loc_desc"),
+                            res.getString("loc_site"),
+                            res.getString("loc_wh"),    
+                            res.getString("loc_active")
+                        );
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new loc_mstr(m);
+        }
+        return r;
+    }
+    
+    
     public static String[] addRoutingMstr(wf_mstr x) {
         String[] m = new String[2];
         String sqlSelect = "SELECT * FROM  wf_mstr where wf_id = ? and wf_op = ?";
@@ -859,6 +989,64 @@ public class invData {
         return m;
     }
 
+    public static wf_mstr getRoutingMstr(String[] x) {
+        wf_mstr r = null;
+        String[] m = new String[2];
+        String sql = "";
+        if (x.length == 1) {
+            sql = "select * from wf_mstr where wf_id = ? ;";
+        } else {
+            sql = "select * from wf_mstr where wf_id = ? and wf_op = ? ;";
+        }
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, x[0]);
+        if (x.length > 1) {
+        ps.setString(2, x[1]);
+        }
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new wf_mstr(m);  // minimum return
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new wf_mstr(m, res.getString("wf_id"), res.getString("wf_desc"),
+                        res.getString("wf_site"), res.getString("wf_op"),
+                        res.getString("wf_assert"), res.getString("wf_op_desc"),
+                        res.getString("wf_cell"), res.getString("wf_setup_hours"),
+                        res.getString("wf_run_hours"));
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getClassName() + "." + Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new wf_mstr(m);
+        }
+        return r;
+    }
+  
+    public static String[] deleteRoutingMstr(wf_mstr x) {
+        String[] m;
+        String sqlDelete = "delete from wf_mstr where wf_id = ? ;"; 
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+             PreparedStatement ps = con.prepareStatement(sqlDelete);) {
+             ps.setString(1, x.wf_id);
+             int rows = ps.executeUpdate();
+             if (rows > 0) {
+                m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess}; 
+             } else {
+                m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordError}; 
+             }
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+        
+    
     public static String[] addUOMMstr(uom_mstr x) {
         String[] m = new String[2];
         String sqlSelect = "SELECT * FROM  uom_mstr where uom_id = ?";
@@ -950,6 +1138,7 @@ public class invData {
         return m;
     }
     
+    
     public static String[] addWareHouseMstr(wh_mstr x) {
         String[] m = new String[2];
         String sqlSelect = "SELECT * FROM  wh_mstr where wh_id = ?";
@@ -1013,107 +1202,60 @@ public class invData {
         return m;
     }
 
-    public static bom_mstr getBOMMstr(String[] x) {
-        bom_mstr r = null;
+    public static String[] deleteWareHouseMstr(wh_mstr x) { 
+       String[] m = new String[2];
+        String sql = "delete from wh_mstr where wh_id = ?; ";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, x.wh_id);
+        int rows = ps.executeUpdate();
+        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+    
+    public static wh_mstr getWareHouseMstr(String[] x) {
+        wh_mstr r = null;
         String[] m = new String[2];
-        String sql = "select * from bom_mstr where bom_item = ? and bom_id = ? ;";
+        String sql = "select * from wh_mstr where wh_id = ? ;";
         try (Connection con = DriverManager.getConnection(url + db, user, pass);
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, x[0]);
-        ps.setString(2, x[1]);
              try (ResultSet res = ps.executeQuery();) {
                 if (! res.isBeforeFirst()) {
                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
-                r = new bom_mstr(m);  // minimum return
+                r = new wh_mstr(m);
                 } else {
                     while(res.next()) {
                         m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
-                        r = new bom_mstr(m, res.getString("bom_id"),
-                                res.getString("bom_desc"),
-                                res.getString("bom_item"),
-                                res.getString("bom_enabled"),
-                                res.getString("bom_primary"));
+                        r = new wh_mstr(m, res.getString("wh_id"), 
+                            res.getString("wh_site"),
+                            res.getString("wh_name"),
+                            res.getString("wh_addr1"),    
+                            res.getString("wh_addr2"),
+                            res.getString("wh_city"),
+                            res.getString("wh_state"),
+                            res.getString("wh_zip"),
+                            res.getString("wh_country")    
+                        );
                     }
                 }
             }
         } catch (SQLException s) {   
 	       MainFrame.bslog(s);  
-               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getClassName() + "." + Thread.currentThread().getStackTrace()[1].getMethodName())}; 
-               r = new bom_mstr(m);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new wh_mstr(m);
         }
         return r;
     }
-  
-    public static wf_mstr getWFMstr(String[] x) {
-        wf_mstr r = null;
-        String[] m = new String[2];
-        String sql = "";
-        if (x.length == 1) {
-            sql = "select * from wf_mstr where wf_id = ? ;";
-        } else {
-            sql = "select * from wf_mstr where wf_id = ? and wf_op = ? ;";
-        }
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
-	PreparedStatement ps = con.prepareStatement(sql);) {
-        ps.setString(1, x[0]);
-        if (x.length > 1) {
-        ps.setString(2, x[1]);
-        }
-             try (ResultSet res = ps.executeQuery();) {
-                if (! res.isBeforeFirst()) {
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
-                r = new wf_mstr(m);  // minimum return
-                } else {
-                    while(res.next()) {
-                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
-                        r = new wf_mstr(m, res.getString("wf_id"), res.getString("wf_desc"),
-                        res.getString("wf_site"), res.getString("wf_op"),
-                        res.getString("wf_assert"), res.getString("wf_op_desc"),
-                        res.getString("wf_cell"), res.getString("wf_setup_hours"),
-                        res.getString("wf_run_hours"));
-                    }
-                }
-            }
-        } catch (SQLException s) {   
-	       MainFrame.bslog(s);  
-               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getClassName() + "." + Thread.currentThread().getStackTrace()[1].getMethodName())}; 
-               r = new wf_mstr(m);
-        }
-        return r;
-    }
-  
-    public static wc_mstr getWCMstr(String[] x) {
-        wc_mstr r = null;
-        String[] m = new String[2];
-        String sql = "select * from wc_mstr where wc_cell = ? ;";
-        
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
-	PreparedStatement ps = con.prepareStatement(sql);) {
-        ps.setString(1, x[0]);
-       
-             try (ResultSet res = ps.executeQuery();) {
-                if (! res.isBeforeFirst()) {
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
-                r = new wc_mstr(m);  // minimum return
-                } else {
-                    while(res.next()) {
-                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
-                        r = new wc_mstr(m, res.getString("wc_cell"), res.getString("wc_desc"),
-                        res.getString("wc_site"), res.getString("wc_cc"),
-                        res.getString("wc_run_rate"), res.getString("wc_setup_rate"),
-                        res.getString("wc_bdn_rate"), res.getString("wc_run_crew"),
-                        res.getString("wc_setup"), res.getString("wc_remarks"));
-                    }
-                }
-            }
-        } catch (SQLException s) {   
-	       MainFrame.bslog(s);  
-               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getClassName() + "." + Thread.currentThread().getStackTrace()[1].getMethodName())}; 
-               r = new wc_mstr(m);
-        }
-        return r;
-    }
-  
+    
+    
+    
+    
+    
    
 
     /* misc functions */

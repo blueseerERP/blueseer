@@ -36,7 +36,8 @@ import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.fgl.fglData;
 import static com.blueseer.inv.invData.addWorkCenterMstr;
-import static com.blueseer.inv.invData.getWCMstr;
+import static com.blueseer.inv.invData.deleteWorkCenterMstr;
+import static com.blueseer.inv.invData.getWorkCenterMstr;
 import static com.blueseer.inv.invData.updateWorkCenterMstr;
 import com.blueseer.inv.invData.wc_mstr;
 import com.blueseer.utl.BlueSeerUtils;
@@ -391,43 +392,16 @@ public class WorkCenterMaint extends javax.swing.JPanel implements IBlueSeerT {
      String[] m = new String[2];
         boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
         if (proceed) {
-        try {
-
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                
-              
-                   int i = st.executeUpdate("delete from wc_mstr where wc_cell = " + "'" + x[0] + "'" + ";");
-                    if (i > 0) {
-                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
-                    initvars(null);
-                    }
-                } catch (SQLException s) {
-                 MainFrame.bslog(s); 
-                m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};  
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1020, Thread.currentThread().getStackTrace()[1].getMethodName())};
-        }
+         m = deleteWorkCenterMstr(createRecord()); 
+         initvars(null);
         } else {
            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
         }
-     return m;
+         return m;
      }
       
     public String[] getRecord(String[] key) {
-       wc_mstr z = getWCMstr(key);  
+       wc_mstr z = getWorkCenterMstr(key);  
         x = z;
         return x.m();
     }
