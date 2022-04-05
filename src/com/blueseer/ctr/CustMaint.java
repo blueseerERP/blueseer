@@ -378,8 +378,7 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
     
     public String[] updateRecord(String[] x) {
-        String[] m = new String[2];
-        m = updateCustMstr(createRecord());
+        String[] m = updateCustMstr(createRecord());
         return m;   
      }
      

@@ -25,6 +25,7 @@ SOFTWARE.
  */
 package com.blueseer.utl;
 
+import com.blueseer.utl.BlueSeerUtils.dbaction;
 import javax.swing.JPanel;
 import javax.swing.SwingWorker;
 
@@ -44,11 +45,11 @@ public interface IBlueSeerc {
    
     public String[] updateRecord(String[] x);
     
-    public boolean validateInput(String e);
+    public boolean validateInput(dbaction e);
     
-    public String[] setAction(int i);
+    public void setAction(String[] x);
         
-    public void executeTask(String x, String[] y);
+    public void executeTask(dbaction x, String[] y);
    
     public void setComponentDefaultValues();
 }

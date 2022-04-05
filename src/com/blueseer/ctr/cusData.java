@@ -738,6 +738,67 @@ public class cusData {
     }
     
     
+    public static String[] addUpdateCMCtrl(cm_ctrl x) {
+        int rows = 0;
+        String[] m = new String[2];
+        String sqlSelect = "SELECT * FROM  cm_ctrl"; // there should always be only 1 or 0 records 
+        String sqlInsert = "insert into cm_ctrl (cmc_autocust) "
+                        + " values (?); "; 
+        String sqlUpdate = "update cm_ctrl set cmc_autocust = ?; ";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+             PreparedStatement ps = con.prepareStatement(sqlSelect);) {
+          try (ResultSet res = ps.executeQuery();
+               PreparedStatement psi = con.prepareStatement(sqlInsert);
+               PreparedStatement psu = con.prepareStatement(sqlUpdate);) {  
+            if (! res.isBeforeFirst()) {
+            psi.setString(1, x.cmc_autocust);
+             rows = psi.executeUpdate();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+            } else {
+            psu.setString(1, x.cmc_autocust);
+            rows = psu.executeUpdate();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};    
+            }
+          } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+          }
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+   
+    public static cm_ctrl getCMCtrl(String[] x) {
+        cm_ctrl r = null;
+        String[] m = new String[2];
+        String sql = "select * from cm_ctrl;";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql);) {
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new cm_ctrl(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new cm_ctrl(m, 
+                                res.getString("cmc_autocust")
+                        );
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new cm_ctrl(m);
+        }
+        return r;
+    }
+    
+    
+    
     // cms_det Customer Shipto Table
     public static String[] addCMSDet(cms_det x) {
         String[] m = new String[2];
@@ -2057,5 +2118,11 @@ public class cusData {
         }
     } 
      
+    public record cm_ctrl (String[] m, String cmc_autocust) {
+        public cm_ctrl(String[] m) {
+            this(m,"");
+        }
+    } 
+    
     
 }

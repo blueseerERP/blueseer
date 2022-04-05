@@ -31,6 +31,7 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -208,6 +209,115 @@ public class farData {
     return m;
     }
     
+    
+    public static String[] addUpdateARCtrl(ar_ctrl x) {
+        int rows = 0;
+        String[] m = new String[2];
+        String sqlSelect = "SELECT * FROM  ar_ctrl"; // there should always be only 1 or 0 records 
+        String sqlInsert = "insert into ar_ctrl (arc_bank, arc_default_acct, arc_default_cc,"
+                + "arc_sales_acct, arc_sales_cc, arc_asset_acct, arc_asset_cc,"
+                + "arc_fedtax_acct, arc_fedtax_cc, arc_statetax_acct, arc_statetax_cc,"
+                + "arc_localtax_acct, arc_localtax_cc, arc_othertax_acct, arc_othertax_cc ) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
+        String sqlUpdate = "update ar_ctrl set arc_bank = ?, arc_default_acct = ?, arc_default_cc = ?,"
+                + "arc_sales_acct = ?, arc_sales_cc = ?, arc_asset_acct = ?, arc_asset_cc = ?,"
+                + "arc_fedtax_acct = ?, arc_fedtax_cc = ?, arc_statetax_acct = ?, arc_statetax_cc = ?,"
+                + "arc_localtax_acct = ?, arc_localtax_cc = ?, arc_othertax_acct = ?, arc_othertax_cc = ? ; ";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+             PreparedStatement ps = con.prepareStatement(sqlSelect);) {
+          try (ResultSet res = ps.executeQuery();
+               PreparedStatement psi = con.prepareStatement(sqlInsert);
+               PreparedStatement psu = con.prepareStatement(sqlUpdate);) {  
+            if (! res.isBeforeFirst()) {
+            psi.setString(1, x.arc_bank);
+            psi.setString(2, x.arc_default_acct);
+            psi.setString(3, x.arc_default_cc);
+            psi.setString(4, x.arc_sales_acct);
+            psi.setString(5, x.arc_sales_cc);
+            psi.setString(6, x.arc_asset_acct);
+            psi.setString(7, x.arc_asset_cc);
+            psi.setString(8, x.arc_fedtax_acct);
+            psi.setString(9, x.arc_fedtax_cc);
+            psi.setString(10, x.arc_statetax_acct);
+            psi.setString(11, x.arc_statetax_cc);
+            psi.setString(12, x.arc_localtax_acct);
+            psi.setString(13, x.arc_localtax_cc);
+            psi.setString(14, x.arc_othertax_acct);
+            psi.setString(15, x.arc_othertax_cc);
+             rows = psi.executeUpdate();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+            } else {
+            psu.setString(1, x.arc_bank);
+            psu.setString(2, x.arc_default_acct);
+            psu.setString(3, x.arc_default_cc);
+            psu.setString(4, x.arc_sales_acct);
+            psu.setString(5, x.arc_sales_cc);
+            psu.setString(6, x.arc_asset_acct);
+            psu.setString(7, x.arc_asset_cc);
+            psu.setString(8, x.arc_fedtax_acct);
+            psu.setString(9, x.arc_fedtax_cc);
+            psu.setString(10, x.arc_statetax_acct);
+            psu.setString(11, x.arc_statetax_cc);
+            psu.setString(12, x.arc_localtax_acct);
+            psu.setString(13, x.arc_localtax_cc);
+            psu.setString(14, x.arc_othertax_acct);
+            psu.setString(15, x.arc_othertax_cc);
+            rows = psu.executeUpdate();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};    
+            }
+          } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+          }
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+   
+    public static ar_ctrl getARCtrl(String[] x) {
+        ar_ctrl r = null;
+        String[] m = new String[2];
+        String sql = "select * from ar_ctrl;";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql);) {
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new ar_ctrl(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new ar_ctrl(m, 
+                                res.getString("arc_bank"),
+                                res.getString("arc_default_acct"),
+                                res.getString("arc_default_cc"),
+                                res.getString("arc_sales_acct"),
+                                res.getString("arc_sales_cc"),
+                                res.getString("arc_asset_acct"),
+                                res.getString("arc_asset_cc"),
+                                res.getString("arc_fedtax_acct"),
+                                res.getString("arc_fedtax_cc"),
+                                res.getString("arc_statetax_acct"),
+                                res.getString("arc_statetax_cc"),
+                                res.getString("arc_localtax_acct"),
+                                res.getString("arc_localtax_cc"),
+                                res.getString("arc_othertax_acct"),
+                                res.getString("arc_othertax_cc")
+                        );
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new ar_ctrl(m);
+        }
+        return r;
+    }
+    
+    
     // misc functions
     
     public static String[] getARTaxMaterialOnly(String ref) {
@@ -254,5 +364,13 @@ public class farData {
         }
     }
     
-    
+    public record ar_ctrl(String[] m, String arc_bank, String arc_default_acct, String arc_default_cc, 
+        String arc_sales_acct, String arc_sales_cc, String arc_asset_acct, String arc_asset_cc, 
+        String arc_fedtax_acct, String arc_fedtax_cc, String arc_statetax_acct, String arc_statetax_cc, 
+        String arc_localtax_acct, String arc_localtax_cc, String arc_othertax_acct, String arc_othertax_cc) {
+        public ar_ctrl(String[] m) {
+            this(m, "", "", "", "", "", "", "", "", "", "",
+                    "", "", "", "", "" );
+        }
+    }
 }

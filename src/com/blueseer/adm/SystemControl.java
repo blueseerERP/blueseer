@@ -34,6 +34,7 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.IBlueSeerc;
 import com.blueseer.utl.OVData;
@@ -98,15 +99,15 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
     }
 
     // interface functions implemented
-    public void executeTask(String x, String[] y) { 
+    public void executeTask(dbaction x, String[] y) { 
       
         class Task extends SwingWorker<String[], Void> {
        
           String type = "";
           String[] key = null;
           
-          public Task(String type, String[] key) { 
-              this.type = type;
+          public Task(dbaction type, String[] key) { 
+              this.type = type.name();
               this.key = key;
           } 
            
@@ -217,17 +218,16 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
        }
     }
     
-    public String[] setAction(int i) {
+    public void setAction(String[] x) {
         String[] m = new String[2];
-        if (i > 0) {
+        if (x[0].equals("0")) {
             m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
         } else {
            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
         }
-        return m;
     }
     
-    public boolean validateInput(String x) {
+    public boolean validateInput(dbaction x) {
         boolean b = true;
                                 
                 if (tbversion.getText().isEmpty()) {
@@ -267,7 +267,7 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
     
     public void initvars(String[] arg) {
             setComponentDefaultValues();
-            executeTask("get", null);
+            executeTask(dbaction.get, null);
     }
     
     public String[] updateRecord(String[] x) {
@@ -415,7 +415,7 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
                   tblocale.setText(Locale.getDefault().toString());
                     
                 // set Action if Record found (i > 0)
-                m = setAction(i);
+                setAction(m);
                 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
@@ -908,10 +908,10 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
-       if (! validateInput("updateRecord")) {
+       if (! validateInput(dbaction.update)) {
            return;
        }
-        executeTask("update", null);
+        executeTask(dbaction.update, null);
     }//GEN-LAST:event_btupdateActionPerformed
 
     private void btcopyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcopyActionPerformed

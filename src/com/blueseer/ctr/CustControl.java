@@ -37,6 +37,10 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.ctr.cusData.addUpdateCMCtrl;
+import com.blueseer.ctr.cusData.cm_ctrl;
+import static com.blueseer.ctr.cusData.getCMCtrl;
+import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.IBlueSeerc;
 import com.blueseer.utl.OVData;
@@ -57,7 +61,7 @@ import javax.swing.SwingWorker;
  */
 
 
-public class CustControl extends javax.swing.JPanel implements IBlueSeerc {
+public class CustControl extends javax.swing.JPanel implements IBlueSeerc { 
 
     
     public CustControl() {
@@ -67,18 +71,19 @@ public class CustControl extends javax.swing.JPanel implements IBlueSeerc {
 
     // global variable declarations
                 boolean isLoad = false;
+                private static cm_ctrl x = null;
     
     
     // interface functions implemented
-    public void executeTask(String x, String[] y) { 
+    public void executeTask(dbaction x, String[] y) { 
       
         class Task extends SwingWorker<String[], Void> {
        
           String type = "";
           String[] key = null;
           
-          public Task(String type, String[] key) { 
-              this.type = type;
+          public Task(dbaction type, String[] key) { 
+              this.type = type.name();
               this.key = key;
           } 
            
@@ -109,7 +114,12 @@ public class CustControl extends javax.swing.JPanel implements IBlueSeerc {
             String[] message = get();
            
             BlueSeerUtils.endTask(message);
-          
+            if (this.type.equals("get")) {
+             updateForm(); 
+           } else {
+             initvars(null);  
+             setAction(message);
+           }
             
             } catch (Exception e) {
                 MainFrame.bslog(e);
@@ -174,17 +184,16 @@ public class CustControl extends javax.swing.JPanel implements IBlueSeerc {
        isLoad = false;
     }
     
-    public String[] setAction(int i) {
+    public void setAction(String[] x) {
         String[] m = new String[2];
-        if (i > 0) {
-            m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
+        if (x[0].equals("0")) {
+            bsmf.MainFrame.show(BlueSeerUtils.updateRecordSuccess); 
         } else {
-           m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
+            bsmf.MainFrame.show(BlueSeerUtils.updateRecordError);  
         }
-        return m;
     }
     
-    public boolean validateInput(String x) {
+    public boolean validateInput(dbaction x) {
         boolean b = true;
                       // nothing here              
         return b;
@@ -192,93 +201,35 @@ public class CustControl extends javax.swing.JPanel implements IBlueSeerc {
     
     public void initvars(String[] arg) {
             setComponentDefaultValues();
-            executeTask("get", null);
+            executeTask(dbaction.get, null);
     }
     
     public String[] updateRecord(String[] x) {
-     String[] m = new String[2];
-     
-     try {
-           
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                
-                    String autocust = "";
-                    if ( cbautocust.isSelected() ) {
-                    autocust = "1";    
-                    } else {
-                        autocust = "0";
-                    }
-                    int i = 0;
-                    res = st.executeQuery("SELECT *  FROM  cm_ctrl ;");
-                    while (res.next()) {
-                        i++;
-                    }
-                    if (i == 0) {
-                    st.executeUpdate("insert into cm_ctrl (cmc_autocust ) values (" + "'" + autocust + "'" + 
-                                    ")" + ";");                
-                          m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
-                    } else {
-                    st.executeUpdate("update cm_ctrl set " 
-                            + " cmc_autocust = " + "'" + autocust + "'" +        
-                            ";");   
-                    }
-                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
-                    
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};  
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1020, Thread.currentThread().getStackTrace()[1].getMethodName())};
-        }
-     
-     return m;
-     }
+        String[] m = addUpdateCMCtrl(createRecord());
+        return m;
+    }
       
-    public String[] getRecord(String[] x) {
-       String[] m = new String[2];
-       
-        try {
-
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                
-                int i = 0;
-                res = st.executeQuery("SELECT * FROM  cm_ctrl ;");
-                    while (res.next()) {
-                        i++;
-                        cbautocust.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("cmc_autocust")));
-                    }
-               
-                // set Action if Record found (i > 0)
-                m = setAction(i);
-                
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};  
-        }
-      return m;
+    public String[] getRecord(String[] key) {
+        x = getCMCtrl(key);
+        return x.m();
     }
     
+    public cm_ctrl createRecord() {
+        String autocust = "";
+        if ( cbautocust.isSelected() ) {
+        autocust = "1";    
+        } else {
+            autocust = "0";
+        }
+        cm_ctrl x = new cm_ctrl(null, 
+           autocust
+        );
+        return x;
+    }
     
+    public void updateForm() {
+        cbautocust.setSelected(BlueSeerUtils.ConvertStringToBool(x.cmc_autocust()));
+    }
     
  
     /**
@@ -340,10 +291,10 @@ public class CustControl extends javax.swing.JPanel implements IBlueSeerc {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
-        if (! validateInput("updateRecord")) {
+        if (! validateInput(dbaction.update)) {
            return;
        }
-        executeTask("update", null);
+        executeTask(dbaction.update, null);
     }//GEN-LAST:event_btupdateActionPerformed
 
     private void cbautocustActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbautocustActionPerformed

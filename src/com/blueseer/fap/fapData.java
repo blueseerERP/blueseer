@@ -38,6 +38,7 @@ import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.currformat;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.currformatDoubleUS;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.parseDate;
 import static com.blueseer.utl.BlueSeerUtils.setDateFormat;
 import com.blueseer.utl.OVData;
@@ -711,6 +712,75 @@ public class fapData {
    }
 
     
+    public static String[] addUpdateAPCtrl(ap_ctrl x) {
+        int rows = 0;
+        String[] m = new String[2];
+        String sqlSelect = "SELECT * FROM  ap_ctrl"; // there should always be only 1 or 0 records 
+        String sqlInsert = "insert into ap_ctrl (apc_bank, apc_assetacct, apc_autovoucher, apc_apacct ) "
+                        + " values (?,?,?,?); "; 
+        String sqlUpdate = "update ap_ctrl set apc_bank = ?, apc_assetacct = ?, apc_autovoucher = ?, apc_apacct = ?; ";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+             PreparedStatement ps = con.prepareStatement(sqlSelect);) {
+          try (ResultSet res = ps.executeQuery();
+               PreparedStatement psi = con.prepareStatement(sqlInsert);
+               PreparedStatement psu = con.prepareStatement(sqlUpdate);) {  
+            if (! res.isBeforeFirst()) {
+            psi.setString(1, x.apc_bank);
+            psi.setString(2, x.apc_assetacct);
+            psi.setString(3, x.apc_autovoucher);
+            psi.setString(4, x.apc_apacct);
+             rows = psi.executeUpdate();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+            } else {
+            psu.setString(1, x.apc_bank);
+            psu.setString(2, x.apc_assetacct);
+            psu.setString(3, x.apc_autovoucher);
+            psu.setString(4, x.apc_apacct);
+            rows = psu.executeUpdate();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};    
+            }
+          } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+          }
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+   
+    public static ap_ctrl getAPCtrl(String[] x) {
+        ap_ctrl r = null;
+        String[] m = new String[2];
+        String sql = "select * from ap_ctrl;";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql);) {
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new ap_ctrl(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new ap_ctrl(m, 
+                                res.getString("apc_bank"),
+                                res.getString("apc_assetacct"),
+                                res.getString("apc_autovoucher"),
+                                res.getString("apc_apacct")
+                        );
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new ap_ctrl(m);
+        }
+        return r;
+    }
+    
+    
     public record ap_mstr(String[] m, String ap_id, String ap_vend, String ap_nbr, 
         String ap_amt, String ap_base_amt, String ap_effdate, String ap_entdate, String ap_duedate,
         String ap_type, String ap_rmks, String ap_ref, String ap_terms, String ap_acct,
@@ -738,5 +808,12 @@ public class fapData {
                     "" );
         }
     }
+    
+    public record ap_ctrl (String[] m, String apc_bank, String apc_assetacct, 
+        String apc_autovoucher, String apc_apacct) {
+        public ap_ctrl(String[] m) {
+            this(m,"", "", "", "");
+        }
+    } 
     
 }

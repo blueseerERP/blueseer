@@ -31,7 +31,11 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.far.farData.addUpdateARCtrl;
+import com.blueseer.far.farData.ar_ctrl;
+import static com.blueseer.far.farData.getARCtrl;
 import com.blueseer.utl.BlueSeerUtils;
+import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.IBlueSeerc;
 import com.blueseer.utl.OVData;
@@ -64,18 +68,19 @@ public class ARControl extends javax.swing.JPanel implements IBlueSeerc {
 
     // global variable declarations
                 boolean isLoad = false;
+                private static ar_ctrl x = null;
     
     
     // interface functions implemented
-    public void executeTask(String x, String[] y) { 
+    public void executeTask(dbaction x, String[] y) { 
       
         class Task extends SwingWorker<String[], Void> {
        
           String type = "";
           String[] key = null;
           
-          public Task(String type, String[] key) { 
-              this.type = type;
+          public Task(dbaction type, String[] key) { 
+              this.type = type.name();
               this.key = key;
           } 
            
@@ -101,12 +106,17 @@ public class ARControl extends javax.swing.JPanel implements IBlueSeerc {
         }
  
         
-       public void done() {
+      public void done() {
             try {
             String[] message = get();
            
             BlueSeerUtils.endTask(message);
-          
+            if (this.type.equals("get")) {
+             updateForm(); 
+           } else {
+             initvars(null);  
+             setAction(message);
+           }
             
             } catch (Exception e) {
                 MainFrame.bslog(e);
@@ -171,17 +181,16 @@ public class ARControl extends javax.swing.JPanel implements IBlueSeerc {
        }
     }
     
-    public String[] setAction(int i) {
+    public void setAction(String[] x) {
         String[] m = new String[2];
-        if (i > 0) {
-            m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
+        if (x[0].equals("0")) {
+            bsmf.MainFrame.show(BlueSeerUtils.updateRecordSuccess); 
         } else {
-           m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
+            bsmf.MainFrame.show(BlueSeerUtils.updateRecordError);  
         }
-        return m;
     }
     
-    public boolean validateInput(String x) { 
+    public boolean validateInput(dbaction x) { 
         boolean b = true;
                                 
                 if (tbbank.getText().isEmpty() || ! OVData.isValidBank(tbbank.getText())) {
@@ -233,123 +242,58 @@ public class ARControl extends javax.swing.JPanel implements IBlueSeerc {
     
     public void initvars(String[] arg) {
             setComponentDefaultValues();
-            executeTask("get", null);
+            executeTask(dbaction.get, null);
     }
     
     public String[] updateRecord(String[] x) {
-     String[] m = new String[2];
-     
-     try {
-           
-           Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                
-                    
-                
-                    int i = 0;
-                    res = st.executeQuery("SELECT *  FROM  ar_ctrl ;");
-                    while (res.next()) {
-                        i++;
-                    }
-                     if (i == 0) {
-
-                    st.executeUpdate("insert into ar_ctrl values (" + "'" + tbbank.getText() + "'" + ","
-                            + "'" + tbaracct.getText() + "'" + "," 
-                            + "'" + tbarcc.getText() + "'" + ","
-                            + "'" + tbsalesacct.getText() + "'" + ","
-                            + "'" + tbsalescc.getText() + "'"
-                            + ")" + ";");            
-                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
-                } else {
-                    st.executeUpdate("update ar_ctrl set " 
-                            + " arc_bank = " + "'" + tbbank.getText() + "'" + ","
-                            + " arc_default_acct = " + "'" + tbaracct.getText() + "'" + "," 
-                            + " arc_default_cc = " + "'" + tbarcc.getText() + "'" + "," 
-                            + " arc_sales_acct = " + "'" + tbsalesacct.getText() + "'" + ","
-                            + " arc_sales_cc = " + "'" + tbsalescc.getText() + "'" + ","
-                            + " arc_asset_acct = " + "'" + tbasset.getText() + "'" + ","
-                            + " arc_asset_cc = " + "'" + tbassetcc.getText() + "'" + ","        
-                            + " arc_fedtax_acct = " + "'" + tbfederaltax.getText() + "'" + ","
-                            + " arc_fedtax_cc = " + "'" + tbfederalcc.getText() + "'" + ","
-                            + " arc_statetax_acct = " + "'" + tbstatetax.getText() + "'" + ","
-                            + " arc_statetax_cc = " + "'" + tbstatecc.getText() + "'" + ","
-                            + " arc_localtax_acct = " + "'" + tblocaltax.getText() + "'" + ","
-                            + " arc_localtax_cc = " + "'" + tblocalcc.getText() + "'" + ","
-                            + " arc_othertax_acct = " + "'" + tbothertax.getText() + "'" + ","
-                            + " arc_othertax_cc = " + "'" + tbothercc.getText() + "'" +
-                            ";");   
-                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
-                }
-                    
-                    
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};  
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1020, Thread.currentThread().getStackTrace()[1].getMethodName())};
-        }
-     
-     return m;
+     String[] m = addUpdateARCtrl(createRecord());
+        return m;
      }
       
-    public String[] getRecord(String[] x) {
-       String[] m = new String[2];
-       
-        try {
-
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                
-                int i = 0;
-                
-                res = st.executeQuery("select * from ar_ctrl;");
-                while (res.next()) {
-                    i++;
-                    tbbank.setText(res.getString("arc_bank"));
-                    tbaracct.setText(res.getString("arc_default_acct"));
-                    tbarcc.setText(res.getString("arc_default_cc"));
-                    tbsalesacct.setText(res.getString("arc_sales_acct"));
-                    tbsalescc.setText(res.getString("arc_sales_cc"));
-                    tbasset.setText(res.getString("arc_asset_acct"));
-                    tbassetcc.setText(res.getString("arc_asset_cc"));
-                    tbfederaltax.setText(res.getString("arc_fedtax_acct"));
-                    tbfederalcc.setText(res.getString("arc_fedtax_cc"));
-                    tbstatetax.setText(res.getString("arc_statetax_acct"));
-                    tbstatecc.setText(res.getString("arc_statetax_cc"));
-                    tblocaltax.setText(res.getString("arc_localtax_acct"));
-                    tblocalcc.setText(res.getString("arc_localtax_cc"));
-                    tbothertax.setText(res.getString("arc_othertax_acct"));
-                    tbothercc.setText(res.getString("arc_othertax_cc"));
-                }
-               
-                // set Action if Record found (i > 0)
-                m = setAction(i);
-                
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};  
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1020, Thread.currentThread().getStackTrace()[1].getMethodName())};  
-        }
-      return m;
+    public String[] getRecord(String[] key) {
+      x = getARCtrl(key);
+        return x.m();
     }
     
+    public ar_ctrl createRecord() {
+        ar_ctrl x = new ar_ctrl(null, 
+           tbbank.getText(),
+            tbaracct.getText(),
+            tbarcc.getText(),
+            tbsalesacct.getText(),
+            tbsalescc.getText(),
+            tbasset.getText(),
+            tbassetcc.getText(),      
+            tbfederaltax.getText(),
+            tbfederalcc.getText(),
+            tbstatetax.getText(),
+            tbstatecc.getText(),
+            tblocaltax.getText(),
+            tblocalcc.getText(),
+            tbothertax.getText(),
+            tbothercc.getText()
+        );
+        return x;
+    }
+    
+    
+    public void updateForm() {
+    tbbank.setText(x.arc_bank());
+            tbaracct.setText(x.arc_default_acct());
+            tbarcc.setText(x.arc_default_cc());
+            tbsalesacct.setText(x.arc_sales_acct());
+            tbsalescc.setText(x.arc_sales_cc());
+            tbasset.setText(x.arc_asset_acct());
+            tbassetcc.setText(x.arc_asset_cc());
+            tbfederaltax.setText(x.arc_fedtax_acct());
+            tbfederalcc.setText(x.arc_fedtax_cc());
+            tbstatetax.setText(x.arc_statetax_acct());
+            tbstatecc.setText(x.arc_statetax_cc());
+            tblocaltax.setText(x.arc_localtax_acct());
+            tblocalcc.setText(x.arc_localtax_cc());
+            tbothertax.setText(x.arc_othertax_acct());
+            tbothercc.setText(x.arc_othertax_cc());
+    }
     
     
    
@@ -579,10 +523,10 @@ public class ARControl extends javax.swing.JPanel implements IBlueSeerc {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
-       if (! validateInput("updateRecord")) {
+       if (! validateInput(dbaction.update)) {
            return;
        }
-        executeTask("update", null);
+        executeTask(dbaction.update, null);
     }//GEN-LAST:event_btupdateActionPerformed
 
 

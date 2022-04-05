@@ -1433,6 +1433,77 @@ public class invData {
     }
     
     
+    public static String[] addUpdateINVCtrl(inv_ctrl x) {
+        int rows = 0;
+        String[] m = new String[2];
+        String sqlSelect = "SELECT * FROM  inv_ctrl"; // there should always be only 1 or 0 records 
+        String sqlInsert = "insert into inv_ctrl (planmultiscan, demdtoplan, printsubticket, autoitem, serialize) "
+                        + " values (?,?,?,?,?); "; 
+        String sqlUpdate = "update inv_ctrl set planmultiscan = ?, demdtoplan = ?, printsubticket = ?, autoitem = ?, serialize = ?; ";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+             PreparedStatement ps = con.prepareStatement(sqlSelect);) {
+          try (ResultSet res = ps.executeQuery();
+               PreparedStatement psi = con.prepareStatement(sqlInsert);
+               PreparedStatement psu = con.prepareStatement(sqlUpdate);) {  
+            if (! res.isBeforeFirst()) {
+            psi.setString(1, x.planmultiscan);
+            psi.setString(2, x.demdtoplan);
+            psi.setString(3, x.printsubticket);
+            psi.setString(4, x.autoitem);
+            psi.setString(5, x.serialize);
+             rows = psi.executeUpdate();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+            } else {
+            psu.setString(1, x.planmultiscan);
+            psu.setString(2, x.demdtoplan);
+            psu.setString(3, x.printsubticket);
+            psu.setString(4, x.autoitem);
+            psu.setString(5, x.serialize);
+            rows = psu.executeUpdate();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};    
+            }
+          } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+          }
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+   
+    public static inv_ctrl getINVCtrl(String[] x) {
+        inv_ctrl r = null;
+        String[] m = new String[2];
+        String sql = "select * from inv_ctrl;";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql);) {
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new inv_ctrl(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new inv_ctrl(m, 
+                                res.getString("planmultiscan"),
+                                res.getString("demdtoplan"),
+                                res.getString("printsubticket"),
+                                res.getString("autoitem"),
+                                res.getString("serialize")
+                        );
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new inv_ctrl(m);
+        }
+        return r;
+    }
+    
     
     
     
@@ -3787,6 +3858,11 @@ public class invData {
         }
     }
     
-         
+    public record inv_ctrl(String[] m, String planmultiscan, String demdtoplan, String printsubticket, 
+        String autoitem, String serialize) {
+        public inv_ctrl(String[] m) {
+            this(m, "", "", "", "", "");
+        }
+    }     
 
 }
