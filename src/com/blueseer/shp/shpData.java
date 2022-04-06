@@ -541,6 +541,71 @@ public class shpData {
         return list;
     }
     
+    
+    public static String[] addUpdateSHCtrl(ship_ctrl x) {
+        int rows = 0;
+        String[] m = new String[2];
+        String sqlSelect = "SELECT * FROM  ship_ctrl"; // there should always be only 1 or 0 records 
+        String sqlInsert = "insert into ship_ctrl (shc_confirm, shc_custitemonly) "
+                        + " values (?,?); "; 
+        String sqlUpdate = "update ship_ctrl set shc_confirm = ?, shc_custitemonly = ? ; ";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+             PreparedStatement ps = con.prepareStatement(sqlSelect);) {
+          try (ResultSet res = ps.executeQuery();
+               PreparedStatement psi = con.prepareStatement(sqlInsert);
+               PreparedStatement psu = con.prepareStatement(sqlUpdate);) {  
+            if (! res.isBeforeFirst()) {
+            psi.setString(1, x.shc_confirm);
+            psi.setString(2, x.shc_custitemonly);
+             rows = psi.executeUpdate();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+            } else {
+            psu.setString(1, x.shc_confirm);
+            psu.setString(2, x.shc_custitemonly);
+            rows = psu.executeUpdate();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};    
+            }
+          } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+          }
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+   
+    public static ship_ctrl getSHCtrl(String[] x) {
+        ship_ctrl r = null;
+        String[] m = new String[2];
+        String sql = "select * from ship_ctrl;";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql);) {
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new ship_ctrl(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new ship_ctrl(m, 
+                                res.getString("shc_confirm"),
+                                res.getString("shc_custitemonly")
+                        );
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new ship_ctrl(m);
+        }
+        return r;
+    }
+    
+    
+    
     // misc functions
     
     public static void _updateShipperStatus(String shipper, Date effdate, Connection bscon) throws SQLException {
@@ -1979,4 +2044,11 @@ public class shpData {
             );
         }
     }
+
+    public record ship_ctrl (String[] m, String shc_confirm, String shc_custitemonly) {
+        public ship_ctrl(String[] m) {
+            this(m,"","");
+        }
+    }
+
 }

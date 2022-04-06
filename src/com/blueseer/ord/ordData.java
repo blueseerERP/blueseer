@@ -1417,6 +1417,88 @@ public class ordData {
             return rows;
     }
      
+    
+    public static String[] addUpdateORCtrl(order_ctrl x) {
+        int rows = 0;
+        String[] m = new String[2];
+        String sqlSelect = "SELECT * FROM  order_ctrl"; // there should always be only 1 or 0 records 
+        String sqlInsert = "insert into order_ctrl (orc_autosource, orc_autoinvoice, orc_autoallocate, orc_custitem, " +
+                            " orc_srvm_type, orc_srvm_item_default, orc_exceedqohu) "
+                        + " values (?,?,?,?,?,?,?); "; 
+        String sqlUpdate = "update order_ctrl set orc_autosource = ?, orc_autoinvoice = ?, orc_autoallocate = ?, orc_custitem = ?, " +
+                            " orc_srvm_type = ?, orc_srvm_item_default = ?, orc_exceedqohu = ? ";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+             PreparedStatement ps = con.prepareStatement(sqlSelect);) {
+          try (ResultSet res = ps.executeQuery();
+               PreparedStatement psi = con.prepareStatement(sqlInsert);
+               PreparedStatement psu = con.prepareStatement(sqlUpdate);) {  
+            if (! res.isBeforeFirst()) {
+            psi.setString(1, x.orc_autosource);
+            psi.setString(2, x.orc_autoinvoice);
+            psi.setString(3, x.orc_autoallocate);
+            psi.setString(4, x.orc_custitem);
+            psi.setString(5, x.orc_srvm_type);
+            psi.setString(6, x.orc_srvm_item_default);
+            psi.setString(7, x.orc_exceedqohu);
+             rows = psi.executeUpdate();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+            } else {
+            psu.setString(1, x.orc_autosource);
+            psu.setString(2, x.orc_autoinvoice);
+            psu.setString(3, x.orc_autoallocate);
+            psu.setString(4, x.orc_custitem);
+            psu.setString(5, x.orc_srvm_type);
+            psu.setString(6, x.orc_srvm_item_default);
+            psu.setString(7, x.orc_exceedqohu);
+            rows = psu.executeUpdate();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};    
+            }
+          } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+          }
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+   
+    public static order_ctrl getORCtrl(String[] x) {
+        order_ctrl r = null;
+        String[] m = new String[2];
+        String sql = "select * from order_ctrl;";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql);) {
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new order_ctrl(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new order_ctrl(m, 
+                                res.getString("orc_autosource"),
+                                res.getString("orc_autoinvoice"),
+                                res.getString("orc_autoallocate"),
+                                res.getString("orc_custitem"),
+                                res.getString("orc_srvm_type"),
+                                res.getString("orc_srvm_item_default"),
+                                res.getString("orc_exceedqohu")
+                        );
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new order_ctrl(m);
+        }
+        return r;
+    }
+    
+    
+    
     // miscellaneous SQL queries
     public static Double getOrderItemAllocatedQty(String item, String site) {
        Double qty = 0.00;
@@ -1803,5 +1885,12 @@ public class ordData {
         }
     }
 
-    
+    public record order_ctrl(String[] m, String orc_autosource, String orc_autoinvoice, 
+        String orc_autoallocate, String orc_custitem, String orc_srvm_type, 
+        String orc_srvm_item_default, String orc_exceedqohu)  {
+        public order_ctrl(String[] m) {
+            this (m, "", "", "", "", "", "", "");
+        }
+    }
+
 }

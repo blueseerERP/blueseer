@@ -275,8 +275,7 @@ public class ARControl extends javax.swing.JPanel implements IBlueSeerc {
         );
         return x;
     }
-    
-    
+        
     public void updateForm() {
     tbbank.setText(x.arc_bank());
             tbaracct.setText(x.arc_default_acct());

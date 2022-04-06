@@ -882,13 +882,14 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
     
     public void getstandardcost(String parentpart) {
     ArrayList<Double> costs = invData.getItemCostElements(tbkey.getText(), "standard", ddsite.getSelectedItem().toString());
-   
+     if (costs != null) {
      tbmtlstd.setText(currformatDouble(costs.get(0) + costs.get(5)));
      tblbrstd.setText(currformatDouble(costs.get(1) + costs.get(6)));
      tbbdnstd.setText(currformatDouble(costs.get(2) + costs.get(7)));
      tbovhstd.setText(currformatDouble(costs.get(3) + costs.get(8)));
      tboutstd.setText(currformatDouble(costs.get(4) + costs.get(9)));
      tbtotcoststd.setText(currformatDouble(costs.get(10)));
+     }
      }
         
     

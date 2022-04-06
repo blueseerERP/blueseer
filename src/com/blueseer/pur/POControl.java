@@ -32,6 +32,9 @@ import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.ord.*;
+import static com.blueseer.pur.purData.addUpdatePOCtrl;
+import static com.blueseer.pur.purData.getPOCtrl;
+import com.blueseer.pur.purData.po_ctrl;
 import com.blueseer.utl.BlueSeerUtils;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -70,6 +73,7 @@ public class POControl extends javax.swing.JPanel implements IBlueSeerc {
 
     // global variable declarations
                 boolean isLoad = false;
+                private static po_ctrl x = null;
     
     
     // interface functions implemented
@@ -107,12 +111,17 @@ public class POControl extends javax.swing.JPanel implements IBlueSeerc {
         }
  
         
-       public void done() {
+      public void done() {
             try {
             String[] message = get();
            
             BlueSeerUtils.endTask(message);
-          
+            if (this.type.equals("get")) {
+             updateForm(); 
+           } else {
+             initvars(null);  
+             setAction(message);
+           }
             
             } catch (Exception e) {
                 MainFrame.bslog(e);
@@ -180,9 +189,9 @@ public class POControl extends javax.swing.JPanel implements IBlueSeerc {
     public void setAction(String[] x) {
         String[] m = new String[2];
         if (x[0].equals("0")) {
-            m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
+            bsmf.MainFrame.show(BlueSeerUtils.updateRecordSuccess); 
         } else {
-           m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
+            bsmf.MainFrame.show(BlueSeerUtils.updateRecordError);  
         }
     }
     
@@ -200,98 +209,28 @@ public class POControl extends javax.swing.JPanel implements IBlueSeerc {
     }
     
     public String[] updateRecord(String[] x) {
-     String[] m = new String[2];
-     
-     try {
-           
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                
-                String venditemonly = "";
-                   if ( cbvenditem.isSelected() ) {
-                venditemonly = "1";    
-                } else {
-                    venditemonly = "0";
-                }
-                
-                    int i = 0;
-                    res = st.executeQuery("SELECT *  FROM  po_ctrl ;");
-                    while (res.next()) {
-                        i++;
-                    }
-                     if (i == 0) {
-
-                   st.executeUpdate("insert into po_ctrl (poc_venditem, poc_rcpt_acct, poc_rcpt_cc ) values (" + "'" + venditemonly + "'" + "," +
-                                    "'" + tbacct.getText() + "'" + "," +
-                                    "'" + tbcc.getText() + "'" +
-                                    ")" + ";");  
-                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
-                } else {
-                    st.executeUpdate("update po_ctrl set " 
-                            + " poc_venditem = " + "'" + venditemonly + "'" + "," 
-                            + " poc_rcpt_acct = " + "'" + tbacct.getText() + "'" + "," 
-                            + " poc_rcpt_cc = " + "'" + tbcc.getText() + "'" +                                    
-                            ";");   
-                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
-                }
-                    
-                    
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};  
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1020, Thread.currentThread().getStackTrace()[1].getMethodName())};
-        }
-     
-     return m;
+     String[] m = addUpdatePOCtrl(createRecord());
+        return m;
      }
       
-    public String[] getRecord(String[] x) {
-       String[] m = new String[2];
-       
-        try {
-
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                
-                int i = 0;
-                
-                res = st.executeQuery("SELECT * FROM  po_ctrl ;");
-                    while (res.next()) {
-                        i++;
-                        cbvenditem.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("poc_venditem")));
-                        tbacct.setText(res.getString("poc_rcpt_acct"));
-                        tbcc.setText(res.getString("poc_rcpt_cc"));
-                    }
-               
-                // set Action if Record found (i > 0)
-                setAction(m);
-                
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};  
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1020, Thread.currentThread().getStackTrace()[1].getMethodName())};  
-        }
-      return m;
+    public String[] getRecord(String[] key) {
+       x = getPOCtrl(key);
+        return x.m();
     }
     
+    public po_ctrl createRecord() {
+        po_ctrl x = new po_ctrl(null,
+           tbacct.getText(),
+           tbcc.getText(),
+           String.valueOf(BlueSeerUtils.boolToInt(cbvenditem.isSelected())));
+        return x;
+    }
+        
+    public void updateForm() {
+    cbvenditem.setSelected(BlueSeerUtils.ConvertStringToBool(x.poc_venditem()));
+    tbacct.setText(x.poc_rcpt_acct());
+    tbcc.setText(x.poc_rcpt_cc());
+    }
     
     
     /**

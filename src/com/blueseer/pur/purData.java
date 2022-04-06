@@ -631,6 +631,73 @@ public class purData {
     }
        
     
+    public static String[] addUpdatePOCtrl(po_ctrl x) {
+        int rows = 0;
+        String[] m = new String[2];
+        String sqlSelect = "SELECT * FROM  po_ctrl"; // there should always be only 1 or 0 records 
+        String sqlInsert = "insert into po_ctrl (poc_rcpt_acct, poc_rcpt_cc, poc_venditem) "
+                        + " values (?,?,?); "; 
+        String sqlUpdate = "update po_ctrl set poc_rcpt_acct = ?, poc_rcpt_cc = ?, poc_venditem = ? ; ";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+             PreparedStatement ps = con.prepareStatement(sqlSelect);) {
+          try (ResultSet res = ps.executeQuery();
+               PreparedStatement psi = con.prepareStatement(sqlInsert);
+               PreparedStatement psu = con.prepareStatement(sqlUpdate);) {  
+            if (! res.isBeforeFirst()) {
+            psi.setString(1, x.poc_rcpt_acct);
+            psi.setString(2, x.poc_rcpt_cc);
+            psi.setString(3, x.poc_venditem);
+             rows = psi.executeUpdate();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+            } else {
+            psu.setString(1, x.poc_rcpt_acct);
+            psu.setString(2, x.poc_rcpt_cc);
+            psu.setString(3, x.poc_venditem);
+            rows = psu.executeUpdate();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};    
+            }
+          } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+          }
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+   
+    public static po_ctrl getPOCtrl(String[] x) {
+        po_ctrl r = null;
+        String[] m = new String[2];
+        String sql = "select * from po_ctrl;";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql);) {
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new po_ctrl(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new po_ctrl(m, 
+                                res.getString("poc_rcpt_acct"),
+                                res.getString("poc_rcpt_cc"),
+                                res.getString("poc_venditem")
+                        );
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new po_ctrl(m);
+        }
+        return r;
+    }
+    
+    
+    
     // miscellaneous SQL queries
     public static ArrayList<String> getPOLines(String order) {
         ArrayList<String> lines = new ArrayList<String>();
@@ -806,5 +873,9 @@ public class purData {
         }
     }
     
-   
+    public record po_ctrl (String[] m, String poc_rcpt_acct, String poc_rcpt_cc, String poc_venditem ) {
+        public po_ctrl(String[] m) {
+            this(m,"", "", "");
+        }
+    } 
 }

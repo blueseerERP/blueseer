@@ -31,6 +31,9 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.shp.shpData.addUpdateSHCtrl;
+import static com.blueseer.shp.shpData.getSHCtrl;
+import com.blueseer.shp.shpData.ship_ctrl;
 import com.blueseer.utl.BlueSeerUtils;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -68,6 +71,7 @@ public class ShipperControl extends javax.swing.JPanel implements IBlueSeerc {
     
     // global variable declarations
                 boolean isLoad = false;
+                private static ship_ctrl x = null;
     
     
     // interface functions implemented
@@ -105,12 +109,17 @@ public class ShipperControl extends javax.swing.JPanel implements IBlueSeerc {
         }
  
         
-       public void done() {
+      public void done() {
             try {
             String[] message = get();
            
             BlueSeerUtils.endTask(message);
-          
+            if (this.type.equals("get")) {
+             updateForm(); 
+           } else {
+             initvars(null);  
+             setAction(message);
+           }
             
             } catch (Exception e) {
                 MainFrame.bslog(e);
@@ -178,9 +187,9 @@ public class ShipperControl extends javax.swing.JPanel implements IBlueSeerc {
     public void setAction(String[] x) {
         String[] m = new String[2];
         if (x[0].equals("0")) {
-            m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
+            bsmf.MainFrame.show(BlueSeerUtils.updateRecordSuccess); 
         } else {
-           m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
+            bsmf.MainFrame.show(BlueSeerUtils.updateRecordError);  
         }
     }
     
@@ -198,99 +207,26 @@ public class ShipperControl extends javax.swing.JPanel implements IBlueSeerc {
     }
     
     public String[] updateRecord(String[] x) {
-     String[] m = new String[2];
-     
-     try {
-           
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                
-                    String confirm = "";
-                String custitemonly = "";
-                if ( cbconfirm.isSelected() ) {
-                confirm = "1";    
-                } else {
-                    confirm = "0";
-                }
-                
-                 if ( cbcustitem.isSelected() ) {
-                custitemonly = "1";    
-                } else {
-                    custitemonly = "0";
-                }
-                
-                    int i = 0;
-                    res = st.executeQuery("SELECT *  FROM  ship_ctrl ;");
-                    while (res.next()) {
-                        i++;
-                    }
-                     if (i == 0) {
-                          st.executeUpdate("insert into ship_ctrl values (" + "'" + confirm + "'" + "," + "'" + custitemonly + "'" + ")" + ";");              
-                          m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
-                } else {
-                    st.executeUpdate("update ship_ctrl set " 
-                            + " shc_confirm = " + "'" + confirm + "'" + "," 
-                            + " shc_custitemonly = " + "'" + custitemonly + "'" + 
-                            ";");   
-                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
-                }
-                    
-                    
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};  
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1020, Thread.currentThread().getStackTrace()[1].getMethodName())};
-        }
-     
-     return m;
+     String[] m = addUpdateSHCtrl(createRecord());
+        return m;
      }
       
-    public String[] getRecord(String[] x) {
-       String[] m = new String[2];
-       
-        try {
-
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                
-                int i = 0;
-                
-                res = st.executeQuery("SELECT * FROM  ship_ctrl ;");
-                    while (res.next()) {
-                        i++;
-                        cbconfirm.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("shc_confirm")));
-                        cbcustitem.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("shc_custitemonly")));
-                    }
-               
-                // set Action if Record found (i > 0)
-                setAction(m);
-                
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};  
-        }
-      return m;
+    public String[] getRecord(String[] key) {
+       x = getSHCtrl(key);
+        return x.m();
     }
     
+    public ship_ctrl createRecord() {
+        ship_ctrl x = new ship_ctrl(null, 
+           String.valueOf(BlueSeerUtils.boolToInt(cbconfirm.isSelected())),
+           String.valueOf(BlueSeerUtils.boolToInt(cbcustitem.isSelected())));
+        return x;
+    }
+        
+    public void updateForm() {
+    cbconfirm.setSelected(BlueSeerUtils.ConvertStringToBool(x.shc_confirm()));
+    cbcustitem.setSelected(BlueSeerUtils.ConvertStringToBool(x.shc_custitemonly()));
+    }
     
     
   

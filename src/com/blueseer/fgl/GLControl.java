@@ -31,6 +31,9 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.fgl.fglData.addUpdateGLCtrl;
+import static com.blueseer.fgl.fglData.getGLCtrl;
+import com.blueseer.fgl.fglData.gl_ctrl;
 import com.blueseer.utl.BlueSeerUtils;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -67,7 +70,7 @@ public class GLControl extends javax.swing.JPanel implements IBlueSeerc {
     
     // global variable declarations
                 boolean isLoad = false;
-    
+                private static gl_ctrl x = null;
     
     // interface functions implemented
     public void executeTask(dbaction x, String[] y) { 
@@ -104,12 +107,17 @@ public class GLControl extends javax.swing.JPanel implements IBlueSeerc {
         }
  
         
-       public void done() {
+      public void done() {
             try {
             String[] message = get();
            
             BlueSeerUtils.endTask(message);
-          
+            if (this.type.equals("get")) {
+             updateForm(); 
+           } else {
+             initvars(null);  
+             setAction(message);
+           }
             
             } catch (Exception e) {
                 MainFrame.bslog(e);
@@ -181,9 +189,9 @@ public class GLControl extends javax.swing.JPanel implements IBlueSeerc {
     public void setAction(String[] x) {
         String[] m = new String[2];
         if (x[0].equals("0")) {
-            m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
+            bsmf.MainFrame.show(BlueSeerUtils.updateRecordSuccess); 
         } else {
-           m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
+            bsmf.MainFrame.show(BlueSeerUtils.updateRecordError);  
         }
     }
     
@@ -239,110 +247,37 @@ public class GLControl extends javax.swing.JPanel implements IBlueSeerc {
     }
     
     public String[] updateRecord(String[] x) {
-     String[] m = new String[2];
-     
-     try {
-           
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                
-                    
-                String autopost = "";
-                  if ( cbautopost.isSelected() ) {
-                autopost = "1";    
-                } else {
-                    autopost = "0";
-                }
-                    int i = 0;
-                    res = st.executeQuery("SELECT *  FROM  gl_ctrl ;");
-                    while (res.next()) {
-                        i++;
-                    }
-                     if (i == 0) {
-
-                    st.executeUpdate("insert into gl_ctrl values (" + "'" + tbbsfrom.getText() + "'" + ","
-                            + "'" + tbbsto.getText() + "'" + "," 
-                            + "'" + tbisfrom.getText() + "'" + ","
-                            + "'" + tbisto.getText() + "'" + ","
-                            + "'" + tbearnings.getText() + "'" + ","
-                            + "'" + tbforeignreal.getText() + "'"  + ","
-                            + "'" + autopost + "'"        
-                            + " )" + ";");              
-                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
-                } else {
-                   st.executeUpdate("update gl_ctrl set " 
-                            + " gl_bs_from = " + "'" + tbbsfrom.getText() + "'" + ","
-                            + " gl_bs_to = " + "'" + tbbsto.getText() + "'" + "," 
-                            + " gl_is_from = " + "'" + tbisfrom.getText() + "'" + "," 
-                            + " gl_earnings = " + "'" + tbearnings.getText() + "'" + "," 
-                            + " gl_foreignreal = " + "'" + tbforeignreal.getText() + "'" + ","         
-                            + " gl_is_to = " + "'" + tbisto.getText() + "'" + ","
-                            + " gl_autopost = " + "'" + autopost + "'" +
-                            ";");   
-                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
-                }
-                    
-                    
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError};  
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordConnError};
-        }
-     
-     return m;
+     String[] m = addUpdateGLCtrl(createRecord());
+        return m;
      }
       
-    public String[] getRecord(String[] x) {
-       String[] m = new String[]{"0",BlueSeerUtils.updateRecordSuccess};
-       
-        try {
-
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                
-                int i = 0;
-                
-                res = st.executeQuery("select * from gl_ctrl;");
-                while (res.next()) {
-                    i++;
-                    tbbsfrom.setText(res.getString("gl_bs_from"));
-                    tbbsto.setText(res.getString("gl_bs_to"));
-                    tbisfrom.setText(res.getString("gl_is_from"));
-                    tbisto.setText(res.getString("gl_is_to"));
-                    tbearnings.setText(res.getString("gl_earnings"));
-                    tbforeignreal.setText(res.getString("gl_foreignreal"));
-                    cbautopost.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("gl_autopost")));
-                }
-               
-                // set Action if Record found (i > 0)
-                setAction(m);
-                
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};  
-        }
-      return m;
+    public String[] getRecord(String[] key) {
+       x = getGLCtrl(key);
+        return x.m();
     }
     
+    public gl_ctrl createRecord() {
+        gl_ctrl x = new gl_ctrl(null, 
+        tbbsfrom.getText(),
+        tbbsto.getText(),
+        tbisfrom.getText(),
+        tbisto.getText(),
+        tbearnings.getText(),
+        tbforeignreal.getText(),
+        String.valueOf(BlueSeerUtils.boolToInt(cbautopost.isSelected()))
+        );
+        return x;
+    }
+        
+    public void updateForm() {
+    tbbsfrom.setText(x.gl_bs_from());
+    tbbsto.setText(x.gl_bs_to());
+    tbisfrom.setText(x.gl_is_from());
+    tbisto.setText(x.gl_is_to());
+    tbearnings.setText(x.gl_earnings());
+    tbforeignreal.setText(x.gl_foreignreal());
+    cbautopost.setSelected(BlueSeerUtils.ConvertStringToBool(x.gl_autopost()));
+    }
     
     
    

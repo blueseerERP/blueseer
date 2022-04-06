@@ -329,6 +329,67 @@ public class venData {
         return r;
     }
     
+    
+    public static String[] addUpdateVDCtrl(vd_ctrl x) {
+        int rows = 0;
+        String[] m = new String[2];
+        String sqlSelect = "SELECT * FROM  vd_ctrl"; // there should always be only 1 or 0 records 
+        String sqlInsert = "insert into vd_ctrl (vdc_autovend) "
+                        + " values (?); "; 
+        String sqlUpdate = "update vd_ctrl set vdc_autovend = ?; ";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+             PreparedStatement ps = con.prepareStatement(sqlSelect);) {
+          try (ResultSet res = ps.executeQuery();
+               PreparedStatement psi = con.prepareStatement(sqlInsert);
+               PreparedStatement psu = con.prepareStatement(sqlUpdate);) {  
+            if (! res.isBeforeFirst()) {
+            psi.setString(1, x.vdc_autovend);
+             rows = psi.executeUpdate();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+            } else {
+            psu.setString(1, x.vdc_autovend);
+            rows = psu.executeUpdate();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};    
+            }
+          } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+          }
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+   
+    public static vd_ctrl getVDCtrl(String[] x) {
+        vd_ctrl r = null;
+        String[] m = new String[2];
+        String sql = "select * from vd_ctrl;";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql);) {
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new vd_ctrl(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new vd_ctrl(m, 
+                                res.getString("vdc_autovend")
+                        );
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new vd_ctrl(m);
+        }
+        return r;
+    }
+    
+    
     // misc
     
     public static ArrayList getVendMstrList() {
@@ -735,5 +796,11 @@ return myitem;
                     );
         }
     }
+   
+     public record vd_ctrl (String[] m, String vdc_autovend) {
+        public vd_ctrl(String[] m) {
+            this(m,"");
+        }
+    } 
     
 }

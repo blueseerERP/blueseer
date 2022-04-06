@@ -350,6 +350,172 @@ public class fglData {
         return r;
     }
     
+    
+    public static String[] addUpdateGLCtrl(gl_ctrl x) {
+        int rows = 0;
+        String[] m = new String[2];
+        String sqlSelect = "SELECT * FROM  gl_ctrl"; // there should always be only 1 or 0 records 
+        String sqlInsert = "insert into gl_ctrl (gl_bs_from, gl_bs_to, gl_is_from, " +
+        "gl_is_to, gl_earnings, gl_foreignreal, gl_autopost ) "
+                        + " values (?,?,?,?,?,?,?); "; 
+        String sqlUpdate = "update gl_ctrl set gl_bs_from = ?, gl_bs_to = ?, gl_is_from = ?, " +
+        "gl_is_to = ?, gl_earnings = ?, gl_foreignreal = ?, gl_autopost = ? ";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+             PreparedStatement ps = con.prepareStatement(sqlSelect);) {
+          try (ResultSet res = ps.executeQuery();
+               PreparedStatement psi = con.prepareStatement(sqlInsert);
+               PreparedStatement psu = con.prepareStatement(sqlUpdate);) {  
+            if (! res.isBeforeFirst()) {
+            psi.setString(1, x.gl_bs_from);
+            psi.setString(2, x.gl_bs_to);
+            psi.setString(3, x.gl_is_from);
+            psi.setString(4, x.gl_is_to);
+            psi.setString(5, x.gl_earnings);
+            psi.setString(6, x.gl_foreignreal);
+            psi.setString(7, x.gl_autopost);
+             rows = psi.executeUpdate();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+            } else {
+            psu.setString(1, x.gl_bs_from);
+            psu.setString(2, x.gl_bs_to);
+            psu.setString(3, x.gl_is_from);
+            psu.setString(4, x.gl_is_to);
+            psu.setString(5, x.gl_earnings);
+            psu.setString(6, x.gl_foreignreal);
+            psu.setString(7, x.gl_autopost);
+            rows = psu.executeUpdate();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};    
+            }
+          } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+          }
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+   
+    public static gl_ctrl getGLCtrl(String[] x) {
+        gl_ctrl r = null;
+        String[] m = new String[2];
+        String sql = "select * from gl_ctrl;";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql);) {
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new gl_ctrl(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new gl_ctrl(m, 
+                                res.getString("gl_bs_from"),
+                                res.getString("gl_bs_to"),
+                                res.getString("gl_is_from"),
+                                res.getString("gl_is_to"),
+                                res.getString("gl_earnings"),
+                                res.getString("gl_foreignreal"),
+                                res.getString("gl_autopost")
+                        );
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new gl_ctrl(m);
+        }
+        return r;
+    }
+    
+    
+    public static String[] addUpdatePAYCtrl(pay_ctrl x) {
+        int rows = 0;
+        String[] m = new String[2];
+        String sqlSelect = "SELECT * FROM  pay_ctrl"; // there should always be only 1 or 0 records 
+        String sqlInsert = "insert into pay_ctrl (payc_bank, payc_labor_acct, payc_labor_cc, " +
+        " payc_salaried_acct,  payc_salaried_cc,  payc_payrolltax_acct,  payc_payrolltax_cc, " +
+        "payc_withhold_acct ) "
+                        + " values (?,?,?,?,?,?,?,?); "; 
+        String sqlUpdate = "update pay_ctrl set payc_bank = ?, payc_labor_acct = ?, payc_labor_cc = ?, " +
+        " payc_salaried_acct = ?,  payc_salaried_cc = ?,  payc_payrolltax_acct = ?,  payc_payrolltax_cc = ?, " +
+        "payc_withhold_acct = ? ; ";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+             PreparedStatement ps = con.prepareStatement(sqlSelect);) {
+          try (ResultSet res = ps.executeQuery();
+               PreparedStatement psi = con.prepareStatement(sqlInsert);
+               PreparedStatement psu = con.prepareStatement(sqlUpdate);) {  
+            if (! res.isBeforeFirst()) {
+            psi.setString(1, x.payc_bank);
+            psi.setString(2, x.payc_labor_acct);
+            psi.setString(3, x.payc_labor_cc);
+            psi.setString(4, x.payc_salaried_acct);
+            psi.setString(5, x.payc_salaried_cc);
+            psi.setString(6, x.payc_payrolltax_acct);
+            psi.setString(7, x.payc_payrolltax_cc);
+            psi.setString(8, x.payc_withhold_acct);
+             rows = psi.executeUpdate();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+            } else {
+            psu.setString(1, x.payc_bank);
+            psu.setString(2, x.payc_labor_acct);
+            psu.setString(3, x.payc_labor_cc);
+            psu.setString(4, x.payc_salaried_acct);
+            psu.setString(5, x.payc_salaried_cc);
+            psu.setString(6, x.payc_payrolltax_acct);
+            psu.setString(7, x.payc_payrolltax_cc);
+            psu.setString(8, x.payc_withhold_acct);
+            rows = psu.executeUpdate();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};    
+            }
+          } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+          }
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+   
+    public static pay_ctrl getPAYCtrl(String[] x) {
+        pay_ctrl r = null;
+        String[] m = new String[2];
+        String sql = "select * from pay_ctrl;";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql);) {
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new pay_ctrl(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new pay_ctrl(m, 
+                                res.getString("payc_bank"),
+                                res.getString("payc_labor_acct"),
+                                res.getString("payc_labor_cc"),
+                                res.getString("payc_salaried_acct"),
+                                res.getString("payc_salaried_cc"),
+                                res.getString("payc_payrolltax_acct"),
+                                res.getString("payc_payrolltax_cc"),
+                                res.getString("payc_withhold_acct")
+                        );
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new pay_ctrl(m);
+        }
+        return r;
+    }
+    
+    
     // misc functions
      
     public static String setGLRecNbr(String type) {
@@ -4346,6 +4512,21 @@ return myarray;
     public record CurrMstr(String[] m, String id, String desc) {
         public CurrMstr(String[] m) {
             this(m, "", "");
+        }
+    }
+    
+    public record gl_ctrl(String[] m, String gl_bs_from, String gl_bs_to, String gl_is_from,
+        String gl_is_to, String gl_earnings, String gl_foreignreal, String gl_autopost) {
+        public gl_ctrl(String[] m) {
+            this(m, "", "", "", "", "", "", "");
+        }
+    }
+    
+    public record pay_ctrl(String[] m, String payc_bank, String payc_labor_acct, String payc_labor_cc,
+        String payc_salaried_acct, String payc_salaried_cc, String payc_payrolltax_acct, String payc_payrolltax_cc,
+        String payc_withhold_acct ) {
+        public pay_ctrl(String[] m) {
+            this(m, "", "", "", "", "", "", "", "");
         }
     }
     

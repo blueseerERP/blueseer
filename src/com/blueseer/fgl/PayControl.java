@@ -32,6 +32,9 @@ import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.far.*;
+import static com.blueseer.fgl.fglData.addUpdatePAYCtrl;
+import static com.blueseer.fgl.fglData.getPAYCtrl;
+import com.blueseer.fgl.fglData.pay_ctrl;
 import com.blueseer.utl.BlueSeerUtils;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -66,7 +69,7 @@ public class PayControl extends javax.swing.JPanel implements IBlueSeerc {
 
     // global variable declarations
                 boolean isLoad = false;
-    
+                private static pay_ctrl x = null;
     
     // interface functions implemented
     public void executeTask(dbaction x, String[] y) { 
@@ -103,12 +106,17 @@ public class PayControl extends javax.swing.JPanel implements IBlueSeerc {
         }
  
         
-       public void done() {
+      public void done() {
             try {
             String[] message = get();
            
             BlueSeerUtils.endTask(message);
-          
+            if (this.type.equals("get")) {
+             updateForm(); 
+           } else {
+             initvars(null);  
+             setAction(message);
+           }
             
             } catch (Exception e) {
                 MainFrame.bslog(e);
@@ -177,9 +185,9 @@ public class PayControl extends javax.swing.JPanel implements IBlueSeerc {
     public void setAction(String[] x) {
         String[] m = new String[2];
         if (x[0].equals("0")) {
-            m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
+            bsmf.MainFrame.show(BlueSeerUtils.updateRecordSuccess); 
         } else {
-           m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
+            bsmf.MainFrame.show(BlueSeerUtils.updateRecordError);  
         }
     }
     
@@ -228,107 +236,39 @@ public class PayControl extends javax.swing.JPanel implements IBlueSeerc {
     }
     
     public String[] updateRecord(String[] x) {
-     String[] m = new String[2];
-     
-     try {
-           
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                
-                    
-                
-                    int i = 0;
-                    res = st.executeQuery("SELECT *  FROM  pay_ctrl ;");
-                    while (res.next()) {
-                        i++;
-                    }
-                     if (i == 0) {
-
-                    st.executeUpdate("insert into pay_ctrl values (" + "'" + tbbank.getText() + "'" + ","
-                            + "'" + tblbracct.getText() + "'" + "," 
-                            + "'" + tblbrcc.getText() + "'" + ","
-                            + "'" + tbsalacct.getText() + "'" + ","
-                            + "'" + tbsalcc.getText() + "'" + ","
-                            + "'" + tbtaxacct.getText() + "'" + ","
-                            + "'" + tbtaxcc.getText() + "'" + ","
-                            + "'" + tbwithholdacct.getText() + "'"
-                            + ")" + ";");                 
-                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
-                } else {
-                    st.executeUpdate("update pay_ctrl set " 
-                            + " payc_bank = " + "'" + tbbank.getText() + "'" + ","
-                            + " payc_labor_acct = " + "'" + tblbracct.getText() + "'" + "," 
-                            + " payc_labor_cc = " + "'" + tblbrcc.getText() + "'" + "," 
-                            + " payc_salaried_acct = " + "'" + tbsalacct.getText() + "'" + ","
-                            + " payc_salaried_cc = " + "'" + tbsalcc.getText() + "'" + ","
-                            + " payc_withhold_acct = " + "'" + tbwithholdacct.getText() + "'" + ","
-                            + " payc_payrolltax_acct = " + "'" + tbtaxacct.getText() + "'" + ","
-                            + " payc_payrolltax_cc = " + "'" + tbtaxcc.getText() + "'" +         
-                            ";");   
-                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
-                }
-                    
-                    
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError};  
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordConnError};
-        }
-     
-     return m;
+     String[] m = addUpdatePAYCtrl(createRecord());
+        return m;
      }
       
-    public String[] getRecord(String[] x) {
-       String[] m = new String[]{"0",BlueSeerUtils.getRecordSuccess};
-       
-        try {
-
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                
-                int i = 0;
-                res = st.executeQuery("select * from pay_ctrl;");
-                while (res.next()) {
-                    i++;
-                    tbbank.setText(res.getString("payc_bank"));
-                    tblbracct.setText(res.getString("payc_labor_acct"));
-                    tblbrcc.setText(res.getString("payc_labor_cc"));
-                    tbsalacct.setText(res.getString("payc_salaried_acct"));
-                    tbsalcc.setText(res.getString("payc_salaried_cc"));
-                    tbtaxacct.setText(res.getString("payc_payrolltax_acct"));
-                    tbtaxcc.setText(res.getString("payc_payrolltax_cc"));
-                    tbwithholdacct.setText(res.getString("payc_withhold_acct"));
-                }
-               
-                // set Action if Record found (i > 0)
-                setAction(m);
-                
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};  
-        }
-      return m;
+    public String[] getRecord(String[] key) {
+       x = getPAYCtrl(key);
+        return x.m();
     }
     
+    public pay_ctrl createRecord() {
+        pay_ctrl x = new pay_ctrl(null, 
+        tbbank.getText(),         
+        tblbracct.getText(),
+        tblbrcc.getText(),
+        tbsalacct.getText(),
+        tbsalcc.getText(),
+        tbtaxacct.getText(),
+        tbtaxcc.getText(),
+        tbwithholdacct.getText()
+        );
+        return x;
+    }
+        
+    public void updateForm() {
+    tbbank.setText(x.payc_bank());         
+        tblbracct.setText(x.payc_labor_acct());
+        tblbrcc.setText(x.payc_labor_cc());
+        tbsalacct.setText(x.payc_salaried_acct());
+        tbsalcc.setText(x.payc_salaried_cc());
+        tbtaxacct.setText(x.payc_payrolltax_acct());
+        tbtaxcc.setText(x.payc_payrolltax_cc());
+        tbwithholdacct.setText(x.payc_withhold_acct());
+    }
     
     
     

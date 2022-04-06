@@ -105,7 +105,19 @@ public class invData {
                 "0", // expire days
                 "0" // phantom boolean
                 );
+                item_cost y = new item_cost(null, 
+                    ld[0], 
+                    ld[2], 
+                    "standard",
+                    String.valueOf((bsParseDouble(ld[10]) + bsParseDouble(ld[11]) + bsParseDouble(ld[12]))),
+                    ld[10], 
+                    "0", 
+                    "0", 
+                    ld[11], 
+                    ld[12],
+                    "0", "0", "0", "0", "0");
                 invData._addItemMstr(x, con, true);
+                invData._addItemCostRec(y, con, true);
             }
         } catch (SQLException s) {
              MainFrame.bslog(s);
@@ -258,7 +270,73 @@ public class invData {
             res.close();
         return rows;
     }
+    
+    private static double _addItemCostRec(item_cost x, Connection con, boolean addupdate) throws SQLException {
         
+         int rows = 0;
+        String sqlSelect = "SELECT itc_item FROM item_cost where itc_item = ? "
+                        + " AND itc_site = ? "
+                        + " AND itc_set = ? ;";
+        String sqlInsert = "insert into item_cost (itc_item, itc_site, itc_set, itc_total,  "
+                + "itc_mtl_top, itc_lbr_top, itc_bdn_top, itc_ovh_top, itc_out_top, "
+                + "itc_mtl_low, itc_lbr_low, itc_bdn_low, itc_ovh_low, itc_out_low  ) "
+                 + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
+        String sqlUpdate = "update item_cost set itc_total = ?, "
+                + "itc_mtl_top = ?, itc_lbr_top = ?, itc_bdn_top = ?, itc_ovh_top = ?, itc_out_top = ?, "
+                + "itc_mtl_low = ?, itc_lbr_low = ?, itc_bdn_low = ?, itc_ovh_low = ?, itc_out_low  = ? "
+                + " where itc_item = ? and itc_site = ? and itc_set = ? ; ";
+            PreparedStatement ps = con.prepareStatement(sqlSelect);
+            ps.setString(1, x.itc_item);
+            ps.setString(2, x.itc_site);
+            ps.setString(3, x.itc_set);
+            ResultSet res = ps.executeQuery();
+            PreparedStatement psi = con.prepareStatement(sqlInsert);
+            PreparedStatement psu = con.prepareStatement(sqlUpdate);
+            if (! res.isBeforeFirst()) {
+            psi.setString(1, x.itc_item);
+            psi.setString(2, x.itc_site);
+            psi.setString(3, x.itc_set);
+            psi.setString(4, x.itc_total);
+            psi.setString(5, x.itc_mtl_top);
+            psi.setString(6, x.itc_lbr_top);
+            psi.setString(7, x.itc_bdn_top);
+            psi.setString(8, x.itc_ovh_top);
+            psi.setString(9, x.itc_out_top);
+            psi.setString(10, x.itc_mtl_low);
+            psi.setString(11, x.itc_lbr_low);
+            psi.setString(12, x.itc_bdn_low);
+            psi.setString(13, x.itc_ovh_low);
+            psi.setString(14, x.itc_out_low);
+           
+            rows = psi.executeUpdate();
+            } else {
+                if (addupdate) {
+            psu.setString(12, x.itc_item);
+            psu.setString(13, x.itc_site);
+            psu.setString(14, x.itc_set);
+            psu.setString(1, x.itc_total);
+            psu.setString(2, x.itc_mtl_top);
+            psu.setString(3, x.itc_lbr_top);
+            psu.setString(4, x.itc_bdn_top);
+            psu.setString(5, x.itc_ovh_top);
+            psu.setString(6, x.itc_out_top);
+            psu.setString(7, x.itc_mtl_low);
+            psu.setString(8, x.itc_lbr_low);
+            psu.setString(9, x.itc_bdn_low);
+            psu.setString(10, x.itc_ovh_low);
+            psu.setString(11, x.itc_out_low);
+            
+            rows = psu.executeUpdate();
+                }
+            }
+            psu.close();
+            ps.close();
+            psi.close();
+            res.close();
+        return rows;
+    }
+    
+    
     public static String[] updateItemMstr(item_mstr x) {
         String[] m = new String[2];
         if (x == null) {
@@ -3774,6 +3852,7 @@ public class invData {
      }
     
     
+    
                
     public record item_mstr(String[] m, String it_item, String it_desc, String it_lotsize,
         String it_sell_price, String it_pur_price, String it_ovh_cost, String it_out_cost,
@@ -3792,6 +3871,29 @@ public class invData {
         }
     }
     
+    public record item_cost(String[] m, String itc_item, String itc_site, String itc_set, 
+        String itc_total, String itc_mtl_top, String itc_lbr_top, String itc_bdn_top,
+        String itc_ovh_top, String itc_out_top, String itc_mtl_low, String itc_lbr_low,
+        String itc_bdn_low, String itc_ovh_low, String itc_out_low) {
+        public item_cost(String[] m) {
+            this(m, "", "", "", "", "", "", "", "", "", "",
+                    "", "", "", "");
+        }
+    }
+    
+    public record itemr_cost(String[] m, String itr_item, String itr_site, String itr_set, 
+        String itr_routing, String itr_op, 
+        String itr_total, String itr_mtl_top, String itr_lbr_top, String itr_bdn_top,
+        String itr_ovh_top, String itr_out_top, String itr_mtl_low, String itr_lbr_low,
+        String itr_bdn_low, String itr_ovh_low, String itr_out_low,
+        String itr_date, String itr_userid) {
+        public itemr_cost(String[] m) {
+            this(m, "", "", "", "", "", "", "", "", "", "",
+                    "", "", "", "", "", "", "", "");
+        }
+    }
+    
+
     
     public record pbm_mstr(String[] m, String ps_parent, String ps_child,
         String ps_qty_per, String ps_op, String ps_ref, String ps_type, String ps_bom) {

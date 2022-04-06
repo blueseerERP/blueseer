@@ -231,8 +231,7 @@ public class InventoryCtrl extends javax.swing.JPanel implements IBlueSeerc {
         );
         return x;
     }
-    
-    
+        
     public void updateForm() {
     cbmultiplan.setSelected(BlueSeerUtils.ConvertStringToBool(x.planmultiscan()));
     cbdemdtoplan.setSelected(BlueSeerUtils.ConvertStringToBool(x.demdtoplan()));      

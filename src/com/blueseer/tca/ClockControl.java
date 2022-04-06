@@ -31,6 +31,9 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.tca.tcaData.addUpdateCLKCtrl;
+import com.blueseer.tca.tcaData.clock_ctrl;
+import static com.blueseer.tca.tcaData.getCLKCtrl;
 import com.blueseer.utl.BlueSeerUtils;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
 import com.blueseer.utl.IBlueSeerc;
@@ -66,6 +69,7 @@ public class ClockControl extends javax.swing.JPanel implements IBlueSeerc {
     
     // global variable declarations
                 boolean isLoad = false;
+                private static clock_ctrl x = null;
     
     
     // interface functions implemented
@@ -103,12 +107,17 @@ public class ClockControl extends javax.swing.JPanel implements IBlueSeerc {
         }
  
         
-       public void done() {
+      public void done() {
             try {
             String[] message = get();
            
             BlueSeerUtils.endTask(message);
-          
+            if (this.type.equals("get")) {
+             updateForm(); 
+           } else {
+             initvars(null);  
+             setAction(message);
+           }
             
             } catch (Exception e) {
                 MainFrame.bslog(e);
@@ -176,9 +185,9 @@ public class ClockControl extends javax.swing.JPanel implements IBlueSeerc {
     public void setAction(String[] x) {
         String[] m = new String[2];
         if (x[0].equals("0")) {
-            m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
+            bsmf.MainFrame.show(BlueSeerUtils.updateRecordSuccess); 
         } else {
-           m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
+            bsmf.MainFrame.show(BlueSeerUtils.updateRecordError);  
         }
     }
     
@@ -196,90 +205,24 @@ public class ClockControl extends javax.swing.JPanel implements IBlueSeerc {
     }
     
     public String[] updateRecord(String[] x) {
-     String[] m = new String[2];
-     
-     try {
-           
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                
-                    String scancard = "";
-                if ( cbscancard.isSelected() ) {
-                scancard = "1";    
-                } else {
-                    scancard = "0";
-                }
-                
-                    int i = 0;
-                    res = st.executeQuery("SELECT *  FROM  clock_ctrl ;");
-                    while (res.next()) {
-                        i++;
-                    }
-                     if (i == 0) {
-                     st.executeUpdate("insert into clock_ctrl values (" + "'" + scancard + "'" + ")" + ";");  
-                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
-                } else {
-                    st.executeUpdate("update clock_ctrl set " 
-                            + " clctrl_scan = " + "'" + scancard + "'" + 
-                            ";");   
-                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
-                }
-                    
-                    
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError};  
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordConnError};
-        }
-     
-     return m;
+     String[] m = addUpdateCLKCtrl(createRecord());
+        return m;
      }
       
-    public String[] getRecord(String[] x) {
-       String[] m = new String[2];
-       
-        try {
-
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                
-                int i = 0;
-                
-                res = st.executeQuery("SELECT * FROM  clock_ctrl ;");
-                    while (res.next()) {
-                        i++;
-                        cbscancard.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("clctrl_scan")));
-                    }
-               
-                // set Action if Record found (i > 0)
-                setAction(m);
-                
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};  
-        }
-      return m;
+    public String[] getRecord(String[] key) {
+       x = getCLKCtrl(key);
+        return x.m();
     }
     
+    public clock_ctrl createRecord() {
+        clock_ctrl x = new clock_ctrl(null, 
+           String.valueOf(BlueSeerUtils.boolToInt(cbscancard.isSelected())));
+        return x;
+    }
+        
+    public void updateForm() {
+    cbscancard.setSelected(BlueSeerUtils.ConvertStringToBool(x.clctrl_scan()));
+    }
     
    
    

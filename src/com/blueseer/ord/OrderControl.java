@@ -31,6 +31,9 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.ord.ordData.addUpdateORCtrl;
+import static com.blueseer.ord.ordData.getORCtrl;
+import com.blueseer.ord.ordData.order_ctrl;
 import com.blueseer.utl.BlueSeerUtils;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -67,6 +70,7 @@ public class OrderControl extends javax.swing.JPanel implements IBlueSeerc {
 
     // global variable declarations
                 boolean isLoad = false;
+                private static order_ctrl x = null;
     
     
     // interface functions implemented
@@ -104,12 +108,17 @@ public class OrderControl extends javax.swing.JPanel implements IBlueSeerc {
         }
  
         
-       public void done() {
+      public void done() {
             try {
             String[] message = get();
            
             BlueSeerUtils.endTask(message);
-          
+            if (this.type.equals("get")) {
+             updateForm(); 
+           } else {
+             initvars(null);  
+             setAction(message);
+           }
             
             } catch (Exception e) {
                 MainFrame.bslog(e);
@@ -177,9 +186,9 @@ public class OrderControl extends javax.swing.JPanel implements IBlueSeerc {
     public void setAction(String[] x) {
         String[] m = new String[2];
         if (x[0].equals("0")) {
-            m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
+            bsmf.MainFrame.show(BlueSeerUtils.updateRecordSuccess); 
         } else {
-           m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
+            bsmf.MainFrame.show(BlueSeerUtils.updateRecordError);  
         }
     }
     
@@ -197,157 +206,37 @@ public class OrderControl extends javax.swing.JPanel implements IBlueSeerc {
     }
     
     public String[] updateRecord(String[] x) {
-     String[] m = new String[2];
-     
-     try {
-           
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                
-                  String autosource = "";
-                String autoinvoice = "";
-                String custitemonly = "";
-                String srvmtype = "";
-                String srvmitemdefault = "";
-                String autoallocate = "";
-                String exceedQOHU = "";
-                
-                
-                
-                if ( cbexceedQOHU.isSelected() ) {
-                exceedQOHU = "1";    
-                } else {
-                    exceedQOHU = "0";
-                }
-                if ( cballocate.isSelected() ) {
-                autoallocate = "1";    
-                } else {
-                    autoallocate = "0";
-                }
-                
-                if ( cbautosource.isSelected() ) {
-                autosource = "1";    
-                } else {
-                    autosource = "0";
-                }
-                
-                 if ( cbautoinvoice.isSelected() ) {
-                autoinvoice = "1";    
-                } else {
-                    autoinvoice = "0";
-                }
-                
-                   if ( cbcustitem.isSelected() ) {
-                custitemonly = "1";    
-                } else {
-                    custitemonly = "0";
-                }
-                
-                if ( cbsrvmtype.isSelected() ) {
-                srvmtype = "1";    
-                } else {
-                    srvmtype = "0";
-                }
-                    
-                if ( cbsrvmitemdefault.isSelected() ) {
-                srvmitemdefault = "1";    
-                } else {
-                    srvmitemdefault = "0";
-                }      
-                
-                    int i = 0;
-                    res = st.executeQuery("SELECT *  FROM  order_ctrl ;");
-                    while (res.next()) {
-                        i++;
-                    }
-                     if (i == 0) {
-
-                   st.executeUpdate("insert into order_ctrl (orc_autosource, orc_autoinvoice, orc_autoallocate, orc_custitem, " +
-                            " orc_srvm_type, orc_srvm_item_default, orc_exceedqohu ) values (" + 
-                            "'" + autosource + "'" + "," +
-                            "'" + autoinvoice + "'" + "," +
-                            "'" + autoallocate + "'" + "," +        
-                            "'" + custitemonly + "'" + "," + 
-                            "'" + srvmtype + "'" + "," +
-                            "'" + srvmitemdefault + "'" +  "," +   
-                            "'" + exceedQOHU + "'" +           
-                                    ")" + ";");                   
-                         
-                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
-                } else {
-                     st.executeUpdate("update order_ctrl set " 
-                            + " orc_autosource = " + "'" + autosource + "'" + "," 
-                            + " orc_autoinvoice = " + "'" + autoinvoice + "'" + "," 
-                            + " orc_autoallocate = " + "'" + autoallocate + "'" + ","         
-                            + " orc_custitem = " + "'" + custitemonly + "'" + "," 
-                            + " orc_srvm_type = " + "'" + srvmtype + "'" + ","                 
-                            + " orc_srvm_item_default = " + "'" + srvmitemdefault + "'" + ","   
-                            + " orc_exceedqohu = " + "'" + exceedQOHU + "'" +        
-                            ";");   
-                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
-                }
-                    
-                    
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};  
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1020, Thread.currentThread().getStackTrace()[1].getMethodName())};
-        }
-     
-     return m;
+     String[] m = addUpdateORCtrl(createRecord());
+        return m;
      }
       
-    public String[] getRecord(String[] x) {
-       String[] m = new String[2];
-       
-        try {
-
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                
-                int i = 0;
-                
-                res = st.executeQuery("SELECT * FROM  order_ctrl ;");
-                    while (res.next()) {
-                        i++;
-                        cbautosource.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("orc_autosource")));
-                        cbautoinvoice.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("orc_autoinvoice")));
-                        cbcustitem.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("orc_custitem")));
-                        cbsrvmtype.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("orc_srvm_type")));
-                        cbsrvmitemdefault.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("orc_srvm_item_default")));
-                        cballocate.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("orc_autoallocate")));
-                        cbexceedQOHU.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("orc_exceedqohu")));
-                    }
-               
-                // set Action if Record found (i > 0)
-                setAction(m);
-                
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};  
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1020, Thread.currentThread().getStackTrace()[1].getMethodName())};  
-        }
-      return m;
+    public String[] getRecord(String[] key) {
+       x = getORCtrl(key);
+        return x.m();
     }
     
+    public order_ctrl createRecord() {
+        order_ctrl x = new order_ctrl(null, 
+           String.valueOf(BlueSeerUtils.boolToInt(cbautosource.isSelected())),
+            String.valueOf(BlueSeerUtils.boolToInt(cbautoinvoice.isSelected())),
+            String.valueOf(BlueSeerUtils.boolToInt(cballocate.isSelected())),    
+            String.valueOf(BlueSeerUtils.boolToInt(cbcustitem.isSelected())),
+            String.valueOf(BlueSeerUtils.boolToInt(cbsrvmtype.isSelected())),
+            String.valueOf(BlueSeerUtils.boolToInt(cbsrvmitemdefault.isSelected())),
+            String.valueOf(BlueSeerUtils.boolToInt(cbexceedQOHU.isSelected()))
+        );
+        return x;
+    }
+        
+    public void updateForm() {
+    cbautosource.setSelected(BlueSeerUtils.ConvertStringToBool(x.orc_autosource()));
+    cbautoinvoice.setSelected(BlueSeerUtils.ConvertStringToBool(x.orc_autoinvoice()));      
+    cbcustitem.setSelected(BlueSeerUtils.ConvertStringToBool(x.orc_custitem()));    
+    cbsrvmtype.setSelected(BlueSeerUtils.ConvertStringToBool(x.orc_srvm_type()));   
+    cbsrvmitemdefault.setSelected(BlueSeerUtils.ConvertStringToBool(x.orc_srvm_item_default()));
+    cballocate.setSelected(BlueSeerUtils.ConvertStringToBool(x.orc_autoallocate()));  
+    cbexceedQOHU.setSelected(BlueSeerUtils.ConvertStringToBool(x.orc_exceedqohu()));  
+    }
     
     
     
