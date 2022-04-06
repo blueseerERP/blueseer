@@ -4433,7 +4433,21 @@ public class DTData {
         
         
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), "Doc", "SndISA", "RcvISA", "Map", "SndGS", "RcvGS", "Prefix", "Version", "OutDocType", "OutFileType", "IFS", "OFS"})
+                      new String[]{getGlobalColumnTag("select"), 
+                          getGlobalColumnTag("id"), 
+                          "Doc", 
+                          "SndISA", 
+                          "RcvISA",
+                          getGlobalColumnTag("name"),
+                          "Map", 
+                          "SndGS", 
+                          "RcvGS", 
+                          "Prefix", 
+                          "Version", 
+                          "OutDocType", 
+                          "OutFileType", 
+                          "IFS", 
+                          "OFS"})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -4450,13 +4464,13 @@ public class DTData {
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
-               
-                  res = st.executeQuery("select * from edi_mstr;" );
+                  res = st.executeQuery("select * from edi_mstr inner join edpd_partner on edpd_alias = edi_id inner join edp_partner on edp_id = edpd_parent order by edi_id;" );
                     while (res.next()) {
                         mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("edi_id"),
                                    res.getString("edi_doc"),
                                    res.getString("edi_sndisa"),
                                    res.getString("edi_rcvisa"),
+                                   res.getString("edp_desc"),
                                    res.getString("edi_map"),
                                    res.getString("edi_sndgs"),
                                    res.getString("edi_rcvgs"),
