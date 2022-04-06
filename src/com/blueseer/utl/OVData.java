@@ -4759,7 +4759,7 @@ public class OVData {
     public static boolean createTestData() {
             boolean myreturn = true;
             ArrayList<String[]> items = invData.getItemsAndPriceByType("FG");
-            
+            ArrayList<String> custs = cusData.getcustmstrlist();
             try {
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
@@ -4776,6 +4776,7 @@ public class OVData {
                 int qty = 0;
                 int count = 0;
                 int itempos = 0;
+                int custpos = 0;
                 for (int k = 0; k < 53; k++) {
                     duedate[k] = date.plusDays(k * 7);
                 }
@@ -4784,14 +4785,15 @@ public class OVData {
                     if ((i % 7) == 0) {
                       sduedate = duedate[i / 7].format(DateTimeFormatter.ofPattern("yyyy-MM-dd")); 
                     } 
+                    custpos = (int) (Math.random() * (5 - 0)) + 0;
                     st.executeUpdate(" insert into so_mstr " 
                     + "(so_nbr, so_cust, so_ship, so_po, so_ord_date, so_due_date, " 
                     + "so_create_date, so_userid, so_status,"
                     + "so_rmks, so_terms, so_ar_acct, so_ar_cc, so_shipvia, so_type, so_site, so_onhold ) "
                     + " values ( " + 
                     "'" +  String.valueOf(i + 50100) + "'" + "," + 
-                    "'" +  "cash" + "'" + "," +
-                    "'" +  "cash" + "'" + "," +  
+                    "'" +  custs.get(custpos) + "'" + "," +   
+                    "'" +  custs.get(custpos) + "'" + "," + 
                     "'" +  "testpo" + String.valueOf(i + 50100) + "'" + "," +  
                     "'" +  now + "'" + "," +  
                     "'" +  sduedate + "'" + "," +  

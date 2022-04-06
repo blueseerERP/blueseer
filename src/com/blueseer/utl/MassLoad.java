@@ -2400,6 +2400,13 @@ public class MassLoad extends javax.swing.JPanel {
                  bsmf.MainFrame.show(getMessageTag(1145,filename.toString()));
              }
              
+              filename = FileSystems.getDefault().getPath("data/sampledir/custmstr.txt");
+            file = new File(filename.toString());
+             try {
+                 processCustMstr(file);
+             } catch (IOException ex) {
+                 bsmf.MainFrame.show(getMessageTag(1145,filename.toString()));
+             }
             
              if (createTestData()) { 
                  m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
