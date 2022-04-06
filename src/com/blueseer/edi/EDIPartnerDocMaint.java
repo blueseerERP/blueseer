@@ -86,22 +86,6 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
         initComponents();
         setLanguageTags(this);
     }
-
-    public boolean isFile(String myfile) {
-         // lets check and see if class exists in package
-       boolean isgood = false;
-       
-       try {
-           Class.forName(myfile);
-           isgood = true;
-           
-       } catch( ClassNotFoundException e ) {
-           isgood = false;
-        //my class isn't there!
-       }
-       
-        return isgood;
-    }
     
     public void getCustEDI(String code, String doctype, String sndid, String rcvid) {
         
@@ -998,7 +982,7 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
                     tbmap.requestFocus();
                     return;
                 }
-                if (! isFile(tbmap.getText()) && ! dddoc.getSelectedItem().toString().equals("997")) {
+                if (! BlueSeerUtils.isClassFile(tbmap.getText()) && ! dddoc.getSelectedItem().toString().equals("997")) {
                     proceed = false;
                     bsmf.MainFrame.show(getMessageTag(1145,tbmap.getText()));
                     tbmap.requestFocus();

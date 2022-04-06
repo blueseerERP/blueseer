@@ -804,6 +804,18 @@ public class BlueSeerUtils {
         return xml;
     }
    
+    public static boolean isClassFile(String myfile) {
+         // lets check and see if class exists in package
+       try {
+           Class.forName(myfile);
+           return true;
+           
+       } catch( ClassNotFoundException e ) {
+           return false;
+        //my class isn't there!
+       }
+    }
+    
     
     public static boolean isSet(ArrayList list, Integer index) {
      return index != null && index >=0 && index < list.size() && list.get(index) != null;
