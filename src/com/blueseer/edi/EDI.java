@@ -1214,7 +1214,7 @@ public class EDI {
            } 
 
            // if no map then bail
-           if (map.isEmpty() && c[12].isEmpty()) {
+           if ((map.isEmpty() && c[12].isEmpty()) || ! BlueSeerUtils.isClassFile(map)) {
               EDData.writeEDILog(c, "error", "unable to find map class for parent/gs02/gs03/doc: " + parentPartner + "/" + gs02 + "/" + gs03 + " / " + c[1]); 
            } else {
 
