@@ -1229,7 +1229,7 @@ public class EDI {
            } 
 
            // if no map then bail
-           if ((map.isEmpty() && c[12].isEmpty()) || ! BlueSeerUtils.isClassFile(map)) {
+           if ((map.isEmpty() || ! BlueSeerUtils.isClassFile(map)) && c[12].isEmpty()) {
               EDData.writeEDILog(c, "error", "unable to find map class for parent/gs02/gs03/doc: " + parentPartner + "/" + gs02 + "/" + gs03 + " / " + c[1]); 
            } else {
 
@@ -1351,8 +1351,8 @@ public class EDI {
                } 
             
                // if no map then bail
-               if (map.isEmpty() && c[12].isEmpty()) {
-                  EDData.writeEDILog(c, "error", "unable to find map class for " + c[0] + " / " + c[1]); 
+               if ((map.isEmpty() || ! BlueSeerUtils.isClassFile(map)) && c[12].isEmpty()) {
+                  EDData.writeEDILog(c, "error", "unable to find map class for: " + c[1] + " / " + c[0] + " / " + x[1]); 
                } else {
                    
                    // at this point I should have a doc set (ST to SE) and a map ...now call map to operate on doc 

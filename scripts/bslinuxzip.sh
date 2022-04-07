@@ -9,6 +9,7 @@ zip ../scripts/$bszip jasper/*
 zip -u ../scripts/$bszip zebra/*
 zip -u ../scripts/$bszip patches/*
 zip -u ../scripts/$bszip temp/*
+zip -u ../scripts/$bszip custom/*
 zip -r ../scripts/$bszip data/*
 zip -r ../scripts/$bszip edi/*
 zip -u ../scripts/$bszip images/*

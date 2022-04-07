@@ -30,19 +30,21 @@ cp -R ../sf/data $bsshare/
 cp -R ../sf/zebra $bsshare/
 cp -R ../sf/edi $bsshare/
 cp -R ../sf/temp $bsshare/
+cp -R ../sf/custom $bsshare/
 cp -R ../sf/patches $bsshare/
 cp -R ../sf/jasper $bsshare/
 cp -R ../sf/images $bsshare/
 cp -R /home/vcs/jre17 $bsshare/
 
 rm -f $bs/usr/bin/blueseer
-echo "cd /usr/share/blueseer; jre17/bin/java -D\"java.util.logging.config.file=bslogging.properties\" -cp \".:dist/*\" bsmf.MainFrame" >>$bs/usr/bin/blueseer
+echo "cd /usr/share/blueseer; jre17/bin/java -D\"java.util.logging.config.file=bslogging.properties\" -cp \".:custom/*:dist/*:edi/maps/*\" bsmf.MainFrame" >>$bs/usr/bin/blueseer
 
 chmod -R 0755 $bs
 chmod -R 0777 $bsshare/data
 chmod -R 0777 $bsshare/zebra
 chmod -R 0777 $bsshare/edi
 chmod -R 0777 $bsshare/temp
+chmod -R 0777 $bsshare/custom
 chmod -R 0777 $bsshare/patches
 chmod -R 0777 $bsshare/jasper
 chmod -R 0777 $bsshare/images
