@@ -82,12 +82,12 @@ mysql --defaults-extra-file=my.cnf %DB%  <blueseer.schema
 @echo "loading user account...."
 mysql --defaults-extra-file=my.cnf -e "drop user if exists 'bs_user'@'%' ;"  
 mysql --defaults-extra-file=my.cnf -e "create user if not exists 'bs_user'@'%' identified by 'bspasswd';"  
-mysql --defaults-extra-file=my.cnf -e "grant select,insert,delete,update on bsdb.* to 'bs_user'@'%';" 
+mysql --defaults-extra-file=my.cnf -e "grant select,insert,delete,update on %DB%.* to 'bs_user'@'%';" 
 
 
 cd "%lang%"
 @echo "loading 'some' default records for tables from language pack %lang%....."
-mysql --defaults-extra-file=..\my.cnf -D bsdb -e "source sq_mysql.txt;" 
+mysql --defaults-extra-file=..\my.cnf -D %DB% -e "source sq_mysql.txt;" 
 
 cd ..
 rem clean up my.cnf
