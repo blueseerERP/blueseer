@@ -200,7 +200,9 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
         try {
             Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
+            Statement st2 = con.createStatement();
             ResultSet res = null;
+            ResultSet resdetail = null;
             try {
 
                 int i = 0;
@@ -259,19 +261,30 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                     " order by edx_id desc ;" ) ;
                     }
                     
-              
+                
+                
                 ImageIcon statusImage = null;
                 while (res.next()) {
-                    i++;
+                    
                     if (res.getString("edx_status").equals("success")) {
                       statusImage = BlueSeerUtils.clickcheck;
-                  }  else {
+                    }  else {
                       statusImage = BlueSeerUtils.clicknocheck;
-                  }
-                    
+                    }
                     if (res.getString("edx_ack").equals("1")) {
                       statusImage = BlueSeerUtils.clickcheckblue; 
                     }
+                    // now check detail log...if 'any' errors....set status to clicknocheck
+                    resdetail = st2.executeQuery("select elg_severity from edi_log " +
+                        " where elg_comkey = " + "'" + res.getInt("edx_comkey") + "'" +  ";");
+                    while (resdetail.next()) {
+                        if (resdetail.getString("elg_severity").equals("error")) {
+                           statusImage = BlueSeerUtils.clicknocheck; 
+                        }
+                    }
+                    
+                    i++;
+                    
                  //   "Select", "IdxNbr", "ComKey", "SenderID", "ReceiverID", "TimeStamp", "InFileType", "InDocType", "InBatch", "OutFileType", "OutDocType", "OutBatch",  "Status"                     
                     docmodel.addRow(new Object[]{BlueSeerUtils.clickbasket,
                         res.getInt("edx_id"),
@@ -301,8 +314,14 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                 if (res != null) {
                     res.close();
                 }
+                if (resdetail != null) {
+                    resdetail.close();
+                }
                 if (st != null) {
                     st.close();
+                }
+                if (st2 != null) {
+                    st2.close();
                 }
                 con.close();
             }
@@ -473,7 +492,7 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
        }
     }
     
-    public void getdetail(String comkey) {
+    public void getdetail(String comkey, String idxkey) {
       
          modeldetail.setNumRows(0);
         
@@ -488,7 +507,9 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                 int i = 0;
                 String blanket = "";
                 res = st.executeQuery("select elg_id, elg_comkey, elg_idxnbr, elg_severity, elg_desc, elg_ts from edi_log " +
-                        " where elg_comkey = " + "'" + comkey + "'" +  ";");
+                        " where elg_comkey = " + "'" + comkey + "'" +
+                        " and elg_idxnbr = " + "'" + idxkey + "'" +
+                        ";");
                 while (res.next()) {
                    modeldetail.addRow(new Object[]{ 
                       res.getString("elg_id"), 
@@ -935,7 +956,7 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
         int row = tablereport.rowAtPoint(evt.getPoint());
         int col = tablereport.columnAtPoint(evt.getPoint());
         if ( col == 0) {
-                getdetail(tablereport.getValueAt(row, 2).toString());
+                getdetail(tablereport.getValueAt(row, 2).toString(), tablereport.getValueAt(row, 1).toString());
                 btdetail.setEnabled(true);
                 detailpanel.setVisible(true);
         }

@@ -1102,14 +1102,19 @@ public class EDI {
              
     int callingidxnbr = idxnbr;         
     for (Map.Entry<Integer, Object[]> isa : ISAmap.entrySet()) {
+        ArrayList<String[]> messages = new ArrayList<String[]>();
+        
         int start =  Integer.valueOf(isa.getValue()[0].toString());  //starting ISA position in file
         int end = Integer.valueOf(isa.getValue()[1].toString());  // ending IEA position in file
         char segdelim = (char) Integer.valueOf(isa.getValue()[2].toString()).intValue(); // get segment delimiter
         String gs02 = ""; 
         String gs03 = "";       
 //  System.out.println("envelope key/start/end : " + isa.getKey() + "/" + isa.getValue()[0] + "/" + isa.getValue()[1]);
-        
+    
+    
         String[] c = (String[]) isa.getValue()[6];
+        messages.add(new String[]{"info","Input File: " + c[3]});
+        messages.add(new String[]{"info","ISA Control Number: " + c[4] + " / " + "GS Control Number: " + c[5]});
        // ArrayList d = (ArrayList) isa.getValue()[5];
         Map<Integer, ArrayList> d = (HashMap<Integer, ArrayList>)isa.getValue()[5];
         
@@ -1132,6 +1137,8 @@ public class EDI {
             c[1] = doctype;
             c[6] = docid;
       
+            
+            messages.add(new String[]{"info","Doc Type: " + c[1] + " / " + "DocID: " + c[6]});
        //    System.out.println("doc key/{start/end},doctype,docid " + k[0] + "/" + k[1] + "/" + doctype + "/" + docid);
             
            // Integer[] k = (Integer[])z.getValue()[0];
@@ -1160,7 +1167,7 @@ public class EDI {
     }
      
              c[24] = batchfile;
-             
+             messages.add(new String[]{"info","Processing Batch File: " + c[24]});
              
         // insert isa and st start and stop integer points within the file
         
@@ -1174,7 +1181,7 @@ public class EDI {
           int j = Integer.valueOf(c[10]);
           String delim = String.valueOf(Character.toString((char) j));
           String[] gs = c[14].split(escapeDelimiter(delim));
-         
+          
           if (gs != null && gs.length > 2) {
               gs02 = gs[2];
               gs03 = gs[3];
@@ -1183,8 +1190,10 @@ public class EDI {
           if (parentPartner == null || parentPartner.isEmpty()) {
              parentPartner = EDData.getEDIPartnerFromAlias(c[0]); 
           }
+          
+          messages.add(new String[]{"info","Found parent partner: " + parentPartner});
+          
           // at this point...we need to log this doc in edi_idx table and use return ID for further logs against this doc idx.
-         
           if (c[12].isEmpty() && callingidxnbr == 0) {   // if not override
               idxnbr = EDData.writeEDIIDX(c);
               if (GlobalDebug) 
@@ -1193,8 +1202,10 @@ public class EDI {
           }
           
           c[16] = String.valueOf(idxnbr);
+          EDData.writeEDILogMulti(c, messages);
+          messages.clear();
           
-         String map = c[2];
+          String map = c[2];
              
           if (doctype.equals("997")) {
             if (GlobalDebug)   {

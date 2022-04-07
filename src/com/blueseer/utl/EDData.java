@@ -1480,7 +1480,47 @@ public class EDData {
             MainFrame.bslog(e);
         }
       }
-     
+    
+    public static void writeEDILogMulti(String[] control, ArrayList<String[]> messages) {
+          try {
+            Class.forName(driver);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+                
+                String[] c = control;
+              
+                 // controlarray in this order : senderid, doctype, map, filename, isacontrolnum, gsctrlnum, stctrlnum, ref ; 
+                for (String[] s : messages) {
+                        st.executeUpdate("insert into edi_log ( elg_comkey, elg_idxnbr, elg_severity, elg_desc, elg_isa, elg_doc, elg_map, elg_file, elg_batch, elg_ctrlnum, elg_gsctrlnum, elg_stctrlnum, elg_ref ) "
+                            + " values ( " 
+                            + "'" + c[22] + "'" + ","    
+                            + "'" + c[16] + "'" + ","
+                            + "'" + s[0] + "'" + ","
+                            + "'" + s[1] + "'" + ","
+                            + "'" + c[0] + "'" + ","
+                            + "'" + c[1] + "'" + ","
+                            + "'" + c[2] + "'" + ","
+                            + "'" + c[3] + "'" + ","
+                            + "'" + c[24] + "'" + ","        
+                            + "'" + c[4] + "'" + ","
+                            + "'" + c[5] + "'" + ","
+                            + "'" + c[6] + "'" + ","
+                            + "'" + c[7] + "'"
+                            + ")"
+                            + ";");
+                }
+            } catch (SQLException s) {
+                 MainFrame.bslog(s);
+            }
+            con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+      }
+    
+    
     public static void writeEDIFileLog(String[] control) {
           try {
             Class.forName(driver);
