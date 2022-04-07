@@ -755,9 +755,13 @@ public class EDI {
                  System.out.println("getEDIType: FF rules: " + key + "/" + r[0] + "/" + r[1] + "/" + r[2] + "/" + r[3]);
                      
                     if (Integer.valueOf(r[0]) == k) {
+                        if (((Integer.valueOf(r[1]) - 1) + Integer.valueOf(r[2])) > s.length()) {
+                            continue;
+                        }
                         if (s.substring(Integer.valueOf(r[1]) - 1, ((Integer.valueOf(r[1]) - 1) + Integer.valueOf(r[2]))).trim().equals(r[3])) {
                           matchcount++;
                         }
+                        
                     //    System.out.println("here?: " + k + "/" + matchcount + "/" + rulecount + "/" + s.substring(Integer.valueOf(r[1]) - 1, ((Integer.valueOf(r[1]) - 1) + Integer.valueOf(r[2]))).trim() + "/" + r[3]);
                         
                     }
@@ -1113,8 +1117,8 @@ public class EDI {
     
     
         String[] c = (String[]) isa.getValue()[6];
-        messages.add(new String[]{"info","Input File: " + c[3]});
-        messages.add(new String[]{"info","ISA Control Number: " + c[4] + " / " + "GS Control Number: " + c[5]});
+        messages.add(new String[]{"info","File: " + c[3]});
+        messages.add(new String[]{"info","ISA#: " + c[4] + " / " + "GS#: " + c[5]});
        // ArrayList d = (ArrayList) isa.getValue()[5];
         Map<Integer, ArrayList> d = (HashMap<Integer, ArrayList>)isa.getValue()[5];
         

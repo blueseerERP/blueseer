@@ -276,7 +276,9 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                     }
                     // now check detail log...if 'any' errors....set status to clicknocheck
                     resdetail = st2.executeQuery("select elg_severity from edi_log " +
-                        " where elg_comkey = " + "'" + res.getInt("edx_comkey") + "'" +  ";");
+                        " where elg_comkey = " + "'" + res.getInt("edx_comkey") + "'" 
+                        + " and elg_idxnbr = " + "'" + res.getInt("edx_id") + "'"
+                        +  ";");
                     while (resdetail.next()) {
                         if (resdetail.getString("elg_severity").equals("error")) {
                            statusImage = BlueSeerUtils.clicknocheck; 
@@ -506,10 +508,17 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
             try {
                 int i = 0;
                 String blanket = "";
-                res = st.executeQuery("select elg_id, elg_comkey, elg_idxnbr, elg_severity, elg_desc, elg_ts from edi_log " +
+                if (idxkey.equals("0")) {
+                 res = st.executeQuery("select elg_id, elg_comkey, elg_idxnbr, elg_severity, elg_desc, elg_ts from edi_log " +
+                        " where elg_comkey = " + "'" + comkey + "'" +
+                        ";");   
+                } else {
+                 res = st.executeQuery("select elg_id, elg_comkey, elg_idxnbr, elg_severity, elg_desc, elg_ts from edi_log " +
                         " where elg_comkey = " + "'" + comkey + "'" +
                         " and elg_idxnbr = " + "'" + idxkey + "'" +
-                        ";");
+                        ";");   
+                }
+                
                 while (res.next()) {
                    modeldetail.addRow(new Object[]{ 
                       res.getString("elg_id"), 
@@ -546,6 +555,7 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
         buttonGroup1.add(rbDocLog);
         buttonGroup1.add(rbFileLog);
         rbDocLog.setSelected(true);
+        
         
         tbtoterrors.setText("0");
         tbtot.setText("0");
@@ -955,8 +965,13 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
         
         int row = tablereport.rowAtPoint(evt.getPoint());
         int col = tablereport.columnAtPoint(evt.getPoint());
-        if ( col == 0) {
+        if ( col == 0 && rbDocLog.isSelected()) {
                 getdetail(tablereport.getValueAt(row, 2).toString(), tablereport.getValueAt(row, 1).toString());
+                btdetail.setEnabled(true);
+                detailpanel.setVisible(true);
+        }
+        if ( col == 0 && rbFileLog.isSelected()) {
+                getdetail(tablereport.getValueAt(row, 2).toString(), "0");
                 btdetail.setEnabled(true);
                 detailpanel.setVisible(true);
         }
@@ -1134,9 +1149,11 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
         if (rbDocLog.isSelected()) {
             tbref.setEnabled(true);
             btreprocess.setEnabled(false);
+            getDocLogView();
         } else {
             tbref.setEnabled(false);
             btreprocess.setEnabled(true);
+            getFileLogView();
         }
     }//GEN-LAST:event_rbDocLogActionPerformed
 
@@ -1144,9 +1161,11 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
           if (rbDocLog.isSelected()) {
             tbref.setEnabled(true);
             btreprocess.setEnabled(false);
+            getDocLogView();
         } else {
             tbref.setEnabled(false);
             btreprocess.setEnabled(true);
+            getFileLogView();
         }
     }//GEN-LAST:event_rbFileLogActionPerformed
 
