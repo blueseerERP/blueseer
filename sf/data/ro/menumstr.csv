@@ -207,7 +207,7 @@ EDIPartnerBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,edib
 EDIDocumentMaint,,com.blueseer.edi.EDIDocumentMaint,JMenuItem,eddm
 EDIPartnerDocMaint,,com.blueseer.edi.EDIPartnerDocMaint,JMenuItem,edpd
 EDIPartnerDocBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,edpb
-EDIControl,,com.blueseer.edi.EDIControlPanel,JMenuItem,edic
+EDIControl,,com.blueseer.edi.EDIControl,JMenuItem,edic
 ARAgingView,,com.blueseer.far.ARAgingView,JMenuItem,arav
 APAgingView,,com.blueseer.fap.APAgingView,JMenuItem,apav
 GLControl,,com.blueseer.fgl.GLControl,JMenuItem,glcc
