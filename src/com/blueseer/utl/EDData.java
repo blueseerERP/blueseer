@@ -823,7 +823,7 @@ public class EDData {
         
     }
     
-    public static ArrayList getEDIPartnerDocList() {
+    public static ArrayList getEDIPartnerDocIDs() {
        ArrayList mylist = new ArrayList();
         try{
             Class.forName(driver);
@@ -833,7 +833,7 @@ public class EDData {
             try{
                 
 
-                res = st.executeQuery("select edi_id from edi_mstr order by edi_id; ");
+                res = st.executeQuery("select edi_id from edi_mstr group by edi_id order by edi_id; ");
                while (res.next()) {
                    mylist.add(res.getString("edi_id"));
                 }

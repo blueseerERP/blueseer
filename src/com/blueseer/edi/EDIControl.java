@@ -33,7 +33,7 @@ import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
-import static com.blueseer.utl.EDData.getEDIPartnerDocList;
+import static com.blueseer.utl.EDData.getEDIPartnerDocIDs;
 import static com.blueseer.utl.EDData.getEDIPartnerDocSet;
 import static com.blueseer.utl.EDData.getEDIPartners;
 import com.blueseer.utl.OVData;
@@ -210,7 +210,7 @@ public class EDIControl extends javax.swing.JPanel {
         
         isLoad = true;
         ddcode.removeAllItems();
-        ArrayList<String> mylist = getEDIPartnerDocList();
+        ArrayList<String> mylist = getEDIPartnerDocIDs(); 
         for (int i = 0; i < mylist.size(); i++) {
             ddcode.addItem(mylist.get(i));
         }
