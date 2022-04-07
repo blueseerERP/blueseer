@@ -822,7 +822,75 @@ public class EDData {
         return mylist;
         
     }
-       
+    
+    public static ArrayList getEDIPartnerDocList() {
+       ArrayList mylist = new ArrayList();
+        try{
+            Class.forName(driver);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                
+
+                res = st.executeQuery("select edi_id from edi_mstr order by edi_id; ");
+               while (res.next()) {
+                   mylist.add(res.getString("edi_id"));
+                }
+               
+           }
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return mylist;
+        
+    }
+    
+    public static ArrayList<String[]> getEDIPartnerDocSet(String id) {
+       ArrayList<String[]> mylist = new ArrayList<String[]>();
+        try{
+            Class.forName(driver);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                
+
+                res = st.executeQuery("select * from edi_mstr " +
+                        " where edi_id = " + "'" + id + "'" + " order by edi_id; ");
+               while (res.next()) {
+                   mylist.add(new String[]{res.getString("edi_id"), 
+                       res.getString("edi_doc"), 
+                       res.getString("edi_sndgs"), 
+                       res.getString("edi_rcvgs")
+                   });
+                }
+               
+           }
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return mylist;
+        
+    }
+    
+    
     public static ArrayList getEDIPartners() {
        ArrayList mylist = new ArrayList();
         try{
