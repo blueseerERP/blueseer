@@ -300,23 +300,15 @@ public class SiteMaint extends javax.swing.JPanel implements IBlueSeerT {
         tb_pos_generic.setText(""); 
          
         ddstate.removeAllItems();
-        ArrayList states = OVData.getCodeMstrKeyList("state");
         ddstate.addItem("");
-        for (int i = 0; i < states.size(); i++) {
-            ddstate.addItem(states.get(i).toString());
-        }
-        if (ddstate.getItemCount() > 0) {
-           ddstate.setSelectedIndex(0); 
-        }
+        OVData.getCodeMstrKeyList("state").stream().forEach((s) -> ddstate.addItem(s));
+        ddstate.setSelectedIndex(0);
         
-       ddcountry.removeAllItems();
-        ArrayList countries = OVData.getCodeMstrKeyList("country");
-        for (int i = 0; i < countries.size(); i++) {
-            ddcountry.addItem(countries.get(i).toString());
-        }
-        if (ddcountry.getItemCount() > 0) {
-           ddcountry.setSelectedItem("USA"); 
-        }
+        ddcountry.removeAllItems();
+        ddcountry.addItem("");
+        OVData.getCodeMstrKeyList("country").stream().forEach((s) -> ddcountry.addItem(s));  
+        ddcountry.setSelectedIndex(0);
+      
         
        isLoad = false;
     }
