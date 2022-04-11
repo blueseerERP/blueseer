@@ -414,8 +414,11 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
                
                   tblocale.setText(Locale.getDefault().toString());
                     
-                // set Action if Record found (i > 0)
+                if (i > 0) {
+                m[0] = "0";
+                m[1] = BlueSeerUtils.getRecordSuccess;
                 setAction(m);
+                }
                 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
