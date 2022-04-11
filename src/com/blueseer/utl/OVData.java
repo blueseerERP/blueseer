@@ -11651,7 +11651,7 @@ return mystring;
     public static boolean loadTranHistByTable(JTable mytable) {
           
           /*
-          Field count must be 17 fields...and must be in this exact order:
+          Field count must be 20 fields...and must be in this exact order:
           0=part
           1=type 
           2=operation

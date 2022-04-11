@@ -57,7 +57,8 @@ inner join item_mstr on it_item = plan_part
 left outer join wf_mstr on wf_id = it_wf 
 left outer join so_mstr on so_nbr = plan_order
 left outer join sod_det on sod_nbr = so_nbr and
-                                            sod_part = it_item
+                                            sod_part = plan_part and
+                                            sod_line = plan_line
 where plan_nbr = $P{myid}
 order by wf_op;]]>
 	</queryString>

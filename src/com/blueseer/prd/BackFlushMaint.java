@@ -73,7 +73,8 @@ public class BackFlushMaint extends javax.swing.JPanel {
                 getGlobalColumnTag("assydate"), 
                 getGlobalColumnTag("expiredate"), 
                 getGlobalColumnTag("program"),
-                getGlobalColumnTag("warehouse")
+                getGlobalColumnTag("warehouse"),
+                getGlobalColumnTag("bom")
             });
     
     
@@ -465,7 +466,9 @@ public class BackFlushMaint extends javax.swing.JPanel {
                 "", // assydate
                 expire, 
                 "BackFlushMaint", 
-                wh });
+                wh,
+                ""  // bom 
+                });
         }
         ddop.removeAllItems();
         tbpart.setText("");

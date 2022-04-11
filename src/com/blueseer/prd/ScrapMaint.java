@@ -77,7 +77,8 @@ public class ScrapMaint extends javax.swing.JPanel {
                 getGlobalColumnTag("assydate"), 
                 getGlobalColumnTag("expiredate"),
                 getGlobalColumnTag("program"),
-                getGlobalColumnTag("warehouse")
+                getGlobalColumnTag("warehouse"),
+                getGlobalColumnTag("bom")
             })    {
     @Override
     public boolean isCellEditable(int row, int column) {
@@ -485,7 +486,8 @@ public class ScrapMaint extends javax.swing.JPanel {
                 assydate, // assembly date
                 expire,
                 "ScrapMaint", // program
-                wh
+                wh,
+                "" // bom
             });
             
             

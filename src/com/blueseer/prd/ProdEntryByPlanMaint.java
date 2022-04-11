@@ -62,6 +62,7 @@ import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.inv.invData;
 import com.blueseer.sch.schData;
+import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.awt.Component;
 import java.sql.Connection;
@@ -404,17 +405,7 @@ String sitecitystatezip = "";
     private void btcommitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcommitActionPerformed
        
         
-        int qty = 0;
-        
-        Pattern p = Pattern.compile("^[0-9]\\d*$");
-        Matcher m = p.matcher(tbqty.getText());
-        if (!m.find() || tbqty.getText() == null) {
-            lblmessage.setText("Invalid Qty");
-            lblmessage.setForeground(Color.red);
-            return;
-        } else {
-            qty = Integer.valueOf(tbqty.getText());
-        }
+        double qty = Double.valueOf(tbqty.getText());
         
         if (! schData.isPlan(tbscan.getText())) {
             lblmessage.setText(getMessageTag(1070,tbscan.getText()));
@@ -467,7 +458,7 @@ String sitecitystatezip = "";
             JTable mytable = new JTable();
             javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
-                "Part", "Type", "Operation", "Qty", "Date", "Location", "SerialNo", "Reference", "Site", "Userid", "ProdLine", "AssyCell", "Rmks", "PackCell", "PackDate", "AssyDate", "Program", "Warehouse"
+                "Part", "Type", "Operation", "Qty", "Date", "Location", "SerialNo", "Reference", "Site", "Userid", "ProdLine", "AssyCell", "Rmks", "PackCell", "PackDate", "AssyDate", "ExpireDate", "Program", "Warehouse", "BOM"
             });
             
             // get necessary info from plan_mstr for this scan and store into mytable(mymodel)
@@ -486,7 +477,8 @@ String sitecitystatezip = "";
                   String loc = detail[8];
                   String wh = detail[9];
                   String expire = detail[10];
-                 mymodel.addRow(new Object[]{res.getString("plan_part"),
+                mymodel.addRow(new Object[]{
+                res.getString("plan_part"),
                 "ISS-WIP",
                 ddop.getSelectedItem().toString(),
                 tbqty.getText(),
@@ -504,7 +496,8 @@ String sitecitystatezip = "";
                 "", // assembly date
                 expire,
                 "ProdEntryByPlan", // program
-                wh
+                wh,
+                ""  // bom will grab default
             });
                     }
            }
@@ -558,7 +551,16 @@ String sitecitystatezip = "";
     }//GEN-LAST:event_tbqtyFocusGained
 
     private void tbqtyFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbqtyFocusLost
-        tbqty.setBackground(Color.white);
+         String x = BlueSeerUtils.bsformat("", tbqty.getText(), "2");
+        if (x.equals("error")) {
+            tbqty.setText("");
+            tbqty.setBackground(Color.yellow);
+            bsmf.MainFrame.show(getMessageTag(1000));
+            tbqty.requestFocus();
+        } else {
+            tbqty.setText(x);
+            tbqty.setBackground(Color.white);
+        }
     }//GEN-LAST:event_tbqtyFocusLost
 
     private void tbscanFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbscanFocusGained
