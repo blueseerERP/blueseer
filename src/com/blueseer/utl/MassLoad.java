@@ -2413,6 +2413,15 @@ public class MassLoad extends javax.swing.JPanel {
              } else {
                  m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordError};
              }
+             
+             String fromitem = bsmf.MainFrame.lowchar;
+             String toitem = bsmf.MainFrame.hichar;
+             ArrayList<String> items = invData.getItemRange("1000", fromitem, toitem);
+        
+          for (String p : items) {
+          OVData.setStandardCosts("1000", p);
+            // talog.append("Rolling Cost for: " + p + " \n");
+          }
        
         return m;
     }

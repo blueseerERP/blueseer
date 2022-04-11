@@ -94,7 +94,7 @@ public class ProdDetRpt extends javax.swing.JPanel {
          
         @Override  
           public Class getColumnClass(int col) {  
-            if (col == 3 || col == 4)       
+            if (col == 4 || col == 5)       
                 return Double.class;  
             else return String.class;  //other columns accept String values  
         }  
@@ -468,8 +468,8 @@ try {
                             getGlobalColumnTag("id"),
                             getGlobalColumnTag("item"), 
                             getGlobalColumnTag("class"), 
+                            getGlobalColumnTag("type"),
                             getGlobalColumnTag("quantity"), 
-                            getGlobalColumnTag("cost"), 
                             getGlobalColumnTag("operation"), 
                             getGlobalColumnTag("effectivedate"),  
                             getGlobalColumnTag("cell"),  
@@ -523,8 +523,8 @@ try {
                                 res.getString("tr_id"),
                                 res.getString("tr_part"),
                                 res.getString("it_code"),
+                                res.getString("tr_type"),
                                 res.getInt("tr_qty"),
-                                res.getDouble("tr_cost"),
                                 res.getInt("tr_op"),
                                 res.getString("tr_eff_date"),
                                 res.getString("tr_actcell"),
