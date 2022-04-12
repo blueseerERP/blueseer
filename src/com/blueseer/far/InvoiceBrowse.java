@@ -722,15 +722,13 @@ public class InvoiceBrowse extends javax.swing.JPanel {
                  } else {
                     todate = dfdate.format(dcto.getDate()); 
                  }
-                  
-                 
-                 
+                
                   res = st.executeQuery("select sh_id, ar_status, sh_cust, sh_site, sh_shipdate, sh_confdate, ar_amt, ar_open_amt from ship_mstr " +
                         " inner join ar_mstr on ar_nbr = sh_id AND ar_type = 'I' where " +
                         " sh_id >= " + "'" + shipperfrom + "'" + " AND " +
                         " sh_id <= " + "'" + shipperto + "'" + " AND " +
-                        " sh_shipdate >= " + "'" + fromdate + "'" + " AND " +
-                        " sh_shipdate <= " + "'" + todate + "'" + " AND " +
+                        " sh_confdate >= " + "'" + fromdate + "'" + " AND " +
+                        " sh_confdate <= " + "'" + todate + "'" + " AND " +
                         " sh_cust >= " + "'" + custfrom + "'" + " AND " +
                         " sh_cust <= " + "'" + custto + "'" + " AND " +
                         " sh_status = '1' " +
