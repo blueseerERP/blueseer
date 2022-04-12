@@ -1111,7 +1111,7 @@ public class invData {
         try (Connection con = DriverManager.getConnection(url + db, user, pass);
              PreparedStatement ps = con.prepareStatement(sqlDelete);) {
              ps.setString(1, x.wf_id);
-             ps.setString(1, x.wf_op);
+             ps.setString(2, x.wf_op);
              int rows = ps.executeUpdate();
              if (rows > 0) {
                 m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess}; 

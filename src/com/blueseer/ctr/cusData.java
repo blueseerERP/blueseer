@@ -854,10 +854,10 @@ public class cusData {
                 + " where cms_code = ? and cms_shipto = ? ; ";
             ps = con.prepareStatement(sqlSelect);
             ps.setString(1, x.cms_code);
-            ps.setString(1, x.cms_shipto);
+            ps.setString(2, x.cms_shipto);
             res = ps.executeQuery();
-            ps = con.prepareStatement(sqlInsert);
              if (! res.isBeforeFirst()) {
+            ps = con.prepareStatement(sqlInsert);
             ps.setString(1, x.cms_code);
             ps.setString(2, x.cms_shipto);
             ps.setString(3, x.cms_name);
@@ -871,6 +871,7 @@ public class cusData {
             int rows = ps.executeUpdate();
             } else {
                  if (addupdate) {
+                    ps = con.prepareStatement(sqlUpdate); 
                     ps.setString(9, x.cms_code);
                     ps.setString(10, x.cms_shipto);
                     ps.setString(1, x.cms_name);
@@ -997,7 +998,7 @@ public class cusData {
         String sql = "delete from cms_det where cms_code = ? and cms_shipto = ?; ";
         ps = con.prepareStatement(sql);
         ps.setString(1, x);
-        ps.setString(1, y);
+        ps.setString(2, y);
         ps.executeUpdate();
     }
     
