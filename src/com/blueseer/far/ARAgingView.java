@@ -899,9 +899,9 @@ try {
                  
                  
                 ArrayList custs = cusData.getcustmstrlistBetween(fromcust, tocust);
-                 
+                 String custname = "";
                  for (int j = 0; j < custs.size(); j++) {
-                 
+                 custname = cusData.getCustName(custs.get(j).toString());
                  // init for new cust
                  i = 0;
                  
@@ -937,7 +937,7 @@ try {
                         modelsummary.addRow(new Object[]{
                             BlueSeerUtils.clickbasket,
                             res.getString("ar_cust"),
-                            res.getString("cm_name"),
+                            custname,
                             currformatDouble(res.getDouble("0")),
                             currformatDouble(res.getDouble("30")),
                             currformatDouble(res.getDouble("60")),
@@ -950,7 +950,7 @@ try {
                       // create record with zero fields
                        modelsummary.addRow(new Object[]{
                                 BlueSeerUtils.clickbasket,
-                                custs.get(j),"",
+                                custs.get(j),custname,
                                 0,0,0,0,0
                             });
                   }

@@ -4756,7 +4756,7 @@ public class OVData {
                   return myreturn;
              } 
    
-    public static boolean createTestData() {
+    public static boolean createTestDataSO() {
             boolean myreturn = true;
             ArrayList<String[]> items = invData.getItemsAndPriceByType("FG");
             ArrayList<String> custs = cusData.getcustmstrlist();
@@ -4781,20 +4781,32 @@ public class OVData {
                     duedate[k] = date.plusDays(k * 7);
                 }
                 String sduedate = duedate[0].format(DateTimeFormatter.ofPattern("yyyy-MM-dd")); ;
+                int j = 0;
+                int indexnbr = 0;
                 for (int i = 0; i <= 365; i++) {
                     if ((i % 7) == 0) {
                       sduedate = duedate[i / 7].format(DateTimeFormatter.ofPattern("yyyy-MM-dd")); 
                     } 
                     custpos = (int) (Math.random() * (5 - 0)) + 0;
+                    j = 0;
+                    indexnbr = OVData.getNextNbr("order");
+                    res =  st.executeQuery("select so_nbr from so_mstr where " +
+                                    " so_nbr = " + "'" + String.valueOf(indexnbr) + "'" + ";");
+                    
+                    while (res.next()) {
+                        j++;
+                    }
+                    
+                    if (j == 0) {
                     st.executeUpdate(" insert into so_mstr " 
                     + "(so_nbr, so_cust, so_ship, so_po, so_ord_date, so_due_date, " 
                     + "so_create_date, so_userid, so_status,"
                     + "so_rmks, so_terms, so_ar_acct, so_ar_cc, so_shipvia, so_type, so_site, so_onhold ) "
                     + " values ( " + 
-                    "'" +  String.valueOf(i + 50100) + "'" + "," + 
+                    "'" +  String.valueOf(indexnbr) + "'" + "," + 
                     "'" +  custs.get(custpos) + "'" + "," +   
                     "'" +  custs.get(custpos) + "'" + "," + 
-                    "'" +  "testpo" + String.valueOf(i + 50100) + "'" + "," +  
+                    "'" +  "testpo" + String.valueOf(indexnbr) + "'" + "," +  
                     "'" +  now + "'" + "," +  
                     "'" +  sduedate + "'" + "," +  
                     "'" +  now + "'" + "," +  
@@ -4819,10 +4831,10 @@ public class OVData {
                             + " sod_listprice, sod_disc, sod_due_date, sod_uom, sod_desc, "
                             + "sod_shipped_qty, sod_custpart, sod_status, sod_line) "
                     + " values ( " + 
-                    "'" +  String.valueOf(i + 50100) + "'" + "," + 
+                    "'" +  String.valueOf(indexnbr) + "'" + "," + 
                     "'" +  items.get(itempos)[0] + "'" + "," +
                     "'" +  "1000" + "'" + "," +  
-                    "'" +  "testpo" + String.valueOf(i + 50100) + "'" + "," +  
+                    "'" +  "testpo" + String.valueOf(indexnbr) + "'" + "," +  
                     "'" +  qty + "'" + "," +  
                     "'" +  items.get(itempos)[1] + "'" + "," +  
                     "'" +  items.get(itempos)[1] + "'" + "," +  
@@ -4836,21 +4848,79 @@ public class OVData {
                     "'" +  String.valueOf(z + 1) + "'" +  ");"
                    );    
                 } // for each sales order det random z
+                } // if j == 0
                 } // for each sales order 
+             
+                
+            } // if proceed
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+                myreturn = false;
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
+        } catch (SQLException e) {
+            MainFrame.bslog(e);
+            myreturn = false;
+        }  
+                  return myreturn;
+             } 
+   
+    public static boolean createTestDataPO() {
+            boolean myreturn = true;
+            ArrayList<String[]> items = invData.getItemsAndPriceByType("FG");
+            ArrayList<String> custs = cusData.getcustmstrlist();
+            try {
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+                LocalDate lt = LocalDate.now();
+                int year = lt.getYear(); 
+                LocalDate date = lt.ofYearDay(year, 1);
+               // LocalDate date = LocalDate.parse("2022-01-01");
+                LocalDate[] duedate = new LocalDate[53];
+                String now = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                
+                int qty = 0;
+                int count = 0;
+                int itempos = 0;
+                int custpos = 0;
+                for (int k = 0; k < 53; k++) {
+                    duedate[k] = date.plusDays(k * 7);
+                }
+                String sduedate = duedate[0].format(DateTimeFormatter.ofPattern("yyyy-MM-dd")); ;
+               
                 
                 // Now lets do Purchase Orders
                 items = invData.getItemsAndPriceByType("RAW");
+                int j = 0;
+                int indexnbr = 0;
                 for (int i = 0; i <= 365; i++) {
                     if ((i % 7) == 0) {
                       sduedate = duedate[i / 7].format(DateTimeFormatter.ofPattern("yyyy-MM-dd")); 
                     } 
+                    j = 0;
+                    indexnbr = OVData.getNextNbr("po");
+                    res =  st.executeQuery("select po_nbr from po_mstr where " +
+                                    " po_nbr = " + "'" + String.valueOf(indexnbr) + "'" + ";");
+                    
+                    while (res.next()) {
+                        j++;
+                    }
+                    
+                    if (j == 0) {
                     st.executeUpdate(" insert into po_mstr " 
                     + "(po_nbr, po_vend, po_site, po_type, " 
                         + " po_curr, po_buyer, po_due_date, "
                         + " po_ord_date, po_userid, po_status,"
                         + " po_terms, po_ap_acct, po_ap_cc, po_rmks ) "
                     + " values ( " + 
-                    "'" +  String.valueOf(i + 70100) + "'" + "," + 
+                    "'" +  String.valueOf(indexnbr) + "'" + "," + 
                     "'" +  "cash" + "'" + "," +
                     "'" +  "1000" + "'" + "," +  
                     "'" +  "DISCRETE" + "'" + "," + 
@@ -4875,7 +4945,7 @@ public class OVData {
                             + " pod_netprice, pod_ord_date, pod_due_date, "
                             + "pod_rcvd_qty, pod_status, pod_site, pod_desc) "
                     + " values ( " + 
-                    "'" +  String.valueOf(i + 70100) + "'" + "," + 
+                    "'" +  String.valueOf(indexnbr) + "'" + "," + 
                     "'" +  String.valueOf(z + 1) + "'" + "," + 
                     "'" +  items.get(itempos)[0] + "'" + "," +
                     "'" +  "" + "'" + "," + 
@@ -4892,6 +4962,7 @@ public class OVData {
                     "'" +  items.get(itempos)[3] + "'" +  ");"
                    );    
                 } // for each purchase order det random z
+                } // j == 0
                 } // for each purchase order 
                 
                 
@@ -4912,6 +4983,7 @@ public class OVData {
                   return myreturn;
              } 
    
+    
     public static boolean addSalesOrderDetail(ArrayList<String> list) {
                  boolean myreturn = false;
                   try {

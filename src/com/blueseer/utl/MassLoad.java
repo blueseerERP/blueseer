@@ -34,7 +34,8 @@ import static com.blueseer.inv.invData.addItemMasterMass;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
-import static com.blueseer.utl.OVData.createTestData;
+import static com.blueseer.utl.OVData.createTestDataPO;
+import static com.blueseer.utl.OVData.createTestDataSO;
 import java.awt.Component;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -230,7 +231,7 @@ public class MassLoad extends javax.swing.JPanel {
             }
             return message;
         }
- 
+      
         
        public void done() {
             try {
@@ -372,7 +373,7 @@ public class MassLoad extends javax.swing.JPanel {
     
     public String[] processItemMaster (File myfile) throws FileNotFoundException, IOException {
             String[] m = new String[2];
-            tacomments.setText("");
+            
             boolean proceed = true;
             boolean temp = true;
             ArrayList<String> list = new ArrayList<String>();
@@ -474,7 +475,7 @@ public class MassLoad extends javax.swing.JPanel {
     
     public String[] processBOMMaster (File myfile) throws FileNotFoundException, IOException {
         String[] m = new String[2];  
-        tacomments.setText("");
+        
             boolean proceed = true;
             boolean temp = true;
             ArrayList<String> list = new ArrayList<String>();
@@ -559,7 +560,6 @@ public class MassLoad extends javax.swing.JPanel {
     
     public String[] processGLAcctBalances (File myfile) throws FileNotFoundException, IOException {
         String[] m = new String[2]; 
-        tacomments.setText("");
             boolean proceed = true;
             boolean temp = true;
             ArrayList<String> list = new ArrayList<String>();
@@ -635,7 +635,7 @@ public class MassLoad extends javax.swing.JPanel {
     
     public String[] processGenericCode (File myfile) throws FileNotFoundException, IOException {
         String[] m = new String[2]; 
-        tacomments.setText("");
+        
             boolean proceed = true;
             boolean temp = true;
             ArrayList<String> list = new ArrayList<String>();
@@ -736,7 +736,7 @@ public class MassLoad extends javax.swing.JPanel {
     
     public String[] processCustXref (File myfile) throws FileNotFoundException, IOException {
         String[] m = new String[2];
-        tacomments.setText("");
+        
             boolean proceed = true;
             boolean temp = true;
             ArrayList<String> list = new ArrayList<String>();
@@ -808,7 +808,7 @@ public class MassLoad extends javax.swing.JPanel {
     
     public String[] processCarrier(File myfile) throws FileNotFoundException, IOException {
         String[] m = new String[2]; 
-        tacomments.setText("");
+        
             boolean proceed = true;
             boolean temp = true;
             ArrayList<String> list = new ArrayList<String>();
@@ -879,7 +879,7 @@ public class MassLoad extends javax.swing.JPanel {
     
     public String[] processEDIPartners(File myfile) throws FileNotFoundException, IOException {
         String[] m = new String[2]; 
-        tacomments.setText("");
+        
             boolean proceed = true;
             boolean temp = true;
             ArrayList<String> list = new ArrayList<String>();
@@ -964,7 +964,7 @@ public class MassLoad extends javax.swing.JPanel {
     
     public String[] processEDIDocumentStructures(File myfile) throws FileNotFoundException, IOException {
         String[] m = new String[2]; 
-        tacomments.setText("");
+        
             boolean proceed = true;
             boolean temp = true;
             ArrayList<String> list = new ArrayList<String>();
@@ -1055,7 +1055,7 @@ public class MassLoad extends javax.swing.JPanel {
     
     public String[] processEDIPartnerTransactions (File myfile) throws FileNotFoundException, IOException {
         String[] m = new String[2]; 
-        tacomments.setText("");
+        
             boolean proceed = true;
             boolean temp = true;
             ArrayList<String> list = new ArrayList<String>();
@@ -1154,7 +1154,7 @@ public class MassLoad extends javax.swing.JPanel {
     
     public String[] processVendXref (File myfile) throws FileNotFoundException, IOException {
         String[] m = new String[2]; 
-        tacomments.setText("");
+        
             boolean proceed = true;
             boolean temp = true;
             ArrayList<String> list = new ArrayList<String>();
@@ -1280,7 +1280,7 @@ public class MassLoad extends javax.swing.JPanel {
     
     public String[] processInvAdjustment (File myfile) throws FileNotFoundException, IOException {
         String[] m = new String[2]; 
-        tacomments.setText("");
+        
             boolean proceed = true;
             boolean temp = true;
             ArrayList<String> list = new ArrayList<String>();
@@ -1382,7 +1382,7 @@ public class MassLoad extends javax.swing.JPanel {
     
     public String[] processCustPriceList (File myfile) throws FileNotFoundException, IOException {
         String[] m = new String[2]; 
-        tacomments.setText("");
+        
             boolean proceed = true;
             boolean temp = true;
             ArrayList<String> list = new ArrayList<String>();
@@ -1481,7 +1481,7 @@ public class MassLoad extends javax.swing.JPanel {
     
     public String[] processVendPriceList (File myfile) throws FileNotFoundException, IOException {
         String[] m = new String[2]; 
-        tacomments.setText("");
+        
             boolean proceed = true;
             boolean temp = true;
             ArrayList<String> list = new ArrayList<String>();
@@ -1611,7 +1611,7 @@ public class MassLoad extends javax.swing.JPanel {
     
     public String[] processVendMstr(File myfile) throws FileNotFoundException, IOException {
         String[] m = new String[2]; 
-        tacomments.setText("");
+        
             boolean proceed = true;
             boolean temp = true;
             ArrayList<String> list = new ArrayList<String>();
@@ -1747,7 +1747,7 @@ public class MassLoad extends javax.swing.JPanel {
     
     public String[] processCustMstr(File myfile) throws FileNotFoundException, IOException {
         String[] m = new String[2]; 
-        tacomments.setText("");
+        
             boolean proceed = true;
             boolean temp = true;
             ArrayList<String> list = new ArrayList<String>();
@@ -1850,7 +1850,7 @@ public class MassLoad extends javax.swing.JPanel {
     
     public String[] processCustShipToMstr(File myfile) throws FileNotFoundException, IOException {
         String[] m = new String[2]; 
-        tacomments.setText("");
+        
             boolean proceed = true;
             boolean temp = true;
             ArrayList<String> list = new ArrayList<String>();
@@ -1947,7 +1947,7 @@ public class MassLoad extends javax.swing.JPanel {
     
     public String[] processRoutingMaster (File myfile) throws FileNotFoundException, IOException {
             String[] m = new String[2];
-            tacomments.setText("");
+            
             boolean proceed = true;
             boolean temp = true;
             ArrayList<String> list = new ArrayList<String>();
@@ -2046,7 +2046,7 @@ public class MassLoad extends javax.swing.JPanel {
     
     public String[] processWorkCenterMaster (File myfile) throws FileNotFoundException, IOException {
             String[] m = new String[2];
-            tacomments.setText("");
+            
             boolean proceed = true;
             boolean temp = true;
             ArrayList<String> list = new ArrayList<String>();
@@ -2364,38 +2364,51 @@ public class MassLoad extends javax.swing.JPanel {
             tacomments.setCaretPosition(0);
     }
     
-    public String[] loadTestData() {
+    
+    
+    public String[] loadTestData() throws InterruptedException {
         
         // set ddtable to index 0 for testdata
         ddtable.setSelectedIndex(0);
-        
         String[] m = new String[2];
            // String filename = "c:\\bs\\blueseer\\sf\\data\\sampledir\\workcenter.txt";
             Path filename = FileSystems.getDefault().getPath("data/sampledir/workcenter.txt");
             File file = new File(filename.toString());
              try {
+                 tacomments.append("Creating work centers...\n");
+                 Thread.sleep(1000);
                  processWorkCenterMaster(file);
+                 
              } catch (IOException ex) {
                  bsmf.MainFrame.show(getMessageTag(1145,filename.toString()));
              }
             filename = FileSystems.getDefault().getPath("data/sampledir/routing.txt");
             file = new File(filename.toString());
              try {
+                 tacomments.append("Creating routings...\n");
+                 Thread.sleep(1000);
                  processRoutingMaster(file);
+                 
              } catch (IOException ex) {
                  bsmf.MainFrame.show(getMessageTag(1145,filename.toString()));
              }
              filename = FileSystems.getDefault().getPath("data/sampledir/itemmstr.txt");
             file = new File(filename.toString());
              try {
+                 tacomments.append("Creating items...\n");
+                 Thread.sleep(1000);
                  processItemMaster(file);
+                 
              } catch (IOException ex) {
                  bsmf.MainFrame.show(getMessageTag(1145,filename.toString()));
              }
              filename = FileSystems.getDefault().getPath("data/sampledir/bommstr.txt");
             file = new File(filename.toString());
              try {
+                 tacomments.append("Creating BOMs...\n");
+                 Thread.sleep(1000);
                  processBOMMaster(file);
+                 
              } catch (IOException ex) {
                  bsmf.MainFrame.show(getMessageTag(1145,filename.toString()));
              }
@@ -2403,12 +2416,29 @@ public class MassLoad extends javax.swing.JPanel {
               filename = FileSystems.getDefault().getPath("data/sampledir/custmstr.txt");
             file = new File(filename.toString());
              try {
+                 tacomments.append("Creating customers...\n");
+                 Thread.sleep(1000);
                  processCustMstr(file);
+                 
              } catch (IOException ex) {
                  bsmf.MainFrame.show(getMessageTag(1145,filename.toString()));
              }
-            
-             if (createTestData()) { 
+             
+             
+             tacomments.append("Creating random sales orders...\n");
+             if (createTestDataSO()) { 
+                 m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+             } else {
+                 m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordError};
+             }
+             
+             if (m[0].equals("1")) {
+                 return m;
+             }
+             
+             
+             tacomments.append("Creating random purchase orders...\n");
+             if (createTestDataPO()) { 
                  m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
              } else {
                  m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordError};
@@ -2420,7 +2450,7 @@ public class MassLoad extends javax.swing.JPanel {
         
           for (String p : items) {
           OVData.setStandardCosts("1000", p);
-            // talog.append("Rolling Cost for: " + p + " \n");
+            tacomments.append("Rolling Cost for: " + p + " \n");
           }
        
         return m;
@@ -2542,6 +2572,7 @@ public class MassLoad extends javax.swing.JPanel {
     private void btuploadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btuploadActionPerformed
         File myfile = getfile();
         setPanelComponentState(this, false);
+        tacomments.setText("");
         executeTask(ddtable.getSelectedItem().toString(), myfile, "");
     }//GEN-LAST:event_btuploadActionPerformed
 
@@ -2557,6 +2588,7 @@ public class MassLoad extends javax.swing.JPanel {
        bsmf.MainFrame.show(getMessageTag(1172));
         boolean proceed = bsmf.MainFrame.warn(getMessageTag(1173));
         if (proceed) {
+        tacomments.setText("");
         setPanelComponentState(this, false);
         executeTask("", null, "testdata");
         }
