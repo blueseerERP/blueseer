@@ -87,9 +87,9 @@ public class EDILoadMaint extends javax.swing.JPanel {
 
       MyTableModel mymodel = new MyTableModel(new Object[][]{},
                     new String[]{"File", "Load?"});
-    String inDir = EDData.getEDIInDir();
-    String inArch = EDData.getEDIInArch(); 
-    String ErrorDir = EDData.getEDIErrorDir(); 
+    private static String inDir = "";
+    private static String inArch = ""; 
+    private static String ErrorDir = ""; 
     
     
      public class CheckBoxRenderer extends JCheckBox implements TableCellRenderer {
@@ -510,8 +510,12 @@ public class EDILoadMaint extends javax.swing.JPanel {
     }  
       
     public void initvars(String[] arg) throws MalformedURLException, SmbException {
+    inDir = EDData.getEDIInDir();
+    inArch = EDData.getEDIInArch(); 
+    ErrorDir = EDData.getEDIErrorDir();   
       getFiles();        
     }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
