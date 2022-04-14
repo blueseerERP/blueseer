@@ -147,20 +147,7 @@ public class ChartView extends javax.swing.JPanel {
         
         
         
-        ddcode.removeAllItems();
-        ArrayList<String> codes = OVData.getClockCodes();
-        for (String code : codes) {
-            ddcode.addItem(code);
-        }
-        ddcode.setEnabled(true);
-        if (rpt.equals("ClockChartByCode")) {
-            ddcode.setEnabled(false);
-        }
-        if (rpt.equals("ClockChartByWeek")) {
-            ddcode.setEnabled(false);
-        }
-        
-        ddcode.setVisible(false);
+       
         
         
     }
@@ -719,18 +706,18 @@ public class ChartView extends javax.swing.JPanel {
                                      " from (select date(julianday( " + "'" + dfdate.format(dcFrom.getDate()) + "' )" +
                                      ", '0 days', '+' || mock_nbr || ' days') as mydate " +
                                      " from mock_mstr where mock_nbr <= " + "'" + days + "'" + " ) as boo group by d) as c " +
-                                     " left outer join sod_Det on strftime('%W',sod_ord_date) = c.d " +
-                                     " and sod_ord_date >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
-                                     " and sod_ord_date <= " + "'" + dfdate.format(dcTo.getDate()) + "'" +
+                                     " left outer join sod_Det on strftime('%W',sod_due_date) = c.d " +
+                                     " and sod_due_date >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
+                                     " and sod_due_date <= " + "'" + dfdate.format(dcTo.getDate()) + "'" +
                                      " group by c.d;");
 
                 } else {
                     res = st.executeQuery(" select c.d as 't', sum(sod_ord_qty) as 'sum' from ( select boo.mydate, week(mydate) as 'd' " +
                     " from (select date_add( " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
                     ", interval mock_nbr day) as 'mydate' " +" from mock_mstr where mock_nbr <= " + "'" + days + "'" + " ) as boo group by d) as c " +
-                                     " left outer join sod_det on week(sod_ord_date) = c.d  " +
-                                     " and sod_ord_date >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
-                                     " and sod_ord_date <= " + "'" + dfdate.format(dcTo.getDate()) + "'" +
+                                     " left outer join sod_det on week(sod_due_date) = c.d  " +
+                                     " and sod_due_date >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
+                                     " and sod_due_date <= " + "'" + dfdate.format(dcTo.getDate()) + "'" +
                                      " inner join so_mstr on so_nbr = sod_nbr and so_type = 'DISCRETE' " +        
                                      " group by c.d;"); 
                 }
@@ -791,19 +778,19 @@ public class ChartView extends javax.swing.JPanel {
                                      " from (select date(julianday( " + "'" + dfdate.format(dcFrom.getDate()) + "' )" +
                                      ", '0 days', '+' || mock_nbr || ' days') as mydate " +
                                      " from mock_mstr where mock_nbr <= " + "'" + days + "'" + " ) as boo group by d) as c " +
-                                     " left outer join sod_det on strftime('%W',sod_ord_date) = c.d " +
-                                     " and sod_ord_date >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
-                                     " and sod_ord_date <= " + "'" + dfdate.format(dcTo.getDate()) + "'" +
-                                     " inner join so_mstr on so_mstr.so_nbr = sod_det.sod_nbr and so_type = 'DISCRETE' " +
+                                     " left outer join sod_det on strftime('%W',sod_due_date) = c.d " +
+                                     " and sod_due_date >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
+                                     " and sod_due_date <= " + "'" + dfdate.format(dcTo.getDate()) + "'" +
+                                     " left outer join so_mstr on so_mstr.so_nbr = sod_det.sod_nbr and so_type = 'DISCRETE' " +
                                      //" where mock_nbr <= 10 " +
                                      " group by c.d;");
                 } else {
                 res = st.executeQuery(" select c.d as 't', sum(sod_ord_qty * sod_netprice) as 'sum' from ( select boo.mydate, week(mydate) as 'd' " +
                     " from (select date_add( " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
                     ", interval mock_nbr day) as 'mydate' " +" from mock_mstr where mock_nbr <= " + "'" + days + "'" + " ) as boo group by d) as c " +
-                     " left outer join sod_det on week(sod_ord_date) = c.d  " +
-                     " and sod_ord_date >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
-                     " and sod_ord_date <= " + "'" + dfdate.format(dcTo.getDate()) + "'" +
+                     " left outer join sod_det on week(sod_due_date) = c.d  " +
+                     " and sod_due_date >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
+                     " and sod_due_date <= " + "'" + dfdate.format(dcTo.getDate()) + "'" +
                      " inner join so_mstr on so_nbr = sod_nbr and so_type = 'DISCRETE' " +        
                      " group by c.d;");
                 }
@@ -1036,11 +1023,14 @@ public class ChartView extends javax.swing.JPanel {
             try {
                 
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-                res = st.executeQuery("select dept, sum(tothrs) as 'sum' from time_clock " + 
-                    " where indate >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
+               
+                   res = st.executeQuery("select dept_id as 'dept', sum(tothrs) as 'sum' from dept_mstr " + 
+                    " left outer join time_clock on dept = dept_id " +    
+                    " and indate >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
                     " AND indate <= " + "'" + dfdate.format(dcTo.getDate()) + "'" +
-                    " AND code_id = " + "'" + ddcode.getSelectedItem().toString() + "'" +  
-                    " group by dept order by dept  ;");
+                    " group by dept_id order by dept_id  ;"); 
+               
+                
 
                 DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
@@ -1091,15 +1081,16 @@ public class ChartView extends javax.swing.JPanel {
             try {
                 
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-                res = st.executeQuery("select code_id, sum(tothrs) as 'sum' from time_clock " +
-                    " where indate >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
+                res = st.executeQuery("select clc_code, sum(tothrs) as 'sum' from clock_code " +
+                    " left outer join time_clock on code_id = clc_code " +    
+                    " and indate >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
                     " AND indate <= " + "'" + dfdate.format(dcTo.getDate()) + "'" +
-                    " group by code_id order by code_id  ;");
+                    " group by clc_code order by clc_code  ;");
 
                 DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
                 while (res.next()) {
-                    dataset.setValue(res.getDouble("sum"), "Sum", res.getString("code_id"));
+                    dataset.setValue(res.getDouble("sum"), "Sum", res.getString("clc_code"));
                 }
                 JFreeChart chart = ChartFactory.createBarChart(getTitleTag(5012), getGlobalColumnTag("code"), getGlobalColumnTag("hours"), dataset, PlotOrientation.VERTICAL, true, true, false);
                 CategoryItemRenderer renderer = new CustomRenderer();
@@ -1145,11 +1136,11 @@ public class ChartView extends javax.swing.JPanel {
             try {
                 
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-                res = st.executeQuery("select emp_nbr, sum(tothrs) as 'sum' from time_clock " +
-                    " where indate >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
+                res = st.executeQuery("select emp_mstr.emp_nbr as 'emp_nbr', sum(tothrs) as 'sum' from emp_mstr " +
+                    " left outer join time_clock on time_clock.emp_nbr = emp_mstr.emp_nbr " +    
+                    " and indate >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
                     " AND indate <= " + "'" + dfdate.format(dcTo.getDate()) + "'" +
-                    " AND code_id = " + "'" + ddcode.getSelectedItem().toString() + "'" +  
-                    " group by emp_nbr order by emp_nbr  ;");
+                    " group by emp_mstr.emp_nbr order by emp_mstr.emp_nbr  ;");
 
                 DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
@@ -2013,7 +2004,6 @@ public class ChartView extends javax.swing.JPanel {
         jLabel3 = new javax.swing.JLabel();
         btChart = new javax.swing.JButton();
         btprint = new javax.swing.JButton();
-        ddcode = new javax.swing.JComboBox();
         ChartPanel = new javax.swing.JPanel();
         chartlabel = new javax.swing.JLabel();
         CodePanel = new javax.swing.JPanel();
@@ -2072,9 +2062,7 @@ public class ChartView extends javax.swing.JPanel {
                 .addComponent(btChart)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btprint)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(ddcode, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(24, Short.MAX_VALUE))
+                .addContainerGap(36, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2083,8 +2071,7 @@ public class ChartView extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btChart)
-                        .addComponent(btprint)
-                        .addComponent(ddcode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(btprint))
                     .addComponent(dcFrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(dcTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2)
@@ -2270,12 +2257,11 @@ public class ChartView extends javax.swing.JPanel {
          if (whichreport.equals("ClockChartByDept")) {
             ClockChartByDept();
             tacodes.setText("");
-            ArrayList codes = OVData.getClockCodesAndDesc();
+            ArrayList codes = OVData.getdeptanddesclist();
             String str = "";
             
             for (int i = 0; i < codes.size(); i++) {
-            String[] element = codes.get(i).toString().split(",");
-                str += (element[0] + " = " + element[1]) + "\n";
+                str += (codes.get(i)) + "\n";
             }
             tacodes.setText(str);
             CodePanel.setVisible(true);
@@ -2433,7 +2419,6 @@ public class ChartView extends javax.swing.JPanel {
     private javax.swing.JLabel chartlabel;
     private com.toedter.calendar.JDateChooser dcFrom;
     private com.toedter.calendar.JDateChooser dcTo;
-    private javax.swing.JComboBox ddcode;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;

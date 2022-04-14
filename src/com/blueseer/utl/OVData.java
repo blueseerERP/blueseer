@@ -4807,7 +4807,7 @@ public class OVData {
                     "'" +  custs.get(custpos) + "'" + "," +   
                     "'" +  custs.get(custpos) + "'" + "," + 
                     "'" +  "testpo" + String.valueOf(indexnbr) + "'" + "," +  
-                    "'" +  now + "'" + "," +  
+                    "'" +  sduedate + "'" + "," +  
                     "'" +  sduedate + "'" + "," +  
                     "'" +  now + "'" + "," +  
                     "'" +  "admin" + "'" + "," +
@@ -4828,7 +4828,7 @@ public class OVData {
                 itempos = (int) (Math.random() * (5 - 0)) + 0;
                 st.executeUpdate("insert into sod_det "
                             + "(sod_nbr, sod_part, sod_site, sod_po, sod_ord_qty, sod_netprice, "
-                            + " sod_listprice, sod_disc, sod_due_date, sod_uom, sod_desc, "
+                            + " sod_listprice, sod_disc, sod_due_date, sod_ord_date, sod_uom, sod_desc, "
                             + "sod_shipped_qty, sod_custpart, sod_status, sod_line) "
                     + " values ( " + 
                     "'" +  String.valueOf(indexnbr) + "'" + "," + 
@@ -4839,7 +4839,8 @@ public class OVData {
                     "'" +  items.get(itempos)[1] + "'" + "," +  
                     "'" +  items.get(itempos)[1] + "'" + "," +  
                     "'" +  "0" + "'" + "," +
-                    "'" +  sduedate + "'" + "," +   
+                    "'" +  sduedate + "'" + "," +  
+                    "'" +  sduedate + "'" + "," +        
                     "'" +  items.get(itempos)[2] + "'" + "," +
                     "'" +  items.get(itempos)[3] + "'" + "," +        
                     "'" +  "0" + "'" + "," + 
