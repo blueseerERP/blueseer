@@ -1175,7 +1175,7 @@ public class ChartView extends javax.swing.JPanel {
                                      ", '-6 days', '+' || mock_nbr || ' days') as mydate " +
                                      " from mock_mstr where mock_nbr <= " + "'" + days + "'" + " ) as boo group by d) as c " +
                                      " left outer join time_clock on strftime('%W',indate) = c.d  " +
-                                     " where indate >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
+                                     " and indate >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
                                      " and indate <= " + "'" + dfdate.format(dcTo.getDate()) + "'" +
                                      " group by c.d;");   
                 } else {
@@ -2131,7 +2131,16 @@ public class ChartView extends javax.swing.JPanel {
                 return;
             }
         
-         int days = (int)( (dcTo.getDate().getTime() - dcFrom.getDate().getTime()) / (1000 * 60 * 60 * 24) );
+        int days = (int)( (dcTo.getDate().getTime() - dcFrom.getDate().getTime()) / (1000 * 60 * 60 * 24) );
+        
+        tacodes.setText("");
+        ArrayList weekcodes = OVData.getWeekNbrByDate(dfdate.format(dcFrom.getDate()), String.valueOf(days));
+        String weeknumbers = "";
+
+        for (int i = 0; i < weekcodes.size(); i++) {
+          weeknumbers += (weekcodes.get(i)) + "\n";
+        }
+        
         
         if (whichreport.equals("")) {
             bsmf.MainFrame.show("whichreport is empty");
@@ -2153,52 +2162,27 @@ public class ChartView extends javax.swing.JPanel {
         
          if (whichreport.equals("ShipPerWeekUnitsChart")) {
             ShipPerWeekUnitsChart();
-            tacodes.setText("");
-            ArrayList weekcodes = OVData.getWeekNbrByDate(dfdate.format(dcFrom.getDate()), String.valueOf(days));
-            String str = "";
-            
-            for (int i = 0; i < weekcodes.size(); i++) {
-              str += (weekcodes.get(i)) + "\n";
-            }
-            tacodes.setText(str);
+            tacodes.setText(weeknumbers);
             CodePanel.setVisible(true);
         } // if whichreport
         
         if (whichreport.equals("ShipPerWeekDollarsChart")) {
             ShipPerWeekDollarsChart();
-            tacodes.setText("");
-            ArrayList weekcodes = OVData.getWeekNbrByDate(dfdate.format(dcFrom.getDate()), String.valueOf(days));
-            String str = "";
-            for (int i = 0; i < weekcodes.size(); i++) {
-              str += (weekcodes.get(i)) + "\n";
-            }
-            tacodes.setText(str);
+            tacodes.setText(weeknumbers);
             CodePanel.setVisible(true);
         } // if whichreport
         
           if (whichreport.equals("ProdByWeekFGUnits")) {
             
             ProdByWeekFGUnits();
-            tacodes.setText("");
-            ArrayList weekcodes = OVData.getWeekNbrByDate(dfdate.format(dcFrom.getDate()), String.valueOf(days));
-            String str = "";
-            for (int i = 0; i < weekcodes.size(); i++) {
-              str += (weekcodes.get(i)) + "\n";
-            }
-            tacodes.setText(str);
+            tacodes.setText(weeknumbers);
             CodePanel.setVisible(true);
         } // if whichreport
         
         if (whichreport.equals("ProdByWeekFGDollars")) {
             
             ProdByWeekFGDollars();
-            tacodes.setText("");
-            ArrayList weekcodes = OVData.getWeekNbrByDate(dfdate.format(dcFrom.getDate()), String.valueOf(days));
-            String str = "";
-            for (int i = 0; i < weekcodes.size(); i++) {
-              str += (weekcodes.get(i)) + "\n";
-            }
-            tacodes.setText(str);
+            tacodes.setText(weeknumbers);
             CodePanel.setVisible(true);
         } // if whichreport
         
@@ -2206,13 +2190,7 @@ public class ChartView extends javax.swing.JPanel {
         
         if (whichreport.equals("DiscreteOrderPerWeekUnits")) {
             DiscreteOrderPerWeekUnits();
-            tacodes.setText("");
-            ArrayList weekcodes = OVData.getWeekNbrByDate(dfdate.format(dcFrom.getDate()), String.valueOf(days));
-            String str = "";
-            for (int i = 0; i < weekcodes.size(); i++) {
-              str += (weekcodes.get(i)) + "\n";
-            }
-            tacodes.setText(str);
+            tacodes.setText(weeknumbers);
             CodePanel.setVisible(true);
         } // if whichreport
         
@@ -2222,13 +2200,7 @@ public class ChartView extends javax.swing.JPanel {
         
         if (whichreport.equals("DiscreteOrderPerWeekDollars")) {
             DiscreteOrderPerWeekDollars();
-            tacodes.setText("");
-            ArrayList weekcodes = OVData.getWeekNbrByDate(dfdate.format(dcFrom.getDate()), String.valueOf(days));
-            String str = "";
-            for (int i = 0; i < weekcodes.size(); i++) {
-              str += (weekcodes.get(i)) + "\n";
-            }
-            tacodes.setText(str);
+            tacodes.setText(weeknumbers);
             CodePanel.setVisible(true);
         } // if whichreport
         
@@ -2299,13 +2271,7 @@ public class ChartView extends javax.swing.JPanel {
         
        if (whichreport.equals("ClockChartByWeek")) {
             HoursPerWeek();
-            tacodes.setText("");
-           // ArrayList codes = OVData.getWeekNbrByDateTimeClock(dfdate.format(dcFrom.getDate()));
-            String str = "";
-           // for (int i = 0; i < codes.size(); i++) {
-        //     str += (codes.get(i)) + "\n";
-         //   }
-            tacodes.setText(str);
+            tacodes.setText(weeknumbers);
             CodePanel.setVisible(true);
         } // if whichreport
    
@@ -2314,13 +2280,7 @@ public class ChartView extends javax.swing.JPanel {
         
         if (whichreport.equals("ScrapPerWeek")) {
             ScrapPerWeek();
-            tacodes.setText("");
-            ArrayList codes = OVData.getWeekNbrByDate(dfdate.format(dcFrom.getDate()), String.valueOf(days));
-            String str = "";
-            for (int i = 0; i < codes.size(); i++) {
-              str += (codes.get(i)) + "\n";
-            }
-            tacodes.setText(str);
+            tacodes.setText(weeknumbers);
             CodePanel.setVisible(true);
         } // if whichreport
         
