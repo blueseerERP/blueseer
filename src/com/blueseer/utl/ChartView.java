@@ -383,13 +383,17 @@ public class ChartView extends javax.swing.JPanel {
                                          ", '-3 days', '+' || mock_nbr || ' days') as mydate " +
                                          " from mock_mstr where mock_nbr <= " + "'" + days + "'" + " ) as boo group by myweek) as c " +
                                          " left outer join ship_det on strftime('%W',shd_date) = c.myweek " +
+                                         " and shd_date >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
+                                         " and shd_date <= " + "'" + dfdate.format(dcTo.getDate()) + "'" +
                                          //" where mock_nbr <= 10 " +
                                          " group by c.myweek;");
                     } else {
                     res = st.executeQuery(" select c.myweek as 'myweek', sum(shd_qty * shd_netprice) as 'sum' from ( select boo.mydate, week(mydate) as 'myweek' " +
                         " from (select date_add( " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
                         ", interval mock_nbr day) as 'mydate' " +" from mock_mstr where mock_nbr <= " + "'" + days + "'" + " ) as boo group by myweek) as c " +
-                                         " left outer join ship_det on week(shd_date) = c.myweek " +
+                        " left outer join ship_det on week(shd_date) = c.myweek " +
+                        " and shd_date >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
+                        " and shd_date <= " + "'" + dfdate.format(dcTo.getDate()) + "'" +
                                          //" where mock_nbr <= 10 " +
                                          " group by c.myweek;");
                     }
@@ -471,12 +475,29 @@ public class ChartView extends javax.swing.JPanel {
                 double dol = 0;
                 try {
                     DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-                    res = st.executeQuery("select sum(sod_ord_qty) as 'sum', week(sod_ord_date) as 'myweek' from sod_det " +
-                        " inner join so_mstr on so_nbr = sod_nbr " +
-                        " where sod_ord_date >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
-                        " AND sod_ord_date <= " + "'" + dfdate.format(dcTo.getDate()) + "'" +
-                        " AND so_type = 'DISCRETE' " + 
-                        " group by week(sod_ord_date) order by myweek asc;");
+                    int days = (int)( (dcTo.getDate().getTime() - dcFrom.getDate().getTime()) / (1000 * 60 * 60 * 24) );
+                    
+                    if (bsmf.MainFrame.dbtype.equals("sqlite")) {
+                      res = st.executeQuery(" select c.myweek as 'myweek', sum(shd_qty) as 'sum' from ( select boo.mydate, strftime('%W',mydate) as 'myweek' " +
+                         " from (select date(julianday( " + "'" + dfdate.format(dcFrom.getDate()) + "' )" +
+                         ", '-3 days', '+' || mock_nbr || ' days') as mydate " +
+                         " from mock_mstr where mock_nbr <= " + "'" + days + "'" + " ) as boo group by myweek) as c " +
+                         " left outer join ship_det on strftime('%W',shd_date) = c.myweek " +
+                         " and shd_date >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
+                         " and shd_date <= " + "'" + dfdate.format(dcTo.getDate()) + "'" +
+                         //" where mock_nbr <= 10 " +
+                         " group by c.myweek;");   
+                    } else {
+                     res = st.executeQuery(" select c.myweek as 'myweek', sum(shd_qty) as 'sum' from ( select boo.mydate, week(mydate) as 'myweek' " +
+                        " from (select date_add( " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
+                        ", interval mock_nbr day) as 'mydate' " +" from mock_mstr where mock_nbr <= " + "'" + days + "'" + " ) as boo group by myweek) as c " +
+                         " left outer join ship_det on week(shd_date) = c.myweek " +
+                         " and shd_date >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
+                         " and shd_date <= " + "'" + dfdate.format(dcTo.getDate()) + "'" +
+                                         //" where mock_nbr <= 10 " +
+                                         " group by c.myweek;"); 
+                    }
+                    
 
                     DefaultCategoryDataset dataset = new DefaultCategoryDataset();
                    
@@ -539,7 +560,8 @@ public class ChartView extends javax.swing.JPanel {
                                      ", '-6 days', '+' || mock_nbr || ' days') as mydate " +
                                      " from mock_mstr where mock_nbr <= " + "'" + days + "'" + " ) as boo group by d) as c " +
                                      " left outer join tran_mstr on strftime('%W',tr_eff_date) = c.d and tr_type = 'RCT-FG' " +
-                                     //" where mock_nbr <= 10 " +
+                                     " and tr_eff_date >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
+                                     " and tr_eff_date <= " + "'" + dfdate.format(dcTo.getDate()) + "'" +
                                      " group by c.d;");
                  } else {
                   res = st.executeQuery(" select c.d as 't', sum(tr_qty) as 'sum' from ( select boo.mydate, week(mydate) as 'd' " +
@@ -547,6 +569,8 @@ public class ChartView extends javax.swing.JPanel {
                     ", interval mock_nbr day) as 'mydate' " +
                     " from mock_mstr where mock_nbr <= " + "'" + days + "'" + " ) as boo group by d) as c " +
                     " left outer join tran_mstr on week(tr_eff_date) = c.d and tr_type = 'RCT-FG' " +
+                    " and tr_eff_date >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
+                    " and tr_eff_date <= " + "'" + dfdate.format(dcTo.getDate()) + "'" +        
                     " group by c.d;");
                  }
                 DefaultCategoryDataset dataset = new DefaultCategoryDataset();
@@ -613,6 +637,8 @@ public class ChartView extends javax.swing.JPanel {
                                      ", '-6 days', '+' || mock_nbr || ' days') as mydate " +
                                      " from mock_mstr where mock_nbr <= " + "'" + days + "'" + " ) as boo group by d) as c " +
                                      " left outer join tran_mstr on strftime('%W',tr_eff_date) = c.d and tr_type = 'RCT-FG' " +
+                                     " and tr_eff_date >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
+                                     " and tr_eff_date <= " + "'" + dfdate.format(dcTo.getDate()) + "'" +
                                      " left outer join itemr_cost on itemr_cost.itr_item = tran_mstr.tr_part " +
                                      " and itr_op = tr_op and itr_set = 'standard' and itr_site = tr_site " +
                                      //" where mock_nbr <= 10 " +
@@ -623,6 +649,8 @@ public class ChartView extends javax.swing.JPanel {
                     ", interval mock_nbr day) as 'mydate' " + 
                     " from mock_mstr where mock_nbr <= " + "'" + days + "'" + " ) as boo group by d) as c " +
                                      " left outer join tran_mstr on week(tr_eff_date) = c.d and tr_type = 'RCT-FG' " +
+                                     " and tr_eff_date >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
+                                     " and tr_eff_date <= " + "'" + dfdate.format(dcTo.getDate()) + "'" +
                                      " left outer join itemr_cost on itemr_cost.itr_item = tran_mstr.tr_part " +
                                      " and itr_op = tr_op and itr_set = 'standard' and itr_site = tr_site " +
                                      //" where mock_nbr <= 10 " +
@@ -683,25 +711,28 @@ public class ChartView extends javax.swing.JPanel {
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 ArrayList mylist = OVData.getWeekNbrByFromDateToDate(dfdate.format(dcFrom.getDate()), dfdate.format(dcTo.getDate()));
                 ArrayList newlist = new ArrayList();
+                int days = (int)( (dcTo.getDate().getTime() - dcFrom.getDate().getTime()) / (1000 * 60 * 60 * 24) );
                 if (bsmf.MainFrame.dbtype.equals("sqlite")) {
 
-               int days = (int)( (dcTo.getDate().getTime() - dcFrom.getDate().getTime()) / (1000 * 60 * 60 * 24) );
                //not sure why -3 days was in there...but changed to 0 days
                res = st.executeQuery(" select c.d as 't', sum(sod_ord_qty) as 'sum' from ( select boo.mydate, strftime('%W',mydate) as 'd' " +
                                      " from (select date(julianday( " + "'" + dfdate.format(dcFrom.getDate()) + "' )" +
                                      ", '0 days', '+' || mock_nbr || ' days') as mydate " +
                                      " from mock_mstr where mock_nbr <= " + "'" + days + "'" + " ) as boo group by d) as c " +
                                      " left outer join sod_Det on strftime('%W',sod_ord_date) = c.d " +
-                                     //" where mock_nbr <= 10 " +
+                                     " and sod_ord_date >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
+                                     " and sod_ord_date <= " + "'" + dfdate.format(dcTo.getDate()) + "'" +
                                      " group by c.d;");
 
                 } else {
-                res = st.executeQuery("select sum(sod_ord_qty) as 'sum', week(sod_ord_date) as 't' from sod_det " +
-                    " inner join so_mstr on so_nbr = sod_nbr " +
-                    " where sod_ord_date >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
-                    " AND sod_ord_date <= " + "'" + dfdate.format(dcTo.getDate()) + "'" +
-                    " AND so_type = 'DISCRETE' " + 
-                    " group by week(sod_ord_date) order by myweek asc;");
+                    res = st.executeQuery(" select c.d as 't', sum(sod_ord_qty) as 'sum' from ( select boo.mydate, week(mydate) as 'd' " +
+                    " from (select date_add( " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
+                    ", interval mock_nbr day) as 'mydate' " +" from mock_mstr where mock_nbr <= " + "'" + days + "'" + " ) as boo group by d) as c " +
+                                     " left outer join sod_det on week(sod_ord_date) = c.d  " +
+                                     " and sod_ord_date >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
+                                     " and sod_ord_date <= " + "'" + dfdate.format(dcTo.getDate()) + "'" +
+                                     " inner join so_mstr on so_nbr = sod_nbr and so_type = 'DISCRETE' " +        
+                                     " group by c.d;"); 
                 }
                 while (res.next()) {
                     dataset.setValue(res.getDouble("sum"), "Sum", res.getString("t"));
@@ -754,23 +785,27 @@ public class ChartView extends javax.swing.JPanel {
             try {
                 
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-                if (bsmf.MainFrame.dbtype.equals("sqlite")) {
                 int days = (int)( (dcTo.getDate().getTime() - dcFrom.getDate().getTime()) / (1000 * 60 * 60 * 24) );
-                res = st.executeQuery(" select c.d as 't', sum(sod_ord_qty * sod_netprice) as 'sum' from ( select boo.mydate, strftime('%W',mydate) as 'd' " +
+                if (bsmf.MainFrame.dbtype.equals("sqlite")) {
+                 res = st.executeQuery(" select c.d as 't', sum(sod_ord_qty * sod_netprice) as 'sum' from ( select boo.mydate, strftime('%W',mydate) as 'd' " +
                                      " from (select date(julianday( " + "'" + dfdate.format(dcFrom.getDate()) + "' )" +
                                      ", '0 days', '+' || mock_nbr || ' days') as mydate " +
                                      " from mock_mstr where mock_nbr <= " + "'" + days + "'" + " ) as boo group by d) as c " +
                                      " left outer join sod_det on strftime('%W',sod_ord_date) = c.d " +
+                                     " and sod_ord_date >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
+                                     " and sod_ord_date <= " + "'" + dfdate.format(dcTo.getDate()) + "'" +
                                      " inner join so_mstr on so_mstr.so_nbr = sod_det.sod_nbr and so_type = 'DISCRETE' " +
                                      //" where mock_nbr <= 10 " +
                                      " group by c.d;");
                 } else {
-                res = st.executeQuery("select sum(sod_ord_qty * sod_netprice) as 'sum', week(sod_ord_date) as 'myweek' from sod_det " +
-                    " inner join so_mstr on so_nbr = sod_nbr " +
-                    " where sod_ord_date >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
-                    " AND sod_ord_date <= " + "'" + dfdate.format(dcTo.getDate()) + "'" +
-                    " AND so_type = 'DISCRETE' " + 
-                    " group by week(sod_ord_date) order by myweek asc;");    
+                res = st.executeQuery(" select c.d as 't', sum(sod_ord_qty * sod_netprice) as 'sum' from ( select boo.mydate, week(mydate) as 'd' " +
+                    " from (select date_add( " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
+                    ", interval mock_nbr day) as 'mydate' " +" from mock_mstr where mock_nbr <= " + "'" + days + "'" + " ) as boo group by d) as c " +
+                     " left outer join sod_det on week(sod_ord_date) = c.d  " +
+                     " and sod_ord_date >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
+                     " and sod_ord_date <= " + "'" + dfdate.format(dcTo.getDate()) + "'" +
+                     " inner join so_mstr on so_nbr = sod_nbr and so_type = 'DISCRETE' " +        
+                     " group by c.d;");
                 }
 
                 DefaultCategoryDataset dataset = new DefaultCategoryDataset();
@@ -1167,9 +1202,9 @@ public class ChartView extends javax.swing.JPanel {
             try {
                 
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+                int days = (int)( (dcTo.getDate().getTime() - dcFrom.getDate().getTime()) / (1000 * 60 * 60 * 24) );
+                 
                 if (bsmf.MainFrame.dbtype.equals("sqlite")) {
-                 int days = (int)( (dcTo.getDate().getTime() - dcFrom.getDate().getTime()) / (1000 * 60 * 60 * 24) );
-                  
                  res = st.executeQuery(" select c.d as 't', sum(tothrs) as 'sum' from ( select boo.mydate, strftime('%W',mydate) as 'd' " +
                                      " from (select date(julianday( " + "'" + dfdate.format(dcFrom.getDate()) + "' )" +
                                      ", '-6 days', '+' || mock_nbr || ' days') as mydate " +
@@ -1179,10 +1214,13 @@ public class ChartView extends javax.swing.JPanel {
                                      " and indate <= " + "'" + dfdate.format(dcTo.getDate()) + "'" +
                                      " group by c.d;");   
                 } else {
-                   res = st.executeQuery("select sum(tothrs) as 'sum', week(indate) as 't' from time_clock " +
-                    " where indate >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
-                    " AND indate <= " + "'" + dfdate.format(dcTo.getDate()) + "'" +
-                    " group by week(indate) order by myweek asc;"); 
+                   res = st.executeQuery(" select c.d as 't', sum(tothrs) as 'sum' from ( select boo.mydate, week(mydate) as 'd' " +
+                    " from (select date_add( " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
+                    ", interval mock_nbr day) as 'mydate' " +" from mock_mstr where mock_nbr <= " + "'" + days + "'" + " ) as boo group by d) as c " +
+                                     " left outer join time_clock on week(indate) = c.d  " +
+                                     " and indate >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
+                                     " and indate <= " + "'" + dfdate.format(dcTo.getDate()) + "'" +
+                                     " group by c.d;"); 
                 }
                 
 
@@ -1421,7 +1459,8 @@ public class ChartView extends javax.swing.JPanel {
                                      ", '-6 days', '+' || mock_nbr || ' days') as mydate " +
                                      " from mock_mstr where mock_nbr <= " + "'" + days + "'" + " ) as boo group by d) as c " +
                                      " left outer join tran_mstr on strftime('%W',tr_eff_date) = c.d and tr_type = 'ISS-SCRAP' " +
-                                     //" where mock_nbr <= 10 " +
+                                     " and tr_eff_date >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
+                                     " and tr_eff_date <= " + "'" + dfdate.format(dcTo.getDate()) + "'" +
                                      " group by c.d;");
                  } else {
                 res = st.executeQuery(" select c.d as 't', sum(tr_qty * tr_cost) as 'sum' from ( select boo.mydate, week(mydate) as 'd' " +
