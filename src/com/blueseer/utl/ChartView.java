@@ -1167,15 +1167,29 @@ public class ChartView extends javax.swing.JPanel {
             try {
                 
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-                res = st.executeQuery("select sum(tothrs) as 'sum', week(indate) as 'myweek' from time_clock " +
+                if (bsmf.MainFrame.dbtype.equals("sqlite")) {
+                 int days = (int)( (dcTo.getDate().getTime() - dcFrom.getDate().getTime()) / (1000 * 60 * 60 * 24) );
+                  
+                 res = st.executeQuery(" select c.d as 't', sum(tothrs) as 'sum' from ( select boo.mydate, strftime('%W',mydate) as 'd' " +
+                                     " from (select date(julianday( " + "'" + dfdate.format(dcFrom.getDate()) + "' )" +
+                                     ", '-6 days', '+' || mock_nbr || ' days') as mydate " +
+                                     " from mock_mstr where mock_nbr <= " + "'" + days + "'" + " ) as boo group by d) as c " +
+                                     " left outer join time_clock on strftime('%W',indate) = c.d  " +
+                                     " where indate >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
+                                     " and indate <= " + "'" + dfdate.format(dcTo.getDate()) + "'" +
+                                     " group by c.d;");   
+                } else {
+                   res = st.executeQuery("select sum(tothrs) as 'sum', week(indate) as 't' from time_clock " +
                     " where indate >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
                     " AND indate <= " + "'" + dfdate.format(dcTo.getDate()) + "'" +
-                    " group by week(indate) order by myweek asc;");
+                    " group by week(indate) order by myweek asc;"); 
+                }
+                
 
                 DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
                 while (res.next()) {
-                    dataset.setValue(res.getDouble("sum"), "Sum", res.getString("myweek"));
+                    dataset.setValue(res.getDouble("sum"), "Sum", res.getString("t"));
                 }
                 JFreeChart chart = ChartFactory.createBarChart(getTitleTag(5014), getGlobalColumnTag("week"), getGlobalColumnTag("hours"), dataset, PlotOrientation.VERTICAL, true, true, false);
                 CategoryItemRenderer renderer = new CustomRenderer();
