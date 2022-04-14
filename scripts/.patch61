@@ -23,3 +23,5 @@ patch=7
 # Freeze UI issue fix for ItemMaint, BOMMaint, CustMaint, OrderMaint, POMaint, SiteMstr, UserMstr, DefaultMstr
 patch=8
 # Freeze UI cleanup #49 ; addition of patch loading mechanism #50 
+patch=9
+# bug fixes #51, #52, and chartview cleanup
