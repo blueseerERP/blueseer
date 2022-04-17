@@ -125,7 +125,7 @@ public class engData {
     
     private static int _addECNTask(ecn_task x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
         int rows = 0;
-        String sqlSelect = "select * from ecn_task where ecnt_nbr = ? and ecnt_mstrid = ?";
+        String sqlSelect = "select * from ecn_task where ecnt_nbr = ? and ecnt_mstrid = ? and ecnt_seq = ?";
         String sqlInsert = "insert into ecn_task (ecnt_nbr, ecnt_mstrid, ecnt_seq,  "
                             + " ecnt_owner, ecnt_task, ecnt_assigndate, ecnt_closedate, ecnt_status, ecnt_notes) "
                         + " values (?,?,?,?,?,?,?,?,?); "; 
@@ -133,6 +133,7 @@ public class engData {
           ps = con.prepareStatement(sqlSelect); 
           ps.setString(1, x.ecnt_nbr);
           ps.setString(2, x.ecnt_mstrid);
+          ps.setString(3, x.ecnt_seq);
           res = ps.executeQuery();
           ps = con.prepareStatement(sqlInsert);  
             if (! res.isBeforeFirst()) {
@@ -270,16 +271,17 @@ public class engData {
     
     private static int _updateECNTask(ecn_task x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
         int rows = 0;
-        String sqlSelect = "select * from ecn_task where ecnt_nbr = ? and ecnt_mstrid = ?";
-        String sqlUpdate = "update ecn_task set ecnt_seq = ?, " +
+        String sqlSelect = "select * from ecn_task where ecnt_nbr = ? and ecnt_mstrid = ? and ecnt_seq = ?";
+        String sqlUpdate = "update ecn_task set  " +
                            " ecnt_owner = ?, ecnt_task = ?, ecnt_assigndate = ?, ecnt_closedate = ?, ecnt_status = ? " +
-                 " where ecnt_nbr = ? and ecnt_mstrid = ? ; ";
+                 " where ecnt_nbr = ? and ecnt_mstrid = ? and ecnt_seq = ? ; ";
         String sqlInsert = "insert into ecn_task (ecnt_nbr, ecnt_mstrid, ecnt_seq, ecnt_owner, "
                             + " ecnt_task, ecnt_assigndate, ecnt_closedate, ecnt_status) "
                         + " values (?,?,?,?,?,?,?,?); "; 
         ps = con.prepareStatement(sqlSelect); 
         ps.setString(1, x.ecnt_nbr);
         ps.setString(2, x.ecnt_mstrid);
+        ps.setString(3, x.ecnt_seq);
         res = ps.executeQuery();
         if (! res.isBeforeFirst()) {  // insert
 	 ps = con.prepareStatement(sqlInsert) ;
@@ -295,14 +297,14 @@ public class engData {
             rows = ps.executeUpdate();
         } else {    // update
          ps = con.prepareStatement(sqlUpdate) ;
-            ps.setString(7, x.ecnt_nbr);
-            ps.setString(8, x.ecnt_mstrid);
-            ps.setString(1, x.ecnt_seq);
-            ps.setString(2, x.ecnt_owner);
-            ps.setString(3, x.ecnt_task);
-            ps.setString(4, x.ecnt_assigndate);
-            ps.setString(5, x.ecnt_closedate);
-            ps.setString(6, x.ecnt_status);
+            ps.setString(6, x.ecnt_nbr);
+            ps.setString(7, x.ecnt_mstrid);
+            ps.setString(8, x.ecnt_seq);
+            ps.setString(1, x.ecnt_owner);
+            ps.setString(2, x.ecnt_task);
+            ps.setString(3, x.ecnt_assigndate);
+            ps.setString(4, x.ecnt_closedate);
+            ps.setString(5, x.ecnt_status);
             // ps.setString(7, x.ecnt_notes);  another mechanism updates the Notes field
             rows = ps.executeUpdate();
         }
@@ -423,14 +425,15 @@ public class engData {
         return list;
     }
     
-    public static ecn_task getECNTask(String nbr, String masterid) {
+    public static ecn_task getECNTask(String nbr, String masterid, String seq) {
         ecn_task r = null;
         String[] m = new String[2];
-        String sql = "select * from ecn_task where ecnt_nbr = ? and ecnt_mstrid = ? ;";
+        String sql = "select * from ecn_task where ecnt_nbr = ? and ecnt_mstrid = ? and ecnt_seq = ? ;";
         try (Connection con = DriverManager.getConnection(url + db, user, pass);
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, nbr);
         ps.setString(2, masterid);
+        ps.setString(3, seq); 
              try (ResultSet res = ps.executeQuery();) {
                 if (! res.isBeforeFirst()) {
                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};

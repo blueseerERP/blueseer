@@ -63,6 +63,7 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.sql.Connection;
@@ -70,6 +71,7 @@ import java.text.DecimalFormatSymbols;
 import java.util.Enumeration;
 import java.util.Locale;
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -93,7 +95,15 @@ public class ECNBrowse extends javax.swing.JPanel {
                             getGlobalColumnTag("id"), 
                             getGlobalColumnTag("user"), 
                             getGlobalColumnTag("item"), 
-                            getGlobalColumnTag("status")});
+                            getGlobalColumnTag("status")})
+            {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0 || col == 1)       
+                            return ImageIcon.class;
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        };
                 
     javax.swing.table.DefaultTableModel modeldetail = new javax.swing.table.DefaultTableModel(new Object[][]{},
                         new String[]{getGlobalColumnTag("sequence"), 
@@ -521,19 +531,9 @@ try {
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 String fromdate = "";
                 String todate = "";
-               mymodel.setNumRows(0);
-                 
-              
                 
-                 double totsales = 0.00;
-                 int totqty = 0;
+                 int lines = 0;
                  
-            
-                // String site = ddsite.getSelectedItem().toString(); 
-                                  
-             
-                 String status = "";
-                
                
                  if (dcfrom.getDate() == null) {
                      fromdate = bsmf.MainFrame.lowdate;
@@ -545,8 +545,20 @@ try {
                  } else {
                     todate = dfdate.format(dcto.getDate()); 
                  }
-                  
-                      //must be type balance sheet
+                 
+                  mymodel.setNumRows(0);
+                tablereport.setModel(mymodel);
+                tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
+                tablereport.getColumnModel().getColumn(1).setMaxWidth(100);  
+                
+                 Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
+                 while (en.hasMoreElements()) {
+                     TableColumn tc = en.nextElement();
+                     if (mymodel.getColumnClass(tc.getModelIndex()).getSimpleName().equals("ImageIcon")) {
+                         continue;
+                     }
+                     tc.setCellRenderer(new SomeRenderer());
+                 } 
                
                   res = st.executeQuery("select ecn_nbr, ecn_item, ecn_poc, ecn_status, ecn_createdate, ecn_mstrtask, ecn_targetdate " +
                           " from ecn_mstr where " +
@@ -557,29 +569,19 @@ try {
                 
                        while (res.next()) {
                      
-                         totqty = totqty + 1;
+                         lines = lines + 1;
                          
-                         mymodel.addRow(new Object[]{"Select", "Detail", 
+                         mymodel.addRow(new Object[]{BlueSeerUtils.clickflag,
+                            BlueSeerUtils.clickbasket, 
                                res.getString("ecn_nbr"),
                                 res.getString("ecn_mstrtask"),
                                 res.getString("ecn_poc"),
                                 res.getString("ecn_item"),                                
                                 res.getString("ecn_status")
                             });
-                          tbtotqty.setText(String.valueOf(totqty));         
+                          tbtotqty.setText(String.valueOf(lines));         
                        }
               
-                   Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
-                 while (en.hasMoreElements()) {
-                     TableColumn tc = en.nextElement();
-                     tc.setCellRenderer(new SomeRenderer());
-                 }     
-                 
-                 
-              tablereport.getColumnModel().getColumn(0).setCellRenderer(new ButtonRenderer());
-              tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
-              tablereport.getColumnModel().getColumn(1).setCellRenderer(new ButtonRenderer());
-              tablereport.getColumnModel().getColumn(1).setMaxWidth(100);
               
                 
             } catch (SQLException s) {

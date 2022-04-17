@@ -73,6 +73,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultCellEditor;
@@ -614,14 +616,15 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeerT  {
     public void setComponentDefaultValues() {
        isLoad = true;
         tbkey.setText("");
-         java.util.Date now = new java.util.Date();
+        java.util.Date now = new java.util.Date();
+        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
         TreeScrollPanel.setVisible(false);  
         tree.setVisible(false);
         messglbl.setText("");
         tanotes.setText("");
         tbkey.setText("");  
         tbdrawing.setText("");
-        tbdatecreate.setText("");
+        tbdatecreate.setText(dfdate.format(now));
         
         if (ddengineer.getItemCount() > 0)
         ddengineer.setSelectedIndex(0);
@@ -706,6 +709,7 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeerT  {
                    setPanelComponentState(this, true);
                    btadd.setEnabled(false);
                    tbkey.setEditable(false);
+                   tbdatecreate.setEnabled(false);
                    tbkey.setForeground(Color.blue);
         } else {
                    tbkey.setForeground(Color.red); 

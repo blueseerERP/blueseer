@@ -23,6 +23,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
+
 package com.blueseer.eng;
 
 import bsmf.MainFrame;
@@ -59,14 +60,23 @@ import javax.swing.table.TableCellRenderer;
 import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
+import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.sql.Connection;
 import java.text.DecimalFormatSymbols;
 import java.util.Enumeration;
 import java.util.Locale;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 
@@ -81,7 +91,18 @@ public class TaskBrowse extends javax.swing.JPanel {
                         new String[]{getGlobalColumnTag("select"), 
                             getGlobalColumnTag("detail"), 
                             getGlobalColumnTag("id"), 
-                            getGlobalColumnTag("description")});
+                            getGlobalColumnTag("class"),
+                            getGlobalColumnTag("user"),
+                            getGlobalColumnTag("date"),
+                            getGlobalColumnTag("status")})
+            {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0 || col == 1)       
+                            return ImageIcon.class;
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        };
                 
     javax.swing.table.DefaultTableModel modeldetail = new javax.swing.table.DefaultTableModel(new Object[][]{},
                         new String[]{getGlobalColumnTag("sequence"), 
@@ -118,17 +139,17 @@ public class TaskBrowse extends javax.swing.JPanel {
         Component c = super.getTableCellRendererComponent(table,
                 value, isSelected, hasFocus, row, column);
         
-      //  String status = (String) table.getModel().getValueAt(table.convertRowIndexToModel(row), 6); 
+        String status = (String) table.getModel().getValueAt(table.convertRowIndexToModel(row), 6); 
        // int stock = (int)table.getModel().getValueAt(table.convertRowIndexToModel(row), 7);
         
         
-       // if (status.equals("closed")) {
+        if (status.equals("closed")) {
            // c.setBackground(Color.blue);
-      //      c.setForeground(Color.blue);
-      //  } else {
+            c.setForeground(Color.blue);
+        } else {
             c.setBackground(table.getBackground());
             c.setForeground(table.getForeground());
-      //  }     
+        }     
        
         
         //c.setBackground(row % 2 == 0 ? Color.LIGHT_GRAY : Color.WHITE);
@@ -152,15 +173,13 @@ public class TaskBrowse extends javax.swing.JPanel {
      */
     public TaskBrowse() {
         initComponents();
+        setLanguageTags(this);
     }
 
      public void getdetail(String nbr) {
       
          modeldetail.setNumRows(0);
-         double totalsales = 0.00;
-         double totalqty = 0.00;
-         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
-        
+         double lines = 0.00;
         try {
 
             Connection con = DriverManager.getConnection(url + db, user, pass);
@@ -172,7 +191,7 @@ public class TaskBrowse extends javax.swing.JPanel {
                 res = st.executeQuery("select taskd_id, taskd_owner, taskd_desc, taskd_sequence, taskd_enabled from task_det " +
                         " where taskd_id = " + "'" + nbr + "'" +  ";");
                 while (res.next()) {
-                    totalqty = totalqty + 1;
+                    lines = lines + 1;
                    modeldetail.addRow(new Object[]{ 
                       res.getString("taskd_sequence"), 
                       res.getString("taskd_owner"),
@@ -204,14 +223,67 @@ public class TaskBrowse extends javax.swing.JPanel {
     
   
      
+    public void setLanguageTags(Object myobj) {
+       JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+       Component[] components = panel.getComponents();
+       for (Component component : components) {
+           if (component instanceof JPanel) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
+                       ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
+                    } 
+                    setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JLabel ) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    }
+                }
+                if (component instanceof JButton ) {
+                    if (tags.containsKey("global.button." + component.getName())) {
+                       ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    }
+                }
+                if (component instanceof JCheckBox) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+                if (component instanceof JRadioButton) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
+                       ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    } 
+                }
+       }
+    }
      
     public void initvars(String[] arg) {
        
+        
+        
+        java.util.Date now = new java.util.Date();
+        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+        DateFormat dfyear = new SimpleDateFormat("yyyy");
+        DateFormat dfperiod = new SimpleDateFormat("M");
+        
+        dcfrom.setDate(now);
+        dcto.setDate(now);
+        tbtotqty.setText("0");
         mymodel.setNumRows(0);
         modeldetail.setNumRows(0);
         tablereport.setModel(mymodel);
         tabledetail.setModel(modeldetail);
-        tbtotqty.setText("0");
+        
       
                 //          ReportPanel.TableReport.getColumn("CallID").setCellEditor(
                     //       new ButtonEditor(new JCheckBox()));
@@ -243,6 +315,11 @@ public class TaskBrowse extends javax.swing.JPanel {
         jPanel2 = new javax.swing.JPanel();
         btdetail = new javax.swing.JButton();
         btRun = new javax.swing.JButton();
+        datelabel = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        dcfrom = new com.toedter.calendar.JDateChooser();
+        dcto = new com.toedter.calendar.JDateChooser();
         jPanel3 = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
         tbtotqty = new javax.swing.JLabel();
@@ -313,29 +390,65 @@ public class TaskBrowse extends javax.swing.JPanel {
             }
         });
 
+        jLabel5.setText("From Date:");
+        jLabel5.setName("lblfromdate"); // NOI18N
+
+        jLabel6.setText("To Date:");
+        jLabel6.setName("lbltodate"); // NOI18N
+
+        dcfrom.setDateFormatString("yyyy-MM-dd");
+
+        dcto.setDateFormatString("yyyy-MM-dd");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(83, 83, 83)
-                .addComponent(btRun)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btdetail)
-                .addContainerGap(618, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel6))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(dcfrom, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btRun)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btdetail)
+                                .addGap(18, 20, Short.MAX_VALUE))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(dcto, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(114, 114, 114)
+                        .addComponent(datelabel, javax.swing.GroupLayout.DEFAULT_SIZE, 284, Short.MAX_VALUE)))
+                .addGap(430, 430, 430))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btRun)
-                    .addComponent(btdetail))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btRun)
+                        .addComponent(btdetail)
+                        .addComponent(jLabel5))
+                    .addComponent(dcfrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel6)
+                    .addComponent(dcto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(22, 22, 22)
+                .addComponent(datelabel, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         jLabel7.setText("Total Records:");
-        jLabel7.setName("lblcount"); // NOI18N
+        jLabel7.setName("btcount"); // NOI18N
 
         tbtotqty.setText("0");
 
@@ -357,7 +470,7 @@ public class TaskBrowse extends javax.swing.JPanel {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbtotqty, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel7))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(90, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -378,11 +491,11 @@ public class TaskBrowse extends javax.swing.JPanel {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tablepanel, javax.swing.GroupLayout.DEFAULT_SIZE, 472, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(16, 16, 16)
+                .addComponent(tablepanel, javax.swing.GroupLayout.DEFAULT_SIZE, 392, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -410,7 +523,6 @@ try {
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 String fromdate = "";
                 String todate = "";
-               mymodel.setNumRows(0);
                  
               
                 
@@ -424,11 +536,32 @@ try {
                  String status = "";
                 
                
+                 if (dcfrom.getDate() == null) {
+                     fromdate = bsmf.MainFrame.lowdate;
+                 } else {
+                     fromdate = dfdate.format(dcfrom.getDate());
+                 }
+                 if (dcto.getDate() == null) {
+                     todate = bsmf.MainFrame.hidate;
+                 } else {
+                    todate = dfdate.format(dcto.getDate()); 
+                 }
                 
-                  
-                      //must be type balance sheet
-               
-                  res = st.executeQuery("select task_id, task_desc " +
+                 mymodel.setNumRows(0);
+                tablereport.setModel(mymodel);
+                tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
+                tablereport.getColumnModel().getColumn(1).setMaxWidth(100);  
+                
+                 Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
+                 while (en.hasMoreElements()) {
+                     TableColumn tc = en.nextElement();
+                     if (mymodel.getColumnClass(tc.getModelIndex()).getSimpleName().equals("ImageIcon")) {
+                         continue;
+                     }
+                     tc.setCellRenderer(new SomeRenderer());
+                 } 
+                 
+                 res = st.executeQuery("select task_id, task_desc, task_class, task_creator, task_date_mod, task_status " +
                           " from task_mstr  " +
                         " order by task_id desc;");
                  
@@ -437,25 +570,17 @@ try {
                      
                          totqty = totqty + 1;
                          
-                         mymodel.addRow(new Object[]{"Select", "Detail", 
+                         mymodel.addRow(new Object[]{BlueSeerUtils.clickflag,
+                            BlueSeerUtils.clickbasket, 
                                res.getString("task_id"),
-                                res.getString("task_desc")
+                               res.getString("task_desc"),
+                               res.getString("task_class"),
+                               res.getString("task_creator"),
+                               res.getString("task_date_mod"),
+                               res.getString("task_status")
                             });
                          tbtotqty.setText(String.valueOf(totqty));       
                        }
-              
-                   Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
-                 while (en.hasMoreElements()) {
-                     TableColumn tc = en.nextElement();
-                     tc.setCellRenderer(new SomeRenderer());
-                 }     
-                 
-                 
-              tablereport.getColumnModel().getColumn(0).setCellRenderer(new ButtonRenderer());
-              tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
-              tablereport.getColumnModel().getColumn(1).setCellRenderer(new ButtonRenderer());
-              tablereport.getColumnModel().getColumn(1).setMaxWidth(100);
-              
                 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
@@ -501,7 +626,12 @@ try {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btRun;
     private javax.swing.JButton btdetail;
+    private javax.swing.JLabel datelabel;
+    private com.toedter.calendar.JDateChooser dcfrom;
+    private com.toedter.calendar.JDateChooser dcto;
     private javax.swing.JPanel detailpanel;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
