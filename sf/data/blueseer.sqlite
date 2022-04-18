@@ -1350,6 +1350,7 @@ CREATE TABLE "prt_mstr" (
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "qual_mstr" (
   "qual_id" int(4) NOT NULL,
+  "qual_site" varchar(30) COLLATE NOCASE DEFAULT '',
   "qual_userid" varchar(30) COLLATE NOCASE DEFAULT '',
   "qual_date_crt" varchar(8) COLLATE NOCASE DEFAULT '',
   "qual_date_upd" varchar(8) COLLATE NOCASE DEFAULT '',
