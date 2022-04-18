@@ -14950,6 +14950,36 @@ MainFrame.bslog(e);
             }
       }
     
+    public static void printQPR(String id) throws SQLException, JRException {
+       
+                Connection con = DriverManager.getConnection(url + db, user, pass);
+                String imagepath = "";
+                String logo = "";
+                logo = OVData.getSiteLogo(OVData.getDefaultSite());
+                String jasperfile = "";
+                jasperfile = "qpr.jasper";
+               
+                imagepath = "images/" + logo;
+                HashMap hm = new HashMap();
+                hm.put("REPORT_TITLE", "QPR");
+                hm.put("myid",  id);
+                hm.put("imagepath", imagepath);
+                hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
+               // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_part, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
+               // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
+                File mytemplate = new File("jasper/" + jasperfile); 
+              //  JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, hm, con );
+                 JasperPrint jasperPrint = JasperFillManager.fillReport(mytemplate.getPath(), hm, con );
+                JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/qprprt.pdf");
+                
+                JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
+                jasperViewer.setVisible(true);
+                jasperViewer.setFitPageZoomRatio();
+                
+          
+    }    
+     
+    
     public static MimeBodyPart attachmentPart;
     
     public static class SMTPAuthenticator extends javax.mail.Authenticator {

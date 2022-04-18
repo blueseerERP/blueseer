@@ -364,7 +364,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeer {
         jTabbedPane1.setEnabledAt(1, false);
         jTabbedPane1.setEnabledAt(0, true);
         
-         java.util.Date now = new java.util.Date();
+        java.util.Date now = new java.util.Date();
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
        
         tbkey.setText("");
