@@ -101,9 +101,14 @@
                                           </Group>
                                           <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
                                           <Component id="lbstatus" min="-2" pref="151" max="-2" attributes="0"/>
-                                          <EmptySpace min="34" pref="40" max="32767" attributes="0"/>
+                                          <EmptySpace min="34" pref="39" max="32767" attributes="0"/>
                                           <Group type="103" groupAlignment="1" attributes="0">
-                                              <Group type="102" attributes="0">
+                                              <Group type="102" alignment="1" attributes="0">
+                                                  <Component id="jLabel15" min="-2" max="-2" attributes="0"/>
+                                                  <EmptySpace max="-2" attributes="0"/>
+                                                  <Component id="tbContact" min="-2" pref="147" max="-2" attributes="0"/>
+                                              </Group>
+                                              <Group type="102" alignment="1" attributes="0">
                                                   <Group type="103" groupAlignment="0" attributes="0">
                                                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                                           <Component id="jLabel5" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -128,9 +133,9 @@
                                                           <Component id="cbDeviation" min="-2" max="-2" attributes="0"/>
                                                       </Group>
                                                   </Group>
-                                                  <EmptySpace max="-2" attributes="0"/>
-                                                  <Group type="103" groupAlignment="1" attributes="0">
-                                                      <Group type="102" alignment="1" attributes="0">
+                                                  <Group type="103" groupAlignment="0" attributes="0">
+                                                      <Group type="102" attributes="0">
+                                                          <EmptySpace max="-2" attributes="0"/>
                                                           <Group type="103" groupAlignment="1" attributes="0">
                                                               <Component id="jLabel9" alignment="1" min="-2" max="-2" attributes="0"/>
                                                               <Component id="jLabel10" alignment="1" min="-2" max="-2" attributes="0"/>
@@ -146,21 +151,22 @@
                                                           </Group>
                                                       </Group>
                                                       <Group type="102" alignment="1" attributes="0">
-                                                          <Component id="jLabel8" min="-2" max="-2" attributes="0"/>
-                                                          <EmptySpace max="-2" attributes="0"/>
-                                                          <Component id="tbPartDesc" min="-2" pref="94" max="-2" attributes="0"/>
-                                                      </Group>
-                                                      <Group type="102" alignment="1" attributes="0">
-                                                          <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
-                                                          <EmptySpace max="-2" attributes="0"/>
-                                                          <Component id="tbPartNumber" min="-2" pref="94" max="-2" attributes="0"/>
+                                                          <EmptySpace pref="50" max="32767" attributes="0"/>
+                                                          <Group type="103" groupAlignment="0" attributes="0">
+                                                              <Group type="102" alignment="0" attributes="0">
+                                                                  <Component id="jLabel8" min="-2" max="-2" attributes="0"/>
+                                                                  <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
+                                                                  <Component id="tbPartDesc" min="-2" pref="137" max="-2" attributes="0"/>
+                                                                  <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
+                                                              </Group>
+                                                              <Group type="102" alignment="1" attributes="0">
+                                                                  <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
+                                                                  <EmptySpace max="-2" attributes="0"/>
+                                                                  <Component id="dditem" min="-2" pref="137" max="-2" attributes="0"/>
+                                                              </Group>
+                                                          </Group>
                                                       </Group>
                                                   </Group>
-                                              </Group>
-                                              <Group type="102" alignment="1" attributes="0">
-                                                  <Component id="jLabel15" min="-2" max="-2" attributes="0"/>
-                                                  <EmptySpace max="-2" attributes="0"/>
-                                                  <Component id="tbContact" min="-2" pref="147" max="-2" attributes="0"/>
                                               </Group>
                                           </Group>
                                       </Group>
@@ -187,6 +193,15 @@
                           </Group>
                           <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
                       </Group>
+                      <Component id="jScrollPane2" alignment="0" max="32767" attributes="0"/>
+                      <Component id="jScrollPane3" alignment="0" max="32767" attributes="0"/>
+                      <Group type="102" attributes="0">
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="jLabel17" min="-2" pref="297" max="-2" attributes="0"/>
+                              <Component id="jLabel18" alignment="0" min="-2" pref="297" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                      </Group>
                       <Group type="102" alignment="1" attributes="0">
                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           <Component id="btprint" min="-2" max="-2" attributes="0"/>
@@ -196,15 +211,6 @@
                           <Component id="btupdate" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="btadd" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <Component id="jScrollPane2" alignment="0" max="32767" attributes="0"/>
-                      <Component id="jScrollPane3" alignment="0" max="32767" attributes="0"/>
-                      <Group type="102" attributes="0">
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jLabel17" min="-2" pref="297" max="-2" attributes="0"/>
-                              <Component id="jLabel18" alignment="0" min="-2" pref="297" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -320,15 +326,15 @@
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="tbPartNumber" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jLabel7" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="tbPartDesc" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel8" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="dditem" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel7" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="tbQtyRejected" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel9" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -519,8 +525,6 @@
             <Property name="text" type="java.lang.String" value="External Supplier"/>
             <Property name="name" type="java.lang.String" value="cbexternalsupplier" noResource="true"/>
           </Properties>
-        </Component>
-        <Component class="javax.swing.JTextField" name="tbPartNumber">
         </Component>
         <Component class="javax.swing.JTextField" name="tbPartDesc">
         </Component>
@@ -743,6 +747,16 @@
           </AuxValues>
         </Component>
         <Component class="javax.swing.JLabel" name="lbvendname">
+        </Component>
+        <Component class="javax.swing.JComboBox" name="dditem">
+          <Properties>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+              <StringArray count="0"/>
+            </Property>
+          </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+          </AuxValues>
         </Component>
       </SubComponents>
     </Container>

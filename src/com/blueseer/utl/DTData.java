@@ -1476,7 +1476,14 @@ public class DTData {
         
     public static DefaultTableModel getQPRBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("item"),  getGlobalColumnTag("description"), getGlobalColumnTag("vendor"), getGlobalColumnTag("userid"), getGlobalColumnTag("createdate"), getGlobalColumnTag("closedate")})
+                      new String[]{getGlobalColumnTag("select"), 
+                          getGlobalColumnTag("id"), 
+                          getGlobalColumnTag("item"),  
+                          getGlobalColumnTag("description"), 
+                          getGlobalColumnTag("vendor"), 
+                          getGlobalColumnTag("userid"), 
+                          getGlobalColumnTag("createdate"), 
+                          getGlobalColumnTag("closedate")})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  

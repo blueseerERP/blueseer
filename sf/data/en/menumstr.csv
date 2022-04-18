@@ -120,7 +120,7 @@ PostGLTrans,,com.blueseer.fgl.PostGL,JMenuItem,post
 ProdCodeBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,prcb
 ProdCodeMaint,,com.blueseer.inv.ProdCodeMaint,JMenuItem,prcm
 Scheduler,,com.blueseer.sch.Scheduler,JMenuItem,schm
-QPRBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,qprb
+QPRBrowse,,com.blueseer.inv.QPRBrowse,JMenuItem,qprb
 QPRMaint,,com.blueseer.inv.QPRMaint,JMenuItem,qprm
 ReqMaint,,com.blueseer.pur.ReqMaint,JMenuItem,reqm
 RoutingBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,roub

@@ -323,7 +323,7 @@ public class QPRMaint extends javax.swing.JPanel implements IBlueSeer {
         cbExternal.setSelected(false);
         tbDept.setText("");
         tbDeviationNbr.setText("");
-        tbPartNumber.setText("");
+        
         tbPartDesc.setText("");
         taIssue.setText("");
         taHistory.setText("");
@@ -341,6 +341,14 @@ public class QPRMaint extends javax.swing.JPanel implements IBlueSeer {
           ddvend.insertItemAt("", 0);
           ddvend.setSelectedIndex(0);
         
+        ArrayList<String> items = invData.getItemMasterAlllist();
+        dditem.removeAllItems();
+        for (int i = 0; i < items.size(); i++) {
+            dditem.addItem(items.get(i));
+        }  
+        dditem.insertItemAt("", 0);
+        dditem.setSelectedIndex(0);
+          
        isLoad = false;
     }
     
@@ -493,7 +501,7 @@ public class QPRMaint extends javax.swing.JPanel implements IBlueSeer {
                         + "'" + tbOtherReason.getText().replace("'", "''") + "'" + ","
                         + "'" + BlueSeerUtils.boolToInt(cbInternal.isSelected()) + "'" + ","
                         + "'" + BlueSeerUtils.boolToInt(cbExternal.isSelected()) + "'" + ","
-                        + "'" + tbPartNumber.getText().replace("'", "''") + "'" + ","
+                        + "'" + dditem.getSelectedItem().toString() + "'" + ","
                         + "'" + tbPartDesc.getText().replace("'", "''") + "'" + ","
                         + "'" + Integer.parseInt(tbQtyRejected.getText().toString()) + "'" + ","
                         + "'" + Integer.parseInt(tbNumSuspectCont.getText().toString()) + "'" + ","
@@ -562,7 +570,7 @@ public class QPRMaint extends javax.swing.JPanel implements IBlueSeer {
                         + "qual_vend_contact = " + "'" + tbContact.getText().replace("'", "''") + "'" + ","
                         + "qual_line_dept = " + "'" + tbDept.getText().replace("'", "\\'") + "'" + ","
                         + "qual_dev_nbr = " + "'" + tbDeviationNbr.getText().replace("'", "\\'") + "'" + ","
-                        + "qual_part = " + "'" + tbPartNumber.getText().replace("'", "\\'") + "'" + ","
+                        + "qual_part = " + "'" + dditem.getSelectedItem().toString() + "'" + ","
                         + "qual_part_desc = " + "'" + tbPartDesc.getText().replace("'", "\\'") + "'" + ","
                         + "qual_qty_rej = " + "'" + Integer.parseInt(tbQtyRejected.getText().toString()) + "'" + ","
                         + "qual_qty_susp = " + "'" + Integer.parseInt(tbNumSuspectCont.getText().toString()) + "'" + ","
@@ -668,7 +676,7 @@ public class QPRMaint extends javax.swing.JPanel implements IBlueSeer {
                     cbExternal.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("qual_ext_sup")));
                     tbDept.setText(res.getString("qual_line_dept"));
                     tbDeviationNbr.setText(res.getString("qual_dev_nbr"));
-                    tbPartNumber.setText(res.getString("qual_part"));
+                    dditem.setSelectedItem(res.getString("qual_part"));
                     tbPartDesc.setText(res.getString("qual_part_desc"));
                     taIssue.setText(res.getString("qual_desc_iss"));
                     taHistory.setText(res.getString("qual_desc_fin_hist"));
@@ -856,7 +864,7 @@ public class QPRMaint extends javax.swing.JPanel implements IBlueSeer {
 
                     pg.drawString("Part Number", 430, 210);
                     pg.draw3DRect(430, 212, 100, 15, rootPaneCheckingEnabled);
-                    pg.drawString(tbPartNumber.getText(), 435, 225);
+                    pg.drawString(dditem.getSelectedItem().toString(), 435, 225);
                     pg.drawString("Part Desc", 430, 235);
                     pg.draw3DRect(430, 237, 100, 15, rootPaneCheckingEnabled);
                     pg.drawString(tbPartDesc.getText(), 435, 251);
@@ -1024,7 +1032,6 @@ public class QPRMaint extends javax.swing.JPanel implements IBlueSeer {
         jLabel6 = new javax.swing.JLabel();
         cbInternal = new javax.swing.JCheckBox();
         cbExternal = new javax.swing.JCheckBox();
-        tbPartNumber = new javax.swing.JTextField();
         tbPartDesc = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
@@ -1062,6 +1069,7 @@ public class QPRMaint extends javax.swing.JPanel implements IBlueSeer {
         btlookup = new javax.swing.JButton();
         ddvend = new javax.swing.JComboBox<>();
         lbvendname = new javax.swing.JLabel();
+        dditem = new javax.swing.JComboBox<>();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -1312,8 +1320,12 @@ public class QPRMaint extends javax.swing.JPanel implements IBlueSeer {
                                             .addComponent(cbRework))
                                         .addGap(8, 8, 8)
                                         .addComponent(lbstatus, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(34, 40, Short.MAX_VALUE)
+                                        .addGap(34, 39, Short.MAX_VALUE)
                                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                                .addComponent(jLabel15)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(tbContact, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE))
                                             .addGroup(jPanel1Layout.createSequentialGroup()
                                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -1334,9 +1346,9 @@ public class QPRMaint extends javax.swing.JPanel implements IBlueSeer {
                                                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                                         .addComponent(tbDeviationNbr, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                         .addComponent(cbDeviation)))
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                     .addGroup(jPanel1Layout.createSequentialGroup()
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                                             .addComponent(jLabel9)
                                                             .addComponent(jLabel10)
@@ -1348,18 +1360,18 @@ public class QPRMaint extends javax.swing.JPanel implements IBlueSeer {
                                                             .addComponent(tbQtyRejected, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                             .addComponent(tbTotalQty, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                             .addComponent(tbChargeBack, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                                        .addComponent(jLabel8)
-                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                        .addComponent(tbPartDesc, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                                        .addComponent(jLabel7)
-                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                        .addComponent(tbPartNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                                .addComponent(jLabel15)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(tbContact, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
+                                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                                                .addComponent(jLabel8)
+                                                                .addGap(15, 15, 15)
+                                                                .addComponent(tbPartDesc, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addGap(1, 1, 1))
+                                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                                                .addComponent(jLabel7)
+                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                .addComponent(dditem, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE))))))))
                                     .addGroup(jPanel1Layout.createSequentialGroup()
                                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
@@ -1375,6 +1387,13 @@ public class QPRMaint extends javax.swing.JPanel implements IBlueSeer {
                                         .addGap(0, 0, Short.MAX_VALUE))))
                             .addComponent(jLabel16, javax.swing.GroupLayout.Alignment.LEADING))
                         .addGap(1, 1, 1))
+                    .addComponent(jScrollPane2)
+                    .addComponent(jScrollPane3)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 297, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel18, javax.swing.GroupLayout.PREFERRED_SIZE, 297, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(btprint)
@@ -1383,14 +1402,7 @@ public class QPRMaint extends javax.swing.JPanel implements IBlueSeer {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btupdate)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btadd))
-                    .addComponent(jScrollPane2)
-                    .addComponent(jScrollPane3)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 297, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel18, javax.swing.GroupLayout.PREFERRED_SIZE, 297, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addComponent(btadd)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -1482,12 +1494,12 @@ public class QPRMaint extends javax.swing.JPanel implements IBlueSeer {
                             .addComponent(jLabel15))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(tbPartNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel7))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(tbPartDesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel8))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(dditem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel7))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(tbQtyRejected, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1615,6 +1627,7 @@ public class QPRMaint extends javax.swing.JPanel implements IBlueSeer {
     private com.toedter.calendar.JDateChooser dcclose;
     private com.toedter.calendar.JDateChooser dccreate;
     private com.toedter.calendar.JDateChooser dcupdate;
+    private javax.swing.JComboBox<String> dditem;
     private javax.swing.JComboBox<String> ddvend;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -1652,7 +1665,6 @@ public class QPRMaint extends javax.swing.JPanel implements IBlueSeer {
     private javax.swing.JTextField tbOriginator;
     private javax.swing.JTextField tbOtherReason;
     private javax.swing.JTextField tbPartDesc;
-    private javax.swing.JTextField tbPartNumber;
     private javax.swing.JTextField tbQtyRejected;
     private javax.swing.JTextField tbTotalQty;
     private javax.swing.JTextField tbkey;
