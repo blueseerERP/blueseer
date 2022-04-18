@@ -111,7 +111,7 @@ public class CashTranBrowse extends javax.swing.JPanel {
                             getGlobalColumnTag("id"), 
                             getGlobalColumnTag("key"), 
                             getGlobalColumnTag("type"), 
-                            getGlobalColumnTag("entitynumber"), 
+                            getGlobalColumnTag("entitynbr"), 
                             getGlobalColumnTag("entityname"), 
                             getGlobalColumnTag("effectivedate"), 
                             getGlobalColumnTag("totalqty"), 
@@ -233,7 +233,7 @@ public class CashTranBrowse extends javax.swing.JPanel {
                        dataset.setValue(acct, amt);
                     }
                 }
-        JFreeChart chart = ChartFactory.createPieChart("Expenses For Date Range", dataset, true, true, false);
+        JFreeChart chart = ChartFactory.createPieChart("Expenses", dataset, true, true, false);
         PiePlot plot = (PiePlot) chart.getPlot();
       //  plot.setSectionPaint(KEY1, Color.green);
       //  plot.setSectionPaint(KEY2, Color.red);
@@ -287,26 +287,25 @@ public class CashTranBrowse extends javax.swing.JPanel {
                  DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");       
                  
                   
-                res = st.executeQuery("select pos_type, sum(pos_totamt) as 'sum' from pos_mstr  " +
+                res = st.executeQuery("select posd_acct, ac_desc, sum(posd_netprice * posd_qty) as 'sum' from pos_det " +
+                        " inner join pos_mstr on pos_nbr = posd_nbr  " +
+                        " inner join ac_mstr on ac_id = posd_acct  " +
                         " where pos_entrydate >= " + "'" + dfdate.format(dcfrom.getDate()) + "'" +
                         " AND pos_entrydate <= " + "'" + dfdate.format(dcto.getDate()) + "'" +
                         " AND pos_type <> 'expense' " +
-                         " AND pos_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +               
-                        " group by pos_type order by pos_type desc   ;");
+                        " AND pos_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +       
+                        " group by posd_acct, ac_desc order by posd_acct desc   ;");
              
                 DefaultPieDataset dataset = new DefaultPieDataset();
                
                 String acct = "";
                 while (res.next()) {
-                      acct = res.getString("pos_type");
-                      if (acct.equals("income")) {
-                          acct = "misc income";
-                      }
+                      acct = res.getString("ac_desc");
                     double amt = res.getDouble("sum");
                     if (amt < 0) {amt = amt * -1;}
                   dataset.setValue(acct, amt);
                 }
-        JFreeChart chart = ChartFactory.createPieChart("Buy / Sell / Misc Income For Date Range", dataset, true, true, false);
+        JFreeChart chart = ChartFactory.createPieChart("Income", dataset, true, true, false);
         PiePlot plot = (PiePlot) chart.getPlot();
       //  plot.setSectionPaint(KEY1, Color.green);
       //  plot.setSectionPaint(KEY2, Color.red);
@@ -457,11 +456,11 @@ public class CashTranBrowse extends javax.swing.JPanel {
     
     
     public void initvars(String[] arg) {
-        tbtotexpenses.setText("0");
+        tbexpenses.setText("0");
         tbtotsales.setText("0");
         tbincome.setText("0");
         tbtotpurch.setText("0");
-        saleslessexp.setText("0");
+        tbprofit.setText("0");
         expenses = 0;
         cbchart.setSelected(false);
         
@@ -542,10 +541,10 @@ public class CashTranBrowse extends javax.swing.JPanel {
         jLabel2 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
-        saleslessexp = new javax.swing.JLabel();
+        tbprofit = new javax.swing.JLabel();
         tbtotsales = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
-        tbtotexpenses = new javax.swing.JLabel();
+        tbexpenses = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
         tbtotpurch = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
@@ -725,16 +724,16 @@ public class CashTranBrowse extends javax.swing.JPanel {
         jLabel8.setText("Total Sales:");
         jLabel8.setName("lbltotalsales"); // NOI18N
 
-        saleslessexp.setText("0");
+        tbprofit.setText("0");
 
         tbtotsales.setText("0");
 
         jLabel9.setText("DateRange Profit:");
         jLabel9.setName("lbldaterangeprofit"); // NOI18N
 
-        tbtotexpenses.setText("0");
+        tbexpenses.setText("0");
 
-        jLabel10.setText("Total Expenses:");
+        jLabel10.setText("Total Misc Expenses:");
         jLabel10.setName("lbltotalexpenses"); // NOI18N
 
         tbtotpurch.setText("0");
@@ -757,52 +756,59 @@ public class CashTranBrowse extends javax.swing.JPanel {
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel9))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addContainerGap()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
-                            .addComponent(jLabel3))
-                        .addGap(18, 18, 18)
+                            .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(tbinventory, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tbincome, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(12, 12, 12)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING))))
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(tbinventory, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(tbtotsales, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel3))
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(tbtotpurch, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel10)))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(tbtotexpenses, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE)
-                    .addComponent(tbtotsales, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(tbtotpurch, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(saleslessexp, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(tbprofit, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(tbexpenses, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(tbincome, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(20, 20, 20)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tbtotpurch, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tbexpenses, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel10)
                     .addComponent(jLabel11)
-                    .addComponent(tbinventory, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tbtotsales, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel8)
-                    .addComponent(jLabel3)
-                    .addComponent(tbincome, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tbtotexpenses, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel10))
+                    .addComponent(tbtotpurch, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(saleslessexp, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3)
+                    .addComponent(tbincome, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tbtotsales, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbinventory, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbprofit, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel9))
                 .addGap(14, 14, 14))
         );
@@ -845,9 +851,7 @@ public class CashTranBrowse extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRunActionPerformed
-
-    
-try {
+    try {
            Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
@@ -855,13 +859,14 @@ try {
                  DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 String fromdate = "";
                 String todate = "";
-               mymodel.setNumRows(0);
+                mymodel.setNumRows(0);
                  
               
                 
                  double totsales = 0;
                  double totpurch = 0;
                  double totincome = 0;
+                 double totexpense = 0;
                  
                  String trantype = "";
                  
@@ -951,6 +956,7 @@ try {
                                 BlueSeerUtils.clicklock 
                             });     
                          } else {
+                             totexpense = totexpense + res.getDouble("pos_totamt");
                              mymodel.addRow(new Object[]{BlueSeerUtils.clickbasket, 
                                res.getString("pos_nbr"),
                                 res.getString("pos_key"),
@@ -973,8 +979,8 @@ try {
                 tbtotsales.setText(currformatDouble(totsales));
                 tbincome.setText(currformatDouble(totincome));
                 tbtotpurch.setText(currformatDouble(totpurch));
-                tbtotexpenses.setText(currformatDouble(expenses));
-                saleslessexp.setText(currformatDouble((totsales - totpurch) - expenses));  // expenses depend on math in chartExp();
+                tbexpenses.setText(currformatDouble(expenses));
+                tbprofit.setText(currformatDouble(totincome - totexpense));  // expenses depend on math in chartExp();
                 
              
                 
@@ -1069,15 +1075,15 @@ try {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel pielabel;
-    private javax.swing.JLabel saleslessexp;
     private javax.swing.JPanel summarypanel;
     private javax.swing.JTable tabledetail;
     private javax.swing.JPanel tablepanel;
     private javax.swing.JTable tablereport;
     private javax.swing.JButton tbcsv;
+    private javax.swing.JLabel tbexpenses;
     private javax.swing.JLabel tbincome;
     private javax.swing.JLabel tbinventory;
-    private javax.swing.JLabel tbtotexpenses;
+    private javax.swing.JLabel tbprofit;
     private javax.swing.JLabel tbtotpurch;
     private javax.swing.JLabel tbtotsales;
     // End of variables declaration//GEN-END:variables

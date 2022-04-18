@@ -741,7 +741,7 @@ return myitem;
     public static String[] getVendInfo(String vend) {
            // get vendor specific data
             // addr, acct, cc, currency, bank, terms, site
-            String[] vendinfo = new String[]{"","","","","","","", ""};
+            String[] vendinfo = new String[]{"","","","","","",""};
          try{
             
             Connection con = DriverManager.getConnection(url + db, user, pass);

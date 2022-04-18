@@ -29,6 +29,7 @@ import bsmf.MainFrame;
 import static bsmf.MainFrame.bslog;
 import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.defaultDecimalSeparator;
+import static bsmf.MainFrame.dfdate;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
@@ -36,6 +37,7 @@ import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.ctr.cusData;
 import com.blueseer.fap.fapData;
+import static com.blueseer.fap.fapData.VouchAndPayTransaction;
 import com.blueseer.inv.invData;
 import com.blueseer.shp.shpData;
 import static com.blueseer.shp.shpData.confirmShipperTransaction;
@@ -45,6 +47,7 @@ import static com.blueseer.utl.BlueSeerUtils.currformat;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import static com.blueseer.utl.BlueSeerUtils.setDateFormat;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.OVData;
 import java.sql.DriverManager;
@@ -99,6 +102,7 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import static com.blueseer.utl.OVData.getDueDateFromTerms;
 import com.blueseer.vdr.venData;
+import static com.blueseer.vdr.venData.getVendInfo;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -982,12 +986,54 @@ public class CashTran extends javax.swing.JPanel {
     }
     
     public String[] addExpense() {
-          
-        String[] message = new String[2];
-        message[0] = "";
-        message[1] = ""; 
+        String[] vi = getVendInfo(ddentityExpense.getSelectedItem().toString());  // addr, acct, cc, currency, bank, terms, site
+        
+        fapData.ap_mstr x = new fapData.ap_mstr(null, 
+                "", //ap_id
+                ddentityExpense.getSelectedItem().toString(), // ap_vend, 
+                tbKeyExpense.getText(), // ap_nbr
+                currformatDouble(bsParseDouble(tbexpensetotal.getText())).replace(defaultDecimalSeparator, '.'), // ap_amt
+                currformatDouble(bsParseDouble(tbexpensetotal.getText())).replace(defaultDecimalSeparator, '.'), // ap_base_amt
+                setDateFormat(dcdateExpense.getDate()), // ap_effdate
+                setDateFormat(dcdateExpense.getDate()), // ap_entdate
+                setDateFormat(dcdateExpense.getDate()), // ap_duedate        
+                "V", // ap_type
+                tbrmks.getText(), //ap_rmks
+                tbexpensePO.getText(), //ap_ref
+                terms, //ap_terms
+                vi[1], //ap_acct
+                vi[2], //ap_cc
+                "0", //ap_applied
+                "o", //ap_status
+                vi[4], //ap_bank
+                vi[3], //ap_curr
+                vi[3], //ap_base_curr
+                tbKeyExpense.getText(), //ap_check // in this case voucher number is reference field
+                "", //ap_batch
+                OVData.getDefaultSite() //ap_site
+                ); 
+        
+        ArrayList<fapData.vod_mstr> list = new ArrayList<fapData.vod_mstr>();
+         for (int j = 0; j < expenseTable.getRowCount(); j++) {
+             fapData.vod_mstr y = new fapData.vod_mstr(null, 
+                tbKeyExpense.getText(),
+                "expense",
+                expenseTable.getValueAt(j, 0).toString(),
+                expenseTable.getValueAt(j, 1).toString(),
+                expenseTable.getValueAt(j, 2).toString().replace(defaultDecimalSeparator, '.'),
+                expenseTable.getValueAt(j, 3).toString().replace(defaultDecimalSeparator, '.'),
+                dfdate.format(dcdateExpense.getDate()),
+                ddentityExpense.getSelectedItem().toString(),
+                tbKeyExpense.getText(), 
+                expenseTable.getValueAt(j, 5).toString(),
+                vi[2]
+                );
+        list.add(y);
+         }
+        
+        String[] m = VouchAndPayTransaction(OVData.getNextNbr("batch"), "AP-Cash", list, x);
+       
         try {
-
             Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
@@ -1005,72 +1051,7 @@ public class CashTran extends javax.swing.JPanel {
                     
                 curr = OVData.getDefaultCurrency();
                 String site = OVData.getDefaultSite();   
-                String po = tbexpensePO.getText();
-                if (po.isEmpty()) {
-                    po = "cashtran";
-                }
-                     
-                       st.executeUpdate("insert into ap_mstr "
-                        + "(ap_vend, ap_site, ap_nbr, ap_amt, ap_type, ap_ref, ap_rmks, "
-                        + "ap_entdate, ap_effdate, ap_duedate, ap_acct, ap_cc, "
-                        + "ap_terms, ap_status, ap_bank, ap_curr, ap_base_curr ) "
-                        + " values ( " + "'" + ddentityExpense.getSelectedItem() + "'" + ","
-                              + "'" + site + "'" + ","
-                        + "'" + tbKeyExpense.getText() + "'" + ","
-                        + "'" + currformatDouble(total).replace(defaultDecimalSeparator, '.') + "'" + ","
-                        + "'" + "V" + "'" + ","
-                        + "'" + tbexpensePO.getText() + "'" + ","
-                        + "'" + tbexpenseRemarks.getText() + "'" + ","
-                        + "'" + dfdate.format(now) + "'" + ","
-                        + "'" + dfdate.format(dcdateExpense.getDate()) + "'" + ","
-                        + "'" + dfdate.format(dcdateExpense.getDate()) + "'" + ","
-                        + "'" + apacct + "'" + ","
-                        + "'" + apcc + "'" + ","
-                        + "'" + terms + "'" + ","
-                        + "'" + "o" + "'"  + ","
-                        + "'" + apbank + "'" + ","
-                        + "'" + curr + "'" + ","  
-                        + "'" + curr + "'"        
-                        + ")"
-                        + ";");
                
-               // "Line", "Item", "Qty", "Price", "Ref", "Acct"
-                    for (int j = 0; j < expenseTable.getRowCount(); j++) {
-                        st.executeUpdate("insert into vod_mstr "
-                            + "(vod_id, vod_vend, vod_rvdid, vod_rvdline, vod_part, vod_qty, "
-                            + " vod_voprice, vod_date, vod_invoice, vod_expense_acct, vod_expense_cc )  "
-                            + " values ( " + "'" + tbKeyExpense.getText() + "'" + ","
-                                + "'" + ddentityExpense.getSelectedItem() + "'" + ","
-                            + "'" + "expense" + "'" + ","
-                            + "'" +expenseTable.getValueAt(j, 0).toString() + "'" + ","
-                            + "'" + expenseTable.getValueAt(j, 1).toString() + "'" + ","
-                            + "'" + expenseTable.getValueAt(j, 2).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
-                            + "'" + expenseTable.getValueAt(j, 3).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
-                            + "'" + dfdate.format(dcdateExpense.getDate()) + "'" + ","
-                            + "'" + tbexpensePO.getText().toString() + "'" + ","
-                            + "'" + expenseTable.getValueAt(j, 5).toString() + "'" + ","
-                            + "'" + apcc + "'"
-                            + ")"
-                            + ";");
-                  
-                     }
-                    
-                    int exp = OVData.getNextNbr("expensenumber");
-                    key = String.valueOf(exp);
-                    /* create gl_tran records */
-                      //  if (! error)
-                      //  error = fglData.glEntryFromVoucherExpense(tbKeyExpense.getText(), dcdateExpense.getDate());
-                         
-                       
-                    message = fapData.APExpense(OVData.getNextNbr("batch"), OVData.getDefaultCurrency(), dcdateExpense.getDate(), exp, tbKeyExpense.getText(), tbexpensePO.getText(), ddentityExpense.getSelectedItem().toString(), total, "AP-Cash");
-                        
-                    if (error) {
-                        message = new String[]{"1", "An Error Occurred in Expense"};
-                    } else {
-                    message = new String[]{"0", "expense complete"};
-                    }
-                    
-                    if (proceed ) {
                      st.executeUpdate("insert into pos_mstr "
                         + "(pos_nbr, pos_site, pos_entrydate, pos_entity, pos_entityname, pos_type, pos_key, pos_totqty, pos_totamt ) "
                         + " values ( " + "'" + tbKeyExpense.getText() + "'" + ","
@@ -1100,16 +1081,9 @@ public class CashTran extends javax.swing.JPanel {
                                 + ")"
                                 + ";");
                       }
-                     
-                    }
-               
                     if (OVData.isAutoPost()) {
                         fglData.PostGL();
                     }
-                    
-                //     initvars("2"); 
-                        
-                    
             } catch (SQLException s) {
                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
                 MainFrame.bslog(s);
@@ -1126,10 +1100,10 @@ public class CashTran extends javax.swing.JPanel {
             MainFrame.bslog(e);
         }
         
-        return message;
+        return m;
     }
     
-     public String[] addIncome() {
+    public String[] addIncome() {
           
         String[] message = new String[2];
         message[0] = "";
@@ -1617,9 +1591,7 @@ public class CashTran extends javax.swing.JPanel {
         } else {
             jTabbedPane1.setSelectedIndex(Integer.valueOf(v));
         }
-       // jTabbedPane1.setEnabledAt(1, false);
-       // jTabbedPane1.setEnabledAt(2, false);
-       // jTabbedPane1.setEnabledAt(3, false);
+     
          
        clearAll(); 
        disableAll();

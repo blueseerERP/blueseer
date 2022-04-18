@@ -222,6 +222,7 @@ public class fapData {
             }
             if (ctype.equals("AP-Cash")) {
                 fglData._glEntryFromVoucherExpense(ap.ap_nbr, parseDate(ap.ap_effdate),  bscon);
+                fglData._glEntryFromCheckRun(batchid, parseDate(ap.ap_effdate), ctype, bscon); //aptype=E
             }
             if (ctype.equals("AP-Vendor")) {
                 fglData._glEntryFromCheckRun(batchid, parseDate(ap.ap_effdate), ctype, bscon);
@@ -386,7 +387,7 @@ public class fapData {
             if (ctype.equals("AP-Cash-Purch")) {
                 fglData._glEntryFromCashTranBuy(voucher, effdate, ctype, bscon);
             }
-            if (ctype.equals("AP-Cash")) {
+            if (ctype.equals("AP-Cash")) { // Misc Expense from CashClass
                 fglData._glEntryFromVoucherExpense(voucher, effdate, bscon);
             }
             if (ctype.equals("AP-Vendor")) {
