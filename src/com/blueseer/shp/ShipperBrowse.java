@@ -25,6 +25,8 @@ SOFTWARE.
  */
 package com.blueseer.shp;
 
+import com.blueseer.far.*;
+import com.blueseer.shp.*;
 import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
@@ -70,6 +72,7 @@ import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.sql.Connection;
 import java.text.DecimalFormatSymbols;
+import java.util.HashMap;
 import java.util.Locale;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -78,6 +81,12 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.SwingWorker;
+import javax.swing.table.DefaultTableCellRenderer;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
@@ -85,10 +94,10 @@ import javax.swing.JTabbedPane;
  */
 public class ShipperBrowse extends javax.swing.JPanel {
  
+    boolean sending = false;
     
     javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{
-                            getGlobalColumnTag("select"), 
+                        new String[]{getGlobalColumnTag("select"), 
                             getGlobalColumnTag("detail"), 
                             getGlobalColumnTag("shipper"), 
                             getGlobalColumnTag("customer"), 
@@ -100,7 +109,7 @@ public class ShipperBrowse extends javax.swing.JPanel {
             {
                       @Override  
                       public Class getColumnClass(int col) {  
-                        if (col == 0 || col == 1 )       
+                        if (col == 0 || col == 1)       
                             return ImageIcon.class;  
                         else return String.class;  //other columns accept String values  
                       }  
@@ -137,7 +146,28 @@ public class ShipperBrowse extends javax.swing.JPanel {
     }
     
    
+ class SomeRenderer extends DefaultTableCellRenderer {
+         
+    public Component getTableCellRendererComponent(JTable table,
+            Object value, boolean isSelected, boolean hasFocus, int row,
+            int column) {
 
+        Component c = super.getTableCellRendererComponent(table,
+                value, isSelected, hasFocus, row, column);
+        
+            boolean issched = (Boolean) tablereport.getModel().getValueAt(table.convertRowIndexToModel(row), 4);
+            if (( column == 5 || column == 6) && ! issched ) {
+            c.setBackground(Color.green);
+            c.setForeground(Color.BLACK);
+            
+            }
+            else {
+                c.setBackground(table.getBackground());
+            }
+            return c;
+    }
+    }
+    
     
     
     
@@ -149,58 +179,46 @@ public class ShipperBrowse extends javax.swing.JPanel {
         setLanguageTags(this);
     }
 
-    public void getdetail(String shipper) {
+    
+    public void executeTask(String x, int y, String w) { 
       
-         modeldetail.setNumRows(0);
-         double totalsales = 0;
-         double totalqty = 0;
-        
-        try {
-
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                int i = 0;
-                String blanket = "";
-                res = st.executeQuery("select shd_id, shd_soline, shd_part, shd_custpart, shd_so, shd_po, shd_qty, shd_netprice from ship_det " +
-                        " where shd_id = " + "'" + shipper + "'" +  ";");
-                while (res.next()) {
-                    totalsales = totalsales + (res.getDouble("shd_qty") * res.getDouble("shd_netprice"));
-                    totalqty = totalqty + res.getDouble("shd_qty");
-                   modeldetail.addRow(new Object[]{ 
-                      res.getString("shd_id"), 
-                      res.getString("shd_part"),
-                      res.getString("shd_custpart"),
-                      res.getString("shd_so"),
-                      res.getString("shd_soline"), 
-                      res.getString("shd_po"),
-                      res.getString("shd_qty"),
-                      res.getString("shd_netprice")});
-                }
-               
-               tbdetsales.setText(currformatDouble(totalsales));
-               tbdetqty.setText(currformatDouble(totalqty));
-               
-                tabledetail.setModel(modeldetail);
-                this.repaint();
-
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
+        class Task extends SwingWorker<String[], Void> {
+       
+          String key = "";
+          int row = 0;
+          String site = "";
+          
+          public Task(String key, int row, String site) { 
+              this.key = key;
+              this.row = row;
+              this.site = site;
+          } 
+           
+        @Override
+        public String[] doInBackground() throws Exception {
+            String[] message = new String[2];
+            message = OVData.sendInvoice(key, site); 
+            return message;
         }
-
+ 
+        
+       public void done() {
+            try {
+            String[] message = get();
+            BlueSeerUtils.endTask(message);
+            sending = false;
+            tablereport.getModel().setValueAt(BlueSeerUtils.clickmail,row,11);
+            } catch (Exception e) {
+                MainFrame.bslog(e);
+            } 
+           
+        }
+    }  
+      
+       BlueSeerUtils.startTask(new String[]{"","Running..."});
+       Task z = new Task(x, y, w); 
+       z.execute(); 
+       
     }
     
     public void setLanguageTags(Object myobj) {
@@ -247,6 +265,55 @@ public class ShipperBrowse extends javax.swing.JPanel {
        }
     }
     
+    public void getdetail(String shipper) {
+      
+         modeldetail.setNumRows(0);
+         double totalsales = 0;
+         double totalqty = 0;
+         
+        try {
+
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null; try {
+                
+                int i = 0;
+                String blanket = "";
+                res = st.executeQuery("select shd_id, shd_soline, shd_part, shd_custpart, shd_so, shd_po, shd_qty, shd_netprice from ship_det " +
+                        " where shd_id = " + "'" + shipper + "'" +  ";");
+                while (res.next()) {
+                    totalsales = totalsales + (res.getDouble("shd_qty") * res.getDouble("shd_netprice"));
+                    totalqty = totalqty + res.getDouble("shd_qty");
+                   modeldetail.addRow(new Object[]{ 
+                      res.getString("shd_id"), 
+                      res.getString("shd_part"),
+                      res.getString("shd_custpart"),
+                      res.getString("shd_so"),
+                      res.getString("shd_soline"), 
+                      res.getString("shd_po"),
+                      res.getString("shd_qty"),
+                      currformatDouble(res.getDouble("shd_netprice"))
+                   });
+                }
+               
+               tbdetsales.setText(currformatDouble(totalsales));
+               tbdetqty.setText(currformatDouble(totalqty));
+               
+                tabledetail.setModel(modeldetail);
+                this.repaint();
+
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+
+    }
+   
+    
     public void initvars(String[] arg) {
         tbdetqty.setText("0");
         tbtotqty.setText("0");
@@ -262,22 +329,21 @@ public class ShipperBrowse extends javax.swing.JPanel {
                
         mymodel.setNumRows(0);
         modeldetail.setNumRows(0);
-        tablereport.setModel(mymodel);
+        
         tabledetail.setModel(modeldetail);
-        
-        tablereport.getTableHeader().setReorderingAllowed(false);
         tabledetail.getTableHeader().setReorderingAllowed(false);
-        
-      //   tablereport.getColumnModel().getColumn(0).setCellRenderer(new ButtonRenderer());
-         tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
-      //   tablereport.getColumnModel().getColumn(1).setCellRenderer(new ButtonRenderer());
-         tablereport.getColumnModel().getColumn(1).setMaxWidth(100);
+        tabledetail.getColumnModel().getColumn(7).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+               
+        tablereport.setModel(mymodel);
+        tablereport.getTableHeader().setReorderingAllowed(false);
+        tablereport.getColumnModel().getColumn(8).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+        tablereport.getColumnModel().getColumn(8).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+      
+        tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
+        tablereport.getColumnModel().getColumn(1).setMaxWidth(100);
                 //          ReportPanel.TableReport.getColumn("CallID").setCellEditor(
                     //       new ButtonEditor(new JCheckBox()));
-        
-        
-        
-        
+                
         btdetail.setEnabled(false);
         detailpanel.setVisible(false);
           
@@ -304,7 +370,6 @@ public class ShipperBrowse extends javax.swing.JPanel {
         jLabel4 = new javax.swing.JLabel();
         btRun = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
-        cbinvoiced = new javax.swing.JCheckBox();
         jLabel3 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         datelabel = new javax.swing.JLabel();
@@ -317,6 +382,7 @@ public class ShipperBrowse extends javax.swing.JPanel {
         dcfrom = new com.toedter.calendar.JDateChooser();
         dcto = new com.toedter.calendar.JDateChooser();
         tbcsv = new javax.swing.JButton();
+        cbinvoiced = new javax.swing.JCheckBox();
         jPanel3 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
         tbtotsales = new javax.swing.JLabel();
@@ -328,6 +394,9 @@ public class ShipperBrowse extends javax.swing.JPanel {
         EndBal1 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(0, 102, 204));
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Ship Browse"));
+        jPanel1.setName("panelmain"); // NOI18N
 
         tablepanel.setLayout(new javax.swing.BoxLayout(tablepanel, javax.swing.BoxLayout.LINE_AXIS));
 
@@ -397,9 +466,6 @@ public class ShipperBrowse extends javax.swing.JPanel {
         jLabel1.setText("From Billto:");
         jLabel1.setName("lblfromcust"); // NOI18N
 
-        cbinvoiced.setText("Invoiced Only?");
-        cbinvoiced.setName("cbinvoiceonly"); // NOI18N
-
         jLabel3.setText("To Shipper:");
         jLabel3.setName("lbltoshipper"); // NOI18N
 
@@ -424,6 +490,9 @@ public class ShipperBrowse extends javax.swing.JPanel {
             }
         });
 
+        cbinvoiced.setText("Invoiced Only");
+        cbinvoiced.setName("cbinvoiceonly"); // NOI18N
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -433,12 +502,10 @@ public class ShipperBrowse extends javax.swing.JPanel {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(114, 114, 114)
                         .addComponent(datelabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cbinvoiced)
-                        .addGap(155, 155, 155))
+                        .addGap(267, 267, 267))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel5)
                             .addComponent(jLabel6))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -467,11 +534,14 @@ public class ShipperBrowse extends javax.swing.JPanel {
                             .addComponent(tbfromcust, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(tbtocust, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)))
-                .addComponent(btRun)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btdetail)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tbcsv)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(btRun)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btdetail)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tbcsv))
+                    .addComponent(cbinvoiced))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -490,19 +560,19 @@ public class ShipperBrowse extends javax.swing.JPanel {
                         .addComponent(tbcsv))
                     .addComponent(dcfrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel3)
-                        .addComponent(tbtoshipper, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(tbtocust, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel4)
-                        .addComponent(jLabel6))
-                    .addComponent(dcto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel3)
+                            .addComponent(tbtoshipper, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tbtocust, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel4)
+                            .addComponent(cbinvoiced))
+                        .addComponent(dcto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel6))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(cbinvoiced, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(datelabel, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                .addComponent(datelabel, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(13, 13, 13))
         );
 
         jLabel8.setText("Total Sales:");
@@ -576,7 +646,7 @@ public class ShipperBrowse extends javax.swing.JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(tablepanel, javax.swing.GroupLayout.DEFAULT_SIZE, 1191, Short.MAX_VALUE)
+                    .addComponent(tablepanel, javax.swing.GroupLayout.DEFAULT_SIZE, 1179, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -591,7 +661,7 @@ public class ShipperBrowse extends javax.swing.JPanel {
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(16, 16, 16)
-                .addComponent(tablepanel, javax.swing.GroupLayout.DEFAULT_SIZE, 392, Short.MAX_VALUE))
+                .addComponent(tablepanel, javax.swing.GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -608,19 +678,19 @@ public class ShipperBrowse extends javax.swing.JPanel {
 
     private void btRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRunActionPerformed
 
-    
-try {
+        try {
             Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
+                
 
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 String fromdate = "";
                 String todate = "";
-               mymodel.setNumRows(0);
+                mymodel.setNumRows(0);
                  
-              
+              //  tablereport.getColumnModel().getColumn(10).setCellRenderer(new InvoiceBrowsePanel.SomeRenderer());
                 
                  double totsales = 0;
                  double totqty = 0;
@@ -636,16 +706,16 @@ try {
                 
                  
                  if (shipperfrom.isEmpty()) {
-                     shipperfrom = bsmf.MainFrame.lowchar;
+                     shipperfrom = "0";
                  }
                  if (shipperto.isEmpty()) {
-                     shipperto = bsmf.MainFrame.hichar;
+                     shipperto = "ZZZZZZZZ";
                  }
                  if (custfrom.isEmpty()) {
-                     custfrom = bsmf.MainFrame.lowchar;
+                     custfrom = "0";
                  }
                  if (custto.isEmpty()) {
-                     custto = bsmf.MainFrame.hichar;
+                     custto = "ZZZZZZZZ";
                  }
                  if (dcfrom.getDate() == null) {
                      fromdate = bsmf.MainFrame.lowdate;
@@ -657,7 +727,7 @@ try {
                  } else {
                     todate = dfdate.format(dcto.getDate()); 
                  }
-                  
+                
                       //must be type balance sheet
                  if (cbinvoiced.isSelected()) {
                   res = st.executeQuery("select sh_id, sh_status, sh_cust, sh_shipdate, sh_confdate, sum(shd_qty) as 'qty', sum(shd_qty * shd_netprice) as 'price' from ship_mstr " +
@@ -744,6 +814,23 @@ try {
                if (! checkperms(mypanel)) { return; }
                String[] args = new String[]{tablereport.getValueAt(row, 2).toString()};
                reinitpanels(mypanel, true, args);
+        }
+        if (col == 10) {
+            OVData.printInvoice(tablereport.getValueAt(row, 2).toString(), true); 
+        }
+        if (col == 11) {
+            if (sending) {
+                return;
+            }
+            String[] x = OVData.isSMTPServer();
+            if (x[0].equals("0")) {
+               // tablereport.setEnabled(false);
+                tablereport.getModel().setValueAt(BlueSeerUtils.clicklock,row,11);
+                sending = true; 
+                executeTask(tablereport.getValueAt(row, 2).toString(), row, tablereport.getValueAt(row, 3).toString());
+            } else {
+                bsmf.MainFrame.show(x[1]);
+            }
         }
     }//GEN-LAST:event_tablereportMouseClicked
 

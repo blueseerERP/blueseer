@@ -32,6 +32,14 @@
   </Layout>
   <SubComponents>
     <Container class="javax.swing.JPanel" name="jPanel1">
+      <Properties>
+        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+          <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+            <TitledBorder title="Ship Browse"/>
+          </Border>
+        </Property>
+        <Property name="name" type="java.lang.String" value="panelmain" noResource="true"/>
+      </Properties>
 
       <Layout>
         <DimensionLayout dim="0">
@@ -39,7 +47,7 @@
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="tablepanel" alignment="0" pref="1191" max="32767" attributes="0"/>
+                      <Component id="tablepanel" alignment="0" pref="1179" max="32767" attributes="0"/>
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="jPanel2" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="32767" attributes="0"/>
@@ -59,7 +67,7 @@
                       <Component id="jPanel3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
-                  <Component id="tablepanel" pref="392" max="32767" attributes="0"/>
+                  <Component id="tablepanel" pref="370" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -149,15 +157,13 @@
                           <Group type="102" attributes="0">
                               <EmptySpace min="-2" pref="114" max="-2" attributes="0"/>
                               <Component id="datelabel" max="32767" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="cbinvoiced" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="155" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="267" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="1" attributes="0">
                               <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="jLabel5" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jLabel6" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="1" attributes="0">
+                                  <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="1" attributes="0">
@@ -195,11 +201,16 @@
                               <EmptySpace type="separate" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <Component id="btRun" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="btdetail" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="tbcsv" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" attributes="0">
+                              <Component id="btRun" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="btdetail" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="tbcsv" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Component id="cbinvoiced" min="-2" max="-2" attributes="0"/>
+                      </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -222,22 +233,22 @@
                           <Component id="dcfrom" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="1" attributes="0">
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="tbtoshipper" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="tbtocust" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jLabel6" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="103" groupAlignment="1" attributes="0">
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="tbtoshipper" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="tbtocust" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="cbinvoiced" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <Component id="dcto" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <Component id="dcto" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="cbinvoiced" max="32767" attributes="0"/>
-                          <Component id="datelabel" min="-2" pref="23" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="datelabel" min="-2" pref="23" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="13" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -271,12 +282,6 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="From Billto:"/>
                 <Property name="name" type="java.lang.String" value="lblfromcust" noResource="true"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JCheckBox" name="cbinvoiced">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Invoiced Only?"/>
-                <Property name="name" type="java.lang.String" value="cbinvoiceonly" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel3">
@@ -331,6 +336,12 @@
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tbcsvActionPerformed"/>
               </Events>
+            </Component>
+            <Component class="javax.swing.JCheckBox" name="cbinvoiced">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Invoiced Only"/>
+                <Property name="name" type="java.lang.String" value="cbinvoiceonly" noResource="true"/>
+              </Properties>
             </Component>
           </SubComponents>
         </Container>

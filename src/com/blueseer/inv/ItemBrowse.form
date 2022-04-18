@@ -33,6 +33,11 @@
   <SubComponents>
     <Container class="javax.swing.JPanel" name="jPanel1">
       <Properties>
+        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+          <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+            <TitledBorder title="Item Browse"/>
+          </Border>
+        </Property>
         <Property name="name" type="java.lang.String" value="panelmain" noResource="true"/>
       </Properties>
 
@@ -68,13 +73,13 @@
                   <Component id="btRun" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="btcsv" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="654" max="32767" attributes="0"/>
+                  <EmptySpace pref="642" max="32767" attributes="0"/>
                   <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="labelcount" min="-2" pref="83" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
               </Group>
-              <Component id="jScrollPane1" pref="1469" max="32767" attributes="0"/>
+              <Component id="jScrollPane1" pref="1457" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
@@ -115,7 +120,7 @@
                       </Group>
                   </Group>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
-                  <Component id="jScrollPane1" pref="547" max="32767" attributes="0"/>
+                  <Component id="jScrollPane1" pref="525" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
