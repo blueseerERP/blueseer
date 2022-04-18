@@ -81,7 +81,7 @@ where qual_id =  $P{myid}]]>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="44" splitType="Stretch">
+		<band height="86" splitType="Stretch">
 			<image>
 				<reportElement x="20" y="-50" width="119" height="82" uuid="7d194944-b350-420d-ab9b-682f45a43dc9">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
@@ -90,7 +90,7 @@ where qual_id =  $P{myid}]]>
 				<imageExpression><![CDATA[$P{imagepath}]]></imageExpression>
 			</image>
 			<image>
-				<reportElement x="389" y="2" width="100" height="42" uuid="3182d172-4323-47ed-b8bb-b2f9b3f2b8cd"/>
+				<reportElement x="389" y="16" width="100" height="42" uuid="3182d172-4323-47ed-b8bb-b2f9b3f2b8cd"/>
 				<imageExpression><![CDATA[new net.sf.jasperreports.components.barbecue.BarbecueRenderer(net.sourceforge.barbecue.BarcodeFactory.createCode39($F{qual_id}, false))]]></imageExpression>
 			</image>
 			<textField>
@@ -101,20 +101,20 @@ where qual_id =  $P{myid}]]>
 				<textFieldExpression><![CDATA[$R{jasper.qpr.title}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="166" y="1" width="55" height="14" uuid="8adea455-62c8-4e43-963d-74240be7ed81"/>
+				<reportElement x="166" y="15" width="55" height="14" uuid="8adea455-62c8-4e43-963d-74240be7ed81"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{jasper.qpr.supplier}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="225" y="1" width="142" height="14" uuid="ae9f9876-9373-4352-8a23-bdba5a026027">
+				<reportElement x="225" y="15" width="142" height="14" uuid="ae9f9876-9373-4352-8a23-bdba5a026027">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<textFieldExpression><![CDATA[$F{vd_addr}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="166" y="16" width="55" height="14" uuid="a1c81cec-0387-4209-89a5-bc8130939a85">
+				<reportElement x="166" y="30" width="55" height="14" uuid="a1c81cec-0387-4209-89a5-bc8130939a85">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<textElement>
@@ -123,15 +123,15 @@ where qual_id =  $P{myid}]]>
 				<textFieldExpression><![CDATA[$R{jasper.qpr.name}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="225" y="16" width="141" height="14" uuid="7dfb3c79-c17b-4edf-8499-ebf3da491d0c"/>
+				<reportElement x="225" y="30" width="141" height="14" uuid="7dfb3c79-c17b-4edf-8499-ebf3da491d0c"/>
 				<textFieldExpression><![CDATA[$F{vd_name}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="225" y="30" width="141" height="14" uuid="b9c4278a-66d2-4e78-b04f-fd96b7d3491a"/>
+				<reportElement x="225" y="44" width="141" height="14" uuid="b9c4278a-66d2-4e78-b04f-fd96b7d3491a"/>
 				<textFieldExpression><![CDATA[$F{qual_vend_contact}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="166" y="30" width="55" height="14" uuid="e5931611-d2cd-4768-aab0-ab1e4b8195fd">
+				<reportElement x="166" y="44" width="55" height="14" uuid="e5931611-d2cd-4768-aab0-ab1e4b8195fd">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<textElement>

@@ -99,7 +99,8 @@ public class QPRBrowse extends javax.swing.JPanel {
                           getGlobalColumnTag("id"), 
                           getGlobalColumnTag("item"),  
                           getGlobalColumnTag("description"), 
-                          getGlobalColumnTag("vendor"), 
+                          getGlobalColumnTag("vendor"),
+                          getGlobalColumnTag("name"), 
                           getGlobalColumnTag("userid"), 
                           getGlobalColumnTag("createdate"), 
                           getGlobalColumnTag("closed")})
@@ -224,6 +225,14 @@ public class QPRBrowse extends javax.swing.JPanel {
             ddsite.addItem(site);
         }
         
+        ArrayList<String> items = invData.getItemMasterAlllist();
+        dditem.removeAllItems();
+        for (int i = 0; i < items.size(); i++) {
+            dditem.addItem(items.get(i));
+        }  
+        dditem.insertItemAt("", 0);
+        dditem.setSelectedIndex(0);
+        
         ddvendfrom.removeAllItems();
         ArrayList vends = venData.getVendMstrList();
         for (Object vend : vends) {
@@ -275,6 +284,8 @@ public class QPRBrowse extends javax.swing.JPanel {
         dcfrom = new com.toedter.calendar.JDateChooser();
         dcto = new com.toedter.calendar.JDateChooser();
         cbopen = new javax.swing.JCheckBox();
+        dditem = new javax.swing.JComboBox<>();
+        jLabel2 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
 
         setBackground(new java.awt.Color(0, 102, 204));
@@ -358,6 +369,8 @@ public class QPRBrowse extends javax.swing.JPanel {
 
         cbopen.setText("Open Only");
 
+        jLabel2.setText("Item");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -377,21 +390,27 @@ public class QPRBrowse extends javax.swing.JPanel {
                                 .addComponent(jLabel4))
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(dcfrom, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
                                 .addComponent(jLabel1)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(ddvendfrom, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(ddvendto, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel5)
-                .addGap(4, 4, 4)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel5))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(btRun))
-                    .addComponent(cbopen))
-                .addGap(99, 99, 99))
+                        .addComponent(btRun)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
+                        .addComponent(cbopen)
+                        .addContainerGap())
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(dditem, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(97, 97, 97))))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -404,7 +423,8 @@ public class QPRBrowse extends javax.swing.JPanel {
                         .addComponent(btRun)
                         .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel5)
-                        .addComponent(jLabel6))
+                        .addComponent(jLabel6)
+                        .addComponent(cbopen))
                     .addComponent(dcfrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -412,7 +432,8 @@ public class QPRBrowse extends javax.swing.JPanel {
                         .addComponent(ddvendto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel3)
                         .addComponent(jLabel4)
-                        .addComponent(cbopen))
+                        .addComponent(dditem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel2))
                     .addComponent(dcto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -493,12 +514,25 @@ try {
                   
                  
          //     new String[]{"Detail", "PO", "Vend", "Line", "Part", "Type", "Status", "OrdQty", "RecvQty"});   
-             res = st.executeQuery("select * from qual_mstr where " +
+                if (dditem.getSelectedItem().toString().isEmpty()) {
+                    res = st.executeQuery("select * from qual_mstr where " +
                         " qual_vend >= " + "'" + vendfrom + "'" + " AND " +
                         " qual_vend <= " + "'" + vendto + "'" + " AND " +
-                     " qual_date_crt >= " + "'" + dfdate.format(dcfrom.getDate()) + "'" + " AND " +
+                        " qual_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + " AND " +        
+                        " qual_date_crt >= " + "'" + dfdate.format(dcfrom.getDate()) + "'" + " AND " +
+                        " qual_date_crt <= " + "'" + dfdate.format(dcto.getDate()) + "'" + 
+                        " order by qual_id ;");  
+                } else {
+                    res = st.executeQuery("select * from qual_mstr where " +
+                        " qual_vend >= " + "'" + vendfrom + "'" + " AND " +
+                        " qual_vend <= " + "'" + vendto + "'" + " AND " +
+                        " qual_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + " AND " + 
+                        " qual_part = " + "'" + dditem.getSelectedItem().toString() + "'" + " AND " +         
+                        " qual_date_crt >= " + "'" + dfdate.format(dcfrom.getDate()) + "'" + " AND " +
                         " qual_date_crt <= " + "'" + dfdate.format(dcto.getDate()) + "'" + 
                         " order by qual_id ;");
+                }
+                
                      
                   
                 
@@ -511,6 +545,7 @@ try {
                             res.getString("qual_part"),
                             res.getString("qual_part_desc"),
                             res.getString("qual_vend"),
+                            res.getString("qual_vend_name"),
                             res.getString("qual_userid"),
                             res.getString("qual_date_crt"),
                             res.getString("qual_date_cls")
@@ -565,11 +600,13 @@ try {
     private javax.swing.JCheckBox cbopen;
     private com.toedter.calendar.JDateChooser dcfrom;
     private com.toedter.calendar.JDateChooser dcto;
+    private javax.swing.JComboBox<String> dditem;
     private javax.swing.JComboBox ddsite;
     private javax.swing.JComboBox ddvendfrom;
     private javax.swing.JComboBox ddvendto;
     private javax.swing.JPanel detailpanel;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
