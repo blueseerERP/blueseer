@@ -4205,7 +4205,7 @@ public class DTData {
     public static DefaultTableModel getClockRecBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
               //  "RecID", "EmpID", "LastName", "FirstName", "Dept", getGlobalColumnTag("code"), "InDate", "InTime", "InTmAdj", "OutDate", "OutTime", "OutTmAdj", "tothrs"
-                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("empid"), getGlobalColumnTag("lastname"), getGlobalColumnTag("firstname"), getGlobalColumnTag("department"), getGlobalColumnTag("code"), getGlobalColumnTag("indate"), getGlobalColumnTag("intime"), getGlobalColumnTag("intimeadj"), getGlobalColumnTag("outdate"), getGlobalColumnTag("outtime"), getGlobalColumnTag("outtimeadj"), getGlobalColumnTag("hours")})
+                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("empid"), getGlobalColumnTag("lastname"), getGlobalColumnTag("firstname"), getGlobalColumnTag("dept"), getGlobalColumnTag("code"), getGlobalColumnTag("indate"), getGlobalColumnTag("intime"), getGlobalColumnTag("intimeadj"), getGlobalColumnTag("outdate"), getGlobalColumnTag("outtime"), getGlobalColumnTag("outtimeadj"), getGlobalColumnTag("hours")})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -5174,7 +5174,7 @@ public class DTData {
     public static DefaultTableModel getEmployeeAll() {
 
        javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                    new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("empid"), getGlobalColumnTag("lastname"), getGlobalColumnTag("firstname"), getGlobalColumnTag("department"), getGlobalColumnTag("status"), getGlobalColumnTag("shift"), getGlobalColumnTag("type"), getGlobalColumnTag("startdate"), getGlobalColumnTag("termdate")})
+                    new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("empid"), getGlobalColumnTag("lastname"), getGlobalColumnTag("firstname"), getGlobalColumnTag("dept"), getGlobalColumnTag("status"), getGlobalColumnTag("shift"), getGlobalColumnTag("type"), getGlobalColumnTag("startdate"), getGlobalColumnTag("termdate")})
                {
                   @Override  
                   public Class getColumnClass(int col) {  
@@ -6058,7 +6058,7 @@ return mymodel;
     public static DefaultTableModel getPayRollHours(String fromdate, String todate) {
            
                  javax.swing.table.DefaultTableModel mymodel =  new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("empid"), getGlobalColumnTag("lastname"), getGlobalColumnTag("firstname"), getGlobalColumnTag("middlename"), getGlobalColumnTag("department"), getGlobalColumnTag("shift"), getGlobalColumnTag("supervisor"), getGlobalColumnTag("type"), getGlobalColumnTag("profile"), getGlobalColumnTag("jobtitle"), getGlobalColumnTag("rate"), getGlobalColumnTag("hours"), getGlobalColumnTag("amount")})
+                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("empid"), getGlobalColumnTag("lastname"), getGlobalColumnTag("firstname"), getGlobalColumnTag("middlename"), getGlobalColumnTag("dept"), getGlobalColumnTag("shift"), getGlobalColumnTag("supervisor"), getGlobalColumnTag("type"), getGlobalColumnTag("profile"), getGlobalColumnTag("jobtitle"), getGlobalColumnTag("rate"), getGlobalColumnTag("hours"), getGlobalColumnTag("amount")})
                        {
                       @Override  
                       public Class getColumnClass(int col) {  
