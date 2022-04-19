@@ -38,6 +38,7 @@ import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.IBlueSeerc;
 import com.blueseer.utl.OVData;
+import static com.blueseer.utl.OVData.deleteNonMasterTransactionData;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.GradientPaint;
@@ -588,6 +589,7 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
         tblocale = new javax.swing.JTextField();
         jLabel17 = new javax.swing.JLabel();
         btpatch = new javax.swing.JButton();
+        btclean = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -819,6 +821,13 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
             }
         });
 
+        btclean.setText("Clean");
+        btclean.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btcleanActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -857,6 +866,8 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
                         .addGap(18, 18, 18)
                         .addComponent(btupdate)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btclean)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btpatch)))
                 .addGap(42, 42, 42))
         );
@@ -898,13 +909,13 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(btupdate)
-                                .addComponent(btpatch))
-                            .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(22, Short.MAX_VALUE))
+                                .addComponent(btpatch)
+                                .addComponent(btclean))
+                            .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(39, 39, 39)
-                        .addComponent(panelCopySite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addComponent(panelCopySite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         add(jPanel1);
@@ -935,8 +946,18 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
                     }
     }//GEN-LAST:event_btpatchActionPerformed
 
+    private void btcleanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcleanActionPerformed
+       bsmf.MainFrame.show(getMessageTag(1174));
+        boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
+        if (proceed) {
+          deleteNonMasterTransactionData();
+          bsmf.MainFrame.show(getMessageTag(1125));
+        }
+    }//GEN-LAST:event_btcleanActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btclean;
     private javax.swing.JButton btcopy;
     private javax.swing.JButton btpatch;
     private javax.swing.JButton btupdate;

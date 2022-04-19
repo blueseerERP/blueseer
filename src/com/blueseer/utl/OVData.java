@@ -2922,6 +2922,70 @@ public class OVData {
         return rows;
     }
 
+    public static void deleteNonMasterTransactionData() {
+       
+       try{
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        try{
+           st.executeUpdate(" delete from gl_hist;");
+           st.executeUpdate(" delete from gl_tran;");
+           st.executeUpdate(" delete from acb_mstr;");
+           st.executeUpdate(" delete from so_mstr;");
+           st.executeUpdate(" delete from so_tax;");
+           st.executeUpdate(" delete from sod_det;");
+           st.executeUpdate(" delete from sod_tax;");
+           st.executeUpdate(" delete from sos_det;");
+           st.executeUpdate(" delete from po_mstr;");
+           st.executeUpdate(" delete from pod_mstr;");
+           st.executeUpdate(" delete from ar_mstr;");
+           st.executeUpdate(" delete from ard_mstr;");
+           st.executeUpdate(" delete from art_tax;");
+           st.executeUpdate(" delete from ap_mstr;");
+           st.executeUpdate(" delete from apd_mstr;");
+           st.executeUpdate(" delete from ar_mstr;");
+           st.executeUpdate(" delete from do_mstr;");
+           st.executeUpdate(" delete from dod_mstr;");
+           st.executeUpdate(" delete from po_mstr;");
+           st.executeUpdate(" delete from in_mstr;");
+           st.executeUpdate(" delete from po_mstr;");
+           st.executeUpdate(" delete from label_mstr;");
+           st.executeUpdate(" delete from pay_det;");
+           st.executeUpdate(" delete from pay_line;");
+           st.executeUpdate(" delete from pay_mstr;");
+           st.executeUpdate(" delete from pos_mstr;");
+           st.executeUpdate(" delete from pos_det;");
+           st.executeUpdate(" delete from qual_mstr;");
+           st.executeUpdate(" delete from ship_mstr;");
+           st.executeUpdate(" delete from ship_det;");
+           st.executeUpdate(" delete from ship_log;");
+           st.executeUpdate(" delete from ship_tree;");
+           st.executeUpdate(" delete from shs_det;");
+           st.executeUpdate(" delete from srl_mstr;");
+           st.executeUpdate(" delete from sv_mstr;");
+           st.executeUpdate(" delete from svd_det;");
+           st.executeUpdate(" delete from time_clock;");
+           st.executeUpdate(" delete from tran_mstr;");
+           st.executeUpdate(" delete from vod_mstr;");
+           
+        }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+            if (st != null) {
+                st.close();
+            }
+            con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+
+  
+
+    }
+
 
         
         

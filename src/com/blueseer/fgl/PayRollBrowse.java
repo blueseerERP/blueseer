@@ -276,13 +276,13 @@ public class PayRollBrowse extends javax.swing.JPanel {
         }
         
         ddempfrom.removeAllItems();
-        ArrayList emps = hrmData.getempmstrlist();
-        for (Object emp : emps) {
+        ArrayList<String> emps = hrmData.getempmstrlist();
+        for (String emp : emps) {
             ddempfrom.addItem(emp);
         }
         
         ddempto.removeAllItems();
-        for (Object emp : emps) {
+        for (String emp : emps) {
             ddempto.addItem(emp);
         }
         
