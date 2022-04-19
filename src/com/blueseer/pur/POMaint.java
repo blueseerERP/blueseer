@@ -53,6 +53,7 @@ import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsdate;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
+import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
@@ -67,6 +68,7 @@ import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import static com.blueseer.utl.BlueSeerUtils.lurb2;
 import static com.blueseer.utl.BlueSeerUtils.priceformat;
 import com.blueseer.utl.DTData;
+import com.blueseer.utl.IBlueSeerT;
 import java.awt.Color;
 import java.awt.Component;
 import java.sql.DriverManager;
@@ -85,39 +87,25 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.SwingWorker;
 import javax.swing.event.TableModelEvent;
-import javax.swing.table.DefaultTableModel;
-import com.blueseer.utl.IBlueSeer;
 import com.blueseer.vdr.venData;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.sql.Connection;
-import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
-import java.util.Locale;
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JDialog;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
-import javax.swing.JTextField;
 
 
 /**
  *
  * @author vaughnte
  */
-public class POMaint extends javax.swing.JPanel implements IBlueSeer {
+public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
 
     // global variable declarations
      boolean editmode = false;
@@ -187,15 +175,15 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeer {
   
       
     // interface functions implemented  
-    public void executeTask(String x, String[] y) { 
+    public void executeTask(dbaction x, String[] y) { 
       
         class Task extends SwingWorker<String[], Void> {
        
           String type = "";
           String[] key = null;
           
-          public Task(String type, String[] key) { 
-              this.type = type;
+          public Task(dbaction type, String[] key) { 
+              this.type = type.name();
               this.key = key;
           } 
            
@@ -234,10 +222,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeer {
             BlueSeerUtils.endTask(message);
            if (this.type.equals("delete")) {
              initvars(null);  
-           } else if (this.type.equals("get") && message[0].equals("1")) {
-             updateForm();
-             tbkey.requestFocus();
-           } else if (this.type.equals("get") && message[0].equals("0")) {
+           } else if (this.type.equals("get")) {
              updateForm();
              tbkey.requestFocus();
            } else if (this.type.equals("add") && message[0].equals("0")) {
@@ -485,7 +470,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeer {
         btlookup.setEnabled(true);
         
         if (arg != null && arg.length > 0) {
-            executeTask("get", arg);
+            executeTask(dbaction.get, arg);
         } else {
             tbkey.setEnabled(true);
             tbkey.setEditable(true);
@@ -510,10 +495,9 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeer {
         
     }
     
-    public String[] setAction(int i) {
+    public void setAction(String[] x) {
         String[] m = new String[2];
-        if (i > 0) {
-            m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
+        if (x[0].equals("0")) {
                    setPanelComponentState(this, true);
                    btadd.setEnabled(false);
                    tbkey.setEditable(false);
@@ -535,10 +519,8 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeer {
                     }
                    
         } else {
-           m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
                    tbkey.setForeground(Color.red); 
         }
-        return m;
     }
         
     public String[] addRecord(String[] x) {
@@ -669,7 +651,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeer {
         return list;   
     }
     
-    public boolean validateInput(String x) {
+    public boolean validateInput(dbaction x) {
         boolean proceed = true;
             
             
@@ -920,11 +902,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeer {
                       pod.pod_status()});
         }
         
-        if (po.m()[0].equals("0") && podlist != null && podlist.size() > 0) {
-           setAction(1); 
-        } else {
-           setAction(0);
-        }
+        setAction(po.m()); 
         
         po = null;
         podlist = null;
@@ -2092,11 +2070,11 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeer {
     }//GEN-LAST:event_btclearActionPerformed
 
     private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
-        if (! validateInput("deleteRecord")) {
+        if (! validateInput(dbaction.delete)) {
             return;
         }
         setPanelComponentState(this, false);
-        executeTask("delete", new String[]{tbkey.getText()});
+        executeTask(dbaction.delete, new String[]{tbkey.getText()});
     }//GEN-LAST:event_btdeleteActionPerformed
 
     private void btpoprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btpoprintActionPerformed
@@ -2104,19 +2082,19 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeer {
     }//GEN-LAST:event_btpoprintActionPerformed
 
     private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
-        if (! validateInput("updateRecord")) {
+        if (! validateInput(dbaction.update)) {
             return;
         }
         setPanelComponentState(this, false);
-        executeTask("update", new String[]{tbkey.getText()});
+        executeTask(dbaction.update, new String[]{tbkey.getText()});
     }//GEN-LAST:event_btupdateActionPerformed
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
-        if (! validateInput("addRecord")) {
+        if (! validateInput(dbaction.add)) {
             return;
         }
         setPanelComponentState(this, false);
-        executeTask("add", new String[]{tbkey.getText()});
+        executeTask(dbaction.add, new String[]{tbkey.getText()});
     }//GEN-LAST:event_btaddActionPerformed
 
     private void ddvendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddvendActionPerformed
@@ -2133,7 +2111,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeer {
     }//GEN-LAST:event_btnewActionPerformed
 
     private void tbkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkeyActionPerformed
-        executeTask("get", new String[]{tbkey.getText()});
+        executeTask(dbaction.get, new String[]{tbkey.getText()});
     }//GEN-LAST:event_tbkeyActionPerformed
 
     private void btlookupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btlookupActionPerformed

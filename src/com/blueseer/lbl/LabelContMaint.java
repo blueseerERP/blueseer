@@ -86,9 +86,9 @@ import javax.swing.JTabbedPane;
  */
 public class LabelContMaint extends javax.swing.JPanel {
 
-String partnumber = "";
+String item = "";
 String revnbr = "";
-String custpart = "";
+String custitem = "";
 String partdesc = "";
 String billto = "";
 String shipto = "";
@@ -182,15 +182,20 @@ String shipcountry = "";
                         + ";");
                 while (res.next()) {
                     i++;
-                   partnumber = res.getString("it_item");
+                   item = res.getString("it_item");
                    partdesc = res.getString("it_desc");
-                   custpart = res.getString("sod_custpart");
+                   custitem = res.getString("sod_custpart");
                    billto = res.getString("so_cust");
                    shipto = res.getString("so_ship");
                    ponbr = res.getString("sod_po");
                    ordernbr = res.getString("sod_nbr");
                    linenbr = res.getString("sod_line");
                    revnbr = res.getString("it_rev");
+                   
+                   if (custitem.isEmpty()) {
+                      custitem = item; 
+                   }
+                   
                 }
                
                 
@@ -307,8 +312,8 @@ String shipcountry = "";
         DateFormat dfdate2 = new SimpleDateFormat("yyyy-MM-dd");
          label_mstr x = new label_mstr(null, 
                  serialno_str, 
-                 partnumber, 
-                 custpart, 
+                 item, 
+                 custitem, 
                  serialno_str, 
                  "XX", 
                  quantity, 
@@ -570,8 +575,8 @@ fsr.close();
 // fos.write(concatline.getBytes());
 
 
-concatline = concatline.replace("$PART", partnumber);
-concatline = concatline.replace("$CUSTPART", custpart);
+concatline = concatline.replace("$PART", item);
+concatline = concatline.replace("$CUSTPART", custitem);
 concatline = concatline.replace("$SERIALNO", serialno_str);
 concatline = concatline.replace("$QUANTITY", quantity);
 

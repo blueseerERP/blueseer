@@ -147,7 +147,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
                 String arcc = "";
                 String status = "";
                 String curr = "";
-                String basecurr = OVData.getDefaultCurrency();
+                String basecurr = "";
                 boolean custitemonly = true;
                 boolean autoallocate = false;
                 String allocationStatus = "";
@@ -410,6 +410,8 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
     public void setComponentDefaultValues() {
         
         isLoad = true;
+        
+        basecurr = OVData.getDefaultCurrency();
         
         jTabbedPane1.removeAll();
         jTabbedPane1.add("Main", jPanelMain);
