@@ -140,7 +140,7 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
                 double rcvamt = 0;
                 int voucherline = 0;
                 String curr = "";
-                String basecurr = OVData.getDefaultCurrency();
+                String basecurr = "";
                 
                  javax.swing.table.DefaultTableModel receivermodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
@@ -193,7 +193,7 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
                 String clocktime = dftime.format(now);
                
                 dcdate.setDate(now);
-        
+         basecurr = OVData.getDefaultCurrency();
          terms = "";
          apacct = "";
          apcc = "";

@@ -94,7 +94,7 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
                 double baseamt = 0.00;
                 double rcvamt = 0.00;
                 String curr = "";
-                String basecurr = OVData.getDefaultCurrency();
+                String basecurr = "";
                 
     
     // global datatablemodel declarations 
@@ -319,6 +319,8 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
          control = 0.00;
          rcvamt = 0.00;
         
+         basecurr = OVData.getDefaultCurrency();
+         
         lbcust.setText("");
         lbmessage.setText("");
         lbmessage.setForeground(Color.blue);
