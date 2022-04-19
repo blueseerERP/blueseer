@@ -284,8 +284,8 @@ public class ProjectionBrowse extends javax.swing.JPanel {
                 LocalDate date = LocalDate.now();
                 TemporalField woy = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear(); 
                 int weekOfYear = date.get(woy) - 1;  // need to subtract 1 to match sqlite/mysql week calc
-            
-                res = st.executeQuery("select mrp_part, it_code, itc_total, strftime('%W',mrp_date) as 'w', " + 
+                if (bsmf.MainFrame.dbtype.equals("sqlite")) {
+                  res = st.executeQuery("select mrp_part, it_code, itc_total, strftime('%W',mrp_date) as 'w', " + 
                         " sum(mrp_qty) as 'sum', " +
                         " (select sum(in_qoh) from in_mstr where in_part = mrp_part) as 'qoh' " +
                         " from mrp_mstr " +
@@ -293,7 +293,19 @@ public class ProjectionBrowse extends javax.swing.JPanel {
                         " inner join item_cost on it_item = itc_item and itc_set = 'standard' and itc_site = " + "'" + site + "'" +
                         " where mrp_part >= " + "'" + fromitem + "'" +
                         " and mrp_part <= " + "'" + toitem + "'" +
-                        " group by w, mrp_part;");
+                        " group by w, mrp_part;");  
+                } else {
+                    res = st.executeQuery("select mrp_part, it_code, itc_total, week(mrp_date) as 'w', " + 
+                        " sum(mrp_qty) as 'sum', " +
+                        " (select sum(in_qoh) from in_mstr where in_part = mrp_part) as 'qoh' " +
+                        " from mrp_mstr " +
+                        " inner join item_mstr on it_item = mrp_part " +
+                        " inner join item_cost on it_item = itc_item and itc_set = 'standard' and itc_site = " + "'" + site + "'" +
+                        " where mrp_part >= " + "'" + fromitem + "'" +
+                        " and mrp_part <= " + "'" + toitem + "'" +
+                        " group by w, mrp_part;"); 
+                }
+                
                 Map<String, String> hm = new HashMap<>();
                 Map<String, String> itemqoh = new HashMap<>();
                 Map<String, String> itemcost = new HashMap<>();
@@ -314,14 +326,26 @@ public class ProjectionBrowse extends javax.swing.JPanel {
                     } 
                     
                     // now POs
-                    res = st.executeQuery("select pod_part, it_code, strftime('%W',pod_due_date) as 'w', " + 
+                    if (bsmf.MainFrame.dbtype.equals("sqlite")) {
+                     res = st.executeQuery("select pod_part, it_code, strftime('%W',pod_due_date) as 'w', " + 
                         " sum(pod_ord_qty) as 'sum' " +
                         " from pod_mstr " +
                         " inner join item_mstr on it_item = pod_part " +    
                         " where pod_part >= " + "'" + fromitem + "'" +
                         " and pod_part <= " + "'" + toitem + "'" +
                         " and pod_status <> 'closed' " +
-                        " group by w, pod_part;");
+                        " group by w, pod_part;");   
+                    } else {
+                     res = st.executeQuery("select pod_part, it_code, week(pod_due_date) as 'w', " + 
+                        " sum(pod_ord_qty) as 'sum' " +
+                        " from pod_mstr " +
+                        " inner join item_mstr on it_item = pod_part " +    
+                        " where pod_part >= " + "'" + fromitem + "'" +
+                        " and pod_part <= " + "'" + toitem + "'" +
+                        " and pod_status <> 'closed' " +
+                        " group by w, pod_part;");   
+                    }
+                    
                     while (res.next()) {
                       if (! res.getString("it_code").equals(ddclass.getSelectedItem().toString())) {
                           continue;

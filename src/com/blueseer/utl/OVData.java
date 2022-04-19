@@ -2864,14 +2864,14 @@ public class OVData {
                     } else  {
                     sql = "insert into mrp_mstr (mrp_part, mrp_qty, mrp_date, mrp_type, mrp_site) "
                         + " select ps_child, sum(mrp_qty * ps_qty_per) as sum, " 
-                        + " date_add(mrp_date, concat('interval -',cast(it_itemlevel as varchar),' day')), " 
+                        + " date_add(mrp_date, " + "interval -" + "cast(it_leadtime as char)" + " day), " 
                         + " 'derived', ? from mrp_mstr "
                         + " inner join pbm_mstr on ps_parent = mrp_part "
                         + " inner join bom_mstr on bom_id = ps_bom and bom_primary = '1' "        
                         + " inner join item_mstr on it_item = ps_parent "
                         + " where it_mrp = '1' and it_level = ? " 
-                        + " AND ps_child >= ? " + "'" 
-                        + " AND ps_child <= ? " + "'" 
+                        + " AND ps_child >= ? " 
+                        + " AND ps_child <= ? "
                         + " group by ps_child, mrp_date order by ps_child, mrp_date; ";
                     } 
         try (Connection con = DriverManager.getConnection(url + db, user, pass);

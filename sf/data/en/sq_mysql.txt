@@ -23,6 +23,8 @@ load data local infile 'glcal.csv' replace into table gl_cal fields terminated b
 load data local infile 'acctmstr.csv' replace into table ac_mstr fields terminated by ',' ignore 0 Lines; show errors; 
 load data local infile 'bankmstr.csv' replace into table bk_mstr fields terminated by ',' ignore 0 Lines; show errors; 
 load data local infile 'cmmstr.csv' replace into table cm_mstr fields terminated by ',' ignore 0 Lines; show errors; 
+load data local infile 'cmsdet.csv' replace into table cms_det fields terminated by ',' ignore 0 Lines; show errors; 
+load data local infile 'vdmstr.csv' replace into table vd_mstr fields terminated by ',' ignore 0 Lines; show errors; 
 load data local infile 'ovmstr.csv' replace into table ov_mstr fields terminated by ',' ignore 0 Lines; show errors; 
 load data local infile 'uommstr.csv' replace into table uom_mstr fields terminated by ',' ignore 0 Lines; show errors; 
 load data local infile 'curmstr.csv' replace into table cur_mstr fields terminated by ',' ignore 0 Lines; show errors; 
@@ -49,4 +51,3 @@ load data local infile 'usrmstr.csv' replace into table user_mstr fields termina
 load data local infile 'permwmstr.csv' replace into table permw_mstr fields terminated by ',' ignore 0 Lines; show errors; 
 load data local infile 'mockmstr.csv' replace into table mock_mstr fields terminated by ',' ignore 0 Lines; show errors; 
 load data local infile 'timeclock.csv' replace into table time_clock fields terminated by ',' ignore 0 Lines; show errors; 
-load data local infile 'cmsdet.csv' replace into table cms_det fields terminated by ',' ignore 0 Lines; show errors; 
