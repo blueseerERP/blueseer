@@ -376,7 +376,6 @@ String sitecitystatezip = "";
             BufferedReader fsr = new BufferedReader(new FileReader(new File("zebra/address.prn")));
             String line = "";
             String concatline = "";
-
             while ((line = fsr.readLine()) != null) {
                 concatline += line;
             }

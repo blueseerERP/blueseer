@@ -2508,8 +2508,8 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
         String printer = OVData.getDefaultLabelPrinter();
         if (OVData.isValidPrinter(printer)) {
             try {
-                OVData.printLabelStream(tbkey.getText(), printer);
-            } catch (IOException ex) {
+                OVData.printLabelItem(tbkey.getText(), printer);
+            } catch (IOException ex) { 
                 ex.printStackTrace();
             } catch (PrintException ex) {
                 ex.printStackTrace();

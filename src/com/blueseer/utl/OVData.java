@@ -14843,7 +14843,7 @@ return mystring;
         }
     }    
         
-    public static void printLabelItem(String item, String printer) {
+    public static void printLabelItem(String item, String printer) throws IOException, PrintException {
           String this_printer = "";
           try {
 
