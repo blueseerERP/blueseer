@@ -348,7 +348,7 @@ public class PayRollMaint extends javax.swing.JPanel {
                                 + "'" + modelearnings.getValueAt(e, 1).toString() + "'" + ","
                                 + "'" + modelearnings.getValueAt(e, 2).toString() + "'" + ","
                                 + "''" + ","  // profile  
-                                + "''" + ","  // profileline          
+                                + "'0'" + ","  // profileline          
                                 + "'" + String.valueOf(checknbr) + "'" + ","  // checknumber  
                                 + "'" + modelearnings.getValueAt(e, 3).toString() + "'" + ","
                                 + "'" + modelearnings.getValueAt(e, 4).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
@@ -485,12 +485,10 @@ public class PayRollMaint extends javax.swing.JPanel {
                         codedesc = res.getString("clc_desc");
                     }
                     html += "<tr><td align='right'>" + codedesc + ":" + "</td><td>" + currformatDouble(res.getDouble("t.tothrs") * res.getDouble("e.emp_rate")) + "</td></tr>";
-                
+               
                 modelearnings.addRow(new Object []{empnbr,
                                             "earnings",
                                             res.getString("t.code_id"),
-                                            "",
-                                            "",
                                             res.getString("clc_desc"),
                                             res.getString("e.emp_rate").replace('.',defaultDecimalSeparator),
                                             currformatDouble(res.getDouble("t.tothrs") * res.getDouble("e.emp_rate")).replace('.',defaultDecimalSeparator)
