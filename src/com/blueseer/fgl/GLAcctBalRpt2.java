@@ -106,7 +106,9 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
                       @Override  
                       public Class getColumnClass(int col) {  
                         if (col == 0  )       
-                            return ImageIcon.class;  
+                            return ImageIcon.class; 
+                        else if (col == 6 || col == 7 || col == 8) 
+                            return Double.class;
                         else return String.class;  //other columns accept String values  
                       }  
                         };
@@ -127,7 +129,9 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
                       @Override  
                       public Class getColumnClass(int col) {  
                         if (col == 0  )       
-                            return ImageIcon.class;  
+                            return ImageIcon.class; 
+                        else if (col == 7 || col == 8 || col == 9) 
+                            return Double.class;
                         else return String.class;  //other columns accept String values  
                       }  
                         };
@@ -140,7 +144,15 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
                             getGlobalColumnTag("type"), 
                             getGlobalColumnTag("effectivedate"), 
                             getGlobalColumnTag("description"), 
-                            getGlobalColumnTag("amount")});
+                            getGlobalColumnTag("amount")})
+            {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 7 )   
+                            return Double.class;
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        };
     
     
    
@@ -276,7 +288,7 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
                       res.getString("glh_type"), 
                       res.getString("glh_effdate"),
                       res.getString("glh_desc"),
-                      currformatDouble(res.getDouble("glh_base_amt"))  });
+                      bsParseDouble(currformatDouble(res.getDouble("glh_base_amt")))});
                 }
                
                labeldettotal.setText(currformatDouble(total));
@@ -333,7 +345,7 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
                       res.getString("glh_doc"), 
                       res.getString("glh_effdate"),
                       res.getString("glh_desc"),
-                      currformatDouble(res.getDouble("glh_base_amt"))});
+                      bsParseDouble(currformatDouble(res.getDouble("glh_base_amt")))});
                 }
                
                labeldettotal.setText(currformatDouble(total));
@@ -920,9 +932,9 @@ try {
                                 acctdesc,
                                 site,
                                 res.getString("acb_cc"),
-                                currformatDouble(begbal),
-                                currformatDouble(activity),
-                                currformatDouble(endbal)
+                                bsParseDouble(currformatDouble(begbal)),
+                            bsParseDouble(currformatDouble(activity)),
+                            bsParseDouble(currformatDouble(endbal))
                             });
                             totendbal = totendbal + endbal;
                             totbegbal = totbegbal + begbal;
@@ -933,9 +945,9 @@ try {
                             acctdesc,
                             site,
                             res.getString("acb_cc"),
-                            currformatDouble(begbal),
-                            currformatDouble(activity),
-                            currformatDouble(endbal)
+                            bsParseDouble(currformatDouble(begbal)),
+                            bsParseDouble(currformatDouble(activity)),
+                            bsParseDouble(currformatDouble(endbal))
                             });
                             totendbal = totendbal + endbal;
                             totbegbal = totbegbal + begbal;
@@ -987,9 +999,9 @@ try {
                                 acctdesc,
                                 site,
                                 res.getString("acb_cc"),
-                                currformatDouble(begbal),
-                                currformatDouble(activity),
-                                currformatDouble(endbal)
+                                bsParseDouble(currformatDouble(begbal)),
+                            bsParseDouble(currformatDouble(activity)),
+                            bsParseDouble(currformatDouble(endbal))
                             });
                             totendbal = totendbal + endbal;
                             totbegbal = totbegbal + begbal;
@@ -1000,9 +1012,9 @@ try {
                             acctdesc,
                             site,
                             res.getString("acb_cc"),
-                            currformatDouble(begbal),
-                            currformatDouble(activity),
-                            currformatDouble(endbal)
+                            bsParseDouble(currformatDouble(begbal)),
+                            bsParseDouble(currformatDouble(activity)),
+                            bsParseDouble(currformatDouble(endbal))
                         });
                         totendbal = totendbal + endbal;
                         totbegbal = totbegbal + begbal;
@@ -1130,9 +1142,9 @@ try {
                 mymodel.addRow(new Object[]{BlueSeerUtils.clickbasket, acctid, accttype, acctcurr,
                             acctdesc,
                             site,
-                            currformatDouble(begbal),
-                            currformatDouble(activity),
-                            currformatDouble(endbal)
+                            bsParseDouble(currformatDouble(begbal)),
+                            bsParseDouble(currformatDouble(activity)),
+                            bsParseDouble(currformatDouble(endbal))
                         });
                 // now sum for the total labels display
                  totendbal = totendbal + endbal;
@@ -1143,9 +1155,9 @@ try {
                   mymodel.addRow(new Object[]{BlueSeerUtils.clickbasket, acctid, accttype, acctcurr,
                             acctdesc,
                             site,
-                            currformatDouble(begbal),
-                            currformatDouble(activity),
-                            currformatDouble(endbal)
+                            bsParseDouble(currformatDouble(begbal)),
+                            bsParseDouble(currformatDouble(activity)),
+                            bsParseDouble(currformatDouble(endbal))
                         }); 
                       // now sum for the total labels display
                      totendbal = totendbal + endbal;
