@@ -1032,7 +1032,7 @@ public class fglData {
                     // NOW LETS DO WITHHOLDINGS...
                     // NOTE!!! THis needs to be broken into individual withholding accounts...currently lumped into one withholding account...with 'descriptions'
                       res = st.executeQuery("select py_id, py_site, pyd_checknbr, pyl_amt, pyl_profile, pyl_profile_line, pyl_type, pyl_code, pyl_desc, pyl_empnbr, pyd_empdept from pay_line " +
-                              " inner join pay_det on pyd_id = pyl_id " +
+                              " inner join pay_det on pyd_id = pyl_id and pyd_empnbr = pyl_empnbr " +
                               " inner join pay_mstr on py_id = pyd_id  " +
                                " where pyl_type = 'deduction' and pyd_id = " + "'" + batch + "'" +";");
                    

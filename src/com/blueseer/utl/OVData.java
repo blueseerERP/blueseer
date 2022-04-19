@@ -39,6 +39,7 @@ import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.ctr.cusData;
 import com.blueseer.fgl.fglData;
+import com.blueseer.hrm.hrmData;
 import com.blueseer.inv.calcCost;
 import com.blueseer.inv.invData;
 import com.blueseer.inv.invData.item_mstr;
@@ -4980,6 +4981,58 @@ public class OVData {
         } catch (SQLException e) {
             MainFrame.bslog(e);
             myreturn = false;
+        }  
+                  return myreturn;
+             } 
+   
+    public static boolean createTestDataTC() {
+        boolean myreturn = true;
+        LocalDate today = LocalDate.now();
+        LocalDate[] days = new LocalDate[7];
+        for (int k = 0; k < 7; k++) {
+            days[k] = today.plusDays(0 - k);
+        }
+        ArrayList<String> emps = hrmData.getempmstrlist(); 
+        
+          try {
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+                   st.executeUpdate("delete from time_clock;");
+                   
+                   for (String e : emps) {
+                       for (int m = 0; m < days.length; m++) {
+                   st.executeUpdate(" insert into time_clock " 
+                      + "(emp_nbr, indate, intime, intime_adj, outdate, outtime, outtime_adj, tothrs, dept, code_id, code_orig, login ) "
+                   + " values ( " + 
+                    "'" +  e + "'" + "," + 
+                    "'" +  days[m].format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))  + "'" + "," +
+                    "'" +  "08:00:00" + "'" + "," +  
+                    "'" +  "08:00:00" + "'" + "," +  
+                    "'" +  days[m].format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + "'" + "," +  
+                    "'" +  "16:00:00" + "'" + "," +  
+                    "'" +  "16:00:00" + "'" + "," +  
+                    "'" +  "8" + "'" + "," +
+                    "'" +  "9999" + "'" + "," +
+                    "'" +  "00" + "'" + "," +
+                    "'" +  "00" + "'" + "," +
+                    "'" +  bsmf.MainFrame.userid + "'" +        
+                    ");"
+                   );  
+                   }
+                   }
+            } catch (Exception s) {
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+                myreturn = false;
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
+        } catch (SQLException e) {
+            MainFrame.bslog(e);
         }  
                   return myreturn;
              } 

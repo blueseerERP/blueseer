@@ -396,6 +396,7 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeerT  {
         tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
         detailpanel.setVisible(false);
         chartpanel.setVisible(false);
+        summarypanel.setVisible(true);
         
          tablereport.getColumnModel().getColumn(6).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
          tablereport.getColumnModel().getColumn(7).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());

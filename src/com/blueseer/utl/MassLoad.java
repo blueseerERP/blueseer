@@ -36,6 +36,7 @@ import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.OVData.createTestDataPO;
 import static com.blueseer.utl.OVData.createTestDataSO;
+import static com.blueseer.utl.OVData.createTestDataTC;
 import java.awt.Component;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -2424,6 +2425,16 @@ public class MassLoad extends javax.swing.JPanel {
                  bsmf.MainFrame.show(getMessageTag(1145,filename.toString()));
              }
              
+             tacomments.append("Creating timeclock data...\n");
+             if (createTestDataTC()) { 
+                 m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+             } else {
+                 m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordError};
+             }
+             
+             if (m[0].equals("1")) {
+                 return m;
+             }
              
              tacomments.append("Creating random sales orders...\n");
              if (createTestDataSO()) { 
