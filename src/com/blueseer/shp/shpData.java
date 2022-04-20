@@ -745,6 +745,7 @@ public class shpData {
                 double qty = 0;
                 String uom = "";
                 double baseqty = 0;
+                double lineqty = 0;
                 String loc = "";
                 String wh = "";
                 String site = "";
@@ -759,7 +760,7 @@ public class shpData {
                           " where shd_id = " + "'" + shipper + "'" +";");
                 ArrayList<String[]> list = new ArrayList<String[]>();
                 while (res.next()) {
-                    String[] x = new String[12];
+                    String[] x = new String[13];
                     i = 0;
                     x[0] = res.getString("shd_part");
                     x[1] = res.getString("shd_qty");
@@ -774,6 +775,7 @@ public class shpData {
                     x[10] = res.getString("it_phantom");
                     x[11] = res.getString("shd_bom");
                     baseqty = OVData.getUOMBaseQty(x[0], x[5], x[2], Double.valueOf(x[1]));
+                    x[12] = String.valueOf(baseqty);
                     if (x[3].isEmpty()) {x[3] = x[7];} // if no loc in shipper...use item default loc
                     if (x[4].isEmpty()) {x[4] = x[8];} // if no wh in shipper...use item default wh
                     if (x[9] != null && ! x[9].equals("S")) {  // no service items
@@ -804,6 +806,7 @@ public class shpData {
                     wh = sd[4];
                     site = sd[5];
                     serial = sd[6];
+                    lineqty = Double.valueOf(sd[12]);
                  //   bsmf.MainFrame.show(item + "/" + uom + "/" + loc + "/" + wh + "/" + site + "/" + serial + "/" + baseqty);
                     // if not serialized...pull from non-serialized inventory... in_serial = ""
                     // check for serialized inventory flag...if not...prevent serial from entry into in_mstr
@@ -819,7 +822,7 @@ public class shpData {
                     double qoh = 0.00;
                   
                     if (! serialized) {  // if not serialized
-                    OVData._updateNonSerializedInventory(bscon, item, site, wh, loc, (-1 * baseqty), mydate);
+                    OVData._updateNonSerializedInventory(bscon, item, site, wh, loc, (-1 * lineqty), mydate);
                    } else if (serialized && ! serial.isEmpty()) {
                     res = st.executeQuery("select in_qoh, in_serial from in_mstr where "
                             + " in_part = " + "'" + item + "'" 
@@ -831,7 +834,7 @@ public class shpData {
                     ArrayList<String[]> serialinventory = new ArrayList<String[]>();
                     double diff = 0;
                     while (res.next()) {
-                      diff = res.getDouble("in_qoh") - baseqty;  // app logic must always insure diff >= 0
+                      diff = res.getDouble("in_qoh") - lineqty;  // app logic must always insure diff >= 0
                       if (diff <= 0) { 
                           st2.executeUpdate("delete from in_mstr where " 
                             + " in_part = " + "'" + item + "'" 
@@ -867,7 +870,7 @@ public class shpData {
                         serialinventory.add(new String[]{res.getString("in_serial"), res.getString("in_qoh")});
                     }
                     res.close();
-                    double remaining = baseqty;
+                    double remaining = lineqty;
                     for (String[] s : serialinventory) {
                         if (remaining == 0) break;
                         if (Double.valueOf(s[1]) <= remaining) {
