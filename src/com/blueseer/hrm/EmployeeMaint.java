@@ -135,7 +135,7 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeerT  {
                           getGlobalColumnTag("paydate"),
                           getGlobalColumnTag("hours"), 
                           getGlobalColumnTag("grossamount"), 
-                          getGlobalColumnTag("deducttion"), 
+                          getGlobalColumnTag("deduction"), 
                           getGlobalColumnTag("netamount")})
                        {
                       @Override  

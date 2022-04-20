@@ -82,6 +82,13 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartUtilities;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.labels.PieSectionLabelGenerator;
+import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
+import org.jfree.chart.plot.PiePlot;
+import org.jfree.data.general.DefaultPieDataset;
 
 /**
  *
@@ -89,6 +96,9 @@ import javax.swing.JTabbedPane;
  */
 public class PayRollBrowse extends javax.swing.JPanel {
  
+    String empfilepath = OVData.getSystemTempDirectory() + "/" + "chartexpinc.jpg";
+    String buysellfilepath = OVData.getSystemTempDirectory() + "/" + "chartbuysell.jpg";
+    
      public Map<String, ArrayList<String>> map = new HashMap<String, ArrayList<String>>();
      //pyd_empnbr, pyd_emplname, pyd_empfname, pyd_empdept, pyd_emptype, pyd_paydate, pyd_checknbr, pyd_payamt
     javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
@@ -138,6 +148,151 @@ public class PayRollBrowse extends javax.swing.JPanel {
         setLanguageTags(this);
     }
 
+     public void chartEmployee() {
+         try {
+          
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+                
+                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");       
+                 
+                if (bsmf.MainFrame.dbtype.equals("sqlite")) {
+                 res = st.executeQuery("select pyd_empnbr || '=' || pyd_emplname as name, " +
+                        " sum(pyd_payamt) as 'sum' from pay_det " +
+                        " where pyd_paydate >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
+                        " AND pyd_paydate <= " + "'" + dfdate.format(dcTo.getDate()) + "'" +       
+                        " group by name  ;");   
+                } else {
+                 res = st.executeQuery("select concat(pyd_empnbr,'=',pyd_emplname) as name, " +
+                        " sum(pyd_payamt) as 'sum' from pay_det " +
+                        " where pyd_paydate >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
+                        " AND pyd_paydate <= " + "'" + dfdate.format(dcTo.getDate()) + "'" +       
+                        " group by name  ;");   
+                }
+                
+             
+                DefaultPieDataset dataset = new DefaultPieDataset();
+               
+                String acct = "";
+                while (res.next()) {
+                      acct = res.getString("name");  
+                    double amt = res.getDouble("sum");
+                    if (amt > 0) {
+                       dataset.setValue(acct, amt);
+                    }
+                }
+        JFreeChart chart = ChartFactory.createPieChart("PayRoll By Employee", dataset, true, true, false);
+        PiePlot plot = (PiePlot) chart.getPlot();
+      //  plot.setSectionPaint(KEY1, Color.green);
+      //  plot.setSectionPaint(KEY2, Color.red);
+     //   plot.setExplodePercent(KEY1, 0.10);
+        //plot.setSimpleLabels(true);
+
+        PieSectionLabelGenerator gen = new StandardPieSectionLabelGenerator(
+            "{0}: {1} ({2})", new DecimalFormat("$ #,##0.00", new DecimalFormatSymbols(Locale.US)), new DecimalFormat("0%", new DecimalFormatSymbols(Locale.US)));
+        plot.setLabelGenerator(gen);
+
+        try {
+        
+        ChartUtilities.saveChartAsJPEG(new File(empfilepath), chart, (int) (this.getWidth()/2.5), (int) (this.getHeight()/2.8));
+       // ChartUtilities.saveChartAsJPEG(new File(exoincfilepath), chart, 400, 200);
+        } catch (IOException e) {
+            MainFrame.bslog(e);
+        }
+        ImageIcon myicon = new ImageIcon(empfilepath);
+        myicon.getImage().flush();  
+      //  myicon.getImage().getScaledInstance(400, 200, Image.SCALE_SMOOTH);
+        this.chartlabel.setIcon(myicon);
+        this.repaint();
+       
+       // bsmf.MainFrame.show("your chart is complete...go to chartview");
+                
+              } catch (SQLException s) {
+                  MainFrame.bslog(s);
+                  bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+    }
+       
+      public void chartEmpType() {
+         try {
+          
+           Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+                
+                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");       
+                 
+                  
+                res = st.executeQuery("select pyd_emptype, sum(pyd_payamt) as 'sum' from pay_det " +
+                        " where pyd_paydate >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
+                        " AND pyd_paydate <= " + "'" + dfdate.format(dcTo.getDate()) + "'" +       
+                        " group by pyd_emptype order by pyd_emptype   ;");
+             
+                DefaultPieDataset dataset = new DefaultPieDataset();
+               
+                String acct = "";
+                while (res.next()) {
+                      acct = res.getString("pyd_emptype");
+                    double amt = res.getDouble("sum");
+                    if (amt < 0) {amt = amt * -1;}
+                  dataset.setValue(acct, amt);
+                }
+        JFreeChart chart = ChartFactory.createPieChart("PayRoll By Type", dataset, true, true, false);
+        PiePlot plot = (PiePlot) chart.getPlot();
+      //  plot.setSectionPaint(KEY1, Color.green);
+      //  plot.setSectionPaint(KEY2, Color.red);
+     //   plot.setExplodePercent(KEY1, 0.10);
+        //plot.setSimpleLabels(true);
+
+        PieSectionLabelGenerator gen = new StandardPieSectionLabelGenerator(
+            "{0}: {1} ({2})", new DecimalFormat("$ #,##0.00", new DecimalFormatSymbols(Locale.US)), new DecimalFormat("0%", new DecimalFormatSymbols(Locale.US)));
+        plot.setLabelGenerator(gen);
+
+        try {
+        
+        ChartUtilities.saveChartAsJPEG(new File(buysellfilepath), chart, (int) (this.getWidth()/2.5), (int) (this.getHeight()/2.8));
+        } catch (IOException e) {
+            MainFrame.bslog(e);
+        }
+        ImageIcon myicon = new ImageIcon(buysellfilepath);
+        myicon.getImage().flush();   
+        this.pielabel.setIcon(myicon);
+        this.repaint();
+       
+       // bsmf.MainFrame.show("your chart is complete...go to chartview");
+                
+              } catch (SQLException s) {
+                  MainFrame.bslog(s);
+                  bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+    }
+       
+    
     public void getdetail(String empnbr, String checknbr) {
       
          modeldetail.setNumRows(0);
@@ -237,7 +392,8 @@ public class PayRollBrowse extends javax.swing.JPanel {
     
     public void initvars(String[] arg) {
      
-        tbtotal.setText("0");
+        tbtotalnet.setText("0");
+        tbtotalgross.setText("0");
         tbcount.setText("0");
         
         cbsalary.setSelected(true);
@@ -265,9 +421,9 @@ public class PayRollBrowse extends javax.swing.JPanel {
         
         
         
-        
-        btdetail.setEnabled(false);
+         btdetail.setEnabled(false);
         detailpanel.setVisible(false);
+        chartpanel.setVisible(false);
         
         ddsite.removeAllItems();
         ArrayList sites = OVData.getSiteList();
@@ -314,6 +470,9 @@ public class PayRollBrowse extends javax.swing.JPanel {
         detailpanel = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tabledetail = new javax.swing.JTable();
+        chartpanel = new javax.swing.JPanel();
+        chartlabel = new javax.swing.JLabel();
+        pielabel = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         btdetail = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
@@ -329,11 +488,14 @@ public class PayRollBrowse extends javax.swing.JPanel {
         dcTo = new com.toedter.calendar.JDateChooser();
         cbsalary = new javax.swing.JCheckBox();
         cbhourly = new javax.swing.JCheckBox();
+        cbchart = new javax.swing.JCheckBox();
         jPanel3 = new javax.swing.JPanel();
-        tbtotal = new javax.swing.JTextField();
+        tbtotalnet = new javax.swing.JTextField();
         tbcount = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
+        tbtotalgross = new javax.swing.JTextField();
+        jLabel8 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -387,6 +549,21 @@ public class PayRollBrowse extends javax.swing.JPanel {
 
         tablepanel.add(detailpanel);
 
+        chartpanel.setMinimumSize(new java.awt.Dimension(23, 23));
+        chartpanel.setName(""); // NOI18N
+        chartpanel.setPreferredSize(new java.awt.Dimension(452, 402));
+        chartpanel.setLayout(new java.awt.BorderLayout());
+
+        chartlabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        chartlabel.setMinimumSize(new java.awt.Dimension(50, 50));
+        chartpanel.add(chartlabel, java.awt.BorderLayout.NORTH);
+
+        pielabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        pielabel.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        chartpanel.add(pielabel, java.awt.BorderLayout.SOUTH);
+
+        tablepanel.add(chartpanel);
+
         btdetail.setText("Hide Detail");
         btdetail.setName("bthidedetail"); // NOI18N
         btdetail.addActionListener(new java.awt.event.ActionListener() {
@@ -428,6 +605,14 @@ public class PayRollBrowse extends javax.swing.JPanel {
         cbhourly.setText("Hourly");
         cbhourly.setName("cbhourly"); // NOI18N
 
+        cbchart.setText("Charts");
+        cbchart.setName("cbcharts"); // NOI18N
+        cbchart.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbchartActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -442,7 +627,7 @@ public class PayRollBrowse extends javax.swing.JPanel {
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(dcFrom, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(dcTo, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE))
+                            .addComponent(dcTo, javax.swing.GroupLayout.DEFAULT_SIZE, 116, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
@@ -457,14 +642,18 @@ public class PayRollBrowse extends javax.swing.JPanel {
                     .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(10, 10, 10)
-                        .addComponent(cbhourly)))
+                        .addComponent(cbhourly)
+                        .addGap(3, 3, 3)
+                        .addComponent(cbsalary)))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(btRun)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btdetail))
-                    .addComponent(cbsalary))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(81, 81, 81)
+                        .addComponent(cbchart)))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -488,7 +677,8 @@ public class PayRollBrowse extends javax.swing.JPanel {
                         .addComponent(ddempto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel3)
                         .addComponent(cbsalary)
-                        .addComponent(cbhourly))
+                        .addComponent(cbhourly)
+                        .addComponent(cbchart))
                     .addComponent(dcTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -496,22 +686,27 @@ public class PayRollBrowse extends javax.swing.JPanel {
         jLabel2.setText("Line Count");
         jLabel2.setName("lblcount"); // NOI18N
 
-        jLabel7.setText("Total Amount");
+        jLabel7.setText("Total Net");
         jLabel7.setName("lbltotal"); // NOI18N
+
+        jLabel8.setText("Total Gross");
+        jLabel8.setName("lbltotal"); // NOI18N
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap(116, Short.MAX_VALUE)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel7)
-                    .addComponent(jLabel2))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addContainerGap(126, Short.MAX_VALUE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(tbcount, javax.swing.GroupLayout.DEFAULT_SIZE, 97, Short.MAX_VALUE)
-                    .addComponent(tbtotal))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(tbtotalgross)
+                    .addComponent(tbcount, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 97, Short.MAX_VALUE)
+                    .addComponent(tbtotalnet, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -523,7 +718,11 @@ public class PayRollBrowse extends javax.swing.JPanel {
                     .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tbtotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tbtotalgross, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbtotalnet, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel7))
                 .addContainerGap())
         );
@@ -537,7 +736,7 @@ public class PayRollBrowse extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 112, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(tablepanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
@@ -575,10 +774,12 @@ try {
             try {
              
                mymodel.setNumRows(0);
-               tbtotal.setText("0");
+               tbtotalnet.setText("0");
+               tbtotalgross.setText("0");
                tbcount.setText("0"); 
                int i = 0;
-               double total = 0;
+               double totalnet = 0;
+               double totalgross = 0;
                double netcheck = 0;
                  DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                
@@ -609,7 +810,8 @@ try {
                 while (res.next()) {
                  i++;
                  netcheck = res.getDouble("pyd_payamt") - res.getDouble("deductions");
-                 total = total + netcheck;
+                 totalgross += res.getDouble("pyd_payamt");
+                 totalnet += netcheck;
                  
                   if (! cbsalary.isSelected() && res.getString("pyd_emptype").equals("Salary")) {
                       continue;
@@ -630,8 +832,11 @@ try {
                                 netcheck
                             });
                } // while   
-                                                                                                                                
-                tbtotal.setText(currformatDouble(total));
+                 
+                chartEmpType();
+                chartEmployee();   
+                tbtotalnet.setText(currformatDouble(totalnet));
+                tbtotalgross.setText(currformatDouble(totalgross));
                 tbcount.setText(String.valueOf(i));
         
             } catch (SQLException s) {
@@ -669,12 +874,23 @@ try {
         }
     }//GEN-LAST:event_tablereportMouseClicked
 
+    private void cbchartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbchartActionPerformed
+        if (cbchart.isSelected()) {
+            chartpanel.setVisible(true);
+        } else {
+            chartpanel.setVisible(false);
+        }
+    }//GEN-LAST:event_cbchartActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btRun;
     private javax.swing.JButton btdetail;
+    private javax.swing.JCheckBox cbchart;
     private javax.swing.JCheckBox cbhourly;
     private javax.swing.JCheckBox cbsalary;
+    private javax.swing.JLabel chartlabel;
+    private javax.swing.JPanel chartpanel;
     private com.toedter.calendar.JDateChooser dcFrom;
     private com.toedter.calendar.JDateChooser dcTo;
     private javax.swing.JComboBox ddempfrom;
@@ -688,16 +904,19 @@ try {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JLabel pielabel;
     private javax.swing.JPanel summarypanel;
     private javax.swing.JTable tabledetail;
     private javax.swing.JPanel tablepanel;
     private javax.swing.JTable tablereport;
     private javax.swing.JTextField tbcount;
-    private javax.swing.JTextField tbtotal;
+    private javax.swing.JTextField tbtotalgross;
+    private javax.swing.JTextField tbtotalnet;
     // End of variables declaration//GEN-END:variables
 }

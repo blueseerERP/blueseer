@@ -276,7 +276,7 @@ public class CashTranBrowse extends javax.swing.JPanel {
         }
     }
        
-       public void chartBuyAndSell() {
+      public void chartBuyAndSell() {
          try {
           
            Connection con = DriverManager.getConnection(url + db, user, pass);
@@ -803,7 +803,7 @@ public class CashTranBrowse extends javax.swing.JPanel {
                     .addComponent(tbtotsales, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel8))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(tbinventory, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
