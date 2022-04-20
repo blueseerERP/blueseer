@@ -369,7 +369,7 @@ public class ARMemoMaint extends javax.swing.JPanel implements IBlueSeerT {
        btnew.setEnabled(true);
        
        basecurr = OVData.getDefaultCurrency();
-      
+       ardet.setModel(armodel);
       
        type = "";
        
@@ -602,9 +602,9 @@ public class ARMemoMaint extends javax.swing.JPanel implements IBlueSeerT {
         lual = new ActionListener() {
         public void actionPerformed(ActionEvent event) {
         if (lurb1.isSelected()) {  
-         luModel = DTData.getARPaymentBrowseUtil(luinput.getText(),0, "ar_nbr");
+         luModel = DTData.getARMemoBrowseUtil(luinput.getText(),0, "ar_nbr");
         } else {
-         luModel = DTData.getARPaymentBrowseUtil(luinput.getText(),0, "ar_cust");   
+         luModel = DTData.getARMemoBrowseUtil(luinput.getText(),0, "ar_cust");   
         }
         luTable.setModel(luModel);
         luTable.getColumnModel().getColumn(0).setMaxWidth(50);
@@ -631,13 +631,14 @@ public class ARMemoMaint extends javax.swing.JPanel implements IBlueSeerT {
         };
         luTable.addMouseListener(luml);
       
-        callDialog(getClassLabelTag("lblbatch", this.getClass().getSimpleName()), 
+        callDialog(getClassLabelTag("lblid", this.getClass().getSimpleName()), 
                 getClassLabelTag("lblbillto", this.getClass().getSimpleName()));  
         
         
     }
 
     public void updateForm() {
+        armodel.setNumRows(0);
         tbkey.setText(ar.ar_nbr());
         tbref.setText(ar.ar_ref());
         tbrmks.setText(ar.ar_rmks());
@@ -932,7 +933,7 @@ public class ARMemoMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel3.setName("lblterms"); // NOI18N
 
         jLabel46.setText("Key");
-        jLabel46.setName("lblreference"); // NOI18N
+        jLabel46.setName("lblid"); // NOI18N
 
         btnew.setText("New");
         btnew.setName("btnew"); // NOI18N
@@ -1140,7 +1141,7 @@ public class ARMemoMaint extends javax.swing.JPanel implements IBlueSeerT {
         String prodline = "";
         String status = "";
         String op = "";
-        ardet.setModel(armodel);
+        
          double amt = 0;
       
         if (! BlueSeerUtils.isMoneyFormat(tbamt.getText())) {

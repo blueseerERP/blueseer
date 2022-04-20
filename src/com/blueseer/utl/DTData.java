@@ -3908,7 +3908,66 @@ public class DTData {
         return mymodel;
         
          } 
+    
+    public static DefaultTableModel getARMemoBrowseUtil( String str, int state, String myfield) {
+             javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("number"), getGlobalColumnTag("type"), getGlobalColumnTag("customer"), getGlobalColumnTag("date"), getGlobalColumnTag("amount")})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
+              
+       try{
             
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                if (state == 1) { // begins
+                    res = st.executeQuery(" select ar_nbr, ar_type, ar_cust, ar_effdate, ar_amt " +
+                        " FROM  ar_mstr  where " + myfield + " like " + "'" + str + "%'" +
+                        " and (ar_type = 'C' or ar_type = 'D') order by ar_nbr desc ;");
+                }
+                if (state == 2) { // ends
+                    res = st.executeQuery(" select ar_nbr, ar_type, ar_cust, ar_effdate, ar_amt " +
+                        " FROM  ar_mstr where " + myfield + " like " + "'%" + str + "'" +
+                        " and (ar_type = 'C' or ar_type = 'D') order by ar_nbr desc ;");
+                }
+                 if (state == 0) { // match
+                 res = st.executeQuery(" select ar_nbr, ar_type, ar_cust, ar_effdate, ar_amt " +
+                        " FROM  ar_mstr where " + myfield + " like " + "'%" + str + "%'" +
+                        " and (ar_type = 'C' or ar_type = 'D') order by ar_nbr desc ;");
+                 }
+                    while (res.next()) {
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("ar_nbr"),
+                                   res.getString("ar_cust"),
+                                   res.getString("ar_type"),
+                                   res.getString("ar_effdate"),
+                                   currformatDouble(res.getDouble("ar_amt"))
+                        });
+                    }
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+              } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+            
+        }
+        return mymodel;
+        
+         } 
+    
+    
     public static DefaultTableModel getExpenseBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("vendor"), getGlobalColumnTag("date"), getGlobalColumnTag("amount")})
