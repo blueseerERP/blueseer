@@ -374,8 +374,6 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
        setPanelComponentState(this, true);
         setComponentDefaultValues();
         BlueSeerUtils.message(new String[]{"0",BlueSeerUtils.addRecordInit});
-        btupdate.setEnabled(false);
-        btdelete.setEnabled(false);
         btnew.setEnabled(false);
         tbkey.setEditable(true);
         tbkey.setForeground(Color.blue);
@@ -833,7 +831,6 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
         ardet = new javax.swing.JTable();
         ddcust = new javax.swing.JComboBox();
         btdeleteitem = new javax.swing.JButton();
-        btupdate = new javax.swing.JButton();
         dcdate = new com.toedter.calendar.JDateChooser();
         jLabel27 = new javax.swing.JLabel();
         jLabel35 = new javax.swing.JLabel();
@@ -855,7 +852,6 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
         lbcust = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         btclear = new javax.swing.JButton();
-        btdelete = new javax.swing.JButton();
         btlookup = new javax.swing.JButton();
 
         jLabel1.setText("jLabel1");
@@ -937,14 +933,6 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
             }
         });
 
-        btupdate.setText("Update");
-        btupdate.setName("btupdate"); // NOI18N
-        btupdate.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btupdateActionPerformed(evt);
-            }
-        });
-
         dcdate.setDateFormatString("yyyy-MM-dd");
 
         jLabel27.setText("Control Amt");
@@ -1012,14 +1000,6 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
             }
         });
 
-        btdelete.setText("Delete");
-        btdelete.setName("btdelete"); // NOI18N
-        btdelete.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btdeleteActionPerformed(evt);
-            }
-        });
-
         btlookup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
         btlookup.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1038,12 +1018,7 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
                         .addComponent(btadditem)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btdeleteitem))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(btdelete)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btupdate)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btadd))
+                    .addComponent(btadd)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addComponent(jScrollPane7, javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(jScrollPane8, javax.swing.GroupLayout.Alignment.LEADING)
@@ -1170,10 +1145,7 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(26, 26, 26)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btadd)
-                    .addComponent(btupdate)
-                    .addComponent(btdelete))
+                .addComponent(btadd)
                 .addGap(35, 35, 35))
         );
 
@@ -1234,14 +1206,6 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
         }
         tbactualamt.setText(String.valueOf(actamt));
     }//GEN-LAST:event_btdeleteitemActionPerformed
-
-    private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
-       if (! validateInput("updateRecord")) {
-           return;
-       }
-        setPanelComponentState(this, false);
-        executeTask("update", new String[]{tbkey.getText()});
-    }//GEN-LAST:event_btupdateActionPerformed
 
     private void btaddallActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddallActionPerformed
           for (int i = 0; i < referencedet.getRowCount(); i++) {
@@ -1319,14 +1283,6 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
         executeTask("get", new String[]{tbkey.getText()});
     }//GEN-LAST:event_tbkeyActionPerformed
 
-    private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
-         if (! validateInput("deleteRecord")) {
-           return;
-       }
-        setPanelComponentState(this, false);
-        executeTask("delete", new String[]{tbkey.getText()});   
-    }//GEN-LAST:event_btdeleteActionPerformed
-
     private void btlookupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btlookupActionPerformed
         lookUpFrame();
     }//GEN-LAST:event_btlookupActionPerformed
@@ -1337,11 +1293,9 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
     private javax.swing.JButton btaddall;
     private javax.swing.JButton btadditem;
     private javax.swing.JButton btclear;
-    private javax.swing.JButton btdelete;
     private javax.swing.JButton btdeleteitem;
     private javax.swing.JButton btlookup;
     private javax.swing.JButton btnew;
-    private javax.swing.JButton btupdate;
     private com.toedter.calendar.JDateChooser dcdate;
     private javax.swing.JComboBox<String> ddcurr;
     private javax.swing.JComboBox ddcust;

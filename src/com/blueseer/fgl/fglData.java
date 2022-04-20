@@ -1287,18 +1287,29 @@ public class fglData {
                     ArrayList curr =  new ArrayList(); 
                     ArrayList basecurr =  new ArrayList(); 
                    
-                    String thistype = "AR-PAYMENT";
-                    String thisdesc = "AR Payment";
+                    String thistype = "";
+                    String thisdesc = "AR Memo";
                    
-                       res = st.executeQuery("select ard_acct, ard_cc, ard_id, ard_amt, ard_base_amt, ard_curr, ard_base_curr, ar_ref, ard_ref, ar_site, ar_acct, ar_cc, ar_from ard_mstr " +
+                       res = st.executeQuery("select ar_type, ard_acct, ard_cc, ard_id, ard_amt, ard_base_amt, ard_curr, ard_base_curr, ar_ref, ard_ref, ar_site, ar_acct, ar_cc from ard_mstr " +
                                " inner join ar_mstr on ar_nbr = ard_id  where ard_id = " + "'" + batchnbr + "'" +";");
                    
                     while (res.next()) {
-                     // credit vendor AP Acct (AP Voucher) and debit unvouchered receipts (po_rcpts acct)
-                      acct_cr.add(res.getString("ard_acct"));
-                    acct_dr.add(res.getString("ar_acct"));
-                    cc_cr.add(res.getString("ard_cc"));
-                    cc_dr.add(res.getString("ar_cc"));
+                     // if CM credit cust acct and debit cash
+                     // if DM debit cust acct and credit cash
+                    if (res.getString("ar_type").equals("C")) {
+                        thistype = "AR-MEMO-CM";
+                       acct_cr.add(res.getString("ard_acct"));
+                       acct_dr.add(res.getString("ar_acct"));
+                       cc_cr.add(res.getString("ard_cc"));
+                       cc_dr.add(res.getString("ar_cc")); 
+                    } else {
+                        thistype = "AR-MEMO-DM";
+                       acct_cr.add(res.getString("ar_acct"));
+                       acct_dr.add(res.getString("ard_acct"));
+                       cc_cr.add(res.getString("ar_cc"));
+                       cc_dr.add(res.getString("ard_cc"));  
+                    }
+                    
                     cost.add(res.getDouble("ard_amt"));
                     basecost.add(res.getDouble("ard_base_amt"));
                     curr.add(res.getString("ard_curr"));

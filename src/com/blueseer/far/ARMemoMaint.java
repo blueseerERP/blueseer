@@ -51,11 +51,26 @@ import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.tags;
 import com.blueseer.ctr.cusData;
 import static com.blueseer.ctr.cusData.getCustInfo;
+import static com.blueseer.far.farData.addArTransaction;
 import com.blueseer.fgl.fglData;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
+import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
+import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import static com.blueseer.utl.BlueSeerUtils.luModel;
+import static com.blueseer.utl.BlueSeerUtils.luTable;
+import static com.blueseer.utl.BlueSeerUtils.lual;
+import static com.blueseer.utl.BlueSeerUtils.ludialog;
+import static com.blueseer.utl.BlueSeerUtils.luinput;
+import static com.blueseer.utl.BlueSeerUtils.luml;
+import static com.blueseer.utl.BlueSeerUtils.lurb1;
+import com.blueseer.utl.DTData;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 import javax.swing.BorderFactory;
@@ -66,6 +81,9 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JViewport;
+import javax.swing.SwingWorker;
+import javax.swing.event.TableModelEvent;
 
 /**
  *
@@ -73,15 +91,27 @@ import javax.swing.JTabbedPane;
  */
 public class ARMemoMaint extends javax.swing.JPanel {
 
-     double actamt = 0;
+     // global variable declarations
+                boolean isLoad = false;
+                String terms = "";
+                String aracct = "";
+                String arcc = "";
+                String arbank = "";
+                double actamt = 0.00;
+                double control = 0.00;
+                double baseamt = 0.00;
+                double rcvamt = 0.00;
+                String curr = "";
+                String basecurr = "";
+                String type = "";
     
     /**
      * Creates new form UserMaintPanel
      */
     
-    String type = "";
-           DefaultTableCellRenderer tableRender = new DefaultTableCellRenderer();
-    javax.swing.table.DefaultTableModel transmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+    
+    DefaultTableCellRenderer tableRender = new DefaultTableCellRenderer();
+    javax.swing.table.DefaultTableModel armodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
                 getGlobalColumnTag("line"), 
                 getGlobalColumnTag("account"), 
@@ -95,35 +125,17 @@ public class ARMemoMaint extends javax.swing.JPanel {
     }
 };
     
-    
-    public void getBilltoInfo(String cust) {
-        
-         // aracct, arcc, currency, bank, terms, carrier, onhold, site
-            String[] custinfo = getCustInfo(cust);
-            tbhdracct.setText(custinfo[0]);
-            tbhdrcc.setText(custinfo[1]);
-            ddterms.setSelectedItem(custinfo[4]);
-            ddbank.setSelectedItem(custinfo[3]);
-        
-    }
-    
-    public void tallyamount() {
-        double amt = 0;
-        for (int i = 0; i < transtable.getRowCount(); i++) {
-             amt += bsParseDouble(transtable.getValueAt(i, 4).toString());
-          }
-        actamt = amt;
-        labeltotal.setText(String.valueOf(amt));
-    }
-    
-    public void clearinput() {
-        tbamt.setText("");
-        tbcc.setText("");
-        tbdesc.setText("");
-        tbacct.setText("");
-        tbamt.requestFocus();
-    }
-           
+                
+    javax.swing.event.TableModelListener ml = new javax.swing.event.TableModelListener() {
+                    @Override
+                    public void tableChanged(TableModelEvent tme) {
+                        if (tme.getType() == TableModelEvent.UPDATE && (tme.getColumn() == 1 )) {
+                            sumdollars();
+                        }
+                        // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                    }
+                };            
+  
     class SomeRenderer extends DefaultTableCellRenderer {
         
     public Component getTableCellRendererComponent(JTable table,
@@ -149,10 +161,141 @@ public class ARMemoMaint extends javax.swing.JPanel {
     public ARMemoMaint() {
         initComponents();
         setLanguageTags(this);
-        
-
     }
 
+    
+    public void executeTask(String x, String[] y) { 
+      
+        class Task extends SwingWorker<String[], Void> {
+       
+          String type = "";
+          String[] key = null;
+          
+          public Task(String type, String[] key) { 
+              this.type = type;
+              this.key = key;
+          } 
+           
+        @Override
+        public String[] doInBackground() throws Exception {
+            String[] message = new String[2];
+            message[0] = "";
+            message[1] = "";
+            
+            
+             switch(this.type) {
+                case "add":
+                    message = addRecord(key);
+                    break;
+                case "update":
+                    message = updateRecord(key);
+                    break;
+                case "delete":
+                    message = deleteRecord(key);    
+                    break;
+                case "get":
+                    message = getRecord(key);    
+                    break;    
+                default:
+                    message = new String[]{"1", "unknown action"};
+            }
+            
+            return message;
+        }
+ 
+        
+       public void done() {
+            try {
+            String[] message = get();
+           
+            BlueSeerUtils.endTask(message);
+           if (this.type.equals("delete")) {
+             initvars(null);  
+           } else if (this.type.equals("get") && message[0].equals("1")) {
+             tbkey.requestFocus();
+           } else if (this.type.equals("get") && message[0].equals("0")) {
+             tbkey.requestFocus();
+           } else {
+             initvars(null);  
+           }
+           
+            
+            } catch (Exception e) {
+                MainFrame.bslog(e);
+            } 
+           
+        }
+    }  
+      
+       BlueSeerUtils.startTask(new String[]{"","Running..."});
+       Task z = new Task(x, y); 
+       z.execute(); 
+       
+    }
+   
+    public void setPanelComponentState(Object myobj, boolean b) {
+        JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+        
+        if (panel != null) {
+        panel.setEnabled(b);
+        Component[] components = panel.getComponents();
+        
+            for (Component component : components) {
+                if (component instanceof JLabel || component instanceof JTable ) {
+                    continue;
+                }
+                if (component instanceof JPanel) {
+                    setPanelComponentState((JPanel) component, b);
+                }
+                if (component instanceof JTabbedPane) {
+                    setPanelComponentState((JTabbedPane) component, b);
+                }
+                if (component instanceof JScrollPane) {
+                    setPanelComponentState((JScrollPane) component, b);
+                }
+                
+                component.setEnabled(b);
+            }
+        }
+            if (tabpane != null) {
+                tabpane.setEnabled(b);
+                Component[] componentspane = tabpane.getComponents();
+                for (Component component : componentspane) {
+                    if (component instanceof JLabel || component instanceof JTable ) {
+                        continue;
+                    }
+                    if (component instanceof JPanel) {
+                        setPanelComponentState((JPanel) component, b);
+                    }
+                    
+                    component.setEnabled(b);
+                    
+                }
+            }
+            if (scrollpane != null) {
+                scrollpane.setEnabled(b);
+                JViewport viewport = scrollpane.getViewport();
+                Component[] componentspane = viewport.getComponents();
+                for (Component component : componentspane) {
+                    if (component instanceof JLabel || component instanceof JTable ) {
+                        continue;
+                    }
+                    component.setEnabled(b);
+                }
+            }
+    } 
+    
     public void setLanguageTags(Object myobj) {
        JPanel panel = null;
         JTabbedPane tabpane = null;
@@ -196,31 +339,30 @@ public class ARMemoMaint extends javax.swing.JPanel {
                 }
        }
     }
-    
-    public void initvars(String[] arg) {
-       actamt = 0;
-       labeltotal.setText("0");
+     
+    public void setComponentDefaultValues() {
+       isLoad = true;
+        actamt = 0;
        java.util.Date now = new java.util.Date();
        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-       dceffdate.setDate(now);
-       dateentered.setText(dfdate.format(now));
-       dateentered.setEnabled(false);
-       tbshipto.setText("");
-       tbshipto.setEnabled(false);
-       tbref.setText("");
-       tbref.setEnabled(false);
+       dcdate.setDate(now);
+       tbactualamt.setText("0");
+       tbkey.setText("");
+       tbkey.setEnabled(false);
        tbrmks.setText("");
+       tbref.setText("");
        tbhdracct.setText("");
        tbhdrcc.setText("");
-       transmodel.setNumRows(0);
+       armodel.setNumRows(0);
        tbamt.setText("");
        tbcc.setText("");
        tbdesc.setText("");
        tbacct.setText("");
        btnew.setEnabled(true);
-       btget.setEnabled(true);
+       
+       basecurr = OVData.getDefaultCurrency();
       
-       btsubmit.setEnabled(false);
+      
        type = "";
        
         ddsite.removeAllItems();
@@ -243,16 +385,342 @@ public class ARMemoMaint extends javax.swing.JPanel {
             ddcust.addItem(mycusts.get(i));
         }
         
-         ddbank.removeAllItems();
-        ArrayList bank = OVData.getbanklist();
-        for (int i = 0; i < bank.size(); i++) {
-            ddbank.addItem(bank.get(i));
+       ddcurr.removeAllItems();
+        ArrayList<String> curr = fglData.getCurrlist();
+        for (int i = 0; i < curr.size(); i++) {
+            ddcurr.addItem(curr.get(i));
         }
-        ddbank.setSelectedItem(OVData.getDefaultARBank());
+        ddcurr.setSelectedItem(OVData.getDefaultCurrency());
+        
+        
+       isLoad = false;
+    }
+    
+    public void newAction(String x) {
+       setPanelComponentState(this, true);
+        setComponentDefaultValues();
+        BlueSeerUtils.message(new String[]{"0",BlueSeerUtils.addRecordInit});
+        btnew.setEnabled(false);
+        tbkey.setEditable(true);
+        tbkey.setForeground(Color.blue);
+        if (! x.isEmpty()) {
+          tbkey.setText(String.valueOf(OVData.getNextNbr(x)));  
+          tbkey.setEditable(false);
+        } 
+        tbkey.requestFocus();
+    }
+    
+    public String[] setAction(int i) {
+        String[] m = new String[2];
+        if (i > 0) {
+            m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
+                   setPanelComponentState(this, true);
+                   btadd.setEnabled(false);
+                   tbkey.setEditable(false);
+                   tbkey.setForeground(Color.blue);
+                   
+                   tbactualamt.setText(currformatDouble(actamt));
+        } else {
+           m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
+                   tbkey.setForeground(Color.red); 
+        }
+        return m;
+    }
+    
+    public boolean validateInput(String x) {
+        boolean b = true;
+                if (ddsite.getSelectedItem() == null || ddsite.getSelectedItem().toString().isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show(getMessageTag(1026));
+                    ddsite.requestFocus();
+                    return b;
+                }
+                if (tbkey.getText().isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show(getMessageTag(1024));
+                    tbkey.requestFocus();
+                    return b;
+                }
+                
+                if (tbhdracct.getText().isEmpty() || ! OVData.isValidGLAcct(tbhdracct.getText())) {
+                    b = false;
+                    bsmf.MainFrame.show(getMessageTag(1026));
+                    tbhdracct.requestFocus();
+                    return b;
+                }
+                
+                if (tbhdrcc.getText().isEmpty() || ! OVData.isValidGLcc(tbhdrcc.getText())) {
+                    b = false;
+                    bsmf.MainFrame.show(getMessageTag(1026));
+                    tbhdrcc.requestFocus();
+                    return b;
+                }
+                
+                if (arbank.isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show(getMessageTag(1128));
+                    return b;
+                }
+                if (arcc.isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show(getMessageTag(1129));
+                    return b;
+                }
+                if (aracct.isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show(getMessageTag(1130));
+                    return b;
+                }
+                 if ( actamt == 0.00 ) {
+                    b = false;
+                    bsmf.MainFrame.show(getMessageTag(1036));
+                    return b;
+                }
+                
+                
+                
+               
+        return b;
+    }
+    
+    public void initvars(String[] arg) {
        
+       setPanelComponentState(this, false); 
+       setComponentDefaultValues();
+        btnew.setEnabled(true);
+        btlookup.setEnabled(true);
+        
+        if (arg != null && arg.length > 0) {
+            executeTask("get",arg);
+        } else {
+            tbkey.setEnabled(true);
+            tbkey.setEditable(true);
+            tbkey.requestFocus();
+        }
+    }
+    
+    public String[] addRecord(String[] x) {
+        String[] m = addArTransaction(createDetRecord(), createRecord());
+        boolean error = OVData.ARUpdate(tbkey.getText());
+        if (! error) {
+            error = fglData.glEntryFromARMemo(tbkey.getText(), dcdate.getDate());
+        }
+        return m;
+    }
+     
+    public String[] updateRecord(String[] x) {
+     String[] m = new String[]{BlueSeerUtils.ErrorBit, "This update functionality is not implemented at this time"};
+     return m;
+     }
+     
+    public String[] deleteRecord(String[] x) {
+     String[] m = new String[]{BlueSeerUtils.ErrorBit, "This delete functionality is not implemented at this time"};
+     return m;
+     }
+      
+    public String[] getRecord(String[] x) {
+       String[] m = new String[2];
+        
+       try {
+            Connection con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+                
+                int i = 0;
+                int d = 0;
+                res = st.executeQuery("select * from ar_mstr where ar_nbr = " + "'" + x[0] + "'" + ";");
+                while (res.next()) {
+                  // "Reference", "AmountToApply", "TaxAmount", "Curr"
+                  i++;
+                     tbkey.setText(res.getString("ar_nbr"));
+                     dcdate.setDate(bsmf.MainFrame.dfdate.parse(res.getString("ar_effdate")));
+                     tbref.setText(res.getString("ar_ref"));
+                     tbrmks.setText(res.getString("ar_rmks"));
+                     ddcust.setSelectedItem(res.getString("ar_cust"));
+                     ddsite.setSelectedItem(res.getString("ar_site"));
+                     ddcurr.setSelectedItem(res.getString("ar_curr"));
+                }
+                
+                res = st.executeQuery("select * from ard_mstr where ard_id = " + "'" + x[0] + "'" + ";");
+                while (res.next()) {
+                  // "Reference", "AmountToApply", "TaxAmount", "Curr"
+                     armodel.addRow(new Object[] { res.getString("ard_ref"),
+                                              res.getString("ard_amt"),
+                                              res.getString("ard_amt_tax"),
+                                              res.getString("ard_curr")
+                                              });
+                 
+                  
+                  actamt += res.getDouble("ard_amt");
+                d++;
+                }
+               
+                // set Action if Record found (i > 0)
+                m = setAction(i);
+                
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};  
+        }
+      return m;
+    }
+    
+    public farData.ar_mstr createRecord() { 
+        java.util.Date now = new java.util.Date(); 
+        
+                if (basecurr.toUpperCase().equals(ddcurr.getSelectedItem().toString().toUpperCase())) {
+                  baseamt = actamt;  
+                } else {
+                  baseamt = OVData.getExchangeBaseValue(basecurr, ddcurr.getSelectedItem().toString(), actamt);
+                } 
+        farData.ar_mstr x = new farData.ar_mstr(null, 
+                tbkey.getText(),
+                ddcust.getSelectedItem().toString(),
+                currformatDouble(actamt).replace(defaultDecimalSeparator, '.'),
+                currformatDouble(baseamt).replace(defaultDecimalSeparator, '.'),
+                ddtype.getSelectedItem().toString().substring(0,1),
+                ddcurr.getSelectedItem().toString(),
+                basecurr,
+                tbref.getText(),
+                tbrmks.getText(),
+                BlueSeerUtils.setDateFormat(now),
+                BlueSeerUtils.setDateFormat(dcdate.getDate()),
+                BlueSeerUtils.setDateFormat(now),
+                tbhdracct.getText(),
+                tbhdrcc.getText(),
+                "c",
+                arbank,
+                ddsite.getSelectedItem().toString()
+                );
+        return x;
+    }
+   
+    public ArrayList<farData.ard_mstr> createDetRecord() {
+        ArrayList<farData.ard_mstr> list = new ArrayList<farData.ard_mstr>();
+        
+            
+            double amt_d = 0;
+            double taxamt_d = 0;
+            double baseamt_d = 0;
+            double basetaxamt_d = 0;
+            boolean completeAllocation = true;
+            for (int j = 0; j < ardet.getRowCount(); j++) {
+                        amt_d = bsParseDouble(ardet.getValueAt(j, 4).toString());
+                         if (basecurr.toUpperCase().equals(ddcurr.getSelectedItem().toString().toUpperCase())) {
+                         baseamt_d = amt_d;
+                         } else {
+                         baseamt_d = OVData.getExchangeBaseValue(basecurr, ddcurr.getSelectedItem().toString(), amt_d);
+                         }
+                        farData.ard_mstr x = new farData.ard_mstr(null,  
+                            tbkey.getText(), 
+                            String.valueOf(j + 1),    
+                            ddcust.getSelectedItem().toString(),
+                            tbref.getText(),
+                            BlueSeerUtils.setDateFormat(dcdate.getDate()),
+                            currformatDouble(amt_d).replace(defaultDecimalSeparator, '.'),
+                            currformatDouble(taxamt_d).replace(defaultDecimalSeparator, '.'),
+                            currformatDouble(baseamt_d).replace(defaultDecimalSeparator, '.'),     
+                            currformatDouble(basetaxamt_d).replace(defaultDecimalSeparator, '.'),
+                            ddcurr.getSelectedItem().toString(),
+                            basecurr,
+                            ardet.getValueAt(j, 1).toString(),
+                            ardet.getValueAt(j, 2).toString()
+                            ); 
+                    list.add(x);
+                    }
+        return list;
+    }
+    
+    public void lookUpFrame() {
+        
+        luinput.removeActionListener(lual);
+        lual = new ActionListener() {
+        public void actionPerformed(ActionEvent event) {
+        if (lurb1.isSelected()) {  
+         luModel = DTData.getARPaymentBrowseUtil(luinput.getText(),0, "ar_nbr");
+        } else {
+         luModel = DTData.getARPaymentBrowseUtil(luinput.getText(),0, "ar_cust");   
+        }
+        luTable.setModel(luModel);
+        luTable.getColumnModel().getColumn(0).setMaxWidth(50);
+        if (luModel.getRowCount() < 1) {
+            ludialog.setTitle(getMessageTag(1001));
+        } else {
+            ludialog.setTitle(getMessageTag(1002, String.valueOf(luModel.getRowCount())));
+        }
+        }
+        };
+        luinput.addActionListener(lual);
+        
+        luTable.removeMouseListener(luml);
+        luml = new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                JTable target = (JTable)e.getSource();
+                int row = target.getSelectedRow();
+                int column = target.getSelectedColumn();
+                if ( column == 0) {
+                ludialog.dispose();
+                initvars(new String[]{target.getValueAt(row,1).toString(), target.getValueAt(row,2).toString()});
+                }
+            }
+        };
+        luTable.addMouseListener(luml);
+      
+        callDialog(getClassLabelTag("lblbatch", this.getClass().getSimpleName()), 
+                getClassLabelTag("lblbillto", this.getClass().getSimpleName()));  
+        
+        
+    }
+
+    
+    // custom
+    public void getBilltoInfo(String cust) {
+        
+         // aracct, arcc, currency, bank, terms, carrier, onhold, site
+            String[] custinfo = getCustInfo(cust);
+            aracct = custinfo[0];
+            arcc = custinfo[1];
+            terms = custinfo[4];
+            arbank = custinfo[3];
+            tbhdracct.setText(custinfo[0]);
+            tbhdrcc.setText(custinfo[1]);
+            ddterms.setSelectedItem(custinfo[4]);
+            
+        
+    }
+    
+   
+    
+     public void sumdollars() {
+       double amt = 0;
+        for (int i = 0; i < ardet.getRowCount(); i++) {
+             amt += bsParseDouble(ardet.getValueAt(i, 4).toString());
+          }
+        actamt = amt;
+        tbactualamt.setText(String.valueOf(amt));  
+        
     }
     
     
+    public void clearinput() {
+        tbamt.setText("");
+        tbcc.setText("");
+        tbdesc.setText("");
+        tbacct.setText("");
+        tbamt.requestFocus();
+    }
+           
+    
+   
     
     
     /**
@@ -269,51 +737,46 @@ public class ARMemoMaint extends javax.swing.JPanel {
         taUMperms1 = new javax.swing.JTextArea();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        transtable = new javax.swing.JTable();
-        btdelete = new javax.swing.JButton();
+        ardet = new javax.swing.JTable();
+        btdeleteitem = new javax.swing.JButton();
         jLabel49 = new javax.swing.JLabel();
-        btadd = new javax.swing.JButton();
+        btadditem = new javax.swing.JButton();
         tbcc = new javax.swing.JTextField();
         jLabel52 = new javax.swing.JLabel();
         jLabel51 = new javax.swing.JLabel();
-        labeltotal = new javax.swing.JLabel();
         tbacct = new javax.swing.JTextField();
-        btsubmit = new javax.swing.JButton();
+        btadd = new javax.swing.JButton();
         tbamt = new javax.swing.JTextField();
         jLabel48 = new javax.swing.JLabel();
         tbdesc = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
+        tbactualamt = new javax.swing.JTextField();
         jPanel3 = new javax.swing.JPanel();
         jLabel53 = new javax.swing.JLabel();
         jLabel50 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        dcduedate = new com.toedter.calendar.JDateChooser();
         jLabel3 = new javax.swing.JLabel();
         jLabel46 = new javax.swing.JLabel();
-        dcdiscdate = new com.toedter.calendar.JDateChooser();
         btnew = new javax.swing.JButton();
-        jLabel55 = new javax.swing.JLabel();
-        tbshipto = new javax.swing.JTextField();
         tbhdrcc = new javax.swing.JTextField();
         tbhdracct = new javax.swing.JTextField();
         ddcust = new javax.swing.JComboBox();
         jLabel6 = new javax.swing.JLabel();
-        jLabel54 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
-        jLabel47 = new javax.swing.JLabel();
-        tbref = new javax.swing.JTextField();
-        btget = new javax.swing.JButton();
-        dceffdate = new com.toedter.calendar.JDateChooser();
-        dateentered = new javax.swing.JTextField();
+        tbkey = new javax.swing.JTextField();
+        dcdate = new com.toedter.calendar.JDateChooser();
         jLabel7 = new javax.swing.JLabel();
-        jLabel56 = new javax.swing.JLabel();
-        tbcontrol = new javax.swing.JTextField();
         tbrmks = new javax.swing.JTextField();
         ddsite = new javax.swing.JComboBox();
         ddterms = new javax.swing.JComboBox();
-        ddbank = new javax.swing.JComboBox();
-        jLabel57 = new javax.swing.JLabel();
+        btlookup = new javax.swing.JButton();
+        btclear = new javax.swing.JButton();
+        tbref = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        ddcurr = new javax.swing.JComboBox<>();
+        jLabel4 = new javax.swing.JLabel();
+        ddtype = new javax.swing.JComboBox<>();
+        jLabel9 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -327,7 +790,7 @@ public class ARMemoMaint extends javax.swing.JPanel {
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Detail"));
         jPanel2.setName("paneldetail"); // NOI18N
 
-        transtable.setModel(new javax.swing.table.DefaultTableModel(
+        ardet.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null},
                 {null, null, null, null, null},
@@ -359,24 +822,24 @@ public class ARMemoMaint extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(transtable);
+        jScrollPane1.setViewportView(ardet);
 
-        btdelete.setText("Delete");
-        btdelete.setName("btdelete"); // NOI18N
-        btdelete.addActionListener(new java.awt.event.ActionListener() {
+        btdeleteitem.setText("DeleteItem");
+        btdeleteitem.setName("btdeleteitem"); // NOI18N
+        btdeleteitem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btdeleteActionPerformed(evt);
+                btdeleteitemActionPerformed(evt);
             }
         });
 
         jLabel49.setText("Acct");
         jLabel49.setName("lblacct"); // NOI18N
 
-        btadd.setText("Add");
-        btadd.setName("btadd"); // NOI18N
-        btadd.addActionListener(new java.awt.event.ActionListener() {
+        btadditem.setText("AddItem");
+        btadditem.setName("btadditem"); // NOI18N
+        btadditem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btaddActionPerformed(evt);
+                btadditemActionPerformed(evt);
             }
         });
 
@@ -386,13 +849,17 @@ public class ARMemoMaint extends javax.swing.JPanel {
         jLabel51.setText("Amt");
         jLabel51.setName("lblamt"); // NOI18N
 
-        labeltotal.setBackground(new java.awt.Color(217, 235, 191));
-
-        btsubmit.setText("Submit");
-        btsubmit.setName("btsubmit"); // NOI18N
-        btsubmit.addActionListener(new java.awt.event.ActionListener() {
+        btadd.setText("Add");
+        btadd.setName("btadd"); // NOI18N
+        btadd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btsubmitActionPerformed(evt);
+                btaddActionPerformed(evt);
+            }
+        });
+
+        tbamt.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbamtFocusLost(evt);
             }
         });
 
@@ -424,17 +891,17 @@ public class ARMemoMaint extends javax.swing.JPanel {
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(jLabel52, javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addGap(0, 0, Short.MAX_VALUE)
+                                        .addGap(0, 76, Short.MAX_VALUE)
                                         .addComponent(jLabel8)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(labeltotal, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(33, 33, 33)))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(tbactualamt, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)))
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                                        .addComponent(btadd)
+                                        .addComponent(btadditem)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(btdelete))
-                                    .addComponent(btsubmit, javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(btdeleteitem))
+                                    .addComponent(btadd, javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addGroup(jPanel2Layout.createSequentialGroup()
                                         .addGap(23, 23, 23)
                                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -462,20 +929,16 @@ public class ARMemoMaint extends javax.swing.JPanel {
                     .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btadd)
-                    .addComponent(btdelete))
+                    .addComponent(btadditem)
+                    .addComponent(btdeleteitem))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btsubmit))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGap(5, 5, 5)
-                                .addComponent(jLabel8))))
-                    .addComponent(labeltotal, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btadd)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel8)
+                        .addComponent(tbactualamt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(0, 21, Short.MAX_VALUE))
         );
 
@@ -491,18 +954,11 @@ public class ARMemoMaint extends javax.swing.JPanel {
         jLabel5.setText("Acct");
         jLabel5.setName("lblacct"); // NOI18N
 
-        jLabel2.setText("Entered Date");
-        jLabel2.setName("lblentdate"); // NOI18N
-
-        dcduedate.setDateFormatString("yyyy-MM-dd");
-
         jLabel3.setText("Terms");
         jLabel3.setName("lblterms"); // NOI18N
 
-        jLabel46.setText("Reference");
+        jLabel46.setText("Key");
         jLabel46.setName("lblreference"); // NOI18N
-
-        dcdiscdate.setDateFormatString("yyyy-MM-dd");
 
         btnew.setText("New");
         btnew.setName("btnew"); // NOI18N
@@ -511,9 +967,6 @@ public class ARMemoMaint extends javax.swing.JPanel {
                 btnewActionPerformed(evt);
             }
         });
-
-        jLabel55.setText("DueDate");
-        jLabel55.setName("lblduedate"); // NOI18N
 
         ddcust.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -524,33 +977,42 @@ public class ARMemoMaint extends javax.swing.JPanel {
         jLabel6.setText("cc");
         jLabel6.setName("lblcc"); // NOI18N
 
-        jLabel54.setText("Control");
-        jLabel54.setName("lblcontrol"); // NOI18N
-
         jLabel1.setText("Site");
         jLabel1.setName("lblsite"); // NOI18N
 
-        jLabel47.setText("Shipto");
-        jLabel47.setName("lblshipto"); // NOI18N
-
-        btget.setText("Get");
-        btget.setName("btget"); // NOI18N
-        btget.addActionListener(new java.awt.event.ActionListener() {
+        tbkey.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btgetActionPerformed(evt);
+                tbkeyActionPerformed(evt);
             }
         });
 
-        dceffdate.setDateFormatString("yyyy-MM-dd");
+        dcdate.setDateFormatString("yyyy-MM-dd");
 
         jLabel7.setText("Remarks");
         jLabel7.setName("lblremarks"); // NOI18N
 
-        jLabel56.setText("DiscDate");
-        jLabel56.setName("lbldiscdate"); // NOI18N
+        btlookup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
+        btlookup.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btlookupActionPerformed(evt);
+            }
+        });
 
-        jLabel57.setText("Bank");
-        jLabel57.setName("lblbank"); // NOI18N
+        btclear.setText("Clear");
+        btclear.setName("btclear"); // NOI18N
+        btclear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btclearActionPerformed(evt);
+            }
+        });
+
+        jLabel2.setText("Reference");
+
+        jLabel4.setText("Currency");
+
+        ddtype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "CM", "DM" }));
+
+        jLabel9.setText("Type");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -558,142 +1020,113 @@ public class ARMemoMaint extends javax.swing.JPanel {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel3Layout.createSequentialGroup()
+                            .addGap(46, 46, 46)
+                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(jLabel5)
+                                .addComponent(jLabel3)
+                                .addComponent(jLabel6)))
+                        .addGroup(jPanel3Layout.createSequentialGroup()
+                            .addGap(39, 39, 39)
+                            .addComponent(jLabel7))
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                            .addContainerGap()
+                            .addComponent(jLabel46)))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel53, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel50, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(25, 25, 25)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel54)
-                            .addComponent(jLabel53)
-                            .addComponent(jLabel46)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel6)))
+                        .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel4))
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(39, 39, 39)
-                        .addComponent(jLabel7)))
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(tbref, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(dcdate, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel9))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(ddterms, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tbrmks, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btlookup, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnew)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btclear))
+                            .addComponent(ddcust, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tbhdracct, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tbhdrcc, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(ddcust, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(tbref, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(tbhdracct, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addComponent(ddterms, javax.swing.GroupLayout.Alignment.LEADING, 0, 100, Short.MAX_VALUE)
-                                        .addComponent(ddsite, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                    .addComponent(tbhdrcc, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel55, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel56, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel47, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel50, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)))
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addComponent(tbrmks, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel57)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(dcdiscdate, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(dcduedate, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(dateentered, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tbshipto, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(dceffdate, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(ddbank, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel3Layout.createSequentialGroup()
-                        .addComponent(tbcontrol, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(316, 316, 316)
-                        .addComponent(btnew)
-                        .addGap(6, 6, 6)
-                        .addComponent(btget)))
-                .addContainerGap())
+                    .addComponent(ddtype, javax.swing.GroupLayout.Alignment.LEADING, 0, 80, Short.MAX_VALUE)
+                    .addComponent(ddcurr, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(184, 184, 184))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(12, 12, 12)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(jLabel54))
-                    .addComponent(tbcontrol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnew)
-                    .addComponent(btget))
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel46))
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnew)
+                            .addComponent(btclear)))
+                    .addComponent(btlookup))
                 .addGap(6, 6, 6)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ddcust, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel53))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addGap(6, 6, 6)
-                                .addComponent(jLabel53))
-                            .addComponent(ddcust, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(6, 6, 6)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addGap(6, 6, 6)
-                                .addComponent(jLabel46))
-                            .addComponent(tbref, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(6, 6, 6)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel1)
-                            .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(12, 12, 12)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel3)
-                            .addComponent(ddterms, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(6, 6, 6)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(tbhdracct, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel5))
+                            .addComponent(ddcurr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel4))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(tbhdrcc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel6))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(tbrmks, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel7)))
+                            .addComponent(ddtype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel9)))
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addGap(12, 12, 12)
-                                .addComponent(jLabel47))
-                            .addComponent(tbshipto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addGap(14, 14, 14)
-                                .addComponent(jLabel2))
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addGap(6, 6, 6)
-                                .addComponent(dateentered, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(6, 6, 6)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addGap(12, 12, 12)
-                                .addComponent(jLabel50))
-                            .addComponent(dceffdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(6, 6, 6)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addGap(12, 12, 12)
-                                .addComponent(jLabel55))
-                            .addComponent(dcduedate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(2, 2, 2)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addGap(16, 16, 16)
-                                .addComponent(jLabel56))
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addGap(4, 4, 4)
-                                .addComponent(dcdiscdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(ddbank, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel57))))
-                .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel1))
+                        .addGap(5, 5, 5)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(tbref, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(dcdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel50))))
+                .addGap(7, 7, 7)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(ddterms, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(6, 6, 6)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbhdracct, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbhdrcc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbrmks, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7))
+                .addGap(0, 2, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -720,100 +1153,20 @@ public class ARMemoMaint extends javax.swing.JPanel {
         add(jPanel1);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btsubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btsubmitActionPerformed
-        try {
-            Connection con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                
-                boolean proceed = true;
-                boolean error = false;
-                int i = 0;
-                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-                java.util.Date now = new java.util.Date();
-                   
-                    if (proceed) {
-                                        
-                      st.executeUpdate("insert into ar_mstr "
-                        + "(ar_cust, ar_nbr, ar_amt, ar_open_amt, ar_type, ar_ref, ar_rmks, "
-                        + "ar_entdate, ar_effdate, ar_duedate, ar_discdate, ar_acct, ar_cc, "
-                        + "ar_status, ar_bank, ar_site ) "
-                        + " values ( " + "'" + ddcust.getSelectedItem() + "'" + ","
-                        + "'" + tbref.getText() + "'" + ","
-                        + "'" + currformatDouble(actamt).replace(defaultDecimalSeparator, '.') + "'" + ","
-                        + "'" + currformatDouble(actamt).replace(defaultDecimalSeparator, '.') + "'" + ","
-                        + "'" + "M" + "'" + ","
-                        + "'" + tbref.getText() + "'" + ","
-                        + "'" + tbrmks.getText() + "'" + ","
-                        + "'" + dfdate.format(now) + "'" + ","
-                        + "'" + dfdate.format(dceffdate.getDate()) + "'" + ","
-                        + "'" + dfdate.format(dcduedate.getDate()) + "'" + ","
-                        + "'" + dfdate.format(dcdiscdate.getDate()) + "'" + ","
-                        + "'" + tbhdracct.getText() + "'" + ","
-                        + "'" + tbhdrcc.getText() + "'" + ","
-                        + "'" + "o" + "'"  + ","
-                        + "'" + ddbank.getSelectedItem().toString() + "'" + ","
-                        + "'" + ddsite.getSelectedItem().toString() + "'"
-                        + ")"
-                        + ";");
-                double amt = 0;
-               // "Reference", "Type", "Date", "Amount"
-                // "Line", "Acct", "CC", "Desc", "Amt"
-                    for (int j = 0; j < transtable.getRowCount(); j++) {
-                        amt = bsParseDouble(transtable.getValueAt(j, 4).toString());
-                        st.executeUpdate("insert into ard_mstr "
-                            + "(ard_id, ard_cust, ard_ref, ard_line, ard_date, ard_amt, ard_acct, ard_cc) "
-                            + " values ( " + "'" + tbref.getText() + "'" + ","
-                                + "'" + ddcust.getSelectedItem() + "'" + ","
-                            + "'" + transtable.getValueAt(j, 3).toString() + "'" + ","
-                            + "'" + (j + 1) + "'" + ","
-                            + "'" + dfdate.format(dceffdate.getDate()) + "'" + ","
-                            + "'" + currformatDouble(amt).replace(defaultDecimalSeparator, '.') + "'" + ","
-                            + "'" + transtable.getValueAt(j, 1).toString() + "'" + "," 
-                            + "'" + transtable.getValueAt(j, 2).toString() + "'"
-                            + ")"
-                            + ";");
-                    }
-                        
-                     
-                    
-                    /* create gl_tran records */
-                        if (! error)
-                        error = fglData.glEntryFromARMemo(tbref.getText(), dceffdate.getDate());
-                    if (error) {
-                        bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-                    } else {
-                    bsmf.MainFrame.show(getMessageTag(1125));
-                    initvars(null);
-                    }
-                    //reinitreceivervariables("");
-                   
-                    // btQualProbAdd.setEnabled(false);
-                } // if proceed
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-    }//GEN-LAST:event_btsubmitActionPerformed
-
-    private void btgetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btgetActionPerformed
-        
-    }//GEN-LAST:event_btgetActionPerformed
-
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
+        if (! validateInput("addRecord")) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask("add", new String[]{tbkey.getText()});
+    }//GEN-LAST:event_btaddActionPerformed
+
+    private void btadditemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btadditemActionPerformed
         boolean canproceed = true;
         String prodline = "";
         String status = "";
         String op = "";
-        transtable.setModel(transmodel);
+        ardet.setModel(armodel);
          double amt = 0;
       
         if (! BlueSeerUtils.isMoneyFormat(tbamt.getText())) {
@@ -842,7 +1195,7 @@ public class ARMemoMaint extends javax.swing.JPanel {
             canproceed = false;
         }
         
-        if (dceffdate.getDate() == null || ! BlueSeerUtils.isValidDateStr(BlueSeerUtils.mysqlDateFormat.format(dceffdate.getDate())) ) {
+        if (dcdate.getDate() == null || ! BlueSeerUtils.isValidDateStr(BlueSeerUtils.mysqlDateFormat.format(dcdate.getDate())) ) {
             bsmf.MainFrame.show(getMessageTag(1123));
             canproceed = false;
         }
@@ -850,42 +1203,35 @@ public class ARMemoMaint extends javax.swing.JPanel {
         
         if (canproceed) {
             amt = bsParseDouble(tbamt.getText());
-            transmodel.addRow(new Object[]{transmodel.getRowCount() + 1,
+            armodel.addRow(new Object[]{armodel.getRowCount() + 1,
                 tbacct.getText(),
                 tbcc.getText(),
                 tbdesc.getText(),
                 currformatDouble(amt)
             });
-            tallyamount();
+            sumdollars();
             clearinput();
         }
-    }//GEN-LAST:event_btaddActionPerformed
+    }//GEN-LAST:event_btadditemActionPerformed
 
-    private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
-       int[] rows = transtable.getSelectedRows();
+    private void btdeleteitemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteitemActionPerformed
+       int[] rows = ardet.getSelectedRows();
         for (int i : rows) {
             bsmf.MainFrame.show(getMessageTag(1031,String.valueOf(i)));
-            ((javax.swing.table.DefaultTableModel) transtable.getModel()).removeRow(i);
+            ((javax.swing.table.DefaultTableModel) ardet.getModel()).removeRow(i);
         }
         
         // clean up line count....column 1
-          for (int i = 0; i < transtable.getRowCount(); i++) {
-             transtable.setValueAt(i + 1, i, 0);
+          for (int i = 0; i < ardet.getRowCount(); i++) {
+             ardet.setValueAt(i + 1, i, 0);
           }
           
-          tallyamount();
+          sumdollars();
         
-    }//GEN-LAST:event_btdeleteActionPerformed
+    }//GEN-LAST:event_btdeleteitemActionPerformed
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
-       
-       
-       tbref.setText(String.valueOf(OVData.getNextNbr("AR")));    
-       
-       btnew.setEnabled(false);
-       btget.setEnabled(false);
-       btsubmit.setEnabled(true);
-       
+       newAction("ar");
     }//GEN-LAST:event_btnewActionPerformed
 
     private void ddcustActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddcustActionPerformed
@@ -893,25 +1239,53 @@ public class ARMemoMaint extends javax.swing.JPanel {
         getBilltoInfo(ddcust.getSelectedItem().toString());
     }//GEN-LAST:event_ddcustActionPerformed
 
+    private void btlookupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btlookupActionPerformed
+        lookUpFrame();
+    }//GEN-LAST:event_btlookupActionPerformed
+
+    private void btclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearActionPerformed
+        BlueSeerUtils.messagereset();
+        initvars(null);
+    }//GEN-LAST:event_btclearActionPerformed
+
+    private void tbkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkeyActionPerformed
+       executeTask("get", new String[]{tbkey.getText()});
+    }//GEN-LAST:event_tbkeyActionPerformed
+
+    private void tbamtFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbamtFocusLost
+        if (! tbamt.getText().isEmpty()) {
+        String x = BlueSeerUtils.bsformat("", tbamt.getText(), "2");
+        if (x.equals("error")) {
+            tbamt.setText("");
+            tbamt.setBackground(Color.yellow);
+            bsmf.MainFrame.show(getMessageTag(1000));
+            tbamt.requestFocus();
+        } else {
+            tbamt.setText(x);
+            tbamt.setBackground(Color.white);
+        }
+        }
+    }//GEN-LAST:event_tbamtFocusLost
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTable ardet;
     private javax.swing.JButton btadd;
-    private javax.swing.JButton btdelete;
-    private javax.swing.JButton btget;
+    private javax.swing.JButton btadditem;
+    private javax.swing.JButton btclear;
+    private javax.swing.JButton btdeleteitem;
+    private javax.swing.JButton btlookup;
     private javax.swing.JButton btnew;
-    private javax.swing.JButton btsubmit;
-    private javax.swing.JTextField dateentered;
-    private com.toedter.calendar.JDateChooser dcdiscdate;
-    private com.toedter.calendar.JDateChooser dcduedate;
-    private com.toedter.calendar.JDateChooser dceffdate;
-    private javax.swing.JComboBox ddbank;
+    private com.toedter.calendar.JDateChooser dcdate;
+    private javax.swing.JComboBox<String> ddcurr;
     private javax.swing.JComboBox ddcust;
     private javax.swing.JComboBox ddsite;
     private javax.swing.JComboBox ddterms;
+    private javax.swing.JComboBox<String> ddtype;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel46;
-    private javax.swing.JLabel jLabel47;
     private javax.swing.JLabel jLabel48;
     private javax.swing.JLabel jLabel49;
     private javax.swing.JLabel jLabel5;
@@ -919,30 +1293,25 @@ public class ARMemoMaint extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel51;
     private javax.swing.JLabel jLabel52;
     private javax.swing.JLabel jLabel53;
-    private javax.swing.JLabel jLabel54;
-    private javax.swing.JLabel jLabel55;
-    private javax.swing.JLabel jLabel56;
-    private javax.swing.JLabel jLabel57;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane7;
-    private javax.swing.JLabel labeltotal;
     private javax.swing.JTextArea taUMperms1;
     private javax.swing.JTextField tbacct;
+    private javax.swing.JTextField tbactualamt;
     private javax.swing.JTextField tbamt;
     private javax.swing.JTextField tbcc;
-    private javax.swing.JTextField tbcontrol;
     private javax.swing.JTextField tbdesc;
     private javax.swing.JTextField tbhdracct;
     private javax.swing.JTextField tbhdrcc;
+    private javax.swing.JTextField tbkey;
     private javax.swing.JTextField tbref;
     private javax.swing.JTextField tbrmks;
-    private javax.swing.JTextField tbshipto;
-    private javax.swing.JTable transtable;
     // End of variables declaration//GEN-END:variables
 }
