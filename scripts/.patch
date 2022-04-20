@@ -25,3 +25,5 @@ patch=8
 # Freeze UI cleanup #49 ; addition of patch loading mechanism #50 
 patch=9
 # bug fixes #51, #52, and chartview cleanup
+patch=10
+# emergency patch for #54 and ARMemo Refactor
