@@ -51,11 +51,16 @@ import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.tags;
 import com.blueseer.ctr.cusData;
 import static com.blueseer.ctr.cusData.getCustInfo;
+import com.blueseer.far.farData.ARSet;
 import static com.blueseer.far.farData.addArTransaction;
+import com.blueseer.far.farData.ar_mstr;
+import com.blueseer.far.farData.ard_mstr;
+import static com.blueseer.far.farData.getARMstrSet;
 import com.blueseer.fgl.fglData;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
+import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -67,6 +72,7 @@ import static com.blueseer.utl.BlueSeerUtils.luinput;
 import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import com.blueseer.utl.DTData;
+import com.blueseer.utl.IBlueSeerT;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -89,9 +95,12 @@ import javax.swing.event.TableModelEvent;
  *
  * @author vaughnte
  */
-public class ARMemoMaint extends javax.swing.JPanel {
+public class ARMemoMaint extends javax.swing.JPanel implements IBlueSeerT {
 
      // global variable declarations
+    public static ar_mstr ar = null;
+    public static ArrayList<ard_mstr> ardlist = null;
+    
                 boolean isLoad = false;
                 String terms = "";
                 String aracct = "";
@@ -164,15 +173,15 @@ public class ARMemoMaint extends javax.swing.JPanel {
     }
 
     
-    public void executeTask(String x, String[] y) { 
+    public void executeTask(dbaction x, String[] y) { 
       
         class Task extends SwingWorker<String[], Void> {
        
           String type = "";
           String[] key = null;
           
-          public Task(String type, String[] key) { 
-              this.type = type;
+          public Task(dbaction type, String[] key) { 
+              this.type = type.name();
               this.key = key;
           } 
            
@@ -211,9 +220,8 @@ public class ARMemoMaint extends javax.swing.JPanel {
             BlueSeerUtils.endTask(message);
            if (this.type.equals("delete")) {
              initvars(null);  
-           } else if (this.type.equals("get") && message[0].equals("1")) {
-             tbkey.requestFocus();
-           } else if (this.type.equals("get") && message[0].equals("0")) {
+           } else if (this.type.equals("get")) {
+             updateForm();
              tbkey.requestFocus();
            } else {
              initvars(null);  
@@ -410,24 +418,21 @@ public class ARMemoMaint extends javax.swing.JPanel {
         tbkey.requestFocus();
     }
     
-    public String[] setAction(int i) {
+    public void setAction(String[] x) {
         String[] m = new String[2];
-        if (i > 0) {
-            m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
+        if (x[0].equals("0")) {
                    setPanelComponentState(this, true);
                    btadd.setEnabled(false);
                    tbkey.setEditable(false);
                    tbkey.setForeground(Color.blue);
                    
                    tbactualamt.setText(currformatDouble(actamt));
-        } else {
-           m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
+        } else { 
                    tbkey.setForeground(Color.red); 
         }
-        return m;
     }
     
-    public boolean validateInput(String x) {
+    public boolean validateInput(dbaction x) {
         boolean b = true;
                 if (ddsite.getSelectedItem() == null || ddsite.getSelectedItem().toString().isEmpty()) {
                     b = false;
@@ -491,7 +496,7 @@ public class ARMemoMaint extends javax.swing.JPanel {
         btlookup.setEnabled(true);
         
         if (arg != null && arg.length > 0) {
-            executeTask("get",arg);
+            executeTask(dbaction.get,arg);
         } else {
             tbkey.setEnabled(true);
             tbkey.setEditable(true);
@@ -518,60 +523,11 @@ public class ARMemoMaint extends javax.swing.JPanel {
      return m;
      }
       
-    public String[] getRecord(String[] x) {
-       String[] m = new String[2];
-        
-       try {
-            Connection con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                
-                int i = 0;
-                int d = 0;
-                res = st.executeQuery("select * from ar_mstr where ar_nbr = " + "'" + x[0] + "'" + ";");
-                while (res.next()) {
-                  // "Reference", "AmountToApply", "TaxAmount", "Curr"
-                  i++;
-                     tbkey.setText(res.getString("ar_nbr"));
-                     dcdate.setDate(bsmf.MainFrame.dfdate.parse(res.getString("ar_effdate")));
-                     tbref.setText(res.getString("ar_ref"));
-                     tbrmks.setText(res.getString("ar_rmks"));
-                     ddcust.setSelectedItem(res.getString("ar_cust"));
-                     ddsite.setSelectedItem(res.getString("ar_site"));
-                     ddcurr.setSelectedItem(res.getString("ar_curr"));
-                }
-                
-                res = st.executeQuery("select * from ard_mstr where ard_id = " + "'" + x[0] + "'" + ";");
-                while (res.next()) {
-                  // "Reference", "AmountToApply", "TaxAmount", "Curr"
-                     armodel.addRow(new Object[] { res.getString("ard_ref"),
-                                              res.getString("ard_amt"),
-                                              res.getString("ard_amt_tax"),
-                                              res.getString("ard_curr")
-                                              });
-                 
-                  
-                  actamt += res.getDouble("ard_amt");
-                d++;
-                }
-               
-                // set Action if Record found (i > 0)
-                m = setAction(i);
-                
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};  
-        }
-      return m;
+    public String[] getRecord(String[] key) {
+      ARSet z = getARMstrSet(key);
+      ar = z.ar();
+      ardlist = z.ard();
+      return z.m();
     }
     
     public farData.ar_mstr createRecord() { 
@@ -681,6 +637,24 @@ public class ARMemoMaint extends javax.swing.JPanel {
         
     }
 
+    public void updateForm() {
+        tbkey.setText(ar.ar_nbr());
+        tbref.setText(ar.ar_ref());
+        tbrmks.setText(ar.ar_rmks());
+        ddsite.setSelectedItem(ar.ar_site());
+        ddcust.setSelectedItem(ar.ar_cust());
+        ddcurr.setSelectedItem(ar.ar_curr());
+        
+         for (ard_mstr ard : ardlist) {
+        armodel.addRow(new Object[]{ard.ard_line(), 
+                      ard.ard_acct(),
+                      ard.ard_cc(), 
+                      ard.ard_ref(),
+                      ard.ard_amt()});
+        }
+        
+        setAction(ar.m());
+    }
     
     // custom
     public void getBilltoInfo(String cust) {
@@ -1154,11 +1128,11 @@ public class ARMemoMaint extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
-        if (! validateInput("addRecord")) {
+        if (! validateInput(dbaction.add)) {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("add", new String[]{tbkey.getText()});
+        executeTask(dbaction.add, new String[]{tbkey.getText()});
     }//GEN-LAST:event_btaddActionPerformed
 
     private void btadditemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btadditemActionPerformed
@@ -1249,7 +1223,7 @@ public class ARMemoMaint extends javax.swing.JPanel {
     }//GEN-LAST:event_btclearActionPerformed
 
     private void tbkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkeyActionPerformed
-       executeTask("get", new String[]{tbkey.getText()});
+       executeTask(dbaction.get, new String[]{tbkey.getText()});
     }//GEN-LAST:event_tbkeyActionPerformed
 
     private void tbamtFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbamtFocusLost

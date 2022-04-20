@@ -210,6 +210,162 @@ public class farData {
     }
     
     
+    public static ARSet getARMstrSet(String[] x ) {
+        ARSet r = null;
+        String[] m = new String[2];
+        Connection bscon = null;
+        PreparedStatement ps = null;
+        ResultSet res = null;
+        try { 
+            bscon = DriverManager.getConnection(url + db, user, pass);
+            
+            // order master
+            ar_mstr ar = _getARMstr(x, bscon, ps, res); 
+            ArrayList<ard_mstr> ard = _getARDet(x, bscon, ps, res);
+           
+            
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+            r = new ARSet(m, ar, ard);
+            
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};
+             r = new ARSet(m);
+        } finally {
+            if (res != null) {
+                try {
+                    res.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (bscon != null) {
+                try {
+                    bscon.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return r;
+    }
+    
+    public static ar_mstr getARMstr(String[] x) {
+        ar_mstr r = null;
+        String[] m = new String[2];
+        String sql = "select * from ar_mstr where ar_nbr = ? ;";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, x[0]);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};
+                r = new ar_mstr(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new ar_mstr(m, res.getString("ar_nbr"), res.getString("ar_cust"),
+                                res.getString("ar_amt"), res.getString("ar_base_amt"), res.getString("ar_type"),
+                                res.getString("ar_curr"), res.getString("ar_base_curr"), res.getString("ar_ref"),
+                                res.getString("ar_rmks"), res.getString("ar_entdate"), res.getString("ar_effdate"),
+                                res.getString("ar_paiddate"), res.getString("ar_acct"), res.getString("ar_cc"),
+                                res.getString("ar_status"), res.getString("ar_bank"), res.getString("ar_site"));
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new ar_mstr(m);
+        }
+        return r;
+    }
+    
+    private static ar_mstr _getARMstr(String[] x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+        ar_mstr r = null;
+        String[] m = new String[2];
+        String sqlSelect = "select * from ar_mstr where ar_nbr = ?";
+          ps = con.prepareStatement(sqlSelect); 
+          ps.setString(1, x[0]);
+          res = ps.executeQuery();
+            if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};
+                r = new ar_mstr(m);
+            } else {
+                while(res.next()) {
+                    m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                    r = new ar_mstr(m, res.getString("ar_nbr"), res.getString("ar_cust"),
+                                res.getString("ar_amt"), res.getString("ar_base_amt"), res.getString("ar_type"),
+                                res.getString("ar_curr"), res.getString("ar_base_curr"), res.getString("ar_ref"),
+                                res.getString("ar_rmks"), res.getString("ar_entdate"), res.getString("ar_effdate"),
+                                res.getString("ar_paiddate"), res.getString("ar_acct"), res.getString("ar_cc"),
+                                res.getString("ar_status"), res.getString("ar_bank"), res.getString("ar_site"));
+                }
+            }
+            return r;
+    }
+     
+    
+    public static ArrayList<ard_mstr> getARDet(String[] x) {
+        ArrayList<ard_mstr> list = new ArrayList<ard_mstr>();
+        ard_mstr r = null;
+        String[] m = new String[2];
+        String sql = "select * from ard_mstr where ard_id = ? ;";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, x[0]);
+             try (ResultSet res = ps.executeQuery();) {
+                    while(res.next()) {
+                    m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                    r = new ard_mstr(m, res.getString("ard_id"), res.getString("ard_line"), res.getString("ard_cust"),
+                    res.getString("ard_ref"), res.getString("ard_date"), res.getString("ard_amt"), 
+                    res.getString("ard_amt_tax"), res.getString("ard_base_amt"),res.getString("ard_base_amt_tax"), 
+                    res.getString("ard_curr"), res.getString("ard_base_curr"), res.getString("ard_acct"), 
+                    res.getString("ard_cc") );
+                    list.add(r);
+                    }
+                
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s); 
+        }
+        return list;
+    }
+    
+    private static ArrayList<ard_mstr> _getARDet(String[] x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+        ArrayList<ard_mstr> list = new ArrayList<ard_mstr>();
+        ard_mstr r = null;
+        String[] m = new String[2];
+        String sqlSelect = "select * from ard_mstr where ard_id = ?";
+          ps = con.prepareStatement(sqlSelect); 
+          ps.setString(1, x[0]);
+          res = ps.executeQuery();
+            if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};
+                r = new ard_mstr(m);
+            } else {
+                while(res.next()) {
+                    m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                    r = new ard_mstr(m, res.getString("ard_id"), res.getString("ard_line"), res.getString("ard_cust"),
+                    res.getString("ard_ref"), res.getString("ard_date"), res.getString("ard_amt"), 
+                    res.getString("ard_amt_tax"), res.getString("ard_base_amt"),res.getString("ard_base_amt_tax"), 
+                    res.getString("ard_curr"), res.getString("ard_base_curr"), res.getString("ard_acct"), 
+                    res.getString("ard_cc") );
+                    list.add(r);
+                    }
+            }
+            return list;
+    }
+    
+    
+    
     public static String[] addUpdateARCtrl(ar_ctrl x) {
         int rows = 0;
         String[] m = new String[2];
@@ -342,6 +498,12 @@ public class farData {
             MainFrame.bslog(s);
         }
         return taxinfo;
+    }
+    
+    public record ARSet(String[] m, ar_mstr ar, ArrayList<ard_mstr> ard) {
+        public ARSet(String[] m) {
+            this (m, null, null);
+        }
     }
     
     public record ar_mstr(String[] m, String ar_nbr, String ar_cust, String ar_amt, String ar_base_amt, 
