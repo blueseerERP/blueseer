@@ -349,7 +349,67 @@ public class ChartView extends javax.swing.JPanel {
             MainFrame.bslog(e);
         }
     }
-        
+    
+    public void piechart_profitandloss() {
+         try {
+         cleanUpOldChartFile();
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd"); 
+                res = st.executeQuery("select ac_type, sum(glh_amt) as 'sum' from gl_hist inner join ac_mstr on ac_id = glh_acct " +
+                        " where glh_effdate >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
+                        " AND glh_effdate <= " + "'" + dfdate.format(dcTo.getDate()) + "'" +
+                        " AND (ac_type = 'E' or ac_type = 'I') " +
+                        " group by ac_type order by sum desc limit 10  ;");
+             
+                DefaultPieDataset dataset = new DefaultPieDataset();
+               
+                String type = "";
+                double amt = 0.00;
+                while (res.next()) {
+                    if (res.getString("ac_type").equals("E")) {
+                        type = "Expense";
+                    } else {
+                        type = "Income";
+                    }
+                    if (res.getDouble("sum") < 0.00) {
+                    amt = (-1 * res.getDouble("sum"));    
+                    } else {
+                    amt = res.getDouble("sum");    
+                    }
+                    dataset.setValue(type, amt);
+                }
+                JFreeChart chart = ChartFactory.createPieChart(getTitleTag(5026), dataset, true, true, false);
+                PiePlot plot = (PiePlot) chart.getPlot();
+                PieSectionLabelGenerator gen = new StandardPieSectionLabelGenerator(("{1} ({2})"), NumberFormat.getCurrencyInstance(), new DecimalFormat("0.00%"));
+                plot.setLabelGenerator(gen);
+
+                try {
+                ChartUtilities.saveChartAsJPEG(new File(chartfilepath), chart, 900, this.getHeight()/2);
+                } catch (IOException e) {
+                    MainFrame.bslog(e);
+                }
+                ImageIcon myicon = new ImageIcon(chartfilepath);
+                myicon.getImage().flush();   
+                this.chartlabel.setIcon(myicon);
+                ChartPanel.setVisible(true);
+                this.repaint();
+       
+                } catch (SQLException s) {
+                  MainFrame.bslog(s);
+                } finally {
+                   if (res != null) res.close();
+                   if (st != null) st.close();
+                   con.close();
+                }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+    }
+         
+    
      // shipments
     public void ShipPerWeekDollarsChart() {
         try {
@@ -2241,6 +2301,10 @@ public class ChartView extends javax.swing.JPanel {
         
         if (whichreport.equals("piechart_salesbycust")) {
             piechart_salesbycust();
+        }
+        
+        if (whichreport.equals("piechart_profitandloss")) {
+            piechart_profitandloss();
         }
         
         if (whichreport.equals("piechart_expensebyaccount")) {

@@ -96,7 +96,7 @@ public class hrmData {
             psi.setString(32, x.emp_dob);
             psi.setString(33, x.emp_termdate);
             psi.setString(34, x.emp_clockin);
-            psi.setString(34, x.emp_supervisor);
+            psi.setString(35, x.emp_supervisor);
             
             int rows = psi.executeUpdate();
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};

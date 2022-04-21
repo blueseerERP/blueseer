@@ -287,3 +287,4 @@ TaxBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,taxb
 InventoryCtrl,,com.blueseer.inv.InventoryCtrl,JMenuItem,inve
 MassLoad,,com.blueseer.utl.MassLoad,JMenuItem,load
 SchemaBrowse,Schema Details of Database BSDB,com.blueseer.utl.ReportPanel,JMenuItem,schema
+piechart_profitandloss,,com.blueseer.utl.ChartView,JMenuItem,palc
