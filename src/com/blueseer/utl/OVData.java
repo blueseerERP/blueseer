@@ -4889,7 +4889,7 @@ public class OVData {
                 count = (int) (Math.random() * (5 - 1)) + 1;
                 
                 for (int z = 0; z <= count; z++ ) {
-                qty = (int) (Math.random() * (200 - 10)) + 10;   
+                qty = (int) (Math.random() * (20 - 1)) + 1;   
                 itempos = (int) (Math.random() * (5 - 0)) + 0;
                 st.executeUpdate("insert into sod_det "
                             + "(sod_nbr, sod_part, sod_site, sod_po, sod_ord_qty, sod_netprice, "
@@ -5243,11 +5243,26 @@ public class OVData {
         String tranhisttype = "";
         String expire = ""; // should be blank for component issues
 
-
+        boolean isReportable = false;
+        
         Connection con = DriverManager.getConnection(url + db, user, pass);
         Statement st = con.createStatement();
         ResultSet res = null;
         try{
+            
+            res = st.executeQuery("select wf_assert " +
+                   " from wf_mstr " +
+                   " inner join item_mstr on it_wf = wf_id " +
+                   " where it_item = " + "'" + item + "'" +
+                   " and wf_op = " + "'" + op + "'" + 
+                   " and wf_site = " + "'" + csite + "'" +        
+                   ";");
+             while (res.next()) {
+               if (res.getBoolean("wf_assert")) {
+                   isReportable = true;
+               }
+             }
+            
 
             /* lets get the 'wip' acct and cc from product line info for the item */
             res = st.executeQuery("select pl_wip, pl_line, it_code " +
@@ -5328,16 +5343,12 @@ public class OVData {
                // update inventory
                OVData.UpdateInventoryDiscrete(child.get(j).toString(), csite, loc.get(j).toString(), wh.get(j).toString(), "", "", bsParseDouble(qtyper.get(j).toString()) * qty * -1);    
 
-
-
            }
 
-            /* now lets go get all the unreport operations back to the last reported op 
-              exclusive of the last reported op */
-
+             /* if current op is reportable, go get all the unreport operations back to the last reported op 
+              exclusive of this reported op  */
+           if (isReportable) { 
             ArrayList<String> myops = new ArrayList<String>();
-
-
            res = st.executeQuery("select wf_op " +
                    " from wf_mstr inner join item_mstr on wf_id = it_wf " + 
                    " where it_item = " + "'" + item + "'" +
@@ -5351,10 +5362,10 @@ public class OVData {
             for ( String myvalue : myops) {
                 wip_iss_mtl_gl_unreported(item, myvalue, csite, qty, date, cref, ctype, cdesc, serial, userid, program, bom);
             }
-
+           } /* if Reportable Op */
            } // if pmcode "M"
        }
-        catch (SQLException s){
+        catch (SQLException s){ 
             MainFrame.bslog(s);
             bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
         } finally {
@@ -5515,7 +5526,10 @@ public class OVData {
             res = st.executeQuery("select wf_assert " +
                    " from wf_mstr " +
                    " inner join item_mstr on it_wf = wf_id " +
-                   " where it_item = " + "'" + item + "'" + ";");
+                   " where it_item = " + "'" + item + "'" +
+                   " and wf_op = " + "'" + cop + "'" + 
+                   " and wf_site = " + "'" + site + "'" +        
+                   ";");
              while (res.next()) {
                if (res.getBoolean("wf_assert")) {
                    isReportable = true;
@@ -5571,10 +5585,10 @@ public class OVData {
 
 
 
-           /* now lets go get all the unreport operations back to the last reported op 
-              exclusive of the last reported op */
-            ArrayList op = new ArrayList();
-
+           /* if current op is reportable, go get all the unreport operations back to the last reported op 
+              exclusive of this reported op  */
+           if (isReportable) { 
+           ArrayList op = new ArrayList();
            res = st.executeQuery("select wf_op " +
                    " from wf_mstr inner join item_mstr on wf_id = it_wf " + 
                    " where it_item = " + "'" + item + "'" +
@@ -5583,11 +5597,10 @@ public class OVData {
             while (res.next()) {
                 op.add(res.getString("wf_op"));
             }
-
              for (int j = 0; j < op.size(); j++) {
                  wip_iss_op_cost_gl_unreported(item, op.get(j).toString(), site, qty, date, ref, type, desc);
              }
-
+        } // if reportable
 
        }
         catch (SQLException s){

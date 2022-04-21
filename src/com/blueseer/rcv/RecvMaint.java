@@ -379,7 +379,7 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
         orddate.setText("");
         
         ddpo.removeAllItems();
-        ddpart.removeAllItems();
+        ddline.removeAllItems();
         
         ddwh.removeAllItems();
         ArrayList<String> mywh = OVData.getWareHouseList();
@@ -846,7 +846,7 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel38 = new javax.swing.JLabel();
         btadditem = new javax.swing.JButton();
         btadd = new javax.swing.JButton();
-        ddpart = new javax.swing.JComboBox();
+        ddline = new javax.swing.JComboBox();
         jLabel43 = new javax.swing.JLabel();
         tbqtyrcvd = new javax.swing.JTextField();
         jScrollPane7 = new javax.swing.JScrollPane();
@@ -889,6 +889,7 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
         dcexpire = new com.toedter.calendar.JDateChooser();
         jLabel2 = new javax.swing.JLabel();
         btgenerate = new javax.swing.JButton();
+        lblitem = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -915,8 +916,8 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel26.setText("DueDate");
         jLabel26.setName("lblduedate"); // NOI18N
 
-        jLabel30.setText("PartNumber");
-        jLabel30.setName("lblitem"); // NOI18N
+        jLabel30.setText("PO Line");
+        jLabel30.setName("lblpoline"); // NOI18N
 
         jLabel32.setText("Price");
         jLabel32.setName("lblprice"); // NOI18N
@@ -943,9 +944,9 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
             }
         });
 
-        ddpart.addActionListener(new java.awt.event.ActionListener() {
+        ddline.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ddpartActionPerformed(evt);
+                ddlineActionPerformed(evt);
             }
         });
 
@@ -1108,9 +1109,7 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
                                 .addGap(198, 198, 198))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addComponent(ddpart, javax.swing.GroupLayout.Alignment.LEADING, 0, 156, Short.MAX_VALUE)
-                                        .addComponent(ddpo, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addComponent(ddpo, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(lblvendpart, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(ddvend, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(ddwh, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1131,7 +1130,11 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
                                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                                 .addComponent(tbuom)
                                                 .addComponent(tbqtyord, javax.swing.GroupLayout.DEFAULT_SIZE, 70, Short.MAX_VALUE)
-                                                .addComponent(tbline)))))
+                                                .addComponent(tbline))))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(ddline, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(lblitem, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
@@ -1236,9 +1239,11 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
                                 .addComponent(jLabel38)
                                 .addComponent(ddpo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(ddpart, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel30))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(ddline, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel30))
+                            .addComponent(lblitem, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lblvendpart, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1311,7 +1316,7 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
           line++;      
        //   "Part", "PO", "line", "Qty", uom,  listprice, disc, netprice, loc, serial, lot, cost
             if (proceed)
-            myrecvdetmodel.addRow(new Object[]{line, ddpart.getSelectedItem(), ddpo.getSelectedItem(), 
+            myrecvdetmodel.addRow(new Object[]{line, lblitem.getText(), ddpo.getSelectedItem(), 
                 tbline.getText(), tbqty.getText(), tbuom.getText(), tbprice.getText(), "0", 
                 tbprice.getText(), ddloc.getSelectedItem().toString(), ddwh.getSelectedItem().toString(), 
                 tbserial.getText(), tblot.getText(), tbcost.getText()});
@@ -1326,11 +1331,12 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
         executeTask(dbaction.add, new String[]{tbkey.getText()});
     }//GEN-LAST:event_btaddActionPerformed
 
-    private void ddpartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddpartActionPerformed
-
+    private void ddlineActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddlineActionPerformed
+        if (! isLoad) {
         try {
             String mypart = "";
             String mypo = "";
+            String myline = "";
             
                     tbline.setText("");
                     tbprice.setText("");
@@ -1347,12 +1353,17 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
                     tbserial.setText("");
                     tblot.setText("");
                     tbcost.setText("");
-            
-            if (ddpart.getItemCount() > 0 && ddpo.getItemCount() > 0) {
-                mypart = ddpart.getSelectedItem().toString();
+          
+            if (ddline.getItemCount() > 0 && ddpo.getItemCount() > 0) {
+                myline = ddline.getSelectedItem().toString();
                 mypo = ddpo.getSelectedItem().toString();
             }
-            if (! mypo.toString().isEmpty() || ! mypart.toString().isEmpty()  ) {
+           
+            
+               
+           
+            
+            if (! mypo.toString().isEmpty() || ! myline.toString().isEmpty()  ) {
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
@@ -1360,13 +1371,16 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
             try {
                     // at this time you cannot have the same item on the PO more than once
                 
-                res = st.executeQuery("select itc_total, it_loc, it_wh, pod_nbr, pod_line, pod_uom, pod_vendpart, pod_netprice, pod_rcvd_qty, pod_ord_qty, pod_ord_date, pod_due_date, pod_status, pod_site from pod_mstr " +
+                res = st.executeQuery("select itc_total, it_loc, it_wh, pod_nbr, pod_line, pod_part, pod_uom, pod_vendpart, pod_netprice, pod_rcvd_qty, pod_ord_qty, pod_ord_date, pod_due_date, pod_status, pod_site from pod_mstr " +
                        " inner join po_mstr on po_nbr = pod_nbr " +
                        " left outer join item_mstr on it_item = pod_part " +
                        " left outer join item_cost on itc_item = pod_part and itc_set = 'standard' and itc_site = po_site " + 
-                       " where pod_part = " + "'" + mypart + "'" + 
-                        " AND pod_nbr = " + "'" + mypo + "'" + ";");
+                       " where " +
+                       " pod_nbr = " + "'" + mypo + "'" + 
+                       " AND pod_line = " + "'" + myline + "'" +
+                       ";");
                 while (res.next()) {
+                    lblitem.setText(res.getString("pod_part"));
                     tbline.setText(res.getString("pod_line"));
                     tbprice.setText(res.getString("pod_netprice"));
                     if (res.getString("itc_total") != null)
@@ -1403,12 +1417,13 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
-    }//GEN-LAST:event_ddpartActionPerformed
+        }
+    }//GEN-LAST:event_ddlineActionPerformed
 
     private void ddvendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddvendActionPerformed
       if (! isLoad) {
         ddpo.removeAllItems();
-        ddpart.removeAllItems();
+        ddline.removeAllItems();
        if (ddvend.getSelectedItem() != null && ! ddvend.getSelectedItem().toString().isEmpty()) {
         try {
 
@@ -1466,22 +1481,24 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
     }//GEN-LAST:event_btupdateActionPerformed
 
     private void ddpoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddpoActionPerformed
-       ddpart.removeAllItems();
+       if (! isLoad) {
+       ddline.removeAllItems();
+       
        String mypo = "";
             if (ddpo.getItemCount() > 0) {
                 mypo = ddpo.getSelectedItem().toString();
             }
-            if (! mypo.toString().isEmpty()) {
+            if (! mypo.isEmpty()) {
             try {
             Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
                     // at this time you cannot have the same item on the PO more than once
-                res = st.executeQuery("select pod_part, pod_site from pod_mstr " +
+                res = st.executeQuery("select pod_line, pod_part, pod_site from pod_mstr " +
                        " inner join po_mstr on po_nbr = pod_nbr where pod_nbr = " + "'" + mypo + "'" + ";");
                 while (res.next()) {
-                   ddpart.addItem(res.getString("pod_part"));
+                   ddline.addItem(res.getString("pod_line"));
                    ddsite.setSelectedItem(res.getString("pod_site"));
                 }
                 res.close();
@@ -1501,6 +1518,7 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
             MainFrame.bslog(e);
         }
        } // if mypo is not empty 
+       }
     }//GEN-LAST:event_ddpoActionPerformed
 
     private void ddwhActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddwhActionPerformed
@@ -1566,8 +1584,8 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JCheckBox cbautovoucher;
     private com.toedter.calendar.JDateChooser dcdate;
     private com.toedter.calendar.JDateChooser dcexpire;
+    private javax.swing.JComboBox ddline;
     private javax.swing.JComboBox<String> ddloc;
-    private javax.swing.JComboBox ddpart;
     private javax.swing.JComboBox ddpo;
     private javax.swing.JComboBox<String> ddsite;
     private javax.swing.JComboBox ddvend;
@@ -1596,6 +1614,7 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JLabel jLabel43;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane7;
+    private javax.swing.JLabel lblitem;
     private javax.swing.JLabel lblvendpart;
     private javax.swing.JLabel lbvendor;
     private javax.swing.JTextField orddate;
