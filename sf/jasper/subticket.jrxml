@@ -202,7 +202,7 @@ where plan_nbr = $P{myid} and
 			</textField>
 			<textField>
 				<reportElement x="272" y="66" width="66" height="19" uuid="beda7838-24e0-4a61-b293-db89eee92028"/>
-				<textFieldExpression><![CDATA[$F{pland_cell}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{wf_cell}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="4" y="47" width="24" height="18" uuid="1fc23098-545f-4ba1-aa16-d8ed1ea5e2b3"/>
