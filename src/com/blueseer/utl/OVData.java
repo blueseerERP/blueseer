@@ -99,15 +99,19 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.DataOutputStream;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.RandomAccessFile;
 import static java.lang.Math.abs;
 import java.math.RoundingMode;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 import java.sql.PreparedStatement;
 import java.sql.Savepoint;
 import java.time.LocalDate;
@@ -14163,7 +14167,41 @@ return mystring;
         }
                 
       }
-     
+    
+    public static void exportTable(String tablename, String filename) {
+         
+         try{
+            Path outpath = FileSystems.getDefault().getPath("temp" + "/" + filename);
+            BufferedWriter output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outpath.toFile())));
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+                res = st.executeQuery("select * from " + tablename + ";");
+               while (res.next()) {
+                    StringBuilder line = new StringBuilder();
+                    for (int j = 1; j <= res.getMetaData().getColumnCount(); j++) {
+                      line .append(res.getString(j)).append(":");
+                    }
+                    output.write(line.deleteCharAt(line.length() - 1).toString() + "\n");                  
+                }
+                output.close();
+           }
+            catch (SQLException s){
+                MainFrame.bslog(s);
+                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
+        }
+        catch (IOException | SQLException e){
+            MainFrame.bslog(e);
+        }
+    }
+    
+    
     /* print methods */
     public static void printPOS_Jasper(String nbr) {
         

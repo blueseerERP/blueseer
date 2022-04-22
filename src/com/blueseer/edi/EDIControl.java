@@ -267,6 +267,7 @@ public class EDIControl extends javax.swing.JPanel {
         jLabel15 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         ddtocode = new javax.swing.JComboBox<>();
+        btexport = new javax.swing.JButton();
 
         jLabel6.setText("jLabel6");
 
@@ -392,6 +393,13 @@ public class EDIControl extends javax.swing.JPanel {
                 .addContainerGap())
         );
 
+        btexport.setText("Export Master Data");
+        btexport.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btexportActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -420,18 +428,20 @@ public class EDIControl extends javax.swing.JPanel {
                             .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel12, javax.swing.GroupLayout.Alignment.TRAILING))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(tbstructure)
-                            .addComponent(tberrordir)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(cbdelete)
-                                    .addComponent(cbarchive))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btupdate))
-                            .addComponent(tboutarch)
-                            .addComponent(tbbatch)
-                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btexport)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(tbstructure)
+                                .addComponent(tberrordir)
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(cbdelete)
+                                        .addComponent(cbarchive))
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(btupdate))
+                                .addComponent(tboutarch)
+                                .addComponent(tbbatch)
+                                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(12, 12, 12))))
         );
         jPanel1Layout.setVerticalGroup(
@@ -477,7 +487,9 @@ public class EDIControl extends javax.swing.JPanel {
                     .addComponent(btupdate))
                 .addGap(43, 43, 43)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(102, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btexport)
+                .addContainerGap(16, Short.MAX_VALUE))
         );
 
         add(jPanel1);
@@ -559,9 +571,22 @@ public class EDIControl extends javax.swing.JPanel {
         copyPartnerDoc(x[0], x[1], x[2], x[3], ddtocode.getSelectedItem().toString(), tbsndgs.getText(), tbrcvgs.getText());
     }//GEN-LAST:event_btcopyActionPerformed
 
+    private void btexportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btexportActionPerformed
+        
+        OVData.exportTable("edi_mstr", "edimstr.txt");
+        OVData.exportTable("edi_doc", "edidoc.txt");
+        OVData.exportTable("edi_docdet", "edidocdet.txt");
+        OVData.exportTable("edi_stds", "edistds.txt");
+        OVData.exportTable("edp_partner", "edppartner.txt");
+        OVData.exportTable("edpd_partner", "edpdpartner.txt");
+        bsmf.MainFrame.show("Files exported to temp dir");
+        
+    }//GEN-LAST:event_btexportActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btcopy;
+    private javax.swing.JButton btexport;
     private javax.swing.JButton btupdate;
     private javax.swing.JCheckBox cbarchive;
     private javax.swing.JCheckBox cbdelete;

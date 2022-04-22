@@ -45,6 +45,7 @@ import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import static java.nio.file.Files.copy;
 import java.nio.file.Path;
@@ -2880,8 +2881,8 @@ public class EDI {
    // SmbFile folder = new SmbFile("smb://10.17.2.55/edi/", auth);
     
         
-    Path path = Paths.get(dir + "/" + filename);
-    Path archpath = Paths.get(EDData.getEDIOutArch() + "/" + filename);
+    Path path = FileSystems.getDefault().getPath(dir + "/" + filename);
+    Path archpath = FileSystems.getDefault().getPath(EDData.getEDIOutArch() + "/" + filename);
     
     
     BufferedWriter output;
@@ -2923,7 +2924,7 @@ public class EDI {
     
    
     
-    Path path = Paths.get(filename);
+    Path path = FileSystems.getDefault().getPath(filename);
     
     
     
