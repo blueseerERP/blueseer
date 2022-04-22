@@ -102,7 +102,7 @@ public class Scheduler extends javax.swing.JPanel {
                             getGlobalColumnTag("item"), 
                             getGlobalColumnTag("duedate"), 
                             getGlobalColumnTag("type"), 
-                            getGlobalColumnTag("issched"), 
+                            getGlobalColumnTag("isscheduled"), 
                             getGlobalColumnTag("cell"), 
                             getGlobalColumnTag("schedqty"), 
                             getGlobalColumnTag("reqdqty"), 

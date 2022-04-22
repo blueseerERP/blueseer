@@ -77,12 +77,14 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.sql.Connection;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -102,7 +104,7 @@ public class ProdSchedRpt extends javax.swing.JPanel {
                             getGlobalColumnTag("item"), 
                             getGlobalColumnTag("duedate"), 
                             getGlobalColumnTag("type"), 
-                            getGlobalColumnTag("issched"), 
+                            getGlobalColumnTag("isscheduled"), 
                             getGlobalColumnTag("cell"), 
                             getGlobalColumnTag("schedqty"), 
                             getGlobalColumnTag("reqdqty"), 
@@ -111,7 +113,17 @@ public class ProdSchedRpt extends javax.swing.JPanel {
                             getGlobalColumnTag("order"), 
                             getGlobalColumnTag("line"), 
                             getGlobalColumnTag("status"), 
-                            getGlobalColumnTag("print")});
+                            getGlobalColumnTag("print")})
+               {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0 || col == 14)       
+                            return ImageIcon.class;  
+                        else if (col == 7 || col == 8 || col == 9)
+                            return Double.class;
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        };
       
       
        DetailModel modeldetail = new DetailModel(new Object[][]{},
@@ -203,7 +215,7 @@ public class ProdSchedRpt extends javax.swing.JPanel {
         }    
     
     
-     class SomeRenderer extends DefaultTableCellRenderer {
+    class SomeRenderer extends DefaultTableCellRenderer {
         
     public Component getTableCellRendererComponent(JTable table,
             Object value, boolean isSelected, boolean hasFocus, int row,
@@ -292,72 +304,6 @@ public class ProdSchedRpt extends javax.swing.JPanel {
         }
     }
 
-    
-     class ButtonEditor extends DefaultCellEditor {
-
-        protected JButton button;
-        private String label;
-        private String columnname;
-        private int myrow;
-        private int mycol;
-        private boolean isPushed;
-
-        public ButtonEditor(JCheckBox checkBox) {
-            super(checkBox);
-            button = new JButton();
-            button.setOpaque(true);
-            button.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    fireEditingStopped();
-                }
-            });
-        }
-
-        public Component getTableCellEditorComponent(JTable table, Object value,
-                boolean isSelected, int row, int column) {
-            if (isSelected) {
-                button.setForeground(table.getSelectionForeground());
-                button.setBackground(table.getSelectionBackground());
-            } else {
-                button.setForeground(table.getForeground());
-                button.setBackground(table.getBackground());
-            }
-            label = (value == null) ? "" : value.toString();
-            columnname = String.valueOf(column);
-            button.setText(label);
-            //button.setText("approve");
-            
-            isPushed = true;
-           
-            return button;
-        }
-
-        public Object getCellEditorValue() {
-            boolean isGood = false;
-            if (isPushed) {
-               
-                myrow = mastertable.getSelectedRow();
-                mycol = mastertable.getSelectedColumn();
-                
-               
-               
-                if (mycol == 14)  { 
-                printticket(mastertable.getValueAt(myrow, 1).toString(), "Work Order");
-                }
-            }
-            isPushed = false;
-            return new String(label);
-        }
-
-        public boolean stopCellEditing() {
-            isPushed = false;
-            return super.stopCellEditing();
-        }
-
-        protected void fireEditingStopped() {
-            super.fireEditingStopped();
-        }
-    }
     
     
     
@@ -468,14 +414,16 @@ public class ProdSchedRpt extends javax.swing.JPanel {
            Connection con = DriverManager.getConnection(url + db, user, pass);
             
                 HashMap hm = new HashMap();
+                String jasperfile = "jobticket.jasper";
                 hm.put("BUSINESSTITLE", bustitle);
-                hm.put("REPORT_TITLE", "MASTER TICKET");
-                 hm.put("SUBREPORT_DIR", "jasper/");
+                hm.put("REPORT_TITLE", jasperfile);
+                hm.put("SUBREPORT_DIR", "jasper/");
+                hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
                 hm.put("myid",  jobid);
                 //hm.put("imagepath", "images/avmlogo.png");
                // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_part, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
-                File mytemplate = new File("jasper/jobticket.jasper");
+                File mytemplate = new File("jasper/" + jasperfile);
                 JasperPrint jasperPrint = JasperFillManager.fillReport(mytemplate.getPath(), hm, con );
                 JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/jobticket.pdf");
          
@@ -958,33 +906,20 @@ try {
                  
                  Enumeration<TableColumn> en = mastertable.getColumnModel().getColumns();
                  while (en.hasMoreElements()) {
-                   
                      TableColumn tc = en.nextElement();
-                     tc.setCellRenderer(new ProdSchedRpt.SomeRenderer());
+                     if (mymodel.getColumnClass(tc.getModelIndex()).getSimpleName().equals("ImageIcon")) {
+                         continue;
+                     }
+                     tc.setCellRenderer(new SomeRenderer());
                  }   
-                 
-               
                 
-                mastertable.getColumn("Detail").setCellRenderer(new ButtonRenderer());
-                mastertable.getColumn("Print").setCellRenderer(new ButtonRenderer());
-                mastertable.getColumn("Print").setCellEditor(new ButtonEditor(new JCheckBox()));
-                mastertable.getColumn("Print").setMaxWidth(100);
-                mastertable.getColumn("Detail").setMaxWidth(100);
+                mastertable.getColumnModel().getColumn(0).setMaxWidth(100);
+                mastertable.getColumnModel().getColumn(14).setMaxWidth(100);
                
             
                 mymodel.setRowCount(0);
-                
-       
-                // ReportPanel.TableReport.getColumn("CallID").setCellRenderer(new ButtonRenderer());
-                //          ReportPanel.TableReport.getColumn("CallID").setCellEditor(
-                    //       new ButtonEditor(new JCheckBox()));
-               
-              // tcm.getColumn(6).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());  
-            
                
                  DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-
-                 
                  
                  res = st.executeQuery("SELECT plan_nbr, plan_type, plan_part, plan_qty_req, plan_qty_comp, "
                          + " plan_qty_sched, plan_date_due, plan_date_sched, plan_status, plan_is_sched, plan_cell, plan_order, plan_line " +
@@ -1011,7 +946,7 @@ try {
                     i++;
                     reqtot = reqtot + res.getInt("plan_qty_req");
                     schtot = schtot + res.getInt("plan_qty_sched");
-                    mymodel.addRow(new Object[]{"Detail",
+                    mymodel.addRow(new Object[]{BlueSeerUtils.clickbasket,
                                 res.getString("plan_nbr"),
                                 res.getString("plan_part"),
                                 res.getString("plan_date_due"),
@@ -1025,7 +960,7 @@ try {
                                 res.getString("plan_order"),
                                 res.getString("plan_line"),
                                 res.getString("plan_status"),
-                                "Print"
+                                BlueSeerUtils.clickprint
                             });
                 }
                 labelqtysched.setText(String.valueOf(schtot));
@@ -1069,10 +1004,12 @@ try {
         String jobnbr = mastertable.getValueAt(row, 1).toString();
         
         if ( col == 0) {
-            
             getdetail(jobnbr);
             bthidedetail.setEnabled(true);
             detailpanel.setVisible(true);
+        }
+        if ( col == 14) {
+            printticket(mastertable.getValueAt(row, 1).toString(), "Work Order");
         }
     }//GEN-LAST:event_mastertableMouseClicked
 
