@@ -774,7 +774,7 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 
                  html += "<table>";
                 
-                if (type.equals("Hourly")) {
+                if (type.equals("Hourly") || type.equals("Hourly-Direct")) {
                     res = st.executeQuery("SELECT sum(t.tothrs) as 't.tothrs', t.code_id as 't.code_id', " +
                             "  e.emp_rate as 'e.emp_rate', clc_desc " +
                            "  FROM  time_clock t inner join emp_mstr e on e.emp_nbr = t.emp_nbr inner join clock_code on clc_code = t.code_id " +
@@ -1866,7 +1866,7 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeerT  {
         jLabel3.setText("Rate/hr");
         jLabel3.setName("lblratehr"); // NOI18N
 
-        ddtype.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Hourly", "Salary", "Temp" }));
+        ddtype.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Hourly", "Salary", "Hourly-Direct", "Temp" }));
 
         jLabel4.setText("Type");
         jLabel4.setName("lbltype"); // NOI18N

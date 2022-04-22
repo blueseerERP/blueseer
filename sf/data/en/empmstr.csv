@@ -1,7 +1,7 @@
-1000,1000,Frey,Glenn,,9999,Active,2000-01-01,2001-01-01,1,Hourly,M,,,17.50,0.00,0.00,0.00,104 West 2nd street,,Winslow,AZ,USA,,,,1946-03-11,59645,0,1000,,0,1,default,987654321,999999999999,bi-monthly
-1001,1000,Henley,Don,,9999,Active,2000-01-01,2001-01-01,1,Hourly,M,,,14.35,0.00,0.00,0.00,2nd street,,Winslow,NV,USA,,,,1945-03-12,59645,0,1000,,0,1,default,987654321,999999999999,monthly
-1002,1000,Meisner,Randy,,9999,Active,2000-01-01,2001-01-01,1,Hourly,M,,,21.00,0.00,0.00,0.00,2nd street,,Winslow,NV,USA,,,,1945-04-20,59645,0,1000,,0,1,default,987654321,999999999999,monthly
-1003,1000,Leadon,Bernie,,9999,Active,2000-01-01,2001-01-01,1,Hourly,M,,,44.00,0.00,0.00,0.00,2nd street,,Winslow,NV,USA,,,,1945-09-17,59645,0,1000,,0,1,default,987654321,999999999999,monthly
-1004,1000,Felder,Don,,9999,Active,2000-01-01,2001-01-01,1,Hourly,M,,,8.50,0.00,0.00,0.00,2nd street,,Winslow,NV,USA,,,,1945-12-10,59645,0,1000,,0,1,default,987654321,999999999999,monthly
-1005,1000,Walsh,Joe,,9999,Active,2000-01-01,2001-01-01,1,Hourly,M,,,4.10,0.00,0.00,0.00,2nd street,,Winslow,NV,USA,,,,1945-11-18,59645,0,1000,,0,1,default,987654321,999999999999,monthly
-1006,1000,Schmidt,Timothy,B,9999,Active,2000-01-01,2001-01-01,1,Hourly,M,,,3.26,0.00,0.00,0.00,2nd street,,Winslow,NV,USA,,,,1945-02-10,59645,0,1000,,0,1,default,987654321,999999999999,weekly
+1000,1000,Frey,Glenn,,9999,Active,2000-01-01,2001-01-01,1,Hourly-Direct,M,,,17.50,0.00,0.00,0.00,104 West 2nd street,,Winslow,AZ,USA,,,,1946-03-11,59645,0,1000,,0,1,default,987654321,999999999999,bi-monthly
+1001,1000,Henley,Don,,9999,Active,2000-01-01,2001-01-01,1,Salary,M,,,14.35,0.00,0.00,0.00,2nd street,,Winslow,NV,USA,,,,1945-03-12,59645,0,1000,,0,1,default,987654321,999999999999,monthly
+1002,1000,Meisner,Randy,,9999,Active,2000-01-01,2001-01-01,1,Hourly-Direct,M,,,21.00,0.00,0.00,0.00,2nd street,,Winslow,NV,USA,,,,1945-04-20,59645,0,1000,,0,1,default,987654321,999999999999,monthly
+1003,1000,Leadon,Bernie,,9999,Active,2000-01-01,2001-01-01,1,Hourly-Direct,M,,,44.00,0.00,0.00,0.00,2nd street,,Winslow,NV,USA,,,,1945-09-17,59645,0,1000,,0,1,default,987654321,999999999999,monthly
+1004,1000,Felder,Don,,9999,Active,2000-01-01,2001-01-01,1,Hourly-Direct,M,,,8.50,0.00,0.00,0.00,2nd street,,Winslow,NV,USA,,,,1945-12-10,59645,0,1000,,0,1,default,987654321,999999999999,monthly
+1005,1000,Walsh,Joe,,9999,Active,2000-01-01,2001-01-01,1,Hourly-Direct,M,,,4.10,0.00,0.00,0.00,2nd street,,Winslow,NV,USA,,,,1945-11-18,59645,0,1000,,0,1,default,987654321,999999999999,monthly
+1006,1000,Schmidt,Timothy,B,9999,Active,2000-01-01,2001-01-01,1,Hourly-Direct,M,,,3.26,0.00,0.00,0.00,2nd street,,Winslow,NV,USA,,,,1945-02-10,59645,0,1000,,0,1,default,987654321,999999999999,weekly

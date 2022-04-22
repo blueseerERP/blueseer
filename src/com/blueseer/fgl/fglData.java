@@ -1006,19 +1006,23 @@ public class fglData {
                     
                     // LETS DO LABOR FIRST....THIS WILL DEBIT LABOR EXPENSE AND CREDIT CASH WITH THE NET CHECK PAYMENT
                     
-                       res = st.executeQuery("select py_id, py_site, pyd_checknbr, pyd_payamt, pyd_empdept from pay_det inner join pay_mstr on py_id = pyd_id  " +
+                       res = st.executeQuery("select py_id, py_site, pyd_emptype, pyd_checknbr, pyd_payamt, pyd_empdept from pay_det inner join pay_mstr on py_id = pyd_id  " +
                                " where pyd_id = " + "'" + batch + "'" +";");
                    
                     Double amt = 0.00;   
                     while (res.next()) {
                      // credit Cash account and debit labor expense
                     amt = res.getDouble("pyd_payamt");
-                       acct_cr.add(bankacct);
-                    acct_dr.add(laboracct);
+                    if (res.getString("pyd_emptype").equals("Hourly-Direct")) {
+                     acct_dr.add(laboracct);   
+                    } else {
+                     acct_dr.add(salariedacct);   
+                    }
+                    acct_cr.add(bankacct);
                     cc_cr.add(res.getString("pyd_empdept"));
                     cc_dr.add(res.getString("pyd_empdept"));
-                      cost.add(amt);
-                      basecost.add(amt);
+                    cost.add(amt);
+                    basecost.add(amt);
                     curr.add(defaultcurr);
                     basecurr.add(defaultcurr);
                     site.add(res.getString("py_site"));
