@@ -79,6 +79,7 @@ import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.sql.Connection;
 import java.text.DecimalFormatSymbols;
@@ -248,24 +249,17 @@ public class ProdSchedRpt extends javax.swing.JPanel {
       // c.setBackground(row % 2 == 0 ? Color.GREEN : Color.LIGHT_GRAY);
       // c.setBackground(row % 3 == 0 ? new Color(245,245,220) : Color.LIGHT_GRAY);
        
-        if (isSelected)
-        {
-            setBackground(table.getSelectionBackground());
-            setForeground(Color.BLACK);
-           
-        }
-        else
-        {
-              String status = (String) mastertable.getModel().getValueAt(table.convertRowIndexToModel(row), 12);  // 7 = status column
-              if (status.equals("1")) {
+       
+              String status = (String) mastertable.getModel().getValueAt(table.convertRowIndexToModel(row), 13);  // 7 = status column
+              if (status.equals(getGlobalProgTag("closed"))) {
               setForeground(Color.blue);
-             } else if (status.equals("-1")) {
+             } else if (status.equals(getGlobalProgTag("void"))) {
               setForeground(Color.red);   
              } else {
               setBackground(table.getBackground());
               setForeground(table.getForeground());
               }
-        }
+        
             
         //c.setBackground(table.getBackground());
             
@@ -864,13 +858,12 @@ try {
 
                 double amt = 0;
                
-                DecimalFormat df = new DecimalFormat("###,###,###.##", new DecimalFormatSymbols(Locale.US));
                 int i = 0;
-                String fpart = "";
-                String tpart = "";
-                String fcell = "";
-                String tcell = "";
-               
+                String fpart;
+                String tpart;
+                String fcell;
+                String tcell;
+                String status;
                 
                 if (frompart.getText().isEmpty()) {
                     fpart = bsmf.MainFrame.lowchar;
@@ -892,15 +885,7 @@ try {
                 } else {
                     tcell = tocell.getText();
                 }
-               
-                 
-               //  ScrapReportPanel.MyTableModel mymodel = new ScrapReportPanel.MyTableModel(new Object[][]{},
-               //         new String[]{"Acct", "Description", "Amt"});
-               // tablescrap.setModel(mymodel);
-               
-                   
-              //  mytable.getColumnModel().getColumn(0).setCellRenderer(new ProdSchedPanel.SomeRenderer());  
-              
+             
                   CheckBoxRenderer checkBoxRenderer = new CheckBoxRenderer();
                 mastertable.getColumnModel().getColumn(4).setCellRenderer(checkBoxRenderer); 
                  
@@ -943,6 +928,14 @@ try {
                         continue;
                     }
                     
+                    if (res.getInt("plan_status") == 0) {
+                        status = getGlobalProgTag("open");
+                    } else if (res.getInt("plan_status") == 1) {
+                        status = getGlobalProgTag("closed");
+                    } else {
+                        status = getGlobalProgTag("void"); // -1
+                    }
+                    
                     i++;
                     reqtot = reqtot + res.getInt("plan_qty_req");
                     schtot = schtot + res.getInt("plan_qty_sched");
@@ -959,7 +952,7 @@ try {
                                 res.getString("plan_date_sched"),
                                 res.getString("plan_order"),
                                 res.getString("plan_line"),
-                                res.getString("plan_status"),
+                                status,
                                 BlueSeerUtils.clickprint
                             });
                 }
