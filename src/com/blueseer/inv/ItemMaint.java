@@ -623,13 +623,13 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 ddtype.getSelectedItem().toString(),
                 tbgroup.getText(),
                 ddprodcode.getSelectedItem().toString(),
-                tbdrawing.getText().toString(),
+                tbdrawing.getText(),
                 revlevel.getText(),
                 custrevlevel.getText(),
                 ddwh.getSelectedItem().toString(),
                 ddloc.getSelectedItem().toString(),        
                 ddsite.getSelectedItem().toString(),
-                comments.getText().toString(),
+                comments.getText(),
                 ddstatus.getSelectedItem().toString(),
                 dduom.getSelectedItem().toString(),
                 bsformat("d", tbnetwt.getText(), "2").replace(defaultDecimalSeparator, '.'),
@@ -709,6 +709,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
         ddloc.setSelectedItem(x.it_loc());
         ddrouting.setSelectedItem(x.it_wf());
         revlevel.setText(x.it_rev());
+        custrevlevel.setText(x.it_custrev()); 
         tbdefaultcont.setText(x.it_cont());
         tbcontqty.setText(x.it_contqty());
         tbshipwt.setText(x.it_ship_wt());
