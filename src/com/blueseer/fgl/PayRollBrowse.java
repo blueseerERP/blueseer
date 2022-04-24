@@ -797,7 +797,7 @@ try {
             
         
              res = st.executeQuery("select pyd_empnbr, pyd_emplname, pyd_empfname, pyd_empdept, pyd_emptype, pyd_paydate, pyd_checknbr, pyd_payamt, " +
-                         " (select sum(pyl_amt) from pay_line where pyl_id = pyd_id and pyl_checknbr = pyd_checknbr ) as 'deductions' " +
+                         " (select sum(pyl_amt) from pay_line where pyl_id = pyd_id and pyl_checknbr = pyd_checknbr and pyl_type = 'deduction' ) as 'deductions' " +
                          " from pay_det where " +
                         " pyd_empnbr >= " + "'" + empfrom + "'" + " AND " +
                         " pyd_empnbr <= " + "'" + empto + "'" + " AND " +

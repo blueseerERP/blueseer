@@ -56,6 +56,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.lang.reflect.Field;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -388,7 +389,7 @@ public class AcctMaint extends javax.swing.JPanel implements IBlueSeerT  {
     }
    
     public String[] getRecord(String[] key) {
-        AcctMstr z = getAcctMstr(key);  
+        AcctMstr z = getAcctMstr(key);        
         x = z;
         return x.m();
     }
@@ -400,6 +401,11 @@ public class AcctMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 ddcur.getSelectedItem().toString(),
                 String.valueOf(BlueSeerUtils.boolToInt(cbdisplay.isSelected()))
                 );
+        /* potential validation mechanism...would need association between record field and input field
+        for(Field f : x.getClass().getDeclaredFields()){
+        System.out.println(f.getName());
+        }
+        */
         return x;
     }
        

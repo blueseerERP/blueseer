@@ -338,7 +338,7 @@ public class PayRollMaint extends javax.swing.JPanel {
                          
                          
                          // now do earnings detail
-                         getEarnings(tablereport.getValueAt(j, 2).toString(), dfdate.format(dcpay.getDate()).toString(), dfdate.format(dcpay.getDate()).toString());
+                         getEarnings(tablereport.getValueAt(j, 2).toString(), dfdate.format(dcfrom.getDate()).toString(), dfdate.format(dcto.getDate()).toString());
                          // "EmpID", "type", "code", "desc", "rate", "amt"
                               for (int e = 0; e < modelearnings.getRowCount() ; e++) {
                                       st.executeUpdate("insert into pay_line "
@@ -478,6 +478,7 @@ public class PayRollMaint extends javax.swing.JPanel {
                                 " order by t.code_id " +      
                                ";" );
                  html += "<table>";
+                String amtstring = "";
                 while (res.next()) {
                     codedesc = res.getString("t.code_id");
                     if (codedesc.equals("00") || codedesc.equals("77")) {
@@ -486,13 +487,13 @@ public class PayRollMaint extends javax.swing.JPanel {
                         codedesc = res.getString("clc_desc");
                     }
                     html += "<tr><td align='right'>" + codedesc + ":" + "</td><td>" + currformatDouble(res.getDouble("t.tothrs") * res.getDouble("e.emp_rate")) + "</td></tr>";
-               
+                amtstring = currformatDouble(res.getDouble("t.tothrs") * res.getDouble("e.emp_rate"));
                 modelearnings.addRow(new Object []{empnbr,
                                             "earnings",
                                             res.getString("t.code_id"),
                                             res.getString("clc_desc"),
                                             res.getString("e.emp_rate").replace('.',defaultDecimalSeparator),
-                                            currformatDouble(res.getDouble("t.tothrs") * res.getDouble("e.emp_rate")).replace('.',defaultDecimalSeparator)
+                                            amtstring.replace('.',defaultDecimalSeparator)
                                             } );
                 
                 }
