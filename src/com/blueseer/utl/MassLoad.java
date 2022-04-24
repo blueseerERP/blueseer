@@ -409,11 +409,11 @@ public class MassLoad extends javax.swing.JPanel {
         ArrayList<String> list = new ArrayList<String>();
         list.add("bom_id,s,30,mandatory,unvalidated");
         list.add("bom_desc,s,100,mandatory,unvalidated");
-        list.add("bom_item,s,18,mandatory,validated");
+        list.add("bom_item,s,30,mandatory,validated");
         list.add("bom_enabled,b,1,mandatory,unvalidated");
         list.add("bom_primary,b,1,mandatory,unvalidated");
-        list.add("ps_parent,s,18,mandatory,validated");
-        list.add("ps_child,s,18,mandatory,validated");
+        list.add("ps_parent,s,30,mandatory,validated");
+        list.add("ps_child,s,30,mandatory,validated");
         list.add("ps_type,s,10,mandatory,validated (P or M or A)");
         list.add("ps_qty_per,d,10,mandatory,unvalidated");
         list.add("ps_desc,s,30,mandatory,unvalidated");
