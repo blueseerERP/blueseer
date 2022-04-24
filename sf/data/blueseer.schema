@@ -176,8 +176,8 @@ CREATE TABLE IF NOT EXISTS `call_mstr` (
   `call_name` varchar(50)  NOT NULL DEFAULT '',
   `call_phone` varchar(15)  NOT NULL DEFAULT '',
   `call_type` varchar(30)  NOT NULL DEFAULT '',
-  `call_custpart` varchar(30)  NOT NULL DEFAULT '',
-  `call_intpart` varchar(30)  NOT NULL DEFAULT '',
+  `call_custpart` varchar(50)  NOT NULL DEFAULT '',
+  `call_intpart` varchar(36)  NOT NULL DEFAULT '',
   `call_misc1` varchar(30)  NOT NULL DEFAULT '',
   `call_extlen` varchar(30)  NOT NULL DEFAULT '',
   `call_comlen` varchar(30)  NOT NULL DEFAULT '',
@@ -295,8 +295,8 @@ CREATE TABLE IF NOT EXISTS `cms_det` (
   `cms_plantcode` varchar(30) NOT NULL  DEFAULT '') ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `cpr_mstr` (
   `cpr_cust` varchar(10)  NOT NULL DEFAULT '',
-  `cpr_desc` varchar(30) NOT NULL  DEFAULT '',
-  `cpr_item` varchar(30) NOT NULL  DEFAULT '',
+  `cpr_desc` varchar(50) NOT NULL  DEFAULT '',
+  `cpr_item` varchar(36) NOT NULL  DEFAULT '',
   `cpr_curr` varchar(3) NOT NULL  DEFAULT '',
   `cpr_type` varchar(20) NOT NULL  DEFAULT '',
   `cpr_price` decimal(12,5) NOT NULL DEFAULT '0.00000',
@@ -309,14 +309,14 @@ CREATE TABLE IF NOT EXISTS `cpr_mstr` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `cup_mstr` (
   `cup_cust` varchar(10)  NOT NULL DEFAULT '',
-  `cup_item` varchar(30)  NOT NULL DEFAULT '',
-  `cup_citem` varchar(30)  NOT NULL DEFAULT '',
-  `cup_citem2` varchar(30)  NOT NULL DEFAULT '',
-  `cup_upc` varchar(30)  NOT NULL DEFAULT '',
+  `cup_item` varchar(36)  NOT NULL DEFAULT '',
+  `cup_citem` varchar(50)  NOT NULL DEFAULT '',
+  `cup_citem2` varchar(50)  NOT NULL DEFAULT '',
+  `cup_upc` varchar(50)  NOT NULL DEFAULT '',
   `cup_userid` varchar(10)  NOT NULL DEFAULT '',
   `cup_ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `cup_misc` varchar(30)  NOT NULL DEFAULT '',
-  `cup_sku` varchar(30)  NOT NULL DEFAULT '') ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `cup_misc` varchar(50)  NOT NULL DEFAULT '',
+  `cup_sku` varchar(50)  NOT NULL DEFAULT '') ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `cur_mstr` (
   `cur_id` varchar(10)  NOT NULL DEFAULT '',
   `cur_desc` varchar(50)  NOT NULL DEFAULT ''
@@ -356,7 +356,7 @@ CREATE TABLE IF NOT EXISTS `ecn_mstr` (
   `ecn_createdate` date  DEFAULT NULL,
   `ecn_closedate` date  DEFAULT NULL,
   `ecn_drawing` varchar(50) NOT NULL  DEFAULT '',
-  `ecn_item` varchar(30) NOT NULL  DEFAULT '',
+  `ecn_item` varchar(60) NOT NULL  DEFAULT '',
   `ecn_rev` varchar(30) NOT NULL  DEFAULT '',
   `ecn_custrev` varchar(30) NOT NULL  DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -623,7 +623,7 @@ CREATE TABLE IF NOT EXISTS `fct_cal` (
   `fctc_start` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `fct_mstr` (
-  `fct_part` varchar(30) NOT NULL  DEFAULT '',
+  `fct_part` varchar(36) NOT NULL  DEFAULT '',
   `fct_site` varchar(10) NOT NULL  DEFAULT '',
   `fct_year` varchar(4) NOT NULL  DEFAULT '',
   `fct_wkqty1` int(8) NOT NULL DEFAULT '0',
@@ -755,7 +755,7 @@ CREATE TABLE IF NOT EXISTS `glic_def` (
   `glic_end` varchar(10) NOT NULL  DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `in_mstr` (
-  `in_part` varchar(30) NOT NULL,
+  `in_part` varchar(36) NOT NULL,
   `in_qoh` decimal(14,5) NOT NULL DEFAULT '0.00000',
   `in_date` date  DEFAULT NULL,
   `in_loc` varchar(30)  NOT NULL DEFAULT '',
@@ -773,7 +773,7 @@ CREATE TABLE IF NOT EXISTS `inv_ctrl` (
   `serialize` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `item_cost` (
-  `itc_item` varchar(30) NOT NULL  DEFAULT '',
+  `itc_item` varchar(36) NOT NULL  DEFAULT '',
   `itc_site` varchar(10) NOT NULL  DEFAULT '',
   `itc_set` varchar(20) NOT NULL  DEFAULT '',
   `itc_total` decimal(14,5) NOT NULL DEFAULT '0.00000',
@@ -788,7 +788,7 @@ CREATE TABLE IF NOT EXISTS `item_cost` (
   `itc_ovh_low` decimal(14,5) NOT NULL DEFAULT '0.00000',
   `itc_out_low` decimal(14,5) NOT NULL DEFAULT '0.00000') ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `item_image` (
-  `iti_item` varchar(30) NOT NULL,
+  `iti_item` varchar(36) NOT NULL,
   `iti_site` varchar(10) NOT NULL DEFAULT '',
   `iti_order` int NOT NULL DEFAULT '0',
   `iti_default` tinyint(1) NOT NULL DEFAULT '0',
@@ -796,7 +796,7 @@ CREATE TABLE IF NOT EXISTS `item_image` (
   `iti_dir` varchar(120)  NOT NULL DEFAULT '',
   `iti_path` varchar(120)  NOT NULL DEFAULT '') ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `item_mstr` (
-  `it_item` varchar(30) NOT NULL  DEFAULT '',
+  `it_item` varchar(36) NOT NULL  DEFAULT '',
   `it_desc` varchar(50)  NOT NULL DEFAULT '',
   `it_uom` varchar(10)  NOT NULL DEFAULT '',
   `it_prodline` varchar(4)  NOT NULL DEFAULT '',
@@ -840,7 +840,7 @@ CREATE TABLE IF NOT EXISTS `item_mstr` (
   `it_phantom` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `itemr_cost` (
-  `itr_item` varchar(30) NOT NULL,
+  `itr_item` varchar(36) NOT NULL,
   `itr_site` varchar(10)  NOT NULL DEFAULT '',
   `itr_set` varchar(20)  NOT NULL DEFAULT '',
   `itr_routing` varchar(20)  NOT NULL DEFAULT '',
@@ -860,8 +860,8 @@ CREATE TABLE IF NOT EXISTS `itemr_cost` (
   `itr_userid` varchar(20)  NOT NULL DEFAULT '') ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `label_mstr` (
   `lbl_id` int(8) NOT NULL DEFAULT '0',
-  `lbl_part` varchar(30) NOT NULL  DEFAULT '',
-  `lbl_custpart` varchar(30) NOT NULL  DEFAULT '',
+  `lbl_part` varchar(36) NOT NULL  DEFAULT '',
+  `lbl_custpart` varchar(50) NOT NULL  DEFAULT '',
   `lbl_id_str` varchar(30) NOT NULL  DEFAULT '',
   `lbl_conttype` varchar(30) NOT NULL  DEFAULT '',
   `lbl_qty` int(11) NOT NULL DEFAULT '0',
@@ -911,7 +911,7 @@ CREATE TABLE IF NOT EXISTS `mock_mstr` (
   `mock_nbr` int(6) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `mrp_mstr` (
-  `mrp_part` varchar(30) NOT NULL  DEFAULT '',
+  `mrp_part` varchar(36) NOT NULL  DEFAULT '',
   `mrp_date` date DEFAULT NULL,
   `mrp_qty` decimal(14,5) NOT NULL DEFAULT '0.00000',
   `mrp_ref` varchar(30) NOT NULL  DEFAULT '',
@@ -946,7 +946,7 @@ CREATE TABLE IF NOT EXISTS `ov_mstr` (
 CREATE TABLE IF NOT EXISTS `bom_mstr` (
   `bom_id` varchar(30)  NOT NULL DEFAULT '',
   `bom_desc` varchar(100)  NOT NULL DEFAULT '',
-  `bom_item` varchar(30)  NOT NULL DEFAULT '',
+  `bom_item` varchar(36)  NOT NULL DEFAULT '',
   `bom_enabled` tinyint(1) NOT NULL DEFAULT '0',
   `bom_primary` tinyint(1)  NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -1000,7 +1000,7 @@ CREATE TABLE IF NOT EXISTS `pl_mstr` (
   `pl_out_ratevar` varchar(10)  NOT NULL DEFAULT '') ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `plan_mstr` (
   `plan_nbr` int(8) NOT NULL,
-  `plan_part` varchar(30) NOT NULL,
+  `plan_part` varchar(36) NOT NULL,
   `plan_site` varchar(10) NOT NULL  DEFAULT '',
   `plan_qty_req` int(9)  NOT NULL DEFAULT '0',
   `plan_qty_comp` int(9)  NOT NULL DEFAULT '0',
@@ -1018,7 +1018,7 @@ CREATE TABLE IF NOT EXISTS `plan_mstr` (
 CREATE TABLE IF NOT EXISTS `pland_mstr` (
   `pland_id` int(8) NOT NULL DEFAULT '0',
   `pland_parent` int(8) NOT NULL DEFAULT '0',
-  `pland_part` varchar(30) NOT NULL  DEFAULT '',
+  `pland_part` varchar(36) NOT NULL  DEFAULT '',
   `pland_op` varchar(2) NOT NULL  DEFAULT '',
   `pland_qty` int(9) NOT NULL DEFAULT '0',
   `pland_cell` varchar(30) NOT NULL  DEFAULT '',
@@ -1051,7 +1051,7 @@ CREATE TABLE IF NOT EXISTS `pod_mstr` (
   `pod_nbr` varchar(8)  NOT NULL DEFAULT '',
   `pod_line` int(11)  NOT NULL DEFAULT '0',
   `pod_part` varchar(100) NOT NULL  DEFAULT '',
-  `pod_vendpart` varchar(30)  NOT NULL DEFAULT '',
+  `pod_vendpart` varchar(50)  NOT NULL DEFAULT '',
   `pod_ord_qty` int(8)  NOT NULL DEFAULT '0',
   `pod_rcvd_qty` int(8)  NOT NULL DEFAULT '0',
   `pod_netprice` decimal(13,5) NOT NULL DEFAULT '0.00000',
@@ -1136,7 +1136,7 @@ CREATE TABLE IF NOT EXISTS `qual_mstr` (
   `qual_src_oth_desc` varchar(30)  NOT NULL DEFAULT '',
   `qual_int_sup` varchar(1)  NOT NULL DEFAULT '0',
   `qual_ext_sup` varchar(1)  NOT NULL DEFAULT '',
-  `qual_part` varchar(30)  NOT NULL DEFAULT '',
+  `qual_part` varchar(36)  NOT NULL DEFAULT '',
   `qual_part_desc` varchar(30)  NOT NULL DEFAULT '',
   `qual_qty_rej` int(11)  NOT NULL DEFAULT '0',
   `qual_qty_susp` varchar(30)  NOT NULL DEFAULT '',
@@ -1291,7 +1291,7 @@ CREATE TABLE IF NOT EXISTS `ship_det` (
   `shd_jobnbr` varchar(30) NOT NULL  DEFAULT '',
   `shd_site` varchar(10) NOT NULL  DEFAULT '',
   `shd_curr` varchar(3) NOT NULL  DEFAULT '',
-  `shd_custpart` varchar(30) NOT NULL  DEFAULT '',
+  `shd_custpart` varchar(50) NOT NULL  DEFAULT '',
   `shd_cumqty` int(11) NOT NULL DEFAULT '0',
   `shd_ref` varchar(30) NOT NULL  DEFAULT '',
   `shd_sku` varchar(30) NOT NULL  DEFAULT '',
@@ -1303,7 +1303,7 @@ CREATE TABLE IF NOT EXISTS `ship_det` (
 CREATE TABLE IF NOT EXISTS `dod_mstr` (
   `dod_nbr` varchar(8) NOT NULL  DEFAULT '',
   `dod_line` int(8) NOT NULL DEFAULT '0',
-  `dod_item` varchar(30) NOT NULL  DEFAULT '',
+  `dod_item` varchar(36) NOT NULL  DEFAULT '',
   `dod_qty` int(11) NOT NULL DEFAULT '0',
   `dod_ref` varchar(30) NOT NULL  DEFAULT '',
   `dod_serial` varchar(30) NOT NULL  DEFAULT '',
@@ -1450,7 +1450,7 @@ CREATE TABLE IF NOT EXISTS `ship_tree` (
   `ship_isroot` tinyint(1)  NOT NULL DEFAULT '0',
   `ship_so` varchar(10)  NOT NULL DEFAULT '',
   `ship_po` varchar(30)  NOT NULL DEFAULT '',
-  `ship_part` varchar(30)  NOT NULL DEFAULT '',
+  `ship_part` varchar(36)  NOT NULL DEFAULT '',
   `ship_type` varchar(10)  NOT NULL DEFAULT '',
   `ship_ship_date` date  DEFAULT NULL,
   `ship_create_date` date  DEFAULT NULL,
@@ -1587,7 +1587,7 @@ CREATE TABLE IF NOT EXISTS `sod_det` (
   `sod_line` int(4)  NOT NULL DEFAULT '0',
   `sod_uom` varchar(3) NOT NULL DEFAULT '',
   `sod_part` varchar(100) NOT NULL  DEFAULT '',
-  `sod_custpart` varchar(30)  NOT NULL DEFAULT '',
+  `sod_custpart` varchar(50)  NOT NULL DEFAULT '',
   `sod_ord_qty` int(8)  NOT NULL DEFAULT '0',
   `sod_shipped_qty` int(8)  NOT NULL DEFAULT '0',
   `sod_po` varchar(30)  NOT NULL DEFAULT '',
@@ -1623,7 +1623,7 @@ CREATE TABLE IF NOT EXISTS `srl_mstr` (
   `srl_so` varchar(30) NOT NULL  DEFAULT '',
   `srl_po` varchar(30) NOT NULL  DEFAULT '',
   `srl_line` int(11) NOT NULL DEFAULT '0',
-  `srl_part` varchar(30) NOT NULL  DEFAULT '',
+  `srl_part` varchar(36) NOT NULL  DEFAULT '',
   `srl_ref` varchar(30) NOT NULL  DEFAULT '',
   `srl_qtyord` int(11) NOT NULL DEFAULT '0',
   `srl_qtyshp` int(11) NOT NULL DEFAULT '0',
@@ -1801,18 +1801,18 @@ CREATE TABLE IF NOT EXISTS `vdc_det` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `vdp_mstr` (
   `vdp_vend` varchar(10)  NOT NULL DEFAULT '',
-  `vdp_item` varchar(30)  NOT NULL DEFAULT '',
-  `vdp_vitem` varchar(30)  NOT NULL DEFAULT '',
-  `vdp_upc` varchar(30)  NOT NULL DEFAULT '',
+  `vdp_item` varchar(36)  NOT NULL DEFAULT '',
+  `vdp_vitem` varchar(36)  NOT NULL DEFAULT '',
+  `vdp_upc` varchar(50)  NOT NULL DEFAULT '',
   `vdp_userid` varchar(10)  NOT NULL DEFAULT '',
-  `vdp_misc` varchar(30)  NOT NULL DEFAULT '',
-  `vdp_sku` varchar(30)  NOT NULL DEFAULT ''
+  `vdp_misc` varchar(50)  NOT NULL DEFAULT '',
+  `vdp_sku` varchar(50)  NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `vod_mstr` (
   `vod_id` int(11) DEFAULT '0',
   `vod_rvdid` varchar(8)  DEFAULT '',
   `vod_rvdline` int(8) DEFAULT '0',
-  `vod_part` varchar(30)  DEFAULT '',
+  `vod_part` varchar(36)  DEFAULT '',
   `vod_qty` decimal(14,5) NOT NULL DEFAULT '0.00000',
   `vod_voprice` decimal(14,5) NOT NULL DEFAULT '0.00000',
   `vod_date` date DEFAULT NULL,
@@ -1822,9 +1822,9 @@ CREATE TABLE IF NOT EXISTS `vod_mstr` (
   `vod_expense_cc` varchar(4) NOT NULL  DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `vpr_mstr` (
-  `vpr_desc` varchar(30)  NOT NULL DEFAULT '',
+  `vpr_desc` varchar(50)  NOT NULL DEFAULT '',
   `vpr_vend` varchar(30)  NOT NULL DEFAULT '',
-  `vpr_item` varchar(30)  NOT NULL DEFAULT '',
+  `vpr_item` varchar(36)  NOT NULL DEFAULT '',
   `vpr_curr` varchar(3)  NOT NULL DEFAULT '',
   `vpr_type` varchar(20)  NOT NULL DEFAULT '',
   `vpr_volume` varchar(500)  NOT NULL DEFAULT '',

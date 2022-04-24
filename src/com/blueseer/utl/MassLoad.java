@@ -268,7 +268,7 @@ public class MassLoad extends javax.swing.JPanel {
     // Item master stuff
     public ArrayList<String> defineItemMaster() {
         ArrayList<String> list = new ArrayList<String>();
-        list.add("it_item,s,30,mandatory,unvalidated");
+        list.add("it_item,s,36,mandatory,unvalidated");
         list.add("it_desc,s,50,optional,unvalidated");
         list.add("it_site,s,10,mandatory,validated");
         list.add("it_code,s,10,mandatory,validated (P or M or A)");
@@ -407,13 +407,13 @@ public class MassLoad extends javax.swing.JPanel {
      // BOM master stuff
     public ArrayList<String> defineBOMMaster() {
         ArrayList<String> list = new ArrayList<String>();
-        list.add("bom_id,s,30,mandatory,unvalidated");
+        list.add("bom_id,s,36,mandatory,unvalidated");
         list.add("bom_desc,s,100,mandatory,unvalidated");
-        list.add("bom_item,s,30,mandatory,validated");
+        list.add("bom_item,s,36,mandatory,validated");
         list.add("bom_enabled,b,1,mandatory,unvalidated");
         list.add("bom_primary,b,1,mandatory,unvalidated");
-        list.add("ps_parent,s,30,mandatory,validated");
-        list.add("ps_child,s,30,mandatory,validated");
+        list.add("ps_parent,s,36,mandatory,validated");
+        list.add("ps_child,s,36,mandatory,validated");
         list.add("ps_type,s,10,mandatory,validated (P or M or A)");
         list.add("ps_qty_per,d,10,mandatory,unvalidated");
         list.add("ps_desc,s,30,mandatory,unvalidated");
@@ -422,7 +422,7 @@ public class MassLoad extends javax.swing.JPanel {
         list.add("ps_userid,s,8,optional,unvalidated");
         list.add("ps_misc1,s,30,optional,unvalidated");
         list.add("ps_ref,s,30,optional,unvalidated");
-        list.add("ps_bom,s,30,optional,unvalidated");
+        list.add("ps_bom,s,36,optional,unvalidated");
         
         return list;
     }
@@ -672,12 +672,12 @@ public class MassLoad extends javax.swing.JPanel {
     public ArrayList<String> defineCustXref() {
         ArrayList<String> list = new ArrayList<String>();
         list.add("cup_cust,s,10,mandatory,validated");
-        list.add("cup_item,s,20,mandatory,validated");
-        list.add("cup_citem,s,30,mandatory,unvalidated");
-        list.add("cup_citem2,s,30,optional,unvalidated");
-        list.add("cup_upc,s,30,optional,unvalidated");
-        list.add("cup_sku,s,30,optional,unvalidated");
-        list.add("cup_misc,s,30,optional,unvalidated");
+        list.add("cup_item,s,36,mandatory,validated");
+        list.add("cup_citem,s,50,mandatory,unvalidated");
+        list.add("cup_citem2,s,50,optional,unvalidated");
+        list.add("cup_upc,s,50,optional,unvalidated");
+        list.add("cup_sku,s,50,optional,unvalidated");
+        list.add("cup_misc,s,50,optional,unvalidated");
         return list;
     }
     
@@ -1091,11 +1091,11 @@ public class MassLoad extends javax.swing.JPanel {
     public ArrayList<String> defineVendXref() {
         ArrayList<String> list = new ArrayList<String>();
         list.add("vdp_vend,s,10,mandatory,validated");
-        list.add("vdp_item,s,20,mandatory,validated");
-        list.add("vdp_vitem,s,30,mandatory,unvalidated");
-        list.add("vdp_upc,s,30,optional,unvalidated");
-        list.add("vdp_sku,s,30,optional,unvalidated");
-        list.add("vdp_misc,s,30,optional,unvalidated");
+        list.add("vdp_item,s,36,mandatory,validated");
+        list.add("vdp_vitem,s,50,mandatory,unvalidated");
+        list.add("vdp_upc,s,50,optional,unvalidated");
+        list.add("vdp_sku,s,50,optional,unvalidated");
+        list.add("vdp_misc,s,50,optional,unvalidated");
         return list;
     }
     
@@ -1315,8 +1315,8 @@ public class MassLoad extends javax.swing.JPanel {
     public ArrayList<String> defineCustPriceList() {
         ArrayList<String> list = new ArrayList<String>();
         list.add("cpr_cust,s,10,mandatory,validated");
-        list.add("cpr_item,s,20,mandatory,validated");
-        list.add("cpr_desc,s,30,optional,unvalidated");
+        list.add("cpr_item,s,36,mandatory,validated");
+        list.add("cpr_desc,s,50,optional,unvalidated");
         list.add("cpr_type,s,20,mandatory,validated");
         list.add("cpr_price,d,12,optional,unvalidated");
         list.add("cpr_volqty,d,12,optional,unvalidated");
@@ -1416,8 +1416,8 @@ public class MassLoad extends javax.swing.JPanel {
     public ArrayList<String> defineVendPriceList() {
         ArrayList<String> list = new ArrayList<String>();
         list.add("vpr_cust,s,10,mandatory,validated");
-        list.add("vpr_item,s,20,mandatory,validated");
-        list.add("vpr_desc,s,30,optional,unvalidated");
+        list.add("vpr_item,s,36,mandatory,validated");
+        list.add("vpr_desc,s,50,optional,unvalidated");
         list.add("vpr_type,s,20,mandatory,validated");
         list.add("vpr_price,d,12,optional,unvalidated");
         list.add("vpr_volqty,d,12,optional,unvalidated");
