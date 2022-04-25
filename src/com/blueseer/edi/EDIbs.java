@@ -420,7 +420,7 @@ public static void main(String args[]) throws IOException {
                         EDI.reduceFile(Paths.get(listOfFiles[i].getPath()), outdir, keepers);
                         //Files.copy(oldpath, newpath, StandardCopyOption.REPLACE_EXISTING);
                     } else {
-                        System.out.println(m[1]);
+                        System.out.println(dfdate.format(now) + "," + listOfFiles[i].getName() + "," + m[1]);
                     }
                     if (! archdir.isEmpty()) {
                        Path archivepath = Paths.get(archdir + listOfFiles[i].getName());

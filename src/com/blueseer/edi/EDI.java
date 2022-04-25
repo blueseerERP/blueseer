@@ -212,7 +212,7 @@ public class EDI {
                     
                     // lets bale if not proper ISA envelope.....unless the 106 is carriage return...then ok
                     if (i == mark && cbuf[mark+106] != 'G' && cbuf[mark+107] != 'S' && ! String.format("%02x",(int) cbuf[mark+106]).equals("0a")) {
-                        return m = new String[]{"1","malformed envelope", "", ""};
+                        return m = new String[]{"1","malformed envelope", "", "", ""};
                     }
                     ed_escape = escapeDelimiter(String.valueOf(e));
                     sd_escape = escapeDelimiter(String.valueOf(s));
