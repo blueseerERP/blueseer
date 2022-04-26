@@ -46,6 +46,7 @@ import com.blueseer.fgl.fglData;
 import com.blueseer.lbl.lblData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.checkLength;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
@@ -71,6 +72,7 @@ import java.awt.event.MouseEvent;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -487,40 +489,175 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
     
     public boolean validateInput(dbaction action) {
-         boolean r = true;
-          if ( tbkey.getText().isEmpty()) {
-              r = false;
-              bsmf.MainFrame.show(getMessageTag(1024));
-              tbkey.requestFocus();
-              return r;
-              }  
-          if (action.equals("add") && OVData.isValidCustomer(tbkey.getText())) {
-              r = false;
-              bsmf.MainFrame.show(getMessageTag(1014));
-              tbkey.requestFocus();
-              return r;
+        
+        Map<String,Integer> f = OVData.getTableInfo("cm_mstr");
+        int fc;
 
-          }  
+        fc = checkLength(f,"cm_code");
+        if (tbkey.getText().length() > fc || tbkey.getText().isEmpty()) {
+            bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+            tbkey.requestFocus();
+            return false;
+        }  
+        
+        fc = checkLength(f,"cm_name");
+        if (tbname.getText().length() > fc || tbname.getText().isEmpty()) {
+            bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+            tbname.requestFocus();
+            return false;
+        } 
+        
+        fc = checkLength(f,"cm_line1");
+        if (tbline1.getText().length() > fc) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tbline1.requestFocus();
+            return false;
+        }
+        
+        fc = checkLength(f,"cm_line2");
+        if (tbline2.getText().length() > fc) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tbline2.requestFocus();
+            return false;
+        }
+        
+        fc = checkLength(f,"cm_line3");
+        if (tbline3.getText().length() > fc) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tbline3.requestFocus();
+            return false;
+        }
+        
+        fc = checkLength(f,"cm_city");
+        if (tbcity.getText().length() > fc) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tbcity.requestFocus();
+            return false;
+        }
+        
+        fc = checkLength(f,"cm_zip");
+        if (tbzip.getText().length() > fc) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tbzip.requestFocus();
+            return false;
+        }
+        
+        fc = checkLength(f,"cm_phone");
+        if (tbphone.getText().length() > fc) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tbphone.requestFocus();
+            return false;
+        }
+        
+        fc = checkLength(f,"cm_email");
+        if (tbemail.getText().length() > fc) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tbemail.requestFocus();
+            return false;
+        }
+        
+        fc = checkLength(f,"cm_group");
+        if (tbgroup.getText().length() > fc) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tbgroup.requestFocus();
+            return false;
+        }
+        
+        fc = checkLength(f,"cm_market");
+        if (tbmarket.getText().length() > fc) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tbmarket.requestFocus();
+            return false;
+        }
+        
+        fc = checkLength(f,"cm_salesperson");
+        if (tbsalesrep.getText().length() > fc) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tbsalesrep.requestFocus();
+            return false;
+        }
+        
+        fc = checkLength(f,"cm_remarks");
+        if (tbremarks.getText().length() > fc) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tbremarks.requestFocus();
+            return false;
+        }
+        
 
-          if ( ! OVData.isValidGLAcct(ddaccount.getSelectedItem().toString())) {
-              r = false;
-              bsmf.MainFrame.show(getMessageTag(1052));
-              ddaccount.requestFocus();
-              return r;
+        if ( ! OVData.isValidGLAcct(ddaccount.getSelectedItem().toString())) {
+          bsmf.MainFrame.show(getMessageTag(1052));
+          ddaccount.requestFocus();
+          return false;
+        }
 
-          }
+        if ( ! OVData.isValidGLcc(ddcc.getSelectedItem().toString())) {
+          bsmf.MainFrame.show(getMessageTag(1048));
+          ddcc.requestFocus();
+          return false;  
+        }
 
-          if ( ! OVData.isValidGLcc(ddcc.getSelectedItem().toString())) {
-              r = false;
-              bsmf.MainFrame.show(getMessageTag(1048));
-              ddcc.requestFocus();
-              return r;              
-
-          }
-
-              return r;
+      return true;
      }
-     
+    
+    public boolean validateInputShipTo(dbaction action) {
+        
+        Map<String,Integer> f = OVData.getTableInfo("cms_det");
+        int fc;
+
+        fc = checkLength(f,"cms_shipto");
+        if (tbshipcode.getText().length() > fc || tbshipcode.getText().isEmpty()) {
+            bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+            tbshipcode.requestFocus();
+            return false;
+        }  
+        
+        fc = checkLength(f,"cms_name");
+        if (tbshipname.getText().length() > fc || tbshipname.getText().isEmpty()) {
+            bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+            tbshipname.requestFocus();
+            return false;
+        } 
+        
+        fc = checkLength(f,"cms_line1");
+        if (tbshipline1.getText().length() > fc) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tbshipline1.requestFocus();
+            return false;
+        }
+        
+        fc = checkLength(f,"cms_line2");
+        if (tbshipline2.getText().length() > fc) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tbshipline2.requestFocus();
+            return false;
+        }
+        
+        fc = checkLength(f,"cms_line3");
+        if (tbshipline3.getText().length() > fc) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tbshipline3.requestFocus();
+            return false;
+        }
+        
+        fc = checkLength(f,"cms_city");
+        if (tbshipcity.getText().length() > fc) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tbshipcity.requestFocus();
+            return false;
+        }
+        
+        fc = checkLength(f,"cms_zip");
+        if (tbshipzip.getText().length() > fc) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tbshipzip.requestFocus();
+            return false;
+        }
+
+      return true;
+     }
+    
+    
     public void lookUpFrame(String option) {
         
         luinput.removeActionListener(lual);
@@ -1811,7 +1948,10 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
     }//GEN-LAST:event_btupdateActionPerformed
 
     private void btshipaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btshipaddActionPerformed
-       if (OVData.isValidCustShipTo(tbkey.getText(),tbshipcode.getText())) {
+        if (! validateInputShipTo(dbaction.add)) {
+           return;
+        }
+        if (OVData.isValidCustShipTo(tbkey.getText(),tbshipcode.getText())) {
                   bsmf.MainFrame.show(getMessageTag(1014));
                   return;
               } 
@@ -1819,6 +1959,9 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
     }//GEN-LAST:event_btshipaddActionPerformed
 
     private void btshipeditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btshipeditActionPerformed
+       if (! validateInputShipTo(dbaction.update)) {
+           return;
+       }
        if (OVData.isValidCustShipTo(tbkey.getText(),tbshipcode.getText())) {
            updateShipTo();
        } 
