@@ -44,6 +44,7 @@ import static com.blueseer.inv.invData.updateItemMstr;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsformat;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.checkLength;
 import static com.blueseer.utl.BlueSeerUtils.currformat;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
@@ -84,6 +85,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -474,44 +476,84 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
     }
     
     public boolean validateInput(dbaction x) {
-        boolean b = true;
-                if (ddsite.getSelectedItem() == null || ddsite.getSelectedItem().toString().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1026));
-                    ddsite.requestFocus();
-                    return b;
-                }
+        Map<String,Integer> f = OVData.getTableInfo("item_mstr");
+        int fc;
+
+        fc = checkLength(f,"it_item");
+        if (tbkey.getText().length() > fc || tbkey.getText().isEmpty()) {
+            bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+            tbkey.requestFocus();
+            return false;
+        }  
+        
+        fc = checkLength(f,"it_desc");
+        if (tbdesc.getText().length() > fc || tbdesc.getText().isEmpty()) {
+            bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+            tbdesc.requestFocus();
+            return false;
+        }
+        
+        fc = checkLength(f,"it_group");
+        if (tbgroup.getText().length() > fc) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tbgroup.requestFocus();
+            return false;
+        }
+        
+        fc = checkLength(f,"it_lotsize");
+        if (tblotsize.getText().length() > fc) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tblotsize.requestFocus();
+            return false;
+        }
+        
+        fc = checkLength(f,"it_drawing");
+        if (tbdrawing.getText().length() > fc) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tbdrawing.requestFocus();
+            return false;
+        }
+        
+        fc = checkLength(f,"it_rev");
+        if (revlevel.getText().length() > fc) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            revlevel.requestFocus();
+            return false;
+        }
+        
+        fc = checkLength(f,"it_custrev");
+        if (custrevlevel.getText().length() > fc) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            custrevlevel.requestFocus();
+            return false;
+        }
+        
+        fc = checkLength(f,"it_comments");
+        if (comments.getText().length() > fc) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            comments.requestFocus();
+            return false;
+        }
+        
+        if (ddsite.getSelectedItem() == null || ddsite.getSelectedItem().toString().isEmpty()) {
+            bsmf.MainFrame.show(getMessageTag(1026));
+            ddsite.requestFocus();
+            return false;
+        }
                
-                if (ddcode.getSelectedItem() == null || ddcode.getSelectedItem().toString().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1026));
-                    ddcode.requestFocus();
-                    return b;
-                }
+        if (ddcode.getSelectedItem() == null || ddcode.getSelectedItem().toString().isEmpty()) {
+            bsmf.MainFrame.show(getMessageTag(1026));
+            ddcode.requestFocus();
+            return false;
+        }
                 
-                if (ddprodcode.getSelectedItem() == null || ddprodcode.getSelectedItem().toString().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1026));
-                    ddprodcode.requestFocus();
-                    return b;
-                }
-                
-                if (tbdesc.getText().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1024));
-                    tbdesc.requestFocus();
-                    return b;
-                }
-                
-                if (tbkey.getText().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1024));
-                    tbkey.requestFocus();
-                    return b;
-                }
-                
+        if (ddprodcode.getSelectedItem() == null || ddprodcode.getSelectedItem().toString().isEmpty()) {
+            bsmf.MainFrame.show(getMessageTag(1026));
+            ddprodcode.requestFocus();
+            return false;
+        }       
                
-        return b;
+        return true;
     }
     
     public void initvars(String[] arg) {
