@@ -38,6 +38,7 @@ import static com.blueseer.fgl.fglData.deleteBankMstr;
 import static com.blueseer.fgl.fglData.getBankMstr;
 import static com.blueseer.fgl.fglData.updateBankMstr;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.checkLength;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -67,6 +68,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -328,43 +330,55 @@ public class BankMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
     
     public boolean validateInput(dbaction x) {
-        boolean b = true;
-                if (ddsite.getSelectedItem() == null || ddsite.getSelectedItem().toString().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show("must choose a site");
-                    return b;
-                }
-                
-                if (tbacct.getText().isEmpty() || ! OVData.isValidGLAcct(tbacct.getText())) {
-                    b = false;
-                    bsmf.MainFrame.show("must choose a valid account");
-                    return b;
-                }
+        
+        Map<String,Integer> f = OVData.getTableInfo("bk_mstr");
+        int fc;
+
+        fc = checkLength(f,"bk_id");
+        if (tbkey.getText().length() > fc || tbkey.getText().isEmpty()) {
+            bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+            tbkey.requestFocus();
+            return false;
+        }   
+        
+        fc = checkLength(f,"bk_desc");
+        if (tbdesc.getText().length() > fc || tbdesc.getText().isEmpty()) {
+            bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+            tbdesc.requestFocus();
+            return false;
+        }
+        
+        if (ddsite.getSelectedItem() == null || ddsite.getSelectedItem().toString().isEmpty()) {
+            bsmf.MainFrame.show("must choose a site");
+            return false;
+        }
+        
+        if (tbacct.getText().isEmpty() || ! OVData.isValidGLAcct(tbacct.getText())) {
+            bsmf.MainFrame.show("must choose a valid account");
+            tbacct.requestFocus();
+            return false;
+        }
+        
+        fc = checkLength(f,"bk_route");
+        if (tbroute.getText().length() > fc) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tbroute.requestFocus();
+            return false;
+        }
+        
+        fc = checkLength(f,"bk_assignedID");
+        if (tbassignedID.getText().length() > fc) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tbassignedID.requestFocus();
+            return false;
+        }
+        
+        if (ddcurr.getSelectedItem() == null || ddcurr.getSelectedItem().toString().isEmpty()) {
+            bsmf.MainFrame.show("must choose a currency");
+            return false;
+        }    
                
-                if (ddcurr.getSelectedItem() == null || ddcurr.getSelectedItem().toString().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show("must choose a currency");
-                    return b;
-                }
-                
-                if (tbkey.getText().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show("must enter a code");
-                    tbkey.requestFocus();
-                    return b;
-                }
-                
-                if (tbdesc.getText().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show("must enter a description");
-                    tbdesc.requestFocus();
-                    return b;
-                }
-                
-                
-                
-               
-        return b;
+        return true;
     }
     
     public void initvars(String[] arg) {

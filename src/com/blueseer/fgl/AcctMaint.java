@@ -37,6 +37,7 @@ import static com.blueseer.fgl.fglData.getAcctMstr;
 import static com.blueseer.fgl.fglData.updateAcctMstr;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.checkLength;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -57,6 +58,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.lang.reflect.Field;
+import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -314,60 +316,53 @@ public class AcctMaint extends javax.swing.JPanel implements IBlueSeerT  {
     }
      
     public boolean validateInput(dbaction x) {
-        boolean b = true;
         
-                String z = BlueSeerUtils.bsformat("", tbkey.getText(), "0");
-                if (z.equals("error")) {
-                    bsmf.MainFrame.show(getMessageTag(1000));
-                    tbkey.requestFocus();
-                    b = false;
-                    return b;
-                } 
+        String z = BlueSeerUtils.bsformat("", tbkey.getText(), "0");
+        if (z.equals("error")) {
+            bsmf.MainFrame.show(getMessageTag(1000));
+            tbkey.requestFocus();
+            return false;
+        } 
+
+        if (ddcur.getSelectedItem() == null || ddcur.getSelectedItem().toString().isEmpty()) {
+            bsmf.MainFrame.show(getMessageTag(1029));
+            return false;
+        }
+
+        Map<String,Integer> f = OVData.getTableInfo("ac_mstr");
+        int fc;
+
+        fc = checkLength(f,"ac_id");
+        if (tbkey.getText().length() > fc || tbkey.getText().isEmpty()) {
+            bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+            tbkey.requestFocus();
+            return false;
+        }
+
+
+        Long n = 0L;
+        try {
+           n = Long.parseLong(tbkey.getText());
+        } catch (final NumberFormatException e) {
+        }
+
+        if (n != 0) {
+            if (n >= 99000000 && n <= 99999999) {
+                BlueSeerUtils.message(new String[] {"1", "Account numbers between 99000000 and 99999999 are system reserved"});
+                bsmf.MainFrame.show("Account numbers between 99000000 and 99999999 are system reserved");
+                tbkey.requestFocus();
+                return false;
+            } 
+        } 
         
-                if (ddcur.getSelectedItem() == null || ddcur.getSelectedItem().toString().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1029));
-                    return b;
-                }
-               
-                if (tbdesc.getText().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1024));
-                    tbdesc.requestFocus();
-                    return b;
-                }
-                
-                if (tbkey.getText().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1024));
-                    tbkey.requestFocus();
-                    return b;
-                }
-                
-                if (tbkey.getText().length() > 12) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1032, "12"));
-                    tbkey.requestFocus();
-                    return b;
-                }
-                
-                Long n = 0L;
-                try {
-                   n = Long.parseLong(tbkey.getText());
-                } catch (final NumberFormatException e) {
-                }
-                
-                if (n != 0) {
-                    if (n >= 99000000 && n <= 99999999) {
-                        b = false;
-                        BlueSeerUtils.message(new String[] {"1", "Account numbers between 99000000 and 99999999 are system reserved"});
-                        bsmf.MainFrame.show("Account numbers between 99000000 and 99999999 are system reserved");
-                        tbkey.requestFocus();
-                    } 
-                }
-                
-               
-        return b;
+        fc = checkLength(f,"ac_desc");
+        if (tbdesc.getText().length() > fc || tbdesc.getText().isEmpty()) {
+            bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+            tbdesc.requestFocus();
+            return false;
+        }
+        
+      return true;
     }
     
     public void initvars(String[] arg) {

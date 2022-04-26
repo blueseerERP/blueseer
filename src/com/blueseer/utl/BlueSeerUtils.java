@@ -55,6 +55,7 @@ import java.util.Collections;
 import java.util.Currency;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.BoxLayout;
@@ -863,6 +864,13 @@ public class BlueSeerUtils {
         return b ? String.valueOf(1) : String.valueOf(0);
     }
 
+    public static int checkLength(Map<String, Integer> m, String f) {
+        int x = 0;
+        if (m != null && m.get(f) != null) {
+            x = m.get(f);
+        }
+        return x;
+    }
     
     public static String xNull(String mystring) {
        String returnstring = "";

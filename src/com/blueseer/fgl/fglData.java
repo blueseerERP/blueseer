@@ -2449,9 +2449,7 @@ public class fglData {
         return myerror;
         
          }
-       
-        
-     
+         
     public static ArrayList getCurrlist() {
         ArrayList myarray = new ArrayList();
         try {

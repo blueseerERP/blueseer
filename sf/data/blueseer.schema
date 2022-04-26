@@ -1,11 +1,11 @@
 CREATE TABLE IF NOT EXISTS `ac_mstr` (
-  `ac_id` varchar(10) NOT NULL  DEFAULT '',
+  `ac_id` varchar(12) NOT NULL  DEFAULT '',
   `ac_desc` varchar(50)  NOT NULL DEFAULT '',
   `ac_type` varchar(1)  NOT NULL DEFAULT '',
   `ac_cur` varchar(10)  NOT NULL DEFAULT '',
   `ac_display` tinyint(1)  NOT NULL DEFAULT '0') ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `acb_mstr` (
-  `acb_acct` varchar(10) NOT NULL  DEFAULT '',
+  `acb_acct` varchar(12) NOT NULL  DEFAULT '',
   `acb_cc` varchar(4) NOT NULL  DEFAULT '',
   `acb_per` int(2) NOT NULL DEFAULT '0',
   `acb_year` int(4) NOT NULL DEFAULT '0',
@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS `exp_mstr` (
   `exp_site` varchar(10)  NOT NULL DEFAULT '',
   `exp_entity` varchar(20)  NOT NULL DEFAULT '',
   `exp_name` varchar(50)  NOT NULL DEFAULT '',
-  `exp_acct` varchar(10)  NOT NULL DEFAULT '',
+  `exp_acct` varchar(12)  NOT NULL DEFAULT '',
   `exp_cc` varchar(8)  NOT NULL DEFAULT '',
   `exp_createdate` date  NOT NULL,
   `exp_changedate` date  NOT NULL,
@@ -38,9 +38,9 @@ CREATE TABLE IF NOT EXISTS `edpd_partner` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `ap_ctrl` (
   `apc_bank` varchar(10)  NOT NULL DEFAULT '',
-  `apc_assetacct` varchar(10)  NOT NULL DEFAULT '',
+  `apc_assetacct` varchar(12)  NOT NULL DEFAULT '',
   `apc_autovoucher` tinyint(1)  NOT NULL DEFAULT '0',
-  `apc_apacct` varchar(10)  NOT NULL DEFAULT ''
+  `apc_apacct` varchar(12)  NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `ap_mstr` (
   `ap_id` int(12) NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS `ap_mstr` (
   `ap_rmks` varchar(50)  NOT NULL DEFAULT '',
   `ap_ref` varchar(30)  NOT NULL DEFAULT '',
   `ap_terms` varchar(30)  NOT NULL DEFAULT '',
-  `ap_acct` varchar(8)  NOT NULL DEFAULT '',
+  `ap_acct` varchar(12)  NOT NULL DEFAULT '',
   `ap_cc` varchar(4)  NOT NULL DEFAULT '',
   `ap_applied` decimal(14,2) NOT NULL DEFAULT '0.00',
   `ap_status` varchar(1)  DEFAULT '',
@@ -75,30 +75,30 @@ CREATE TABLE IF NOT EXISTS `apd_mstr` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `ar_ctrl` (
   `arc_bank` varchar(10) NOT NULL  DEFAULT '',
-  `arc_default_acct` varchar(10) NOT NULL  DEFAULT '',
+  `arc_default_acct` varchar(12) NOT NULL  DEFAULT '',
   `arc_default_cc` varchar(10) NOT NULL  DEFAULT '',
-  `arc_sales_acct` varchar(10) NOT NULL  DEFAULT '',
+  `arc_sales_acct` varchar(12) NOT NULL  DEFAULT '',
   `arc_sales_cc` varchar(4) NOT NULL  DEFAULT '',
-  `arc_asset_acct` varchar(10) NOT NULL  DEFAULT '',
+  `arc_asset_acct` varchar(12) NOT NULL  DEFAULT '',
   `arc_asset_cc` varchar(4) NOT NULL  DEFAULT '',
-  `arc_fedtax_acct` varchar(10) NOT NULL  DEFAULT '',
+  `arc_fedtax_acct` varchar(12) NOT NULL  DEFAULT '',
   `arc_fedtax_cc` varchar(4) NOT NULL  DEFAULT '',
-  `arc_statetax_acct` varchar(10) NOT NULL  DEFAULT '',
+  `arc_statetax_acct` varchar(12) NOT NULL  DEFAULT '',
   `arc_statetax_cc` varchar(4) NOT NULL  DEFAULT '',
-  `arc_localtax_acct` varchar(10) NOT NULL  DEFAULT '',
+  `arc_localtax_acct` varchar(12) NOT NULL  DEFAULT '',
   `arc_localtax_cc` varchar(4) NOT NULL  DEFAULT '',
-  `arc_othertax_acct` varchar(10) NOT NULL  DEFAULT '',
+  `arc_othertax_acct` varchar(12) NOT NULL  DEFAULT '',
   `arc_othertax_cc` varchar(4) NOT NULL  DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `pay_ctrl` (
   `payc_bank` varchar(10) NOT NULL  DEFAULT '',
-  `payc_labor_acct` varchar(10) NOT NULL  DEFAULT '',
+  `payc_labor_acct` varchar(12) NOT NULL  DEFAULT '',
   `payc_labor_cc` varchar(10) NOT NULL  DEFAULT '',
-  `payc_salaried_acct` varchar(10) NOT NULL  DEFAULT '',
+  `payc_salaried_acct` varchar(12) NOT NULL  DEFAULT '',
   `payc_salaried_cc` varchar(4) NOT NULL  DEFAULT '',
-  `payc_payrolltax_acct` varchar(10) NOT NULL  DEFAULT '',
+  `payc_payrolltax_acct` varchar(12) NOT NULL  DEFAULT '',
   `payc_payrolltax_cc` varchar(4) NOT NULL  DEFAULT '',
-  `payc_withhold_acct` varchar(10) NOT NULL  DEFAULT ''
+  `payc_withhold_acct` varchar(12) NOT NULL  DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `ar_mstr` (
   `ar_id` int(12) NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -116,7 +116,7 @@ CREATE TABLE IF NOT EXISTS `ar_mstr` (
   `ar_type` varchar(1) NOT NULL  DEFAULT '',
   `ar_rmks` varchar(50) NOT NULL  DEFAULT '',
   `ar_ref` varchar(30) NOT NULL  DEFAULT '',
-  `ar_acct` varchar(8) NOT NULL  DEFAULT '',
+  `ar_acct` varchar(12) NOT NULL  DEFAULT '',
   `ar_status` varchar(1) NOT NULL  DEFAULT '',
   `ar_terms` varchar(30) NOT NULL  DEFAULT '',
   `ar_entdate` date DEFAULT NULL,
@@ -149,13 +149,13 @@ CREATE TABLE IF NOT EXISTS `ard_mstr` (
   `ard_base_amt_tax` decimal(12,5) NOT NULL DEFAULT '0.00000',
   `ard_curr` varchar(3) NOT NULL DEFAULT '',
   `ard_base_curr` varchar(3) NOT NULL DEFAULT '',
-  `ard_acct` varchar(10) NOT NULL DEFAULT '0',
+  `ard_acct` varchar(12) NOT NULL DEFAULT '0',
   `ard_cc` varchar(4) NOT NULL DEFAULT '0') ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `bk_mstr` (
   `bk_id` varchar(30) NOT NULL  DEFAULT '',
   `bk_site` varchar(10) NOT NULL  DEFAULT '',
   `bk_desc` varchar(50) NOT NULL  DEFAULT '',
-  `bk_acct` varchar(10)  DEFAULT '',
+  `bk_acct` varchar(12)  DEFAULT '',
   `bk_cur` varchar(10)  DEFAULT '',
   `bk_active` tinyint(1) NOT NULL DEFAULT '0',
   `bk_route` varchar(10)  DEFAULT '',
@@ -195,7 +195,7 @@ CREATE TABLE IF NOT EXISTS `car_mstr` (
   `car_email` varchar(100)  NOT NULL DEFAULT '',
   `car_contact` varchar(50)  NOT NULL DEFAULT '',
   `car_type` varchar(10)  NOT NULL DEFAULT '',
-  `car_acct` varchar(20)  NOT NULL DEFAULT '') 
+  `car_acct` varchar(12)  NOT NULL DEFAULT '') 
 ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `car_det` (
   `card_code` varchar(30) NOT NULL  DEFAULT '',
@@ -229,7 +229,7 @@ CREATE TABLE IF NOT EXISTS `cm_mstr` (
   `cm_disc_code` varchar(10)  DEFAULT '',
   `cm_tax_code` varchar(10)  DEFAULT '',
   `cm_salesperson` varchar(50)  DEFAULT '',
-  `cm_ar_acct` varchar(10)  DEFAULT '',
+  `cm_ar_acct` varchar(12)  DEFAULT '',
   `cm_ar_cc` varchar(4)  DEFAULT '',
   `cm_remarks` varchar(500)  DEFAULT '',
   `cm_misc1` varchar(100)  DEFAULT '',
@@ -337,13 +337,13 @@ CREATE TABLE IF NOT EXISTS `cust_term` (
 CREATE TABLE IF NOT EXISTS `dept_mstr` (
   `dept_id` varchar(10) NOT NULL  DEFAULT '',
   `dept_desc` varchar(100)  NOT NULL DEFAULT '',
-  `dept_cop_acct` varchar(8)  NOT NULL DEFAULT '',
-  `dept_lbr_acct` varchar(8)  NOT NULL DEFAULT '',
-  `dept_bdn_acct` varchar(8)  NOT NULL DEFAULT '',
-  `dept_lbr_usg_acct` varchar(8)  NOT NULL DEFAULT '',
-  `dept_lbr_rate_acct` varchar(8)  NOT NULL DEFAULT '',
-  `dept_bdn_rate_acct` varchar(8)  NOT NULL DEFAULT '',
-  `dept_bdn_usg_acct` varchar(8)  NOT NULL DEFAULT '') ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `dept_cop_acct` varchar(12)  NOT NULL DEFAULT '',
+  `dept_lbr_acct` varchar(12)  NOT NULL DEFAULT '',
+  `dept_bdn_acct` varchar(12)  NOT NULL DEFAULT '',
+  `dept_lbr_usg_acct` varchar(12)  NOT NULL DEFAULT '',
+  `dept_lbr_rate_acct` varchar(12)  NOT NULL DEFAULT '',
+  `dept_bdn_rate_acct` varchar(12)  NOT NULL DEFAULT '',
+  `dept_bdn_usg_acct` varchar(12)  NOT NULL DEFAULT '') ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `ecn_ctrl` (
   `ecnc_email` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -595,14 +595,14 @@ CREATE TABLE IF NOT EXISTS `emp_mstr` (
   `emp_active` tinyint(1) NOT NULL DEFAULT '0',
   `emp_profile` varchar(20)  NOT NULL DEFAULT '',
   `emp_routing` varchar(9)  NOT NULL DEFAULT '',
-  `emp_acct` varchar(20)  NOT NULL DEFAULT '',
+  `emp_acct` varchar(12)  NOT NULL DEFAULT '',
   `emp_payfrequency` varchar(20)  NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `emp_exception` (
   `empx_nbr` int(8) NOT NULL,
   `empx_desc` varchar(20) NOT NULL DEFAULT '',
   `empx_type` varchar(20) NOT NULL DEFAULT '',
-  `empx_acct` varchar(10) NOT NULL DEFAULT '',
+  `empx_acct` varchar(12) NOT NULL DEFAULT '',
   `empx_cc` varchar(4) NOT NULL DEFAULT '',
   `empx_amttype` varchar(20) NOT NULL DEFAULT '',
   `empx_amt` decimal(14,2) NOT NULL DEFAULT '0'
@@ -708,7 +708,7 @@ CREATE TABLE IF NOT EXISTS `gl_hist` (
   `glh_effdate` date  DEFAULT NULL,
   `glh_entdate` date  DEFAULT NULL,
   `glh_ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `glh_acct` varchar(8)  NOT NULL DEFAULT '',
+  `glh_acct` varchar(12)  NOT NULL DEFAULT '',
   `glh_cc` varchar(4)  NOT NULL DEFAULT '',
   `glh_amt` decimal(14,2) NOT NULL DEFAULT '0.00',
   `glh_base_amt` decimal(14,2) NOT NULL DEFAULT '0.00',
@@ -728,7 +728,7 @@ CREATE TABLE IF NOT EXISTS `gl_tran` (
   `glt_effdate` date  DEFAULT NULL,
   `glt_entdate` date  DEFAULT NULL,
   `glt_ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `glt_acct` varchar(8)  NOT NULL DEFAULT '',
+  `glt_acct` varchar(12)  NOT NULL DEFAULT '',
   `glt_cc` varchar(4)  NOT NULL DEFAULT '',
   `glt_amt` decimal(14,2) NOT NULL DEFAULT '0.00',
   `glt_base_amt` decimal(14,2) NOT NULL DEFAULT '0.00',
@@ -742,7 +742,7 @@ CREATE TABLE IF NOT EXISTS `gl_tran` (
   `glt_userid` varchar(8)  NOT NULL DEFAULT '') ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `glic_accts` (
   `glicd_name` varchar(100) NOT NULL  DEFAULT '',
-  `glicd_acct` varchar(10) NOT NULL  DEFAULT '',
+  `glicd_acct` varchar(12) NOT NULL  DEFAULT '',
   `glicd_seq` int(4) NOT NULL DEFAULT '0',
   `glicd_type` varchar(10) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -944,7 +944,7 @@ CREATE TABLE IF NOT EXISTS `ov_mstr` (
   `ov_labelprinter` varchar(20)  NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `bom_mstr` (
-  `bom_id` varchar(30)  NOT NULL DEFAULT '',
+  `bom_id` varchar(36)  NOT NULL DEFAULT '',
   `bom_desc` varchar(100)  NOT NULL DEFAULT '',
   `bom_item` varchar(36)  NOT NULL DEFAULT '',
   `bom_enabled` tinyint(1) NOT NULL DEFAULT '0',
@@ -961,7 +961,7 @@ CREATE TABLE IF NOT EXISTS `pbm_mstr` (
   `ps_userid` varchar(8)  NOT NULL DEFAULT '',
   `ps_misc1` varchar(30)  NOT NULL DEFAULT '',
   `ps_ref` varchar(30) NOT NULL  DEFAULT '',
-  `ps_bom` varchar(30) NOT NULL  DEFAULT ''
+  `ps_bom` varchar(36) NOT NULL  DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `perm_mstr` (
   `perm_user` varchar(30) NOT NULL  DEFAULT '',
@@ -1026,7 +1026,7 @@ CREATE TABLE IF NOT EXISTS `pland_mstr` (
   `pland_ref` varchar(30) NOT NULL  DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `po_ctrl` (
-  `poc_rcpt_acct` varchar(10)  NOT NULL DEFAULT '',
+  `poc_rcpt_acct` varchar(12)  NOT NULL DEFAULT '',
   `poc_rcpt_cc` varchar(30)  DEFAULT '',
   `poc_venditem` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -1044,7 +1044,7 @@ CREATE TABLE IF NOT EXISTS `po_mstr` (
   `po_terms` varchar(30)  NOT NULL DEFAULT '',
   `po_site` varchar(10)  NOT NULL DEFAULT '',
   `po_buyer` varchar(30)  NOT NULL DEFAULT '',
-  `po_ap_acct` varchar(10)  NOT NULL DEFAULT '',
+  `po_ap_acct` varchar(12)  NOT NULL DEFAULT '',
   `po_ap_cc` varchar(4)  NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `pod_mstr` (
@@ -1066,7 +1066,7 @@ CREATE TABLE IF NOT EXISTS `pod_mstr` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `pos_ctrl` (
   `posc_taxpercent` decimal(14,4) NOT NULL DEFAULT '0.0000',
-  `posc_taxacct` varchar(10) NOT NULL  DEFAULT '',
+  `posc_taxacct` varchar(12) NOT NULL  DEFAULT '',
   `posc_bank` varchar(30) NOT NULL  DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `pos_det` (
@@ -1080,7 +1080,7 @@ CREATE TABLE IF NOT EXISTS `pos_det` (
   `posd_disc` decimal(14,2) NOT NULL DEFAULT '0.00',
   `posd_netprice` decimal(14,2) NOT NULL DEFAULT '0.00',
   `posd_tax` decimal(14,2) NOT NULL DEFAULT '0.00',
-  `posd_acct` varchar(10) NOT NULL  DEFAULT '',
+  `posd_acct` varchar(12) NOT NULL  DEFAULT '',
   `posd_cc` varchar(4) NOT NULL  DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `pos_mstr` (
@@ -1091,7 +1091,7 @@ CREATE TABLE IF NOT EXISTS `pos_mstr` (
   `pos_entityname` varchar(30) NOT NULL  DEFAULT '',
   `pos_entrydate` date  DEFAULT NULL,
   `pos_entrytime` time  NOT NULL DEFAULT '00:00:00',
-  `pos_aracct` varchar(10) NOT NULL  DEFAULT '',
+  `pos_aracct` varchar(12) NOT NULL  DEFAULT '',
   `pos_arcc` varchar(4) NOT NULL  DEFAULT '',
   `pos_totqty` int(11) NOT NULL DEFAULT '0',
   `pos_totlines` int(11) NOT NULL DEFAULT '0',
@@ -1178,7 +1178,7 @@ CREATE TABLE IF NOT EXISTS `recv_mstr` (
   `rv_status` tinyint(1) NOT NULL DEFAULT '0',
   `rv_packingslip` varchar(30) NOT NULL  DEFAULT '',
   `rv_userid` varchar(8) NOT NULL  DEFAULT '',
-  `rv_ap_acct` varchar(10) NOT NULL  DEFAULT '',
+  `rv_ap_acct` varchar(12) NOT NULL  DEFAULT '',
   `rv_ap_cc` varchar(4) NOT NULL  DEFAULT '',
   `rv_terms` varchar(30) NOT NULL  DEFAULT '',
   `rv_site` varchar(10) NOT NULL  DEFAULT '',
@@ -1216,7 +1216,7 @@ CREATE TABLE IF NOT EXISTS `req_mstr` (
   `req_desc` varchar(300)  NOT NULL DEFAULT '',
   `req_status` varchar(8)  NOT NULL DEFAULT '',
   `req_po` varchar(10)  NOT NULL DEFAULT '',
-  `req_acct` varchar(10)  NOT NULL DEFAULT '',
+  `req_acct` varchar(12)  NOT NULL DEFAULT '',
   `req_cc` varchar(10)  NOT NULL DEFAULT '',
   `req_proj` varchar(30)  NOT NULL DEFAULT '',
   `req_AR` varchar(30)  NOT NULL DEFAULT '',
@@ -1298,7 +1298,7 @@ CREATE TABLE IF NOT EXISTS `ship_det` (
   `shd_desc` varchar(50) NOT NULL  DEFAULT '',
   `shd_uom` varchar(3) NOT NULL  DEFAULT '',
   `shd_cont` varchar(30) NOT NULL  DEFAULT '',
-  `shd_bom` varchar(30) NOT NULL  DEFAULT ''
+  `shd_bom` varchar(36) NOT NULL  DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `dod_mstr` (
   `dod_nbr` varchar(8) NOT NULL  DEFAULT '',
@@ -1423,7 +1423,7 @@ CREATE TABLE IF NOT EXISTS `ship_mstr` (
   `sh_ref` varchar(30) NOT NULL  DEFAULT '',
   `sh_bol` varchar(30) NOT NULL  DEFAULT '',
   `sh_rmks` varchar(60) NOT NULL  DEFAULT '',
-  `sh_ar_acct` varchar(10) NOT NULL  DEFAULT '',
+  `sh_ar_acct` varchar(12) NOT NULL  DEFAULT '',
   `sh_ar_cc` varchar(4) NOT NULL  DEFAULT '',
   `sh_cust_terms` varchar(30) NOT NULL  DEFAULT '',
   `sh_taxcode` varchar(10) NOT NULL  DEFAULT '',
@@ -1504,7 +1504,7 @@ CREATE TABLE IF NOT EXISTS `sv_mstr` (
   `sv_char3` varchar(30)  NOT NULL DEFAULT '',
   `sv_terms` varchar(30)  NOT NULL DEFAULT '',
   `sv_curr` varchar(3)  NOT NULL DEFAULT '',
-  `sv_ar_acct` varchar(10)  NOT NULL DEFAULT '',
+  `sv_ar_acct` varchar(12)  NOT NULL DEFAULT '',
   `sv_ar_cc` varchar(4)  NOT NULL DEFAULT '',
   `sv_onhold` tinyint(1) NOT NULL DEFAULT '0',
   `sv_taxcode` varchar(10)  NOT NULL DEFAULT '',
@@ -1551,7 +1551,7 @@ CREATE TABLE IF NOT EXISTS `so_mstr` (
   `so_char3` varchar(30)  NOT NULL DEFAULT '',
   `so_terms` varchar(30)  NOT NULL DEFAULT '',
   `so_curr` varchar(3)  NOT NULL DEFAULT '',
-  `so_ar_acct` varchar(10)  NOT NULL DEFAULT '',
+  `so_ar_acct` varchar(12)  NOT NULL DEFAULT '',
   `so_ar_cc` varchar(4)  NOT NULL DEFAULT '',
   `so_onhold` tinyint(1) NOT NULL DEFAULT '0',
   `so_taxcode` varchar(10)  NOT NULL DEFAULT '',
@@ -1608,7 +1608,7 @@ CREATE TABLE IF NOT EXISTS `sod_det` (
   `sod_wh` varchar(10)  NOT NULL DEFAULT '',
   `sod_loc` varchar(20) NOT NULL  DEFAULT '',
   `sod_all_qty` int(8) NOT NULL  DEFAULT '0',
-  `sod_bom` varchar(30) NOT NULL  DEFAULT ''
+  `sod_bom` varchar(36) NOT NULL  DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `sod_tax` (
   `sodt_nbr` varchar(8) NOT NULL,
@@ -1734,7 +1734,7 @@ CREATE TABLE IF NOT EXISTS `tran_mstr` (
   `tr_po` varchar(30)  NOT NULL DEFAULT '',
   `tr_price` decimal(14,5)  NOT NULL DEFAULT '0',
   `tr_cost` decimal(14,5)  NOT NULL DEFAULT '0',
-  `tr_acct` varchar(10)  NOT NULL DEFAULT '',
+  `tr_acct` varchar(12)  NOT NULL DEFAULT '',
   `tr_terms` varchar(30)  NOT NULL DEFAULT '',
   `tr_pack` varchar(30)  DEFAULT '',
   `tr_curr` varchar(3)  DEFAULT '',
@@ -1742,7 +1742,7 @@ CREATE TABLE IF NOT EXISTS `tran_mstr` (
   `tr_assy_date` date  DEFAULT NULL,
   `tr_uom` varchar(3)  DEFAULT NULL,
   `tr_base_qty` decimal(14,5)  DEFAULT '0.00000',
-  `tr_bom` tinyint(1) NOT NULL DEFAULT '0' 
+  `tr_bom` varchar(36) NOT NULL DEFAULT '' 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `user_mstr` (
   `user_id` varchar(10) NOT NULL  DEFAULT '',
@@ -1780,7 +1780,7 @@ CREATE TABLE IF NOT EXISTS `vd_mstr` (
   `vd_price_code` varchar(30)  DEFAULT '',
   `vd_disc_code` varchar(30)  DEFAULT '',
   `vd_tax_code` varchar(30)  DEFAULT '',
-  `vd_ap_acct` varchar(10)  DEFAULT '',
+  `vd_ap_acct` varchar(12)  DEFAULT '',
   `vd_ap_cc` varchar(4)  DEFAULT '',
   `vd_remarks` varchar(300)  DEFAULT '',
   `vd_freight_type` varchar(30)  DEFAULT '',
@@ -1818,7 +1818,7 @@ CREATE TABLE IF NOT EXISTS `vod_mstr` (
   `vod_date` date DEFAULT NULL,
   `vod_vend` varchar(10)  DEFAULT '',
   `vod_invoice` varchar(30)  DEFAULT '',
-  `vod_expense_acct` varchar(10) NOT NULL  DEFAULT '',
+  `vod_expense_acct` varchar(12) NOT NULL  DEFAULT '',
   `vod_expense_cc` varchar(4) NOT NULL  DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `vpr_mstr` (
@@ -2011,7 +2011,7 @@ CREATE TABLE `pay_profdet` (
   `paypd_parentcode` varchar(10) NOT NULL DEFAULT '',
   `paypd_desc` varchar(30) NOT NULL DEFAULT '',
   `paypd_type` varchar(10) NOT NULL DEFAULT '',
-  `paypd_acct` varchar(10) NOT NULL DEFAULT '',
+  `paypd_acct` varchar(12) NOT NULL DEFAULT '',
   `paypd_cc` varchar(4) NOT NULL DEFAULT '',
   `paypd_amt` decimal(11,2) NOT NULL DEFAULT '0.00',
   `paypd_amttype` varchar(10) NOT NULL DEFAULT '',

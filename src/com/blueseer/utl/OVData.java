@@ -113,7 +113,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.sql.PreparedStatement;
-import java.sql.Savepoint;
+import java.sql.ResultSetMetaData;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -14199,6 +14199,34 @@ return mystring;
         catch (IOException | SQLException e){
             MainFrame.bslog(e);
         }
+    }
+    
+    public static Map<String,Integer> getTableInfo(String tablename) {
+         Map<String,Integer> hm = new HashMap<String,Integer>();
+         try{
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+                res = st.executeQuery("select * from " +  tablename  + " limit 1 ;");
+                ResultSetMetaData rsmd = res.getMetaData();
+                for (int i = 1; i <= rsmd.getColumnCount(); i++) {
+                  hm.put(rsmd.getColumnName(i), rsmd.getPrecision(i));  
+                }
+           }
+            catch (SQLException s){
+                MainFrame.bslog(s);
+                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
+        }
+        catch (SQLException e){
+            MainFrame.bslog(e);
+        }
+         return hm;
     }
     
     
