@@ -1046,7 +1046,8 @@ CREATE TABLE IF NOT EXISTS `po_mstr` (
   `po_site` varchar(10)  NOT NULL DEFAULT '',
   `po_buyer` varchar(30)  NOT NULL DEFAULT '',
   `po_ap_acct` varchar(12)  NOT NULL DEFAULT '',
-  `po_ap_cc` varchar(4)  NOT NULL DEFAULT ''
+  `po_ap_cc` varchar(4)  NOT NULL DEFAULT '',
+  `po_export_850` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `pod_mstr` (
   `pod_nbr` varchar(8)  NOT NULL DEFAULT '',
@@ -1441,7 +1442,9 @@ CREATE TABLE IF NOT EXISTS `ship_mstr` (
   `sh_po_date` date  DEFAULT NULL,
   `sh_type` varchar(3) NOT NULL DEFAULT '',
   `sh_boxes` int(8) NOT NULL DEFAULT '0',
-  `sh_pallets` int(8) NOT NULL DEFAULT '0'
+  `sh_pallets` int(8) NOT NULL DEFAULT '0',
+  `ship_export_810` tinyint(1)  NOT NULL DEFAULT '0',
+  `ship_export_856` tinyint(1)  NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `ship_tree` (
   `ship_id` varchar(30)  NOT NULL DEFAULT '',
@@ -1558,7 +1561,8 @@ CREATE TABLE IF NOT EXISTS `so_mstr` (
   `so_taxcode` varchar(10)  NOT NULL DEFAULT '',
   `so_wh` varchar(10)  NOT NULL DEFAULT '',
   `so_site` varchar(10) NOT NULL  DEFAULT '',
-  `so_isallocated` varchar(1) NOT NULL  DEFAULT ''
+  `so_isallocated` varchar(1) NOT NULL  DEFAULT '',
+  `so_export_855` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `so_tax` (
   `sot_nbr` varchar(8) NOT NULL,

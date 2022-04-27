@@ -1268,7 +1268,8 @@ CREATE TABLE "po_mstr" (
   "po_site" varchar(10) COLLATE NOCASE DEFAULT '',
   "po_buyer" varchar(30) COLLATE NOCASE DEFAULT '',
   "po_ap_acct" varchar(12) COLLATE NOCASE DEFAULT '',
-  "po_ap_cc" varchar(4) COLLATE NOCASE DEFAULT ''
+  "po_ap_cc" varchar(4) COLLATE NOCASE DEFAULT '',
+  "po_export_850" tinyint(1) NOT NULL DEFAULT '0'
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -1730,7 +1731,9 @@ CREATE TABLE "ship_mstr" (
   "sh_po_date" date COLLATE NOCASE DEFAULT '',
   "sh_type" varchar(3) COLLATE NOCASE DEFAULT '',
   "sh_boxes" int(8) NOT NULL DEFAULT '0',
-  "sh_pallets" int(8) NOT NULL DEFAULT '0');
+  "sh_pallets" int(8) NOT NULL DEFAULT '0',
+  "sh_export_810" tinyint(1) NOT NULL DEFAULT '0',
+  "sh_export_856" tinyint(1) NOT NULL DEFAULT '0');
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -1866,7 +1869,9 @@ CREATE TABLE "so_mstr" (
   "so_taxcode" varchar(10) COLLATE NOCASE DEFAULT '',
   "so_wh" varchar(10) COLLATE NOCASE DEFAULT '',
   "so_site" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
-  "so_isallocated" varchar(1) NOT NULL COLLATE NOCASE DEFAULT '');
+  "so_isallocated" varchar(1) NOT NULL COLLATE NOCASE DEFAULT '',
+  "so_export_855" tinyint(1) NOT NULL DEFAULT '0'
+);
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;

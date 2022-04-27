@@ -1906,7 +1906,7 @@ public class EDI {
                     Object envelope = method.invoke(obj, doc, c_in); // envelope array holds in this order (isa, gs, ge, iea, filename, isactrlnum, gsctrlnum, stctrlnum)
                     String[] c_out = (String[])envelope;
                     
-                    EDData.writeEDILog(c_out, "INFO", "Export"); 
+                    EDData.writeEDILog(c_out, "info", "Export"); 
                     } catch (IllegalAccessException | ClassNotFoundException |
                              InstantiationException | NoSuchMethodException |
                             InvocationTargetException ex) {
