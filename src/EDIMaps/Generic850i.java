@@ -34,9 +34,13 @@ import com.blueseer.edi.EDI.*;
 import static com.blueseer.utl.BlueSeerUtils.convertDateFormat;
 import com.blueseer.edi.EDI;
 import com.blueseer.inv.invData;
+import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import com.blueseer.utl.EDData;
 import static com.blueseer.utl.EDData.writeEDILog;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 
 /**
@@ -45,16 +49,18 @@ import static com.blueseer.utl.EDData.writeEDILog;
  */
 public class Generic850i extends com.blueseer.edi.EDIMap {
     
-    public String[] Mapdata(ArrayList doc, String[] c) {
+    public String[] Mapdata(ArrayList doc, String[] c) throws IOException {
    
-    setControl(c); // as defined by EDI.initEDIControl() and EDIMap.setControl()
-    setControlISA(c[13].toString().split(EDI.escapeDelimiter(ed), -1));  // EDIMap.setISA
-    setControlGS(c[14].toString().split(EDI.escapeDelimiter(ed), -1));   // EDIMap.setGS
-     
-        // set mandatory document wide variables
-         edi850 e = null;  // mandatory class creation
-        boolean error = false;  // set at any time to prevent order creation
-        int i = 0;   // detail line counter
+        setControl(c); // as defined by EDI.initEDIControl() and EDIMap.setControl()
+        if (isError) { return error;}  // check errors for master variables
+
+        mappedInput = mapInput(c, doc, ISF);
+
+        edi850 e = new edi850(getInputISA(6), getInputISA(8), getInputGS(2), getInputGS(3), getInputISA(13), getInputISA(9), doctype, stctrl);  // mandatory class creation
+
+        // set some global variables if necessary
+        String  now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+        int i = 0; 
         
         // set misc document wide variables
         String po = "";
@@ -64,164 +70,99 @@ public class Generic850i extends com.blueseer.edi.EDIMap {
         double listprice = 0;
         double netprice = 0;
         boolean shiploop = false;
-               
-        // loop through each segment in the inbound raw 850
-         for (Object seg : doc) {
+        boolean useInternalPrice = false;
+         
+        e.setOVBillTo(EDData.getEDICustFromSenderISA(doctype, getInputISA(6), getInputISA(8)));   // 3rd parameter '0' is outbound direction '1' is inbound
+        po = getInput("BEG","e03");
+        e.setPO(po);  
+        e.setPODate(convertDateFormat("yyyyMMdd", getInput("BEG","e05")));
+           
+        if (segmentExists("DTM","1:002","e01")) {
+        e.setDueDate(convertDateFormat("yyyyMMdd", getInput("DTM","1:002","e02")));
+        } else {
+        e.setDueDate(now);    
+        }   
         
-             
-           // create array of each segment per delimiter used  
-           String x[] = seg.toString().split(EDI.escapeDelimiter(ed), -1);
-           
-
-           // skip envelope segments ISA, GS, GE, IEA
-           if (EDI.isEnvelopeSegment(x[0].toString())) { 
-           continue;
-           }
-           
-           
-           if (x[0].toString().equals("BEG")) {   // BEG SEGMENT DRIVE HEADER ORDER CREATION
-              
-                /* We now set the instance object for edi850 class...to be called and updated later on */
-               /* this is done once and only once per doc */
-               /* the object 'e' will contain cherry-picked information form the raw 850 file ...and passed to the CreateOrder routine */
-               e = new edi850(getISA(6), getISA(8), getGS(2), getGS(3), getISA(13), getISA(9), doctype, stctrl);
-              
-              /* If there is a one to one relationship between an ISA sender ID and a billto code in CustMaster...then */
-           /* set Customer/TPDOC Maintenance with appropriate values ...example:  if ISA is 'generic' and custmaster billto is 'mycust' */
-           /* or you can hardcode 'billto' right here in the code to whatever the custmstr record is...i.e.  billto = "mycust".  */
-          
-           /* OR Some customers only send in the shipto destination in N1 ST segment...assign billto from N1 ST shipto parent lookup */
-           /* can be overridden by N1 ST assignment below */
-           
-           /* IF this is a 'dropship' shipto address that is not currently in the system...i.e. the shipto address will */
-           /* be created on the fly.....you WILL NEED to assign   */
-           /* the billto code here at the header level based on the ISA senderID or N1 BT segment  */
-           /* because you will not be able to retrieve a billto code from a shipto code that hasn't been previously defined */
-            
-          
-               e.setOVBillTo(EDData.getEDICustFromSenderISA(doctype, getISA(6), getISA(8)));   // 3rd parameter '0' is outbound direction '1' is inbound
-               
-               
-               po = x[3];
-               e.setPO(po);
-               
-               if (isSet(x, 5)) {
-               e.setPODate(convertDateFormat("yyyyMMdd", x[5].toString()));
-               } else {
-               e.setPODate("");
-               }
-           } // END BEG SEGMENT
-           
-           
-           // DTM SEGMENT
-           if (x[0].toString().equals("DTM") && x[1].toString().equals("002")) {
-              e.setDueDate(convertDateFormat("yyyyMMdd", x[2].toString()));
-           }
-           
-           
-           // N1 SEGMENT
-           if (x[0].toString().equals("N1") && x[1].toString().equals("ST")) {
-               shiploop = true;
-           }
-           if (x[0].toString().equals("N1") && x[1].toString().equals("BT")) {
-               shiploop = false;
-           }
-           
-           // shipto address info
-           if (x[0].toString().equals("N3") && shiploop) {
-               e.setShipToLine1(x[1]);
-           }
-           
-           if (x[0].toString().equals("N4") && shiploop) {
-               e.setShipToCity(x[1]);
-               e.setShipToState(x[2]);
-               e.setShipToZip(x[3]);
-           }
-           
-           
-           if (x[0].toString().equals("N1") && x[1].toString().equals("ST"))  {
-               // regular Store code
-              e.setShipTo(x[4]);
-              e.setShipToName(x[2]);
-              // here we take the EDI shipto code in N1 ST E04....and retrieve from generic code xref the internal shipto code
-              e.setOVShipTo(OVData.getCodeValueByCodeKey("edixref", e.getShipTo()));
-              // here we assign the internal billto code from the retrieved internal shipto code
-              // unless shipto lookup returned a blank...i.e....a drop ship type where ship address is previously unknown
-              // in that case...OVBillTo 'should' have been set above in header level
-              
-               
-              if (! e.getOVShipTo().isEmpty()) {
-              e.setOVBillTo(cusData.getcustBillTo(e.getOVShipTo()));
-              } 
-              
-             
-              
+        int n1count = getGroupCount("N1");
+        boolean isN1ST = false;
+        for (i = 1; i <= n1count; i++) {
+            if (getInput("N1",1,i).equals("ST")) {
+            isN1ST = true;
+            } else {
+            isN1ST = false;
+            }
+            if (isN1ST) {
+                e.setShipTo(getInput("N1",4,i));
+                e.setShipToName(getInput("N1",2,i));
+                e.setShipToLine1(getInput("N3",1,i));
+                e.setShipToCity(getInput("N4",1,i));
+                e.setShipToState(getInput("N4",2,i));
+                e.setShipToZip(getInput("N4",3,i));
+            }
+        }  // shipto loop
+        
+               if (! e.getOVShipTo().isEmpty()) {
+               e.setOVBillTo(cusData.getcustBillTo(e.getOVShipTo()));
+               } 
                // NOTE: it's imperative that we have an internal billto code assign for pricing and discounts look up during the detail loop
                // if here and we have a blank billto...then error out
                if (e.getOVBillTo().isEmpty()) {
-               writeEDILog(c, "ERROR", "No internal Billto Found");
-               error = true;
+               setError("No internal Billto Found PO:" + po);
+               return error; 
                }
-              
-           }
-           // END N1 SEGMENT
-          
+        
            /* Now the Detail LOOP  */ 
-            // PO1 SEGMENT      
-           if ( x[0].toString().equals("PO1")  ) {  
-               e.addDetail();  // INITIATE An ArrayList for Each PO1 SEGMENT....variable i is set at bottom of loop as index  i == 0 is first PO1
-               part = "";   // init part
-              if (! error) { 
-                  // check and see if last element used is set
-                 if (isSet(x,7)) {
-                  e.setDetCustItem(i,x[7]);
-                  e.setDetSku(i,x[7]);
-                  e.setDetPO(i,po);
-                  e.setDetQty(i,x[2]);
-                  e.setDetLine(i,x[1]);
-                  e.setDetRef(i,x[1]);
-
-                  /* lets find the internal part and internal pricing */
-                  part = invData.getItemFromCustCItem(e.getOVBillTo(), x[7]);
-                  if (part.isEmpty()) {
-                      part = x[7];
-                      e.setDetItem(i,part);
-                  } else {
-                      e.setDetItem(i,part);
-                      uom = OVData.getUOMByItem(part);
-                      e.setDetUOM(i,uom);
-
-
-                      /* lets get the internal list price and discounts*/
-                      listprice = invData.getItemPriceFromCust(e.getOVBillTo(), part, uom, cusData.getCustCurrency(e.getOVBillTo()));
-                      discount = invData.getItemDiscFromCust(e.getOVBillTo());
-                      netprice = listprice;
-
-                      if (discount != 0)
-                      netprice = listprice - (listprice * (discount / 100));
-
-                   
-                      e.setDetNetPrice(i,String.valueOf(currformatDouble(netprice)));
-                      e.setDetListPrice(i,String.valueOf(currformatDouble(listprice)));
-                      e.setDetDisc(i,String.valueOf(currformatDouble(discount)));
-                 }
-                }
-                  
-              }
-               i++;  // increment index counter
-               
-           } // END PO1 SEGMENT
-          
-         } // END of segments in 850 Doc
+           /* Item Loop */
+        DecimalFormat df = new java.text.DecimalFormat("0.000##");
+        int itemcount = getGroupCount("PO1");
+        int itemLoopCount = 0;
+        int totalqty = 0;
+        for (i = 1; i <= itemcount; i++) {
+            e.addDetail();  // INITIATE An ArrayList for Each PO1 SEGMENT....variable i is set at bottom of loop as index  i == 0 is first PO1
+	    itemLoopCount++;
+	    totalqty += Integer.valueOf(getInput("PO1",2,i));
+	    e.setDetQty(i, getInput("PO1",2,i));
+            if (getInput("PO1",6,i).equals("VP") || getInput("PO1",6,i).equals("VN")) {
+             e.setDetItem(i,getInput("PO1",7,i));
+            } else if (getInput("PO1",8,i).equals("BP") || getInput("PO1",8,i).equals("SK")) {
+             e.setDetItem(i,getInput("PO1",9,i));   
+            } else {
+             e.setDetItem(i,"UNKNOWN");   
+            }
+           // e.setDetCustItem(i,getInput("PO1",9,i));
+            e.setDetPO(i,po);
+            e.setDetLine(i,getInput("PO1",1,i));
+            
+            if (useInternalPrice) {
+            listprice = invData.getItemPriceFromCust(e.getOVBillTo(), getInput("PO1",7,i), getInput("PO1",3,i), cusData.getCustCurrency(e.getOVBillTo()));
+            discount = invData.getItemDiscFromCust(e.getOVBillTo());
+            netprice = listprice;
+            if (discount != 0) {
+            netprice = listprice - (listprice * (discount / 100));
+            }
+            e.setDetNetPrice(i,String.valueOf(currformatDouble(netprice)));
+            e.setDetListPrice(i,String.valueOf(currformatDouble(listprice)));
+            e.setDetDisc(i,String.valueOf(currformatDouble(discount)));
+            } else {
+             if (BlueSeerUtils.isParsableToDouble(getInput("PO1",4, i))) {
+	        e.setDetNetPrice(i, df.format(Double.valueOf(getInput("PO1",4, i))));
+                e.setDetListPrice(i, df.format(Double.valueOf(getInput("PO1",4, i))));
+	     } else {
+	    	e.setDetNetPrice(i, "0");
+                e.setDetListPrice(i, "0");	
+	     }   
+            }
+        }
+        /* end of item loop */
          
-         
-         
+        mappedInput.clear();
+        
          /* Load Sales Order */
-         if (! error)
+         if (! isError) {
          com.blueseer.edi.EDI.createOrderFrom850(e, c); 
+         }
          
-         
-        return c;
+        return new String[]{"success","transaction mapped successfully"};
       
     }
 

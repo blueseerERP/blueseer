@@ -1118,8 +1118,7 @@ public class EDI {
     
     
         String[] c = (String[]) isa.getValue()[6];
-        messages.add(new String[]{"info","File: " + c[3]});
-        messages.add(new String[]{"info","ISA#: " + c[4] + " / " + "GS#: " + c[5]});
+        
        // ArrayList d = (ArrayList) isa.getValue()[5];
         Map<Integer, ArrayList> d = (HashMap<Integer, ArrayList>)isa.getValue()[5];
         
@@ -1142,7 +1141,8 @@ public class EDI {
             c[1] = doctype;
             c[6] = docid;
       
-            
+            messages.add(new String[]{"info","File: " + c[3]});
+            messages.add(new String[]{"info","ISA#: " + c[4] + " / " + "GS#: " + c[5]});
             messages.add(new String[]{"info","Doc Type: " + c[1] + " / " + "DocID: " + c[6]});
        //    System.out.println("doc key/{start/end},doctype,docid " + k[0] + "/" + k[1] + "/" + doctype + "/" + docid);
             
@@ -1208,7 +1208,7 @@ public class EDI {
           
           c[16] = String.valueOf(idxnbr);
           EDData.writeEDILogMulti(c, messages);
-          messages.clear();
+          messages.clear();  // clear message here...and at 997...and at end
           
           String map = c[2];
              
@@ -1217,8 +1217,10 @@ public class EDI {
             System.out.println("Encountered 997...processing and return" + c[1] + "/" + gs02 + "/" + gs03);    
             }
             String[] m = process997(doc, c);
-            EDData.writeEDILog(c, m[0], m[1]);
+            messages.add(new String[]{m[0], m[1]});
             EDData.updateEDIIDXStatus(idxnbr, m[0]);
+            EDData.writeEDILogMulti(c, messages);
+            messages.clear();
             continue;
           }   
           
@@ -1231,12 +1233,14 @@ public class EDI {
 
            // if no map then bail
            if ((map.isEmpty() || ! BlueSeerUtils.isClassFile(map)) && c[12].isEmpty()) {
-              EDData.writeEDILog(c, "error", "unable to find map class for parent/gs02/gs03/doc: " + parentPartner + "/" + gs02 + "/" + gs03 + " / " + c[1]); 
+                messages.add(new String[]{"error","unable to find map class for parent/gs02/gs03/doc: " + parentPartner + "/" + gs02 + "/" + gs03 + " / " + c[1]});
            } else {
-
+               
             if (GlobalDebug)   
             System.out.println("Entering Map " + map + " with: " +  c[1] + "/" + gs02 + "/" + gs03);    
 
+            messages.add(new String[]{"info","Using Map: " + map + " for docID: " + c[6]});
+            
                // at this point I should have a doc set (ST to SE) and a map ...now call map to operate on doc 
                 try {
                 Class cls = Class.forName(map);
@@ -1244,30 +1248,32 @@ public class EDI {
                 Method method = cls.getDeclaredMethod("Mapdata", ArrayList.class, String[].class);
                 Object oc = method.invoke(obj, doc, c);
                 String[] oString = (String[]) oc;
-                EDData.writeEDILog(c, oString[0], oString[1]);
+                messages.add(new String[]{oString[0], oString[1]});
                 EDData.updateEDIIDX(idxnbr, c); 
 
                 } catch (InvocationTargetException ex) {
                     if (c[12].isEmpty()) {
-                    EDData.writeEDILog(c, "error", "invocation exception in map class " + map + "/" + c[0] + " / " + c[1]);
+                    messages.add(new String[]{"error", "invocation exception in map class " + map + "/" + c[0] + " / " + c[1]});    
                     }
                     MainFrame.bslog(ex); 
                 } catch (ClassNotFoundException ex) {
                     if (c[12].isEmpty()) {
-                    EDData.writeEDILog(c, "error", "Map Class not found " + map + "/" + c[0] + " / " + c[1]);
+                    messages.add(new String[]{"error", "Map Class not found " + map + "/" + c[0] + " / " + c[1]});        
                     }
                     MainFrame.bslog(ex); 
                 } catch (IllegalAccessException |
                          InstantiationException | NoSuchMethodException ex
                         ) {
                     if (c[12].isEmpty()) {
-                    EDData.writeEDILog(c, "error", "IllegalAccess|Instantiation|NoSuchMethod " + map + "/" + c[0] + " / " + c[1]);
-                    }
+                    messages.add(new String[]{"error", "IllegalAccess|Instantiation|NoSuchMethod " + map + "/" + c[0] + " / " + c[1]});        
+                   }
                     MainFrame.bslog(ex);
                 }
 
            }
-               
+           
+           EDData.writeEDILogMulti(c, messages);
+           messages.clear();
             
                
       } // r         
