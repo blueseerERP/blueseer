@@ -1559,8 +1559,8 @@ public class EDI {
    
     }
     
-    public static void createOrderFrom850(edi850 e, String[] control) {
-        
+    public static String[] createOrderFrom850(edi850 e, String[] control) {
+        String[] m = new String[]{"",""};
         int sonbr = 0;
         boolean error = false;
         
@@ -1579,6 +1579,7 @@ public class EDI {
              
              error = EDData.CreateSalesOrderHdr(control, String.valueOf(sonbr), e.ov_billto, shipto, e.po, e.duedate, e.podate, e.remarks, e.shipmethod); 
              if (! error) {  
+                 
              for (int j = 0; j < e.getDetCount(); j++ ) {
                  
                    // error trigger logic ...missing internal item
@@ -1604,11 +1605,22 @@ public class EDI {
                        String.valueOf(j + 1)); 
                // System.out.println(((edi850)e.get(i)).getDetCustItem(j));
                }
+                   if (error) {
+                   m[0] = "0";
+                   m[1] = "Data Errors in Order: " + sonbr;
+                   } else {
+                   m[0] = "0";
+                   m[1] = "Sales Order Created: " + sonbr;    
+                   }
+             } else {
+                 m[0] = "1";
+                 m[1] = "Problem creating Order";
              }
-        if (error)
+        if (error) {
             OVData.updateOrderStatusError(String.valueOf(sonbr));
+        }
         
-    
+      return m;
     }
     
     public static void createShipperFrom945(edi945 e, String[] control) {

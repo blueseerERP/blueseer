@@ -63,6 +63,7 @@ public class Generic850i extends com.blueseer.edi.EDIMap {
         int i = 0; 
         
         // set misc document wide variables
+        String[] m = new String[]{"",""}; // return info
         String po = "";
         String part = "";
         String uom = "";
@@ -101,15 +102,15 @@ public class Generic850i extends com.blueseer.edi.EDIMap {
             }
         }  // shipto loop
         
-               if (! e.getOVShipTo().isEmpty()) {
-               e.setOVBillTo(cusData.getcustBillTo(e.getOVShipTo()));
-               } 
-               // NOTE: it's imperative that we have an internal billto code assign for pricing and discounts look up during the detail loop
-               // if here and we have a blank billto...then error out
-               if (e.getOVBillTo().isEmpty()) {
-               setError("No internal Billto Found PO:" + po);
-               return error; 
-               }
+       if (! e.getOVShipTo().isEmpty()) {
+       e.setOVBillTo(cusData.getcustBillTo(e.getOVShipTo()));
+       } 
+       // NOTE: it's imperative that we have an internal billto code assign for pricing and discounts look up during the detail loop
+       // if here and we have a blank billto...then error out
+       if (e.getOVBillTo().isEmpty()) {
+       setError("No internal Billto Found PO:" + po);
+       return error; 
+       }
         
            /* Now the Detail LOOP  */ 
            /* Item Loop */
@@ -159,10 +160,13 @@ public class Generic850i extends com.blueseer.edi.EDIMap {
         
          /* Load Sales Order */
          if (! isError) {
-         com.blueseer.edi.EDI.createOrderFrom850(e, c); 
+         m = com.blueseer.edi.EDI.createOrderFrom850(e, c); 
+         } else {
+             m[0] = "1";
+             m[1] = "Error in Map";
          }
          
-        return new String[]{"success","transaction mapped successfully"};
+        return m;
       
     }
 
