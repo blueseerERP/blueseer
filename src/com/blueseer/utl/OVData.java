@@ -16373,7 +16373,7 @@ MainFrame.bslog(e);
                
       }
      
-    public static String CreateShipTo(String billtocode, String name, String line1, String line2, String line3, String city, String state, String zip, String country, String plantcode) {
+    public static String CreateShipTo(String billtocode, String name, String line1, String line2, String line3, String city, String state, String zip, String country, String shipto) {
           String shiptocode = "";
           try {
             Connection con = DriverManager.getConnection(url + db, user, pass);
@@ -16382,9 +16382,9 @@ MainFrame.bslog(e);
             try {
                 boolean proceed = true;
                 int i = 0;
-                if (! plantcode.isEmpty()) {
+                if (! shipto.isEmpty()) {
                  res = st.executeQuery("select * from cms_det where cms_code = " + "'" + billtocode + "'" 
-                         + " AND cms_plantcode = " + "'" + plantcode + "'"
+                         + " AND cms_shipto = " + "'" + shipto + "'"
                          + " ;");
                        while (res.next()) {
                            i++;
@@ -16409,7 +16409,7 @@ MainFrame.bslog(e);
                         + "'" + state + "'" + ","
                         + "'" + zip + "'" + ","
                             + "'" + country + "'" + ","
-                        + "'" + plantcode + "'"                           
+                        + "'" + shipto + "'"                           
                         + ")"
                         + ";");
                 } // if i == 0

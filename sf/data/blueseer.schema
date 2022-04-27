@@ -532,7 +532,8 @@ CREATE TABLE IF NOT EXISTS `edi_xref` (
   `exr_tpid` varchar(15) NOT NULL  DEFAULT '',
   `exr_tpaddr` varchar(30) NOT NULL  DEFAULT '',
   `exr_ovaddr` varchar(30) NOT NULL  DEFAULT '',
-  `exr_gsid` varchar(15) NOT NULL  DEFAULT ''
+  `exr_gsid` varchar(15) NOT NULL  DEFAULT '',
+  `exr_type` varchar(15) NOT NULL  DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `edi_attr` (
   `exa_sndid` varchar(15) NOT NULL  DEFAULT '',

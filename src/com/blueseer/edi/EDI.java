@@ -83,8 +83,8 @@ public class EDI {
     public static boolean GlobalDebug = false;
     
     public static String[] initEDIControl() {   
-        String[] controlarray = new String[38];
-             /*  38 elements consisting of:
+        String[] controlarray = new String[39];
+             /*  39 elements consisting of:
             c[0] = senderid;
             c[1] = doctype;
             c[2] = map;
@@ -123,9 +123,10 @@ public class EDI {
             c[35] = outsegdelim
             c[36] = outeledelim
             c[37] = outsubdelim
+            c[38] = message
             
               */
-               for (int i = 0; i < 38; i++) {
+               for (int i = 0; i < 39; i++) {
                    controlarray[i] = (i == 35 || i == 36 || i == 37 ||
                            i == 9 || i == 10 || i == 11) ? "0" : "";
                 }
@@ -1569,7 +1570,6 @@ public class EDI {
        
             error = false;
              sonbr = OVData.getNextNbr("order");
-             EDData.writeEDILog(control, "INFO", "Load");
            //  control = ((edi850)e.get(i)).isaSenderID + "," + ((edi850)e.get(i)).doctype + "," + ((edi850)e.get(i)).isaCtrlNum + "," + ((edi850)e.get(i)).po ;
              
              if (e.ov_shipto.isEmpty())
@@ -1606,14 +1606,14 @@ public class EDI {
                // System.out.println(((edi850)e.get(i)).getDetCustItem(j));
                }
                    if (error) {
-                   m[0] = "0";
+                   m[0] = "info";
                    m[1] = "Data Errors in Order: " + sonbr;
                    } else {
-                   m[0] = "0";
+                   m[0] = "success";
                    m[1] = "Sales Order Created: " + sonbr;    
                    }
              } else {
-                 m[0] = "1";
+                 m[0] = "error";
                  m[1] = "Problem creating Order";
              }
         if (error) {

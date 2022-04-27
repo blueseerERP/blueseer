@@ -55,9 +55,12 @@ public class Generic850i extends com.blueseer.edi.EDIMap {
         if (isError) { return error;}  // check errors for master variables
 
         mappedInput = mapInput(c, doc, ISF);
-
+        setReference(getInput("BEG","e03")); // must be ran after mappedInput
+       // debuginput(mappedInput);  // for debug purposes
+        
         edi850 e = new edi850(getInputISA(6), getInputISA(8), getInputGS(2), getInputGS(3), getInputISA(13), getInputISA(9), doctype, stctrl);  // mandatory class creation
-
+        isDBLoad(c);
+        
         // set some global variables if necessary
         String  now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
         int i = 0; 
@@ -65,15 +68,12 @@ public class Generic850i extends com.blueseer.edi.EDIMap {
         // set misc document wide variables
         String[] m = new String[]{"",""}; // return info
         String po = "";
-        String part = "";
-        String uom = "";
         double discount = 0;
-        double listprice = 0;
-        double netprice = 0;
-        boolean shiploop = false;
+        double listprice;
+        double netprice;
         boolean useInternalPrice = false;
          
-        e.setOVBillTo(EDData.getEDICustFromSenderISA(doctype, getInputISA(6), getInputISA(8)));   // 3rd parameter '0' is outbound direction '1' is inbound
+        e.setOVBillTo(EDData.getEDIXrefIn(getInputISA(6), getInputGS(2), "BT", ""));   // 3rd parameter '0' is outbound direction '1' is inbound
         po = getInput("BEG","e03");
         e.setPO(po);  
         e.setPODate(convertDateFormat("yyyyMMdd", getInput("BEG","e05")));
@@ -95,10 +95,11 @@ public class Generic850i extends com.blueseer.edi.EDIMap {
             if (isN1ST) {
                 e.setShipTo(getInput("N1",4,i));
                 e.setShipToName(getInput("N1",2,i));
-                e.setShipToLine1(getInput("N3",1,i));
-                e.setShipToCity(getInput("N4",1,i));
-                e.setShipToState(getInput("N4",2,i));
-                e.setShipToZip(getInput("N4",3,i));
+                e.setShipToLine1(getInput("N1:N3",1,i));
+                e.setShipToCity(getInput("N1:N4",1,i));
+                e.setShipToState(getInput("N1:N4",2,i));
+                e.setShipToZip(getInput("N1:N4",3,i));
+                e.setOVShipTo(EDData.getEDIXrefIn(getInputISA(6), getInputGS(2), "ST", getInput("N1",4,i)));
             }
         }  // shipto loop
         
@@ -122,17 +123,17 @@ public class Generic850i extends com.blueseer.edi.EDIMap {
             e.addDetail();  // INITIATE An ArrayList for Each PO1 SEGMENT....variable i is set at bottom of loop as index  i == 0 is first PO1
 	    itemLoopCount++;
 	    totalqty += Integer.valueOf(getInput("PO1",2,i));
-	    e.setDetQty(i, getInput("PO1",2,i));
+	    e.setDetQty(i-1, getInput("PO1",2,i));
             if (getInput("PO1",6,i).equals("VP") || getInput("PO1",6,i).equals("VN")) {
-             e.setDetItem(i,getInput("PO1",7,i));
+             e.setDetItem(i-1,getInput("PO1",7,i));
             } else if (getInput("PO1",8,i).equals("BP") || getInput("PO1",8,i).equals("SK")) {
-             e.setDetItem(i,getInput("PO1",9,i));   
+             e.setDetItem(i-1,getInput("PO1",9,i));   
             } else {
-             e.setDetItem(i,"UNKNOWN");   
+             e.setDetItem(i-1,"UNKNOWN");   
             }
            // e.setDetCustItem(i,getInput("PO1",9,i));
-            e.setDetPO(i,po);
-            e.setDetLine(i,getInput("PO1",1,i));
+            e.setDetPO(i-1,po);
+            e.setDetLine(i-1,getInput("PO1",1,i));
             
             if (useInternalPrice) {
             listprice = invData.getItemPriceFromCust(e.getOVBillTo(), getInput("PO1",7,i), getInput("PO1",3,i), cusData.getCustCurrency(e.getOVBillTo()));
@@ -141,16 +142,16 @@ public class Generic850i extends com.blueseer.edi.EDIMap {
             if (discount != 0) {
             netprice = listprice - (listprice * (discount / 100));
             }
-            e.setDetNetPrice(i,String.valueOf(currformatDouble(netprice)));
-            e.setDetListPrice(i,String.valueOf(currformatDouble(listprice)));
-            e.setDetDisc(i,String.valueOf(currformatDouble(discount)));
+            e.setDetNetPrice(i-1,String.valueOf(currformatDouble(netprice)));
+            e.setDetListPrice(i-1,String.valueOf(currformatDouble(listprice)));
+            e.setDetDisc(i-1,String.valueOf(currformatDouble(discount)));
             } else {
              if (BlueSeerUtils.isParsableToDouble(getInput("PO1",4, i))) {
-	        e.setDetNetPrice(i, df.format(Double.valueOf(getInput("PO1",4, i))));
-                e.setDetListPrice(i, df.format(Double.valueOf(getInput("PO1",4, i))));
+	        e.setDetNetPrice(i-1, df.format(Double.valueOf(getInput("PO1",4, i))));
+                e.setDetListPrice(i-1, df.format(Double.valueOf(getInput("PO1",4, i))));
 	     } else {
-	    	e.setDetNetPrice(i, "0");
-                e.setDetListPrice(i, "0");	
+	    	e.setDetNetPrice(i-1, "0");
+                e.setDetListPrice(i-1, "0");	
 	     }   
             }
         }
@@ -159,15 +160,11 @@ public class Generic850i extends com.blueseer.edi.EDIMap {
         mappedInput.clear();
         
          /* Load Sales Order */
-         if (! isError) {
-         m = com.blueseer.edi.EDI.createOrderFrom850(e, c); 
-         } else {
-             m[0] = "1";
-             m[1] = "Error in Map";
-         }
-         
-        return m;
-      
+         /* call processDB ONLY if the output is direction of DataBase Internal */
+        processDB(c,com.blueseer.edi.EDI.createOrderFrom850(e, c));
+        
+        return packagePayLoad(c);
+        
     }
 
  

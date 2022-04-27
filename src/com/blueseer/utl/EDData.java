@@ -956,7 +956,8 @@ public class EDData {
         
     }
              
-    public static String getEDICustFromSenderISA(String doctype, String sndid, String rcvid) {
+    
+    public static String getEDIXrefIn(String isaid, String gsid, String editype, String addrcode) {
              String mystring = "";
         try{
             Class.forName(driver);
@@ -964,14 +965,14 @@ public class EDData {
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
-                
-                   
-                      res = st.executeQuery("select * from edi_mstr where edi_sndgs = " + "'" + sndid.trim() + "'" + 
-                        " AND edi_rcvgs = " + "'" + rcvid + "'" +
-                              " AND edi_doc = " + "'" + doctype + "'" + 
+                      res = st.executeQuery("select * from edi_xref where " +
+                              " exr_tpid = " + "'" + isaid.trim() + "'" + 
+                              " AND exr_gsid = " + "'" + gsid + "'" +
+                              " AND exr_tpaddr = " + "'" + addrcode + "'" + 
+                              " AND exr_type = " + "'" + editype + "'" +        
                                 ";");
                     while (res.next()) {
-                       mystring = res.getString("edi_id");
+                       mystring = res.getString("exr_ovaddr");
                     }
            }
             catch (SQLException s) {
@@ -979,7 +980,7 @@ public class EDData {
             } finally {
                if (res != null) res.close();
                if (st != null) st.close();
-               if (con != null) con.close();
+               con.close();
             }
         }
         catch (Exception e){
@@ -989,6 +990,7 @@ public class EDData {
         return mystring;
         
     }
+    
     
     public static String getEDIDocTypeFromStds(String gs) {
        String x = "??";
@@ -2824,8 +2826,8 @@ public class EDData {
                         + "so_create_date, so_userid, so_status,"
                         + "so_rmks, so_terms, so_ar_acct, so_ar_cc, so_shipvia, so_type, so_site, so_onhold ) "
                         + " values ( " + "'" + nbr + "'" + ","
-                        + "'" + billto.toUpperCase() + "'" + ","
-                        + "'" + shipto.toUpperCase() + "'" + ","
+                        + "'" + billto + "'" + ","
+                        + "'" + shipto + "'" + ","
                         + "'" + po + "'" + ","
                         + "'" + orddate + "'" + ","
                         + "'" + duedate + "'" + ","

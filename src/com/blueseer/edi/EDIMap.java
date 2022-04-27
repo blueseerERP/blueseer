@@ -564,7 +564,9 @@ public abstract class EDIMap implements EDIMapi {
 
     public String[] packagePayLoad(String[] c) {
      
-        
+        if (c[29].equals("DB")) {
+            return new String[]{c[23],c[38]};
+        }
         // get TP/Doc defaults
         String[] tp = EDData.getEDITPDefaults(doctype, outsender, outreceiver );
         
@@ -657,6 +659,33 @@ public abstract class EDIMap implements EDIMapi {
 
      return new String[]{"success","transaction mapped successfully"};
      }
+    
+    public void isDBLoad(String[] c) {
+        c[7] = ref;
+        c[15] = "DB";
+        c[25] = "dbload";
+        c[27] = outdir;
+        c[29] = "DB";
+        c[6] = stctrl;
+        c[5] = gsctrl;
+        c[4] = isactrl;
+        c[31] = "0";
+        c[32]  = "99999";
+        c[33] = "0";
+        c[34] = "99999";
+        c[35] = "0";
+        c[36] = "0";
+        c[37] = "0";
+
+     if (GlobalDebug)
+     System.out.println("Value of c within EDIMap class: " + String.join(",", c));
+
+     }
+    
+    public void processDB(String[] c, String[] m) {
+        c[23] = m[0];  // set return status
+        c[38] = m[1];
+    }
     
     public static void mapSegment(String segment, String x, String y) {
     	 String[] z = new String[] {x,y};
