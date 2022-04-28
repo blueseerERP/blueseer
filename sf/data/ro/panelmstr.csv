@@ -177,13 +177,13 @@ com.blueseer.sch.RetailReorderRpt,,1
 com.blueseer.sch.ProjectionBrowse,,1
 com.blueseer.sch.ComponentDemandBrowse,,1
 com.blueseer.sch.SchRptPicker,,1
-com.blueseer.shp.ShipConfirm,,1
+com.blueseer.shp.ShipperConfirm,,1
 com.blueseer.shp.ShipperMaint,,1
 com.blueseer.shp.ShipperMaintSerial,,1
 com.blueseer.shp.ShipperBrowse,,1
 com.blueseer.shp.ShipperControl,,1
 com.blueseer.shp.ShipperDetBrowse,,1
-com.blueseer.shp.ShipUnConfirm,,1
+com.blueseer.shp.ShipperUnConfirm,,1
 com.blueseer.tca.ClockApprovalMaint,,1
 com.blueseer.tca.ClockAutoMaint,,1
 com.blueseer.tca.ClockCodeMaint,,1
