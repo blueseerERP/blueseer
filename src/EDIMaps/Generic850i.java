@@ -119,6 +119,8 @@ public class Generic850i extends com.blueseer.edi.EDIMap {
         int itemcount = getGroupCount("PO1");
         int itemLoopCount = 0;
         int totalqty = 0;
+        String uom = "";
+        String item = "";
         for (i = 1; i <= itemcount; i++) {
             e.addDetail();  // INITIATE An ArrayList for Each PO1 SEGMENT....variable i is set at bottom of loop as index  i == 0 is first PO1
 	    itemLoopCount++;
@@ -131,12 +133,20 @@ public class Generic850i extends com.blueseer.edi.EDIMap {
             } else {
              e.setDetItem(i-1,"UNKNOWN");   
             }
+            item = e.getDetItem(i-1);
            // e.setDetCustItem(i,getInput("PO1",9,i));
             e.setDetPO(i-1,po);
             e.setDetLine(i-1,getInput("PO1",1,i));
             
+            //override incoming UOM with what is available in UOM Maintenance
+            if (getInput("P01",3,i).equals("CS")) {
+                uom = "CA";
+            } else {
+             uom = OVData.getUOMByItem(item);
+            }
+            
             if (useInternalPrice) {
-            listprice = invData.getItemPriceFromCust(e.getOVBillTo(), getInput("PO1",7,i), getInput("PO1",3,i), cusData.getCustCurrency(e.getOVBillTo()));
+            listprice = invData.getItemPriceFromCust(e.getOVBillTo(), item, uom, cusData.getCustCurrency(e.getOVBillTo()));
             discount = invData.getItemDiscFromCust(e.getOVBillTo());
             netprice = listprice;
             if (discount != 0) {

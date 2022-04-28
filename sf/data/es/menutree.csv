@@ -36,7 +36,8 @@ EDIMenu,EDIPartnerBrowse,4,JMenuItem,EDI Partner Exploración,,1,,1,1
 EDIMenu,EDIPartnerDocMaint,5,JMenuItem,Mantenimiento de transacciones de socios,,,,1,1
 EDIMenu,EDIPartnerDocBrowse,6,JMenuItem,Exploración de transacciones de socios de EDI,,1,,1,1
 EDIMenu,EDIDocumentMaint,7,JMenuItem,Mantenimiento de reconocimiento de documentos,,,,1,1
-EDIMenu,EDIControl,8,JMenuItem,Control EDI,,,,1,1
+EDIMenu,EDIXrefMaint,8,JMenuItem,EDI Xref Maintenance,,,,1,1
+EDIMenu,EDIControl,9,JMenuItem,Control EDI,,,,1,1
 LabelMenu,LabelsContGeneric,1,JMenuItem,Etiquetas de contenedores,,,,1,1
 LabelMenu,AddrLabel,2,JMenuItem,Etiquetas de dirección,,,,1,1
 LabelMenu,LabelBrowse,3,JMenuItem,Exploración de etiquetas,,1,,1,1

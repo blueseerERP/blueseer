@@ -81,8 +81,6 @@ CustXrefBrowse,,com.blueseer.ctr.CustXrefRpt,JMenuItem,cuxb
 DefaultMaint,,com.blueseer.adm.DefaultMaint,JMenuItem,defm
 DeptBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,depb
 DeptMaint,,com.blueseer.fgl.DeptMaint,JMenuItem,depm
-EDILoad,,com.blueseer.edi.EDILoadMaint,JMenuItem,edip
-EDILog,,com.blueseer.edi.EDITransactionBrowse,JMenuItem,edil
 FileOrderLoad,,com.blueseer.adm.FileOrderLoadMaint,JMenuItem,orlo
 FreightMaint,,com.blueseer.ctr.FreightMaint,JMenuItem,frtm
 GenCodeBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,genb
@@ -208,6 +206,9 @@ EDIDocumentMaint,,com.blueseer.edi.EDIDocumentMaint,JMenuItem,eddm
 EDIPartnerDocMaint,,com.blueseer.edi.EDIPartnerDocMaint,JMenuItem,edpd
 EDIPartnerDocBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,edpb
 EDIControl,,com.blueseer.edi.EDIControl,JMenuItem,edic
+EDILoad,,com.blueseer.edi.EDILoadMaint,JMenuItem,edip
+EDILog,,com.blueseer.edi.EDITransactionBrowse,JMenuItem,edil
+EDIXrefMaint,,com.blueseer.edi.EDIXrefMaint,JMenuItem,edix
 ARAgingView,,com.blueseer.far.ARAgingView,JMenuItem,arav
 APAgingView,,com.blueseer.fap.APAgingView,JMenuItem,apav
 GLControl,,com.blueseer.fgl.GLControl,JMenuItem,glcc

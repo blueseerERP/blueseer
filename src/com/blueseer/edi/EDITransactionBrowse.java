@@ -274,14 +274,17 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                     if (res.getString("edx_ack").equals("1")) {
                       statusImage = BlueSeerUtils.clickcheckblue; 
                     }
-                    // now check detail log...if 'any' errors....set status to clicknocheck
+                    // now check detail log...if 'any' errors....set status to clicknocheck...unless last is 'success'
                     resdetail = st2.executeQuery("select elg_severity from edi_log " +
                         " where elg_comkey = " + "'" + res.getInt("edx_comkey") + "'" 
                         + " and elg_idxnbr = " + "'" + res.getInt("edx_id") + "'"
-                        +  ";");
+                        +  " order by elg_idxnbr;");
                     while (resdetail.next()) {
                         if (resdetail.getString("elg_severity").equals("error")) {
                            statusImage = BlueSeerUtils.clicknocheck; 
+                        }
+                        if (resdetail.getString("elg_severity").equals("success")) {
+                           statusImage = BlueSeerUtils.clickcheck; 
                         }
                     }
                     

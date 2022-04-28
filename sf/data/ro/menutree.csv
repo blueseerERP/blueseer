@@ -36,7 +36,8 @@ EDIMenu,EDIPartnerBrowse,4,JMenuItem,EDI Partner Browse,,1,,1,1
 EDIMenu,EDIPartnerDocMaint,5,JMenuItem,Întreținerea tranzacțiilor cu parteneri,,,,1,1
 EDIMenu,EDIPartnerDocBrowse,6,JMenuItem,Răsfoiți tranzacții pentru parteneri EDI,,1,,1,1
 EDIMenu,EDIDocumentMaint,7,JMenuItem,Întreținerea recunoașterii documentelor,,,,1,1
-EDIMenu,EDIControl,8,JMenuItem,Control EDI,,,,1,1
+EDIMenu,EDIXrefMaint,8,JMenuItem,EDI Xref Maintenance,,,,1,1
+EDIMenu,EDIControl,9,JMenuItem,Control EDI,,,,1,1
 LabelMenu,LabelsContGeneric,1,JMenuItem,Etichete pentru containere,,,,1,1
 LabelMenu,AddrLabel,2,JMenuItem,Etichete de adresă,,,,1,1
 LabelMenu,LabelBrowse,3,JMenuItem,Răsfoire etichetă,,1,,1,1

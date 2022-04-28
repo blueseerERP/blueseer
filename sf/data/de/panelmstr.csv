@@ -44,6 +44,7 @@ com.blueseer.edi.EDITransactionBrowse,,1
 com.blueseer.edi.EDIMap,,1
 com.blueseer.edi.EDIMapi,,1
 com.blueseer.edi.EDITPBrowse,,1
+com.blueseer.edi.EDIXrefMaint,,1
 com.blueseer.eng.ECNBrowse,,1
 com.blueseer.eng.ECNMaint,,1
 com.blueseer.eng.OVDevBrowse,,1
@@ -174,6 +175,7 @@ com.blueseer.sch.ForecastMaint,,1
 com.blueseer.sch.MRPBrowse,,1
 com.blueseer.sch.RetailReorderRpt,,1
 com.blueseer.sch.ProjectionBrowse,,1
+com.blueseer.sch.ComponentDemandBrowse,,1
 com.blueseer.sch.SchRptPicker,,1
 com.blueseer.shp.ShipConfirm,,1
 com.blueseer.shp.ShipperMaint,,1

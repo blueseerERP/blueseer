@@ -208,6 +208,7 @@ EDIDocumentMaint,,com.blueseer.edi.EDIDocumentMaint,JMenuItem,eddm
 EDIPartnerDocMaint,,com.blueseer.edi.EDIPartnerDocMaint,JMenuItem,edpd
 EDIPartnerDocBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,edpb
 EDIControl,,com.blueseer.edi.EDIControl,JMenuItem,edic
+EDIXrefMaint,,com.blueseer.edi.EDIXrefMaint,JMenuItem,edix
 ARAgingView,,com.blueseer.far.ARAgingView,JMenuItem,arav
 APAgingView,,com.blueseer.fap.APAgingView,JMenuItem,apav
 GLControl,,com.blueseer.fgl.GLControl,JMenuItem,glcc

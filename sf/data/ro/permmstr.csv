@@ -25,6 +25,7 @@ admin,TermsBrowse
 admin,CustomerReports
 admin,piechart_salesbycust
 admin,piechart_custAR
+admin,piechart_profitandloss
 admin,VendorMenu
 admin,VendMaint
 admin,VendBrowse
@@ -295,3 +296,4 @@ admin,ItemBrowse
 admin,RetailReorderRpt
 admin,ProjectionBrowse
 admin,ComponentDemandBrowse
+admin,EDIXrefMaint

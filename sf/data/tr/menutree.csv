@@ -36,7 +36,8 @@ EDIMenu,EDIPartnerBrowse,4,JMenuItem,EDI İş Ortağı Gözat,,1,,1,1
 EDIMenu,EDIPartnerDocMaint,5,JMenuItem,İş Ortağı İşlem Bakımı,,,,1,1
 EDIMenu,EDIPartnerDocBrowse,6,JMenuItem,EDI İş Ortağı İşlemine Gözat,,1,,1,1
 EDIMenu,EDIDocumentMaint,7,JMenuItem,Belge Tanıma Bakımı,,,,1,1
-EDIMenu,EDIControl,8,JMenuItem,EDI Kontrolü,,,,1,1
+EDIMenu,EDIXrefMaint,8,JMenuItem,EDI Xref Maintenance,,,,1,1
+EDIMenu,EDIControl,9,JMenuItem,EDI Kontrolü,,,,1,1
 LabelMenu,LabelsContGeneric,1,JMenuItem,Konteyner Etiketleri,,,,1,1
 LabelMenu,AddrLabel,2,JMenuItem,Adres Etiketleri,,,,1,1
 LabelMenu,LabelBrowse,3,JMenuItem,Etikete Gözat,,1,,1,1
