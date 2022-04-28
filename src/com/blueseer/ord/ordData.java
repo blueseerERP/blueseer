@@ -154,14 +154,20 @@ public class ordData {
             for (sod_det z : sod) {
                 _addOrderDet(z, bscon, ps, res);
             }
-            for (so_tax z : sot) {
-                _addOrderTaxMstr(z, bscon, ps, res);
+            if (sot != null) {
+                for (so_tax z : sot) {
+                    _addOrderTaxMstr(z, bscon, ps, res);
+                }
             }
-            for (sod_tax z : sotd) {
-                _addOrderTaxDet(z, bscon, ps, res);
+            if (sotd != null) {
+                for (sod_tax z : sotd) {
+                    _addOrderTaxDet(z, bscon, ps, res);
+                }
             }
-            for (sos_det z : sos) {
-                _addOrderSummaryDet(z, bscon, ps, res);
+            if (sos != null) {
+                for (sos_det z : sos) {
+                    _addOrderSummaryDet(z, bscon, ps, res);
+                }
             }
             bscon.commit();
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};

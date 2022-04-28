@@ -286,10 +286,7 @@ public class EDData {
             try {
                 int i = 0;
                 String[] ld = null;
-                             
-                               
-                // now loop through comma delimited list and insert into item master table
-                // skip if already in table.....keys are cust (cup_cust) and custitem (cup_citem)
+               
                 for (String rec : list) {
                     ld = rec.split(":", -1);
                     
@@ -547,9 +544,9 @@ public class EDData {
          * @param doctype
          * @param dir
          * @return Array with 0=ISA, 1=ISAQUAL, 2=GS, 3=BS_ISA, 4=BS_ISA_QUAL, 5=BS_GS, 6=ELEMDELIM, 7=SEGDELIM, 8=SUBDELIM, 9=FILEPATH, 10=FILEPREFIX, 11=FILESUFFIX,
-         * @return 12=X12VERSION, 13=SUPPCODE, 14=DIRECTION
+         * @return 12=X12VERSION, 13=SUPPCODE, 14=edi_doctypeout, 15=edi_filetypeout, 16=edi_ifs, 17=edi_ofs
          */
-    public static String[] getEDITPDefaults(String doctype, String sndid, String rcvid) {
+    public static String[] getEDITPDefaults(String doctype, String gssndid, String gsrcvid) {
            
                     
              String[] mystring = new String[]{"","","","","","","0","0","0","","","","","","","","",""};
@@ -563,8 +560,8 @@ public class EDData {
                    
                       res = st.executeQuery("select * from edi_mstr where " + 
                         " edi_doc = " + "'" + doctype + "'" 
-                      +  " AND edi_sndgs = " + "'" + sndid + "'"  
-                      +  " AND edi_rcvgs = " + "'" + rcvid + "'"          
+                      +  " AND edi_sndgs = " + "'" + gssndid + "'"  
+                      +  " AND edi_rcvgs = " + "'" + gsrcvid + "'"          
                         + ";");
                     while (res.next()) {
                        mystring[0] = res.getString("edi_sndisa");
@@ -973,6 +970,40 @@ public class EDData {
                                 ";");
                     while (res.next()) {
                        mystring = res.getString("exr_ovaddr");
+                    }
+           }
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+            
+        }
+        return mystring;
+        
+    }
+    
+    public static String[] getEDIXrefOut(String bsaddr, String editype) {
+             String mystring[] = new String[]{"","",""};
+        try{
+            Class.forName(driver);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                      res = st.executeQuery("select * from edi_xref where " +
+                              " exr_ovaddr = " + "'" + bsaddr + "'" + 
+                              " AND exr_type = " + "'" + editype + "'" +        
+                                ";");
+                    while (res.next()) {
+                       mystring[0] = res.getString("exr_tpid");
+                       mystring[0] = res.getString("exr_gsid");
+                       mystring[0] = res.getString("exr_tpaddr");
                     }
            }
             catch (SQLException s) {

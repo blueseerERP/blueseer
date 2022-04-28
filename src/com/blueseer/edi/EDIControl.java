@@ -182,6 +182,8 @@ public class EDIControl extends javax.swing.JPanel {
                     tberrordir.setText(res.getString("edic_errordir")); 
                     cbarchive.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("edic_archyesno")));
                     cbdelete.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("edic_delete")));
+                    tbtpid.setText(res.getString("edic_tpid"));
+                    tbgsid.setText(res.getString("edic_gsid"));
                 }
                
                 if (i == 0)
@@ -268,6 +270,10 @@ public class EDIControl extends javax.swing.JPanel {
         jLabel11 = new javax.swing.JLabel();
         ddtocode = new javax.swing.JComboBox<>();
         btexport = new javax.swing.JButton();
+        tbtpid = new javax.swing.JTextField();
+        tbgsid = new javax.swing.JTextField();
+        jLabel13 = new javax.swing.JLabel();
+        jLabel16 = new javax.swing.JLabel();
 
         jLabel6.setText("jLabel6");
 
@@ -400,6 +406,10 @@ public class EDIControl extends javax.swing.JPanel {
             }
         });
 
+        jLabel13.setText("TPID");
+
+        jLabel16.setText("GSID");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -438,7 +448,16 @@ public class EDIControl extends javax.swing.JPanel {
                                         .addComponent(cbdelete)
                                         .addComponent(cbarchive))
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(btupdate))
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                            .addComponent(btupdate)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(jLabel16))
+                                        .addComponent(jLabel13))
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(tbtpid, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
+                                        .addComponent(tbgsid)))
                                 .addComponent(tboutarch)
                                 .addComponent(tbbatch)
                                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -480,11 +499,16 @@ public class EDIControl extends javax.swing.JPanel {
                     .addComponent(tberrordir, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel8))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(cbarchive)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cbarchive)
+                    .addComponent(tbtpid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel13))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cbdelete)
-                    .addComponent(btupdate))
+                    .addComponent(btupdate)
+                    .addComponent(tbgsid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel16))
                 .addGap(43, 43, 43)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -520,7 +544,9 @@ public class EDIControl extends javax.swing.JPanel {
                             + "'" + tbstructure.getText().replace("\\","\\\\") + "'" + ","          
                             + "'" + tberrordir.getText().replace("\\","\\\\") + "'" + ","         
                             + "'" + BlueSeerUtils.boolToInt(cbarchive.isSelected()) + "'" + ","      
-                            + "'" + BlueSeerUtils.boolToInt(cbdelete.isSelected()) + "'"        
+                            + "'" + BlueSeerUtils.boolToInt(cbdelete.isSelected()) + "'"  + ","  
+                            + "'" + tbtpid.getText() + "'" + ","
+                            + "'" + tbgsid.getText() + "'"        
                             + ") ;");              
                           bsmf.MainFrame.show(getMessageTag(1007));
                 } else {
@@ -534,7 +560,10 @@ public class EDIControl extends javax.swing.JPanel {
                             + "edic_errordir = " + "'" + tberrordir.getText().replace("\\","\\\\") + "'" + ","            
                             + "edic_delete = " + "'" + BlueSeerUtils.boolToInt(cbdelete.isSelected()) + "'" + ","         
                             + "edic_archyesno = " + "'" + BlueSeerUtils.boolToInt(cbarchive.isSelected()) + "'" + "," 
-                            + "edic_outftp = " + "'" + tboutscript.getText() + "'" + ";");   
+                            + "edic_outftp = " + "'" + tboutscript.getText() + "'" + "," 
+                            + "edic_tpid = " + "'" + tbtpid.getText() + "'" + ","
+                            + "edic_gsid = " + "'" + tbgsid.getText() + "'"        
+                            + ";");   
                     bsmf.MainFrame.show(getMessageTag(1008));
                 }
               
@@ -597,8 +626,10 @@ public class EDIControl extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -611,6 +642,7 @@ public class EDIControl extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JTextField tbbatch;
     private javax.swing.JTextField tberrordir;
+    private javax.swing.JTextField tbgsid;
     private javax.swing.JTextField tbinarch;
     private javax.swing.JTextField tbindir;
     private javax.swing.JTextField tboutarch;
@@ -619,5 +651,6 @@ public class EDIControl extends javax.swing.JPanel {
     private javax.swing.JTextField tbrcvgs;
     private javax.swing.JTextField tbsndgs;
     private javax.swing.JTextField tbstructure;
+    private javax.swing.JTextField tbtpid;
     // End of variables declaration//GEN-END:variables
 }

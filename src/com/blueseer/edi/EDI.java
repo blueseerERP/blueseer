@@ -27,10 +27,14 @@ SOFTWARE.
 package com.blueseer.edi;
 
 import bsmf.MainFrame;
-import static com.blueseer.edi.EDIMap.ed;
+import static bsmf.MainFrame.defaultDecimalSeparator;
+import com.blueseer.ctr.cusData;
+import com.blueseer.ord.ordData;
+import static com.blueseer.ord.ordData.addOrderTransaction;
 import com.blueseer.shp.shpData;
 import com.blueseer.utl.EDData;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import com.blueseer.utl.OVData;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -1559,68 +1563,85 @@ public class EDI {
        
    
     }
-    
-    public static String[] createOrderFrom850(edi850 e, String[] control) {
-        String[] m = new String[]{"",""};
-        int sonbr = 0;
-        boolean error = false;
         
-        String shipto = "";
-        control[7] = String.valueOf(sonbr);
-       
-            error = false;
-             sonbr = OVData.getNextNbr("order");
-           //  control = ((edi850)e.get(i)).isaSenderID + "," + ((edi850)e.get(i)).doctype + "," + ((edi850)e.get(i)).isaCtrlNum + "," + ((edi850)e.get(i)).po ;
-             
-             if (e.ov_shipto.isEmpty())
-                 shipto = OVData.CreateShipTo(e.ov_billto, e.st_name, e.st_line1, e.st_line2, e.st_line3, e.st_city, e.st_state, e.st_zip, e.st_country, e.shipto);
-             else
-                 shipto = e.ov_shipto;
-             
-             error = EDData.CreateSalesOrderHdr(control, String.valueOf(sonbr), e.ov_billto, shipto, e.po, e.duedate, e.podate, e.remarks, e.shipmethod); 
-             if (! error) {  
-                 
-             for (int j = 0; j < e.getDetCount(); j++ ) {
-                 
-                   // error trigger logic ...missing internal item
-                   if (e.getDetItem(j).isEmpty())
-                      error = true;
-                   
-                   // error trigger logic ...missing netprice = 0
-                   if ( Double.valueOf(e.getDetNetPrice(j)) == 0)
-                      error = true;
-                  
-               EDData.CreateSalesOrderDet(String.valueOf(sonbr), 
-                       e.ov_billto,
-                       e.getDetItem(j), 
-                       e.getDetCustItem(j), 
-                       e.getDetSku(j), 
-                       e.getDetPO(j), 
-                       e.getDetQty(j),
-                       e.getDetListPrice(j), 
-                       e.getDetDisc(j), 
-                       e.getDetNetPrice(j),
-                       e.getHdrDueDate(), 
-                       e.getDetRef(j),
-                       String.valueOf(j + 1)); 
-               // System.out.println(((edi850)e.get(i)).getDetCustItem(j));
-               }
-                   if (error) {
-                   m[0] = "info";
-                   m[1] = "Data Errors in Order: " + sonbr;
-                   } else {
-                   m[0] = "success";
-                   m[1] = "Sales Order Created: " + sonbr;    
-                   }
-             } else {
-                 m[0] = "error";
-                 m[1] = "Problem creating Order";
-             }
-        if (error) {
-            OVData.updateOrderStatusError(String.valueOf(sonbr));
+    public static String[] createSOFrom850(edi850 e, String[] control) {
+        String[] m = new String[]{"",""};
+        int sonbr = OVData.getNextNbr("order");
+        String shipto;
+        
+        if (e.ov_shipto.isEmpty())
+            shipto = OVData.CreateShipTo(e.ov_billto, e.st_name, e.st_line1, e.st_line2, e.st_line3, e.st_city, e.st_state, e.st_zip, e.st_country, e.shipto);
+        else
+            shipto = e.ov_shipto;
+    
+        String[] custinfo = cusData.getCustInfo(e.ov_billto);
+        String site = OVData.getDefaultSite();
+        ordData.so_mstr so = new ordData.so_mstr(null, 
+                String.valueOf(sonbr),
+                 e.ov_billto,
+                 shipto,
+                 site,
+                 OVData.getDefaultCurrency(),   
+                 e.shipmethod,
+                 "",
+                 e.po,
+                 e.duedate,
+                 e.podate,
+                 bsmf.MainFrame.dfdate.format(new Date()),
+                 bsmf.MainFrame.userid,
+                 getGlobalProgTag("open"),
+                 "",   // order level allocation status (global variable) set by createDetRecord 
+                 custinfo[4],
+                 custinfo[0],
+                 custinfo[1],
+                 e.remarks,
+                 "DISCRETE",
+                 "", // tax
+                "0" // isSourced
+                );
+        // detail
+        ArrayList<ordData.sod_det> detail = new ArrayList<ordData.sod_det>();
+        String uom;
+        for (int j = 0; j < e.getDetCount(); j++ ) {
+           if (e.getDetUOM(j).isEmpty()) {
+               uom = OVData.getUOMByItem(e.getDetItem(j));  
+           } else { 
+               uom = e.getDetUOM(j);
+           }
+        ordData.sod_det sod = new ordData.sod_det(null, 
+                String.valueOf(sonbr),
+                String.valueOf(j + 1),
+                e.getDetItem(j), 
+                e.getDetCustItem(j), 
+                e.po,
+                e.getDetQty(j).replace(defaultDecimalSeparator, '.'),
+                uom,
+                "", // allocation value
+                e.getDetListPrice(j).replace(defaultDecimalSeparator, '.'),
+                e.getDetDisc(j).replace(defaultDecimalSeparator, '.'),
+                e.getDetNetPrice(j).replace(defaultDecimalSeparator, '.'),
+                e.podate,
+                e.duedate,   
+                "0", // ship qty
+                "", // status
+                "", // wh
+                "", // location
+                "",  // desc
+                "", // tax 
+                site,  
+                "" // bom        
+                );  
+                detail.add(sod);
         }
         
-      return m;
+        m = addOrderTransaction(detail, so, null, null, null);
+        if (m[0].equals("0")) {
+            m[0] = "success";
+            m[1] = m[1] + ": " + sonbr;
+        } else {
+            m[0] = "error";
+        }
+        return m;
     }
     
     public static void createShipperFrom945(edi945 e, String[] control) {
@@ -1962,7 +1983,8 @@ public class EDI {
         c_in[12] = "0"; // is override
         
         // get Delimiters from Cust Defaults
-        String[] defaults = EDData.getEDITPDefaults(billto, doctype, "");
+        String[] ids = EDData.getEDIXrefOut(billto, "PY");
+        String[] defaults = EDData.getEDITPDefaults(doctype, ids[0], "ourGS");
         c_in[9] = defaults[7]; 
         c_in[10] = defaults[6]; 
         c_in[11] = defaults[8]; 
