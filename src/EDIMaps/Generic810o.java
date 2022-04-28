@@ -47,39 +47,50 @@ public class Generic810o extends com.blueseer.edi.EDIMap {
      com.blueseer.edi.EDI edi = new com.blueseer.edi.EDI();
      String doctype = c[1];
      String key = doc.get(0).toString();
+    
         
      // set the super class variables per the inbound array passed from the Processor (See EDIMap javadoc for defs)
     setControl(c);    
     
     // set the envelope segments (ISA, GS, ST, SE, GE, IEA)...the default is to create envelope from DB read...-x will override this and keep inbound envelopes
     // you can then override individual envelope elements as desired
-    setOutPutEnvelopeStrings(c);
+   // setOutPutEnvelopeStrings(c);
         
-         String[] h = shpData.getShipperHeader(key);  // 13 elements...see declaration
-        
-         // header
-        
-         H.add("BIG" + ed +  h[5].replace("-", "") + ed + key + ed + h[4].replace("-", "") +  ed + h[3]);
-         H.add("REF" + ed + "ST" + ed + h[1]);
-         H.add("N1" + ed + "RE" + ed + OVData.getDefaultSiteName() + ed + "92" + ed + h[1]);
-         H.add("DTM" + ed + "011" + ed + h[5].replace("-", ""));
-         
+    String[] h = shpData.getShipperHeader(key);  // 13 elements...see declaration
+    
+     /* Begin Mapping Segments */ 
+    mapSegment("BIG","e01",h[5].replace("-", ""));
+    mapSegment("BIG","e02",key);
+    mapSegment("BIG","e03",h[4].replace("-", ""));
+    mapSegment("BIG","e04",h[3]);
+    commitSegment("BIG");
+    
+    mapSegment("REF","e01","ST");
+    mapSegment("REF","e02",h[1]);
+    commitSegment("REF");
+    
+    mapSegment("N1","e01","RE");
+    mapSegment("N1","e02",OVData.getDefaultSiteName());
+    mapSegment("N1","e03","92");
+    mapSegment("N1","e04",h[1]);
+    commitSegment("N1");
+    
+    mapSegment("DTM","e01","011");
+    mapSegment("DTM","e02",h[5].replace("-", ""));
+    commitSegment("DTM");    
+    
                
         // detail
          int i = 0;
          int sumqty = 0;
          double sumamt = 0;
          double sumlistamt = 0;
-         
-        
          double sumamtTDS = 0;
          String sku = "";
-         
-      
-         // part, custpart, qty, po, cumqty, listprice, netprice, reference, sku
+         // item, custitem, qty, po, cumqty, listprice, netprice, reference, sku
          ArrayList<String[]> lines = shpData.getShipperLines(key);
               for (String[] d : lines) {
-                  
+                  i++;
                   if (d[8].isEmpty() && d[8] != null) {
                       sku = cusData.getCustAltItem(h[0], d[0]);
                   }
@@ -87,16 +98,33 @@ public class Generic810o extends com.blueseer.edi.EDIMap {
                   sumqty = sumqty + Integer.valueOf(d[2]);
                   sumamt = sumamt + (bsParseDouble(d[2]) * bsParseDouble(d[6]));
                   sumlistamt = sumlistamt + (bsParseDouble(d[2]) * bsParseDouble(d[5]));
-                  D.add("IT1" + ed  +  ed + d[2] + ed + "EA" + ed + currformatDouble(bsParseDouble(d[5])) + ed + ed + "IN" + ed + sku + ed + "VP" + ed + d[1]);
-                  i++;
+                  
+                mapSegment("IT1","e01",String.valueOf(i));
+                mapSegment("IT1","e02",d[2]);
+                mapSegment("IT1","e03","EA");
+                mapSegment("IT1","e04",currformatDouble(bsParseDouble(d[5])));
+                mapSegment("IT1","e06","IN");
+                mapSegment("IT1","e07",sku);
+                mapSegment("IT1","e08","VP");
+                mapSegment("IT1","e09",d[0]);
+                commitSegment("IT1");
+                  
               }
             sumamtTDS = (sumamt * 100);
             
             // trailer
+         mapSegment("TDS","e01",currformatDouble(sumamtTDS));
+         commitSegment("TDS");
          
-          T.add("TDS" + ed + currformatDouble(sumamtTDS));
-          T.add("ISS" + ed + String.valueOf(sumqty) + ed + "EA" + ed + String.valueOf(sumqty) + ed + "LB");
-          T.add("CTT" + ed + String.valueOf(i));
+         mapSegment("ISS","e01",String.valueOf(sumqty));
+         mapSegment("ISS","e02","EA");
+         mapSegment("ISS","e03",String.valueOf(sumqty));
+         mapSegment("ISS","e04","LB");
+         commitSegment("ISS");
+         
+         mapSegment("CTT","e01",String.valueOf(i));
+         commitSegment("CTT");
+        
    
     // Package it      
     

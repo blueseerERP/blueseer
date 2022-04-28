@@ -989,7 +989,7 @@ public class EDData {
     }
     
     public static String[] getEDIXrefOut(String bsaddr, String editype) {
-             String mystring[] = new String[]{"","",""};
+             String mystring[] = new String[]{"","","","",""};
         try{
             Class.forName(driver);
             Connection con = DriverManager.getConnection(url + db, user, pass);
@@ -1002,8 +1002,10 @@ public class EDData {
                                 ";");
                     while (res.next()) {
                        mystring[0] = res.getString("exr_tpid");
-                       mystring[0] = res.getString("exr_gsid");
-                       mystring[0] = res.getString("exr_tpaddr");
+                       mystring[1] = res.getString("exr_gsid");
+                       mystring[2] = res.getString("exr_tpaddr");
+                       mystring[3] = res.getString("exr_ovaddr");
+                       mystring[4] = res.getString("exr_type");
                     }
            }
             catch (SQLException s) {

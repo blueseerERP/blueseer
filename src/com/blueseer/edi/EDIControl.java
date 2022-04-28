@@ -114,7 +114,7 @@ public class EDIControl extends javax.swing.JPanel {
     }
     
     
-    public void copyPartnerDoc(String fromid, String fromdoc, String fromsndgs, String fromrcvgs, String toid, String tosndgs, String torcvgs) {
+    public void copyPartnerDoc(String fromid, String fromdoc, String fromsndgs, String fromrcvgs, String toid, String todoc, String tosndgs, String torcvgs) {
          try {
             Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
@@ -123,7 +123,7 @@ public class EDIControl extends javax.swing.JPanel {
                 int i = 0;
                 res = st.executeQuery("SELECT edi_id, edi_doc FROM  edi_mstr where " +
                                           " edi_id = " + "'" + toid + "'" +
-                                          " AND edi_doc = " + "'" + fromdoc + "'" + 
+                                          " AND edi_doc = " + "'" + todoc + "'" + 
                                           " AND edi_sndgs = " + "'" + tosndgs + "'" +
                                           " AND edi_rcvgs = " + "'" + torcvgs + "'" +        
                                           ";");
@@ -133,7 +133,7 @@ public class EDIControl extends javax.swing.JPanel {
                 
                     if (i == 0) {
                     st.executeUpdate("insert into edi_mstr (edi_id, edi_doc, edi_sndisa, edi_sndq, edi_sndgs, edi_map, edi_eledelim, edi_segdelim, edi_subdelim, edi_fileprefix, edi_filesuffix, edi_filepath, edi_version, edi_rcvisa, edi_rcvgs, edi_rcvq, edi_supcode, edi_doctypeout, edi_filetypeout, edi_ifs, edi_ofs, edi_fa_required ) " + 
-                            " select  " + "'" + toid + "'" + ", em.edi_doc, em.edi_sndisa, em.edi_sndq, " + "'" + tosndgs + "'" + ", em.edi_map, em.edi_eledelim, em.edi_segdelim, em.edi_subdelim, em.edi_fileprefix, em.edi_filesuffix, em.edi_filepath, em.edi_version, em.edi_rcvisa, " + "'" + torcvgs + "'" + ", em.edi_rcvq, em.edi_supcode, em.edi_doctypeout, em.edi_filetypeout, em.edi_ifs, em.edi_ofs, em.edi_fa_required from edi_mstr em " +
+                            " select  " + "'" + toid + "'" + "," + "'" + todoc + "'" + ", em.edi_sndisa, em.edi_sndq, " + "'" + tosndgs + "'" + ", em.edi_map, em.edi_eledelim, em.edi_segdelim, em.edi_subdelim, em.edi_fileprefix, em.edi_filesuffix, em.edi_filepath, em.edi_version, em.edi_rcvisa, " + "'" + torcvgs + "'" + ", em.edi_rcvq, em.edi_supcode, em.edi_doctypeout, em.edi_filetypeout, em.edi_ifs, em.edi_ofs, em.edi_fa_required from edi_mstr em " +
                             " where em.edi_id = " + "'" + fromid + "'" +
                             " and em.edi_doc = " + "'" + fromdoc + "'" +
                             " and em.edi_sndgs = " + "'" + fromsndgs + "'" +
@@ -269,6 +269,8 @@ public class EDIControl extends javax.swing.JPanel {
         jLabel15 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         ddtocode = new javax.swing.JComboBox<>();
+        tbtodoc = new javax.swing.JTextField();
+        jLabel17 = new javax.swing.JLabel();
         btexport = new javax.swing.JButton();
         tbtpid = new javax.swing.JTextField();
         tbgsid = new javax.swing.JTextField();
@@ -345,6 +347,8 @@ public class EDIControl extends javax.swing.JPanel {
 
         jLabel11.setText("To: code");
 
+        jLabel17.setText("To: doc");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -365,12 +369,16 @@ public class EDIControl extends javax.swing.JPanel {
                         .addComponent(btcopy)
                         .addGap(78, 78, 78))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(tbsndgs, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(ddtocode, javax.swing.GroupLayout.Alignment.LEADING, 0, 141, Short.MAX_VALUE))
-                            .addComponent(ddcode, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                        .addComponent(ddcode, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(tbsndgs, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(ddtocode, javax.swing.GroupLayout.Alignment.LEADING, 0, 141, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel17)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tbtodoc, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -386,7 +394,9 @@ public class EDIControl extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel11)
-                    .addComponent(ddtocode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(ddtocode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tbtodoc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel17))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbsndgs, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -597,7 +607,7 @@ public class EDIControl extends javax.swing.JPanel {
 
     private void btcopyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcopyActionPerformed
         String[] x = ddset.getSelectedItem().toString().split("\\+");
-        copyPartnerDoc(x[0], x[1], x[2], x[3], ddtocode.getSelectedItem().toString(), tbsndgs.getText(), tbrcvgs.getText());
+        copyPartnerDoc(x[0], x[1], x[2], x[3], ddtocode.getSelectedItem().toString(), tbtodoc.getText(), tbsndgs.getText(), tbrcvgs.getText());
     }//GEN-LAST:event_btcopyActionPerformed
 
     private void btexportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btexportActionPerformed
@@ -630,6 +640,7 @@ public class EDIControl extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -651,6 +662,7 @@ public class EDIControl extends javax.swing.JPanel {
     private javax.swing.JTextField tbrcvgs;
     private javax.swing.JTextField tbsndgs;
     private javax.swing.JTextField tbstructure;
+    private javax.swing.JTextField tbtodoc;
     private javax.swing.JTextField tbtpid;
     // End of variables declaration//GEN-END:variables
 }

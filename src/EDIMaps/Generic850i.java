@@ -59,7 +59,7 @@ public class Generic850i extends com.blueseer.edi.EDIMap {
        // debuginput(mappedInput);  // for debug purposes
         
         edi850 e = new edi850(getInputISA(6), getInputISA(8), getInputGS(2), getInputGS(3), getInputISA(13), getInputISA(9), doctype, stctrl);  // mandatory class creation
-        isDBLoad(c);
+        isDBWrite(c);
         
         // set some global variables if necessary
         String  now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));

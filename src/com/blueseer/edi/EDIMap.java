@@ -243,8 +243,8 @@ public abstract class EDIMap implements EDIMapi {
         outsender = gsArrayIN[2];
         outreceiver = gsArrayIN[3];
         } else {
-        outsender = c[0];
-        outreceiver = c[21]; 
+        outsender = c[0];  // senderid
+        outreceiver = c[21]; // receiverid
         }
         
         String[] tp = EDData.getEDITPDefaults(outputdoctype, outsender, outreceiver );
@@ -660,7 +660,7 @@ public abstract class EDIMap implements EDIMapi {
      return new String[]{"success","transaction mapped successfully"};
      }
     
-    public void isDBLoad(String[] c) {
+    public void isDBWrite(String[] c) {
         c[7] = ref;
         c[15] = "DB";
         c[25] = "dbload";

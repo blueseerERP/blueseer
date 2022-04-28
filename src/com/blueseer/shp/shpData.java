@@ -1305,9 +1305,10 @@ public class shpData {
             String mydate = dfdate.format(now);
 
 
-               String[] d = new String[9];
+               
                   res = st.executeQuery("select * from ship_det where shd_id = " + "'" + shipper + "'" +";");
                 while (res.next()) {
+                    String[] d = new String[9];
                     for (int z = 0; z < 9; z++) {
                         d[z] = "";
                     }
