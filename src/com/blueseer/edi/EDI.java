@@ -1984,7 +1984,7 @@ public class EDI {
         
         // get Delimiters from Cust Defaults
         String[] ids = EDData.getEDIXrefOut(billto, "PY");
-        String[] defaults = EDData.getEDITPDefaults(doctype, ids[0], "ourGS");
+        String[] defaults = EDData.getEDITPDefaults(doctype, ids[1], EDData.getEDIgsid()); //810, theirGS, ourGS
         c_in[9] = defaults[7]; 
         c_in[10] = defaults[6]; 
         c_in[11] = defaults[8]; 

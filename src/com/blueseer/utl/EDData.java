@@ -1227,6 +1227,37 @@ public class EDData {
        return segments;
     }
        
+    public static String getEDIgsid() {
+       String mystring = "";
+        try{
+            Class.forName(driver);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                
+
+                res = st.executeQuery("select edic_gsid from edi_ctrl ;");
+               while (res.next()) {
+                   mystring = res.getString("edic_gsid");
+                }
+               
+           }
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return mystring;
+        
+    }
+    
     
     public static String getEDIOutDir() {
        String mystring = "";
