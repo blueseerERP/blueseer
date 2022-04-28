@@ -27,3 +27,5 @@ patch=9
 # bug fixes #51, #52, and chartview cleanup
 patch=10
 # emergency patch for #54 and ARMemo Refactor
+patch=11
+# new class addition EDIXrefMaint and item related field lengths to 36 chars
