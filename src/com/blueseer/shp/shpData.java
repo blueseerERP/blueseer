@@ -1308,8 +1308,8 @@ public class shpData {
                
                   res = st.executeQuery("select * from ship_det where shd_id = " + "'" + shipper + "'" +";");
                 while (res.next()) {
-                    String[] d = new String[9];
-                    for (int z = 0; z < 9; z++) {
+                    String[] d = new String[10];
+                    for (int z = 0; z < 10; z++) {
                         d[z] = "";
                     }
                     d[0] = res.getString("shd_part");

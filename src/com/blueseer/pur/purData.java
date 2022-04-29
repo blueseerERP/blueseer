@@ -757,6 +757,79 @@ public class purData {
         return lines;
     }
     
+    public static String[] getPOHeaderEDI(String order) {
+        String[] x = new String[10];
+        try{
+        Class.forName(driver).newInstance();
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+         // po, vend, ship, site, type, orddate, duedate, shipvia, rmks, cur
+           res = st.executeQuery("SELECT * from po_mstr " +
+                   " where po_nbr = " + "'" + order + "'" + ";");
+                        while (res.next()) {
+                          x[0] = res.getString("po_nbr");
+                          x[1] = res.getString("po_vend");
+                          x[2] = res.getString("po_ship");
+                          x[3] = res.getString("po_site");
+                          x[4] = res.getString("po_type");
+                          x[5] = res.getString("po_ord_date");
+                          x[6] = res.getString("po_due_date");
+                          x[7] = res.getString("po_shipvia");
+                          x[8] = res.getString("po_rmks");
+                          x[9] = res.getString("po_curr");
+                        }
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+        return x;
+    }
+    
+    public static ArrayList<String[]> getPOdetailsEDI(String order) {
+        ArrayList<String[]> lines = new ArrayList<String[]>();
+        try{
+        Class.forName(driver).newInstance();
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+           // line, item, venditem, qty, price, uom, desc
+           res = st.executeQuery("SELECT * from pod_mstr " +
+                   " where pod_nbr = " + "'" + order + "'" + ";");
+                        while (res.next()) {
+                          String[] s = new String[7];
+                          for (int z = 0; z < 7; z++) {
+                          s[z] = "";
+                          }
+                          s[0] = res.getString("pod_line");
+                          s[1] = res.getString("pod_part");
+                          s[2] = res.getString("pod_vendpart");
+                          s[3] = res.getString("pod_ord_qty");
+                          s[4] = res.getString("pod_netprice");
+                          s[5] = res.getString("pod_uom");
+                          s[6] = res.getString("pod_desc");
+                          lines.add(s);
+                        }
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+        return lines;
+    }
+    
+    
     public static void updatePOFromReceiver(String receiver) {
 
         boolean partial = false;

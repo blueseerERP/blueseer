@@ -1861,91 +1861,114 @@ public class EDI {
     // outbound
     
     public static int Create856(String shipper)  {
-          int errorcode = 0;
+        int errorcode = 0;
         // errorcode = 0 ... clean exit
-        // errorcode = 1 ... no record found in cmedi_mstr for billto doctype
-        // errorcode = 2 ... unable to retrieve billto from shipper
-        // errorcode = 3 ... any catch error below ...try running from command line to see trace dump
-          // errorcode = 4 ... shipper does not exist
-          
+        // errorcode = 1 ... no record found in getEDIXrefOut/getEDITPDefaults
+        // errorcode = 2 ... any catch error below ...try running from command line to see trace dump
+        
         String billto = "";
         String doctype = "856";
         String map = "";
-        boolean proceed = true;
-       
+        ArrayList<String[]> messages = new ArrayList<String[]>();
          
         // lets determine the billto of this shipper
         billto = shpData.getShipperBillto(shipper);
-        if (billto.isEmpty()) {
-            proceed = false;
-            errorcode = 2;
-            return errorcode;
-        }
         
-        String[] c_in = initEDIControl();   
         
-        c_in[0] = billto;
-        c_in[1] = doctype;
-        c_in[2] = map;
-        c_in[3] = "";
-        c_in[4] = "";
-        c_in[5] = "";
-        c_in[6] = "";
-        c_in[7] = shipper;
-        c_in[15] = "0"; // dir out
-        c_in[12] = "0"; // is override
+        messages.add(new String[]{"info","exporting shipper: " + shipper + " for billto: " + billto});
+        
+        int comkey = OVData.getNextNbr("edilog");
+        
+        String[] c = initEDIControl();   
+        
+        c[1] = doctype;
+        c[2] = map;
+        c[3] = "";
+        c[4] = "";
+        c[5] = "";
+        c[6] = "";
+        c[7] = shipper;
+        c[15] = "0"; // dir out
+        c[12] = "0"; // is override
+        c[22] = String.valueOf(comkey);
+        c[28] = "DB";
+        c[17] = "0";
+        c[18] = "999999";
+        c[19] = "0";
+        c[20] = "999999";
         
         // get Delimiters from Cust Defaults
-        String[] defaults = EDData.getEDITPDefaults(billto, doctype, "");
-        c_in[9] = defaults[7]; 
-        c_in[10] = defaults[6]; 
-        c_in[11] = defaults[8]; 
         
-        // lets determine if an ASN map is available for this billto of this shipper
-        map = EDData.getEDIMap(c_in[0], c_in[1], "");
+        String[] ids = EDData.getEDIXrefOut(billto, "ST");
+        messages.add(new String[]{"info","edi_xref: " + ids[0] + "/" + ids[1] + "/" + ids[2] + "/" + ids[3] + "/" + ids[4]});
+        
+        String[] defaults = EDData.getEDITPDefaults(doctype, EDData.getEDIgsid(), ids[1]  ); //810, ourGS, theirsGS
+        c[9] = defaults[7]; 
+        c[10] = defaults[6]; 
+        c[11] = defaults[8]; 
+        
+        c[0] = defaults[2];
+        c[21] = defaults[5];
+        
+        int idxnbr = EDData.writeEDIIDX(c);
+        c[16] = String.valueOf(idxnbr);
+        
+        messages.add(new String[]{"info","searching for map with: " + c[1] + "/" + defaults[2] + "/" + defaults[5]});
+        map = EDData.getEDIMap(c[1], defaults[2], defaults[5]);
         
           if (map.isEmpty()) {
-            proceed = false;
             errorcode = 1;
-            EDData.writeEDILog(c_in, "error", "no edi_mstr map for " + billto + " / " + doctype); 
-                   return errorcode;
+            messages.add(new String[]{"error","unable to find map class for billto/gs02/gs03/doc: " + billto + "/" + defaults[2] + "/" + defaults[5] + " / " + c[1]});
+            EDData.writeEDILogMulti(c, messages);
+            messages.clear();  // clear message here
+            return errorcode;
         } 
-        
+        messages.add(new String[]{"info","using map: " + map});
+       
         
         // Mapdata method call below requires two parameters (ArrayList, String[]) ...doc and c
         ArrayList doc = new ArrayList();
         doc.add(shipper);
         
         
-        
-           if (proceed) {
-                   try {
-                    Class cls = Class.forName(map);
-                    Object obj = cls.newInstance();
-                    Method method = cls.getDeclaredMethod("Mapdata", ArrayList.class, String[].class);
-               
-                    
-                    Object envelope = method.invoke(obj, doc, c_in); // envelope array holds in this order (isa, gs, ge, iea, filename, isactrlnum, gsctrlnum, stctrlnum)
-                    String[] c_out = (String[])envelope;
-                    
-                    EDData.writeEDILog(c_out, "info", "Export"); 
-                    } catch (IllegalAccessException | ClassNotFoundException |
-                             InstantiationException | NoSuchMethodException |
-                            InvocationTargetException ex) {
-                         if (c_in[12].isEmpty()) {
-                        EDData.writeEDILog(c_in, "error", "unable to load map class for " + c_in[0] + " / " + c_in[1]);
-                        }
-                        errorcode = 3;
-                        MainFrame.bslog(ex);
-                    }
-                  
-           }
+         // call map 
+        try {
+        Class cls = Class.forName(map);
+        Object obj = cls.newInstance();
+        Method method = cls.getDeclaredMethod("Mapdata", ArrayList.class, String[].class);
+        Object oc = method.invoke(obj, doc, c);
+        String[] oString = (String[]) oc;
+        messages.add(new String[]{oString[0], oString[1]});
+        EDData.updateEDIIDX(idxnbr, c); 
+        } catch (InvocationTargetException ex) {
+        errorcode = 2;    
+        if (c[12].isEmpty()) {
+        messages.add(new String[]{"error", "invocation exception in map class " + map + "/" + c[0] + " / " + c[1]});    
+        }
+        MainFrame.bslog(ex); 
+        } catch (ClassNotFoundException ex) {
+        errorcode = 2;    
+        if (c[12].isEmpty()) {
+        messages.add(new String[]{"error", "Map Class not found " + map + "/" + c[0] + " / " + c[1]});        
+        }
+        MainFrame.bslog(ex); 
+        } catch (IllegalAccessException |
+             InstantiationException | NoSuchMethodException ex
+            ) {
+        errorcode = 2;    
+        if (c[12].isEmpty()) {
+        messages.add(new String[]{"error", "IllegalAccess|Instantiation|NoSuchMethod " + map + "/" + c[0] + " / " + c[1]});        
+       }
+        MainFrame.bslog(ex);
+       } finally {
+          EDData.writeEDILogMulti(c, messages);
+          messages.clear();  // clear message here...and at 997...and at end   
+       }
          
-         
-         return errorcode;
-        
+       return errorcode; 
          
      }
+    
      
     public static int Create810(String shipper)  {
         int errorcode = 0;

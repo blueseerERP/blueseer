@@ -29,6 +29,7 @@ package EDIMaps;
 import com.blueseer.ctr.cusData;
 import java.util.ArrayList;
 import com.blueseer.edi.EDI;
+import com.blueseer.pur.purData;
 import com.blueseer.shp.shpData;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
@@ -56,27 +57,28 @@ public class Generic850o extends com.blueseer.edi.EDIMap {
     // you can then override individual envelope elements as desired
    // setOutPutEnvelopeStrings(c);
         
-    String[] h = shpData.getShipperHeader(key);  // 13 elements...see declaration
+    String[] h = purData.getPOHeaderEDI(key);  // 13 elements...see declaration
+    // po, vend, ship, site, type, orddate, duedate, shipvia, rmks, cur
     
      /* Begin Mapping Segments */ 
-    mapSegment("BIG","e01",h[5].replace("-", ""));
-    mapSegment("BIG","e02",key);
-    mapSegment("BIG","e03",h[4].replace("-", ""));
-    mapSegment("BIG","e04",h[3]);
-    commitSegment("BIG");
+    mapSegment("BEG","e01","00");
+    mapSegment("BEG","e02","NE");
+    mapSegment("BEG","e03",key);
+    mapSegment("BEG","e05",h[5].replace("-", ""));
+    commitSegment("BEG");
     
     mapSegment("REF","e01","ST");
-    mapSegment("REF","e02",h[1]);
+    mapSegment("REF","e02",h[3]);
     commitSegment("REF");
     
-    mapSegment("N1","e01","RE");
+    mapSegment("N1","e01","ST");
     mapSegment("N1","e02",OVData.getDefaultSiteName());
     mapSegment("N1","e03","92");
-    mapSegment("N1","e04",h[1]);
+    mapSegment("N1","e04",h[3]);
     commitSegment("N1");
     
-    mapSegment("DTM","e01","011");
-    mapSegment("DTM","e02",h[5].replace("-", ""));
+    mapSegment("DTM","e01","002");
+    mapSegment("DTM","e02",h[6].replace("-", ""));
     commitSegment("DTM");    
     
                
@@ -84,43 +86,30 @@ public class Generic850o extends com.blueseer.edi.EDIMap {
          int i = 0;
          int sumqty = 0;
          double sumamt = 0;
-         double sumlistamt = 0;
-         double sumamtTDS = 0;
-         String sku = "";
-         // item, custitem, qty, po, cumqty, listprice, netprice, reference, sku, desc
-         ArrayList<String[]> lines = shpData.getShipperLines(key);
+         // line, item, venditem, qty, price, uom, desc
+         ArrayList<String[]> lines = purData.getPOdetailsEDI(key);
               for (String[] d : lines) {
                   i++;
-                  if (d[8].isEmpty() && d[8] != null) {
-                      sku = cusData.getCustAltItem(h[0], d[0]);
-                  }
                                     
-                  sumqty = sumqty + Integer.valueOf(d[2]);
-                  sumamt = sumamt + (bsParseDouble(d[2]) * bsParseDouble(d[6]));
-                  sumlistamt = sumlistamt + (bsParseDouble(d[2]) * bsParseDouble(d[5]));
+                  sumqty = sumqty + Integer.valueOf(d[3]);
+                  sumamt = sumamt + (bsParseDouble(d[3]) * bsParseDouble(d[4]));
                   
-                mapSegment("IT1","e01",String.valueOf(i));
-                mapSegment("IT1","e02",d[2]);
-                mapSegment("IT1","e03","EA");
-                mapSegment("IT1","e04",currformatDouble(bsParseDouble(d[5])));
-                mapSegment("IT1","e06","IN");
-                mapSegment("IT1","e07",sku);
-                mapSegment("IT1","e08","VP");
-                mapSegment("IT1","e09",d[0]);
-                commitSegment("IT1");
-                  
+                mapSegment("PO1","e01",d[0]);
+                mapSegment("PO1","e02",d[3]);
+                mapSegment("PO1","e03",d[5]);
+                mapSegment("PO1","e04",currformatDouble(bsParseDouble(d[4])));
+                mapSegment("PO1","e06","BP");
+                mapSegment("PO1","e07",d[1]);
+                if (! d[2].isEmpty()) {
+                mapSegment("PO1","e08","VP");
+                mapSegment("PO1","e09",d[2]);
+                }
+                commitSegment("PO1");
+                
+                mapSegment("PID","e01","F");
+                mapSegment("PID","e05",d[6]);
+                commitSegment("PID");
               }
-            sumamtTDS = (sumamt * 100);
-            
-            // trailer
-         mapSegment("TDS","e01",currformatDouble(sumamtTDS));
-         commitSegment("TDS");
-         
-         mapSegment("ISS","e01",String.valueOf(sumqty));
-         mapSegment("ISS","e02","EA");
-         mapSegment("ISS","e03",String.valueOf(sumqty));
-         mapSegment("ISS","e04","LB");
-         commitSegment("ISS");
          
          mapSegment("CTT","e01",String.valueOf(i));
          commitSegment("CTT");

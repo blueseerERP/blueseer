@@ -1257,7 +1257,7 @@ CREATE TABLE "po_ctrl" (
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "po_mstr" (
   "po_nbr" varchar(8) COLLATE NOCASE DEFAULT '',
-  "po_vend" varchar(30) COLLATE NOCASE DEFAULT '',
+  "po_vend" varchar(10) COLLATE NOCASE DEFAULT '',
   "po_ord_date" date COLLATE NOCASE DEFAULT '',
   "po_due_date" date COLLATE NOCASE DEFAULT '',
   "po_rmks" varchar(30) COLLATE NOCASE DEFAULT '',
@@ -1272,7 +1272,8 @@ CREATE TABLE "po_mstr" (
   "po_ap_acct" varchar(12) COLLATE NOCASE DEFAULT '',
   "po_ap_cc" varchar(4) COLLATE NOCASE DEFAULT '',
   "po_export_850" tinyint(1) NOT NULL DEFAULT '0',
-  "po_ack" tinyint(1) NOT NULL DEFAULT '0'
+  "po_ack" tinyint(1) NOT NULL DEFAULT '0',
+  "po_ship" varchar(10) COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;

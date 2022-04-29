@@ -55,7 +55,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.BorderFactory;
@@ -199,9 +202,16 @@ public class EDIExport extends javax.swing.JPanel {
     }
     
     public void setComponentDefaultValues() {
+       Date today = new Date();
        isLoad = true;
-        tacomments.setText("");
+       tacomments.setText("");
+       dcfrom.setDate(today);
+       dcto.setDate(today);
+       tbnbrfrom.setText(bsmf.MainFrame.lowchar);
+       tbnbrto.setText(bsmf.MainFrame.hichar);
+       cboverride.setSelected(false);
        isLoad = false;
+       
     }
     
     public void setState() {
@@ -226,6 +236,12 @@ public class EDIExport extends javax.swing.JPanel {
             message[1] = "";
             if (x.equals("Invoice")) {
                  message = exportInvoices(y);
+            }
+            if (x.equals("Advance Ship Notice")) {
+                 message = exportASNs(y);
+            }
+            if (x.equals("Purchase Order")) {
+                 message = exportPurchaseOrders(y);
             }
             return message;
         }
@@ -254,6 +270,7 @@ public class EDIExport extends javax.swing.JPanel {
    
     
     public void initvars(String[] arg) {
+      setComponentDefaultValues();
       if (! dddoctype.getItemAt(0).equals("")) {
           dddoctype.insertItemAt("", 0);
       }  
@@ -302,6 +319,28 @@ public class EDIExport extends javax.swing.JPanel {
         m[1] = "Processing Complete";
         return m;
     }
+    
+    public String[] exportASNs(ArrayList<String> list) {
+        String[] m = new String[]{"", ""};
+        int l_error = 0;
+        int g_error = 0;
+        String status = "";
+        for (String x : list) {
+          l_error = EDI.Create856(x); 
+          if (l_error == 0) {
+            status = "success";
+            EDData.updateEDIASNStatus(x);   
+          } else {
+            g_error = l_error;  
+            status = "error";  
+          }
+          tacomments.append("exporting number: " + x + "  Return Code: " + status + "\n");
+        }
+        m[0] = String.valueOf(g_error);
+        m[1] = "Processing Complete";
+        return m;
+    }
+    
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -452,6 +491,9 @@ public class EDIExport extends javax.swing.JPanel {
         ArrayList<String> list = new ArrayList<String>();
         if (dddoctype.getSelectedItem().toString().equals("Invoice")) {
           list = EDData.getEDIInvoices(tbnbrfrom.getText(), tbnbrto.getText(), BlueSeerUtils.setDateFormat(dcfrom.getDate()), BlueSeerUtils.setDateFormat(dcto.getDate()), cboverride.isSelected());
+        }
+        if (dddoctype.getSelectedItem().toString().equals("Advance Ship Notice")) {
+          list = EDData.getEDIASNs(tbnbrfrom.getText(), tbnbrto.getText(), BlueSeerUtils.setDateFormat(dcfrom.getDate()), BlueSeerUtils.setDateFormat(dcto.getDate()), cboverride.isSelected());
         }
         if (dddoctype.getSelectedItem().toString().equals("Purchase Order")) {
           list = EDData.getEDIPOs(tbnbrfrom.getText(), tbnbrto.getText(), BlueSeerUtils.setDateFormat(dcfrom.getDate()), BlueSeerUtils.setDateFormat(dcto.getDate()), cboverride.isSelected());

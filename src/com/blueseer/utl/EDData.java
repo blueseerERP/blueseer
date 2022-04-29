@@ -932,6 +932,51 @@ public class EDData {
         
     }
     
+    public static ArrayList<String> getEDIASNs(String fromnbr, String tonbr, String fromdate, String todate, boolean override) {
+       ArrayList mylist = new ArrayList();
+        try{
+            Class.forName(driver);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                
+                if (override) {
+                 res = st.executeQuery("select sh_id from ship_mstr where " +
+                        " sh_id >= " + "'" + fromnbr + "'" + 
+                        " and sh_id <= " + "'" + tonbr + "'" +
+                        " and sh_confdate >= " + "'" + fromdate + "'" +
+                        " and sh_confdate <= " + "'" + todate + "'" +
+                        " and sh_status = '1' ;");   
+                } else {
+                 res = st.executeQuery("select sh_id from ship_mstr where " +
+                        " sh_id >= " + "'" + fromnbr + "'" + 
+                        " and sh_id <= " + "'" + tonbr + "'" +
+                        " and sh_confdate >= " + "'" + fromdate + "'" +
+                        " and sh_confdate <= " + "'" + todate + "'" +
+                        " and sh_status = '1' " +
+                        " and sh_export_856 = '0' ;");   
+                }
+                
+               while (res.next()) {
+                   mylist.add(res.getString("sh_id"));
+                }
+           }
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return mylist;
+        
+    }
+        
     public static ArrayList<String> getEDIPOs(String fromnbr, String tonbr, String fromdate, String todate, boolean override) {
        ArrayList mylist = new ArrayList();
         try{
@@ -954,7 +999,7 @@ public class EDData {
                         " and po_nbr <= " + "'" + tonbr + "'" +
                         " and po_ord_date >= " + "'" + fromdate + "'" +
                         " and po_ord_date <= " + "'" + todate + "'" +
-                        " and po_export_810 = '0' ;");   
+                        " and po_export_850 = '0' ;");   
                 }
                 
                while (res.next()) {
@@ -975,8 +1020,7 @@ public class EDData {
         return mylist;
         
     }
-    
-    
+        
     public static void updateEDIPOStatus(String po) {
        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd"); 
        try{
@@ -986,6 +1030,32 @@ public class EDData {
            st.executeUpdate(
                  " update po_mstr set po_export_850 = '1' " +
                  " where po_nbr = " + "'" + po + "'" + ";" );
+        }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+            
+            if (st != null) {
+                st.close();
+            }
+            con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+
+   }
+    
+    public static void updateEDIASNStatus(String shipper) {
+       DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd"); 
+       try{
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        try{
+           st.executeUpdate(
+                 " update ship_mstr set sh_export_856 = '1' " +
+                 " where sh_id = " + "'" + shipper + "'" + ";" );
         }
         catch (SQLException s){
              MainFrame.bslog(s);

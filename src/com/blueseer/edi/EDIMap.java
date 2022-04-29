@@ -250,8 +250,12 @@ public abstract class EDIMap implements EDIMapi {
         String[] tp = EDData.getEDITPDefaults(outputdoctype, outsender, outreceiver );
         setOutPutDocType(tp[14]);
         setOutPutFileType(tp[15]);
+        if (! tp[16].equals("DB")) {
         setInputStructureFile(tp[16]);
+        }
+        if (! tp[17].equals("DB")) {
         setOutputStructureFile(tp[17]);
+        }
      }
 
     public void setReference(String key) {
