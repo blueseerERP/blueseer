@@ -229,14 +229,14 @@ CREATE TABLE "clock_ctrl" (
 CREATE TABLE "cm_mstr" (
   "cm_code" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
   "cm_site" varchar(10) COLLATE NOCASE DEFAULT '',
-  "cm_name" varchar(30) COLLATE NOCASE DEFAULT '',
-  "cm_line1" varchar(30) COLLATE NOCASE DEFAULT '',
-  "cm_line2" varchar(30) COLLATE NOCASE DEFAULT '',
-  "cm_line3" varchar(30) COLLATE NOCASE DEFAULT '',
-  "cm_city" varchar(30) COLLATE NOCASE DEFAULT '',
+  "cm_name" varchar(50) COLLATE NOCASE DEFAULT '',
+  "cm_line1" varchar(50) COLLATE NOCASE DEFAULT '',
+  "cm_line2" varchar(50) COLLATE NOCASE DEFAULT '',
+  "cm_line3" varchar(50) COLLATE NOCASE DEFAULT '',
+  "cm_city" varchar(50) COLLATE NOCASE DEFAULT '',
   "cm_state" varchar(3) COLLATE NOCASE DEFAULT '',
-  "cm_zip" varchar(10) COLLATE NOCASE DEFAULT '',
-  "cm_country" varchar(50) COLLATE NOCASE DEFAULT '',
+  "cm_zip" varchar(15) COLLATE NOCASE DEFAULT '',
+  "cm_country" varchar(3) COLLATE NOCASE DEFAULT '',
   "cm_dateadd" date DEFAULT '0000-00-00',
   "cm_datemod" date DEFAULT '0000-00-00',
   "cm_usermod" varchar(10) COLLATE NOCASE DEFAULT '',
@@ -316,8 +316,8 @@ CREATE TABLE "cms_det" (
   "cms_line3" varchar(50) COLLATE NOCASE DEFAULT '',
   "cms_city" varchar(50) COLLATE NOCASE DEFAULT '',
   "cms_state" varchar(3) COLLATE NOCASE DEFAULT '',
-  "cms_zip" varchar(10) COLLATE NOCASE DEFAULT '',
-  "cms_country" varchar(50) COLLATE NOCASE DEFAULT '',
+  "cms_zip" varchar(15) COLLATE NOCASE DEFAULT '',
+  "cms_country" varchar(3) COLLATE NOCASE DEFAULT '',
   "cms_contact" varchar(50) COLLATE NOCASE DEFAULT '',
   "cms_phone" varchar(15) COLLATE NOCASE DEFAULT '',
   "cms_email" varchar(100) COLLATE NOCASE DEFAULT '',
@@ -701,12 +701,12 @@ CREATE TABLE "emp_mstr" (
   "emp_addrline2" varchar(50) COLLATE NOCASE DEFAULT '',
   "emp_city" varchar(50) COLLATE NOCASE DEFAULT '',
   "emp_state" varchar(3) COLLATE NOCASE DEFAULT '',
-  "emp_country" varchar(50) COLLATE NOCASE DEFAULT '',
+  "emp_country" varchar(3) COLLATE NOCASE DEFAULT '',
   "emp_phone" varchar(30) COLLATE NOCASE DEFAULT '',
   "emp_emer_contact" varchar(30) COLLATE NOCASE DEFAULT '',
   "emp_emer_phone" varchar(30) COLLATE NOCASE DEFAULT '',
   "emp_dob" date COLLATE NOCASE DEFAULT '',
-  "emp_zip" varchar(10) COLLATE NOCASE DEFAULT '',
+  "emp_zip" varchar(15) COLLATE NOCASE DEFAULT '',
   "emp_clockin" int(1) NOT NULL DEFAULT '0',
   "emp_clockid" int(11) NOT NULL DEFAULT '0',
   "emp_supervisor" varchar(30) COLLATE NOCASE DEFAULT '',
@@ -1045,13 +1045,13 @@ CREATE TABLE "label_mstr" (
   "lbl_parent" int(8) NOT NULL DEFAULT '0',
   "lbl_parent_str" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "lbl_addrcode" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "lbl_addrname" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "lbl_addr1" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "lbl_addr2" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "lbl_addrcity" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "lbl_addrname" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
+  "lbl_addr1" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
+  "lbl_addr2" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
+  "lbl_addrcity" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
   "lbl_addrstate" varchar(3) NOT NULL COLLATE NOCASE DEFAULT '',
-  "lbl_addrzip" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
-  "lbl_addrcountry" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "lbl_addrzip" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
+  "lbl_addrcountry" varchar(3) NOT NULL COLLATE NOCASE DEFAULT '',
   "lbl_crt_date" date NOT NULL DEFAULT '0000-00-00',
   "lbl_ship_date" date NOT NULL DEFAULT '0000-00-00',
   "lbl_scan" tinyint(1) NOT NULL DEFAULT '0',
@@ -1072,9 +1072,9 @@ CREATE TABLE "wh_mstr" (
   "wh_name" varchar(50) COLLATE NOCASE DEFAULT '',
   "wh_addr1" varchar(50) COLLATE NOCASE DEFAULT '',
   "wh_addr2" varchar(50) COLLATE NOCASE DEFAULT '',
-  "wh_city" varchar(30) COLLATE NOCASE DEFAULT '',
+  "wh_city" varchar(50) COLLATE NOCASE DEFAULT '',
   "wh_state" varchar(3) COLLATE NOCASE DEFAULT '',
-  "wh_zip" varchar(10) COLLATE NOCASE DEFAULT '',
+  "wh_zip" varchar(15) COLLATE NOCASE DEFAULT '',
   "wh_country" varchar(3) COLLATE NOCASE DEFAULT '');
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -1271,7 +1271,8 @@ CREATE TABLE "po_mstr" (
   "po_buyer" varchar(30) COLLATE NOCASE DEFAULT '',
   "po_ap_acct" varchar(12) COLLATE NOCASE DEFAULT '',
   "po_ap_cc" varchar(4) COLLATE NOCASE DEFAULT '',
-  "po_export_850" tinyint(1) NOT NULL DEFAULT '0'
+  "po_export_850" tinyint(1) NOT NULL DEFAULT '0',
+  "po_ack" tinyint(1) NOT NULL DEFAULT '0'
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -1655,13 +1656,13 @@ CREATE TABLE "fod_det" (
   "fod_recvtime" time NOT NULL COLLATE NOCASE DEFAULT '',
   "fod_shipper" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "fod_code" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "fod_name" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "fod_addr1" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "fod_addr2" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "fod_addr3" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "fod_city" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "fod_name" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
+  "fod_addr1" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
+  "fod_addr2" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
+  "fod_addr3" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
+  "fod_city" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
   "fod_state" varchar(3) NOT NULL COLLATE NOCASE DEFAULT '',
-  "fod_zip" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "fod_zip" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
   "fod_phone" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "fod_email" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "fod_contact" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
@@ -1762,14 +1763,14 @@ CREATE TABLE "ship_tree" (
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "site_mstr" (
   "site_site" varchar(10) NOT NULL,
-  "site_desc" varchar(30) COLLATE NOCASE DEFAULT '',
-  "site_line1" varchar(30) COLLATE NOCASE DEFAULT '',
-  "site_line2" varchar(30) COLLATE NOCASE DEFAULT '',
-  "site_line3" varchar(30) COLLATE NOCASE DEFAULT '',
-  "site_city" varchar(30) COLLATE NOCASE DEFAULT '',
+  "site_desc" varchar(50) COLLATE NOCASE DEFAULT '',
+  "site_line1" varchar(50) COLLATE NOCASE DEFAULT '',
+  "site_line2" varchar(50) COLLATE NOCASE DEFAULT '',
+  "site_line3" varchar(50) COLLATE NOCASE DEFAULT '',
+  "site_city" varchar(50) COLLATE NOCASE DEFAULT '',
   "site_state" varchar(3) COLLATE NOCASE DEFAULT '',
-  "site_zip" varchar(30) COLLATE NOCASE DEFAULT '',
-  "site_country" varchar(30) COLLATE NOCASE DEFAULT '',
+  "site_zip" varchar(15) COLLATE NOCASE DEFAULT '',
+  "site_country" varchar(3) COLLATE NOCASE DEFAULT '',
   "site_phone" varchar(30) COLLATE NOCASE DEFAULT '',
   "site_web" varchar(30) COLLATE NOCASE DEFAULT '',
   "site_logo" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
@@ -1872,7 +1873,8 @@ CREATE TABLE "so_mstr" (
   "so_wh" varchar(10) COLLATE NOCASE DEFAULT '',
   "so_site" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
   "so_isallocated" varchar(1) NOT NULL COLLATE NOCASE DEFAULT '',
-  "so_export_855" tinyint(1) NOT NULL DEFAULT '0'
+  "so_export_855" tinyint(1) NOT NULL DEFAULT '0',
+  "so_entrytype" varchar(10) NOT NULL COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -1914,7 +1916,11 @@ CREATE TABLE "sod_det" (
   "sod_wh" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
   "sod_loc" varchar(20) NOT NULL COLLATE NOCASE DEFAULT '',
   "sod_all_qty" int(8) NOT NULL COLLATE NOCASE DEFAULT '0',
-  "sod_bom" varchar(36) NOT NULL COLLATE NOCASE DEFAULT ''
+  "sod_bom" varchar(36) NOT NULL COLLATE NOCASE DEFAULT '',
+  "sod_custline" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
+  "sod_custuom" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
+  "sod_custprice" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
+  "sod_edikv" varchar(100) NOT NULL COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -2217,14 +2223,14 @@ CREATE TABLE "user_mstr" (
 CREATE TABLE "vd_mstr" (
   "vd_addr" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "vd_site" varchar(10) COLLATE NOCASE DEFAULT '',
-  "vd_name" varchar(30) COLLATE NOCASE DEFAULT '',
-  "vd_line1" varchar(30) COLLATE NOCASE DEFAULT '',
-  "vd_line2" varchar(30) COLLATE NOCASE DEFAULT '',
-  "vd_line3" varchar(30) COLLATE NOCASE DEFAULT '',
-  "vd_city" varchar(30) COLLATE NOCASE DEFAULT '',
+  "vd_name" varchar(50) COLLATE NOCASE DEFAULT '',
+  "vd_line1" varchar(50) COLLATE NOCASE DEFAULT '',
+  "vd_line2" varchar(50) COLLATE NOCASE DEFAULT '',
+  "vd_line3" varchar(50) COLLATE NOCASE DEFAULT '',
+  "vd_city" varchar(50) COLLATE NOCASE DEFAULT '',
   "vd_state" varchar(3) COLLATE NOCASE DEFAULT '',
-  "vd_zip" varchar(10) COLLATE NOCASE DEFAULT '',
-  "vd_country" varchar(30) COLLATE NOCASE DEFAULT '',
+  "vd_zip" varchar(15) COLLATE NOCASE DEFAULT '',
+  "vd_country" varchar(3) COLLATE NOCASE DEFAULT '',
   "vd_dateadd" date DEFAULT '0000-00-00',
   "vd_datemod" date DEFAULT '0000-00-00',
   "vd_usermod" varchar(30) COLLATE NOCASE DEFAULT '',
@@ -2245,6 +2251,25 @@ CREATE TABLE "vd_mstr" (
   "vd_misc" varchar(50) NOT NULL DEFAULT '0',
   "vd_phone" varchar(15) NOT NULL DEFAULT '0',
   "vd_email" varchar(60) NOT NULL DEFAULT '0');
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE "vds_det" (
+  "vds_code" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
+  "vds_shipto" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
+  "vds_name" varchar(50) COLLATE NOCASE DEFAULT '',
+  "vds_line1" varchar(50) COLLATE NOCASE DEFAULT '',
+  "vds_line2" varchar(50) COLLATE NOCASE DEFAULT '',
+  "vds_line3" varchar(50) COLLATE NOCASE DEFAULT '',
+  "vds_city" varchar(50) COLLATE NOCASE DEFAULT '',
+  "vds_state" varchar(3) COLLATE NOCASE DEFAULT '',
+  "vds_zip" varchar(15) COLLATE NOCASE DEFAULT '',
+  "vds_country" varchar(3) COLLATE NOCASE DEFAULT '',
+  "vds_contact" varchar(50) COLLATE NOCASE DEFAULT '',
+  "vds_phone" varchar(15) COLLATE NOCASE DEFAULT '',
+  "vds_email" varchar(100) COLLATE NOCASE DEFAULT '',
+  "vds_misc" varchar(50) COLLATE NOCASE DEFAULT '',
+  "vds_plantcode" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '');
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
