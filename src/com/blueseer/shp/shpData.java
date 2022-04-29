@@ -1321,6 +1321,7 @@ public class shpData {
                     d[6] = res.getString("shd_netprice");
                     d[7] = res.getString("shd_ref");
                     d[8] = res.getString("shd_sku");
+                    d[9] = res.getString("shd_desc");
                     mylist.add(d);
                 }
        }

@@ -41,7 +41,7 @@ import java.text.DecimalFormat;
  *
  * @author vaughnte
  */
-public class Generic810o extends com.blueseer.edi.EDIMap { 
+public class Generic850o extends com.blueseer.edi.EDIMap { 
     
     public String[] Mapdata(ArrayList doc, String[] c) throws IOException {
      com.blueseer.edi.EDI edi = new com.blueseer.edi.EDI();

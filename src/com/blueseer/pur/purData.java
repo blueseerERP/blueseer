@@ -45,8 +45,10 @@ import java.sql.SQLException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Locale;
@@ -699,6 +701,36 @@ public class purData {
     
     
     // miscellaneous SQL queries
+    public static String getPOVendor(String po) {
+         String x = "";
+          try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+            ResultSet res = null;
+        try{
+           
+            res = st.executeQuery("select po_vend from po_mstr where po_nbr = " + "'" + po + "'" +";");
+            while (res.next()) {
+                x = res.getString("po_vend");
+            }
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+
+        } finally {
+            if (res != null) res.close();
+            if (st != null) st.close();
+            con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+
+    }
+         return x;
+     }
+
     public static ArrayList<String> getPOLines(String order) {
         ArrayList<String> lines = new ArrayList<String>();
         try{

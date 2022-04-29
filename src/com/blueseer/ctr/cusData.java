@@ -1334,7 +1334,64 @@ public class cusData {
         }
         return custinfo;
     }
-        
+    
+    public static String[] getCustAddressInfo(String cust) {
+           // get billto specific data
+            // aracct, arcc, currency, bank, terms, carrier, onhold, site
+        String[] custinfo = new String[]{"","","","","","","",""};
+        String sql = "select cm_name, cm_line1, cm_line2, cm_line3, cm_city, cm_state, cm_zip, cm_country, cm_email from cm_mstr where cm_code = ?;";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, cust);
+             try (ResultSet res = ps.executeQuery();) {
+               while (res.next()) {
+               custinfo[0] = res.getString("cm_name");
+               custinfo[1] = res.getString("cm_line1");
+               custinfo[2] = res.getString("cm_line2");
+               custinfo[3] = res.getString("cm_line3");
+               custinfo[4] = res.getString("cm_city");
+               custinfo[5] = res.getString("cm_state");
+               custinfo[6] = res.getString("cm_country");
+               custinfo[7] = res.getString("cm_email");                   
+               }
+            }
+        }
+        catch (SQLException s){
+            MainFrame.bslog(s);
+        }
+        return custinfo;
+    }
+    
+    public static String[] getShipAddressInfo(String cust, String ship) {
+           // get billto specific data
+            // aracct, arcc, currency, bank, terms, carrier, onhold, site
+        String[] custinfo = new String[]{"","","","","","","","",""};
+        String sql = "select cms_shipto, cms_name, cms_line1, cms_line2, cms_line3, cms_city, cms_state, cms_zip, cms_country, cms_plantcode from cms_det where cms_code = ? and cms_shipto = ?;";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, cust);
+        ps.setString(2, ship);
+             try (ResultSet res = ps.executeQuery();) {
+               while (res.next()) {
+               custinfo[0] = res.getString("cms_shipto");
+               custinfo[1] = res.getString("cms_name");
+               custinfo[2] = res.getString("cms_line1");
+               custinfo[3] = res.getString("cms_line2");
+               custinfo[4] = res.getString("cms_line3");
+               custinfo[5] = res.getString("cms_city");
+               custinfo[6] = res.getString("cms_state");
+               custinfo[7] = res.getString("cms_country");
+               custinfo[8] = res.getString("cms_plantcode");                   
+               }
+            }
+        }
+        catch (SQLException s){
+            MainFrame.bslog(s);
+        }
+        return custinfo;
+    }
+         
+    
     public static String getCustSalesAcct(String cust) {
            String myitem = "";
          try{

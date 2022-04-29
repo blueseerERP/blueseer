@@ -261,22 +261,45 @@ public class EDIExport extends javax.swing.JPanel {
       tacomments.setText("");
     }
     
-    public String[] exportPurchaseOrders(String fromnbr, String tonbr, String fromdate, String todate) {
-        String[] m = new String[2];
-        
+    public String[] exportPurchaseOrders(ArrayList<String> list) {
+         String[] m = new String[]{"", ""};
+        int l_error = 0;
+        int g_error = 0;
+        String status = "";
+        for (String x : list) {
+          l_error = EDI.Create850(x); 
+          if (l_error == 0) {
+            status = "success";
+            EDData.updateEDIPOStatus(x);   
+          } else {
+            g_error = l_error;  
+            status = "error";  
+          }
+          tacomments.append("exporting number: " + x + "  Return Code: " + status + "\n");
+        }
+        m[0] = String.valueOf(g_error);
+        m[1] = "Processing Complete";
         return m;
     }
     
     public String[] exportInvoices(ArrayList<String> list) {
         String[] m = new String[]{"", ""};
-        int error = 0;
+        int l_error = 0;
+        int g_error = 0;
+        String status = "";
         for (String x : list) {
-          error = EDI.Create810(x); 
-          if (error == 0) {
+          l_error = EDI.Create810(x); 
+          if (l_error == 0) {
+            status = "success";
             EDData.updateEDIInvoiceStatus(x);   
+          } else {
+            g_error = l_error;  
+            status = "error";  
           }
-          tacomments.append("exporting number: " + x + "  Return Code: " + String.valueOf(error) + "\n");
+          tacomments.append("exporting number: " + x + "  Return Code: " + status + "\n");
         }
+        m[0] = String.valueOf(g_error);
+        m[1] = "Processing Complete";
         return m;
     }
     
@@ -429,6 +452,9 @@ public class EDIExport extends javax.swing.JPanel {
         ArrayList<String> list = new ArrayList<String>();
         if (dddoctype.getSelectedItem().toString().equals("Invoice")) {
           list = EDData.getEDIInvoices(tbnbrfrom.getText(), tbnbrto.getText(), BlueSeerUtils.setDateFormat(dcfrom.getDate()), BlueSeerUtils.setDateFormat(dcto.getDate()), cboverride.isSelected());
+        }
+        if (dddoctype.getSelectedItem().toString().equals("Purchase Order")) {
+          list = EDData.getEDIPOs(tbnbrfrom.getText(), tbnbrto.getText(), BlueSeerUtils.setDateFormat(dcfrom.getDate()), BlueSeerUtils.setDateFormat(dcto.getDate()), cboverride.isSelected());
         }
         setPanelComponentState(this, false);
         tacomments.setText("");

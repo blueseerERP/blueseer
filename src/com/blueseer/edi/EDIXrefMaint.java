@@ -554,7 +554,7 @@ public class EDIXrefMaint extends javax.swing.JPanel implements IBlueSeerT    {
 
         jLabel4.setText("BSAddr");
 
-        ddtype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "BT", "ST", "PY" }));
+        ddtype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "BT", "ST", "PY", "VN" }));
 
         jLabel5.setText("Type");
 

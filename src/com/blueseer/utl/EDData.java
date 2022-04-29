@@ -932,6 +932,78 @@ public class EDData {
         
     }
     
+    public static ArrayList<String> getEDIPOs(String fromnbr, String tonbr, String fromdate, String todate, boolean override) {
+       ArrayList mylist = new ArrayList();
+        try{
+            Class.forName(driver);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                
+                if (override) {
+                 res = st.executeQuery("select po_nbr from po_mstr where " +
+                        " po_nbr >= " + "'" + fromnbr + "'" + 
+                        " and po_nbr <= " + "'" + tonbr + "'" +
+                        " and po_ord_date >= " + "'" + fromdate + "'" +
+                        " and po_ord_date <= " + "'" + todate + "'" +
+                        " ;");   
+                } else {
+                 res = st.executeQuery("select po_nbr from po_mstr where " +
+                        " po_nbr >= " + "'" + fromnbr + "'" + 
+                        " and po_nbr <= " + "'" + tonbr + "'" +
+                        " and po_ord_date >= " + "'" + fromdate + "'" +
+                        " and po_ord_date <= " + "'" + todate + "'" +
+                        " and po_export_810 = '0' ;");   
+                }
+                
+               while (res.next()) {
+                   mylist.add(res.getString("po_nbr"));
+                }
+           }
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return mylist;
+        
+    }
+    
+    
+    public static void updateEDIPOStatus(String po) {
+       DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd"); 
+       try{
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        try{
+           st.executeUpdate(
+                 " update po_mstr set po_export_850 = '1' " +
+                 " where po_nbr = " + "'" + po + "'" + ";" );
+        }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+            
+            if (st != null) {
+                st.close();
+            }
+            con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+
+   }
+    
+    
     public static void updateEDIInvoiceStatus(String shipper) {
        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd"); 
        try{
