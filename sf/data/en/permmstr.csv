@@ -297,3 +297,4 @@ admin,RetailReorderRpt
 admin,ProjectionBrowse
 admin,ComponentDemandBrowse
 admin,EDIXrefMaint
+admin,EDIExport

@@ -887,6 +887,103 @@ public class EDData {
         
     }
     
+    public static ArrayList<String> getEDIInvoices(String fromnbr, String tonbr, String fromdate, String todate, boolean override) {
+       ArrayList mylist = new ArrayList();
+        try{
+            Class.forName(driver);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                
+                if (override) {
+                 res = st.executeQuery("select sh_id from ship_mstr where " +
+                        " sh_id >= " + "'" + fromnbr + "'" + 
+                        " and sh_id <= " + "'" + tonbr + "'" +
+                        " and sh_confdate >= " + "'" + fromdate + "'" +
+                        " and sh_confdate <= " + "'" + todate + "'" +
+                        " and sh_status = '1' ;");   
+                } else {
+                 res = st.executeQuery("select sh_id from ship_mstr where " +
+                        " sh_id >= " + "'" + fromnbr + "'" + 
+                        " and sh_id <= " + "'" + tonbr + "'" +
+                        " and sh_confdate >= " + "'" + fromdate + "'" +
+                        " and sh_confdate <= " + "'" + todate + "'" +
+                        " and sh_status = '1' " +
+                        " and sh_export_810 = '0' ;");   
+                }
+                
+               while (res.next()) {
+                   mylist.add(res.getString("sh_id"));
+                }
+           }
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return mylist;
+        
+    }
+    
+    public static void updateEDIInvoiceStatus(String shipper) {
+       DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd"); 
+       try{
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        try{
+           st.executeUpdate(
+                 " update ship_mstr set sh_export_810 = '1' " +
+                 " where sh_id = " + "'" + shipper + "'" + ";" );
+        }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+            
+            if (st != null) {
+                st.close();
+            }
+            con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+
+   }
+    
+    public static void updateEDIInvoiceStatus(ArrayList<String> shippers) {
+       try{
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        try{
+           for (String s : shippers) { 
+               st.executeUpdate(
+                     " update ship_mstr set sh_export_810 = '1' " +
+                     " where sh_id = " + "'" + s + "'" + ";" );
+           }
+        }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+            
+            if (st != null) {
+                st.close();
+            }
+            con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+   }
+
     
     public static ArrayList getEDIPartners() {
        ArrayList mylist = new ArrayList();

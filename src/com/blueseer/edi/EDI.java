@@ -2011,6 +2011,8 @@ public class EDI {
           if (map.isEmpty()) {
             errorcode = 1;
             messages.add(new String[]{"error","unable to find map class for billto/gs02/gs03/doc: " + billto + "/" + defaults[2] + "/" + defaults[5] + " / " + c[1]});
+            EDData.writeEDILogMulti(c, messages);
+            messages.clear();  // clear message here
             return errorcode;
         } 
         messages.add(new String[]{"info","using map: " + map});

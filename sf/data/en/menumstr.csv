@@ -209,6 +209,7 @@ EDIControl,,com.blueseer.edi.EDIControl,JMenuItem,edic
 EDILoad,,com.blueseer.edi.EDILoadMaint,JMenuItem,edip
 EDILog,,com.blueseer.edi.EDITransactionBrowse,JMenuItem,edil
 EDIXrefMaint,,com.blueseer.edi.EDIXrefMaint,JMenuItem,edix
+EDIExport,,com.blueseer.edi.EDIExport,JMenuItem,edit
 ARAgingView,,com.blueseer.far.ARAgingView,JMenuItem,arav
 APAgingView,,com.blueseer.fap.APAgingView,JMenuItem,apav
 GLControl,,com.blueseer.fgl.GLControl,JMenuItem,glcc
