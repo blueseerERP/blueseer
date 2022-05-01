@@ -334,7 +334,7 @@ public class TermsMaint extends javax.swing.JPanel implements IBlueSeerT {
         int fc;
         
         if ((x.equals(x.delete) || x.equals(x.update)) && cbsystemcode.isSelected()) {
-            bsmf.MainFrame.show("cannot alter system record");
+            bsmf.MainFrame.show(getMessageTag(1175));
             return false;
         }
         
