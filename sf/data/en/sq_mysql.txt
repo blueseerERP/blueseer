@@ -17,6 +17,8 @@ load data local infile 'edictrl.csv' replace into table edi_ctrl fields terminat
 insert into car_mstr (car_code, car_desc, car_scac, car_type) values ('USPS','US POSTAL SERVICE','USPS','carrier') ; 
 insert into cust_term (cut_code, cut_desc, cut_days) values ('N30','NET 30','30') ; 
 insert into cust_term (cut_code, cut_desc, cut_days) values ('N00','Due Now','0') ; 
+insert into cust_term (cut_code, cut_desc, cut_days, cut_syscode) values ('CIA','Cash In Advance','0','1') ; 
+insert into cust_term (cut_code, cut_desc, cut_days, cut_syscode) values ('PIA','Payment In Advance','0', '1') ; 
 insert into frt_mstr (frt_code) values ('PICKUP') ; 
 load data local infile 'sitemstr.csv' replace into table site_mstr fields terminated by ',' ignore 0 Lines; show errors; 
 load data local infile 'glcal.csv' replace into table gl_cal fields terminated by ',' ignore 0 Lines; show errors; 

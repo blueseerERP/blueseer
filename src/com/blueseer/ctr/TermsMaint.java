@@ -272,6 +272,9 @@ public class TermsMaint extends javax.swing.JPanel implements IBlueSeerT {
     
     public void setComponentDefaultValues() {
        isLoad = true;
+       
+       cbsystemcode.setEnabled(false);
+       
         tbkey.setText("");
         tbdesc.setText("");
         duedays.setText("");
@@ -306,6 +309,7 @@ public class TermsMaint extends javax.swing.JPanel implements IBlueSeerT {
         btnew.setEnabled(false);
         tbkey.setEditable(true);
         tbkey.setForeground(Color.blue);
+        cbsystemcode.setEnabled(false);
         if (! x.isEmpty()) {
           tbkey.setText(String.valueOf(OVData.getNextNbr(x)));  
           tbkey.setEditable(false);
@@ -319,6 +323,7 @@ public class TermsMaint extends javax.swing.JPanel implements IBlueSeerT {
                    btadd.setEnabled(false);
                    tbkey.setEditable(false);
                    tbkey.setForeground(Color.blue);
+                   cbsystemcode.setEnabled(false);
         } else {
                    tbkey.setForeground(Color.red); 
         }
@@ -328,6 +333,11 @@ public class TermsMaint extends javax.swing.JPanel implements IBlueSeerT {
         Map<String,Integer> f = OVData.getTableInfo("cust_term");
         int fc;
         
+        if ((x.equals(x.delete) || x.equals(x.update)) && cbsystemcode.isSelected()) {
+            bsmf.MainFrame.show("cannot alter system record");
+            return false;
+        }
+        
         fc = checkLength(f,"cut_code");        
         if (tbkey.getText().length() > fc || tbkey.getText().isEmpty()) { 
             bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
@@ -335,6 +345,7 @@ public class TermsMaint extends javax.swing.JPanel implements IBlueSeerT {
             return false;
         }
         
+        fc = checkLength(f,"cut_desc");
         if (tbdesc.getText().length() > fc) { 
             bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
             tbdesc.requestFocus();
