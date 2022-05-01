@@ -42,6 +42,7 @@ import static com.blueseer.ctr.cusData.getCarrierMstr;
 import static com.blueseer.ctr.cusData.updateCarrierMstr;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.checkLength;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -67,6 +68,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -327,27 +329,53 @@ public class CarrierMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
     
     public boolean validateInput(dbaction x) {
-        boolean b = true;
+       
                
+        Map<String,Integer> f = OVData.getTableInfo("car_mstr");
+        int fc;        
+        fc = checkLength(f,"car_code");
+        if (tbkey.getText().length() > fc || tbkey.getText().isEmpty()) {
+        bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+        tbkey.requestFocus();
+        return false;
+        } 
                 
-                if (tbkey.getText().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1024));
-                    tbkey.requestFocus();
-                    return b;
-                }
-                
-                if (tbdesc.getText().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1024));
-                    tbdesc.requestFocus();
-                    return b;
-                }
-                
-                
-                
-               
-        return b;
+        fc = checkLength(f,"car_desc");
+        if (tbdesc.getText().length() > fc) {
+        bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+        tbdesc.requestFocus();
+        return false;
+        } 
+        
+        fc = checkLength(f,"car_scac");
+        if (tbscaccode.getText().length() > fc) {
+        bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+        tbscaccode.requestFocus();
+        return false;
+        }
+        
+        fc = checkLength(f,"car_acct");
+        if (tbacct.getText().length() > fc) {
+        bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+        tbacct.requestFocus();
+        return false;
+        }
+        
+        fc = checkLength(f,"car_contact");
+        if (tbcontact.getText().length() > fc) {
+        bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+        tbcontact.requestFocus();
+        return false;
+        }
+        
+        fc = checkLength(f,"car_phone");
+        if (tbphone.getText().length() > fc) {
+        bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+        tbphone.requestFocus();
+        return false;
+        }
+        
+        return true;
     }
     
     public void initvars(String[] arg) {
