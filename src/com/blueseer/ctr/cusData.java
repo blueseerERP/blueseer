@@ -512,8 +512,9 @@ public class cusData {
     public static String[] addTermsMstr(cust_term x) {
         String[] m = new String[2];
         String sqlSelect = "select * from cust_term where cut_code = ?";
-        String sqlInsert = "insert into cust_term (cut_code, cut_desc, cut_days, cut_discdays, cut_discpercent)  " +
-                " values (?,?,?,?,?); "; 
+        String sqlInsert = "insert into cust_term (cut_code, cut_desc, cut_days, cut_discdays, cut_discpercent, " +
+                " cut_mfi, cut_mfimonth, cut_mfiday )  " +
+                " values (?,?,?,?,?,?,?,?); "; 
         try (Connection con = DriverManager.getConnection(url + db, user, pass);
              PreparedStatement ps = con.prepareStatement(sqlSelect);) {
              ps.setString(1, x.cut_code);
@@ -525,6 +526,9 @@ public class cusData {
             psi.setString(3, x.cut_days);
             psi.setString(4, x.cut_discdays);
             psi.setString(5, x.cut_discpercent);
+            psi.setString(6, x.cut_mfi);
+            psi.setString(7, x.cut_mfimonth);
+            psi.setString(8, x.cut_mfiday);
             int rows = psi.executeUpdate();
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
             } else {
@@ -541,14 +545,17 @@ public class cusData {
     public static String[] updateTermsMstr(cust_term x) {
         String[] m = new String[2];
         String sql = "update cust_term set cut_desc = ?, cut_days = ?, cut_discdays = ?, " +
-                " cut_discpercent = ? where cut_code = ? ";
+                " cut_discpercent = ?, cut_mfi = ?, cut_mfimonth = ?, cut_mfiday = ? where cut_code = ? ";
         try (Connection con = DriverManager.getConnection(url + db, user, pass);
 	PreparedStatement ps = con.prepareStatement(sql)) {
         ps.setString(1, x.cut_desc);
         ps.setString(2, x.cut_days);
         ps.setString(3, x.cut_discdays);
         ps.setString(4, x.cut_discpercent);
-        ps.setString(5, x.cut_code);
+        ps.setString(5, x.cut_mfi);
+        ps.setString(6, x.cut_mfimonth);
+        ps.setString(7, x.cut_mfiday);
+        ps.setString(8, x.cut_code);
         int rows = ps.executeUpdate();
         m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
         } catch (SQLException s) {
@@ -591,7 +598,11 @@ public class cusData {
                             res.getString("cut_desc"),
                             res.getString("cut_days"),
                             res.getString("cut_discdays"),
-                            res.getString("cut_discpercent")
+                            res.getString("cut_discpercent"),
+                            res.getString("cut_syscode"),
+                            res.getString("cut_mfi"),
+                            res.getString("cut_mfimonth"),
+                            res.getString("cut_mfiday")
                         );
                     }
                 }
@@ -2157,9 +2168,10 @@ public class cusData {
     }
     
     public record cust_term(String[] m, String cut_code, String cut_desc, String cut_days, 
-        String cut_discdays, String cut_discpercent) {
+        String cut_discdays, String cut_discpercent, String cut_syscode, String cut_mfi,
+        String cut_mfimonth, String cut_mfiday) {
         public cust_term(String[] m) {
-            this(m,"","","","","");
+            this(m,"","","","","","","","","");
         }
     } 
     

@@ -333,7 +333,12 @@ CREATE TABLE IF NOT EXISTS `cust_term` (
   `cut_discdays` int(11) NOT NULL DEFAULT '0',
   `cut_discpercent` int(11) NOT NULL DEFAULT '0',
   `cut_discstart` int(11) NOT NULL DEFAULT '0',
-  `cut_duestart` int(11) NOT NULL DEFAULT '0') ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `cut_duestart` int(11) NOT NULL DEFAULT '0',
+  `cut_syscode` tinyint(1) NOT NULL DEFAULT '0',
+  `cut_mfi` tinyint(1) NOT NULL DEFAULT '0',
+  `cut_mfimonth` int(2) NOT NULL DEFAULT '0',
+  `cut_mfiday` int(2) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `dept_mstr` (
   `dept_id` varchar(10) NOT NULL  DEFAULT '',
   `dept_desc` varchar(100)  NOT NULL DEFAULT '',

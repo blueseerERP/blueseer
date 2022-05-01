@@ -377,7 +377,12 @@ CREATE TABLE "cust_term" (
   "cut_discdays" int(11) NOT NULL DEFAULT '0',
   "cut_discpercent" int(11) NOT NULL DEFAULT '0',
   "cut_discstart" int(11) NOT NULL DEFAULT '0',
-  "cut_duestart" int(11) NOT NULL DEFAULT '0');
+  "cut_duestart" int(11) NOT NULL DEFAULT '0',
+  "cut_syscode" tinyint(1) NOT NULL DEFAULT '0',
+  "cut_mfi" tinyint(1) NOT NULL DEFAULT '0',
+  "cut_mfimonth" int(2) NOT NULL DEFAULT '0',
+  "cut_mfiday" int(2) NOT NULL DEFAULT '0'
+);
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;

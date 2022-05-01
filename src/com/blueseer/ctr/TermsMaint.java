@@ -40,6 +40,7 @@ import com.blueseer.ctr.cusData.cust_term;
 import static com.blueseer.ctr.cusData.getTermsMstr;
 import static com.blueseer.ctr.cusData.updateTermsMstr;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.checkLength;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
@@ -62,7 +63,9 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.YearMonth;
 import java.util.ArrayList;
+import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -83,7 +86,7 @@ public class TermsMaint extends javax.swing.JPanel implements IBlueSeerT {
 
     // global variable declarations
                 boolean isLoad = false;
-    
+    private static cust_term x = null;
     // global datatablemodel declarations    
                 
     public TermsMaint() {
@@ -140,9 +143,8 @@ public class TermsMaint extends javax.swing.JPanel implements IBlueSeerT {
             BlueSeerUtils.endTask(message);
            if (this.type.equals("delete")) {
              initvars(null);  
-           } else if (this.type.equals("get") && message[0].equals("1")) {
-             tbkey.requestFocus();
-           } else if (this.type.equals("get") && message[0].equals("0")) {
+           } else if (this.type.equals("get")) {
+             updateForm();  
              tbkey.requestFocus();
            } else {
              initvars(null);  
@@ -276,6 +278,22 @@ public class TermsMaint extends javax.swing.JPanel implements IBlueSeerT {
         discduedays.setText("");
         discpercent.setText("");
         
+        cbsystemcode.setSelected(false);
+        cbmfi.setSelected(false);
+        ddmfimonth.removeAllItems();
+        for (int i = 1; i <= 12; i++) {
+            ddmfimonth.addItem(String.valueOf(i));
+        }
+        ddmfimonth.setSelectedIndex(0);
+       
+        ddmfiday.removeAllItems();
+        for (int i = 1; i <= 31; i++) {
+            ddmfiday.addItem(String.valueOf(i));
+        }
+        ddmfiday.setSelectedIndex(0);
+        //YearMonth yearMonthObject = YearMonth.of(1999, 2);
+        //int daysInMonth = yearMonthObject.lengthOfMonth(); //28  
+        
        isLoad = false;
     }
     
@@ -307,45 +325,42 @@ public class TermsMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
     
     public boolean validateInput(BlueSeerUtils.dbaction x) {
-        boolean b = true;
-                
-                
-                if (tbkey.getText().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1024));
-                    tbkey.requestFocus();
-                    return b;
-                }
-                
-                if (tbdesc.getText().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1024));
-                    tbdesc.requestFocus();
-                    return b;
-                }
-                
-                if (! BlueSeerUtils.isParsableToInt(duedays.getText())) {
-                    bsmf.MainFrame.show(getMessageTag(1028));
-                    duedays.requestFocus();
-                    b = false;
-                    
-                }
-                
-                if (! BlueSeerUtils.isParsableToInt(discduedays.getText())) {
-                    bsmf.MainFrame.show(getMessageTag(1028));
-                    discduedays.requestFocus();
-                    b = false;
-                    
-                }
-                
-                if (! BlueSeerUtils.isParsableToInt(discpercent.getText())) {
-                    bsmf.MainFrame.show(getMessageTag(1028));
-                    discpercent.requestFocus();
-                    b = false;
-                    
-                }
+        Map<String,Integer> f = OVData.getTableInfo("cust_term");
+        int fc;
+        
+        fc = checkLength(f,"cut_code");        
+        if (tbkey.getText().length() > fc || tbkey.getText().isEmpty()) { 
+            bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+            tbkey.requestFocus();
+            return false;
+        }
+        
+        if (tbdesc.getText().length() > fc) { 
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tbdesc.requestFocus();
+            return false;
+        }
                
-        return b;
+                
+        if (! BlueSeerUtils.isParsableToInt(duedays.getText())) {
+            bsmf.MainFrame.show(getMessageTag(1028));
+            duedays.requestFocus();
+            return false;
+        }
+
+        if (! BlueSeerUtils.isParsableToInt(discduedays.getText())) {
+            bsmf.MainFrame.show(getMessageTag(1028));
+            discduedays.requestFocus();
+            return false;
+        }
+
+        if (! BlueSeerUtils.isParsableToInt(discpercent.getText())) {
+            bsmf.MainFrame.show(getMessageTag(1028));
+            discpercent.requestFocus();
+            return false;
+        }
+               
+        return true;
     }
     
     public void initvars(String[] arg) {
@@ -426,13 +441,7 @@ public class TermsMaint extends javax.swing.JPanel implements IBlueSeerT {
      }
       
     public String[] getRecord(String[] key) {
-       cust_term x = getTermsMstr(key);  
-        tbkey.setText(x.cut_code());
-        tbdesc.setText(x.cut_desc());
-        duedays.setText(x.cut_days());
-        discduedays.setText(x.cut_discdays());
-        discpercent.setText(x.cut_discpercent());
-        setAction(x.m());
+       x = getTermsMstr(key);
         return x.m();
     }
     
@@ -441,11 +450,28 @@ public class TermsMaint extends javax.swing.JPanel implements IBlueSeerT {
                 tbdesc.getText().toUpperCase(),
                 duedays.getText(),
                 discduedays.getText(),
-                discpercent.getText()
+                discpercent.getText(),
+                String.valueOf(BlueSeerUtils.boolToInt(cbsystemcode.isSelected())),
+                String.valueOf(BlueSeerUtils.boolToInt(cbmfi.isSelected())),
+                ddmfimonth.getSelectedItem().toString(),
+                ddmfiday.getSelectedItem().toString()
                 );
         return x;
     }
     
+    public String[] updateForm() {
+        tbkey.setText(x.cut_code());
+        tbdesc.setText(x.cut_desc());
+        duedays.setText(x.cut_days());
+        discduedays.setText(x.cut_discdays());
+        discpercent.setText(x.cut_discpercent());
+        cbsystemcode.setSelected(BlueSeerUtils.ConvertStringToBool(x.cut_syscode()));   
+        cbmfi.setSelected(BlueSeerUtils.ConvertStringToBool(x.cut_mfi())); 
+        ddmfimonth.setSelectedItem(x.cut_mfimonth());
+        ddmfiday.setSelectedItem(x.cut_mfiday());
+        setAction(x.m());
+        return x.m();  
+    }
     
     public void lookUpFrame() {
         
@@ -516,6 +542,12 @@ public class TermsMaint extends javax.swing.JPanel implements IBlueSeerT {
         btnew = new javax.swing.JButton();
         btclear = new javax.swing.JButton();
         btlookup = new javax.swing.JButton();
+        ddmfimonth = new javax.swing.JComboBox<>();
+        jLabel6 = new javax.swing.JLabel();
+        ddmfiday = new javax.swing.JComboBox<>();
+        jLabel7 = new javax.swing.JLabel();
+        cbmfi = new javax.swing.JCheckBox();
+        cbsystemcode = new javax.swing.JCheckBox();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -590,6 +622,14 @@ public class TermsMaint extends javax.swing.JPanel implements IBlueSeerT {
             }
         });
 
+        jLabel6.setText("MFI Month");
+
+        jLabel7.setText("MFI Day");
+
+        cbmfi.setText("use MFI?");
+
+        cbsystemcode.setText("System Code");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -601,22 +641,11 @@ public class TermsMaint extends javax.swing.JPanel implements IBlueSeerT {
                     .addComponent(jLabel2)
                     .addComponent(jLabel3)
                     .addComponent(jLabel4)
-                    .addComponent(jLabel5))
+                    .addComponent(jLabel5)
+                    .addComponent(jLabel6)
+                    .addComponent(jLabel7))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(discpercent, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(discduedays, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(btadd)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btdelete)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btupdate))
-                            .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(duedays, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -624,7 +653,25 @@ public class TermsMaint extends javax.swing.JPanel implements IBlueSeerT {
                         .addGap(13, 13, 13)
                         .addComponent(btnew)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btclear)))
+                        .addComponent(btclear))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cbsystemcode)
+                            .addComponent(cbmfi)
+                            .addComponent(discpercent, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(discduedays, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(duedays, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(ddmfimonth, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(ddmfiday, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(btadd, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btdelete)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btupdate)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -644,6 +691,8 @@ public class TermsMaint extends javax.swing.JPanel implements IBlueSeerT {
                     .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cbsystemcode)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(duedays, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3))
@@ -655,6 +704,16 @@ public class TermsMaint extends javax.swing.JPanel implements IBlueSeerT {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(discpercent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cbmfi)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ddmfimonth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ddmfiday, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btadd)
@@ -715,6 +774,10 @@ public class TermsMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JButton btlookup;
     private javax.swing.JButton btnew;
     private javax.swing.JButton btupdate;
+    private javax.swing.JCheckBox cbmfi;
+    private javax.swing.JCheckBox cbsystemcode;
+    private javax.swing.JComboBox<String> ddmfiday;
+    private javax.swing.JComboBox<String> ddmfimonth;
     private javax.swing.JTextField discduedays;
     private javax.swing.JTextField discpercent;
     private javax.swing.JTextField duedays;
@@ -723,6 +786,8 @@ public class TermsMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTextField tbdesc;
     private javax.swing.JTextField tbkey;
