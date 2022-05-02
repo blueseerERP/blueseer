@@ -35,6 +35,7 @@ import static com.blueseer.fgl.fglData.getCurrMstr;
 import static com.blueseer.fgl.fglData.updateCurrMstr;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.checkLength;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -54,6 +55,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -298,34 +300,25 @@ public class CurrencyMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
     
     public boolean validateInput(dbaction x) {
-        boolean b = true;
                 
+        Map<String,Integer> f = OVData.getTableInfo("cur_mstr");
+        int fc;
+        
+        
+        //fc = checkLength(f,"cur_id");        
+        if (tbkey.getText().length() != 3 || tbkey.getText().isEmpty()) { 
+            bsmf.MainFrame.show(getMessageTag(1032,"3" + "/" + "3"));
+            tbkey.requestFocus();
+            return false;
+        }
                 
-                if (tbkey.getText().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1024,"ID"));
-                    tbkey.requestFocus();
-                    return b;
-                }
-                
-                if (tbkey.getText().length() > 3) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1032, "3"));
-                    tbkey.requestFocus();
-                    return b;
-                }
-                
-                if (tbdesc.getText().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1024,"Description"));
-                    tbdesc.requestFocus();
-                    return b;
-                }
-                
-                
-                
-               
-        return b;
+        fc = checkLength(f,"cur_desc");        
+        if (tbkey.getText().length() > fc || tbkey.getText().isEmpty()) { 
+            bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+            tbkey.requestFocus();
+            return false;
+        }
+        return true;
     }
     
     public void initvars(String[] arg) {
