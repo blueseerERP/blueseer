@@ -525,6 +525,20 @@ CREATE TABLE "export_mstr" (
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
+CREATE TABLE "change_log" (
+  "chg_id" INTEGER PRIMARY KEY,
+  "chg_key" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "chg_table" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "chg_class" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "chg_userid" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
+  "chg_desc" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
+  "chg_ts" timestamp NOT NULL DEFAULT (datetime('now','localtime')),
+  "chg_type" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "chg_ref" varchar(30) NOT NULL COLLATE NOCASE DEFAULT ''
+);
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "cron_log" (
   "cron_id" INTEGER PRIMARY KEY,
   "cron_prog" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',

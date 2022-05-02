@@ -448,6 +448,17 @@ CREATE TABLE IF NOT EXISTS `jasp_mstr` (
   `jasp_sequence` int(3) NOT NULL  DEFAULT '0',
   `jasp_format` varchar(10) NOT NULL  DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `change_log` (
+  `chg_id` int(12) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  `chg_key` varchar(30) NOT NULL  DEFAULT '',
+  `chg_table` varchar(30) NOT NULL  DEFAULT '',
+  `chg_class` varchar(30) NOT NULL  DEFAULT '',
+  `chg_userid` varchar(8) NOT NULL  DEFAULT '',
+  `chg_desc` varchar(100) NOT NULL  DEFAULT '',
+  `chg_ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `chg_type` varchar(30) NOT NULL  DEFAULT '',
+  `chg_ref` varchar(30) NOT NULL  DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `cron_log` (
   `cron_id` int(12) NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `cron_prog` varchar(30) NOT NULL  DEFAULT '',
