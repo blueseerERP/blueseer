@@ -115,8 +115,8 @@ public class purData {
         String sqlInsert = "insert into po_mstr (po_nbr, po_vend, po_site, po_type, " 
                         + " po_curr, po_buyer, po_due_date, "
                         + " po_ord_date, po_userid, po_status,"
-                        + " po_terms, po_ap_acct, po_ap_cc, po_rmks ) "
-                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
+                        + " po_terms, po_ap_acct, po_ap_cc, po_rmks, po_ship ) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
        
           ps = con.prepareStatement(sqlSelect); 
           ps.setString(1, x.po_nbr);
@@ -137,12 +137,13 @@ public class purData {
             ps.setString(12, x.po_ap_acct);
             ps.setString(13, x.po_ap_cc);
             ps.setString(14, x.po_rmks);
+            ps.setString(15, x.po_ship);
             rows = ps.executeUpdate();
             } 
             return rows;
     }
             
-    public static String[] addPOTransaction(ArrayList<pod_mstr> pod, po_mstr po) {
+    public static String[] addPOTransaction(ArrayList<pod_mstr> pod, po_addr poa, po_mstr po) {
         String[] m = new String[2];
         Connection bscon = null;
         PreparedStatement ps = null;
@@ -151,6 +152,7 @@ public class purData {
             bscon = DriverManager.getConnection(url + db, user, pass);
             bscon.setAutoCommit(false);
             _addPOMstr(po, bscon, ps, res);  
+            _addPOAddr(poa, bscon, ps, res, true);
             for (pod_mstr z : pod) {
                 _addPODet(z, bscon, ps, res);
             }
@@ -201,7 +203,7 @@ public class purData {
         ResultSet res = null;
         try { 
             con = DriverManager.getConnection(url + db, user, pass);
-            int rows = _updatePOMstr(x, con, ps);  // add cms_det
+            int rows = _updatePOMstr(x, con, ps); 
             if (rows > 0) {
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
             } else {
@@ -239,7 +241,7 @@ public class purData {
     private static int _updatePOMstr(po_mstr x, Connection con, PreparedStatement ps) throws SQLException {
         int rows = 0;
         String sql = "update po_mstr set po_status = ?, po_rmks = ?,  " +
-                "po_site = ?, po_buyer = ?, po_due_date = ?, po_shipvia = ? " +               
+                "po_site = ?, po_buyer = ?, po_due_date = ?, po_shipvia = ?, po_ship = ? " +               
                  " where po_nbr = ? ; ";
 	ps = con.prepareStatement(sql) ;
         ps.setString(7, x.po_nbr);
@@ -249,6 +251,7 @@ public class purData {
             ps.setString(4, x.po_buyer);
             ps.setString(5, x.po_due_date);
             ps.setString(6, x.po_shipvia);
+            ps.setString(7, x.po_ship);
             rows = ps.executeUpdate();
         return rows;
     }
@@ -310,7 +313,7 @@ public class purData {
         return rows;
     }
         
-    public static String[] updatePOTransaction(String x, ArrayList<String> lines, ArrayList<pod_mstr> pod, po_mstr po) {
+    public static String[] updatePOTransaction(String x, ArrayList<String> lines, ArrayList<pod_mstr> pod, po_addr poa, po_mstr po) {
         String[] m = new String[2];
         Connection bscon = null;
         PreparedStatement ps = null;
@@ -328,7 +331,8 @@ public class purData {
                 _updatePODet(z, bscon, ps, res);
             }
           
-             _updatePOMstr(po, bscon, ps);  // update so_mstr
+             _updatePOMstr(po, bscon, ps);  // update po_mstr
+             _updatePOAddr(poa, bscon, ps);  // update po_addr
             bscon.commit();
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
         } catch (SQLException s) {
@@ -375,7 +379,7 @@ public class purData {
         Connection con = null;
         try { 
             con = DriverManager.getConnection(url + db, user, pass);
-            _deletePOMstr(x, con);  // add cms_det
+            _deletePOMstr(x, con);  // add po_addr
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
         } catch (SQLException s) {
              MainFrame.bslog(s);
@@ -401,7 +405,7 @@ public class purData {
         try { 
             con = DriverManager.getConnection(url + db, user, pass);
              for (String line : lines) {
-               _deletePOLines(x, line, con);  // add cms_det
+               _deletePOLines(x, line, con);  // add po_addr
              }
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
         } catch (SQLException s) {
@@ -454,11 +458,12 @@ public class purData {
             
             // order master
             po_mstr po = _getPOMstr(x, bscon, ps, res);
+            po_addr poa = _getPOAddr(new String[]{po.po_nbr, po.po_ship}, bscon, ps, res);
             ArrayList<pod_mstr> pod = _getPODet(x, bscon, ps, res);
            
             
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
-            r = new purchaseOrder(m, po, pod);
+            r = new purchaseOrder(m, po, poa, pod);
             
         } catch (SQLException s) {
              MainFrame.bslog(s);
@@ -510,7 +515,7 @@ public class purData {
                         res.getString("po_shipvia"), res.getString("po_status"), res.getString("po_userid"), 
                         res.getString("po_type"), res.getString("po_curr"), res.getString("po_terms"), 
                         res.getString("po_site"), res.getString("po_buyer"), res.getString("po_ap_acct"), 
-                        res.getString("po_ap_cc"));
+                        res.getString("po_ap_cc"), res.getString("po_ship"));
                     }
                 }
             }
@@ -540,7 +545,7 @@ public class purData {
                         res.getString("po_shipvia"), res.getString("po_status"), res.getString("po_userid"), 
                         res.getString("po_type"), res.getString("po_curr"), res.getString("po_terms"), 
                         res.getString("po_site"), res.getString("po_buyer"), res.getString("po_ap_acct"), 
-                        res.getString("po_ap_cc"));
+                        res.getString("po_ap_cc"), res.getString("po_ship"));
                 }
             }
             return r;
@@ -697,6 +702,308 @@ public class purData {
         }
         return r;
     }
+    
+    public static String[] addPOAddr(po_addr x) {
+        String[] m = new String[2];
+        if (x == null) {
+            return new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordError};
+        }
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet res = null;
+        try { 
+            con = DriverManager.getConnection(url + db, user, pass);
+            _addPOAddr(x, con, ps, res, false);  // add po_addr
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordError};
+        } finally {
+            if (res != null) {
+                try {
+                    res.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
+    }
+    
+    private static void _addPOAddr(po_addr x, Connection con, PreparedStatement ps, ResultSet res, boolean addupdate) throws SQLException {
+        if (x == null) return;
+        String sqlSelect = "select * from po_addr where poa_code = ? and poa_shipto = ?";
+        String sqlInsert = "insert into po_addr (poa_code, poa_shipto, poa_name, poa_line1, poa_line2, " 
+                        + "poa_line3, poa_city, poa_state, poa_zip, poa_country, poa_contact, "
+                        + "poa_phone, poa_email ) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
+        String sqlUpdate = "update po_addr set " 
+                + " poa_name = ?, poa_line1 = ?, poa_line2 = ?, "
+                + "poa_line3 = ?, poa_city = ?, poa_state = ?, poa_zip = ?, "
+                + "poa_country = ?, poa_contact = ?, poa_phone = ?, poa_email = ? "
+                + " where poa_code = ? and poa_shipto = ? ; ";
+            ps = con.prepareStatement(sqlSelect);
+            ps.setString(1, x.poa_code);
+            ps.setString(2, x.poa_shipto);
+            res = ps.executeQuery();
+             if (! res.isBeforeFirst()) {
+            ps = con.prepareStatement(sqlInsert);
+            ps.setString(1, x.poa_code);
+            ps.setString(2, x.poa_shipto);
+            ps.setString(3, x.poa_name);
+            ps.setString(4, x.poa_line1);
+            ps.setString(5, x.poa_line2);
+            ps.setString(6, x.poa_line3);
+            ps.setString(7, x.poa_city);
+            ps.setString(8, x.poa_state);
+            ps.setString(9, x.poa_zip);
+            ps.setString(10, x.poa_country);
+            ps.setString(11, x.poa_contact);
+            ps.setString(12, x.poa_phone);
+            ps.setString(13, x.poa_email);
+            int rows = ps.executeUpdate();
+            } else {
+                 if (addupdate) {
+                    ps = con.prepareStatement(sqlUpdate); 
+                    ps.setString(12, x.poa_code);
+                    ps.setString(13, x.poa_shipto);
+                    ps.setString(1, x.poa_name);
+                    ps.setString(2, x.poa_line1);
+                    ps.setString(3, x.poa_line2);
+                    ps.setString(4, x.poa_line3);
+                    ps.setString(5, x.poa_city);
+                    ps.setString(6, x.poa_state);
+                    ps.setString(7, x.poa_zip);
+                    ps.setString(8, x.poa_country);
+                    ps.setString(9, x.poa_contact);
+                    ps.setString(10, x.poa_phone);
+                    ps.setString(11, x.poa_email);
+                    ps.executeUpdate();    
+                 }
+             }
+    }
+    
+    public static String[] updatePOAddr(po_addr x) {
+        String[] m = new String[2];
+        if (x == null) {
+            return new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordError};
+        }
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet res = null;
+        try { 
+            con = DriverManager.getConnection(url + db, user, pass);
+            _updatePOAddr(x, con, ps);  // add po_addr
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordError};
+        } finally {
+            if (res != null) {
+                try {
+                    res.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
+    }
+    
+    private static int _updatePOAddr(po_addr x, Connection con, PreparedStatement ps) throws SQLException {
+        int rows = 0;
+        String sql = "update po_addr set " 
+                + " poa_name = ?, poa_line1 = ?, poa_line2 = ?, "
+                + "poa_line3 = ?, poa_city = ?, poa_state = ?, poa_zip = ?, "
+                + "poa_country = ?, poa_contact = ?, poa_phone = ?, poa_email = ? "
+                + " where poa_code = ? and poa_shipto = ? ; ";
+       ps = con.prepareStatement(sql);
+        ps.setString(12, x.poa_code);
+        ps.setString(13, x.poa_shipto);
+            ps.setString(1, x.poa_name);
+            ps.setString(2, x.poa_line1);
+            ps.setString(3, x.poa_line2);
+            ps.setString(4, x.poa_line3);
+            ps.setString(5, x.poa_city);
+            ps.setString(6, x.poa_state);
+            ps.setString(7, x.poa_zip);
+            ps.setString(8, x.poa_country);
+            ps.setString(9, x.poa_contact);
+            ps.setString(10, x.poa_phone);
+            ps.setString(11, x.poa_email);
+            rows = ps.executeUpdate();
+        
+       
+        return rows;
+    }
+         
+    public static String[] deletePOAddr(po_addr x) {
+        String[] m = new String[2];
+        if (x == null) {
+            return new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordError};
+        }
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet res = null;
+        try { 
+            con = DriverManager.getConnection(url + db, user, pass);
+            _deletePOAddr(x.poa_code, x.poa_shipto, con, ps, res);  // add po_addr
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordError};
+        } finally {
+            if (res != null) {
+                try {
+                    res.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
+    }
+    
+    private static void _deletePOAddr(String x, String y, Connection con, PreparedStatement ps, ResultSet res) throws SQLException { 
+       
+        String sql = "delete from po_addr where poa_code = ? and poa_shipto = ?; ";
+        ps = con.prepareStatement(sql);
+        ps.setString(1, x);
+        ps.setString(2, y);
+        ps.executeUpdate();
+    }
+    
+    public static po_addr getPOAddr(String shipto, String code) {
+        po_addr r = null;
+        String[] m = new String[2];
+        String sql = "select * from po_addr where poa_shipto = ? and poa_code = ? ;";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, shipto);
+        ps.setString(2, code);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new po_addr(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new po_addr(m, res.getString("poa_code"), res.getString("poa_shipto"), res.getString("poa_name"), res.getString("poa_line1"), res.getString("poa_line2"),
+                    res.getString("poa_line3"), res.getString("poa_city"), res.getString("poa_state"), res.getString("poa_zip"),
+                    res.getString("poa_country"), res.getString("poa_contact"), res.getString("poa_phone"),
+                    res.getString("poa_email")
+                    );
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new po_addr(m);
+        }
+        return r;
+    }
+    
+    private static po_addr _getPOAddr(String[] x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+        po_addr r = null;
+        String[] m = new String[2];
+        String sqlSelect = "select * from po_addr where poa_code = ?";
+          ps = con.prepareStatement(sqlSelect); 
+          ps.setString(1, x[0]);
+          res = ps.executeQuery();
+            if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};
+                r = new po_addr(m);
+            } else {
+                while(res.next()) {
+                    m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                      r = new po_addr(m, res.getString("poa_code"), res.getString("poa_shipto"), res.getString("poa_name"), res.getString("poa_line1"), res.getString("poa_line2"),
+                    res.getString("poa_line3"), res.getString("poa_city"), res.getString("poa_state"), res.getString("poa_zip"),
+                    res.getString("poa_country"), res.getString("poa_contact"), res.getString("poa_phone"),
+                    res.getString("poa_email")
+                    );
+                }
+            }
+            return r;
+    }
+        
+    public static ArrayList<po_addr> getPOAddr(String code) {
+        po_addr r = null;
+        String[] m = new String[2];
+        ArrayList<po_addr> list = new ArrayList<po_addr>();
+        String sql = "select * from po_addr where poa_code = ? ;";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, code);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new po_addr(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new po_addr(m, res.getString("poa_code"), res.getString("poa_shipto"), res.getString("poa_name"), res.getString("poa_line1"), res.getString("poa_line2"),
+                    res.getString("poa_line3"), res.getString("poa_city"), res.getString("poa_state"), res.getString("poa_zip"),
+                    res.getString("poa_country"), res.getString("poa_contact"), res.getString("poa_phone"),
+                    res.getString("poa_email") 
+                    );
+                        list.add(r);
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new po_addr(m);
+               list.add(r);
+        }
+        return list;
+    }
+    
+    
+    
     
     
     
@@ -949,9 +1256,9 @@ public class purData {
 
    }
  
-    public record purchaseOrder(String[] m, po_mstr po, ArrayList<pod_mstr> pod) {
+    public record purchaseOrder(String[] m, po_mstr po, po_addr poa, ArrayList<pod_mstr> pod) {
         public purchaseOrder(String[] m) {
-            this (m, null, null);
+            this (m, null, null, null);
         }
     }
     
@@ -959,10 +1266,11 @@ public class purData {
     public record po_mstr(String[] m, String po_nbr, String po_vend, 
      String po_ord_date, String po_due_date, String po_rmks, String po_shipvia,
     String po_status, String po_userid, String po_type, String po_curr,
-    String po_terms, String po_site, String po_buyer, String po_ap_acct, String po_ap_cc) {
+    String po_terms, String po_site, String po_buyer, String po_ap_acct, String po_ap_cc, 
+    String po_ship ) {
         public po_mstr(String[] m) {
             this(m, "", "", "", "", "", "", "", "", "", "",
-                    "", "", "", "", ""
+                    "", "", "", "", "", ""
                     );
         }
     }
@@ -975,6 +1283,15 @@ public class purData {
         public pod_mstr(String[] m) {
             this (m, "", "", "", "", "", "", "", "", "", "",
                     "", "", "", "", "");
+        }
+    }
+    
+     public record po_addr(String[] m, String poa_code, String poa_shipto, 
+        String poa_name, String poa_line1, String poa_line2,
+        String poa_line3, String poa_city, String poa_state, 
+        String poa_zip, String poa_country, String poa_contact, String poa_phone, String poa_email) {
+        public po_addr(String[] m) {
+            this(m,"","","","","","","","","","","","","");
         }
     }
     

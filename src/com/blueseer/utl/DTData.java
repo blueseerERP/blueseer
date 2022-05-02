@@ -771,6 +771,68 @@ public class DTData {
         
          } 
         
+    public static DefaultTableModel getPOAddrBrowseUtil( String str, int state, String myfield) {
+        javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("code"), getGlobalColumnTag("shipto"), getGlobalColumnTag("name"), getGlobalColumnTag("addr1"), getGlobalColumnTag("city"), getGlobalColumnTag("state"), getGlobalColumnTag("zip"), getGlobalColumnTag("country")})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
+              
+        try{
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                if (state == 1) { // begins
+                    res = st.executeQuery("SELECT poa_code, poa_shipto, poa_name, poa_line1, poa_city, poa_state, poa_zip, poa_country  " +
+                        " FROM  po_addr where " + myfield + " like " + "'" + str + "%'" +
+                        " order by poa_code ;");
+                }
+                if (state == 2) { // ends
+                    res = st.executeQuery("SELECT poa_code, poa_shipto, poa_name, poa_line1, poa_city, poa_state, poa_zip, poa_country  " +
+                        " FROM  po_addr where " + myfield + " like " + "'%" + str + "'" +
+                        " order by poa_code ;");
+                }
+                 if (state == 0) { // match
+                 res = st.executeQuery("SELECT poa_code, poa_shipto, poa_name, poa_line1, poa_city, poa_state, poa_zip, poa_country  " +
+                        " FROM  po_addr where " + myfield + " like " + "'%" + str + "%'" +
+                        " order by poa_code ;");
+                 }
+                    while (res.next()) {
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("poa_code"),
+                                   res.getString("poa_shipto"),
+                                   res.getString("poa_name"),
+                                   res.getString("poa_line1"),
+                                   res.getString("poa_city"),
+                                   res.getString("poa_state"),
+                                   res.getString("poa_zip"),
+                                   res.getString("poa_country")
+                        });
+                    }
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+            
+        }
+        return mymodel;
+        
+         } 
+    
+    
     public static DefaultTableModel getAcctBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("code"), getGlobalColumnTag("description"), getGlobalColumnTag("type"), getGlobalColumnTag("currency")})

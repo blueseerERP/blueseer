@@ -318,7 +318,7 @@ CREATE TABLE IF NOT EXISTS `cup_mstr` (
   `cup_misc` varchar(50)  NOT NULL DEFAULT '',
   `cup_sku` varchar(50)  NOT NULL DEFAULT '') ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `cur_mstr` (
-  `cur_id` varchar(10)  NOT NULL DEFAULT '',
+  `cur_id` varchar(3)  NOT NULL DEFAULT '',
   `cur_desc` varchar(50)  NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `exc_mstr` (
@@ -1075,6 +1075,23 @@ CREATE TABLE IF NOT EXISTS `pod_mstr` (
   `pod_uom` varchar(3)  NOT NULL DEFAULT '',
   `pod_desc` varchar(50)  NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `po_addr` (
+  `poa_code` varchar(10) NOT NULL  DEFAULT '',
+  `poa_shipto` varchar(10) NOT NULL  DEFAULT '',
+  `poa_name` varchar(50)  DEFAULT '',
+  `poa_line1` varchar(50)  DEFAULT '',
+  `poa_line2` varchar(50)  DEFAULT '',
+  `poa_line3` varchar(50)  DEFAULT '',
+  `poa_city` varchar(50)  DEFAULT '',
+  `poa_state` varchar(3)  DEFAULT '',
+  `poa_zip` varchar(15)  DEFAULT '',
+  `poa_country` varchar(3)  DEFAULT '',
+  `poa_contact` varchar(50)  DEFAULT '',
+  `poa_phone` varchar(15)  DEFAULT '',
+  `poa_email` varchar(100)  DEFAULT '',
+  `poa_misc` varchar(50)  DEFAULT '',
+  `poa_plantcode` varchar(30) NOT NULL  DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `pos_ctrl` (
   `posc_taxpercent` decimal(14,4) NOT NULL DEFAULT '0.0000',
   `posc_taxacct` varchar(12) NOT NULL  DEFAULT '',
@@ -1545,6 +1562,48 @@ CREATE TABLE IF NOT EXISTS `svd_det` (
   `svd_taxamt` decimal(12,4) NOT NULL DEFAULT '0.0000',
   `svd_taxcode` varchar(10)  NOT NULL DEFAULT '',
   `svd_site` varchar(10) NOT NULL  DEFAULT '') ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `or_mstr` (
+  `or_bsid` varchar(30) NOT NULL,
+  `or_id` varchar(30) NOT NULL,
+  `or_nbr` varchar(30) NOT NULL,
+  `or_key` varchar(40) NOT NULL,
+  `or_type` varchar(10) NOT NULL,
+  `or_platform` varchar(30) NOT NULL,
+  `or_cust` varchar(20)  NOT NULL DEFAULT '',
+  `or_ship` varchar(20) NOT NULL  DEFAULT '',
+  `or_site` varchar(20) NOT NULL  DEFAULT '',
+  `or_createdvia` varchar(100) NOT NULL  DEFAULT '',
+  `or_create_date` varchar(30)  DEFAULT NULL,
+  `or_create_date_gmt` varchar(30)  DEFAULT NULL,
+  `or_mod_date` varchar(30)  DEFAULT NULL,
+  `or_mod_date_gmt` varchar(30)  DEFAULT NULL,
+  `or_ship_date` varchar(30)  DEFAULT NULL,
+  `or_ship_date_gmt` varchar(30)  DEFAULT NULL,
+  `or_status` varchar(30)  NOT NULL DEFAULT '',
+  `or_curr` varchar(3)  NOT NULL DEFAULT '',
+  `or_ar_acct` varchar(12)  NOT NULL DEFAULT '',
+  `or_ar_cc` varchar(4)  NOT NULL DEFAULT '',
+  `or_remarks` varchar(200)  NOT NULL DEFAULT '',
+  `or_total_ship` decimal(12,2)  NOT NULL DEFAULT '',
+  `or_total_ship_tax` decimal(12,2)  NOT NULL DEFAULT '',
+  `or_total_disc` decimal(12,2)  NOT NULL DEFAULT '',
+  `or_total_disc_tax` decimal(12,2)  NOT NULL DEFAULT '',
+  `or_total` decimal(12,2)  NOT NULL DEFAULT '',
+  `or_total_tax` decimal(12,2)  NOT NULL DEFAULT '',
+  `or_lines_tax` decimal(12,2)  NOT NULL DEFAULT '',
+  `or_paymentmethod` varchar(30)  NOT NULL DEFAULT '',
+  `or_paymentmethod_title` varchar(70)  NOT NULL DEFAULT '',
+  `or_transid` varchar(40)  NOT NULL DEFAULT '',
+  `or_assigned` tinyint(1)  NOT NULL DEFAULT '',
+  `or_multivend` tinyint(1)  NOT NULL DEFAULT '',
+  `or_entrytype` varchar(10)  NOT NULL DEFAULT '',
+  `or_refund` tinyint(1)  NOT NULL DEFAULT '',
+  `or_refundid` varchar(30)  NOT NULL DEFAULT '',
+  `or_refundnote` varchar(200)  NOT NULL DEFAULT '',
+  `or_misc1` varchar(30)  NOT NULL DEFAULT '',
+  `or_misc2` varchar(30)  NOT NULL DEFAULT '',
+  `or_misc3` varchar(30)  NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `so_mstr` (
   `so_nbr` varchar(8) NOT NULL,
   `so_cust` varchar(30)  NOT NULL DEFAULT '',

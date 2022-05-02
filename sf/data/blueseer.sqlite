@@ -356,7 +356,7 @@ CREATE TABLE "cup_mstr" (
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "cur_mstr" (
-  "cur_id" varchar(10) COLLATE NOCASE DEFAULT '',
+  "cur_id" varchar(3) COLLATE NOCASE DEFAULT '',
   "cur_desc" varchar(50) COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -1303,6 +1303,25 @@ CREATE TABLE "pod_mstr" (
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
+CREATE TABLE "po_addr" (
+  "poa_code" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
+  "poa_shipto" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
+  "poa_name" varchar(50) COLLATE NOCASE DEFAULT '',
+  "poa_line1" varchar(50) COLLATE NOCASE DEFAULT '',
+  "poa_line2" varchar(50) COLLATE NOCASE DEFAULT '',
+  "poa_line3" varchar(50) COLLATE NOCASE DEFAULT '',
+  "poa_city" varchar(50) COLLATE NOCASE DEFAULT '',
+  "poa_state" varchar(3) COLLATE NOCASE DEFAULT '',
+  "poa_zip" varchar(15) COLLATE NOCASE DEFAULT '',
+  "poa_country" varchar(3) COLLATE NOCASE DEFAULT '',
+  "poa_contact" varchar(50) COLLATE NOCASE DEFAULT '',
+  "poa_phone" varchar(15) COLLATE NOCASE DEFAULT '',
+  "poa_email" varchar(100) COLLATE NOCASE DEFAULT '',
+  "poa_misc" varchar(50) COLLATE NOCASE DEFAULT '',
+  "poa_plantcode" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '');
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "pos_ctrl" (
   "posc_taxpercent" decimal(14,4) NOT NULL DEFAULT '0.0000',
   "posc_taxacct" varchar(12) NOT NULL COLLATE NOCASE DEFAULT '',
@@ -1849,6 +1868,49 @@ CREATE TABLE "svd_det" (
   "svd_taxamt" decimal(12,4) NOT NULL DEFAULT '0.0000',
   "svd_taxcode" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
   "svd_site" varchar(10) NOT NULL COLLATE NOCASE DEFAULT ''
+);
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE "or_mstr" (
+  "or_bsid" varchar(30) NOT NULL,
+  "or_id" varchar(30) NOT NULL,
+  "or_nbr" varchar(30) NOT NULL,
+  "or_key" varchar(30) NOT NULL,
+  "or_type" varchar(10) NOT NULL,
+  "or_platform" varchar(30) NOT NULL,
+  "or_cust" varchar(20) COLLATE NOCASE DEFAULT '',
+  "or_ship" varchar(20) COLLATE NOCASE DEFAULT '',
+  "or_site" varchar(20) COLLATE NOCASE DEFAULT '',
+  "or_createdvia" varchar(100) COLLATE NOCASE DEFAULT '',
+  "or_create_date" varchar(30) COLLATE NOCASE DEFAULT '',
+  "or_create_date_gmt" varchar(30) COLLATE NOCASE DEFAULT '',
+  "or_mod_date" varchar(30) COLLATE NOCASE DEFAULT '',
+  "or_mod_date_gmt" varchar(30) COLLATE NOCASE DEFAULT '',
+  "or_status" varchar(30) COLLATE NOCASE DEFAULT '',
+  "or_curr" varchar(3) COLLATE NOCASE DEFAULT '',
+  "or_ar_acct" varchar(12) COLLATE NOCASE DEFAULT '',
+  "or_ar_cc" varchar(4) COLLATE NOCASE DEFAULT '',
+  "or_remarks" varchar(200) COLLATE NOCASE DEFAULT '',
+  "or_total_ship" decimal(12,2) NOT NULL DEFAULT '0.00',
+  "or_total_ship_tax" decimal(12,2) NOT NULL DEFAULT '0.00',
+  "or_total_disc" decimal(12,2) NOT NULL DEFAULT '0.00',
+  "or_total_disc_tax" decimal(12,2) NOT NULL DEFAULT '0.00',
+  "or_total" decimal(12,2) NOT NULL DEFAULT '0.00',
+  "or_total_tax" decimal(12,2) NOT NULL DEFAULT '0.00',
+  "or_lines_tax" decimal(12,2) NOT NULL DEFAULT '0.00',
+  "or_paymentmethod" varchar(30) COLLATE NOCASE DEFAULT '',
+  "or_paymentmethod_title" varchar(70) COLLATE NOCASE DEFAULT '',
+  "or_transid" varchar(40) COLLATE NOCASE DEFAULT '',
+  "or_assigned" tinyint(1) NOT NULL DEFAULT '0',
+  "or_multivend" tinyint(1) NOT NULL DEFAULT '0',
+  "or_entrytype" varchar(10) COLLATE NOCASE DEFAULT '',
+  "or_refund" tinyint(1) NOT NULL DEFAULT '0',
+  "or_refundid" varchar(30) COLLATE NOCASE DEFAULT '',
+  "or_refundnote" varchar(200) COLLATE NOCASE DEFAULT '',
+  "or_misc1" varchar(30) COLLATE NOCASE DEFAULT '',
+  "or_misc2" varchar(30) COLLATE NOCASE DEFAULT '',
+  "or_misc3" varchar(30) COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;

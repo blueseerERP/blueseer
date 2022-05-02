@@ -4985,7 +4985,7 @@ public class OVData {
                     
                     if (j == 0) {
                     st.executeUpdate(" insert into po_mstr " 
-                    + "(po_nbr, po_vend, po_site, po_type, " 
+                    + "(po_nbr, po_vend, po_site, po_type, po_ship, " 
                         + " po_curr, po_buyer, po_due_date, "
                         + " po_ord_date, po_userid, po_status,"
                         + " po_terms, po_ap_acct, po_ap_cc, po_rmks ) "
@@ -4993,7 +4993,8 @@ public class OVData {
                     "'" +  String.valueOf(indexnbr) + "'" + "," + 
                     "'" +  "cash" + "'" + "," +
                     "'" +  "1000" + "'" + "," +  
-                    "'" +  "DISCRETE" + "'" + "," + 
+                    "'" +  "site" + "'" + "," + 
+                    "'" +  "1000" + "'" + "," +        
                     "'" +  OVData.getDefaultCurrency() + "'" + "," +   
                     "'" +  "admin" + "'" + "," +  
                     "'" +  sduedate + "'" + "," +  
