@@ -1291,7 +1291,8 @@ CREATE TABLE "po_mstr" (
   "po_ap_acct" varchar(12) COLLATE NOCASE DEFAULT '',
   "po_ap_cc" varchar(4) COLLATE NOCASE DEFAULT '',
   "po_export_850" tinyint(1) NOT NULL DEFAULT '0',
-  "po_ack" tinyint(1) NOT NULL DEFAULT '0',
+  "po_import_855" tinyint(1) NOT NULL DEFAULT '0',
+  "po_import_856" tinyint(1) NOT NULL DEFAULT '0',
   "po_ship" varchar(10) COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -1918,7 +1919,7 @@ CREATE TABLE "or_mstr" (
   "or_paymentmethod" varchar(30) COLLATE NOCASE DEFAULT '',
   "or_paymentmethod_title" varchar(70) COLLATE NOCASE DEFAULT '',
   "or_transid" varchar(40) COLLATE NOCASE DEFAULT '',
-  "or_assigned" tinyint(1) NOT NULL DEFAULT '0',
+  "or_sourced" tinyint(1) NOT NULL DEFAULT '0',
   "or_multivend" tinyint(1) NOT NULL DEFAULT '0',
   "or_entrytype" varchar(10) COLLATE NOCASE DEFAULT '',
   "or_refund" tinyint(1) NOT NULL DEFAULT '0',
@@ -1935,6 +1936,17 @@ CREATE TABLE "or_meta" (
   "orm_bsid" varchar(30) NOT NULL,
   "orm_key" varchar(80) NOT NULL,
   "orm_value" varchar(80) NOT NULL
+);
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE "or_tran" (
+  "ort_id" INTEGER PRIMARY KEY,
+  "ort_bsid" varchar(30) NOT NULL,
+  "ort_type" varchar(30) NOT NULL,
+  "ort_processed" tinyint(1) NOT NULL DEFAULT '0',
+  "ort_ts_processed" varchar(30) NOT NULL,
+  "ort_ts_create" varchar(30) NOT NULL
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -1964,6 +1976,7 @@ CREATE TABLE "ord_det" (
   "ord_poline" int(10) NOT NULL DEFAULT '0',
   "ord_shipmethod" varchar(30) NOT NULL,
   "ord_shipservice" varchar(30) NOT NULL,
+  "ord_sourced" tinyint(1) NOT NULL DEFAULT '0',
   "ord_export_850" tinyint(1) NOT NULL DEFAULT '0',
   "ord_import_855" tinyint(1) NOT NULL DEFAULT '0',
   "ord_import_856" tinyint(1) NOT NULL DEFAULT '0',
@@ -2386,7 +2399,9 @@ CREATE TABLE "vd_mstr" (
   "vd_curr" varchar(3) COLLATE NOCASE DEFAULT '',
   "vd_misc" varchar(50) NOT NULL DEFAULT '0',
   "vd_phone" varchar(15) NOT NULL DEFAULT '0',
-  "vd_email" varchar(60) NOT NULL DEFAULT '0');
+  "vd_email" varchar(60) NOT NULL DEFAULT '0',
+  "vd_is850export" tinyint(1) NOT NULL DEFAULT '0'
+);
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -2598,5 +2613,25 @@ CREATE TABLE "exp_mstr" (
 "exp_ref" varchar(80) DEFAULT '' COLLATE NOCASE,
 "exp_amt" decimal(14,2) DEFAULT '0.00' COLLATE NOCASE,
 "exp_active" tinyint(1) DEFAULT '0' COLLATE NOCASE
+);
+CREATE TABLE "web_mstr" (
+  "web_id" varchar(10) NOT NULL DEFAULT '',
+  "web_desc" varchar(100) NOT NULL DEFAULT '',
+  "web_url" varchar(200) NOT NULL DEFAULT '',
+  "web_port" varchar(8) NOT NULL DEFAULT '',
+  "web_credname" varchar(80) NOT NULL DEFAULT '',
+  "web_credpass" varchar(80) NOT NULL DEFAULT '',
+  "web_active" tinyint(1) NOT NULL DEFAULT '0',
+  "web_path" varchar(100) NOT NULL DEFAULT '',
+  "web_misc1" varchar(100) NOT NULL DEFAULT '',
+  "web_misc2" varchar(100) NOT NULL DEFAULT '',
+  "web_misc3" varchar(100) NOT NULL DEFAULT ''
+);
+CREATE TABLE "web_verb" (
+  "wbv_id" varchar(10) NOT NULL DEFAULT '',
+  "wbv_verb" varchar(10) NOT NULL DEFAULT '',
+  "wbv_desc" varchar(100) NOT NULL DEFAULT '',
+  "wbv_path" varchar(100) NOT NULL DEFAULT '',
+  "wbv_active" tinyint(1) NOT NULL DEFAULT '0'
 );
 End Transaction;
