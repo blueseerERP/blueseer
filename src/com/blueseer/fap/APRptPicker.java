@@ -613,7 +613,7 @@ public class APRptPicker extends javax.swing.JPanel {
             try{   
                  res = st.executeQuery("select ap_nbr, ap_vend, vd_name, ap_type, " +
                                " ap_ref, ap_effdate, ap_duedate, ap_amt, ap_base_amt,  " +
-                               " ap_status, ap_curr, vod_part, vod_expense_acct " +
+                               " ap_status, ap_curr, vod_item, vod_expense_acct " +
                                " from ap_mstr inner join vd_mstr on vd_addr = ap_vend " +
                                " inner join vod_mstr on vod_id = ap_nbr " + 
                                " where ap_vend >= " + "'" + from + "'" +
@@ -633,7 +633,7 @@ public class APRptPicker extends javax.swing.JPanel {
                             res.getString("ap_type"),
                             res.getString("ap_effdate"),
                             BlueSeerUtils.currformat(res.getString("ap_amt")),
-                            res.getString("vod_part"),
+                            res.getString("vod_item"),
                             res.getString("ap_status"),
                             res.getString("ap_curr"),
                             res.getString("vod_expense_acct")

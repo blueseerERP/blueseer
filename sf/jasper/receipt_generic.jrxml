@@ -25,8 +25,14 @@
 		<![CDATA[select shd_id, sh_curr, sh_ref, it_desc, 
 (select case when sum(shs_amt) is null then 0 else sum(shs_amt) end from shs_det where shs_nbr = $P{myid} and shs_amttype = 'amount' and shs_type <> 'tax') as charges, 
 (select case when sum(shs_amt) is null then 0 else sum(shs_amt)  end from shs_det where shs_nbr = $P{myid} and shs_amttype = 'amount' and shs_type = 'tax') as taxes,
-sh_cust, sh_confdate,  sh_rmks, shd_po, shd_part, shd_custpart, shd_qty, shd_netprice, shd_listprice, shd_taxamt, shd_taxpercent, cm_code, cm_name, cm_line1, cm_line2, 
-cms_name, cms_line1, cms_line2, site_desc, site_line1 from ship_det left outer join item_mstr on it_item = shd_part inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust left outer join cms_det on cms_code = sh_cust and cms_shipto = sh_ship inner join site_mstr on site_site = sh_site where shd_id =  $P{myid}]]>
+sh_cust, sh_confdate,  sh_rmks, shd_po, shd_item, shd_custitem, shd_qty, shd_netprice, shd_listprice, shd_taxamt, shd_taxpercent, cm_code, cm_name, cm_line1, cm_line2, 
+cms_name, cms_line1, cms_line2, site_desc, site_line1 
+from ship_det 
+left outer join item_mstr on it_item = shd_item 
+inner join ship_mstr on sh_id = shd_id 
+inner join cm_mstr on cm_code = sh_cust 
+left outer join cms_det on cms_code = sh_cust and cms_shipto = sh_ship 
+inner join site_mstr on site_site = sh_site where shd_id =  $P{myid}]]>
 	</queryString>
 	<field name="shd_id" class="java.lang.String"/>
 	<field name="sh_curr" class="java.lang.String"/>
@@ -36,8 +42,8 @@ cms_name, cms_line1, cms_line2, site_desc, site_line1 from ship_det left outer j
 	<field name="sh_cust" class="java.lang.Object"/>
 	<field name="sh_rmks" class="java.lang.Object"/>
 	<field name="shd_po" class="java.lang.Object"/>
-	<field name="shd_part" class="java.lang.Object"/>
-	<field name="shd_custpart" class="java.lang.Object"/>
+	<field name="shd_item" class="java.lang.Object"/>
+	<field name="shd_custitem" class="java.lang.Object"/>
 	<field name="shd_qty" class="java.lang.Double"/>
 	<field name="shd_netprice" class="java.lang.Double"/>
 	<field name="shd_listprice" class="java.lang.Double"/>
@@ -317,7 +323,7 @@ cms_name, cms_line1, cms_line2, site_desc, site_line1 from ship_det left outer j
 		<band height="21" splitType="Stretch">
 			<textField>
 				<reportElement x="19" y="0" width="72" height="16" uuid="978682a3-4259-41c3-adae-54872ecfe90a"/>
-				<textFieldExpression><![CDATA[$F{shd_part}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{shd_item}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0">
 				<reportElement x="360" y="0" width="46" height="16" uuid="32390b0a-6d5c-4fae-8870-72c4e68a5f90"/>

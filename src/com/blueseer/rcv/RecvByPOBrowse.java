@@ -167,7 +167,7 @@ public class RecvByPOBrowse extends javax.swing.JPanel {
                 int i = 0;
                 String blanket = "";
                 
-                res = st.executeQuery("select rvd_id, rvd_poline, rvd_part, rvd_packingslip, rvd_date, rvd_netprice, rvd_qty, rvd_voqty " +
+                res = st.executeQuery("select rvd_id, rvd_poline, rvd_item, rvd_packingslip, rvd_date, rvd_netprice, rvd_qty, rvd_voqty " +
                         " from recv_det " +
                         " where rvd_po = " + "'" + po + "'" +
                         " AND rvd_poline = " + "'" + line + "'" + ";");
@@ -175,7 +175,7 @@ public class RecvByPOBrowse extends javax.swing.JPanel {
                    modeldetail.addRow(new Object[]{ 
                       res.getString("rvd_id"), 
                        res.getString("rvd_poline"),
-                       res.getString("rvd_part"),
+                       res.getString("rvd_item"),
                        res.getString("rvd_packingslip"),
                        res.getString("rvd_date"),
                        currformatDouble(res.getDouble("rvd_netprice")),
@@ -565,7 +565,7 @@ try {
                   
                  
          //     new String[]{"Detail", "PO", "Vend", "Line", "Part", "Type", "Status", "OrdQty", "RecvQty"});   
-             res = st.executeQuery("select po_nbr, po_vend, pod_line, po_type, po_status, pod_part, " +
+             res = st.executeQuery("select po_nbr, po_vend, pod_line, po_type, po_status, pod_item, " +
                       " pod_ord_qty, pod_rcvd_qty, pod_netprice " +
                          " from po_mstr inner join pod_mstr on pod_nbr = po_nbr where " +
                         " po_vend >= " + "'" + vendfrom + "'" + " AND " +
@@ -580,7 +580,7 @@ try {
                     mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, BlueSeerUtils.clickbasket, res.getString("po_nbr"),
                                 res.getString("po_vend"),
                                 res.getString("pod_line"),
-                                res.getString("pod_part"),
+                                res.getString("pod_item"),
                                 res.getString("po_type"),
                                 res.getString("po_status"),
                                 res.getDouble("pod_ord_qty"),

@@ -203,12 +203,12 @@ public class POBrowse extends javax.swing.JPanel {
             try {
                 int i = 0;
                 String blanket = "";
-                res = st.executeQuery("select pod_nbr, pod_part, pod_netprice, pod_ord_qty, pod_rcvd_qty, pod_status from pod_mstr " +
+                res = st.executeQuery("select pod_nbr, pod_item, pod_netprice, pod_ord_qty, pod_rcvd_qty, pod_status from pod_mstr " +
                         " where pod_nbr = " + "'" + po + "'" +  ";");
                 while (res.next()) {
                    modeldetail.addRow(new Object[]{ 
                       res.getString("pod_nbr"), 
-                       res.getString("pod_part"),
+                       res.getString("pod_item"),
                        bsParseDouble(currformatDouble(res.getDouble("pod_netprice"))),
                       res.getInt("pod_ord_qty"), 
                       res.getInt("pod_rcvd_qty"), 

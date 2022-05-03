@@ -483,31 +483,31 @@ try {
                  
                  
                   if (ddtype.getSelectedItem().toString().equals("ALL")) {    
-                   res = st.executeQuery("SELECT tr_id, tr_part,  tr_cost, tr_type, it_code, tr_qty, " +
+                   res = st.executeQuery("SELECT tr_id, tr_item,  tr_cost, tr_type, it_code, tr_qty, " +
                         " tr_op, tr_eff_date, tr_assy_date, tr_ref, tr_actcell, tr_cost, " +
                          " tr_timestamp, tr_userid, tr_pack, tr_pack_date " +
-                        " FROM  tran_mstr inner join item_mstr on it_item = tr_part " +
-                        " left outer join itemr_cost on itr_item = tr_part and itr_op = tr_op and itr_routing = it_wf and itr_set = 'standard' and itr_site = it_site " +
-                         " left outer join item_cost on itc_item = tr_part and itc_set = 'standard' and itc_site = it_site " +
+                        " FROM  tran_mstr inner join item_mstr on it_item = tr_item " +
+                        " left outer join itemr_cost on itr_item = tr_item and itr_op = tr_op and itr_routing = it_wf and itr_set = 'standard' and itr_site = it_site " +
+                         " left outer join item_cost on itc_item = tr_item and itc_set = 'standard' and itc_site = it_site " +
                         " where  tr_eff_date   >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" + 
                         " AND  tr_eff_date   <= " + "'" + dfdate.format(dcTo.getDate()) + "'" + 
-                        " AND tr_part >= " + "'" + frompart + "'" + 
-                        " AND tr_part <= " + "'" + topart + "'" + 
+                        " AND tr_item >= " + "'" + frompart + "'" + 
+                        " AND tr_item <= " + "'" + topart + "'" + 
                          " AND tr_actcell >= " + "'" + fromcell + "'" + 
                         " AND tr_actcell <= " + "'" + tocell + "'" + 
                         " AND ( tr_type = 'ISS-WIP' or tr_type = 'RCT-FG') " + 
                         " order by tr_id desc ;");    
                   } else {
-                      res = st.executeQuery("SELECT tr_id, tr_part,  tr_cost, tr_type, it_code, tr_qty, " +
+                      res = st.executeQuery("SELECT tr_id, tr_item,  tr_cost, tr_type, it_code, tr_qty, " +
                         " tr_op, tr_eff_date, tr_assy_date, tr_ref, tr_actcell, tr_cost, " +
                          " tr_timestamp, tr_userid, tr_pack, tr_pack_date " +
-                        " FROM  tran_mstr inner join item_mstr on it_item = tr_part " +
-                        " left outer join itemr_cost on itr_item = tr_part and itr_op = tr_op and itr_routing = it_wf and itr_set = 'standard' and itr_site = it_site " +
-                         " left outer join item_cost on itc_item = tr_part and itc_set = 'standard' and itc_site = it_site " +
+                        " FROM  tran_mstr inner join item_mstr on it_item = tr_item " +
+                        " left outer join itemr_cost on itr_item = tr_item and itr_op = tr_op and itr_routing = it_wf and itr_set = 'standard' and itr_site = it_site " +
+                         " left outer join item_cost on itc_item = tr_item and itc_set = 'standard' and itc_site = it_site " +
                         " where  tr_eff_date   >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" + 
                         " AND  tr_eff_date   <= " + "'" + dfdate.format(dcTo.getDate()) + "'" + 
-                        " AND tr_part >= " + "'" + frompart + "'" + 
-                        " AND tr_part <= " + "'" + topart + "'" + 
+                        " AND tr_item >= " + "'" + frompart + "'" + 
+                        " AND tr_item <= " + "'" + topart + "'" + 
                          " AND tr_actcell >= " + "'" + fromcell + "'" + 
                         " AND tr_actcell <= " + "'" + tocell + "'" + 
                         " AND tr_type = " + "'" + ddtype.getSelectedItem().toString() + "'" + 
@@ -521,7 +521,7 @@ try {
                     dol = dol + (res.getDouble("tr_cost") * res.getInt("tr_qty"));
                          mymodel.addRow(new Object[]{
                                 res.getString("tr_id"),
-                                res.getString("tr_part"),
+                                res.getString("tr_item"),
                                 res.getString("it_code"),
                                 res.getString("tr_type"),
                                 res.getInt("tr_qty"),
@@ -611,17 +611,17 @@ try {
             ResultSet res = null;
             try {
                 
-                res = st.executeQuery("SELECT tr_part, tr_type, it_code, tr_qty, " +
+                res = st.executeQuery("SELECT tr_item, tr_type, it_code, tr_qty, " +
                         " tr_op, tr_eff_date, tr_assy_date, tr_ref, tr_actcell, " +
                         " case when it_code = 'M' then itr_total else itc_total end as amt,  " +
                          " tr_timestamp, tr_export, tr_userid, tr_pack, tr_pack_date " +
-                        " FROM  tran_mstr inner join item_mstr on it_item = tr_part " +
-                        " left outer join itemr_cost on itr_item = tr_part and itr_op = tr_op and itr_set = 'standard' " +
-                         " left outer join item_cost on itc_item = tr_part and itc_set = 'standard' " +
+                        " FROM  tran_mstr inner join item_mstr on it_item = tr_item " +
+                        " left outer join itemr_cost on itr_item = tr_item and itr_op = tr_op and itr_set = 'standard' " +
+                         " left outer join item_cost on itc_item = tr_item and itc_set = 'standard' " +
                         " where  tr_eff_date   >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" + 
                         " AND  tr_eff_date   <= " + "'" + dfdate.format(dcTo.getDate()) + "'" + 
-                        " AND tr_part >= " + "'" + frompart + "'" + 
-                        " AND tr_part <= " + "'" + topart + "'" + 
+                        " AND tr_item >= " + "'" + frompart + "'" + 
+                        " AND tr_item <= " + "'" + topart + "'" + 
                          " AND tr_actcell >= " + "'" + fromcell + "'" + 
                         " AND tr_actcell <= " + "'" + tocell + "'" + 
                         " AND tr_type = 'WIP-TRAN' " + 
@@ -634,7 +634,7 @@ try {
                     i++;
                    qty = qty + res.getInt("tr_qty");
                     dol = dol + (res.getDouble("amt") * res.getInt("tr_qty"));
-                    String newstring = res.getString("tr_part") + "," + res.getString("it_code").replace(",","") + "," + 
+                    String newstring = res.getString("tr_item") + "," + res.getString("it_code").replace(",","") + "," + 
                             res.getInt("tr_qty") + "," + res.getDouble("amt") + "," + res.getInt("tr_op") + "," + res.getString("tr_eff_date") + 
                             "," + res.getString("tr_actcell")  ;
                            output.write(newstring + '\n');

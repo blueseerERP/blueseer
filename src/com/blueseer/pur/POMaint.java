@@ -968,9 +968,9 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
         // now detail
         for (pod_mstr pod : podlist) {
         myorddetmodel.addRow(new Object[]{pod.pod_line(), 
-                      pod.pod_part(),
+                      pod.pod_item(),
                       pod.pod_desc(), 
-                      pod.pod_vendpart(), 
+                      pod.pod_venditem(), 
                       pod.pod_nbr(), 
                       bsNumber(pod.pod_ord_qty()), 
                       pod.pod_uom(), 

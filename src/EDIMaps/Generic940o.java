@@ -88,7 +88,7 @@ public class Generic940o {
          String[] h = OVData.getOrderHeaderArray(nbr);
          
          // now detail
-         // sod_line, sod_part, sod_custpart, sod_ord_qty, sod_uom, sod_desc, it_net_wt
+         // sod_line, sod_item, sod_custitem, sod_ord_qty, sod_uom, sod_desc, it_net_wt
          ArrayList<String[]> dt = OVData.getOrderDetailArray(nbr);
          
          

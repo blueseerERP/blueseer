@@ -108,7 +108,7 @@ public class shpData {
     private static int _addShipDet(ship_det x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
         int rows = 0;
         String sqlSelect = "select * from ship_det where shd_id = ? and shd_line = ?";
-        String sqlInsert = "insert into ship_det (shd_id, shd_line, shd_part, shd_so, shd_soline, shd_date, shd_po, shd_qty, shd_curr, shd_uom, "
+        String sqlInsert = "insert into ship_det (shd_id, shd_line, shd_item, shd_so, shd_soline, shd_date, shd_po, shd_qty, shd_curr, shd_uom, "
                         + "shd_netprice, shd_disc, shd_listprice, shd_desc, shd_wh, shd_loc, shd_taxamt, shd_cont, shd_serial, shd_site, shd_bom ) "
                         + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
        
@@ -120,7 +120,7 @@ public class shpData {
             if (! res.isBeforeFirst()) {
             ps.setString(1, x.shd_id);
             ps.setString(2, x.shd_line);
-            ps.setString(3, x.shd_part);
+            ps.setString(3, x.shd_item);
             ps.setString(4, x.shd_so);
             ps.setString(5, x.shd_soline);
             ps.setString(6, x.shd_date);
@@ -297,13 +297,13 @@ public class shpData {
     private static int _updateShipDet(ship_det x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
         int rows = 0;
         String sqlSelect = "select * from ship_det where shd_id = ? and shd_line = ?";
-        String sqlUpdate = "update ship_det set shd_part = ?, shd_so = ?, " +
+        String sqlUpdate = "update ship_det set shd_item = ?, shd_so = ?, " +
                 "shd_soline = ?, shd_date = ?, shd_po = ?, shd_qty = ?, " +
                 " shd_netprice = ?, shd_disc = ?, shd_listprice = ?, shd_desc = ?, " +
                 "shd_wh = ?, shd_loc = ?, shd_taxamt = ?, shd_cont = ?, shd_serial = ?, " +
                 " shd_site = ?, shd_bom = ?" +
                  " where shd_id = ? and shd_line = ? ; ";
-        String sqlInsert = "insert into ship_det (shd_id, shd_line, shd_part, shd_so, shd_soline, " 
+        String sqlInsert = "insert into ship_det (shd_id, shd_line, shd_item, shd_so, shd_soline, " 
                         + " shd_date, shd_po, shd_qty,"
                         + "shd_netprice, shd_disc, shd_listprice, shd_desc, shd_wh, "
                         + " shd_loc, shd_taxamt, shd_cont, shd_serial, shd_site, shd_bom  ) "
@@ -316,7 +316,7 @@ public class shpData {
 	 ps = con.prepareStatement(sqlInsert) ;
             ps.setString(1, x.shd_id);
             ps.setString(2, x.shd_line);
-            ps.setString(3, x.shd_part);
+            ps.setString(3, x.shd_item);
             ps.setString(4, x.shd_so);
             ps.setString(5, x.shd_soline);
             ps.setString(6, x.shd_date);
@@ -338,7 +338,7 @@ public class shpData {
          ps = con.prepareStatement(sqlUpdate) ;
             ps.setString(18, x.shd_id);
             ps.setString(19, x.shd_line);
-            ps.setString(1, x.shd_part);
+            ps.setString(1, x.shd_item);
             ps.setString(2, x.shd_so);
             ps.setString(3, x.shd_soline);
             ps.setString(4, x.shd_date);
@@ -640,12 +640,12 @@ public class shpData {
                 String expire = "";
                 double sum = 0;
                 int i = 0;
-                  res = st.executeQuery("select sh_site, shd_part, shd_qty, shd_uom, shd_loc, shd_wh, shd_site, shd_serial " +
+                  res = st.executeQuery("select sh_site, shd_item, shd_qty, shd_uom, shd_loc, shd_wh, shd_site, shd_serial " +
                           " from ship_det inner join ship_mstr on sh_id = shd_id  " +
                           " where shd_id = " + "'" + shipper + "'" +";");
                 while (res.next()) {
                     i = 0;
-                    part = res.getString("shd_part");
+                    part = res.getString("shd_item");
                     qty = res.getDouble("shd_qty");
                     uom = res.getString("shd_uom");
                     loc = res.getString("shd_loc");
@@ -686,7 +686,7 @@ public class shpData {
                     int z = 0;
                     double qoh = 0.00;
                     nres = st2.executeQuery("select in_qoh from in_mstr where "
-                            + " in_part = " + "'" + part + "'" 
+                            + " in_item = " + "'" + part + "'" 
                             + " and in_loc = " + "'" + loc + "'"
                             + " and in_wh = " + "'" + wh + "'"
                             + " and in_site = " + "'" + site + "'"
@@ -703,7 +703,7 @@ public class shpData {
                     if (z == 0) {
                      sum = (-1 * baseqty);
                      st3.executeUpdate("insert into in_mstr "
-                            + "(in_site, in_part, in_loc, in_wh, in_serial, in_expire, in_qoh, in_date ) "
+                            + "(in_site, in_item, in_loc, in_wh, in_serial, in_expire, in_qoh, in_date ) "
                             + " values ( " 
                             + "'" + site + "'" + ","
                             + "'" + part + "'" + ","
@@ -722,7 +722,7 @@ public class shpData {
                          st3.executeUpdate("update in_mstr "
                             + " set in_qoh = " + "'" + sum + "'" + "," +
                               " in_date = " + "'" + mydate + "'"
-                            + " where in_part = " + "'" + part + "'" 
+                            + " where in_item = " + "'" + part + "'" 
                             + " and in_loc = " + "'" + loc + "'"
                             + " and in_wh = " + "'" + wh + "'"
                             + " and in_site = " + "'" + site + "'"
@@ -754,15 +754,15 @@ public class shpData {
                 double sum = 0;
                 boolean serialized = false;
                 int i = 0;
-                  res = st.executeQuery("select sh_site, shd_part, shd_qty, shd_uom, shd_loc, shd_wh, shd_site, shd_serial, shd_bom, it_loc, it_wh, it_code, it_phantom " +
+                  res = st.executeQuery("select sh_site, shd_item, shd_qty, shd_uom, shd_loc, shd_wh, shd_site, shd_serial, shd_bom, it_loc, it_wh, it_code, it_phantom " +
                           " from ship_det inner join ship_mstr on sh_id = shd_id  " +
-                          " left outer join item_mstr on it_item = shd_part " +
+                          " left outer join item_mstr on it_item = shd_item " +
                           " where shd_id = " + "'" + shipper + "'" +";");
                 ArrayList<String[]> list = new ArrayList<String[]>();
                 while (res.next()) {
                     String[] x = new String[13];
                     i = 0;
-                    x[0] = res.getString("shd_part");
+                    x[0] = res.getString("shd_item");
                     x[1] = res.getString("shd_qty");
                     x[2] = res.getString("shd_uom");
                     x[3] = res.getString("shd_loc");
@@ -825,7 +825,7 @@ public class shpData {
                     OVData._updateNonSerializedInventory(bscon, item, site, wh, loc, (-1 * lineqty), mydate);
                    } else if (serialized && ! serial.isEmpty()) {
                     res = st.executeQuery("select in_qoh, in_serial from in_mstr where "
-                            + " in_part = " + "'" + item + "'" 
+                            + " in_item = " + "'" + item + "'" 
                             + " and in_loc = " + "'" + loc + "'"
                             + " and in_wh = " + "'" + wh + "'"
                             + " and in_site = " + "'" + site + "'"  
@@ -837,7 +837,7 @@ public class shpData {
                       diff = res.getDouble("in_qoh") - lineqty;  // app logic must always insure diff >= 0
                       if (diff <= 0) { 
                           st2.executeUpdate("delete from in_mstr where " 
-                            + " in_part = " + "'" + item + "'" 
+                            + " in_item = " + "'" + item + "'" 
                             + " and in_loc = " + "'" + loc + "'"
                             + " and in_wh = " + "'" + wh + "'"
                             + " and in_site = " + "'" + site + "'"
@@ -847,7 +847,7 @@ public class shpData {
                           st2.executeUpdate("update in_mstr "
                             + " set in_qoh = " + "'" + diff + "'" + "," +
                               " in_date = " + "'" + mydate + "'"
-                            + " where in_part = " + "'" + item + "'" 
+                            + " where in_item = " + "'" + item + "'" 
                             + " and in_loc = " + "'" + loc + "'"
                             + " and in_wh = " + "'" + wh + "'"
                             + " and in_site = " + "'" + site + "'"
@@ -859,7 +859,7 @@ public class shpData {
                     res.close();   
                    } else { // must be serialized...yet no serial inventory specifically chosen...relieve oldest inventory first by serial / expire
                     res = st.executeQuery("select in_qoh, in_serial from in_mstr where "
-                            + " in_part = " + "'" + item + "'" 
+                            + " in_item = " + "'" + item + "'" 
                             + " and in_loc = " + "'" + loc + "'"
                             + " and in_wh = " + "'" + wh + "'"
                             + " and in_site = " + "'" + site + "'"  
@@ -877,7 +877,7 @@ public class shpData {
                             remaining = remaining - Double.valueOf(s[1]);
                             // delete serial in_mstr record
                             st2.executeUpdate("delete from in_mstr where " 
-                            + " in_part = " + "'" + item + "'" 
+                            + " in_item = " + "'" + item + "'" 
                             + " and in_loc = " + "'" + loc + "'"
                             + " and in_wh = " + "'" + wh + "'"
                             + " and in_site = " + "'" + site + "'"
@@ -889,7 +889,7 @@ public class shpData {
                             st2.executeUpdate("update in_mstr "
                             + " set in_qoh = " + "'" + sum + "'" + "," +
                               " in_date = " + "'" + mydate + "'"
-                            + " where in_part = " + "'" + item + "'" 
+                            + " where in_item = " + "'" + item + "'" 
                             + " and in_loc = " + "'" + loc + "'"
                             + " and in_wh = " + "'" + wh + "'"
                             + " and in_site = " + "'" + site + "'"
@@ -954,7 +954,7 @@ public class shpData {
 
         res = st.executeQuery("select * from ship_det where shd_id = " + "'" + shipper + "'" +";");
         while (res.next()) {
-            part = res.getString("shd_part");
+            part = res.getString("shd_item");
             uom = res.getString("shd_uom");
             qty = res.getDouble("shd_qty");
             order = res.getString("shd_so");
@@ -967,7 +967,7 @@ public class shpData {
             baseqty = OVData.getUOMBaseQty(part, site, uom, qty);
 
     st2.executeUpdate("insert into tran_mstr "
-                    + "(tr_site, tr_part, tr_qty, tr_base_qty, tr_uom, tr_ent_date, tr_eff_date, "
+                    + "(tr_site, tr_item, tr_qty, tr_base_qty, tr_uom, tr_ent_date, tr_eff_date, "
                     + " tr_userid, tr_ref, tr_addrcode, tr_type, tr_rmks, tr_nbr, "
                     + " tr_acct, tr_cc, tr_lot, tr_serial, tr_program, tr_loc, "
                     + " tr_order, tr_line, tr_po, tr_price, tr_cost, tr_terms ) "
@@ -1026,10 +1026,10 @@ public class shpData {
             ArrayList linestatus = new ArrayList();
             ArrayList ordernbr = new ArrayList();
 
-             res = st.executeQuery("select sod_nbr, sod_status, sod_line, shd_part, sum(shd_qty) as sumqty, sod_shipped_qty, sod_ord_qty from ship_det inner join " +
-                     " sod_det on shd_part = sod_part and shd_soline = sod_line and shd_so = sod_nbr " +
+             res = st.executeQuery("select sod_nbr, sod_status, sod_line, shd_item, sum(shd_qty) as sumqty, sod_shipped_qty, sod_ord_qty from ship_det inner join " +
+                     " sod_det on shd_item = sod_item and shd_soline = sod_line and shd_so = sod_nbr " +
                " where shd_id = " + "'" + shipper + "'" + 
-               " group by shd_part, sod_nbr, sod_status, sod_line, sod_shipped_qty, sod_ord_qty " +                        
+               " group by shd_item, sod_nbr, sod_status, sod_line, sod_shipped_qty, sod_ord_qty " +                        
                ";");
                while (res.next()) {
                    shippedqty.add(res.getString("sod_shipped_qty"));
@@ -1040,7 +1040,7 @@ public class shpData {
                    ordernbr.add(res.getString("sod_nbr"));
                 }
                res.close();
-                              // res = st.executeQuery("select shd_part from ship_mstr where sh_id = " + "'" + shipper + "'" +";");
+                              // res = st.executeQuery("select shd_item from ship_mstr where sh_id = " + "'" + shipper + "'" +";");
           if (dbtype.equals("sqlite")) {
               double total = 0;
               String status = "";
@@ -1058,7 +1058,7 @@ public class shpData {
               }
           } else {
               st.executeUpdate(
-                     " update sod_det inner join ship_det on shd_part = sod_part and shd_soline = sod_line and shd_so = sod_nbr " +
+                     " update sod_det inner join ship_det on shd_item = sod_item and shd_soline = sod_line and shd_so = sod_nbr " +
                      " inner join so_mstr on so_nbr = sod_nbr and so_type = 'DISCRETE' " +
                       " set sod_shipped_qty = sod_shipped_qty + shd_qty, sod_status = " +
                       " (case when sod_shipped_qty + shd_qty >= sod_ord_qty then " + "'" + getGlobalProgTag("closed") + "'" +
@@ -1106,7 +1106,7 @@ public class shpData {
         ResultSet res = null;
             String ordernbr = "";
              res = st.executeQuery("select svd_nbr from ship_det inner join " +
-                     " svd_det on shd_part = svd_item and shd_soline = svd_line and shd_so = svd_nbr " +
+                     " svd_det on shd_item = svd_item and shd_soline = svd_line and shd_so = svd_nbr " +
                " where shd_id = " + "'" + shipper + "'" +";");
                while (res.next()) {
                    ordernbr = res.getString("svd_nbr");
@@ -1312,8 +1312,8 @@ public class shpData {
                     for (int z = 0; z < 10; z++) {
                         d[z] = "";
                     }
-                    d[0] = res.getString("shd_part");
-                    d[1] = res.getString("shd_custpart");
+                    d[0] = res.getString("shd_item");
+                    d[1] = res.getString("shd_custitem");
                     d[2] = res.getString("shd_qty");
                     d[3] = res.getString("shd_po");
                     d[4] = res.getString("shd_cumqty");
@@ -1526,7 +1526,7 @@ public class shpData {
             if (proceed) {
                 for (int j = 0; j < dettable.getRowCount(); j++) {
                     st.executeUpdate("insert into ship_det "
-                        + "(shd_id, shd_soline, shd_part, shd_custpart, shd_so, shd_po, shd_date, shd_qty, shd_uom, "
+                        + "(shd_id, shd_soline, shd_item, shd_custitem, shd_so, shd_po, shd_date, shd_qty, shd_uom, "
                         + "shd_listprice, shd_disc, shd_netprice, shd_wh, shd_loc, shd_desc, shd_taxamt, shd_site ) "
                         + " values ( " + "'" + shippernbr + "'" + ","
                         + "'" + dettable.getValueAt(j, 0).toString() + "'" + ","
@@ -1712,7 +1712,7 @@ public class shpData {
 
             if (proceed) {
                     st.executeUpdate("insert into ship_det "
-                        + "(shd_id, shd_soline, shd_part, shd_so, shd_date, shd_po, shd_qty, shd_uom, "
+                        + "(shd_id, shd_soline, shd_item, shd_so, shd_date, shd_po, shd_qty, shd_uom, "
                         + "shd_netprice, shd_listprice, shd_disc, shd_desc, shd_wh, shd_loc, shd_taxamt, shd_site ) "
                         + " values ( " + "'" + nbr + "'" + ","
                         + "'" + line + "'" + ","
@@ -1963,7 +1963,7 @@ public class shpData {
                 //ItemNumber, ItemDescription, Line, Order, PO, ShipQty, UOM, CustItem, SkuItem, UpcItem, ListPrice, NetPrice, Discount, TaxAmt, Warehouse, Location});
                 for (String[] s : detail) {
                 st.executeUpdate("insert into ship_det "
-                        + "(shd_id, shd_soline, shd_part, shd_so, shd_date, shd_po, shd_qty, shd_uom, "
+                        + "(shd_id, shd_soline, shd_item, shd_so, shd_date, shd_po, shd_qty, shd_uom, "
                         + "shd_netprice, shd_listprice, shd_disc, shd_desc, shd_wh, shd_loc, shd_taxamt, shd_site ) "
                         + " values ( " + "'" + nbr + "'" + ","
                         + "'" + s[2] + "'" + ","
@@ -2029,7 +2029,7 @@ public class shpData {
         }
     }
    
-    public record ship_det(String[] m, String shd_id, String shd_line, String shd_part, String shd_custpart, String shd_so,
+    public record ship_det(String[] m, String shd_id, String shd_line, String shd_item, String shd_custitem, String shd_so,
         String shd_soline, String shd_date, String shd_po, String shd_qty, String shd_uom, String shd_curr,
         String shd_netprice, String shd_disc, String shd_listprice, String shd_desc, 
         String shd_wh, String shd_loc, String shd_taxamt, String shd_cont, String shd_ref,

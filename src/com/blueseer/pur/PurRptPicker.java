@@ -715,7 +715,7 @@ public class PurRptPicker extends javax.swing.JPanel {
             ResultSet res = null;
             try{   
                 res = st.executeQuery(" select po_nbr, po_vend, vd_name, po_site, po_rmks, po_ord_date, po_due_date, po_status, " +
-                        " pod_ord_qty, pod_rcvd_qty, pod_netprice, pod_part, pod_due_date " +
+                        " pod_ord_qty, pod_rcvd_qty, pod_netprice, pod_item, pod_due_date " +
                         " FROM  po_mstr inner join pod_mstr on pod_nbr = po_nbr " +
                         " inner join vd_mstr on vd_addr = po_vend " +
                         " where po_vend >= " + "'" + fromvend + "'" +   
@@ -729,7 +729,7 @@ public class PurRptPicker extends javax.swing.JPanel {
                                    res.getString("po_nbr"),
                                    res.getString("po_vend"),
                                    res.getString("vd_name"),
-                                   res.getString("pod_part"),
+                                   res.getString("pod_item"),
                                    res.getString("pod_due_date"),
                                    res.getString("pod_ord_qty"),
                                    res.getString("pod_rcvd_qty"),

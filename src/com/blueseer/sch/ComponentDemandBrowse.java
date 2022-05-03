@@ -209,9 +209,9 @@ public class ComponentDemandBrowse extends javax.swing.JPanel {
             ResultSet res = null;
             try {
                 double totqty = 0;
-                res = st.executeQuery("select sod_nbr, so_po, so_cust, so_due_date, sod_part, sod_netprice, sod_ord_qty " +
+                res = st.executeQuery("select sod_nbr, so_po, so_cust, so_due_date, sod_item, sod_netprice, sod_ord_qty " +
                         " from sod_det inner join so_mstr on so_nbr = sod_nbr " +
-                        " where sod_part = " + "'" + item + "'" +  ";");
+                        " where sod_item = " + "'" + item + "'" +  ";");
                 while (res.next()) {
                    totqty += res.getDouble("sod_ord_qty"); 
                    modeldetail.addRow(new Object[]{ 
@@ -219,7 +219,7 @@ public class ComponentDemandBrowse extends javax.swing.JPanel {
                       res.getString("so_po"),
                       res.getString("so_cust"),
                       res.getString("so_due_date"),
-                       res.getString("sod_part"),
+                       res.getString("sod_item"),
                        bsParseDouble(currformatDouble(res.getDouble("sod_netprice"))),
                       res.getInt("sod_ord_qty")});
                 }
@@ -568,7 +568,7 @@ public class ComponentDemandBrowse extends javax.swing.JPanel {
                 
                 lines++;
                 res = st.executeQuery("select it_item, it_desc, sum(in_qoh) as 'qoh' " +
-                         " from item_mstr left outer join in_mstr on in_part = it_item  " +
+                         " from item_mstr left outer join in_mstr on in_item = it_item  " +
                         " where it_item = " + "'" + p + "'" +
                         " group by it_item ; ");
                 while (res.next()) {

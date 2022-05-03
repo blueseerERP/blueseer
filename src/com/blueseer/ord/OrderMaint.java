@@ -1208,8 +1208,8 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         for (sod_det sod : sodlist) {
                     myorddetmodel.addRow(new Object[]{
                       sod.sod_line(), 
-                      sod.sod_part(),
-                      sod.sod_custpart(), 
+                      sod.sod_item(),
+                      sod.sod_custitem(), 
                       sod.sod_nbr(), 
                       sod.sod_po(), 
                       bsNumber(sod.sod_ord_qty()), 
@@ -1441,7 +1441,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
                 res = st.executeQuery("select * from srl_mstr where " +
                         " srl_so = " + "'" + order + "'" + 
                         " AND srl_po = " + "'" + po + "'" + 
-                        " AND srl_part = " + "'" + part + "'" + 
+                        " AND srl_item = " + "'" + part + "'" + 
                         " AND srl_line = " + "'" + line + "'" + 
                          ";");
                  while (res.next()) {

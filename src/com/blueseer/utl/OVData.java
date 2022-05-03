@@ -2855,10 +2855,10 @@ public class OVData {
         int rows = 0;
         String sql = "";
         if (dbtype.equals("sqlite")) {
-                    sql =  "insert into mrp_mstr (mrp_part, mrp_qty, mrp_date, mrp_type, mrp_site) "
+                    sql =  "insert into mrp_mstr (mrp_item, mrp_qty, mrp_date, mrp_type, mrp_site) "
                         + " select ps_child, sum(mrp_qty * ps_qty_per) as sum, " 
                         + " date(mrp_date, ('-' || it_leadtime || ' day')), 'derived', ? from mrp_mstr "
-                        + " inner join pbm_mstr on ps_parent = mrp_part "
+                        + " inner join pbm_mstr on ps_parent = mrp_item "
                         + " inner join bom_mstr on bom_id = ps_bom and bom_primary = '1' "        
                         + " inner join item_mstr on it_item = ps_parent "
                         + " where it_mrp = '1' and it_level = ? "
@@ -2866,11 +2866,11 @@ public class OVData {
                         + " AND ps_child <= ? " 
                         + " group by ps_child, mrp_date order by ps_child, mrp_date; ";
                     } else  {
-                    sql = "insert into mrp_mstr (mrp_part, mrp_qty, mrp_date, mrp_type, mrp_site) "
+                    sql = "insert into mrp_mstr (mrp_item, mrp_qty, mrp_date, mrp_type, mrp_site) "
                         + " select ps_child, sum(mrp_qty * ps_qty_per) as sum, " 
                         + " date_add(mrp_date, " + "interval -" + "cast(it_leadtime as char)" + " day), " 
                         + " 'derived', ? from mrp_mstr "
-                        + " inner join pbm_mstr on ps_parent = mrp_part "
+                        + " inner join pbm_mstr on ps_parent = mrp_item "
                         + " inner join bom_mstr on bom_id = ps_bom and bom_primary = '1' "        
                         + " inner join item_mstr on it_item = ps_parent "
                         + " where it_mrp = '1' and it_level = ? " 
@@ -2894,9 +2894,9 @@ public class OVData {
    
     public static int createMRPZeroLevel(String site) {
         int rows = 0;
-        String sql = " insert into mrp_mstr (mrp_part, mrp_qty, mrp_date, mrp_ref, mrp_type, mrp_line, mrp_site ) "
-                        + " select sod_part, (sod_ord_qty - sod_shipped_qty), sod_due_date, sod_nbr, 'demand', sod_line, sod_site from sod_det "
-                        + " inner join  item_mstr on sod_part = it_item and it_level = '0' where it_mrp = '1' " 
+        String sql = " insert into mrp_mstr (mrp_item, mrp_qty, mrp_date, mrp_ref, mrp_type, mrp_line, mrp_site ) "
+                        + " select sod_item, (sod_ord_qty - sod_shipped_qty), sod_due_date, sod_nbr, 'demand', sod_line, sod_site from sod_det "
+                        + " inner join  item_mstr on sod_item = it_item and it_level = '0' where it_mrp = '1' " 
                         + " AND sod_status <> " + "'" + getGlobalProgTag("closed") + "'"
                         + " and sod_site = ? " + ";";
         try (Connection con = DriverManager.getConnection(url + db, user, pass);
@@ -2912,8 +2912,8 @@ public class OVData {
     public static int deleteAllMRP(String site, String fromitem, String toitem) {
         int rows = 0;
         String sql = " delete from mrp_mstr where mrp_site = ? " 
-                        + " AND mrp_part >= ? "
-                        + " AND mrp_part <= ? ;";
+                        + " AND mrp_item >= ? "
+                        + " AND mrp_item <= ? ;";
         try (Connection con = DriverManager.getConnection(url + db, user, pass);
 	PreparedStatement ps = con.prepareStatement(sql)) {
         ps.setString(1, site);
@@ -4896,9 +4896,9 @@ public class OVData {
                 qty = (int) (Math.random() * (20 - 1)) + 1;   
                 itempos = (int) (Math.random() * (5 - 0)) + 0;
                 st.executeUpdate("insert into sod_det "
-                            + "(sod_nbr, sod_part, sod_site, sod_po, sod_ord_qty, sod_netprice, "
+                            + "(sod_nbr, sod_item, sod_site, sod_po, sod_ord_qty, sod_netprice, "
                             + " sod_listprice, sod_disc, sod_due_date, sod_ord_date, sod_uom, sod_desc, "
-                            + "sod_shipped_qty, sod_custpart, sod_status, sod_line) "
+                            + "sod_shipped_qty, sod_custitem, sod_status, sod_line) "
                     + " values ( " + 
                     "'" +  String.valueOf(indexnbr) + "'" + "," + 
                     "'" +  items.get(itempos)[0] + "'" + "," +
@@ -5011,7 +5011,7 @@ public class OVData {
                 qty = (int) (Math.random() * (200 - 10)) + 10;   
                 itempos = (int) (Math.random() * (10 - 0)) + 0;
                 st.executeUpdate("insert into pod_mstr "
-                            + "(pod_nbr, pod_line, pod_part, pod_vendpart, "
+                            + "(pod_nbr, pod_line, pod_item, pod_venditem, "
                             + " pod_ord_qty, pod_uom, pod_listprice, pod_disc, "
                             + " pod_netprice, pod_ord_date, pod_due_date, "
                             + "pod_rcvd_qty, pod_status, pod_site, pod_desc) "
@@ -5122,9 +5122,9 @@ public class OVData {
                 for (String rec : list) {
                     ld = rec.split(":", -1);
                     st.executeUpdate("insert into sod_det "
-                            + "(sod_nbr, sod_part, sod_site, sod_po, sod_ord_qty, sod_netprice, "
+                            + "(sod_nbr, sod_item, sod_site, sod_po, sod_ord_qty, sod_netprice, "
                             + " sod_listprice, sod_disc, sod_due_date, "
-                            + "sod_shipped_qty, sod_custpart, sod_status, sod_line) "
+                            + "sod_shipped_qty, sod_custitem, sod_status, sod_line) "
                     + " values ( " + 
                     "'" +  ld[0] + "'" + "," + 
                     "'" +  ld[1] + "'" + "," +
@@ -8301,7 +8301,7 @@ return outvalue;
             }
 
             // now overwrite with optimum wh and loc with highest qoh
-            res = st.executeQuery("select in_loc, in_wh from in_mstr where in_part = " + "'" + item + "'" + 
+            res = st.executeQuery("select in_loc, in_wh from in_mstr where in_item = " + "'" + item + "'" + 
                     " AND in_site = " + "'" + site + "'" +
                     " order by in_qoh desc limit 1;" );
            while (res.next()) {
@@ -8334,7 +8334,7 @@ return outvalue;
             ResultSet res = null;
             try {
 
-            res = st.executeQuery("select in_qoh from in_mstr where in_part = " + "'" + item + "'" + 
+            res = st.executeQuery("select in_qoh from in_mstr where in_item = " + "'" + item + "'" + 
                     " AND in_site = " + "'" + site + "'" +
                     " order by in_qoh desc limit 1;" );
            while (res.next()) {
@@ -10844,13 +10844,13 @@ try{
         String mydate = dfdate.format(now);
 
 
-            // sod_line, sod_part, sod_custpart, sod_ord_qty, sod_uom, sod_desc, it_net_wt, sod_listprice, sod_disc, sod_netprice, sod_site, sod_wh, sod_loc
-            res = st.executeQuery("select sod_line, sod_part, sod_custpart, sod_ord_qty, sod_uom, sod_desc, it_net_wt, sod_listprice, sod_disc, sod_netprice, sod_site, sod_wh, sod_loc from sod_det " +
-                    " left outer join item_mstr on it_item = sod_part where sod_nbr = " + "'" + order + "'" +";");
+            // sod_line, sod_item, sod_custitem, sod_ord_qty, sod_uom, sod_desc, it_net_wt, sod_listprice, sod_disc, sod_netprice, sod_site, sod_wh, sod_loc
+            res = st.executeQuery("select sod_line, sod_item, sod_custitem, sod_ord_qty, sod_uom, sod_desc, it_net_wt, sod_listprice, sod_disc, sod_netprice, sod_site, sod_wh, sod_loc from sod_det " +
+                    " left outer join item_mstr on it_item = sod_item where sod_nbr = " + "'" + order + "'" +";");
             while (res.next()) {
                 detail.add(new String[]{res.getString("sod_line").toUpperCase(), 
-                    res.getString("sod_part").toUpperCase(), 
-                    res.getString("sod_custpart").toUpperCase(), 
+                    res.getString("sod_item").toUpperCase(), 
+                    res.getString("sod_custitem").toUpperCase(), 
                     res.getString("sod_ord_qty").toUpperCase(), 
                     res.getString("sod_uom").toUpperCase(), 
                     res.getString("sod_desc").toUpperCase(), 
@@ -10967,7 +10967,7 @@ return mystring;
                     // check if in_mstr record exists for this part, loc, wh, site, serial, expire combo
                     // if not add it
                     nres = st2.executeQuery("select in_qoh from in_mstr where "
-                            + " in_part = " + "'" + item + "'" 
+                            + " in_item = " + "'" + item + "'" 
                             + " and in_loc = " + "'" + loc + "'"
                             + " and in_wh = " + "'" + wh + "'"
                             + " and in_site = " + "'" + site + "'"
@@ -10985,7 +10985,7 @@ return mystring;
                     if (z == 0) {
                      sum = qty;
                      st3.executeUpdate("insert into in_mstr "
-                            + "(in_site, in_part, in_loc, in_wh, in_serial, in_expire, in_qoh, in_date ) "
+                            + "(in_site, in_item, in_loc, in_wh, in_serial, in_expire, in_qoh, in_date ) "
                             + " values ( " 
                             + "'" + site + "'" + ","
                             + "'" + item + "'" + ","
@@ -11004,7 +11004,7 @@ return mystring;
                          st3.executeUpdate("update in_mstr "
                             + " set in_qoh = " + "'" + sum + "'" + "," +
                               " in_date = " + "'" + mydate + "'"
-                            + " where in_part = " + "'" + item + "'" 
+                            + " where in_item = " + "'" + item + "'" 
                             + " and in_loc = " + "'" + loc + "'"
                             + " and in_wh = " + "'" + wh + "'"
                             + " and in_site = " + "'" + site + "'"
@@ -11096,7 +11096,7 @@ return mystring;
                     // check if in_mstr record exists for this part,loc,site combo
                     // if not add it
                     nres = st2.executeQuery("select in_qoh from in_mstr where "
-                            + " in_part = " + "'" + item + "'" 
+                            + " in_item = " + "'" + item + "'" 
                             + " and in_loc = " + "'" + loc + "'"
                             + " and in_wh = " + "'" + wh + "'"
                             + " and in_site = " + "'" + site + "'"
@@ -11114,7 +11114,7 @@ return mystring;
                     if (z == 0) {
                      sum = (-1 * qty);
                      st3.executeUpdate("insert into in_mstr "
-                            + "(in_site, in_part, in_loc, in_wh, in_qoh, in_date ) "
+                            + "(in_site, in_item, in_loc, in_wh, in_qoh, in_date ) "
                             + " values ( " 
                             + "'" + site + "'" + ","
                             + "'" + item + "'" + ","
@@ -11131,7 +11131,7 @@ return mystring;
                          st3.executeUpdate("update in_mstr "
                             + " set in_qoh = " + "'" + sum + "'" + "," +
                               " in_date = " + "'" + mydate + "'"
-                            + " where in_part = " + "'" + item + "'" 
+                            + " where in_item = " + "'" + item + "'" 
                             + " and in_loc = " + "'" + loc + "'"
                             + " and in_wh = " + "'" + wh + "'"
                             + " and in_site = " + "'" + site + "'"
@@ -11183,7 +11183,7 @@ return mystring;
 
 
 
-                  res = st.executeQuery("select sh_site, shd_part, shd_qty, shd_loc, shd_wh, shd_uom, shd_serial " +
+                  res = st.executeQuery("select sh_site, shd_item, shd_qty, shd_loc, shd_wh, shd_uom, shd_serial " +
                           " from ship_det inner join ship_mstr on sh_id = shd_id  " +
                           " where shd_id = " + "'" + shipper + "'" +";");
 
@@ -11191,7 +11191,7 @@ return mystring;
                 while (res.next()) {
 
                     i = 0;
-                    item = res.getString("shd_part");
+                    item = res.getString("shd_item");
                     qty = res.getDouble("shd_qty");
                     loc = res.getString("shd_loc");
                     wh = res.getString("shd_wh");
@@ -11232,7 +11232,7 @@ return mystring;
                     // check if in_mstr record exists for this part,loc,site combo
                     // if not add it
                     nres = st2.executeQuery("select in_qoh from in_mstr where "
-                            + " in_part = " + "'" + item + "'" 
+                            + " in_item = " + "'" + item + "'" 
                             + " and in_loc = " + "'" + loc + "'"
                             + " and in_wh = " + "'" + wh + "'"
                             + " and in_site = " + "'" + site + "'"
@@ -11251,7 +11251,7 @@ return mystring;
                     if (z == 0) {
                      sum = (-1 * baseqty);
                      st3.executeUpdate("insert into in_mstr "
-                            + "(in_site, in_part, in_loc, in_wh, in_serial, in_expire, in_qoh, in_date ) "
+                            + "(in_site, in_item, in_loc, in_wh, in_serial, in_expire, in_qoh, in_date ) "
                             + " values ( " 
                             + "'" + site + "'" + ","
                             + "'" + item + "'" + ","
@@ -11270,7 +11270,7 @@ return mystring;
                          st3.executeUpdate("update in_mstr "
                             + " set in_qoh = " + "'" + sum + "'" + "," +
                               " in_date = " + "'" + mydate + "'"
-                            + " where in_part = " + "'" + item + "'" 
+                            + " where in_item = " + "'" + item + "'" 
                             + " and in_loc = " + "'" + loc + "'"
                             + " and in_wh = " + "'" + wh + "'"
                             + " and in_site = " + "'" + site + "'"
@@ -11336,7 +11336,7 @@ return mystring;
 
                   res = st.executeQuery("select * from recv_det where rvd_id = " + "'" + receiver + "'" +";");
                 while (res.next()) {
-                    item = res.getString("rvd_part");
+                    item = res.getString("rvd_item");
                     qty = res.getDouble("rvd_qty");
                     loc = res.getString("rvd_loc");
                     wh = res.getString("rvd_wh");
@@ -11354,7 +11354,7 @@ return mystring;
                     // check if in_mstr record exists for this part,loc,site combo
                     // if not add it
                     nres = st2.executeQuery("select in_qoh from in_mstr where "
-                            + " in_part = " + "'" + item + "'" 
+                            + " in_item = " + "'" + item + "'" 
                             + " and in_loc = " + "'" + loc + "'"
                             + " and in_wh = " + "'" + wh + "'"
                             + " and in_site = " + "'" + site + "'"
@@ -11372,7 +11372,7 @@ return mystring;
                     if (z == 0) {
                      sum = baseqty;
                      st3.executeUpdate("insert into in_mstr "
-                            + "(in_site, in_part, in_loc, in_wh, in_serial, in_expire, in_qoh, in_date ) "
+                            + "(in_site, in_item, in_loc, in_wh, in_serial, in_expire, in_qoh, in_date ) "
                             + " values ( " 
                             + "'" + site + "'" + ","
                             + "'" + item + "'" + ","
@@ -11391,7 +11391,7 @@ return mystring;
                          st3.executeUpdate("update in_mstr "
                             + " set in_qoh = " + "'" + sum + "'" + "," +
                               " in_date = " + "'" + mydate + "'"
-                            + " where in_part = " + "'" + item + "'" 
+                            + " where in_item = " + "'" + item + "'" 
                             + " and in_loc = " + "'" + loc + "'"
                             + " and in_wh = " + "'" + wh + "'"
                             + " and in_site = " + "'" + site + "'"
@@ -11432,7 +11432,7 @@ return mystring;
             double sum = 0;
           
                 res = st.executeQuery("select in_qoh from in_mstr where "
-                            + " in_part = " + "'" + item + "'" 
+                            + " in_item = " + "'" + item + "'" 
                             + " and in_loc = " + "'" + loc + "'"
                             + " and in_wh = " + "'" + wh + "'"
                             + " and in_site = " + "'" + site + "'"    
@@ -11446,7 +11446,7 @@ return mystring;
                     st.close();
                     if (z == 0) {
                      st2.executeUpdate("insert into in_mstr "
-                            + "(in_site, in_part, in_loc, in_wh, in_serial, in_expire, in_qoh, in_date ) "
+                            + "(in_site, in_item, in_loc, in_wh, in_serial, in_expire, in_qoh, in_date ) "
                             + " values ( " 
                             + "'" + site + "'" + ","
                             + "'" + item + "'" + ","
@@ -11463,7 +11463,7 @@ return mystring;
                          st2.executeUpdate("update in_mstr "
                             + " set in_qoh = " + "'" + (qoh + baseqty) + "'" + "," +
                               " in_date = " + "'" + date + "'"
-                            + " where in_part = " + "'" + item + "'" 
+                            + " where in_item = " + "'" + item + "'" 
                             + " and in_loc = " + "'" + loc + "'"
                             + " and in_wh = " + "'" + wh + "'"
                             + " and in_site = " + "'" + site + "'"        
@@ -11577,9 +11577,9 @@ return mystring;
                  type = "RCT-PURCH";
                 }
 
-                res = st.executeQuery("select * from recv_det left outer join item_cost on itc_set = 'standard' and itc_item = rvd_part where rvd_id = " + "'" + receiver + "'" +";");
+                res = st.executeQuery("select * from recv_det left outer join item_cost on itc_set = 'standard' and itc_item = rvd_item where rvd_id = " + "'" + receiver + "'" +";");
                 while (res.next()) {
-                    item = res.getString("rvd_part");
+                    item = res.getString("rvd_item");
                     qty = res.getDouble("rvd_qty");
                     order = res.getString("rvd_po");
                     po = res.getString("rvd_po");
@@ -11594,7 +11594,7 @@ return mystring;
                     baseqty = OVData.getUOMBaseQty(item, site, uom, qty);
 
             st2.executeUpdate("insert into tran_mstr "
-                            + "(tr_site, tr_part, tr_qty, tr_base_qty, tr_uom, tr_ent_date, tr_eff_date, "
+                            + "(tr_site, tr_item, tr_qty, tr_base_qty, tr_uom, tr_ent_date, tr_eff_date, "
                             + " tr_userid, tr_ref, tr_addrcode, tr_type, tr_rmks, tr_nbr, "
                             + " tr_acct, tr_cc, tr_lot, tr_serial, tr_program, tr_loc, "
                             + " tr_order, tr_line, tr_po, tr_price, tr_cost, tr_terms ) "
@@ -11691,7 +11691,7 @@ return mystring;
                         uom = OVData.getUOMFromItemSite(item, site);  //always base uom for POS program
                         
                 st2.executeUpdate("insert into tran_mstr "
-                                + "(tr_site, tr_part, tr_qty, tr_base_qty, tr_uom, tr_ent_date, tr_eff_date, "
+                                + "(tr_site, tr_item, tr_qty, tr_base_qty, tr_uom, tr_ent_date, tr_eff_date, "
                                 + " tr_userid, tr_ref, tr_addrcode, tr_type, tr_rmks, tr_nbr, "
                                 + " tr_acct, tr_cc, tr_lot, tr_serial, tr_program, tr_loc, "
                                 + " tr_order, tr_line, tr_po, tr_price, tr_cost, tr_terms ) "
@@ -11786,7 +11786,7 @@ return mystring;
                    
                     res = st.executeQuery("select * from ship_det where shd_id = " + "'" + shipper + "'" +";");
                     while (res.next()) {
-                        item = res.getString("shd_part");
+                        item = res.getString("shd_item");
                         uom = res.getString("shd_uom");
                         qty = res.getDouble("shd_qty");
                         order = res.getString("shd_so");
@@ -11802,7 +11802,7 @@ return mystring;
                         
                         
                 st2.executeUpdate("insert into tran_mstr "
-                                + "(tr_site, tr_part, tr_qty, tr_base_qty, tr_uom, tr_ent_date, tr_eff_date, "
+                                + "(tr_site, tr_item, tr_qty, tr_base_qty, tr_uom, tr_ent_date, tr_eff_date, "
                                 + " tr_userid, tr_ref, tr_addrcode, tr_type, tr_rmks, tr_nbr, "
                                 + " tr_acct, tr_cc, tr_lot, tr_serial, tr_program, tr_loc, "
                                 + " tr_order, tr_line, tr_po, tr_price, tr_cost, tr_terms ) "
@@ -11997,7 +11997,7 @@ return mystring;
                  
               if (dbtype.equals("sqlite")) {    
               st.executeUpdate("insert into tran_mstr "
-                        + "(tr_part, tr_type, tr_op, tr_qty, tr_base_qty, tr_uom, tr_cost, tr_eff_date, tr_loc, tr_wh, "
+                        + "(tr_item, tr_type, tr_op, tr_qty, tr_base_qty, tr_uom, tr_cost, tr_eff_date, tr_loc, tr_wh, "
                         + "tr_serial, tr_ref, tr_site, tr_userid, tr_prodline, tr_export, tr_expire, tr_actcell, tr_rmks, tr_pack, tr_assy_date, tr_pack_date, tr_ent_date, tr_program, tr_bom )"
                         + " values ( " + "'" + _part + "'" + ","
                         + "'" + temptype + "'" + ","
@@ -12028,7 +12028,7 @@ return mystring;
                         + ";");
               } else {
                   st.executeUpdate("insert into tran_mstr "
-                        + "(tr_part, tr_type, tr_op, tr_qty, tr_base_qty, tr_uom, tr_cost, tr_eff_date, tr_loc, tr_wh, "
+                        + "(tr_item, tr_type, tr_op, tr_qty, tr_base_qty, tr_uom, tr_cost, tr_eff_date, tr_loc, tr_wh, "
                         + "tr_serial, tr_ref, tr_site, tr_userid, tr_prodline, tr_export, tr_expire, tr_actcell, tr_rmks, tr_pack, tr_assy_date, tr_pack_date, tr_ent_date, tr_program, tr_bom )"
                         + " values ( " + "'" + _part + "'" + ","
                         + "'" + temptype + "'" + ","
@@ -12087,7 +12087,7 @@ return mystring;
                   /* let's first load the tran_hist */
               if (dbtype.equals("sqlite")) {         
               st.executeUpdate("insert into tran_mstr "
-                        + "(tr_part, tr_type, tr_op, tr_qty, tr_base_qty, tr_uom, tr_cost, tr_eff_date, tr_loc, "
+                        + "(tr_item, tr_type, tr_op, tr_qty, tr_base_qty, tr_uom, tr_cost, tr_eff_date, tr_loc, "
                         + "tr_serial, tr_ref, tr_site, tr_userid, tr_prodline, tr_export, tr_actcell, tr_rmks, tr_pack, tr_assy_date, tr_pack_date, tr_ent_date, tr_program, tr_bom )"
                         + " values ( " + "'" + _part + "'" + ","
                         + "'" + _type + "'" + ","
@@ -12116,7 +12116,7 @@ return mystring;
                         + ";");
               } else {
                  st.executeUpdate("insert into tran_mstr "
-                        + "(tr_part, tr_type, tr_op, tr_qty, tr_base_qty, tr_uom, tr_cost, tr_eff_date, tr_loc, "
+                        + "(tr_item, tr_type, tr_op, tr_qty, tr_base_qty, tr_uom, tr_cost, tr_eff_date, tr_loc, "
                         + "tr_serial, tr_ref, tr_site, tr_userid, tr_prodline, tr_export, tr_actcell, tr_rmks, tr_pack, tr_assy_date, tr_pack_date, tr_ent_date, tr_program, tr_bom )"
                         + " values ( " + "'" + _part + "'" + ","
                         + "'" + _type + "'" + ","
@@ -12162,7 +12162,7 @@ return mystring;
                   /* let's first load the tran_hist */
                   
               st.executeUpdate("insert into tran_mstr "
-                        + "(tr_part, tr_type, tr_op, tr_qty, tr_base_qty, tr_uom, tr_cost, tr_eff_date, tr_loc, "
+                        + "(tr_item, tr_type, tr_op, tr_qty, tr_base_qty, tr_uom, tr_cost, tr_eff_date, tr_loc, "
                         + "tr_serial, tr_ref, tr_site, tr_userid, tr_prodline, tr_export, tr_actcell, tr_rmks, tr_pack, tr_assy_date, tr_pack_date, tr_ent_date, tr_program, tr_bom )"
                         + " values ( " + "'" + _part + "'" + ","
                         + "'" + _type + "'" + ","
@@ -12243,7 +12243,7 @@ return mystring;
                 String uom = OVData.getUOMFromItemSite(item, site);
                                            
                 st.executeUpdate("insert into tran_mstr "
-                                + "(tr_site, tr_part, tr_qty, tr_base_qty, tr_uom, tr_op, tr_ent_date, tr_eff_date, "
+                                + "(tr_site, tr_item, tr_qty, tr_base_qty, tr_uom, tr_op, tr_ent_date, tr_eff_date, "
                                 + " tr_userid, tr_ref, tr_addrcode, tr_type, tr_rmks, tr_nbr, "
                                 + " tr_acct, tr_cc, tr_lot, tr_serial, tr_program, tr_loc, tr_wh, tr_expire, "
                                 + " tr_order, tr_line, tr_po, tr_price, tr_cost, tr_terms ) "
@@ -12649,7 +12649,7 @@ return mystring;
                     res = st.executeQuery("select * from ship_det where shd_id = " + "'" + shipper + "'" +";");
                     while (res.next()) {
                     amt += (res.getDouble("shd_qty") * res.getDouble("shd_netprice"));
-                    matltax += OVData.getTaxAmtApplicableByItem(res.getString("shd_part"),res.getDouble("shd_qty") * res.getDouble("shd_netprice")); // line level matl tax
+                    matltax += OVData.getTaxAmtApplicableByItem(res.getString("shd_item"),res.getDouble("shd_qty") * res.getDouble("shd_netprice")); // line level matl tax
                     }
                     res.close();
                     
@@ -12863,7 +12863,7 @@ return mystring;
                     res = st.executeQuery("select * from ship_det where shd_id = " + "'" + shipper + "'" +";");
                     while (res.next()) {
                     amt += (res.getDouble("shd_qty") * res.getDouble("shd_netprice"));
-                    matltax += OVData.getTaxAmtApplicableByItem(res.getString("shd_part"),res.getDouble("shd_qty") * res.getDouble("shd_netprice")); // line level matl tax
+                    matltax += OVData.getTaxAmtApplicableByItem(res.getString("shd_item"),res.getDouble("shd_qty") * res.getDouble("shd_netprice")); // line level matl tax
                     }
                     res.close();
                     
@@ -13098,7 +13098,7 @@ return mystring;
                     while (res.next()) {
                   
                     amt += (res.getDouble("shd_qty") * res.getDouble("shd_netprice"));
-                    matltax += OVData.getTaxAmtApplicableByItem(res.getString("shd_part"),res.getDouble("shd_qty") * res.getDouble("shd_netprice")); // line level matl tax
+                    matltax += OVData.getTaxAmtApplicableByItem(res.getString("shd_item"),res.getDouble("shd_qty") * res.getDouble("shd_netprice")); // line level matl tax
                     }
                     res.close();
                     
@@ -13872,10 +13872,10 @@ return mystring;
             ArrayList linestatus = new ArrayList();
             ArrayList ordernbr = new ArrayList();
 
-             res = st.executeQuery("select sod_nbr, sod_status, sod_line, shd_part, sum(shd_qty) as sumqty, sod_shipped_qty, sod_ord_qty from ship_det inner join " +
-                     " sod_det on shd_part = sod_part and shd_soline = sod_line and shd_so = sod_nbr " +
+             res = st.executeQuery("select sod_nbr, sod_status, sod_line, shd_item, sum(shd_qty) as sumqty, sod_shipped_qty, sod_ord_qty from ship_det inner join " +
+                     " sod_det on shd_item = sod_item and shd_soline = sod_line and shd_so = sod_nbr " +
                " where shd_id = " + "'" + shipper + "'" + 
-               " group by shd_part, sod_nbr, sod_status, sod_line, sod_shipped_qty, sod_ord_qty " +                        
+               " group by shd_item, sod_nbr, sod_status, sod_line, sod_shipped_qty, sod_ord_qty " +                        
                ";");
                while (res.next()) {
                    shippedqty.add(res.getString("sod_shipped_qty"));
@@ -13886,7 +13886,7 @@ return mystring;
                    ordernbr.add(res.getString("sod_nbr"));
                 }
                res.close();
-                              // res = st.executeQuery("select shd_part from ship_mstr where sh_id = " + "'" + shipper + "'" +";");
+                              // res = st.executeQuery("select shd_item from ship_mstr where sh_id = " + "'" + shipper + "'" +";");
           if (dbtype.equals("sqlite")) {
               double total = 0;
               String status = "";
@@ -13904,7 +13904,7 @@ return mystring;
               }
           } else {
               st.executeUpdate(
-                     " update sod_det inner join ship_det on shd_part = sod_part and shd_soline = sod_line and shd_so = sod_nbr " +
+                     " update sod_det inner join ship_det on shd_item = sod_item and shd_soline = sod_line and shd_so = sod_nbr " +
                      " inner join so_mstr on so_nbr = sod_nbr and so_type = 'DISCRETE' " +
                       " set sod_shipped_qty = sod_shipped_qty + shd_qty, sod_status = " +
                       " (case when sod_shipped_qty + shd_qty >= sod_ord_qty then " + "'" + getGlobalProgTag("closed") + "'" +
@@ -13952,7 +13952,7 @@ return mystring;
         ResultSet res = null;
             String ordernbr = "";
              res = st.executeQuery("select svd_nbr from ship_det inner join " +
-                     " svd_det on shd_part = svd_item and shd_soline = svd_line and shd_so = svd_nbr " +
+                     " svd_det on shd_item = svd_item and shd_soline = svd_line and shd_so = svd_nbr " +
                " where shd_id = " + "'" + shipper + "'" +";");
                while (res.next()) {
                    ordernbr = res.getString("svd_nbr");
@@ -13977,9 +13977,9 @@ return mystring;
         ResultSet res = null;
         try{
             
-           // res = st.executeQuery("select shd_part from ship_mstr where sh_id = " + "'" + shipper + "'" +";");
+           // res = st.executeQuery("select shd_item from ship_mstr where sh_id = " + "'" + shipper + "'" +";");
                st.executeUpdate(
-                     " update sod_det inner join ship_det on shd_part = sod_part and shd_soline = sod_line and shd_so = sod_nbr " +
+                     " update sod_det inner join ship_det on shd_item = sod_item and shd_soline = sod_line and shd_so = sod_nbr " +
                      " inner join so_mstr on so_nbr = sod_nbr and so_type = 'DISCRETE' " +
                       " set sod_shipped_qty = sod_shipped_qty - shd_qty, " +
                       " sod_status = " + "'" + getGlobalProgTag("open") + "'" + " ) " +
@@ -14248,7 +14248,7 @@ return mystring;
                 hm.put("mysite",  site);
                 hm.put("imagepath", imagepath);
                 hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
-                // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_part, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
+                // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_item, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                 // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
                 File mytemplate = new File("jasper/" + jasperfile);
                 //  JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, hm, con );
@@ -14319,7 +14319,7 @@ return mystring;
                 hm.put("ship_csz", ship_csz);
                 hm.put("imagepath", imagepath);
                 hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
-               // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_part, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
+               // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_item, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
                 File mytemplate = new File("jasper/" + jasperfile); 
               //  JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, hm, con );
@@ -14413,7 +14413,7 @@ return mystring;
                 hm.put("ship_csz", ship_csz);
                 hm.put("imagepath", imagepath);
                 hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
-               // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_part, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
+               // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_item, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
                 File mytemplate = new File("jasper/" + jasperfile); 
               //  JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, hm, con );
@@ -14556,7 +14556,7 @@ return mystring;
                 hm.put("ship_csz", ship_csz);
                 hm.put("imagepath", imagepath);
                 hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
-               // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_part, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
+               // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_item, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
                 File mytemplate = new File("jasper/" + jasperfile); 
               //  JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, hm, con );
@@ -14594,7 +14594,7 @@ return mystring;
                 hm.put("myid",  batch);
                 hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
                
-               // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_part, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
+               // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_item, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
                 File mytemplate = new File("jasper/" + jasperfile); 
               //  JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, hm, con );
@@ -14661,7 +14661,7 @@ return mystring;
                 hm.put("ship_csz", ship_csz);
                 hm.put("imagepath", imagepath);
                 hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
-               // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_part, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
+               // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_item, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
                 File mytemplate = new File("jasper/" + jasperfile);
               //  JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, hm, con );
@@ -14739,7 +14739,7 @@ return mystring;
                 hm.put("ship_csz", ship_csz);
                 hm.put("imagepath", imagepath);
                 hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
-               // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_part, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
+               // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_item, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
                 File mytemplate = new File("jasper/" + jasperfile);
               //  JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, hm, con );
@@ -14809,7 +14809,7 @@ return mystring;
                 hm.put("ship_csz", ship_csz);
                 hm.put("imagepath", imagepath);
                 hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
-               // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_part, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
+               // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_item, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
                 File mytemplate = new File("jasper/" + jasperfile);
               //  JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, hm, con );
@@ -14887,7 +14887,7 @@ return mystring;
                 hm.put("imagepath", imagepath);
                 hm.put("taxes", taxes);
                 hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
-               // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_part, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
+               // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_item, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
                 File mytemplate = new File("jasper/" + jasperfile); 
               //  JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, hm, con );
@@ -14968,7 +14968,7 @@ return mystring;
                 hm.put("ship_csz", ship_csz);
                 hm.put("imagepath", imagepath);
                 hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
-               // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_part, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
+               // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_item, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
                 File mytemplate = new File("jasper/" + jasperfile); 
               //  JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, hm, con );
@@ -15021,7 +15021,7 @@ return mystring;
                 hm.put("curcost",  curcost);
                 hm.put("imagepath", imagepath);
                 hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
-               // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_part, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
+               // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_item, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
                 File mytemplate = new File("jasper/" + jasperfile); 
               //  JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, hm, con );
@@ -15162,7 +15162,7 @@ MainFrame.bslog(e);
                 hm.put("myid",  id);
                 hm.put("imagepath", imagepath);
                 hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
-               // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_part, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
+               // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_item, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
                 File mytemplate = new File("jasper/" + jasperfile); 
               //  JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, hm, con );
@@ -15547,7 +15547,7 @@ MainFrame.bslog(e);
                     qty = bsParseDouble(voucherdet.getValueAt(j,3).toString());
                     amt += bsParseDoubleUS(voucherdet.getValueAt(j, 3).toString()) * bsParseDoubleUS(voucherdet.getValueAt(j, 4).toString());
                     st.executeUpdate("insert into vod_mstr "
-                        + "(vod_id, vod_vend, vod_rvdid, vod_rvdline, vod_part, vod_qty, "
+                        + "(vod_id, vod_vend, vod_rvdid, vod_rvdline, vod_item, vod_qty, "
                         + " vod_voprice, vod_date, vod_invoice, vod_expense_acct, vod_expense_cc )  "
                         + " values ( " + "'" + nbr + "'" + ","
                             + "'" + vend + "'" + ","
@@ -15894,8 +15894,8 @@ MainFrame.bslog(e);
               //  detail.add(new String[]{ItemNumber, Line, OrderQty, UOM,CustItem,ListPrice,NetPrice,Discount});
                 for (String[] s : detail) {
                 st.executeUpdate("insert into sod_det "
-                        + "(sod_nbr, sod_part, sod_site, sod_po, sod_ord_qty, sod_netprice, sod_listprice, sod_disc, sod_due_date, "
-                        + "sod_shipped_qty, sod_custpart, sod_status, sod_line) "
+                        + "(sod_nbr, sod_item, sod_site, sod_po, sod_ord_qty, sod_netprice, sod_listprice, sod_disc, sod_due_date, "
+                        + "sod_shipped_qty, sod_custitem, sod_status, sod_line) "
                         + " values ( " + "'" + nbr + "'" + ","
                         + "'" + s[0] + "'" + ","
                         + "'" + custinfo[7] + "'" + ","
@@ -15953,13 +15953,13 @@ MainFrame.bslog(e);
             Date now = new Date();
              // Rule 1:  if no blanket order,line,status=open for this part then proceed = false
             i = 0;
-            res = st.executeQuery("select sod_part, sod_po from sod_det where sod_nbr = " + "'" + order + "'" 
+            res = st.executeQuery("select sod_item, sod_po from sod_det where sod_nbr = " + "'" + order + "'" 
                      + " AND sod_line = " + "'" + line + "'" 
                      + " AND sod_status = " + "'" + getGlobalProgTag("open") + "'"                           
                      + " ;");
                while (res.next()) {
                    i++;
-               item = res.getString("sod_part");
+               item = res.getString("sod_item");
                po = res.getString("sod_po");
                }
                if (i == 0) {
@@ -15971,7 +15971,7 @@ MainFrame.bslog(e);
                i = 0;
                res = st.executeQuery("select * from srl_mstr where srl_so = " + "'" + order + "'" 
                         + " AND srl_line = " + "'" + line + "'" 
-                        + " AND srl_part = " + "'" + item + "'" 
+                        + " AND srl_item = " + "'" + item + "'" 
                         + " AND srl_po = " + "'" + po + "'" 
                         + " AND srl_ref = " + "'" + ref + "'" 
                         + " AND srl_duedate = " + "'" + date + "'" 
@@ -15990,7 +15990,7 @@ MainFrame.bslog(e);
             if (proceed) {
 
                     st.executeUpdate("insert into srl_mstr "
-                        + " (srl_so, srl_po, srl_line, srl_part, srl_ref, srl_qtyord, srl_duedate, srl_crtdate, "
+                        + " (srl_so, srl_po, srl_line, srl_item, srl_ref, srl_qtyord, srl_duedate, srl_crtdate, "
                         + "srl_type, srl_rlse ) "
                         + " values ( " + "'" + order + "'" + ","
                         + "'" + po + "'" + ","
@@ -16225,7 +16225,7 @@ MainFrame.bslog(e);
                   _op = mytable.getValueAt(i, 2).toString();
                   planid = OVData.getNextNbr("pland");
                     st.executeUpdate("insert into pland_mstr "
-                        + " (pland_id, pland_parent, pland_part, pland_op, pland_qty, pland_cell, pland_ref, pland_date ) "
+                        + " (pland_id, pland_parent, pland_item, pland_op, pland_qty, pland_cell, pland_ref, pland_date ) "
                         + " values ( " + "'" + planid + "'" + ","  
                         + "'" + _parent + "'" + ","
                         + "'" + _part + "'" + ","
@@ -16600,9 +16600,9 @@ MainFrame.bslog(e);
 
              int qty = 0;
               res = st.executeQuery("select * from fct_mstr " +
-                      " inner join item_mstr on it_item = fct_part " +
-                      " where fct_part >= " + "'" + fromitem + "'" +
-                      " and fct_part <= " + "'" + toitem + "'" + 
+                      " inner join item_mstr on it_item = fct_item " +
+                      " where fct_item >= " + "'" + fromitem + "'" +
+                      " and fct_item <= " + "'" + toitem + "'" + 
                       " and fct_site >= " + "'" + fromsite + "'" + 
                       " and fct_site <= " + "'" + tosite + "'" + 
                       " and it_plan = '1' " +
@@ -16610,7 +16610,7 @@ MainFrame.bslog(e);
                 while (res.next()) {
                   // for this part, this site, and this 'next' 13 weeks...see what plan_mstr records exist
 
-                 item = res.getString("fct_part");
+                 item = res.getString("fct_item");
                  site = res.getString("fct_site");
 
 
@@ -16623,7 +16623,7 @@ MainFrame.bslog(e);
                           continue;
 
 
-                      res2 = st2.executeQuery("select * from plan_mstr where plan_part = " + "'" + item + "'" +
+                      res2 = st2.executeQuery("select * from plan_mstr where plan_item = " + "'" + item + "'" +
                                " AND plan_site = " + "'" + site + "'" + 
                               " AND plan_date_due = " + "'" + df.format(dates.get(j - 1)) + "'" + 
                               " AND plan_type = 'FCST' " + ";");
@@ -16634,7 +16634,7 @@ MainFrame.bslog(e);
                              recnumber++;
                                 int nbr = OVData.getNextNbr("plan");
                                 st3.executeUpdate("insert into plan_mstr "
-                                    + "(plan_nbr, plan_part, plan_qty_req, plan_date_create, plan_date_due, plan_type, plan_site ) "
+                                    + "(plan_nbr, plan_item, plan_qty_req, plan_date_create, plan_date_due, plan_type, plan_site ) "
                                     + " values ( " + "'" + nbr + "'" + ","
                                     + "'" + item + "'" + ","
                                     + "'" + qty + "'" + ","
@@ -16716,7 +16716,7 @@ MainFrame.bslog(e);
               res = st.executeQuery("select it_item, ita_fct, sod_site, in_qoh, round(ita_fct / 25) as '2week', " +
                       " coalesce(sum(sod_ord_qty - sod_shipped_qty),0) as mydemand " +
                       " from item_mstr " +
-                      " left outer join in_mstr on in_part = it_item and in_loc = 'locA' and in_site = '1000' " +
+                      " left outer join in_mstr on in_item = it_item and in_loc = 'locA' and in_site = '1000' " +
                       " left outer join item_apd on ita_item = it_item " +
                       " left outer join sod_det on sod_char1 = it_item and sod_due_date <= " + "'" + enddate + "'" + " AND sod_site = '1000' " +
                       " where it_prodline >= " + "'" + fromprod + "'" +
@@ -16783,7 +16783,7 @@ MainFrame.bslog(e);
 
                  // now lets find out what tickets we already have open ...tickets that are not closed (whether sched or not sched).
 
-                      res2 = st2.executeQuery("select sum(plan_qty_req) as 'sum' from plan_mstr where plan_part = " + "'" + item + "'" +
+                      res2 = st2.executeQuery("select sum(plan_qty_req) as 'sum' from plan_mstr where plan_item = " + "'" + item + "'" +
                                " AND plan_site = " + "'" + site + "'" + 
                               " AND plan_status = '0' " + ";" );
                          while (res2.next()) {
@@ -16802,7 +16802,7 @@ MainFrame.bslog(e);
                              recnumber++;
                                 int nbr = OVData.getNextNbr("plan");
                                 st3.executeUpdate("insert into plan_mstr "
-                                    + "(plan_nbr, plan_part, plan_qty_req, plan_date_create, plan_date_due, plan_type, plan_site, plan_rmks ) "
+                                    + "(plan_nbr, plan_item, plan_qty_req, plan_date_create, plan_date_due, plan_type, plan_site, plan_rmks ) "
                                     + " values ( " + "'" + nbr + "'" + ","
                                     + "'" + item + "'" + ","
                                     + "'" + min + "'" + ","
@@ -16825,7 +16825,7 @@ MainFrame.bslog(e);
                              recnumber++;
                                 int nbr = OVData.getNextNbr("plan");
                                 st3.executeUpdate("insert into plan_mstr "
-                                    + "(plan_nbr, plan_part, plan_qty_req, plan_date_create, plan_date_due, plan_type, plan_site, plan_rmks ) "
+                                    + "(plan_nbr, plan_item, plan_qty_req, plan_date_create, plan_date_due, plan_type, plan_site, plan_rmks ) "
                                     + " values ( " + "'" + nbr + "'" + ","
                                     + "'" + item + "'" + ","
                                     + "'" + min + "'" + ","
@@ -16889,9 +16889,9 @@ MainFrame.bslog(e);
 
              int k = 0;
 
-              res = st.executeQuery("select sod_site, sod_nbr, sod_due_date, sod_part, sod_ord_qty, sod_shipped_qty, sod_line from so_mstr " +
+              res = st.executeQuery("select sod_site, sod_nbr, sod_due_date, sod_item, sod_ord_qty, sod_shipped_qty, sod_line from so_mstr " +
                       " inner join sod_det on sod_nbr = so_nbr and sod_status = " + "'" + getGlobalProgTag("open") + "'" + " and (sod_ord_qty - sod_shipped_qty) > 0 " +
-                      " inner join item_mstr on it_item = sod_part " +
+                      " inner join item_mstr on it_item = sod_item " +
                       " where so_site = " + "'" + site + "'" +
                       " and so_status = " + "'" + getGlobalProgTag("open") + "'" +
                       " and it_plan = '1' " + 
@@ -16900,7 +16900,7 @@ MainFrame.bslog(e);
 
                     // for this part, this site, this order, this line ....see what plan_mstr records exist
 
-                 item = res.getString("sod_part");
+                 item = res.getString("sod_item");
                  order = res.getString("sod_nbr");
                  line = res.getString("sod_line");
                  qty = res.getDouble("sod_ord_qty") - res.getDouble("sod_shipped_qty");
@@ -16908,7 +16908,7 @@ MainFrame.bslog(e);
                  k = 0;
 
 
-                      res2 = st2.executeQuery("select * from plan_mstr where plan_part = " + "'" + item + "'" +
+                      res2 = st2.executeQuery("select * from plan_mstr where plan_item = " + "'" + item + "'" +
                                " AND plan_site = " + "'" + site + "'" + 
                                " AND plan_order = " + "'" + order + "'" +
                               " AND plan_line = " + "'" + line + "'" + ";");
@@ -16931,7 +16931,7 @@ MainFrame.bslog(e);
                     int nbr = OVData.getNextNbr("plan");
                     recnumber++;
                                 st.executeUpdate("insert into plan_mstr "
-                                    + "(plan_nbr, plan_order, plan_line, plan_part, plan_qty_req, plan_date_create, plan_date_due, plan_type, plan_site ) "
+                                    + "(plan_nbr, plan_order, plan_line, plan_item, plan_qty_req, plan_date_create, plan_date_due, plan_type, plan_site ) "
                                     + " values ( " + "'" + nbr + "'" + ","
                                     + "'" + a_order.get(z) + "'" + ","
                                     + "'" + a_line.get(z) + "'" + ","

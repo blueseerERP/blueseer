@@ -286,13 +286,13 @@ public class ordData {
     private static int _updateOrderDet(sod_det x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
         int rows = 0;
         String sqlSelect = "select * from sod_det where sod_nbr = ? and sod_line = ?";
-        String sqlUpdate = "update sod_det set sod_part = ?, sod_custpart = ?, " +
+        String sqlUpdate = "update sod_det set sod_item = ?, sod_custitem = ?, " +
                 "sod_po = ?, sod_ord_qty = ?, sod_uom = ?, sod_all_qty = ?, " +
                 " sod_listprice = ?, sod_disc = ?, sod_netprice = ?, sod_ord_date = ?, " +
                 "sod_due_date = ?, sod_shipped_qty = ?, sod_status = ?, sod_wh = ?, sod_loc = ?, " +
                 " sod_desc = ?, sod_taxamt = ?, sod_site = ?, sod_bom = ? " +
                  " where sod_nbr = ? and sod_line = ? ; ";
-        String sqlInsert = "insert into sod_det (sod_nbr, sod_line, sod_part, sod_custpart, " 
+        String sqlInsert = "insert into sod_det (sod_nbr, sod_line, sod_item, sod_custitem, " 
                         + "sod_po, sod_ord_qty, sod_uom, sod_all_qty, " 
                         + "sod_listprice, sod_disc, sod_netprice, sod_ord_date, sod_due_date, " 
                         + "sod_shipped_qty, sod_status, sod_wh, sod_loc, "
@@ -306,8 +306,8 @@ public class ordData {
 	 ps = con.prepareStatement(sqlInsert) ;
             ps.setString(1, x.sod_nbr);
             ps.setString(2, x.sod_line);
-            ps.setString(3, x.sod_part);
-            ps.setString(4, x.sod_custpart);
+            ps.setString(3, x.sod_item);
+            ps.setString(4, x.sod_custitem);
             ps.setString(5, x.sod_po);
             ps.setString(6, x.sod_ord_qty);
             ps.setString(7, x.sod_uom);
@@ -330,8 +330,8 @@ public class ordData {
          ps = con.prepareStatement(sqlUpdate) ;
             ps.setString(20, x.sod_nbr);
             ps.setString(21, x.sod_line);
-            ps.setString(1, x.sod_part);
-            ps.setString(2, x.sod_custpart);
+            ps.setString(1, x.sod_item);
+            ps.setString(2, x.sod_custitem);
             ps.setString(3, x.sod_po);
             ps.setString(4, x.sod_ord_qty);
             ps.setString(5, x.sod_uom);
@@ -671,8 +671,8 @@ public class ordData {
              try (ResultSet res = ps.executeQuery();) {
                     while(res.next()) {
                     m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
-                    r = new sod_det(m, res.getString("sod_nbr"), res.getString("sod_line"), res.getString("sod_part"),
-                    res.getString("sod_custpart"), res.getString("sod_po"), res.getString("sod_ord_qty"), res.getString("sod_uom"), res.getString("sod_all_qty"),
+                    r = new sod_det(m, res.getString("sod_nbr"), res.getString("sod_line"), res.getString("sod_item"),
+                    res.getString("sod_custitem"), res.getString("sod_po"), res.getString("sod_ord_qty"), res.getString("sod_uom"), res.getString("sod_all_qty"),
                     res.getString("sod_listprice"), res.getString("sod_disc"), res.getString("sod_netprice"), res.getString("sod_ord_date"), res.getString("sod_due_date"),
                     res.getString("sod_shipped_qty"), res.getString("sod_status"), res.getString("sod_wh"), res.getString("sod_loc"), 
                     res.getString("sod_desc"), res.getString("sod_taxamt"), res.getString("sod_site"), res.getString("sod_bom") );
@@ -700,8 +700,8 @@ public class ordData {
             } else {
                 while(res.next()) {
                     m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
-                    r = new sod_det(m, res.getString("sod_nbr"), res.getString("sod_line"), res.getString("sod_part"),
-                    res.getString("sod_custpart"), res.getString("sod_po"), res.getString("sod_ord_qty"), res.getString("sod_uom"), res.getString("sod_all_qty"),
+                    r = new sod_det(m, res.getString("sod_nbr"), res.getString("sod_line"), res.getString("sod_item"),
+                    res.getString("sod_custitem"), res.getString("sod_po"), res.getString("sod_ord_qty"), res.getString("sod_uom"), res.getString("sod_all_qty"),
                     res.getString("sod_listprice"), res.getString("sod_disc"), res.getString("sod_netprice"), res.getString("sod_ord_date"), res.getString("sod_due_date"),
                     res.getString("sod_shipped_qty"), res.getString("sod_status"), res.getString("sod_wh"), res.getString("sod_loc"), 
                     res.getString("sod_desc"), res.getString("sod_taxamt"), res.getString("sod_site"), res.getString("sod_bom") );
@@ -856,7 +856,7 @@ public class ordData {
     private static int _addOrderDet(sod_det x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
         int rows = 0;
         String sqlSelect = "select * from sod_det where sod_nbr = ? and sod_line = ?";
-        String sqlInsert = "insert into sod_det (sod_nbr, sod_line, sod_part, sod_custpart, " 
+        String sqlInsert = "insert into sod_det (sod_nbr, sod_line, sod_item, sod_custitem, " 
                         + "sod_po, sod_ord_qty, sod_uom, sod_all_qty, " 
                         + "sod_listprice, sod_disc, sod_netprice, sod_ord_date, sod_due_date, " 
                         + "sod_shipped_qty, sod_status, sod_wh, sod_loc, "
@@ -871,8 +871,8 @@ public class ordData {
             if (! res.isBeforeFirst()) {
             ps.setString(1, x.sod_nbr);
             ps.setString(2, x.sod_line);
-            ps.setString(3, x.sod_part);
-            ps.setString(4, x.sod_custpart);
+            ps.setString(3, x.sod_item);
+            ps.setString(4, x.sod_custitem);
             ps.setString(5, x.sod_po);
             ps.setString(6, x.sod_ord_qty);
             ps.setString(7, x.sod_uom);
@@ -1517,10 +1517,10 @@ public class ordData {
 
            res = st.executeQuery("SELECT  sum(case when sod_all_qty = '' then 0 else (sod_all_qty - sod_shipped_qty) end) as allqty  " +
                                     " FROM  sod_det inner join so_mstr on so_nbr = sod_nbr  " +
-                                    " where sod_part = " + "'" + item + "'" + 
+                                    " where sod_item = " + "'" + item + "'" + 
                                     " AND so_status <> " + "'" + getGlobalProgTag("closed") + "'" +
                                     " AND so_site = " + "'" + site + "'" +          
-                                    " group by sod_part ;");
+                                    " group by sod_item ;");
 
                                     while (res.next()) {
                                     qty = res.getDouble("allqty");
@@ -1662,10 +1662,10 @@ public class ordData {
         Statement st = con.createStatement();
         ResultSet res = null;
             try{
-                res = st.executeQuery("select sod_part from sod_det where sod_nbr = " + "'" + order + "'" + 
+                res = st.executeQuery("select sod_item from sod_det where sod_nbr = " + "'" + order + "'" + 
                         " and sod_line = " + "'" + line + "'" + ";");
                 while (res.next()) {
-                    item = res.getString("sod_part");
+                    item = res.getString("sod_item");
                 }
             }
             catch (SQLException s){
@@ -1812,7 +1812,7 @@ public class ordData {
     }
     
                               
-    public record sod_det(String[] m, String sod_nbr, String sod_line, String sod_part, String sod_custpart, 
+    public record sod_det(String[] m, String sod_nbr, String sod_line, String sod_item, String sod_custitem, 
         String sod_po, String sod_ord_qty, String sod_uom, String sod_all_qty, 
         String sod_listprice, String sod_disc, String sod_netprice, String sod_ord_date, 
         String sod_due_date, String sod_shipped_qty, String sod_status, String sod_wh, 
@@ -1862,7 +1862,7 @@ public class ordData {
     }
     
     public record svd_det(String[] m, String svd_nbr, String svd_line, String svd_uom, 
-        String svd_item, String svd_desc, String svd_type, String svd_custpart, 
+        String svd_item, String svd_desc, String svd_type, String svd_custitem, 
         String svd_qty, String svd_completed_hrs, String svd_po,  String svd_ord_date, 
         String svd_due_date, String svd_create_date, String svd_char1, String svd_char2, String svd_char3,
         String svd_status, String svd_listprice, String svd_netprice, String svd_disc,  

@@ -201,13 +201,13 @@ public class ForecastBrowse extends javax.swing.JPanel {
                 int i = 0;
                 String blanket = "";
                 res = st.executeQuery("select * from plan_mstr " +
-                        " where plan_part = " + "'" + part + "'" +
+                        " where plan_item = " + "'" + part + "'" +
                         " AND plan_is_sched = '1'" +
                         " AND plan_status = '0'" + ";");
                 while (res.next()) {
                    modeltrans.addRow(new Object[]{ 
                       res.getString("plan_nbr"), 
-                       res.getString("plan_part"),
+                       res.getString("plan_item"),
                        res.getInt("plan_qty_sched"),
                       res.getString("plan_type"), 
                       res.getString("plan_date_due")});

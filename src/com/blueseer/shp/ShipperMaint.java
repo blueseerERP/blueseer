@@ -632,7 +632,7 @@ public class ShipperMaint extends javax.swing.JPanel {
          
                 res = st.executeQuery("select * from ship_det where shd_id = " + "'" + myshipper + "'" + ";");
                 while (res.next()) {
-                  myshipdetmodel.addRow(new Object[]{res.getString("shd_soline"), res.getString("shd_part"), 
+                  myshipdetmodel.addRow(new Object[]{res.getString("shd_soline"), res.getString("shd_item"), 
                       res.getString("shd_so"),
                       res.getString("shd_soline"),
                       res.getString("shd_po"), 
@@ -727,9 +727,9 @@ public class ShipperMaint extends javax.swing.JPanel {
                 
                 
                 res = st.executeQuery("select so_nbr, sod_line, sod_wh, sod_loc, sod_netprice, sod_shipped_qty, (sod_ord_qty - sod_shipped_qty) as qty from sod_det inner join so_mstr on so_nbr = sod_nbr where so_cust = " + "'" + cust + "'" +
-                        " and sod_part = " + "'" + item + "'" + 
+                        " and sod_item = " + "'" + item + "'" + 
                         " and sod_po = " + "'" + po + "'" +         
-                        " order by sod_part ;");
+                        " order by sod_item ;");
                 while (res.next()) {
                     tbprice.setText(res.getString("sod_netprice"));
                     tbqty.setText(res.getString("qty"));
@@ -933,13 +933,13 @@ public class ShipperMaint extends javax.swing.JPanel {
                 
                 String bom = "";
                 res = st.executeQuery("select * from sod_det " + 
-                        " inner join item_mstr on it_item = sod_part "  +
+                        " inner join item_mstr on it_item = sod_item "  +
                         " where sod_nbr = " + "'" + nbr + "'" +
                         " AND sod_line = " + "'" + line + "'" +  
                         " AND sod_status <> " + "'" + getGlobalProgTag("closed") + "'" + 
                         " order by sod_line ;");
                 while (res.next()) {
-                tbitem.setText(res.getString("sod_part"));
+                tbitem.setText(res.getString("sod_item"));
                 tbpo.setText(res.getString("sod_po"));
                 tbdesc.setText(res.getString("sod_desc"));
                 int qty = res.getInt("sod_ord_qty") - res.getInt("sod_shipped_qty");
@@ -1046,7 +1046,7 @@ public class ShipperMaint extends javax.swing.JPanel {
                     while (res.next()) {
                         qtyavailable = res.getInt("sod_ord_qty") - res.getInt("sod_shipped_qty");
                      myshipdetmodel.addRow(new Object[]{res.getString("sod_line"), 
-                         res.getString("sod_part"), 
+                         res.getString("sod_item"), 
                          res.getString("sod_nbr"),
                          res.getString("sod_line"),
                          res.getString("sod_po"), 
@@ -1133,7 +1133,7 @@ public class ShipperMaint extends javax.swing.JPanel {
             
                  /* ok....let's get the current state of this line item on the sales order */
                  res = st.executeQuery("select * from sod_det where sod_nbr = " + "'" + thisorder + "'" + 
-                                     " AND sod_part = " + "'" + thispart + "'" + ";");
+                                     " AND sod_item = " + "'" + thispart + "'" + ";");
                while (res.next()) {     
                  i++;
                    if (Integer.valueOf(res.getString("sod_shipped_qty") + thisshipqty) < Integer.valueOf(res.getString("sod_ord_qty")) ) {
@@ -1150,7 +1150,7 @@ public class ShipperMaint extends javax.swing.JPanel {
                  st.executeUpdate("update sod_det set sod_shipped_qty = " + "'" + thisshippedtotal + "'" + 
                                   "," + " sod_status = " + "'" + thislinestatus + "'" +
                                   " where sod_nbr = " + "'" + thisorder + "'" + 
-                                  " and sod_part = " + "'" + thispart + "'" + 
+                                  " and sod_item = " + "'" + thispart + "'" + 
                                   " and sod_po = " + "'" + thispo + "'" +
                      ";");
                  
@@ -1222,7 +1222,7 @@ public class ShipperMaint extends javax.swing.JPanel {
         public void actionPerformed(ActionEvent event) {
          
         if (lurb1.isSelected()) {  
-         luModel = DTData.getOrderDetailBrowseUtil(luinput.getText(), "sod_part", ddbillto.getSelectedItem().toString(), ddshipto.getSelectedItem().toString() );
+         luModel = DTData.getOrderDetailBrowseUtil(luinput.getText(), "sod_item", ddbillto.getSelectedItem().toString(), ddshipto.getSelectedItem().toString() );
         } else {
          luModel = DTData.getOrderDetailBrowseUtil(luinput.getText(), "sod_desc", ddbillto.getSelectedItem().toString(), ddshipto.getSelectedItem().toString() );
         }    
@@ -2385,7 +2385,7 @@ public class ShipperMaint extends javax.swing.JPanel {
                     st.executeUpdate("delete from ship_det where shd_id = " + "'" + tbshipper.getText() + "'"  );
                     for (int j = 0; j < tabledetail.getRowCount(); j++) {
                        st.executeUpdate("insert into ship_det "
-                            + "(shd_id, shd_line, shd_part, shd_so, shd_soline, shd_date, shd_po, shd_qty,"
+                            + "(shd_id, shd_line, shd_item, shd_so, shd_soline, shd_date, shd_po, shd_qty,"
                             + "shd_netprice, shd_disc, shd_listprice, shd_desc, shd_wh, shd_loc, shd_taxamt, shd_cont, shd_serial, shd_site ) "
                             + " values ( " + "'" + tbshipper.getText() + "'" + ","
                             + "'" + tabledetail.getValueAt(j, 0).toString() + "'" + ","

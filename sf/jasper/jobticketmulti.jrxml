@@ -31,7 +31,7 @@
 	<queryString>
 		<![CDATA[SELECT
      plan_nbr,
-     plan_part,
+     plan_item,
      plan_qty_req,
      plan_qty_sched,
      plan_date_due,
@@ -42,7 +42,7 @@
      plan_cell, it_item, it_wf, wf_op, wf_desc, wf_cell,wf_run_hours
 FROM
      plan_mstr
-inner join item_mstr on it_item = plan_part
+inner join item_mstr on it_item = plan_item
 left outer join wf_mstr on wf_id = it_wf
 where plan_nbr >= $P{fromjob} and
       plan_nbr <= $P{tojob} order by plan_nbr;]]>
@@ -50,7 +50,7 @@ where plan_nbr >= $P{fromjob} and
 	<field name="plan_nbr" class="java.lang.Integer">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="plan_part" class="java.lang.String">
+	<field name="plan_item" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="plan_qty_req" class="java.lang.Integer">
@@ -125,21 +125,21 @@ where plan_nbr >= $P{fromjob} and
 				<textElement>
 					<font size="12" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{plan_part}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{plan_item}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="295" y="76" width="100" height="20" uuid="92f0edcc-29a8-4a03-9eb5-df01dc9d576b"/>
 				<textElement>
 					<font size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{plan_part}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{plan_item}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="295" y="96" width="100" height="17" uuid="271ba4d0-b5fb-418b-8e7a-f9b2fc19c7e8"/>
 				<textElement>
 					<font size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{plan_part}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{plan_item}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="669" y="24" width="91" height="20" uuid="6b176497-4809-4032-a18b-f01cdd861408"/>
@@ -337,7 +337,7 @@ where plan_nbr >= $P{fromjob} and
 					<subreportParameterExpression><![CDATA[$F{wf_op}]]></subreportParameterExpression>
 				</subreportParameter>
 				<subreportParameter name="part">
-					<subreportParameterExpression><![CDATA[$F{plan_part}]]></subreportParameterExpression>
+					<subreportParameterExpression><![CDATA[$F{plan_item}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "routing.jasper"]]></subreportExpression>

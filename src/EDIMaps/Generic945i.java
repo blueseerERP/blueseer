@@ -114,7 +114,7 @@ public class Generic945i {
                  
                  
                  // get original sales order detail
-                 // sod_line, sod_part, sod_custpart, sod_ord_qty, sod_uom, sod_desc, it_net_wt, sod_listprice, sod_disc, sod_netprice, sod_site, sod_wh, sod_loc
+                 // sod_line, sod_item, sod_custitem, sod_ord_qty, sod_uom, sod_desc, it_net_wt, sod_listprice, sod_disc, sod_netprice, sod_site, sod_wh, sod_loc
                  dt = OVData.getOrderDetailArray(so);
                  
                  

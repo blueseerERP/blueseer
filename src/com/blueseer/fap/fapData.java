@@ -463,7 +463,7 @@ public class fapData {
     private static int _addVODMstr(vod_mstr x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
         int rows = 0;
         String sqlSelect = "select * from vod_mstr where vod_id = ? and vod_rvdid = ? and vod_rvdline = ?";
-        String sqlInsert = "insert into vod_mstr (vod_id, vod_rvdid, vod_rvdline, vod_part, vod_qty, vod_voprice, vod_date, vod_vend," +
+        String sqlInsert = "insert into vod_mstr (vod_id, vod_rvdid, vod_rvdline, vod_item, vod_qty, vod_voprice, vod_date, vod_vend," +
         "vod_invoice, vod_expense_acct, vod_expense_cc ) "
                         + " values (?,?,?,?,?,?,?,?,?,?,?); "; 
        
@@ -477,7 +477,7 @@ public class fapData {
             ps.setString(1, x.vod_id);
             ps.setString(2, x.vod_rvdid);
             ps.setString(3, x.vod_rvdline);
-            ps.setString(4, x.vod_part);
+            ps.setString(4, x.vod_item);
             ps.setString(5, x.vod_qty);
             ps.setString(6, x.vod_voprice);
             ps.setString(7, x.vod_date);
@@ -802,7 +802,7 @@ public class fapData {
     }
     
     public record vod_mstr(String[] m, String vod_id, String vod_rvdid, String vod_rvdline, 
-        String vod_part, String vod_qty, String vod_voprice, String vod_date, String vod_vend,
+        String vod_item, String vod_qty, String vod_voprice, String vod_date, String vod_vend,
         String vod_invoice, String vod_expense_acct, String vod_expense_cc) {
         public vod_mstr(String[]m) {
             this(m, "", "", "", "", "", "", "", "", "", "",

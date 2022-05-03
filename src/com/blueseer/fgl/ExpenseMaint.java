@@ -531,7 +531,7 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeerT {
                 //  "PO", "Line", "Part", "Qty", "Price", "RecvID", "RecvLine", "Acct", "CC"
                      expensemodel.addRow(new Object[] { res.getString("vod_id"),
                                               res.getString("vod_rvdline"),
-                                              res.getString("vod_part"),
+                                              res.getString("vod_item"),
                                               res.getString("vod_qty").replace('.',defaultDecimalSeparator),
                                               res.getString("vod_voprice").replace('.',defaultDecimalSeparator),
                                               res.getString("vod_rvdid"),

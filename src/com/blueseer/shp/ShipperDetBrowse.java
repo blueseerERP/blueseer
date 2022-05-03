@@ -151,7 +151,7 @@ public class ShipperDetBrowse extends javax.swing.JPanel {
             try {
                 int i = 0;
                 String blanket = "";
-                res = st.executeQuery("select shd_id, shd_soline, shd_part, shd_custpart, shd_so, shd_po, shd_qty, shd_netprice from ship_det " +
+                res = st.executeQuery("select shd_id, shd_soline, shd_item, shd_custitem, shd_so, shd_po, shd_qty, shd_netprice from ship_det " +
                         " where shd_id = " + "'" + shipper + "'" +  ";");
                 while (res.next()) {
                     totalsales = totalsales + (res.getDouble("shd_qty") * res.getDouble("shd_netprice"));
@@ -159,8 +159,8 @@ public class ShipperDetBrowse extends javax.swing.JPanel {
                    modeldetail.addRow(new Object[]{ 
                       res.getString("shd_id"), 
                       res.getString("shd_soline"), 
-                      res.getString("shd_part"),
-                      res.getString("shd_custpart"),
+                      res.getString("shd_item"),
+                      res.getString("shd_custitem"),
                       res.getString("shd_so"),
                       res.getString("shd_po"),
                       res.getString("shd_qty"),
@@ -509,7 +509,7 @@ try {
                   
                       //must be type balance sheet
                  if (cbinvoiced.isSelected()) {
-                   res = st.executeQuery("select sh_id, sh_cust, shd_part, shd_po, sh_shipdate, shd_qty, shd_netprice from ship_mstr " +
+                   res = st.executeQuery("select sh_id, sh_cust, shd_item, shd_po, sh_shipdate, shd_qty, shd_netprice from ship_mstr " +
                         " inner join ship_det on shd_id = sh_id where " +
                         " sh_id >= " + "'" + shipperfrom + "'" + " AND " +
                         " sh_id <= " + "'" + shipperto + "'" + " AND " +
@@ -518,7 +518,7 @@ try {
                         " sh_status = '1' " +
                         " ;");
                  } else {
-                   res = st.executeQuery("select sh_id, sh_cust, shd_part, shd_po, sh_shipdate, shd_qty, shd_netprice from ship_mstr " +
+                   res = st.executeQuery("select sh_id, sh_cust, shd_item, shd_po, sh_shipdate, shd_qty, shd_netprice from ship_mstr " +
                         " inner join ship_det on shd_id = sh_id where " +
                         " sh_id >= " + "'" + shipperfrom + "'" + " AND " +
                         " sh_id <= " + "'" + shipperto + "'" + " AND " +
@@ -536,7 +536,7 @@ try {
                                res.getString("sh_id"),
                                res.getString("shd_po"),
                                 res.getString("sh_shipdate"),
-                                res.getString("shd_part"),
+                                res.getString("shd_item"),
                                 res.getString("shd_qty"),
                                 res.getString("shd_netprice"),
                                 currformatDouble(sales)

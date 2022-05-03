@@ -558,7 +558,7 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
                 //  "PO", "Line", "Part", "Qty", "Price", "RecvID", "RecvLine", "Acct", "CC"
                      vouchermodel.addRow(new Object[] { res.getString("vod_id"),
                                               res.getString("vod_rvdline"),
-                                              res.getString("vod_part"),
+                                              res.getString("vod_item"),
                                               res.getString("vod_qty").replace('.',defaultDecimalSeparator),
                                               res.getString("vod_voprice").replace('.',defaultDecimalSeparator),
                                               res.getString("vod_rvdid"),
@@ -763,7 +763,7 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
                 res = st.executeQuery("select * from recv_det inner join recv_mstr on rv_id = rvd_id where rvd_id = " + "'" + myreceiver + "'" + ";");
                 while (res.next()) {
                     // "Part", "PO", "Line", "Qty", "listprice", "disc", "netprice", "loc", "serial", "lot", "RecvID", "RecvLine", "Acct", "CC"
-                  receivermodel.addRow(new Object[]{res.getString("rvd_part"), res.getString("rvd_po"), 
+                  receivermodel.addRow(new Object[]{res.getString("rvd_item"), res.getString("rvd_po"), 
                       res.getString("rvd_poline"), bsFormatDouble((res.getDouble("rvd_qty") - res.getDouble("rvd_voqty"))).replace('.',defaultDecimalSeparator), res.getString("rvd_listprice").replace('.',defaultDecimalSeparator),
                    res.getString("rvd_disc").replace('.',defaultDecimalSeparator), res.getString("rvd_netprice").replace('.',defaultDecimalSeparator), res.getString("rvd_loc"),
                   res.getString("rvd_serial"), res.getString("rvd_lot"), res.getString("rvd_id"), res.getString("rvd_rline"),
@@ -808,7 +808,7 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
                         " where vod_id = " + "'" + voucher + "'" + ";");
                 while (res.next()) {
                   vouchermodel.addRow(new Object[]{res.getString("rvd_po"), 
-                      res.getString("vod_rvdline"), res.getString("vod_part"), res.getString("vod_qty").replace('.',defaultDecimalSeparator), res.getString("vod_voprice").replace('.',defaultDecimalSeparator),
+                      res.getString("vod_rvdline"), res.getString("vod_item"), res.getString("vod_qty").replace('.',defaultDecimalSeparator), res.getString("vod_voprice").replace('.',defaultDecimalSeparator),
                    res.getString("vod_rvdid"), res.getString("vod_rvdline"), res.getString("vod_expense_acct"),
                   res.getString("vod_expense_cc") }) ;
                 d++;

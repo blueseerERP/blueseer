@@ -554,7 +554,7 @@ public class ShipperMaintSerial extends javax.swing.JPanel implements IBlueSeer 
                 while (res.next()) {
                 // line, item, desc, serial, warehouse, loc, qty, price, bom
                      shipmodel.addRow(new Object[] { res.getString("shd_line"),
-                                              res.getString("shd_part"),
+                                              res.getString("shd_item"),
                                               res.getString("shd_desc"),
                                               res.getString("shd_serial"),
                                               res.getString("shd_wh"),
@@ -738,7 +738,7 @@ public class ShipperMaintSerial extends javax.swing.JPanel implements IBlueSeer 
             
                  /* ok....let's get the current state of this line item on the sales order */
                  res = st.executeQuery("select * from sod_det where sod_nbr = " + "'" + thisorder + "'" + 
-                                     " AND sod_part = " + "'" + thispart + "'" + ";");
+                                     " AND sod_item = " + "'" + thispart + "'" + ";");
                while (res.next()) {     
                  i++;
                    if (Double.valueOf(res.getString("sod_recvped_qty") + thisrecvqty) < Double.valueOf(res.getString("sod_ord_qty")) ) {
@@ -755,7 +755,7 @@ public class ShipperMaintSerial extends javax.swing.JPanel implements IBlueSeer 
                  st.executeUpdate("update sod_det set sod_recvped_qty = " + "'" + thisrecvpedtotal + "'" + 
                                   "," + " sod_status = " + "'" + thislinestatus + "'" +
                                   " where sod_nbr = " + "'" + thisorder + "'" + 
-                                  " and sod_part = " + "'" + thispart + "'" + 
+                                  " and sod_item = " + "'" + thispart + "'" + 
                                   " and sod_po = " + "'" + thispo + "'" +
                      ";");
                  
@@ -819,12 +819,12 @@ public class ShipperMaintSerial extends javax.swing.JPanel implements IBlueSeer 
             try {
                int i = 0;
                     
-                res = st.executeQuery("select * from in_mstr inner join item_mstr on it_item = in_part where in_part = " + "'" + item + "'" 
+                res = st.executeQuery("select * from in_mstr inner join item_mstr on it_item = in_item where in_item = " + "'" + item + "'" 
                         + ";");
                 while (res.next()) {
                     i++;
                     inventorymodel.addRow(new Object[]{
-                      res.getString("in_part"), 
+                      res.getString("in_item"), 
                       res.getString("it_desc"),  
                       res.getString("in_serial"), 
                       res.getString("in_wh"), 

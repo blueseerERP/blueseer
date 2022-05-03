@@ -480,7 +480,7 @@ public class InvoiceMaint extends javax.swing.JPanel {
                     st.executeUpdate("delete from ship_det where shd_id = " + "'" + tbkey.getText() + "'"  );
                     for (int j = 0; j < tabledetail.getRowCount(); j++) {
                        st.executeUpdate("insert into ship_det "
-                            + "(shd_id, shd_soline, shd_part, shd_so, shd_date, shd_po, shd_qty,"
+                            + "(shd_id, shd_soline, shd_item, shd_so, shd_date, shd_po, shd_qty,"
                             + "shd_netprice, shd_disc, shd_listprice, shd_desc, shd_wh, shd_loc, shd_site ) "
                             + " values ( " + "'" + tbkey.getText() + "'" + ","
                             + "'" + tabledetail.getValueAt(j, 0).toString() + "'" + ","
@@ -641,12 +641,12 @@ public class InvoiceMaint extends javax.swing.JPanel {
                 String order = "";
                 String po = "";
                 
-                 res = st.executeQuery("select shd_soline, shd_part, shd_so, shd_po, sum(shd_qty) as sumqty, shd_netprice, shd_desc, " +
+                 res = st.executeQuery("select shd_soline, shd_item, shd_so, shd_po, sum(shd_qty) as sumqty, shd_netprice, shd_desc, " +
                          " shd_disc, shd_listprice, shd_taxamt " +
                          " from ship_det where shd_id = " + "'" + x[0] + "'" +
-                                       " group by shd_so, shd_soline, shd_part, shd_po, shd_netprice, shd_desc, shd_disc, shd_listprice, shd_taxamt " + ";");
+                                       " group by shd_so, shd_soline, shd_item, shd_po, shd_netprice, shd_desc, shd_disc, shd_listprice, shd_taxamt " + ";");
                 while (res.next()) {
-                  myshipdetmodel.addRow(new Object[]{res.getString("shd_soline"), res.getString("shd_part"), 
+                  myshipdetmodel.addRow(new Object[]{res.getString("shd_soline"), res.getString("shd_item"), 
                       res.getString("shd_so"), 
                       res.getString("shd_po"), 
                       res.getString("sumqty"), 

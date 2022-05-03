@@ -847,7 +847,7 @@ public class fglData {
                     String thistype = "RCT-VOUCH";
                    
                    
-                       res = st.executeQuery("select ap_amt, ap_base_amt, ap_curr, ap_base_curr, ap_ref, ap_check, ap_nbr, vod_part, ap_site, ap_acct, ap_cc, ap_vend, vod_qty, vod_voprice, vod_expense_acct, vod_expense_cc from vod_mstr " +
+                       res = st.executeQuery("select ap_amt, ap_base_amt, ap_curr, ap_base_curr, ap_ref, ap_check, ap_nbr, vod_item, ap_site, ap_acct, ap_cc, ap_vend, vod_qty, vod_voprice, vod_expense_acct, vod_expense_cc from vod_mstr " +
                                "inner join ap_mstr on ap_nbr = vod_id and ap_type = 'V' where vod_id = " + "'" + voucher + "'" +";");
                    
                     Double amt = 0.00;   
@@ -866,9 +866,9 @@ public class fglData {
                     ref.add(res.getString("ap_check"));
                     type.add(thistype);
                     if (res.getString("ap_ref").isEmpty()) {
-                       desc.add(res.getString("vod_part")); 
+                       desc.add(res.getString("vod_item")); 
                     } else {
-                       desc.add(res.getString("ap_ref") + "/" + res.getString("vod_part"));
+                       desc.add(res.getString("ap_ref") + "/" + res.getString("vod_item"));
                     }
                              
                
@@ -922,7 +922,7 @@ public class fglData {
                     String thistype = "RCT-VOUCH";
                    
                    
-                       res = st.executeQuery("select ap_amt, ap_base_amt, ap_curr, ap_base_curr, ap_ref, ap_check, ap_nbr, vod_part, ap_site, ap_acct, ap_cc, ap_vend, vod_qty, vod_voprice, vod_expense_acct, vod_expense_cc from vod_mstr " +
+                       res = st.executeQuery("select ap_amt, ap_base_amt, ap_curr, ap_base_curr, ap_ref, ap_check, ap_nbr, vod_item, ap_site, ap_acct, ap_cc, ap_vend, vod_qty, vod_voprice, vod_expense_acct, vod_expense_cc from vod_mstr " +
                                "inner join ap_mstr on ap_nbr = vod_id and ap_type = 'V' where vod_id = " + "'" + voucher + "'" +";");
                    
                     Double amt = 0.00;   
@@ -941,9 +941,9 @@ public class fglData {
                     ref.add(res.getString("ap_check"));
                     type.add(thistype);
                     if (res.getString("ap_ref").isEmpty()) {
-                       desc.add(res.getString("vod_part")); 
+                       desc.add(res.getString("vod_item")); 
                     } else {
-                       desc.add(res.getString("ap_ref") + "/" + res.getString("vod_part"));
+                       desc.add(res.getString("ap_ref") + "/" + res.getString("vod_item"));
                     }
                              
                
@@ -1125,9 +1125,9 @@ public class fglData {
                     String thistype = "RCT-VOUCH";
                    
                    
-                       res = st.executeQuery("select pl_line, pl_po_rcpt, pl_inventory, ap_amt, ap_base_amt, ap_curr, ap_base_curr, ap_ref, ap_nbr, vod_part, ap_site, ap_acct, ap_cc, ap_vend, " +
+                       res = st.executeQuery("select pl_line, pl_po_rcpt, pl_inventory, ap_amt, ap_base_amt, ap_curr, ap_base_curr, ap_ref, ap_nbr, vod_item, ap_site, ap_acct, ap_cc, ap_vend, " +
                                " vod_qty, vod_voprice, vod_expense_acct, vod_expense_cc from vod_mstr " +
-                               " inner join item_mstr on it_item = vod_part " +
+                               " inner join item_mstr on it_item = vod_item " +
                                " inner join pl_mstr on pl_line = it_prodline " +
                                "inner join ap_mstr on ap_nbr = vod_id and ap_type = 'V' where vod_id = " + "'" + voucher + "'" +";");
                    
@@ -1146,7 +1146,7 @@ public class fglData {
                     site.add(res.getString("ap_site"));
                     ref.add(res.getString("ap_nbr"));
                     type.add(thistype);
-                    desc.add("cashtranvouch:" + res.getString("ap_ref") + "/" + res.getString("vod_part"));         
+                    desc.add("cashtranvouch:" + res.getString("ap_ref") + "/" + res.getString("vod_item"));         
                
                     // need to do discounts ..credit sales, debit disc, debit AR (-$4.00, $.02, $3.98)
                     
@@ -1163,7 +1163,7 @@ public class fglData {
                     site.add(res.getString("ap_site"));
                     ref.add(res.getString("ap_nbr"));
                     type.add("RCT-PURCH");
-                    desc.add("cashtranpurch:" + res.getString("ap_ref") + "/" + res.getString("vod_part"));      
+                    desc.add("cashtranpurch:" + res.getString("ap_ref") + "/" + res.getString("vod_item"));      
                     
                     }
                      for (int j = 0; j < acct_cr.size(); j++) {
@@ -1211,9 +1211,9 @@ public class fglData {
                     String thistype = "RCT-VOUCH";
                    
                    
-                       res = st.executeQuery("select pl_line, pl_po_rcpt, pl_inventory, ap_amt, ap_base_amt, ap_curr, ap_base_curr, ap_ref, ap_nbr, vod_part, ap_site, ap_acct, ap_cc, ap_vend, " +
+                       res = st.executeQuery("select pl_line, pl_po_rcpt, pl_inventory, ap_amt, ap_base_amt, ap_curr, ap_base_curr, ap_ref, ap_nbr, vod_item, ap_site, ap_acct, ap_cc, ap_vend, " +
                                " vod_qty, vod_voprice, vod_expense_acct, vod_expense_cc from vod_mstr " +
-                               " inner join item_mstr on it_item = vod_part " +
+                               " inner join item_mstr on it_item = vod_item " +
                                " inner join pl_mstr on pl_line = it_prodline " +
                                "inner join ap_mstr on ap_nbr = vod_id and ap_type = 'V' where vod_id = " + "'" + voucher + "'" +";");
                    
@@ -1232,7 +1232,7 @@ public class fglData {
                     site.add(res.getString("ap_site"));
                     ref.add(res.getString("ap_nbr"));
                     type.add(thistype);
-                    desc.add("cashtranvouch:" + res.getString("ap_ref") + "/" + res.getString("vod_part"));         
+                    desc.add("cashtranvouch:" + res.getString("ap_ref") + "/" + res.getString("vod_item"));         
                
                     // need to do discounts ..credit sales, debit disc, debit AR (-$4.00, $.02, $3.98)
                     
@@ -1249,7 +1249,7 @@ public class fglData {
                     site.add(res.getString("ap_site"));
                     ref.add(res.getString("ap_nbr"));
                     type.add("RCT-PURCH");
-                    desc.add("cashtranpurch:" + res.getString("ap_ref") + "/" + res.getString("vod_part"));      
+                    desc.add("cashtranpurch:" + res.getString("ap_ref") + "/" + res.getString("vod_item"));      
                     
                     }
                      for (int j = 0; j < acct_cr.size(); j++) {
@@ -1740,9 +1740,9 @@ public class fglData {
                         unvouchcc = res.getString("poc_rcpt_cc"); // not used at this time
                     }
                     
-                      res = st.executeQuery("select rvd_part, rvd_qty, rvd_loc, rvd_site, rvd_id, rvd_netprice, rvd_po, po_curr from recv_det inner join po_mstr on rvd_po = po_nbr where rvd_id = " + "'" + receiver + "'" +";");
+                      res = st.executeQuery("select rvd_item, rvd_qty, rvd_loc, rvd_site, rvd_id, rvd_netprice, rvd_po, po_curr from recv_det inner join po_mstr on rvd_po = po_nbr where rvd_id = " + "'" + receiver + "'" +";");
                     while (res.next()) {
-                        part = res.getString("rvd_part");
+                        part = res.getString("rvd_item");
                         qty = res.getDouble("rvd_qty");
                         loc = res.getString("rvd_loc");
                         thissite = res.getString("rvd_site");
@@ -1918,7 +1918,7 @@ public class fglData {
                     
                       res = st.executeQuery("select * from ship_det where shd_id = " + "'" + shipper + "'" +";");
                     while (res.next()) {
-                        part = res.getString("shd_part");
+                        part = res.getString("shd_item");
                         qty = res.getDouble("shd_qty");
                         uom = res.getString("shd_uom");
                         loc = res.getString("shd_loc");
@@ -2185,7 +2185,7 @@ public class fglData {
                     
                       res = st.executeQuery("select * from ship_det where shd_id = " + "'" + shipper + "'" +";");
                     while (res.next()) {
-                        part = res.getString("shd_part");
+                        part = res.getString("shd_item");
                         qty = res.getDouble("shd_qty");
                         loc = res.getString("shd_loc");
                         thisref = res.getString("shd_id");

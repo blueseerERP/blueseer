@@ -822,7 +822,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
 
                res = st.executeQuery("SELECT tr_type, tr_eff_date, tr_id, tr_base_qty  " +
                         " FROM  tran_mstr  " +
-                        " where tr_part = " + "'" + parentpart + "'" + 
+                        " where tr_item = " + "'" + parentpart + "'" + 
                         " order by tr_eff_date desc limit 25 ;");
 
                 while (res.next()) {
@@ -875,7 +875,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
 
                res = st.executeQuery("SELECT in_site, in_wh, in_loc, in_qoh, in_serial, in_date  " +
                         " FROM  in_mstr  " +
-                        " where in_part = " + "'" + parentpart + "'" + 
+                        " where in_item = " + "'" + parentpart + "'" + 
                         " order by in_wh, in_loc ;");
 
                 while (res.next()) {

@@ -897,7 +897,7 @@ public class CashTranBrowse extends javax.swing.JPanel {
                       //lets get the total inventory value first
                       inventory = 0;
                       res = st.executeQuery("select sum(in_qoh * it_mtl_cost) as 'sum' from in_mstr " +
-                        " inner join item_mstr on it_item = in_part where it_code = 'A' " );
+                        " inner join item_mstr on it_item = in_item where it_code = 'A' " );
                       while (res.next()) {
                           inventory += res.getDouble("sum");
                       }

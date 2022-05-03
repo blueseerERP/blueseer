@@ -27,7 +27,7 @@
 	<queryString>
 		<![CDATA[select so_nbr, sod_nbr, so_curr, sod_desc, 
 (select case when sum(sos_amt) is null then 0 else sum(sos_amt) end from sos_det where sos_nbr = $P{myid} and sos_amttype = 'amount' and sos_type <> 'tax') as charges, 
-so_cust, so_create_date,  so_rmks, sod_po, sod_part, sod_custpart, sod_ord_qty, 
+so_cust, so_create_date,  so_rmks, sod_po, sod_item, sod_custitem, sod_ord_qty, 
 sod_netprice, sod_listprice, sod_taxamt, cm_code, cm_name, cm_line1, cm_line2,  
 cms_name, cms_line1, cms_line2,  site_desc, site_line1 
 from sod_det  
@@ -45,8 +45,8 @@ inner join site_mstr on site_site = so_site where sod_nbr =  $P{myid}]]>
 	<field name="so_create_date" class="java.lang.String"/>
 	<field name="so_rmks" class="java.lang.String"/>
 	<field name="sod_po" class="java.lang.String"/>
-	<field name="sod_part" class="java.lang.String"/>
-	<field name="sod_custpart" class="java.lang.String"/>
+	<field name="sod_item" class="java.lang.String"/>
+	<field name="sod_custitem" class="java.lang.String"/>
 	<field name="sod_ord_qty" class="java.lang.Double"/>
 	<field name="sod_netprice" class="java.lang.Double"/>
 	<field name="sod_listprice" class="java.lang.Double"/>
@@ -323,7 +323,7 @@ inner join site_mstr on site_site = so_site where sod_nbr =  $P{myid}]]>
 		<band height="21" splitType="Stretch">
 			<textField>
 				<reportElement x="0" y="0" width="100" height="16" uuid="978682a3-4259-41c3-adae-54872ecfe90a"/>
-				<textFieldExpression><![CDATA[$F{sod_part}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{sod_item}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.00">
 				<reportElement x="360" y="0" width="46" height="16" uuid="32390b0a-6d5c-4fae-8870-72c4e68a5f90"/>

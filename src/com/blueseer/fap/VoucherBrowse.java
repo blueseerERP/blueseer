@@ -195,7 +195,7 @@ public class VoucherBrowse extends javax.swing.JPanel {
                 int i = 0;
                 String blanket = "";
                 
-                res = st.executeQuery("select rvd_id, rvd_poline, rvd_part, rvd_packingslip, rvd_date, rvd_netprice, rvd_qty, rvd_voqty " +
+                res = st.executeQuery("select rvd_id, rvd_poline, rvd_item, rvd_packingslip, rvd_date, rvd_netprice, rvd_qty, rvd_voqty " +
                         " from recv_det " +
                         " where rvd_po = " + "'" + po + "'" +
                         " AND rvd_poline = " + "'" + line + "'" + ";");
@@ -203,7 +203,7 @@ public class VoucherBrowse extends javax.swing.JPanel {
                    modeldetail.addRow(new Object[]{ 
                       res.getString("rvd_id"), 
                        res.getString("rvd_poline"),
-                       res.getString("rvd_part"),
+                       res.getString("rvd_item"),
                        res.getString("rvd_packingslip"),
                        res.getString("rvd_date"),
                        currformatDouble(res.getDouble("rvd_netprice")),
@@ -591,7 +591,7 @@ try {
          //     new String[]{"Detail", "PO", "Vend", "Line", "Part", "Type", "Status", "OrdQty", "RecvQty"});   
         
            res = st.executeQuery("select case when vod_id is null then '' else vod_id end as vod_id, " +
-                                " case when vod_invoice is null then '' else vod_invoice end as vod_invoice, rvd_status, rv_id, rv_vend, rvd_po, rvd_poline, rvd_rline, rvd_part, rvd_packingslip, " +
+                                " case when vod_invoice is null then '' else vod_invoice end as vod_invoice, rvd_status, rv_id, rv_vend, rvd_po, rvd_poline, rvd_rline, rvd_item, rvd_packingslip, " +
                       " rvd_qty, rvd_voqty " +
                          " from recv_det inner join recv_mstr on rvd_id = rv_id " +
                          " left outer join vod_mstr on vod_rvdid = rvd_id and vod_rvdline = rvd_rline where " +
@@ -614,7 +614,7 @@ try {
                                 res.getString("vod_id"),
                                 res.getString("rv_id"),
                                 res.getString("rvd_poline"),
-                                res.getString("rvd_part"),
+                                res.getString("rvd_item"),
                                 res.getString("rvd_packingslip"),
                                 res.getString("vod_invoice"),
                                 res.getString("rvd_rline"),

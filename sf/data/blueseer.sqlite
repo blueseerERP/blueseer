@@ -188,7 +188,7 @@ CREATE TABLE "call_mstr" (
   "call_name" varchar(50) COLLATE NOCASE DEFAULT '',
   "call_phone" varchar(15) COLLATE NOCASE DEFAULT '',
   "call_type" varchar(30) COLLATE NOCASE DEFAULT '',
-  "call_custpart" varchar(50) COLLATE NOCASE DEFAULT '',
+  "call_custitem" varchar(50) COLLATE NOCASE DEFAULT '',
   "call_intpart" varchar(36) COLLATE NOCASE DEFAULT '',
   "call_misc1" varchar(30) COLLATE NOCASE DEFAULT '',
   "call_extlen" varchar(30) COLLATE NOCASE DEFAULT '',
@@ -773,7 +773,7 @@ CREATE TABLE "fct_cal" (
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "fct_mstr" (
-  "fct_part" varchar(36) NOT NULL COLLATE NOCASE DEFAULT '',
+  "fct_item" varchar(36) NOT NULL COLLATE NOCASE DEFAULT '',
   "fct_site" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
   "fct_year" varchar(4) NOT NULL COLLATE NOCASE DEFAULT '',
   "fct_wkqty1" int(8) NOT NULL DEFAULT '0',
@@ -929,7 +929,7 @@ CREATE TABLE "glic_def" (
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "in_mstr" (
-  "in_part" varchar(36) NOT NULL,
+  "in_item" varchar(36) NOT NULL,
   "in_qoh" decimal(14,5) NOT NULL DEFAULT '0.00000',
   "in_date" date COLLATE NOCASE DEFAULT '',
   "in_loc" varchar(30) COLLATE NOCASE DEFAULT '',
@@ -1051,8 +1051,8 @@ CREATE TABLE "itemr_cost" (
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "label_mstr" (
   "lbl_id" int(8) NOT NULL DEFAULT '0',
-  "lbl_part" varchar(36) NOT NULL COLLATE NOCASE DEFAULT '',
-  "lbl_custpart" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
+  "lbl_item" varchar(36) NOT NULL COLLATE NOCASE DEFAULT '',
+  "lbl_custitem" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
   "lbl_id_str" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "lbl_conttype" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "lbl_qty" int(11) NOT NULL DEFAULT '0',
@@ -1111,7 +1111,7 @@ CREATE TABLE "mock_mstr" (
   "mock_nbr" int(6) NOT NULL DEFAULT '0'
 );
 CREATE TABLE "mrp_mstr" (
-  "mrp_part" varchar(36) NOT NULL COLLATE NOCASE DEFAULT '',
+  "mrp_item" varchar(36) NOT NULL COLLATE NOCASE DEFAULT '',
   "mrp_date" date NOT NULL DEFAULT '0000-00-00',
   "mrp_qty" decimal(9,5) NOT NULL DEFAULT '0.00000',
   "mrp_ref" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
@@ -1235,7 +1235,7 @@ CREATE TABLE "pl_mstr" (
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "plan_mstr" (
   "plan_nbr" int(8) NOT NULL,
-  "plan_part" varchar(36) NOT NULL,
+  "plan_item" varchar(36) NOT NULL,
   "plan_site" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
   "plan_qty_req" int(9) COLLATE NOCASE DEFAULT '',
   "plan_qty_comp" int(9) COLLATE NOCASE DEFAULT '',
@@ -1256,7 +1256,7 @@ CREATE TABLE "plan_mstr" (
 CREATE TABLE "pland_mstr" (
   "pland_id" int(8) NOT NULL DEFAULT '0',
   "pland_parent" int(8) NOT NULL DEFAULT '0',
-  "pland_part" varchar(36) NOT NULL COLLATE NOCASE DEFAULT '',
+  "pland_item" varchar(36) NOT NULL COLLATE NOCASE DEFAULT '',
   "pland_op" varchar(2) NOT NULL COLLATE NOCASE DEFAULT '',
   "pland_qty" int(9) NOT NULL DEFAULT '0',
   "pland_cell" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
@@ -1300,8 +1300,8 @@ CREATE TABLE "po_mstr" (
 CREATE TABLE "pod_mstr" (
   "pod_nbr" varchar(8) COLLATE NOCASE DEFAULT '',
   "pod_line" int(11) COLLATE NOCASE DEFAULT '',
-  "pod_part" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
-  "pod_vendpart" varchar(50) COLLATE NOCASE DEFAULT '',
+  "pod_item" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
+  "pod_venditem" varchar(50) COLLATE NOCASE DEFAULT '',
   "pod_ord_qty" int(8) COLLATE NOCASE DEFAULT '',
   "pod_rcvd_qty" int(8) COLLATE NOCASE DEFAULT '',
   "pod_netprice" decimal(13,5) NOT NULL DEFAULT '0.00000',
@@ -1420,8 +1420,8 @@ CREATE TABLE "qual_mstr" (
   "qual_src_oth_desc" varchar(30) COLLATE NOCASE DEFAULT '',
   "qual_int_sup" varchar(1) COLLATE NOCASE DEFAULT '',
   "qual_ext_sup" varchar(1) COLLATE NOCASE DEFAULT '',
-  "qual_part" varchar(36) COLLATE NOCASE DEFAULT '',
-  "qual_part_desc" varchar(50) COLLATE NOCASE DEFAULT '',
+  "qual_item" varchar(36) COLLATE NOCASE DEFAULT '',
+  "qual_item_desc" varchar(50) COLLATE NOCASE DEFAULT '',
   "qual_qty_rej" int(11) COLLATE NOCASE DEFAULT '',
   "qual_qty_susp" varchar(30) COLLATE NOCASE DEFAULT '',
   "qual_qty_tot_def" int(11) COLLATE NOCASE DEFAULT '',
@@ -1440,7 +1440,7 @@ CREATE TABLE "recv_det" (
   "rvd_po" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "rvd_poline" int(8) DEFAULT '0',
   "rvd_packingslip" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "rvd_part" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
+  "rvd_item" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
   "rvd_qty" decimal(14,5) NOT NULL DEFAULT '0.00000',
   "rvd_date" date COLLATE NOCASE DEFAULT '',
   "rvd_listprice" decimal(14,5) NOT NULL DEFAULT '0.00000',
@@ -1603,7 +1603,7 @@ CREATE TABLE "ship_det" (
   "shd_so" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "shd_soline" int(8) NOT NULL DEFAULT '0',
   "shd_po" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "shd_part" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
+  "shd_item" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
   "shd_qty" int(11) NOT NULL DEFAULT '0',
   "shd_date" date NOT NULL DEFAULT '0000-00-00',
   "shd_char1" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
@@ -1621,7 +1621,7 @@ CREATE TABLE "ship_det" (
   "shd_jobnbr" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "shd_site" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
   "shd_curr" varchar(3) NOT NULL COLLATE NOCASE DEFAULT '',
-  "shd_custpart" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
+  "shd_custitem" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
   "shd_cumqty" int(11) NOT NULL DEFAULT '0',
   "shd_ref" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "shd_sku" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
@@ -1787,7 +1787,7 @@ CREATE TABLE "ship_tree" (
   "ship_isroot" tinyint(1) COLLATE NOCASE DEFAULT '',
   "ship_so" varchar(10) COLLATE NOCASE DEFAULT '',
   "ship_po" varchar(30) COLLATE NOCASE DEFAULT '',
-  "ship_part" varchar(36) COLLATE NOCASE DEFAULT '',
+  "ship_item" varchar(36) COLLATE NOCASE DEFAULT '',
   "ship_type" varchar(10) COLLATE NOCASE DEFAULT '',
   "ship_ship_date" date COLLATE NOCASE DEFAULT '',
   "ship_create_date" date COLLATE NOCASE DEFAULT '',
@@ -1865,7 +1865,7 @@ CREATE TABLE "svd_det" (
   "svd_item" varchar(200) NOT NULL COLLATE NOCASE DEFAULT '',
   "svd_desc" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
   "svd_type" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
-  "svd_custpart" varchar(50) COLLATE NOCASE DEFAULT '',
+  "svd_custitem" varchar(50) COLLATE NOCASE DEFAULT '',
   "svd_qty" int(8) COLLATE NOCASE DEFAULT '',
   "svd_completed_hrs" int(8) COLLATE NOCASE DEFAULT '',
   "svd_po" varchar(30) COLLATE NOCASE DEFAULT '',
@@ -2030,8 +2030,8 @@ CREATE TABLE "sod_det" (
   "sod_nbr" varchar(8) NOT NULL,
   "sod_line" int(4) COLLATE NOCASE DEFAULT '0',
   "sod_uom" varchar(3) NOT NULL COLLATE NOCASE DEFAULT '',
-  "sod_part" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
-  "sod_custpart" varchar(50) COLLATE NOCASE DEFAULT '',
+  "sod_item" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
+  "sod_custitem" varchar(50) COLLATE NOCASE DEFAULT '',
   "sod_ord_qty" int(8) COLLATE NOCASE DEFAULT '0',
   "sod_shipped_qty" int(8) COLLATE NOCASE DEFAULT '0',
   "sod_po" varchar(30) COLLATE NOCASE DEFAULT '',
@@ -2098,7 +2098,7 @@ CREATE TABLE "srl_mstr" (
   "srl_so" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "srl_po" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "srl_line" int(11) NOT NULL DEFAULT '0',
-  "srl_part" varchar(36) NOT NULL COLLATE NOCASE DEFAULT '',
+  "srl_item" varchar(36) NOT NULL COLLATE NOCASE DEFAULT '',
   "srl_ref" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "srl_qtyord" int(11) NOT NULL DEFAULT '0',
   "srl_qtyshp" int(11) NOT NULL DEFAULT '0',
@@ -2288,7 +2288,7 @@ CREATE TABLE "time_clock" (
 CREATE TABLE "tran_mstr" (
   "tr_id" INTEGER PRIMARY KEY,
   "tr_site" varchar(10) COLLATE NOCASE DEFAULT '',
-  "tr_part" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
+  "tr_item" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
   "tr_qty" decimal(14,5) NOT NULL DEFAULT '0.00000',
   "tr_ent_date" date COLLATE NOCASE DEFAULT '',
   "tr_eff_date" date COLLATE NOCASE DEFAULT '',
@@ -2437,7 +2437,7 @@ CREATE TABLE "vod_mstr" (
   "vod_id" int(11) DEFAULT '0',
   "vod_rvdid" varchar(8) COLLATE NOCASE DEFAULT '',
   "vod_rvdline" int(8) DEFAULT '0',
-  "vod_part" varchar(36) COLLATE NOCASE DEFAULT '',
+  "vod_item" varchar(36) COLLATE NOCASE DEFAULT '',
   "vod_qty" decimal(14,5) NOT NULL DEFAULT '0.00000',
   "vod_voprice" decimal(14,5) NOT NULL DEFAULT '0.00000',
   "vod_date" date DEFAULT '0000-00-00',

@@ -693,13 +693,13 @@ try {
             ResultSet res = null;
             try {
 
-               res = st.executeQuery("SELECT tr_part, tr_type, it_code, tr_qty, " +
+               res = st.executeQuery("SELECT tr_item, tr_type, it_code, tr_qty, " +
                         " tr_op, tr_eff_date, tr_ref, tr_actcell " +
-                        " FROM  tran_mstr inner join item_mstr on it_item = tr_part " +
+                        " FROM  tran_mstr inner join item_mstr on it_item = tr_item " +
                         " where tr_eff_date >= " + "'" + dfdate.format(dcfrom.getDate()) + "'" + 
                         " AND tr_eff_date <= " + "'" + dfdate.format(dcto.getDate()) + "'" + 
-                        " AND tr_part >= " + "'" + frompart + "'" + 
-                        " AND tr_part <= " + "'" + topart + "'" + 
+                        " AND tr_item >= " + "'" + frompart + "'" + 
+                        " AND tr_item <= " + "'" + topart + "'" + 
                          " AND tr_ref >= " + "'" + fromcode + "'" + 
                         " AND tr_ref <= " + "'" + tocode + "'" + 
                        " AND tr_type = 'ISS-SCRAP' " + 
@@ -707,7 +707,7 @@ try {
 
 
                 while (res.next()) {
-                    String newstring = res.getString("tr_part") + "," + res.getString("it_code").replace(",","") + "," + 
+                    String newstring = res.getString("tr_item") + "," + res.getString("it_code").replace(",","") + "," + 
                             res.getString("tr_qty") + "," + res.getString("tr_op") + "," + res.getString("tr_eff_date") + "," + 
                             res.getString("tr_ref") + "," + res.getString("tr_actcell") ;
                             

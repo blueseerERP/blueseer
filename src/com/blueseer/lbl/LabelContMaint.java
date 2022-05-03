@@ -174,9 +174,9 @@ String shipcountry = "";
             try {
                 int i = 0;
                                 
-                res = st.executeQuery("select sod_nbr, sod_line, sod_part, sod_custpart, so_cust, sod_po, so_ship, it_item, it_desc, it_rev from sod_det " 
+                res = st.executeQuery("select sod_nbr, sod_line, sod_item, sod_custitem, so_cust, sod_po, so_ship, it_item, it_desc, it_rev from sod_det " 
                         + " inner join so_mstr on so_nbr = sod_nbr " 
-                        + " inner join item_mstr on it_item = sod_part "
+                        + " inner join item_mstr on it_item = sod_item "
                         + " where sod_nbr = " + "'" + order + "'"
                         + " and sod_line = " + "'" + line + "'" 
                         + ";");
@@ -184,7 +184,7 @@ String shipcountry = "";
                     i++;
                    item = res.getString("it_item");
                    partdesc = res.getString("it_desc");
-                   custitem = res.getString("sod_custpart");
+                   custitem = res.getString("sod_custitem");
                    billto = res.getString("so_cust");
                    shipto = res.getString("so_ship");
                    ponbr = res.getString("sod_po");

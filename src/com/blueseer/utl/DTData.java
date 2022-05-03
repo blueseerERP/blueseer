@@ -104,7 +104,7 @@ public class DTData {
                   
                   res = st.executeQuery("select * from fct_mstr;" );
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("fct_part"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("fct_item"),
                                    res.getString("fct_year"),
                                    res.getString("fct_site"),
                                    res.getInt(wk),
@@ -175,7 +175,7 @@ public class DTData {
                   
                   res = st.executeQuery("select * from fct_mstr;" );
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("fct_part"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("fct_item"),
                                    res.getString("fct_year"),
                                    res.getString("fct_site"),
                                    res.getString("fct_crt_userid"),
@@ -374,7 +374,7 @@ public class DTData {
                 
                 
                  res = st.executeQuery("SELECT it_item, it_desc, it_uom, it_type, it_status, sum(in_qoh) as 'sum', it_safestock  " +
-                        " FROM  item_mstr inner join in_mstr on in_part = it_item  " +
+                        " FROM  item_mstr inner join in_mstr on in_item = it_item  " +
                         " group by it_item, it_desc, it_uom, it_type, it_status order by it_item ;");
                     while (res.next()) {
                         mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("it_item"),
@@ -1562,25 +1562,25 @@ public class DTData {
             ResultSet res = null;
             try{
                 if (state == 1) { // begins
-                    res = st.executeQuery(" SELECT qual_id, qual_part, qual_part_desc, qual_vend, qual_userid, qual_date_crt, qual_date_cls " +
+                    res = st.executeQuery(" SELECT qual_id, qual_item, qual_item_desc, qual_vend, qual_userid, qual_date_crt, qual_date_cls " +
                         " FROM  qual_mstr where " + myfield + " like " + "'" + str + "%'" +
                         " order by qual_id ;");
                 }
                 if (state == 2) { // ends
-                    res = st.executeQuery(" SELECT qual_id, qual_part, qual_part_desc, qual_vend, qual_userid, qual_date_crt, qual_date_cls " +
+                    res = st.executeQuery(" SELECT qual_id, qual_item, qual_item_desc, qual_vend, qual_userid, qual_date_crt, qual_date_cls " +
                         " FROM  qual_mstr  where " + myfield + " like " + "'%" + str + "'" +
                         " order by qual_id ;");
                 }
                  if (state == 0) { // match
-                 res = st.executeQuery(" SELECT qual_id, qual_part, qual_part_desc, qual_vend, qual_userid, qual_date_crt, qual_date_cls " +
+                 res = st.executeQuery(" SELECT qual_id, qual_item, qual_item_desc, qual_vend, qual_userid, qual_date_crt, qual_date_cls " +
                         " FROM  qual_mstr  where " + myfield + " like " + "'%" + str + "%'" +
                         " order by qual_id ;");
                  }
                     while (res.next()) {
                         mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, 
                             res.getString("qual_id"),
-                            res.getString("qual_part"),
-                            res.getString("qual_part_desc"),
+                            res.getString("qual_item"),
+                            res.getString("qual_item_desc"),
                             res.getString("qual_vend"),
                             res.getString("qual_userid"),
                             res.getString("qual_date_crt"),
@@ -2314,22 +2314,22 @@ public class DTData {
             ResultSet res = null;
             try{
                 if (state == 1) { // begins
-                    res = st.executeQuery(" select fct_part, fct_site, fct_year " +
+                    res = st.executeQuery(" select fct_item, fct_site, fct_year " +
                         " FROM  fct_mstr where " + myfield + " like " + "'" + str + "%'" +
-                        " order by fct_part ;");
+                        " order by fct_item ;");
                 }
                 if (state == 2) { // ends
-                    res = st.executeQuery("  select fct_part, fct_site, fct_year " +
+                    res = st.executeQuery("  select fct_item, fct_site, fct_year " +
                         " FROM  fct_mstr where " + myfield + " like " + "'%" + str + "'" +
-                        " order by fct_part ;");
+                        " order by fct_item ;");
                 }
                  if (state == 0) { // match
-                 res = st.executeQuery(" select fct_part, fct_site, fct_year " +
+                 res = st.executeQuery(" select fct_item, fct_site, fct_year " +
                         " FROM  fct_mstr where " + myfield + " like " + "'%" + str + "%'" +
-                        " order by fct_part ;");
+                        " order by fct_item ;");
                  }
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("fct_part"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("fct_item"),
                                    res.getString("fct_site"),
                                    res.getString("fct_year")
                         });
@@ -3125,7 +3125,7 @@ public class DTData {
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
-                 res = st.executeQuery(" select so_nbr, so_po, sod_line, sod_part, sod_desc, sod_ord_qty, sod_shipped_qty  " +
+                 res = st.executeQuery(" select so_nbr, so_po, sod_line, sod_item, sod_desc, sod_ord_qty, sod_shipped_qty  " +
                         " FROM so_mstr " +
                         " inner join sod_Det on sod_nbr = so_nbr " +
                         " where " + 
@@ -3139,7 +3139,7 @@ public class DTData {
                         mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("so_nbr"),
                                    res.getString("sod_line"),
                                    res.getString("so_po"),
-                                   res.getString("sod_part"),
+                                   res.getString("sod_item"),
                                    res.getString("sod_desc"),
                                    res.getString("sod_ord_qty"),
                                    res.getString("sod_shipped_qty")
@@ -4165,17 +4165,17 @@ public class DTData {
             ResultSet res = null;
             try{
                 if (state == 1) { // begins
-                    res = st.executeQuery(" select rv_id, rv_vend, rvd_po, rvd_packingslip, rvd_part, rvd_date, rvd_qty " +
+                    res = st.executeQuery(" select rv_id, rv_vend, rvd_po, rvd_packingslip, rvd_item, rvd_date, rvd_qty " +
                         " FROM  recv_det inner join recv_mstr on rv_id = rvd_id where " + myfield + " like " + "'" + str + "%'" +
                         " order by rv_id desc ;");
                 }
                 if (state == 2) { // ends
-                    res = st.executeQuery(" select rv_id, rv_vend, rvd_po, rvd_packingslip, rvd_part, rvd_date, rvd_qty  " +
+                    res = st.executeQuery(" select rv_id, rv_vend, rvd_po, rvd_packingslip, rvd_item, rvd_date, rvd_qty  " +
                         " FROM  recv_det inner join recv_mstr on rv_id = rvd_id where " + myfield + " like " + "'%" + str + "'" +
                         " order by rv_id desc ;");
                 }
                  if (state == 0) { // match
-                 res = st.executeQuery(" select rv_id, rv_vend, rvd_po, rvd_packingslip, rvd_part, rvd_date, rvd_qty   " +
+                 res = st.executeQuery(" select rv_id, rv_vend, rvd_po, rvd_packingslip, rvd_item, rvd_date, rvd_qty   " +
                         " FROM  recv_det inner join recv_mstr on rv_id = rvd_id where " + myfield + " like " + "'%" + str + "%'" +
                         " order by rv_id desc ;");
                  }
@@ -4184,7 +4184,7 @@ public class DTData {
                                    res.getString("rv_vend"),
                                    res.getString("rvd_po"),
                                    res.getString("rvd_packingslip"),
-                                   res.getString("rvd_part"),
+                                   res.getString("rvd_item"),
                                    res.getString("rvd_date"),
                                    res.getString("rvd_qty")
                         });
@@ -4756,7 +4756,7 @@ public class DTData {
             try{
                   res = st.executeQuery("select * from fct_mstr;" );
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("fct_part"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("fct_item"),
                                    res.getString("fct_site"),
                                    res.getString("fct_year"),
                                    res.getString("fct_wkqty1"),
@@ -4832,8 +4832,8 @@ public class DTData {
             try{
                   
                   
-                  res = st.executeQuery("select * from fct_mstr where fct_part >= " + "'" + frompart + "'" +
-                                       " AND fct_part <= " + "'" + topart + "'" + 
+                  res = st.executeQuery("select * from fct_mstr where fct_item >= " + "'" + frompart + "'" +
+                                       " AND fct_item <= " + "'" + topart + "'" + 
                                        " AND fct_year = " + "'" + thisyear + "'" + 
                                        ";" );
                     while (res.next()) {
@@ -4844,7 +4844,7 @@ public class DTData {
                         }
                         
                                                 
-                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("fct_part"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("fct_item"),
                                    res.getString("fct_year"),
                                    res.getString("fct_site"),
                                    values[0],
@@ -5741,8 +5741,8 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
 
             while (res.next()) {
 
-                mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, res.getString("qual_id"), res.getString("qual_originator"), res.getString("qual_part"),
-                            res.getString("qual_part_desc"),
+                mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, res.getString("qual_id"), res.getString("qual_originator"), res.getString("qual_item"),
+                            res.getString("qual_item_desc"),
                             res.getString("qual_vend"),
                             res.getString("qual_date_crt"),
                             res.getString("qual_date_upd"),});
@@ -5818,13 +5818,13 @@ res = st.executeQuery("SELECT * FROM  qual_mstr order by qual_id;");
         ResultSet res = null;
         try{
 
-            res = st.executeQuery("SELECT sod_nbr, so_cust, sod_part, ifnull(it_desc,'') as 'description', sod_po, sod_ord_qty, sod_shipped_qty FROM  so_mstr inner join sod_det on sod_nbr = so_nbr " +
-                    " left outer join item_mstr on it_item = sod_part " +
+            res = st.executeQuery("SELECT sod_nbr, so_cust, sod_item, ifnull(it_desc,'') as 'description', sod_po, sod_ord_qty, sod_shipped_qty FROM  so_mstr inner join sod_det on sod_nbr = so_nbr " +
+                    " left outer join item_mstr on it_item = sod_item " +
                     " where (so_status = 'open' or so_status = 'backorder') and (sod_status <> 'Shipped' or sod_status is null) order by so_nbr;");
 
             while (res.next()) {
 
-                mymodel.addRow(new Object[]{res.getString("sod_nbr"), res.getString("so_cust"), res.getString("sod_part"),
+                mymodel.addRow(new Object[]{res.getString("sod_nbr"), res.getString("so_cust"), res.getString("sod_item"),
                             res.getString("description"),
                             res.getString("sod_po"),
                             res.getString("sod_ord_qty"),

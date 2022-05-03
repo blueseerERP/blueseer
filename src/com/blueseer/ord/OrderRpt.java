@@ -225,13 +225,13 @@ public class OrderRpt extends javax.swing.JPanel {
             try {
                 int i = 0;
                 double qty = 0;
-                res = st.executeQuery("select sod_nbr, sod_part, sod_netprice, sod_ord_qty, sod_shipped_qty, sod_status from sod_det " +
+                res = st.executeQuery("select sod_nbr, sod_item, sod_netprice, sod_ord_qty, sod_shipped_qty, sod_status from sod_det " +
                         " where sod_nbr = " + "'" + order + "'" +  ";");
                 while (res.next()) {
                     qty += (res.getDouble("sod_netprice") * res.getDouble("sod_ord_qty"));
                    modeldetail.addRow(new Object[]{ 
                       res.getString("sod_nbr"), 
-                       res.getString("sod_part"),
+                       res.getString("sod_item"),
                        bsParseDouble(currformatDouble(res.getDouble("sod_netprice"))),
                       res.getInt("sod_ord_qty"), 
                       res.getInt("sod_shipped_qty"), 

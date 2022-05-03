@@ -172,7 +172,7 @@ public class VendXrefRpt extends javax.swing.JPanel {
                 int i = 0;
                 String blanket = "";
                 
-                res = st.executeQuery("select rvd_id, rvd_po, rvd_poline, rvd_part, rvd_packingslip, rvd_date, rvd_netprice, rvd_qty, rvd_voqty " +
+                res = st.executeQuery("select rvd_id, rvd_po, rvd_poline, rvd_item, rvd_packingslip, rvd_date, rvd_netprice, rvd_qty, rvd_voqty " +
                         " from recv_det " +
                         " where rvd_id = " + "'" + rvid + "'" + ";");
                 while (res.next()) {
@@ -180,7 +180,7 @@ public class VendXrefRpt extends javax.swing.JPanel {
                       res.getString("rvd_id"), 
                        res.getString("rvd_po"),
                        res.getString("rvd_poline"),
-                       res.getString("rvd_part"),
+                       res.getString("rvd_item"),
                        res.getString("rvd_packingslip"),
                        res.getString("rvd_date"),
                        currformatDouble(res.getDouble("rvd_netprice")),

@@ -686,7 +686,7 @@ public class ChartView extends javax.swing.JPanel {
                                      " left outer join tran_mstr on strftime('%W',tr_eff_date) = c.d and tr_type = 'RCT-FG' " +
                                      " and tr_eff_date >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
                                      " and tr_eff_date <= " + "'" + dfdate.format(dcTo.getDate()) + "'" +
-                                     " left outer join itemr_cost on itemr_cost.itr_item = tran_mstr.tr_part " +
+                                     " left outer join itemr_cost on itemr_cost.itr_item = tran_mstr.tr_item " +
                                      " and itr_op = tr_op and itr_set = 'standard' and itr_site = tr_site " +
                                      //" where mock_nbr <= 10 " +
                                      " group by c.d;");
@@ -698,7 +698,7 @@ public class ChartView extends javax.swing.JPanel {
                                      " left outer join tran_mstr on week(tr_eff_date) = c.d and tr_type = 'RCT-FG' " +
                                      " and tr_eff_date >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
                                      " and tr_eff_date <= " + "'" + dfdate.format(dcTo.getDate()) + "'" +
-                                     " left outer join itemr_cost on itemr_cost.itr_item = tran_mstr.tr_part " +
+                                     " left outer join itemr_cost on itemr_cost.itr_item = tran_mstr.tr_item " +
                                      " and itr_op = tr_op and itr_set = 'standard' and itr_site = tr_site " +
                                      //" where mock_nbr <= 10 " +
                                      " group by c.d;");
@@ -1629,17 +1629,17 @@ public class ChartView extends javax.swing.JPanel {
             try {
                 
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-                res = st.executeQuery("select tr_part, sum(tr_qty) as 'sum' from tran_mstr " +
+                res = st.executeQuery("select tr_item, sum(tr_qty) as 'sum' from tran_mstr " +
                     " where tr_eff_date >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
                     " AND tr_eff_date <= " + "'" + dfdate.format(dcTo.getDate()) + "'" +
                     " AND tr_type = 'ISS-SCRAP' " + 
-                    " group by tr_part order by sum desc limit 20 ;");
+                    " group by tr_item order by sum desc limit 20 ;");
 
                 DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
                 while (res.next()) {
 
-                    dataset.setValue(res.getDouble("sum"), "Sum", res.getString("tr_part"));
+                    dataset.setValue(res.getDouble("sum"), "Sum", res.getString("tr_item"));
                 }
                 JFreeChart chart = ChartFactory.createBarChart(getTitleTag(5020), getGlobalColumnTag("item"), getGlobalColumnTag("qty"), dataset, PlotOrientation.VERTICAL, true, true, false);
                 CategoryItemRenderer renderer = new CustomRenderer();
@@ -1688,17 +1688,17 @@ public class ChartView extends javax.swing.JPanel {
             try {
                 
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-                res = st.executeQuery("select tr_part, sum(tr_qty) as 'sum' from tran_mstr " +
+                res = st.executeQuery("select tr_item, sum(tr_qty) as 'sum' from tran_mstr " +
                     " where tr_eff_date >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
                     " AND tr_eff_date <= " + "'" + dfdate.format(dcTo.getDate()) + "'" +
                     " AND tr_type = 'ISS-REWK' " + 
-                    " group by tr_part order by sum desc limit 20 ;");
+                    " group by tr_item order by sum desc limit 20 ;");
 
                 DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
                 while (res.next()) {
 
-                    dataset.setValue(res.getDouble("sum"), "Sum", res.getString("tr_part"));
+                    dataset.setValue(res.getDouble("sum"), "Sum", res.getString("tr_item"));
                 }
                 JFreeChart chart = ChartFactory.createBarChart(getTitleTag(5021), getGlobalColumnTag("item"), getGlobalColumnTag("qty"), dataset, PlotOrientation.VERTICAL, true, true, false);
                 CategoryItemRenderer renderer = new CustomRenderer();
@@ -1746,18 +1746,18 @@ public class ChartView extends javax.swing.JPanel {
             try {
                 
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-                res = st.executeQuery("select tr_part, sum(tr_qty * itr_total) as 'sum' from tran_mstr " +
-                         " inner join item_mstr on it_item = tr_part " +
-                    " left outer join itemr_cost on itr_item = tr_part and itr_op = tr_op and itr_routing = item_mstr.it_wf" +
+                res = st.executeQuery("select tr_item, sum(tr_qty * itr_total) as 'sum' from tran_mstr " +
+                         " inner join item_mstr on it_item = tr_item " +
+                    " left outer join itemr_cost on itr_item = tr_item and itr_op = tr_op and itr_routing = item_mstr.it_wf" +
                     " where tr_eff_date >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
                     " AND tr_eff_date <= " + "'" + dfdate.format(dcTo.getDate()) + "'" +
                     " AND tr_type = 'ISS-SCRAP' " + 
-                    " group by tr_part order by sum desc limit 20 ;");
+                    " group by tr_item order by sum desc limit 20 ;");
 
                 DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
                 while (res.next()) {
-                    dataset.setValue(res.getDouble("sum"), "Sum", res.getString("tr_part"));
+                    dataset.setValue(res.getDouble("sum"), "Sum", res.getString("tr_item"));
                 }
                 JFreeChart chart = ChartFactory.createBarChart(getTitleTag(5022), getGlobalColumnTag("item"), getGlobalColumnTag("total"), dataset, PlotOrientation.VERTICAL, true, true, false);
                 CategoryItemRenderer renderer = new CustomRenderer();
@@ -1806,8 +1806,8 @@ public class ChartView extends javax.swing.JPanel {
                
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 res = st.executeQuery("select tr_ref, sum(tr_qty * itr_total) as 'sum' from tran_mstr " +
-                         " inner join item_mstr on it_item = tr_part " +
-                    " left outer join itemr_cost on itr_item = tr_part and itr_op = tr_op and itr_routing = item_mstr.it_wf" +
+                         " inner join item_mstr on it_item = tr_item " +
+                    " left outer join itemr_cost on itr_item = tr_item and itr_op = tr_op and itr_routing = item_mstr.it_wf" +
                     " where tr_eff_date >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
                     " AND tr_eff_date <= " + "'" + dfdate.format(dcTo.getDate()) + "'" +
                     " AND tr_type = 'ISS-SCRAP' " + 
@@ -1865,8 +1865,8 @@ public class ChartView extends javax.swing.JPanel {
                 
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 res = st.executeQuery("select tr_actcell, sum(tr_qty * itr_total) as 'sum' from tran_mstr " +
-                         " inner join item_mstr on it_item = tr_part " +
-                    " left outer join itemr_cost on itr_item = tr_part and itr_op = tr_op and itr_routing = item_mstr.it_wf" +
+                         " inner join item_mstr on it_item = tr_item " +
+                    " left outer join itemr_cost on itr_item = tr_item and itr_op = tr_op and itr_routing = item_mstr.it_wf" +
                     " where tr_eff_date >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
                     " AND tr_eff_date <= " + "'" + dfdate.format(dcTo.getDate()) + "'" +
                     " AND tr_type = 'ISS-SCRAP' " + 

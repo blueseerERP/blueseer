@@ -755,7 +755,7 @@ public class ShpRptPicker extends javax.swing.JPanel {
             try{   
                    res = st.executeQuery("SELECT sh_id, sh_cust, cm_name, " +
                         " sh_shipdate, sh_type, sh_site, sh_po, " +
-                        " shd_part, shd_qty, shd_netprice from ship_mstr " +
+                        " shd_item, shd_qty, shd_netprice from ship_mstr " +
                         " inner join ship_det " +
                         " on shd_id = sh_id " +
                         " inner join cm_mstr on cm_code = sh_cust " +
@@ -773,7 +773,7 @@ public class ShpRptPicker extends javax.swing.JPanel {
                         res.getString("cm_name"),
                         res.getString("sh_shipdate"),
                         res.getString("sh_po"),
-                        res.getString("shd_part"),
+                        res.getString("shd_item"),
                         res.getString("shd_qty"),
                         res.getString("shd_netprice")
                             });
@@ -860,7 +860,7 @@ public class ShpRptPicker extends javax.swing.JPanel {
             try{   
                    res = st.executeQuery("SELECT sh_id, sh_cust, cm_name, " +
                         " sh_shipdate, sh_type, sh_site, shd_po, " +
-                        " shd_part, shd_qty, shd_netprice from ship_mstr " +
+                        " shd_item, shd_qty, shd_netprice from ship_mstr " +
                         " inner join ship_det " +
                         " on shd_id = sh_id " +
                         " inner join cm_mstr on cm_code = sh_cust " +
@@ -876,7 +876,7 @@ public class ShpRptPicker extends javax.swing.JPanel {
                         res.getString("cm_name"),
                         res.getString("sh_shipdate"),
                         res.getString("shd_po"),
-                        res.getString("shd_part"),
+                        res.getString("shd_item"),
                         res.getString("shd_qty"),
                         res.getString("shd_netprice")
                             });

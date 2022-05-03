@@ -37,7 +37,7 @@
 	<queryString>
 		<![CDATA[SELECT
      plan_nbr,
-     plan_part,
+     plan_item,
      plan_qty_req,
      plan_qty_sched,
      plan_date_due,
@@ -50,14 +50,14 @@
      case when wf_run_hours = 0 then '0' when wf_run_hours = '' then '0' when wf_run_hours is null then '0' else (1 / wf_run_hours) end as runrate,
      case when plan_type = 'DEMD' then so_po else 'N/A' end as custpo,
      case when plan_type = 'DEMD' then so_cust else 'N/A' end as custcode,
-     case when plan_type = 'DEMD' then sod_custpart else 'N/A' end as custitem
+     case when plan_type = 'DEMD' then sod_custitem else 'N/A' end as custitem
 FROM
      plan_mstr
-inner join item_mstr on it_item = plan_part
+inner join item_mstr on it_item = plan_item
 left outer join wf_mstr on wf_id = it_wf 
 left outer join so_mstr on so_nbr = plan_order
 left outer join sod_det on sod_nbr = so_nbr and
-                                            sod_part = plan_part and
+                                            sod_item = plan_item and
                                             sod_line = plan_line
 where plan_nbr = $P{myid}
 order by wf_op;]]>
@@ -65,7 +65,7 @@ order by wf_op;]]>
 	<field name="plan_nbr" class="java.lang.Integer">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="plan_part" class="java.lang.String">
+	<field name="plan_item" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="plan_qty_req" class="java.lang.Integer">
@@ -184,7 +184,7 @@ order by wf_op;]]>
 				<textElement>
 					<font size="12" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{plan_part}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{plan_item}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="280" y="45" width="140" height="20" uuid="92f0edcc-29a8-4a03-9eb5-df01dc9d576b"/>
@@ -409,7 +409,7 @@ order by wf_op;]]>
 					<subreportParameterExpression><![CDATA[$F{wf_op}]]></subreportParameterExpression>
 				</subreportParameter>
 				<subreportParameter name="part">
-					<subreportParameterExpression><![CDATA[$F{plan_part}]]></subreportParameterExpression>
+					<subreportParameterExpression><![CDATA[$F{plan_item}]]></subreportParameterExpression>
 				</subreportParameter>
 				<subreportParameter name="qty">
 					<subreportParameterExpression><![CDATA[$F{plan_qty_sched}]]></subreportParameterExpression>

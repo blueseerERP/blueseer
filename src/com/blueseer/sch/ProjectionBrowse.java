@@ -285,25 +285,25 @@ public class ProjectionBrowse extends javax.swing.JPanel {
                 TemporalField woy = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear(); 
                 int weekOfYear = date.get(woy) - 1;  // need to subtract 1 to match sqlite/mysql week calc
                 if (bsmf.MainFrame.dbtype.equals("sqlite")) {
-                  res = st.executeQuery("select mrp_part, it_code, itc_total, strftime('%W',mrp_date) as 'w', " + 
+                  res = st.executeQuery("select mrp_item, it_code, itc_total, strftime('%W',mrp_date) as 'w', " + 
                         " sum(mrp_qty) as 'sum', " +
-                        " (select sum(in_qoh) from in_mstr where in_part = mrp_part) as 'qoh' " +
+                        " (select sum(in_qoh) from in_mstr where in_item = mrp_item) as 'qoh' " +
                         " from mrp_mstr " +
-                        " inner join item_mstr on it_item = mrp_part " +
+                        " inner join item_mstr on it_item = mrp_item " +
                         " inner join item_cost on it_item = itc_item and itc_set = 'standard' and itc_site = " + "'" + site + "'" +
-                        " where mrp_part >= " + "'" + fromitem + "'" +
-                        " and mrp_part <= " + "'" + toitem + "'" +
-                        " group by w, mrp_part;");  
+                        " where mrp_item >= " + "'" + fromitem + "'" +
+                        " and mrp_item <= " + "'" + toitem + "'" +
+                        " group by w, mrp_item;");  
                 } else {
-                    res = st.executeQuery("select mrp_part, it_code, itc_total, week(mrp_date) as 'w', " + 
+                    res = st.executeQuery("select mrp_item, it_code, itc_total, week(mrp_date) as 'w', " + 
                         " sum(mrp_qty) as 'sum', " +
-                        " (select sum(in_qoh) from in_mstr where in_part = mrp_part) as 'qoh' " +
+                        " (select sum(in_qoh) from in_mstr where in_item = mrp_item) as 'qoh' " +
                         " from mrp_mstr " +
-                        " inner join item_mstr on it_item = mrp_part " +
+                        " inner join item_mstr on it_item = mrp_item " +
                         " inner join item_cost on it_item = itc_item and itc_set = 'standard' and itc_site = " + "'" + site + "'" +
-                        " where mrp_part >= " + "'" + fromitem + "'" +
-                        " and mrp_part <= " + "'" + toitem + "'" +
-                        " group by w, mrp_part;"); 
+                        " where mrp_item >= " + "'" + fromitem + "'" +
+                        " and mrp_item <= " + "'" + toitem + "'" +
+                        " group by w, mrp_item;"); 
                 }
                 
                 Map<String, String> hm = new HashMap<>();
@@ -315,42 +315,42 @@ public class ProjectionBrowse extends javax.swing.JPanel {
                       if (! res.getString("it_code").equals(ddclass.getSelectedItem().toString())) {
                           continue;
                       }
-                      hm.put(res.getString("mrp_part") + "+" + res.getString("w"), res.getString("sum"));
-                      set.add(res.getString("mrp_part"));
-                      if (! itemqoh.containsKey(res.getString("mrp_part"))) {
-			itemqoh.put(res.getString("mrp_part"), res.getString("qoh"));
+                      hm.put(res.getString("mrp_item") + "+" + res.getString("w"), res.getString("sum"));
+                      set.add(res.getString("mrp_item"));
+                      if (! itemqoh.containsKey(res.getString("mrp_item"))) {
+			itemqoh.put(res.getString("mrp_item"), res.getString("qoh"));
 		      }
-                      if (! itemcost.containsKey(res.getString("mrp_part"))) {
-			itemcost.put(res.getString("mrp_part"), res.getString("itc_total"));
+                      if (! itemcost.containsKey(res.getString("mrp_item"))) {
+			itemcost.put(res.getString("mrp_item"), res.getString("itc_total"));
 		      }
                     } 
                     
                     // now POs
                     if (bsmf.MainFrame.dbtype.equals("sqlite")) {
-                     res = st.executeQuery("select pod_part, it_code, strftime('%W',pod_due_date) as 'w', " + 
+                     res = st.executeQuery("select pod_item, it_code, strftime('%W',pod_due_date) as 'w', " + 
                         " sum(pod_ord_qty) as 'sum' " +
                         " from pod_mstr " +
-                        " inner join item_mstr on it_item = pod_part " +    
-                        " where pod_part >= " + "'" + fromitem + "'" +
-                        " and pod_part <= " + "'" + toitem + "'" +
+                        " inner join item_mstr on it_item = pod_item " +    
+                        " where pod_item >= " + "'" + fromitem + "'" +
+                        " and pod_item <= " + "'" + toitem + "'" +
                         " and pod_status <> 'closed' " +
-                        " group by w, pod_part;");   
+                        " group by w, pod_item;");   
                     } else {
-                     res = st.executeQuery("select pod_part, it_code, week(pod_due_date) as 'w', " + 
+                     res = st.executeQuery("select pod_item, it_code, week(pod_due_date) as 'w', " + 
                         " sum(pod_ord_qty) as 'sum' " +
                         " from pod_mstr " +
-                        " inner join item_mstr on it_item = pod_part " +    
-                        " where pod_part >= " + "'" + fromitem + "'" +
-                        " and pod_part <= " + "'" + toitem + "'" +
+                        " inner join item_mstr on it_item = pod_item " +    
+                        " where pod_item >= " + "'" + fromitem + "'" +
+                        " and pod_item <= " + "'" + toitem + "'" +
                         " and pod_status <> 'closed' " +
-                        " group by w, pod_part;");   
+                        " group by w, pod_item;");   
                     }
                     
                     while (res.next()) {
                       if (! res.getString("it_code").equals(ddclass.getSelectedItem().toString())) {
                           continue;
                       }
-                      pos.put(res.getString("pod_part") + "+" + res.getString("w"), res.getString("sum"));
+                      pos.put(res.getString("pod_item") + "+" + res.getString("w"), res.getString("sum"));
                     } 
                     
                     double[] qty = new double[]{0,0,0,0,0,0,0,0,0,0,0,0};

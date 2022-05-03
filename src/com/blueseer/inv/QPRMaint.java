@@ -479,7 +479,7 @@ public class QPRMaint extends javax.swing.JPanel implements IBlueSeer {
                         + "qual_src_line, qual_line_dept, qual_src_recv,"  
                         + "qual_src_cust, qual_src_eng, qual_src_oth,"
                         + "qual_src_oth_desc, qual_int_sup, qual_ext_sup,"
-                        + "qual_part, qual_part_desc, qual_qty_rej, qual_qty_susp,"
+                        + "qual_item, qual_item_desc, qual_qty_rej, qual_qty_susp,"
                         + "qual_qty_tot_def, qual_desc_iss, qual_desc_fin_hist,"
                         + "qual_desc_sqe_comt, qual_tot_charge, qual_dec1, qual_date1, qual_int1) "
                         + " values ( " + "'" + tbkey.getText().toString() + "'" + ","
@@ -579,8 +579,8 @@ public class QPRMaint extends javax.swing.JPanel implements IBlueSeer {
                         + "qual_vend_contact = " + "'" + tbContact.getText().replace("'", "''") + "'" + ","
                         + "qual_line_dept = " + "'" + tbDept.getText().replace("'", "\\'") + "'" + ","
                         + "qual_dev_nbr = " + "'" + tbDeviationNbr.getText().replace("'", "\\'") + "'" + ","
-                        + "qual_part = " + "'" + dditem.getSelectedItem().toString() + "'" + ","
-                        + "qual_part_desc = " + "'" + tbPartDesc.getText().replace("'", "\\'") + "'" + ","
+                        + "qual_item = " + "'" + dditem.getSelectedItem().toString() + "'" + ","
+                        + "qual_item_desc = " + "'" + tbPartDesc.getText().replace("'", "\\'") + "'" + ","
                         + "qual_qty_rej = " + "'" + Integer.parseInt(tbQtyRejected.getText().toString()) + "'" + ","
                         + "qual_qty_susp = " + "'" + Integer.parseInt(tbNumSuspectCont.getText().toString()) + "'" + ","
                         + "qual_qty_tot_def = " + "'" + Integer.parseInt(tbTotalQty.getText().toString()) + "'" + ","
@@ -686,8 +686,8 @@ public class QPRMaint extends javax.swing.JPanel implements IBlueSeer {
                     cbExternal.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("qual_ext_sup")));
                     tbDept.setText(res.getString("qual_line_dept"));
                     tbDeviationNbr.setText(res.getString("qual_dev_nbr"));
-                    dditem.setSelectedItem(res.getString("qual_part"));
-                    tbPartDesc.setText(res.getString("qual_part_desc"));
+                    dditem.setSelectedItem(res.getString("qual_item"));
+                    tbPartDesc.setText(res.getString("qual_item_desc"));
                     taIssue.setText(res.getString("qual_desc_iss"));
                     taHistory.setText(res.getString("qual_desc_fin_hist"));
                     taComments.setText(res.getString("qual_desc_sqe_comt"));
@@ -719,9 +719,9 @@ public class QPRMaint extends javax.swing.JPanel implements IBlueSeer {
         lual = new ActionListener() {
         public void actionPerformed(ActionEvent event) {
         if (lurb1.isSelected()) {  
-         luModel = DTData.getQPRBrowseUtil(luinput.getText(),0, "qual_part");
+         luModel = DTData.getQPRBrowseUtil(luinput.getText(),0, "qual_item");
         } else {
-         luModel = DTData.getQPRBrowseUtil(luinput.getText(),0, "qual_part_desc");   
+         luModel = DTData.getQPRBrowseUtil(luinput.getText(),0, "qual_item_desc");   
         }
         luTable.setModel(luModel);
         luTable.getColumnModel().getColumn(0).setMaxWidth(50);

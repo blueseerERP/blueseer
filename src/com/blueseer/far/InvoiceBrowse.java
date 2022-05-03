@@ -281,15 +281,15 @@ public class InvoiceBrowse extends javax.swing.JPanel {
                 
                 int i = 0;
                 String blanket = "";
-                res = st.executeQuery("select shd_id, shd_soline, shd_part, shd_custpart, shd_so, shd_po, shd_qty, shd_netprice from ship_det " +
+                res = st.executeQuery("select shd_id, shd_soline, shd_item, shd_custitem, shd_so, shd_po, shd_qty, shd_netprice from ship_det " +
                         " where shd_id = " + "'" + shipper + "'" +  ";");
                 while (res.next()) {
                     totalsales = totalsales + (res.getDouble("shd_qty") * res.getDouble("shd_netprice"));
                     totalqty = totalqty + res.getDouble("shd_qty");
                    modeldetail.addRow(new Object[]{ 
                       res.getString("shd_id"), 
-                      res.getString("shd_part"),
-                      res.getString("shd_custpart"),
+                      res.getString("shd_item"),
+                      res.getString("shd_custitem"),
                       res.getString("shd_so"),
                       res.getString("shd_soline"), 
                       res.getString("shd_po"),

@@ -416,38 +416,38 @@ try {
                  DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
 
                   if (cbsumpart.isSelected() && cbsumcode.isSelected()) {
-                res = st.executeQuery("SELECT tr_part, tr_type, it_code, sum(tr_qty) as tr_qty, " +
+                res = st.executeQuery("SELECT tr_item, tr_type, it_code, sum(tr_qty) as tr_qty, " +
                         " tr_op, tr_eff_date, tr_ref, tr_actcell,  " +
                         " case when it_code = 'M' then itr_total else itc_total end as amt,  " +
                         " sum(case when it_code = 'M' then itr_total else itc_total end * tr_qty) as tot,  " +
                         " tr_timestamp, tr_export, tr_userid " +
-                        " FROM  tran_mstr inner join item_mstr on it_item = tr_part " +
-                        " left outer join itemr_cost on itr_item = tr_part and itr_op = tr_op and itr_routing = item_mstr.it_wf" +
-                        " left outer join item_cost on itc_item = tr_part and itc_set = 'standard' " +
+                        " FROM  tran_mstr inner join item_mstr on it_item = tr_item " +
+                        " left outer join itemr_cost on itr_item = tr_item and itr_op = tr_op and itr_routing = item_mstr.it_wf" +
+                        " left outer join item_cost on itc_item = tr_item and itc_set = 'standard' " +
                         " where tr_eff_date >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" + 
                         " AND tr_eff_date <= " + "'" + dfdate.format(dcTo.getDate()) + "'" + 
-                        " AND tr_part >= " + "'" + frompart + "'" + 
-                        " AND tr_part <= " + "'" + topart + "'" + 
+                        " AND tr_item >= " + "'" + frompart + "'" + 
+                        " AND tr_item <= " + "'" + topart + "'" + 
                          " AND tr_ref >= " + "'" + fromcode + "'" + 
                         " AND tr_ref <= " + "'" + tocode + "'" + 
                         " AND tr_type = 'ISS-REWK' " +
-                        " group by tr_part, tr_ref " + 
+                        " group by tr_item, tr_ref " + 
                         "   ;");
                  }
                  
                   if (cbsumcode.isSelected() && ! cbsumpart.isSelected()) {
-                res = st.executeQuery("SELECT tr_part, tr_type, it_code, sum(tr_qty) as tr_qty, " +
+                res = st.executeQuery("SELECT tr_item, tr_type, it_code, sum(tr_qty) as tr_qty, " +
                         " tr_op, tr_eff_date, tr_ref, tr_actcell, " +
                         " case when it_code = 'M' then itr_total else itc_total end as amt,  " +
                         " sum(case when it_code = 'M' then itr_total else itc_total end * tr_qty) as tot,  " +
                         " tr_timestamp, tr_export, tr_userid " +
-                        " FROM  tran_mstr inner join item_mstr on it_item = tr_part " +
-                        " left outer join itemr_cost on itr_item = tr_part and itr_op = tr_op and itr_routing = item_mstr.it_wf" +
-                        " left outer join item_cost on itc_item = tr_part and itc_set = 'standard' " +
+                        " FROM  tran_mstr inner join item_mstr on it_item = tr_item " +
+                        " left outer join itemr_cost on itr_item = tr_item and itr_op = tr_op and itr_routing = item_mstr.it_wf" +
+                        " left outer join item_cost on itc_item = tr_item and itc_set = 'standard' " +
                         " where tr_eff_date >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" + 
                         " AND tr_eff_date <= " + "'" + dfdate.format(dcTo.getDate()) + "'" + 
-                        " AND tr_part >= " + "'" + frompart + "'" + 
-                        " AND tr_part <= " + "'" + topart + "'" + 
+                        " AND tr_item >= " + "'" + frompart + "'" + 
+                        " AND tr_item <= " + "'" + topart + "'" + 
                          " AND tr_ref >= " + "'" + fromcode + "'" + 
                         " AND tr_ref <= " + "'" + tocode + "'" + 
                         " AND tr_type = 'ISS-REWK' " +
@@ -456,38 +456,38 @@ try {
                  } 
                   
                  if (cbsumpart.isSelected() && ! cbsumcode.isSelected()) {
-                res = st.executeQuery("SELECT tr_part, tr_type, it_code, sum(tr_qty) as tr_qty, " +
+                res = st.executeQuery("SELECT tr_item, tr_type, it_code, sum(tr_qty) as tr_qty, " +
                         " tr_op, tr_eff_date, tr_ref, tr_actcell, " +
                         " case when it_code = 'M' then itr_total else itc_total end as amt,  " +
                         " sum(case when it_code = 'M' then itr_total else itc_total end * tr_qty) as tot,  " +
                         " tr_timestamp, tr_export, tr_userid " +
-                        " FROM  tran_mstr inner join item_mstr on it_item = tr_part " +
-                        " left outer join itemr_cost on itr_item = tr_part and itr_op = tr_op and itr_routing = item_mstr.it_wf" +
-                        " left outer join item_cost on itc_item = tr_part and itc_set = 'standard' " +
+                        " FROM  tran_mstr inner join item_mstr on it_item = tr_item " +
+                        " left outer join itemr_cost on itr_item = tr_item and itr_op = tr_op and itr_routing = item_mstr.it_wf" +
+                        " left outer join item_cost on itc_item = tr_item and itc_set = 'standard' " +
                         " where tr_eff_date >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" + 
                         " AND tr_eff_date <= " + "'" + dfdate.format(dcTo.getDate()) + "'" + 
-                        " AND tr_part >= " + "'" + frompart + "'" + 
-                        " AND tr_part <= " + "'" + topart + "'" + 
+                        " AND tr_item >= " + "'" + frompart + "'" + 
+                        " AND tr_item <= " + "'" + topart + "'" + 
                          " AND tr_ref >= " + "'" + fromcode + "'" + 
                         " AND tr_ref <= " + "'" + tocode + "'" + 
                         " AND tr_type = 'ISS-REWK' " +
-                        " group by tr_part " + 
+                        " group by tr_item " + 
                         "   ;");
                  } 
                  
                  
                  if (! cbsumpart.isSelected() && ! cbsumcode.isSelected()) {
-                 res = st.executeQuery("SELECT tr_part, tr_type, it_code, tr_qty, " +
+                 res = st.executeQuery("SELECT tr_item, tr_type, it_code, tr_qty, " +
                         " tr_op, tr_eff_date, tr_ref, tr_actcell, " +
                         " case when it_code = 'M' then itr_total else itc_total end as amt,  " +
                          " tr_timestamp, tr_export, tr_userid " +
-                        " FROM  tran_mstr inner join item_mstr on it_item = tr_part " +
-                        " left outer join itemr_cost on itr_item = tr_part and itr_op = tr_op and itr_routing = item_mstr.it_wf" +
-                         " left outer join item_cost on itc_item = tr_part and itc_set = 'standard' " +
+                        " FROM  tran_mstr inner join item_mstr on it_item = tr_item " +
+                        " left outer join itemr_cost on itr_item = tr_item and itr_op = tr_op and itr_routing = item_mstr.it_wf" +
+                         " left outer join item_cost on itc_item = tr_item and itc_set = 'standard' " +
                         " where tr_eff_date >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" + 
                         " AND tr_eff_date <= " + "'" + dfdate.format(dcTo.getDate()) + "'" + 
-                        " AND tr_part >= " + "'" + frompart + "'" + 
-                        " AND tr_part <= " + "'" + topart + "'" + 
+                        " AND tr_item >= " + "'" + frompart + "'" + 
+                        " AND tr_item <= " + "'" + topart + "'" + 
                          " AND tr_ref >= " + "'" + fromcode + "'" + 
                         " AND tr_ref <= " + "'" + tocode + "'" + 
                         " AND tr_type = 'ISS-REWK' " + 
@@ -501,7 +501,7 @@ try {
                    qty = qty + res.getInt("tr_qty");
                     dol = dol + res.getDouble("tot");
                         mymodel.addRow(new Object[]{
-                                res.getString("tr_part"),
+                                res.getString("tr_item"),
                                 res.getString("it_code"),
                                 res.getInt("tr_qty"),
                                 res.getDouble("tot"),
@@ -534,7 +534,7 @@ try {
                    qty = qty + res.getInt("tr_qty");
                     dol = dol + res.getDouble("tot");
                          mymodel.addRow(new Object[]{
-                                res.getString("tr_part"),
+                                res.getString("tr_item"),
                                 res.getString("it_code"),
                                 res.getInt("tr_qty"),
                                 res.getDouble("tot"),
@@ -550,7 +550,7 @@ try {
                     else {
                    qty = qty + res.getInt("tr_qty");
                     dol = dol + (res.getDouble("amt") * res.getInt("tr_qty"));
-                         mymodel.addRow(new Object[]{res.getString("tr_part"),
+                         mymodel.addRow(new Object[]{res.getString("tr_item"),
                                 res.getString("it_code"),
                                 res.getInt("tr_qty"),
                                 res.getDouble("amt"),
@@ -653,38 +653,38 @@ try {
 
                
                   if (cbsumpart.isSelected() && cbsumcode.isSelected()) {
-                res = st.executeQuery("SELECT tr_part, tr_type, it_code, sum(tr_qty) as tr_qty, " +
+                res = st.executeQuery("SELECT tr_item, tr_type, it_code, sum(tr_qty) as tr_qty, " +
                         " tr_op, tr_eff_date, tr_ref, tr_actcell,  " +
                         " case when it_code = 'M' then itr_total else itc_total end as amt,  " +
                         " sum(case when it_code = 'M' then itr_total else itc_total end * tr_qty) as tot,  " +
                         " tr_timestamp, tr_export, tr_userid " +
-                        " FROM  tran_mstr inner join item_mstr on it_item = tr_part " +
-                        " left outer join itemr_cost on itr_item = tr_part and itr_op = tr_op and itr_routing = item_mstr.it_wf" +
-                        " left outer join item_cost on itc_item = tr_part and itc_set = 'standard' " +
+                        " FROM  tran_mstr inner join item_mstr on it_item = tr_item " +
+                        " left outer join itemr_cost on itr_item = tr_item and itr_op = tr_op and itr_routing = item_mstr.it_wf" +
+                        " left outer join item_cost on itc_item = tr_item and itc_set = 'standard' " +
                         " where tr_eff_date >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" + 
                         " AND tr_eff_date <= " + "'" + dfdate.format(dcTo.getDate()) + "'" + 
-                        " AND tr_part >= " + "'" + frompart + "'" + 
-                        " AND tr_part <= " + "'" + topart + "'" + 
+                        " AND tr_item >= " + "'" + frompart + "'" + 
+                        " AND tr_item <= " + "'" + topart + "'" + 
                          " AND tr_ref >= " + "'" + fromcode + "'" + 
                         " AND tr_ref <= " + "'" + tocode + "'" + 
                         " AND tr_type = 'ISS-REWK' " +
-                        " group by tr_part, tr_ref " + 
+                        " group by tr_item, tr_ref " + 
                         "   ;");
                  }
                  
                   if (cbsumcode.isSelected() && ! cbsumpart.isSelected()) {
-                res = st.executeQuery("SELECT tr_part, tr_type, it_code, sum(tr_qty) as tr_qty, " +
+                res = st.executeQuery("SELECT tr_item, tr_type, it_code, sum(tr_qty) as tr_qty, " +
                         " tr_op, tr_eff_date, tr_ref, tr_actcell, " +
                         " case when it_code = 'M' then itr_total else itc_total end as amt,  " +
                         " sum(case when it_code = 'M' then itr_total else itc_total end * tr_qty) as tot,  " +
                         " tr_timestamp, tr_export, tr_userid " +
-                        " FROM  tran_mstr inner join item_mstr on it_item = tr_part " +
-                        " left outer join itemr_cost on itr_item = tr_part and itr_op = tr_op and itr_routing = item_mstr.it_wf" +
-                        " left outer join item_cost on itc_item = tr_part and itc_set = 'standard' " +
+                        " FROM  tran_mstr inner join item_mstr on it_item = tr_item " +
+                        " left outer join itemr_cost on itr_item = tr_item and itr_op = tr_op and itr_routing = item_mstr.it_wf" +
+                        " left outer join item_cost on itc_item = tr_item and itc_set = 'standard' " +
                         " where tr_eff_date >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" + 
                         " AND tr_eff_date <= " + "'" + dfdate.format(dcTo.getDate()) + "'" + 
-                        " AND tr_part >= " + "'" + frompart + "'" + 
-                        " AND tr_part <= " + "'" + topart + "'" + 
+                        " AND tr_item >= " + "'" + frompart + "'" + 
+                        " AND tr_item <= " + "'" + topart + "'" + 
                          " AND tr_ref >= " + "'" + fromcode + "'" + 
                         " AND tr_ref <= " + "'" + tocode + "'" + 
                         " AND tr_type = 'ISS-REWK' " +
@@ -693,38 +693,38 @@ try {
                  } 
                   
                  if (cbsumpart.isSelected() && ! cbsumcode.isSelected()) {
-                res = st.executeQuery("SELECT tr_part, tr_type, it_code, sum(tr_qty) as tr_qty, " +
+                res = st.executeQuery("SELECT tr_item, tr_type, it_code, sum(tr_qty) as tr_qty, " +
                         " tr_op, tr_eff_date, tr_ref, tr_actcell, " +
                         " case when it_code = 'M' then itr_total else itc_total end as amt,  " +
                         " sum(case when it_code = 'M' then itr_total else itc_total end * tr_qty) as tot,  " +
                         " tr_timestamp, tr_export, tr_userid " +
-                        " FROM  tran_mstr inner join item_mstr on it_item = tr_part " +
-                        " left outer join itemr_cost on itr_item = tr_part and itr_op = tr_op and itr_routing = item_mstr.it_wf" +
-                        " left outer join item_cost on itc_item = tr_part and itc_set = 'standard' " +
+                        " FROM  tran_mstr inner join item_mstr on it_item = tr_item " +
+                        " left outer join itemr_cost on itr_item = tr_item and itr_op = tr_op and itr_routing = item_mstr.it_wf" +
+                        " left outer join item_cost on itc_item = tr_item and itc_set = 'standard' " +
                         " where tr_eff_date >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" + 
                         " AND tr_eff_date <= " + "'" + dfdate.format(dcTo.getDate()) + "'" + 
-                        " AND tr_part >= " + "'" + frompart + "'" + 
-                        " AND tr_part <= " + "'" + topart + "'" + 
+                        " AND tr_item >= " + "'" + frompart + "'" + 
+                        " AND tr_item <= " + "'" + topart + "'" + 
                          " AND tr_ref >= " + "'" + fromcode + "'" + 
                         " AND tr_ref <= " + "'" + tocode + "'" + 
                         " AND tr_type = 'ISS-REWK' " +
-                        " group by tr_part " + 
+                        " group by tr_item " + 
                         "   ;");
                  } 
                  
                  
                  if (! cbsumpart.isSelected() && ! cbsumcode.isSelected()) {
-                 res = st.executeQuery("SELECT tr_part, tr_type, it_code, tr_qty, " +
+                 res = st.executeQuery("SELECT tr_item, tr_type, it_code, tr_qty, " +
                         " tr_op, tr_eff_date, tr_ref, tr_actcell, " +
                         " case when it_code = 'M' then itr_total else itc_total end as amt,  " +
                          " tr_timestamp, tr_export, tr_userid " +
-                        " FROM  tran_mstr inner join item_mstr on it_item = tr_part " +
-                        " left outer join itemr_cost on itr_item = tr_part and itr_op = tr_op and itr_routing = item_mstr.it_wf" +
-                         " left outer join item_cost on itc_item = tr_part and itc_set = 'standard' " +
+                        " FROM  tran_mstr inner join item_mstr on it_item = tr_item " +
+                        " left outer join itemr_cost on itr_item = tr_item and itr_op = tr_op and itr_routing = item_mstr.it_wf" +
+                         " left outer join item_cost on itc_item = tr_item and itc_set = 'standard' " +
                         " where tr_eff_date >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" + 
                         " AND tr_eff_date <= " + "'" + dfdate.format(dcTo.getDate()) + "'" + 
-                        " AND tr_part >= " + "'" + frompart + "'" + 
-                        " AND tr_part <= " + "'" + topart + "'" + 
+                        " AND tr_item >= " + "'" + frompart + "'" + 
+                        " AND tr_item <= " + "'" + topart + "'" + 
                          " AND tr_ref >= " + "'" + fromcode + "'" + 
                         " AND tr_ref <= " + "'" + tocode + "'" + 
                         " AND tr_type = 'ISS-REWK' " + 
@@ -738,7 +738,7 @@ try {
                     if (cbsumpart.isSelected() && ! cbsumcode.isSelected()) {
                    qty = qty + res.getInt("tr_qty");
                     dol = dol + res.getDouble("tot");
-                     String newstring = res.getString("tr_part") + "," + res.getString("it_code").replace(",","") + "," + 
+                     String newstring = res.getString("tr_item") + "," + res.getString("it_code").replace(",","") + "," + 
                             res.getString("tr_qty") + "," + res.getDouble("tot");
                     output.write(newstring + '\n');
                        
@@ -753,7 +753,7 @@ try {
                     else if (cbsumcode.isSelected() &&  cbsumpart.isSelected()) {
                    qty = qty + res.getInt("tr_qty");
                     dol = dol + res.getDouble("tot");
-                    String newstring = res.getString("tr_part") + "," + res.getString("it_code").replace(",","") + "," + 
+                    String newstring = res.getString("tr_item") + "," + res.getString("it_code").replace(",","") + "," + 
                             res.getInt("tr_qty") + "," + res.getDouble("tr_op") + "," + 
                             res.getString("tr_ref") ;
                             
@@ -762,7 +762,7 @@ try {
                     else {
                    qty = qty + res.getInt("tr_qty");
                     dol = dol + (res.getDouble("amt") * res.getInt("tr_qty"));
-                    String newstring = res.getString("tr_part") + "," + res.getString("it_code").replace(",","") + "," + 
+                    String newstring = res.getString("tr_item") + "," + res.getString("it_code").replace(",","") + "," + 
                             res.getInt("tr_qty") + "," + res.getDouble("amt") + "," + res.getInt("tr_op") + "," + res.getString("tr_eff_date") + "," + 
                             res.getString("tr_ref") + "," + res.getString("tr_actcell") ;
                            output.write(newstring + '\n');

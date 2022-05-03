@@ -26,7 +26,7 @@
 	<queryString>
 		<![CDATA[select qual_id, vd_addr, vd_name, qual_vend_contact, qual_desc_iss,
 qual_desc_fin_hist, qual_desc_sqe_comt,
-qual_part, qual_part_desc, qual_qty_rej, qual_qty_susp, qual_qty_tot_def, qual_tot_charge,
+qual_item, qual_item_desc, qual_qty_rej, qual_qty_susp, qual_qty_tot_def, qual_tot_charge,
 qual_dev_nbr,
 case qual_qpr when  '1' then 'X' else '' end as qual_qpr,
 case qual_infor when  '1' then 'X' else '' end as qual_infor,
@@ -62,8 +62,8 @@ where qual_id =  $P{myid}]]>
 	<field name="qual_desc_iss" class="java.lang.String"/>
 	<field name="qual_desc_fin_hist" class="java.lang.String"/>
 	<field name="qual_desc_sqe_comt" class="java.lang.String"/>
-	<field name="qual_part" class="java.lang.String"/>
-	<field name="qual_part_desc" class="java.lang.String"/>
+	<field name="qual_item" class="java.lang.String"/>
+	<field name="qual_item_desc" class="java.lang.String"/>
 	<field name="qual_qty_rej" class="java.lang.String"/>
 	<field name="qual_qty_susp" class="java.lang.String"/>
 	<field name="qual_qty_tot_def" class="java.lang.String"/>
@@ -354,7 +354,7 @@ where qual_id =  $P{myid}]]>
 			</textField>
 			<textField>
 				<reportElement x="440" y="111" width="126" height="19" uuid="9d04c783-8407-48f3-a6e5-c627942790a5"/>
-				<textFieldExpression><![CDATA[$F{qual_part}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{qual_item}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="360" y="131" width="72" height="20" uuid="09752be6-e883-4a27-8d02-f06e37850eb0"/>
@@ -363,7 +363,7 @@ where qual_id =  $P{myid}]]>
 			</textField>
 			<textField>
 				<reportElement x="440" y="130" width="126" height="19" uuid="3dddf5e2-411d-4ccb-9703-e0013e6c18c6"/>
-				<textFieldExpression><![CDATA[$F{qual_part_desc}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{qual_item_desc}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="440" y="151" width="126" height="19" uuid="37489f78-7145-4612-b21e-86cc8c68ffb1"/>

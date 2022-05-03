@@ -527,7 +527,7 @@ try {
                         " qual_vend >= " + "'" + vendfrom + "'" + " AND " +
                         " qual_vend <= " + "'" + vendto + "'" + " AND " +
                         " qual_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + " AND " + 
-                        " qual_part = " + "'" + dditem.getSelectedItem().toString() + "'" + " AND " +         
+                        " qual_item = " + "'" + dditem.getSelectedItem().toString() + "'" + " AND " +         
                         " qual_date_crt >= " + "'" + dfdate.format(dcfrom.getDate()) + "'" + " AND " +
                         " qual_date_crt <= " + "'" + dfdate.format(dcto.getDate()) + "'" + 
                         " order by qual_id ;");
@@ -542,8 +542,8 @@ try {
                         }   
                     mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, 
                         res.getString("qual_id"),
-                            res.getString("qual_part"),
-                            res.getString("qual_part_desc"),
+                            res.getString("qual_item"),
+                            res.getString("qual_item_desc"),
                             res.getString("qual_vend"),
                             res.getString("qual_vend_name"),
                             res.getString("qual_userid"),

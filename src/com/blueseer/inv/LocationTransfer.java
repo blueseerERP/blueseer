@@ -96,7 +96,7 @@ public class LocationTransfer extends javax.swing.JPanel {
 
                res = st.executeQuery("SELECT in_site, in_loc, in_wh, in_qoh, in_date  " +
                         " FROM  in_mstr  " +
-                        " where in_part = " + "'" + parentpart.toString() + "'" + 
+                        " where in_item = " + "'" + parentpart.toString() + "'" + 
                         " order by in_loc ;");
 
                 while (res.next()) {

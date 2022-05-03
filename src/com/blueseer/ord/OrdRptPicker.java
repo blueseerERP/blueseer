@@ -842,7 +842,7 @@ public class OrdRptPicker extends javax.swing.JPanel {
             Statement st = con.createStatement();
             ResultSet res = null;
             try{   
-                res = st.executeQuery("SELECT so_nbr, so_po, so_status, sod_part, cm_code, cm_name, " +
+                res = st.executeQuery("SELECT so_nbr, so_po, so_status, sod_item, cm_code, cm_name, " +
                     " sod_ord_qty, sod_shipped_qty, (sod_ord_qty - sod_shipped_qty) as 'remaining' " +
                     " from so_mstr inner join sod_det on so_nbr = sod_nbr " +
                     " inner join cm_mstr on cm_code = so_cust " +
@@ -859,7 +859,7 @@ public class OrdRptPicker extends javax.swing.JPanel {
                         res.getString("so_po"),
                         res.getString("so_status"),
                         res.getString("cm_name"),
-                        res.getString("sod_part"),
+                        res.getString("sod_item"),
                         res.getString("sod_ord_qty"),
                         res.getString("sod_shipped_qty"),
                         res.getString("remaining")
@@ -1065,7 +1065,7 @@ public class OrdRptPicker extends javax.swing.JPanel {
             ResultSet res = null;
             try{   
                 res = st.executeQuery("SELECT sod_nbr, shd_po, sh_id, sh_shipdate,  " +
-                    " sod_ord_qty, shd_qty, shd_part, shd_desc, sh_rmks " +
+                    " sod_ord_qty, shd_qty, shd_item, shd_desc, sh_rmks " +
                     " from ship_det inner join ship_mstr on sh_id = shd_id " +
                     " inner join sod_det on sod_nbr = shd_so and sod_line = shd_soline" + 
                     " where " +
@@ -1081,7 +1081,7 @@ public class OrdRptPicker extends javax.swing.JPanel {
                         res.getString("sh_id"),
                         res.getString("sh_shipdate"),
                         res.getString("sh_rmks"),                        
-                        res.getString("shd_part"),
+                        res.getString("shd_item"),
                         res.getString("shd_desc"),
                         res.getString("shd_qty")
                         

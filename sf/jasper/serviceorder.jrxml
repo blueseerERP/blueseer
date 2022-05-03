@@ -25,7 +25,14 @@
 	<parameter name="ship_csz" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[select sv_nbr, svd_nbr, svd_due_date, svd_create_date,
-sv_cust,  sv_rmks, sv_curr, svd_item, svd_desc, svd_qty, svd_netprice, cm_code, cm_terms, cm_code, cm_name, cm_line1, cm_line2, cms_name, cms_line1, cms_line2, site_desc, site_line1 from svd_det  inner join sv_mstr on sv_nbr = svd_nbr inner join cm_mstr on cm_code = sv_cust left outer join cms_det on cms_code = sv_cust and cms_shipto = sv_ship inner join site_mstr on site_site = sv_site where svd_nbr =  $P{myid}]]>
+sv_cust,  sv_rmks, sv_curr, svd_item, svd_desc, svd_qty, svd_netprice, 
+cm_code, cm_terms, cm_code, cm_name, cm_line1, cm_line2, 
+cms_name, cms_line1, cms_line2, site_desc, site_line1 
+from svd_det  
+inner join sv_mstr on sv_nbr = svd_nbr 
+inner join cm_mstr on cm_code = sv_cust 
+left outer join cms_det on cms_code = sv_cust and cms_shipto = sv_ship 
+inner join site_mstr on site_site = sv_site where svd_nbr =  $P{myid}]]>
 	</queryString>
 	<field name="sv_nbr" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="sv_nbr"/>

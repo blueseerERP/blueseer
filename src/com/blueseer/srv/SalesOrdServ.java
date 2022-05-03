@@ -173,7 +173,7 @@ public static String getSalesOrderXML(String id) {
                    if (z > 0) {
                    // now get the detail
                    res = st.executeQuery("select * from sod_det " +
-                           " left outer join item_mstr on it_item = sod_part " +
+                           " left outer join item_mstr on it_item = sod_item " +
                            " where sod_nbr = " + "'" + id + "'" + ";");
                    int i = 0;
                    ArrayList line = new ArrayList();
@@ -188,14 +188,14 @@ public static String getSalesOrderXML(String id) {
 
 
                    while (res.next()) {
-                       item.add(res.getString("sod_part"));
+                       item.add(res.getString("sod_item"));
                        line.add(res.getString("sod_line"));
                        desc.add(res.getString("it_desc"));
                        qty.add(res.getString("sod_ord_qty"));
                        netprice.add(res.getString("sod_netprice"));
                        listprice.add(res.getString("sod_listprice"));
-                       custnbr.add(res.getString("sod_custpart"));
-                       skunbr.add(res.getString("sod_custpart"));
+                       custnbr.add(res.getString("sod_custitem"));
+                       skunbr.add(res.getString("sod_custitem"));
 
                    }
                        doc = SalesOrderXML.createDetailItem(doc,
@@ -277,8 +277,8 @@ public static String getSalesOrderJSON(String id) {
                          // json.add(jsonOrderedMap);
                     }
                     
-                    res = st.executeQuery("select sod_part as 'ItemNumber', " +
-               " sod_line as 'Line', sod_uom as 'UOM', sod_custpart as 'CustItem',  " +
+                    res = st.executeQuery("select sod_item as 'ItemNumber', " +
+               " sod_line as 'Line', sod_uom as 'UOM', sod_custitem as 'CustItem',  " +
                " sod_ord_qty as 'OrderQty', sod_shipped_qty as 'ShippedQty', sod_status as 'LineStatus', " +
                " sod_listprice as 'ListPrice', sod_netprice as 'NetPrice', sod_disc as 'Discount', " +
                " sod_loc as 'LineLocation', sod_wh as 'LineWarehouse' " +   

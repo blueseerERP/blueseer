@@ -307,7 +307,7 @@ public class WorkOrdServ extends HttpServlet {
                 
                 res = st.executeQuery("select * from plan_mstr " +
                                " inner join item_mstr on " +
-                               " it_item = plan_part " +
+                               " it_item = plan_item " +
                                " where plan_nbr = " + "'" + id + "'" + ";");
                        
                  
@@ -333,7 +333,7 @@ public class WorkOrdServ extends HttpServlet {
                         // Create header Tag content
                         doc = WorkOrderXML.createBody(doc, 
                                 res.getString("plan_nbr"), 
-                                res.getString("plan_part"),
+                                res.getString("plan_item"),
                                 res.getString("it_site"),
                                 res.getString("it_desc"),
                                 res.getString("it_code"),
@@ -392,7 +392,7 @@ public class WorkOrdServ extends HttpServlet {
             ResultSet res = null;
             try{
                 
-                res = st.executeQuery("select plan_nbr as 'WorkOrderNumber', plan_site as 'Site', plan_part as 'Item', " +
+                res = st.executeQuery("select plan_nbr as 'WorkOrderNumber', plan_site as 'Site', plan_item as 'Item', " +
                         " it_desc as 'Description', it_wf as 'Routing', it_drawing as 'Drawing', " +
                         " it_rev as 'Revision', it_loc as 'Location', it_wh as 'Warehouse', " +
                         " it_lotsize as 'LotSize', it_comments as 'ItemComments', it_uom as 'UOM', " +
@@ -403,7 +403,7 @@ public class WorkOrdServ extends HttpServlet {
                         " case when plan_status = '1' then 'closed' when plan_status = '0' then 'open' when plan_status = '-1' then 'void' end as 'Status' " +
                         " from plan_mstr " +
                                " inner join item_mstr on " +
-                               " it_item = plan_part " +
+                               " it_item = plan_item " +
                                " where plan_nbr = " + "'" + id + "'" + ";");
                        
                
@@ -469,7 +469,7 @@ public class WorkOrdServ extends HttpServlet {
             ResultSet res = null;
             try{
                 
-                res = st.executeQuery("select plan_nbr as 'WorkOrderNumber', plan_site as 'Site', plan_part as 'Item', " +
+                res = st.executeQuery("select plan_nbr as 'WorkOrderNumber', plan_site as 'Site', plan_item as 'Item', " +
                         " it_desc as 'Description', it_wf as 'Routing', it_drawing as 'Drawing', " +
                         " it_rev as 'Revision', it_loc as 'Location', it_wh as 'Warehouse', " +
                         " it_lotsize as 'LotSize', it_comments as 'ItemComments', it_uom as 'UOM', " +
@@ -480,11 +480,11 @@ public class WorkOrdServ extends HttpServlet {
                         " case when plan_status = '1' then 'closed' when plan_status = '0' then 'open' when plan_status = '-1' then 'void' end as 'Status' " +
                         " from plan_mstr " +
                                " inner join item_mstr on " +
-                               " it_item = plan_part " +
+                               " it_item = plan_item " +
                                " where plan_date_create >= " + "'" + fromdate + "'" + 
                                " and plan_date_create <= " + "'" + todate + "'" + 
-                               " and plan_part >= " + "'" + fromitem + "'" +
-                               " and plan_part <= " + "'" + toitem + "'" + 
+                               " and plan_item >= " + "'" + fromitem + "'" +
+                               " and plan_item <= " + "'" + toitem + "'" + 
                                " and plan_cell >= " + "'" + fromcell + "'" +
                                " and plan_cell <= " + "'" + tocell + "'" +                
                                        ";");

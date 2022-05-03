@@ -50,7 +50,7 @@ public class lblData {
     public static String[] addLabelMstr(label_mstr x) {
         String[] m = new String[2];
         String sqlSelect = "select * from label_mstr where lbl_id = ?";
-        String sqlInsert = "insert into label_mstr (lbl_id, lbl_part, lbl_custpart, lbl_id_str, lbl_conttype, lbl_qty, lbl_po, "
+        String sqlInsert = "insert into label_mstr (lbl_id, lbl_item, lbl_custitem, lbl_id_str, lbl_conttype, lbl_qty, lbl_po, "
                         + "lbl_order, lbl_line, lbl_ref, lbl_lot, lbl_parent, lbl_parent_str, "
                         + "lbl_addrcode, lbl_addrname, lbl_addr1, lbl_addr2, lbl_addrcity, lbl_addrstate, lbl_addrzip, lbl_addrcountry, "
                         + "lbl_crt_date, lbl_ship_date, lbl_userid, lbl_printer, lbl_prog, lbl_site, lbl_loc, lbl_trantype)  " +
@@ -62,8 +62,8 @@ public class lblData {
                PreparedStatement psi = con.prepareStatement(sqlInsert);) {  
             if (! res.isBeforeFirst()) {
             psi.setString(1, x.lbl_id);
-            psi.setString(2, x.lbl_part);
-            psi.setString(3, x.lbl_custpart);
+            psi.setString(2, x.lbl_item);
+            psi.setString(3, x.lbl_custitem);
             psi.setString(4, x.lbl_id_str);
             psi.setString(5, x.lbl_conttype);
             psi.setString(6, x.lbl_qty);
@@ -222,7 +222,7 @@ public class lblData {
                        }
                 if (i == 0) {
                     st.executeUpdate("insert into label_mstr "
-                        + "(lbl_id, lbl_part, lbl_custpart, lbl_id_str, lbl_conttype, lbl_qty, lbl_po, "
+                        + "(lbl_id, lbl_item, lbl_custitem, lbl_id_str, lbl_conttype, lbl_qty, lbl_po, "
                         + "lbl_order, lbl_line, lbl_ref, lbl_lot, lbl_parent, lbl_parent_str, "
                         + "lbl_addrcode, lbl_addrname, lbl_addr1, lbl_addr2, lbl_addrcity, lbl_addrstate, lbl_addrzip, lbl_addrcountry, "
                         + "lbl_crt_date, lbl_ship_date, lbl_userid, lbl_printer, lbl_prog, lbl_site, lbl_loc, lbl_trantype "
@@ -301,8 +301,8 @@ public class lblData {
                          + " ;");
                while (res.next()) {
                    myreturn = res.getString("lbl_id") + delim + 
-                           res.getString("lbl_part") + delim +
-                           res.getString("lbl_custpart") + delim +
+                           res.getString("lbl_item") + delim +
+                           res.getString("lbl_custitem") + delim +
                            res.getString("lbl_id_str") + delim +
                            res.getString("lbl_conttype") + delim +
                            res.getString("lbl_qty") + delim +
@@ -451,7 +451,7 @@ public class lblData {
         }
     }
      
-    public record label_mstr(String[] m, String lbl_id, String lbl_part, String lbl_custpart, 
+    public record label_mstr(String[] m, String lbl_id, String lbl_item, String lbl_custitem, 
         String lbl_id_str, String lbl_conttype, String lbl_qty, String lbl_po,
         String lbl_order, String lbl_line, String lbl_ref, String lbl_lot, 
         String lbl_parent, String lbl_parent_str, String lbl_addrcode, String lbl_addrname, 

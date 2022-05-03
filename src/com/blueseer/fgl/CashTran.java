@@ -658,7 +658,7 @@ public class CashTran extends javax.swing.JPanel {
                          
                          // now create recevier detail
                           st.executeUpdate("insert into recv_det "
-                            + "(rvd_id, rvd_rline, rvd_part, rvd_po, rvd_poline, rvd_qty, rvd_voqty, "
+                            + "(rvd_id, rvd_rline, rvd_item, rvd_po, rvd_poline, rvd_qty, rvd_voqty, "
                             + "rvd_listprice, rvd_disc, rvd_netprice,  "
                             + " rvd_loc, rvd_wh, rvd_serial, rvd_lot, rvd_cost, rvd_site, rvd_packingslip, rvd_date ) "
                             + " values ( " + "'" + key + "'" + ","
@@ -685,7 +685,7 @@ public class CashTran extends javax.swing.JPanel {
                          
                         
                         st.executeUpdate("insert into vod_mstr "
-                            + "(vod_id, vod_vend, vod_rvdid, vod_rvdline, vod_part, vod_qty, "
+                            + "(vod_id, vod_vend, vod_rvdid, vod_rvdline, vod_item, vod_qty, "
                             + " vod_voprice, vod_date, vod_invoice, vod_expense_acct, vod_expense_cc )  "
                             + " values ( " + "'" + expensenbr.getText() + "'" + ","
                                 + "'" + ddentity.getSelectedItem() + "'" + ","
@@ -1303,7 +1303,7 @@ public class CashTran extends javax.swing.JPanel {
                
                         //  "ID", "Site", "Entity", "Name", "Desc", "Acct", "Amt", "ThisMonth?", "ExactAmt", "Pay?"               
                         st.executeUpdate("insert into vod_mstr "
-                            + "(vod_id, vod_vend, vod_rvdid, vod_rvdline, vod_part, vod_qty, "
+                            + "(vod_id, vod_vend, vod_rvdid, vod_rvdline, vod_item, vod_qty, "
                             + " vod_voprice, vod_date, vod_invoice, vod_expense_acct, vod_expense_cc )  "
                             + " values ( " + "'" + key + "'" + ","
                                 + "'" + recurexpensetable.getValueAt(z, 3).toString() + "'" + ","

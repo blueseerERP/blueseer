@@ -808,7 +808,7 @@ public class InvRptPicker extends javax.swing.JPanel {
                        "case when in_serial is null then 'na' else in_serial end as serial, " +
                        "case when in_expire is null then 'na' else in_expire end as expire " +
                       */ 
-                      " from item_mstr left outer join in_mstr on in_part = it_item " +
+                      " from item_mstr left outer join in_mstr on in_item = it_item " +
                        " where it_item >= " + "'" + fromitem + "'" +  " AND " 
                        + " it_item <= " + "'" + toitem + "'"         
                        + ";" );
@@ -909,8 +909,8 @@ public class InvRptPicker extends javax.swing.JPanel {
                        "case when in_qoh is null then 'na' else in_qoh end as qoh, " +
                        "case when in_loc is null then 'na' else in_loc end as loc, " +
                        "case when in_wh is null then 'na' else in_wh end as wh, " +
-                       " (select sum(sod_all_qty - sod_shipped_qty) from sod_det where sod_part = it_item and sod_status <> 'close' group by sod_part) as qtyall " +
-                       " from item_mstr left outer join in_mstr on in_part = it_item " +
+                       " (select sum(sod_all_qty - sod_shipped_qty) from sod_det where sod_item = it_item and sod_status <> 'close' group by sod_item) as qtyall " +
+                       " from item_mstr left outer join in_mstr on in_item = it_item " +
                        " where it_item >= " + "'" + fromitem + "'" +  " AND " 
                        + " it_item <= " + "'" + toitem + "'"         
                        + ";" );
@@ -1009,20 +1009,20 @@ public class InvRptPicker extends javax.swing.JPanel {
             ResultSet res = null;
             try{
                                 
-              res = st.executeQuery("select sod_part, it_desc, sod_nbr, cm_name, (sod_all_qty - sod_shipped_qty) as qtyall, " + 
+              res = st.executeQuery("select sod_item, it_desc, sod_nbr, cm_name, (sod_all_qty - sod_shipped_qty) as qtyall, " + 
                        " sod_loc, sod_wh " +
-                       " from sod_det inner join item_mstr on it_item = sod_part " +
+                       " from sod_det inner join item_mstr on it_item = sod_item " +
                        " inner join so_mstr on so_nbr = sod_nbr " +
                        " inner join cm_mstr on cm_code = so_cust " +
-                       " where sod_part >= " + "'" + fromitem + "'" +  " AND " 
-                       + " sod_part <= " + "'" + toitem + "'" + " AND "
+                       " where sod_item >= " + "'" + fromitem + "'" +  " AND " 
+                       + " sod_item <= " + "'" + toitem + "'" + " AND "
                        + " sod_status <> 'close' "
                        + ";" );
               
               
                 while (res.next()) {
                     mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, 
-                        res.getString("sod_part"),
+                        res.getString("sod_item"),
                         res.getString("it_desc"),
                         res.getString("sod_nbr"),
                         res.getString("cm_name"),

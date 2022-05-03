@@ -474,13 +474,13 @@ String sitecitystatezip = "";
                  
                 res = st.executeQuery("select * from plan_mstr where plan_nbr = " + "'" + tbscan.getText() + "'" + ";" );
                     while (res.next()) {
-                  String[] detail = invData.getItemDetail(res.getString("plan_part"));
+                  String[] detail = invData.getItemDetail(res.getString("plan_item"));
                   String prodline = detail[3];
                   String loc = detail[8];
                   String wh = detail[9];
                   String expire = detail[10];
                 mymodel.addRow(new Object[]{
-                res.getString("plan_part"),
+                res.getString("plan_item"),
                 "ISS-WIP",
                 ddop.getSelectedItem().toString(),
                 tbqty.getText(),

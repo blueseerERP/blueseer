@@ -457,7 +457,7 @@ public class invData {
         ps = con.prepareStatement(sql);
         ps.setString(1, x.it_item);
         ps.executeUpdate();
-        sql = "delete from in_mstr where in_part = ?; ";
+        sql = "delete from in_mstr where in_item = ?; ";
         ps = con.prepareStatement(sql);
         ps.setString(1, x.it_item);
         ps.executeUpdate();
@@ -469,15 +469,15 @@ public class invData {
         ps = con.prepareStatement(sql);
         ps.setString(1, x.it_item);
         ps.executeUpdate();
-        sql = "delete from plan_mstr where plan_part = ?; ";
+        sql = "delete from plan_mstr where plan_item = ?; ";
         ps = con.prepareStatement(sql);
         ps.setString(1, x.it_item);
         ps.executeUpdate();
-        sql = "delete from pland_mstr where pland_part = ?; ";
+        sql = "delete from pland_mstr where pland_item = ?; ";
         ps = con.prepareStatement(sql);
         ps.setString(1, x.it_item);
         ps.executeUpdate();
-        sql = "delete from mrp_mstr where mrp_part = ?; ";
+        sql = "delete from mrp_mstr where mrp_item = ?; ";
         ps = con.prepareStatement(sql);
         ps.setString(1, x.it_item);
         ps.executeUpdate();
@@ -2458,7 +2458,7 @@ public class invData {
             
 
            res = st.executeQuery("select in_qoh from in_mstr where "
-                            + " in_part = " + "'" + item + "'" 
+                            + " in_item = " + "'" + item + "'" 
                             + " and in_site = " + "'" + site + "'"
                             + ";");
            while (res.next()) {
@@ -2496,7 +2496,7 @@ public class invData {
             
 
            res = st.executeQuery("select in_qoh from in_mstr where "
-                            + " in_part = " + "'" + item + "'" 
+                            + " in_item = " + "'" + item + "'" 
                             + " and in_site = " + "'" + site + "'"
                             + ";");
                while (res.next()) {
@@ -2505,11 +2505,11 @@ public class invData {
 
             res = st.executeQuery("SELECT  sum(case when sod_all_qty = '' then 0 else (sod_all_qty - sod_shipped_qty) end) as allqty  " +
                                 " FROM  sod_det inner join so_mstr on so_nbr = sod_nbr  " +
-                                " where sod_part = " + "'" + item + "'" + 
+                                " where sod_item = " + "'" + item + "'" + 
                                 " AND so_status <> 'closed' " + 
                                 " AND so_site = " + "'" + site + "'" +   
                               //  " AND so_nbr <> " + "'" + currentorder + "'" +
-                                " group by sod_part ;");
+                                " group by sod_item ;");
 
                 while (res.next()) {
                 qohu -= res.getInt("allqty");
@@ -2545,7 +2545,7 @@ public class invData {
             
 
            res = st.executeQuery("select in_qoh from in_mstr where "
-                            + " in_part = " + "'" + item + "'" 
+                            + " in_item = " + "'" + item + "'" 
                             + " and in_site = " + "'" + site + "'"
                             + " and in_wh = " + "'" + wh + "'"
                             + ";");
@@ -2584,7 +2584,7 @@ public class invData {
             
 
            res = st.executeQuery("select in_qoh from in_mstr where "
-                            + " in_part = " + "'" + item + "'" 
+                            + " in_item = " + "'" + item + "'" 
                             + " and in_site = " + "'" + site + "'"
                             + " and in_wh = " + "'" + wh + "'"
                             + " and in_loc = " + "'" + loc + "'"
@@ -3800,7 +3800,7 @@ public class invData {
             ResultSet res = null;
             try {
 
-            res = st.executeQuery("select in_qoh from in_mstr where in_part = " + "'" + item + "'" + 
+            res = st.executeQuery("select in_qoh from in_mstr where in_item = " + "'" + item + "'" + 
                     " AND in_site = " + "'" + site + "'" +
                     " AND in_serial = " + "'" + serial + "'" +        
                     ";" );

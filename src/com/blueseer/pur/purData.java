@@ -259,13 +259,13 @@ public class purData {
     private static int _updatePODet(pod_mstr x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
         int rows = 0;
         String sqlSelect = "select * from pod_mstr where pod_nbr = ? and pod_line = ?";
-        String sqlUpdate = "update pod_mstr set pod_part = ?, pod_vendpart = ?, " +
+        String sqlUpdate = "update pod_mstr set pod_item = ?, pod_venditem = ?, " +
                 " pod_ord_qty = ?, pod_uom = ?, " +
                 " pod_listprice = ?, pod_disc = ?, pod_netprice = ?,  " +
                 " pod_due_date = ?, pod_status = ?, " +
                 " pod_site = ?, pod_desc = ? " +
                  " where pod_nbr = ? and pod_line = ? ; ";
-        String sqlInsert = "insert into pod_mstr (pod_nbr, pod_line, pod_part, pod_vendpart, "
+        String sqlInsert = "insert into pod_mstr (pod_nbr, pod_line, pod_item, pod_venditem, "
                             + " pod_ord_qty, pod_uom, pod_listprice, pod_disc, "
                             + " pod_netprice, pod_ord_date, pod_due_date, "
                             + "pod_rcvd_qty, pod_status, pod_site, pod_desc) "
@@ -278,8 +278,8 @@ public class purData {
 	 ps = con.prepareStatement(sqlInsert) ;
             ps.setString(1, x.pod_nbr);
             ps.setString(2, x.pod_line);
-            ps.setString(3, x.pod_part);
-            ps.setString(4, x.pod_vendpart);
+            ps.setString(3, x.pod_item);
+            ps.setString(4, x.pod_venditem);
             ps.setString(5, x.pod_ord_qty);
             ps.setString(6, x.pod_uom);
             ps.setString(7, x.pod_listprice);
@@ -296,8 +296,8 @@ public class purData {
          ps = con.prepareStatement(sqlUpdate) ;
             ps.setString(11, x.pod_nbr);
             ps.setString(12, x.pod_line);
-            ps.setString(1, x.pod_part);
-            ps.setString(2, x.pod_vendpart);
+            ps.setString(1, x.pod_item);
+            ps.setString(2, x.pod_venditem);
             ps.setString(3, x.pod_ord_qty);
             ps.setString(4, x.pod_uom);
             ps.setString(5, x.pod_listprice);
@@ -562,8 +562,8 @@ public class purData {
              try (ResultSet res = ps.executeQuery();) {
                     while(res.next()) {
                     m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
-                    r = new pod_mstr(m, res.getString("pod_nbr"), res.getString("pod_line"), res.getString("pod_part"),
-                    res.getString("pod_vendpart"), res.getString("pod_ord_qty"), res.getString("pod_rcvd_qty"), 
+                    r = new pod_mstr(m, res.getString("pod_nbr"), res.getString("pod_line"), res.getString("pod_item"),
+                    res.getString("pod_venditem"), res.getString("pod_ord_qty"), res.getString("pod_rcvd_qty"), 
                     res.getString("pod_netprice"), res.getString("pod_disc"),res.getString("pod_listprice"), 
                     res.getString("pod_due_date"), res.getString("pod_status"), res.getString("pod_site"), 
                     res.getString("pod_ord_date"), res.getString("pod_uom"), res.getString("pod_desc") );
@@ -591,8 +591,8 @@ public class purData {
             } else {
                 while(res.next()) {
                     m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
-                    r = new pod_mstr(m, res.getString("pod_nbr"), res.getString("pod_line"), res.getString("pod_part"),
-                    res.getString("pod_vendpart"), res.getString("pod_ord_qty"), res.getString("pod_rcvd_qty"), 
+                    r = new pod_mstr(m, res.getString("pod_nbr"), res.getString("pod_line"), res.getString("pod_item"),
+                    res.getString("pod_venditem"), res.getString("pod_ord_qty"), res.getString("pod_rcvd_qty"), 
                     res.getString("pod_netprice"), res.getString("pod_disc"),res.getString("pod_listprice"), 
                     res.getString("pod_due_date"), res.getString("pod_status"), res.getString("pod_site"), 
                     res.getString("pod_ord_date"), res.getString("pod_uom"), res.getString("pod_desc") );
@@ -605,7 +605,7 @@ public class purData {
     private static int _addPODet(pod_mstr x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
         int rows = 0;
         String sqlSelect = "select * from pod_mstr where pod_nbr = ? and pod_line = ?";
-        String sqlInsert = "insert into pod_mstr (pod_nbr, pod_line, pod_part, pod_vendpart, "
+        String sqlInsert = "insert into pod_mstr (pod_nbr, pod_line, pod_item, pod_venditem, "
                             + " pod_ord_qty, pod_uom, pod_listprice, pod_disc, "
                             + " pod_netprice, pod_ord_date, pod_due_date, "
                             + "pod_rcvd_qty, pod_status, pod_site, pod_desc) "
@@ -619,8 +619,8 @@ public class purData {
             if (! res.isBeforeFirst()) {
             ps.setString(1, x.pod_nbr);
             ps.setString(2, x.pod_line);
-            ps.setString(3, x.pod_part);
-            ps.setString(4, x.pod_vendpart);
+            ps.setString(3, x.pod_item);
+            ps.setString(4, x.pod_venditem);
             ps.setString(5, x.pod_ord_qty);
             ps.setString(6, x.pod_uom);
             ps.setString(7, x.pod_listprice);
@@ -1116,8 +1116,8 @@ public class purData {
                           s[z] = "";
                           }
                           s[0] = res.getString("pod_line");
-                          s[1] = res.getString("pod_part");
-                          s[2] = res.getString("pod_vendpart");
+                          s[1] = res.getString("pod_item");
+                          s[2] = res.getString("pod_venditem");
                           s[3] = res.getString("pod_ord_qty");
                           s[4] = res.getString("pod_netprice");
                           s[5] = res.getString("pod_uom");
@@ -1162,7 +1162,7 @@ public class purData {
 
 
             res = st.executeQuery("select pod_nbr, pod_status, pod_line, rvd_qty, pod_rcvd_qty, pod_ord_qty from recv_det inner join " +
-                     " pod_mstr on rvd_part = pod_part and rvd_poline = pod_line and rvd_po = pod_nbr " +
+                     " pod_mstr on rvd_item = pod_item and rvd_poline = pod_line and rvd_po = pod_nbr " +
                " where rvd_id = " + "'" + receiver + "'" +";");
                while (res.next()) {
                    recvdqty.add(res.getString("pod_rcvd_qty"));
@@ -1193,7 +1193,7 @@ public class purData {
 
             } else {
                 st.executeUpdate(
-                     " update pod_mstr inner join recv_det on rvd_part = pod_part and rvd_poline = pod_line and rvd_po = pod_nbr " +
+                     " update pod_mstr inner join recv_det on rvd_item = pod_item and rvd_poline = pod_line and rvd_po = pod_nbr " +
                      " inner join po_mstr on po_nbr = pod_nbr " +
                       " set pod_rcvd_qty = pod_rcvd_qty + rvd_qty, pod_status = (case when pod_rcvd_qty + rvd_qty >= pod_ord_qty then " + "'" + getGlobalProgTag("closed") + "'" + " else pod_status end) " +
                  " where rvd_id = " + "'" + receiver + "'" + ";" );
@@ -1276,7 +1276,7 @@ public class purData {
     }
     
                               
-    public record pod_mstr(String[] m, String pod_nbr, String pod_line, String pod_part, String pod_vendpart, 
+    public record pod_mstr(String[] m, String pod_nbr, String pod_line, String pod_item, String pod_venditem, 
         String pod_ord_qty, String pod_rcvd_qty, String pod_netprice, String pod_disc,
         String pod_listprice, String pod_due_date, String pod_status, String pod_site,
         String pod_ord_date, String pod_uom, String pod_desc ) {

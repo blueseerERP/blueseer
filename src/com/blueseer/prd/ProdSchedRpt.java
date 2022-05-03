@@ -347,7 +347,7 @@ public class ProdSchedRpt extends javax.swing.JPanel {
                         modeldetail.addRow(new Object[]{
                             res.getString("pland_id"),
                             res.getString("pland_parent"),
-                            res.getString("pland_part"),
+                            res.getString("pland_item"),
                             res.getString("pland_op"),
                             res.getString("pland_cell"),
                             res.getString("pland_date"),
@@ -415,7 +415,7 @@ public class ProdSchedRpt extends javax.swing.JPanel {
                 hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
                 hm.put("myid",  jobid);
                 //hm.put("imagepath", "images/avmlogo.png");
-               // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_part, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
+               // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_item, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
                 File mytemplate = new File("jasper/" + jasperfile);
                 JasperPrint jasperPrint = JasperFillManager.fillReport(mytemplate.getPath(), hm, con );
@@ -906,17 +906,17 @@ try {
                
                  DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                  
-                 res = st.executeQuery("SELECT plan_nbr, plan_type, plan_part, plan_qty_req, plan_qty_comp, "
+                 res = st.executeQuery("SELECT plan_nbr, plan_type, plan_item, plan_qty_req, plan_qty_comp, "
                          + " plan_qty_sched, plan_date_due, plan_date_sched, plan_status, plan_is_sched, plan_cell, plan_order, plan_line " +
                         " FROM  plan_mstr " +
                         " where plan_date_due >= " + "'" + dfdate.format(dcfrom.getDate()) + "'" + 
                         " AND plan_date_due <= " + "'" + dfdate.format(dcto.getDate()) + "'" + 
-                        " AND plan_part >= " + "'" + fpart + "'" + 
-                        " AND plan_part <= " + "'" + tpart + "'" + 
+                        " AND plan_item >= " + "'" + fpart + "'" + 
+                        " AND plan_item <= " + "'" + tpart + "'" + 
                          " AND plan_cell >= " + "'" + fcell + "'" + 
                         " AND plan_cell <= " + "'" + tcell + "'" + 
                         " AND plan_is_sched = " + "'1' "  +
-                        " order by plan_part, plan_date_due;");    
+                        " order by plan_item, plan_date_due;");    
                  
                  
                 while (res.next()) {
@@ -941,7 +941,7 @@ try {
                     schtot = schtot + res.getInt("plan_qty_sched");
                     mymodel.addRow(new Object[]{BlueSeerUtils.clickbasket,
                                 res.getString("plan_nbr"),
-                                res.getString("plan_part"),
+                                res.getString("plan_item"),
                                 res.getString("plan_date_due"),
                                 res.getString("plan_type"),
                                 res.getBoolean("plan_is_sched"),

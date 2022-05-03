@@ -466,7 +466,7 @@ public class ForecastMaint extends javax.swing.JPanel implements IBlueSeer {
                 boolean proceed = true;
                 int i = 0;
 
-                    res = st.executeQuery("SELECT fct_part FROM  fct_mstr where fct_part = " + "'" + tbkey.getText() + "'" +
+                    res = st.executeQuery("SELECT fct_item FROM  fct_mstr where fct_item = " + "'" + tbkey.getText() + "'" +
                             " AND fct_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + 
                             " AND fct_year = " + "'" + ddyear.getSelectedItem().toString() + "'" + ";");
                     while (res.next()) {
@@ -474,7 +474,7 @@ public class ForecastMaint extends javax.swing.JPanel implements IBlueSeer {
                     }
                     if (i == 0) {
                        st.executeUpdate("insert into fct_mstr "
-                            + "(fct_part, fct_site, fct_year,"
+                            + "(fct_item, fct_site, fct_year,"
                             + "fct_wkqty1, fct_wkqty2, fct_wkqty3, fct_wkqty4, fct_wkqty5, fct_wkqty6, fct_wkqty7, fct_wkqty8, fct_wkqty9, fct_wkqty10, "
                                 + "fct_wkqty11, fct_wkqty12, fct_wkqty13, fct_wkqty14, fct_wkqty15, fct_wkqty16, fct_wkqty17, fct_wkqty18, fct_wkqty19, fct_wkqty20, "
                                 + "fct_wkqty21, fct_wkqty22, fct_wkqty23, fct_wkqty24, fct_wkqty25, fct_wkqty26, fct_wkqty27, fct_wkqty28, fct_wkqty29, fct_wkqty30, "
@@ -628,12 +628,12 @@ public class ForecastMaint extends javax.swing.JPanel implements IBlueSeer {
                                 " fct_wkqty50 = " + "'" + tbqty50.getText().replace(defaultDecimalSeparator, '.') + "'" + "," +
                                 " fct_wkqty51 = " + "'" + tbqty51.getText().replace(defaultDecimalSeparator, '.') + "'" + "," +
                                 " fct_wkqty52 = " + "'" + tbqty52.getText().replace(defaultDecimalSeparator, '.') + "'" + 
-                             " where fct_part = " + "'" + tbkey.getText() + "'" +
+                             " where fct_item = " + "'" + tbkey.getText() + "'" +
                               " AND fct_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +
                               " AND fct_year = " + "'" + ddyear.getSelectedItem().toString() + "'"
                             + ";");
                       
-                        st.executeUpdate("delete from plan_mstr where plan_part = " +  "'" + tbkey.getText() + "'"
+                        st.executeUpdate("delete from plan_mstr where plan_item = " +  "'" + tbkey.getText() + "'"
                              + " AND plan_site = " + "'" + ddsite.getSelectedItem().toString() + "'" 
                                 + " AND plan_is_sched = '0' " 
                                 + ";");
@@ -666,10 +666,10 @@ public class ForecastMaint extends javax.swing.JPanel implements IBlueSeer {
             try {
                 
                 
-                int i = st.executeUpdate("delete from fct_mstr where fct_part = " + "'" + tbkey.getText() + "'" +
+                int i = st.executeUpdate("delete from fct_mstr where fct_item = " + "'" + tbkey.getText() + "'" +
                           " AND fct_site =  " + "'" + ddsite.getSelectedItem().toString() + "'" +
                            " AND fct_year = " + "'" + ddyear.getSelectedItem().toString() + "'" +  ";");
-                 st.executeUpdate("delete from plan_mstr where plan_part = " +  "'" + tbkey.getText() + "'"
+                 st.executeUpdate("delete from plan_mstr where plan_item = " +  "'" + tbkey.getText() + "'"
                              + " AND plan_site = " + "'" + ddsite.getSelectedItem().toString() + "'" 
                                 + " AND plan_is_sched = '0' " 
                                 + ";");
@@ -713,9 +713,9 @@ public class ForecastMaint extends javax.swing.JPanel implements IBlueSeer {
                 if (x == null && x.length < 2) { return new String[]{}; };
                 // three key system....make accomodation for first key action performed returning first record where it exists..else grab specific rec with all three keys
                 if (x[1] == null || x[2] == null) {
-                res = st.executeQuery("SELECT * FROM  fct_mstr where fct_part = " + "'" + x[0] + "'"  + " limit 1 ;"); 
+                res = st.executeQuery("SELECT * FROM  fct_mstr where fct_item = " + "'" + x[0] + "'"  + " limit 1 ;"); 
                 } else {
-                res = st.executeQuery("SELECT * FROM  fct_mstr where fct_part = " + "'" + x[0] + "'" +
+                res = st.executeQuery("SELECT * FROM  fct_mstr where fct_item = " + "'" + x[0] + "'" +
                             " AND fct_site = " + "'" + x[1] + "'" + 
                             " AND fct_year = " + "'" + x[2] + "'" + ";");
                 }
@@ -1716,7 +1716,7 @@ public class ForecastMaint extends javax.swing.JPanel implements IBlueSeer {
     }//GEN-LAST:event_btupdateActionPerformed
 
     private void btbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseActionPerformed
-        reinitpanels("BrowseUtil", true, new String[]{"fctmaint","fct_part"});
+        reinitpanels("BrowseUtil", true, new String[]{"fctmaint","fct_item"});
     }//GEN-LAST:event_btbrowseActionPerformed
 
     private void tbkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkeyActionPerformed

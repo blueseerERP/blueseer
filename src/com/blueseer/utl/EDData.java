@@ -3182,8 +3182,8 @@ public class EDData {
 
                 if (proceed) {
                         st.executeUpdate("insert into sod_det "
-                            + "(sod_nbr, sod_part, sod_site, sod_po, sod_ord_qty, sod_netprice, sod_listprice, sod_disc, sod_due_date, "
-                            + "sod_shipped_qty, sod_custpart, sod_status, sod_line) "
+                            + "(sod_nbr, sod_item, sod_site, sod_po, sod_ord_qty, sod_netprice, sod_listprice, sod_disc, sod_due_date, "
+                            + "sod_shipped_qty, sod_custitem, sod_status, sod_line) "
                             + " values ( " + "'" + nbr + "'" + ","
                             + "'" + part + "'" + ","
                             + "'" + site + "'" + ","
@@ -3239,7 +3239,7 @@ public class EDData {
                    proceed = false;
                } else {
                    res = st.executeQuery("select sod_line from sod_det where sod_nbr = " + "'" + order + "'" 
-                         + " AND sod_part = " + "'" + part + "'" 
+                         + " AND sod_item = " + "'" + part + "'" 
                          + " AND sod_po = " + "'" + po + "'" 
                          + " AND sod_status = 'OPEN' "                           
                          + " ;");

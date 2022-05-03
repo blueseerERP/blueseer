@@ -297,7 +297,7 @@ Connection con = DriverManager.getConnection(url + db, user, pass);
                 
                 
                         st.executeUpdate("insert into plan_mstr "
-                            + "(plan_nbr, plan_part, plan_qty_req, plan_date_create, plan_date_due, plan_type, plan_rmks, plan_site ) "
+                            + "(plan_nbr, plan_item, plan_qty_req, plan_date_create, plan_date_due, plan_type, plan_rmks, plan_site ) "
                             + " values ( " + "'" + nbr + "'" + ","
                             + "'" + ddpart.getSelectedItem().toString() + "'" + ","
                             + "'" + tbqty.getText() + "'" + ","

@@ -318,7 +318,7 @@ public class RetailReorderRpt extends javax.swing.JPanel {
                  res = st.executeQuery("SELECT so_nbr, so_cust, cm_name, so_po, so_due_date, sod_ord_qty, sod_all_qty " +
                         " FROM  sod_det inner join so_mstr on sod_nbr = so_nbr " +
                         " inner join cm_mstr on cm_code = so_cust " +
-                        " where sod_part = " + "'" + item + "'" +
+                        " where sod_item = " + "'" + item + "'" +
                     //    " AND sod_due_date >= " + "'" + dfdate.format(now) + "'" + 
                         " AND sod_due_date <= " + "'" + dfdate.format(caldate.getTime()) + "'" + 
                         " AND so_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +     
@@ -340,7 +340,7 @@ public class RetailReorderRpt extends javax.swing.JPanel {
                      res = st.executeQuery("SELECT po_nbr, po_vend, vd_name, po_nbr, po_ord_date, po_due_date, pod_ord_qty, pod_rcvd_qty " +
                         " FROM  pod_mstr inner join po_mstr on pod_nbr = po_nbr " +
                         " inner join vd_mstr on vd_addr = po_vend " +
-                        " where pod_part = " + "'" + item + "'" +
+                        " where pod_item = " + "'" + item + "'" +
                      //   " AND pod_due_date >= " + "'" + dfdate.format(now) + "'" + 
                         " AND pod_due_date <= " + "'" + dfdate.format(caldate.getTime()) + "'" + 
                         " AND po_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +     
@@ -790,12 +790,12 @@ public class RetailReorderRpt extends javax.swing.JPanel {
                         " sum(sod_ord_qty - sod_all_qty - sod_shipped_qty) as uallqty, " +     
                         " sum(case when sod_all_qty <> '0' then sod_all_qty end) as allqty " +
                         " FROM  sod_det inner join so_mstr on sod_nbr = so_nbr " +
-                        " where sod_part = " + "'" + s[0] + "'" +
+                        " where sod_item = " + "'" + s[0] + "'" +
                        // " AND sod_due_date >= " + "'" + dfdate.format(now) + "'" + 
                         " AND sod_due_date <= " + "'" + dfdate.format(caldate.getTime()) + "'" + 
                         " AND so_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +     
                         " AND so_status <> 'closed' " +           
-                        " group by sod_part ;"); 
+                        " group by sod_item ;"); 
                      while (res.next()) {
                          fwdqty = res.getInt("fwdqty");
                          allqty = res.getInt("allqty");
@@ -806,12 +806,12 @@ public class RetailReorderRpt extends javax.swing.JPanel {
                       res = st.executeQuery("SELECT  " +
                         " sum(pod_ord_qty - pod_rcvd_qty) as totqty " +
                         " FROM  pod_mstr inner join po_mstr on pod_nbr = po_nbr " +
-                        " where pod_part = " + "'" + s[0] + "'" +
+                        " where pod_item = " + "'" + s[0] + "'" +
                      //   " AND pod_due_date >= " + "'" + dfdate.format(now) + "'" + 
                         " AND pod_due_date <= " + "'" + dfdate.format(caldate.getTime()) + "'" + 
                         " AND po_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +    
                         " AND po_status <> 'close' " +         
-                         " group by pod_part ;"); 
+                         " group by pod_item ;"); 
                      while (res.next()) {
                          purqty = res.getInt("totqty");
                      }
@@ -819,8 +819,8 @@ public class RetailReorderRpt extends javax.swing.JPanel {
                      // now get QOH
                       res = st.executeQuery("SELECT  sum(in_qoh) as totqty  " +
                         " FROM  in_mstr  " +
-                        " where in_part = " + "'" + s[0] + "'" + 
-                        " group by in_part ;");
+                        " where in_item = " + "'" + s[0] + "'" + 
+                        " group by in_item ;");
 
                 while (res.next()) {
                     qoh = res.getInt("totqty");
@@ -840,7 +840,7 @@ public class RetailReorderRpt extends javax.swing.JPanel {
                 cal.getTime();
                 String thisyear = String.valueOf(cal.get(Calendar.YEAR));
                 
-                 res = st.executeQuery("select * from fct_mstr where fct_part = " + "'" + s[0] + "'" +
+                 res = st.executeQuery("select * from fct_mstr where fct_item = " + "'" + s[0] + "'" +
                                        " AND fct_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + 
                                        " AND fct_year = " + "'" + thisyear + "'" + 
                                        ";" );
@@ -902,9 +902,9 @@ public class RetailReorderRpt extends javax.swing.JPanel {
                         // check if any POs are on the horizon to meet the order due dates
                         // foreach order that has unallocated demand check if sum of PO quantities come before order due date
                         res = st.executeQuery("select s.sod_nbr, s.sod_due_date, s.sod_ord_qty, s.sod_all_qty, " +
-                            " ifnull((select sum(pod_ord_qty) from pod_mstr where pod_part = s.sod_part and pod_due_date <= s.sod_Due_date),0) as coverqty " +
+                            " ifnull((select sum(pod_ord_qty) from pod_mstr where pod_item = s.sod_item and pod_due_date <= s.sod_Due_date),0) as coverqty " +
                             " from sod_det s where " +
-                            " sod_part = " + "'" + s[0] + "'" +
+                            " sod_item = " + "'" + s[0] + "'" +
                             " AND (sod_ord_qty - sod_all_qty) > 0 " +
                             ";");
                     while (res.next()) {
@@ -989,7 +989,7 @@ public class RetailReorderRpt extends javax.swing.JPanel {
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 HashMap hm = new HashMap();
                 //hm.put("imagepath", "images/avmlogo.png");
-               // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_part, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
+               // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_item, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
                 File mytemplate = new File("jasper/orderbrowsesumary.jasper");
               //  JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, hm, bsmf.MainFrame.con );

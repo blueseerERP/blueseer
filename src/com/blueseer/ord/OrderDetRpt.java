@@ -503,17 +503,17 @@ try {
                  DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
 
                      
-                 res = st.executeQuery("SELECT sod_nbr, sod_part, sod_ord_qty, sod_shipped_qty, so_cust, so_po, so_due_date, so_status, " +
+                 res = st.executeQuery("SELECT sod_nbr, sod_item, sod_ord_qty, sod_shipped_qty, so_cust, so_po, so_due_date, so_status, " +
                         " it_desc, plan_nbr, plan_is_sched, plan_cell, plan_qty_sched, plan_date_sched, plan_status " +
                         " FROM  so_mstr inner join sod_det on sod_nbr = so_nbr " +
-                        " inner join item_mstr on it_item = sod_part " +
+                        " inner join item_mstr on it_item = sod_item " +
                         " left outer join plan_mstr on plan_line = sod_line and plan_order = sod_nbr " + 
                         " where so_ord_date >= " + "'" + dfdate.format(dcFrom.getDate())  + "'" + 
                         " AND so_ord_date <= " + "'" + dfdate.format(dcTo.getDate()) + "'" + 
                         " AND so_cust >= " + "'" + fromcust + "'" + 
                         " AND so_cust <= " + "'" + tocust + "'" + 
                         " AND so_type = 'DISCRETE' " +
-                         " order by so_cust, sod_part;");    
+                         " order by so_cust, sod_item;");    
                  
                  
                 while (res.next()) {
@@ -564,7 +564,7 @@ try {
                                 res.getString("so_cust"),
                                 res.getString("so_po"),
                                 res.getString("so_due_date"),
-                                res.getString("sod_part"),
+                                res.getString("sod_item"),
                                 res.getString("it_desc"),
                                 res.getInt("sod_ord_qty"),
                                 res.getInt("sod_shipped_qty"),

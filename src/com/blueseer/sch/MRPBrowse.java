@@ -153,14 +153,14 @@ public class MRPBrowse extends javax.swing.JPanel {
                if (! sortedList.isEmpty()) { 
                for (String line : sortedList) {
                 res = st.executeQuery("select * from sod_det " +
-                        " where sod_part = " + "'" + line + "'" + 
+                        " where sod_item = " + "'" + line + "'" + 
                         " and sod_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +
                         " and sod_due_date >= "  + "'" + startdate + "'" + 
                         " and sod_due_date <= "  + "'" + enddate + "'" + 
                         " order by sod_due_date " +   ";");
                 while (res.next()) {
                    modelorder.addRow(new Object[]{ 
-                      res.getString("sod_part"), 
+                      res.getString("sod_item"), 
                        res.getString("sod_nbr"),
                        "SORD",
                        res.getString("sod_status"),
@@ -171,14 +171,14 @@ public class MRPBrowse extends javax.swing.JPanel {
                } else {
                    // must be top FG
                    res = st.executeQuery("select * from sod_det " +
-                        " where sod_part = " + "'" + part + "'" + 
+                        " where sod_item = " + "'" + part + "'" + 
                         " and sod_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +
                         " and sod_due_date >= "  + "'" + startdate + "'" + 
                         " and sod_due_date <= "  + "'" + enddate + "'" + 
                         " order by sod_due_date " +   ";");
                 while (res.next()) {
                    modelorder.addRow(new Object[]{ 
-                      res.getString("sod_part"), 
+                      res.getString("sod_item"), 
                        res.getString("sod_nbr"),
                        "SORD",
                        res.getString("sod_status"),
@@ -235,7 +235,7 @@ public class MRPBrowse extends javax.swing.JPanel {
                 int i = 0;
               
                 res = st.executeQuery("select * from plan_mstr " +
-                        " where plan_part = " + "'" + part + "'" + 
+                        " where plan_item = " + "'" + part + "'" + 
                         " and plan_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +
                         " and plan_date_due >= "  + "'" + startdate + "'" + 
                         " and plan_date_due <= "  + "'" + enddate + "'" + 
@@ -254,7 +254,7 @@ public class MRPBrowse extends javax.swing.JPanel {
                         status = "unsched";
                     }
                    modelorder.addRow(new Object[]{ 
-                      res.getString("plan_part"), 
+                      res.getString("plan_item"), 
                        res.getString("plan_nbr"),
                        res.getString("plan_type"),
                        status,
@@ -301,14 +301,14 @@ public class MRPBrowse extends javax.swing.JPanel {
                 int i = 0;
               
                 res = st.executeQuery("select * from pod_mstr " +
-                        " where pod_part = " + "'" + part + "'" + 
+                        " where pod_item = " + "'" + part + "'" + 
                         " and pod_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +
                         " and pod_due_date >= "  + "'" + startdate + "'" + 
                         " and pod_due_date <= "  + "'" + enddate + "'" + 
                         " order by pod_due_date " +   ";");
                 while (res.next()) {
                    modelorder.addRow(new Object[]{ 
-                      res.getString("pod_part"), 
+                      res.getString("pod_item"), 
                        res.getString("pod_nbr"),
                        "PORD",
                        res.getString("pod_status"),
@@ -361,7 +361,7 @@ public class MRPBrowse extends javax.swing.JPanel {
 
                res = st.executeQuery("SELECT tr_type, tr_eff_date, tr_id, tr_qty  " +
                         " FROM  tran_mstr  " +
-                        " where tr_part = " + "'" + parentpart.toString() + "'" + 
+                        " where tr_item = " + "'" + parentpart.toString() + "'" + 
                         " order by tr_eff_date desc limit 25 ;");
 
                 while (res.next()) {
@@ -1173,12 +1173,12 @@ public class MRPBrowse extends javax.swing.JPanel {
                
                // lets get cumaltive (if now week 1)
                if (! ddweek.getSelectedItem().equals("Week1")) {
-                    res = st.executeQuery("select mrp_part, ifnull(sum(mrp_qty),0) as cumqty  " +
+                    res = st.executeQuery("select mrp_item, ifnull(sum(mrp_qty),0) as cumqty  " +
                              " from mrp_mstr where mrp_date >= " + "'" + cumstartdate + "'" + " AND" +
                              " mrp_date <= " + "'" + cumenddate + "'" + " AND" +
                              " mrp_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + " AND" +
-                             " mrp_part = " + "'" + item + "'" + "  " +
-                             " group by mrp_part ; ");
+                             " mrp_item = " + "'" + item + "'" + "  " +
+                             " group by mrp_item ; ");
                     while (res.next()) {
                         cumdemand = res.getDouble("cumqty");
                     }
@@ -1187,13 +1187,13 @@ public class MRPBrowse extends javax.swing.JPanel {
                
                // lets get cumalative PLAN records (if now week 1)
                if (! ddweek.getSelectedItem().equals("Week1")) {
-                    res = st.executeQuery("select plan_part, ifnull(sum(plan_qty_sched),0) as cumqty  " +
+                    res = st.executeQuery("select plan_item, ifnull(sum(plan_qty_sched),0) as cumqty  " +
                              " from plan_mstr where plan_date_due >= " + "'" + cumstartdate + "'" + " AND" +
                              " plan_date_due <= " + "'" + cumenddate + "'" + " AND" +
                              " plan_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + " AND" +
                              " plan_status = '0' AND" +
-                             " plan_part = " + "'" + item + "'" +
-                             " group by plan_part ; ");
+                             " plan_item = " + "'" + item + "'" +
+                             " group by plan_item ; ");
                     while (res.next()) {
                         cumplan = res.getDouble("cumqty");
                     }
@@ -1202,13 +1202,13 @@ public class MRPBrowse extends javax.swing.JPanel {
                
                 // lets get cumalative PURCHASE/REPLENISHMENT records (if now week 1)
                if (! ddweek.getSelectedItem().equals("Week1")) {
-                    res = st.executeQuery("select pod_part, ifnull(sum(pod_ord_qty - pod_rcvd_qty),0) as cumqty  " +
+                    res = st.executeQuery("select pod_item, ifnull(sum(pod_ord_qty - pod_rcvd_qty),0) as cumqty  " +
                              " from pod_mstr " +
                              " where pod_due_date >= " + "'" + cumstartdate + "'" + " AND" +
                              " pod_due_date <= " + "'" + cumenddate + "'" + " AND" +
                              " pod_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + " AND " +
-                             " pod_part = " + "'" + item + "'" +
-                             " group by pod_part ; ");
+                             " pod_item = " + "'" + item + "'" +
+                             " group by pod_item ; ");
                           while (res.next()) {
                             cumreplenish = res.getDouble("cumqty");
                           }
@@ -1216,9 +1216,9 @@ public class MRPBrowse extends javax.swing.JPanel {
                }
                
                
-               res = st.executeQuery("select mrp_part,  " +
+               res = st.executeQuery("select mrp_item,  " +
                " sum(A) as A, sum(B) as B, sum(C) as C, sum(D) as D, sum(E) as E, sum(F) as F, sum(G) as G from " +
-               " ( select mrp_part, (case when mrp_date = " + "'" + d1 + "'" + " then mrp_qty else '0' end) as A, " +
+               " ( select mrp_item, (case when mrp_date = " + "'" + d1 + "'" + " then mrp_qty else '0' end) as A, " +
                " (case when mrp_date = " + "'" + d2 + "'" + " then mrp_qty else '0' end) as B, " + 
                " (case when mrp_date = " + "'" + d3 + "'" + " then mrp_qty else '0' end) as C, " +
                " (case when mrp_date = " + "'" + d4 + "'" + " then mrp_qty else '0' end) as D, " +
@@ -1228,8 +1228,8 @@ public class MRPBrowse extends javax.swing.JPanel {
                " from mrp_mstr where mrp_date >= " + "'" + startdate + "'" + " AND" +
                " mrp_date <= " + "'" + enddate + "'" + " AND" +
                " mrp_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + " AND" +
-               " mrp_part = " + "'" + item + "'" + " ) s " +
-                       " group by mrp_part ; ");
+               " mrp_item = " + "'" + item + "'" + " ) s " +
+                       " group by mrp_item ; ");
                
              
                 while (res.next()) {
@@ -1259,9 +1259,9 @@ public class MRPBrowse extends javax.swing.JPanel {
                                    
                     if (classcode.toUpperCase().compareTo("M") == 0) {
                         
-                        res2 = st2.executeQuery("select plan_part, (case when in_qoh is null then '0' else in_qoh end) as in_qoh, " +
+                        res2 = st2.executeQuery("select plan_item, (case when in_qoh is null then '0' else in_qoh end) as in_qoh, " +
                " sum(A) as A, sum(B) as B, sum(C) as C, sum(D) as D, sum(E) as E, sum(F) as F, sum(G) as G from " +
-               " ( select plan_part, (case when plan_date_due = " + "'" + d1 + "'" + " then plan_qty_sched else '0' end) as A, " +
+               " ( select plan_item, (case when plan_date_due = " + "'" + d1 + "'" + " then plan_qty_sched else '0' end) as A, " +
                " (case when plan_date_due = " + "'" + d2 + "'" + " then plan_qty_sched else '0' end) as B, " + 
                " (case when plan_date_due = " + "'" + d3 + "'" + " then plan_qty_sched else '0' end) as C, " +
                " (case when plan_date_due = " + "'" + d4 + "'" + " then plan_qty_sched else '0' end) as D, " +
@@ -1272,16 +1272,16 @@ public class MRPBrowse extends javax.swing.JPanel {
                " plan_date_due <= " + "'" + enddate + "'" + " AND" +
                " plan_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + " AND" +
                " plan_status = '0' AND" +
-               " plan_part = " + "'" + item + "'" + " ) s " +
-               " inner join item_mstr on it_item = plan_part " +
-               " left outer join in_mstr on in_part = it_item and in_loc = it_loc " +
-                       " group by plan_part ; ");
+               " plan_item = " + "'" + item + "'" + " ) s " +
+               " inner join item_mstr on it_item = plan_item " +
+               " left outer join in_mstr on in_item = it_item and in_loc = it_loc " +
+                       " group by plan_item ; ");
                    z = 0; 
                    while (res2.next()) {
                        z++;
                         
                     mymodel.addRow(new Object[]{
-                        BlueSeerUtils.clickflag, res2.getString("plan_part"),
+                        BlueSeerUtils.clickflag, res2.getString("plan_item"),
                         "PLAN",
                         res2.getString("A"),
                         res2.getString("B"),
@@ -1339,7 +1339,7 @@ public class MRPBrowse extends javax.swing.JPanel {
                " (case when sum(F) is not null then sum(F) else '0' end) as F, " +
                " (case when sum(G) is not null then sum(G) else '0' end) as G " +
                " from item_mstr left outer join ( " +
-               " select pod_part, " +
+               " select pod_item, " +
                " (case when pod_due_date = " + "'" + d1 + "'" + " then (pod_ord_qty - pod_rcvd_qty) else '0' end) as A, " +
                " (case when pod_due_date = " + "'" + d2 + "'" + " then (pod_ord_qty - pod_rcvd_qty) else '0' end) as B, " + 
                " (case when pod_due_date = " + "'" + d3 + "'" + " then (pod_ord_qty - pod_rcvd_qty) else '0' end) as C, " +
@@ -1351,9 +1351,9 @@ public class MRPBrowse extends javax.swing.JPanel {
                " where pod_due_date >= " + "'" + startdate + "'" + " AND" +
                " pod_due_date <= " + "'" + enddate + "'" + " AND" +
                " pod_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +
-               " ) s on s.pod_part = it_item" +
-               " left outer join in_mstr on in_part = it_item and in_loc = it_loc " +
-               " where it_item = " + "'" + item + "'" + " group by pod_part ; ");
+               " ) s on s.pod_item = it_item" +
+               " left outer join in_mstr on in_item = it_item and in_loc = it_loc " +
+               " where it_item = " + "'" + item + "'" + " group by pod_item ; ");
                     
                    z = 0;         
                    while (res2.next()) {
@@ -1383,7 +1383,7 @@ public class MRPBrowse extends javax.swing.JPanel {
                      // if no plan records then create dummy zero 'PURCH' record
                    if (z == 0) {
                       mymodel.addRow(new Object[]{
-                        BlueSeerUtils.clickflag, res.getString("mrp_part"),
+                        BlueSeerUtils.clickflag, res.getString("mrp_item"),
                         "PURCH",
                         "0",
                         "0",
@@ -1417,7 +1417,7 @@ public class MRPBrowse extends javax.swing.JPanel {
                " (case when sum(F) is not null then sum(F) else '0' end) as F, " +
                " (case when sum(G) is not null then sum(G) else '0' end) as G " +
                " from item_mstr left outer join ( " +
-               " select pod_part, " +
+               " select pod_item, " +
                " (case when pod_due_date = " + "'" + d1 + "'" + " then (pod_ord_qty - pod_rcvd_qty) else '0' end) as A, " +
                " (case when pod_due_date = " + "'" + d2 + "'" + " then (pod_ord_qty - pod_rcvd_qty) else '0' end) as B, " + 
                " (case when pod_due_date = " + "'" + d3 + "'" + " then (pod_ord_qty - pod_rcvd_qty) else '0' end) as C, " +
@@ -1429,9 +1429,9 @@ public class MRPBrowse extends javax.swing.JPanel {
                " where pod_due_date >= " + "'" + startdate + "'" + " AND" +
                " pod_due_date <= " + "'" + enddate + "'" + " AND" +
                " pod_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +
-               " ) s on s.pod_part = it_item" +
-               " left outer join in_mstr on in_part = it_item and in_loc = it_loc " +
-               " where it_item = " + "'" + item + "'" + " group by pod_part ; ");
+               " ) s on s.pod_item = it_item" +
+               " left outer join in_mstr on in_item = it_item and in_loc = it_loc " +
+               " where it_item = " + "'" + item + "'" + " group by pod_item ; ");
                     
                    z = 0;         
                    while (res2.next()) {
@@ -1461,7 +1461,7 @@ public class MRPBrowse extends javax.swing.JPanel {
                      // if no plan records then create dummy zero 'PURCH' record
                    if (z == 0) {
                       mymodel.addRow(new Object[]{
-                        BlueSeerUtils.clickflag, res.getString("mrp_part"),
+                        BlueSeerUtils.clickflag, res.getString("mrp_item"),
                         "PURCH",
                         "0",
                         "0",

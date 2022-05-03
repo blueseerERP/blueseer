@@ -76,7 +76,7 @@ public class rcvData {
     private static int _addRecvDet(recv_det x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
         int rows = 0;
         String sqlSelect = "select * from recv_det where rvd_id = ? and rvd_rline = ?";
-        String sqlInsert = "insert into recv_det (rvd_id, rvd_rline, rvd_part, rvd_po, "
+        String sqlInsert = "insert into recv_det (rvd_id, rvd_rline, rvd_item, rvd_po, "
                             + " rvd_poline, rvd_qty, rvd_uom, "
                             + "rvd_listprice, rvd_disc, rvd_netprice,  "
                             + " rvd_loc, rvd_wh, rvd_serial, rvd_lot, rvd_cost, rvd_site, " 
@@ -91,7 +91,7 @@ public class rcvData {
             if (! res.isBeforeFirst()) {
             ps.setString(1, x.rvd_id);
             ps.setString(2, x.rvd_rline);
-            ps.setString(3, x.rvd_part);
+            ps.setString(3, x.rvd_item);
             ps.setString(4, x.rvd_po);
             ps.setString(5, x.rvd_poline);
             ps.setString(6, x.rvd_qty);
@@ -178,12 +178,12 @@ public class rcvData {
     private static int _updateRecvDet(recv_det x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
         int rows = 0;
         String sqlSelect = "select * from recv_det where rvd_id = ? and rvd_rline = ?";
-        String sqlUpdate = "update recv_det set rvd_part = ?, rvd_po = ?, " +
+        String sqlUpdate = "update recv_det set rvd_item = ?, rvd_po = ?, " +
                 "rvd_poline = ?, rvd_qty = ?, rvd_uom = ?, rvd_listprice = ?, rvd_disc = ?, " +
                 " rvd_netprice = ?, rvd_loc = ?, rvd_wh = ?, rvd_serial = ?, rvd_lot = ?, " +
                 "rvd_cost = ?, rvd_site = ?, rvd_packingslip = ?, rvd_date = ? " +
                  " where rvd_id = ? and rvd_rline = ? ; ";
-        String sqlInsert = "insert into recv_det (rvd_id, rvd_rline, rvd_part, rvd_po, rvd_poline, "
+        String sqlInsert = "insert into recv_det (rvd_id, rvd_rline, rvd_item, rvd_po, rvd_poline, "
                             + "rvd_qty, rvd_uom, rvd_listprice, rvd_disc, rvd_netprice,  "
                             + " rvd_loc, rvd_wh, rvd_serial, rvd_lot, rvd_cost, rvd_site, "
                             + " rvd_packingslip, rvd_date  ) "
@@ -196,7 +196,7 @@ public class rcvData {
 	 ps = con.prepareStatement(sqlInsert) ;
             ps.setString(17, x.rvd_id);
             ps.setString(18, x.rvd_rline);
-            ps.setString(1, x.rvd_part);
+            ps.setString(1, x.rvd_item);
             ps.setString(2, x.rvd_po);
             ps.setString(3, x.rvd_poline);
             ps.setString(4, x.rvd_qty);
@@ -217,7 +217,7 @@ public class rcvData {
          ps = con.prepareStatement(sqlUpdate) ;
             ps.setString(1, x.rvd_id);
             ps.setString(2, x.rvd_rline);
-            ps.setString(3, x.rvd_part);
+            ps.setString(3, x.rvd_item);
             ps.setString(4, x.rvd_po);
             ps.setString(5, x.rvd_poline);
             ps.setString(6, x.rvd_qty);
@@ -384,7 +384,7 @@ public class rcvData {
                 while(res.next()) {
                     m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
                     r = new recv_det(m, res.getString("rvd_id"), res.getString("rvd_po"), res.getString("rvd_poline"),
-                    res.getString("rvd_packingslip"), res.getString("rvd_part"), res.getString("rvd_qty"), res.getString("rvd_date"), res.getString("rvd_listprice"),
+                    res.getString("rvd_packingslip"), res.getString("rvd_item"), res.getString("rvd_qty"), res.getString("rvd_date"), res.getString("rvd_listprice"),
                     res.getString("rvd_netprice"), res.getString("rvd_disc"), res.getString("rvd_lot"), res.getString("rvd_wh"), res.getString("rvd_serial"),
                     res.getString("rvd_loc"), res.getString("rvd_jobnbr"), res.getString("rvd_site"), res.getString("rvd_status"), 
                     res.getString("rvd_rline"), res.getString("rvd_voqty"), res.getString("rvd_cost"), res.getString("rvd_uom") );
@@ -404,7 +404,7 @@ public class rcvData {
             ResultSet res = null;
             try{
                 
-                res = st.executeQuery("select rvd_id, rvd_rline, rvd_part from recv_det where rvd_id = " + "'" + x + "'" + 
+                res = st.executeQuery("select rvd_id, rvd_rline, rvd_item from recv_det where rvd_id = " + "'" + x + "'" + 
                                       " and rvd_voqty > 0 " + ";");
                 int i = 0;
                 while (res.next()) {
@@ -483,7 +483,7 @@ public class rcvData {
     }
    
     public record recv_det(String[] m, String rvd_id, String rvd_po, String rvd_poline, 
-        String rvd_packingslip, String rvd_part, String rvd_qty, 
+        String rvd_packingslip, String rvd_item, String rvd_qty, 
         String rvd_date, String rvd_listprice, String rvd_netprice, String rvd_disc, 
         String rvd_lot, String rvd_wh, String rvd_serial, String rvd_loc,
         String rvd_jobnbr, String rvd_site, String rvd_status, String rvd_rline, 

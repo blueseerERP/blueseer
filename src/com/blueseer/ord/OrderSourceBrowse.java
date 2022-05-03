@@ -158,12 +158,12 @@ public class OrderSourceBrowse extends javax.swing.JPanel {
             try {
                 int i = 0;
                 String blanket = "";
-                res = st.executeQuery("select sod_nbr, sod_part, sod_netprice, sod_ord_qty, sod_shipped_qty, sod_status, sod_wh, sod_loc from sod_det " +
+                res = st.executeQuery("select sod_nbr, sod_item, sod_netprice, sod_ord_qty, sod_shipped_qty, sod_status, sod_wh, sod_loc from sod_det " +
                         " where sod_nbr = " + "'" + so + "'" +  ";");
                 while (res.next()) {
                    modeldetail.addRow(new Object[]{ 
                       res.getString("sod_nbr"), 
-                       res.getString("sod_part"),
+                       res.getString("sod_item"),
                        currformatDouble(res.getDouble("sod_netprice")),
                       res.getInt("sod_ord_qty"), 
                       res.getInt("sod_shipped_qty"), 

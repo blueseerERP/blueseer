@@ -258,7 +258,7 @@ public class LabelBrowse extends javax.swing.JPanel {
                 while (res.next()) {
                    modeltrans.addRow(new Object[]{ 
                       res.getString("tr_serial"), 
-                       res.getString("tr_part"),
+                       res.getString("tr_item"),
                        res.getInt("tr_qty"),
                       res.getString("tr_ref"), 
                       res.getString("tr_eff_date")});
@@ -651,8 +651,8 @@ try {
                         " FROM  label_mstr " +
                         " where lbl_crt_date >= " + "'" + dfdate.format(dcFrom.getDate())  + "'" + 
                         " AND lbl_crt_date <= " + "'" + dfdate.format(dcTo.getDate()) + "'" + 
-                        " AND lbl_part >= " + "'" + frompart + "'" + 
-                        " AND lbl_part <= " + "'" + topart + "'" + 
+                        " AND lbl_item >= " + "'" + frompart + "'" + 
+                        " AND lbl_item <= " + "'" + topart + "'" + 
                          " AND lbl_id >= " + "'" + fromlabel + "'" + 
                          " AND lbl_id <= " + "'" + tolabel + "'" + 
                          " ;");    
@@ -665,7 +665,7 @@ try {
                         mymodel.addRow(new Object[]{
                                 "Detail",
                                 res.getString("lbl_id"),
-                                res.getString("lbl_part"),
+                                res.getString("lbl_item"),
                                 res.getString("lbl_qty"),
                                 res.getString("lbl_po"),
                                 res.getString("lbl_order"),

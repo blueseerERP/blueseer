@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="567" leftMargin="14" rightMargin="14" topMargin="72" bottomMargin="72" uuid="5c23a538-9f5b-41f2-97dc-c7635f83e5fc">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
@@ -19,12 +20,15 @@
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[select so_cust, sod_part, sod_ord_qty, sod_po, it_desc, sod_shipped_qty from so_mstr inner join sod_det on sod_nbr = so_nbr inner join item_mstr on it_item = sod_part where so_status <> 'close' and so_type = 'DISCRETE' and so_cust >= $P{fromcust} and so_cust <= $P{tocust} and so_ord_date >= $P{fromdate} and so_ord_date <= $P{todate} order by so_cust, sod_part;]]>
+		<![CDATA[select so_cust, sod_item, sod_ord_qty, sod_po, it_desc, sod_shipped_qty 
+from so_mstr inner join sod_det on sod_nbr = so_nbr 
+inner join item_mstr on it_item = sod_item 
+where so_status <> 'close' and so_type = 'DISCRETE' and so_cust >= $P{fromcust} and so_cust <= $P{tocust} and so_ord_date >= $P{fromdate} and so_ord_date <= $P{todate} order by so_cust, sod_part;]]>
 	</queryString>
 	<field name="so_cust" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="sod_part" class="java.lang.String">
+	<field name="sod_item" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="sod_ord_qty" class="java.lang.Integer">
@@ -134,7 +138,7 @@
 			</textField>
 			<textField>
 				<reportElement x="109" y="0" width="72" height="16" uuid="ee72a0da-c3b3-48c4-a45e-ef0e73f30c87"/>
-				<textFieldExpression><![CDATA[$F{sod_part}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{sod_item}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="492" y="0" width="75" height="20" uuid="e2325093-90b1-4cc7-8ece-4f84cb1267f3"/>

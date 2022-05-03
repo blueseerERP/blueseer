@@ -104,7 +104,7 @@ public class TransBrowse extends javax.swing.JPanel {
                             getGlobalColumnTag("warehouse"), 
                             getGlobalColumnTag("location")});
     
-    // tr_id, tr_part, tr_type, tr_qty, tr_eff_date, tr_timestamp, tr_ref, tr_serial, tr_program , tr_userid
+    // tr_id, tr_item, tr_type, tr_qty, tr_eff_date, tr_timestamp, tr_ref, tr_serial, tr_program , tr_userid
     /**
      * Creates new form ScrapReportPanel
      */
@@ -444,20 +444,20 @@ try {
                  DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
 
                  if (ddtype.getSelectedItem().toString().equals("ALL")) {    
-                 res = st.executeQuery("SELECT tr_id, tr_op, tr_cost,  tr_part, tr_type, tr_wh, tr_loc, tr_qty, tr_base_qty, tr_uom, tr_eff_date, tr_timestamp, tr_ref, tr_serial, tr_program , tr_userid " +
+                 res = st.executeQuery("SELECT tr_id, tr_op, tr_cost,  tr_item, tr_type, tr_wh, tr_loc, tr_qty, tr_base_qty, tr_uom, tr_eff_date, tr_timestamp, tr_ref, tr_serial, tr_program , tr_userid " +
                         " FROM  tran_mstr  " +
                         " where tr_eff_date >= " + "'" + dfdate.format(dcfrom.getDate())  + "'" + 
                         " AND tr_eff_date <= " + "'" + dfdate.format(dcto.getDate()) + "'" + 
-                        " AND tr_part >= " + "'" + frompart + "'" + 
-                        " AND tr_part <= " + "'" + topart + "'" + 
+                        " AND tr_item >= " + "'" + frompart + "'" + 
+                        " AND tr_item <= " + "'" + topart + "'" + 
                          " order by tr_ent_date desc ;");    
                  } else {
-                    res = st.executeQuery("SELECT tr_id, tr_op, tr_cost,  tr_part, tr_type, tr_wh, tr_loc, tr_qty, tr_base_qty, tr_uom, tr_eff_date, tr_timestamp, tr_ref, tr_serial, tr_program , tr_userid " +
+                    res = st.executeQuery("SELECT tr_id, tr_op, tr_cost,  tr_item, tr_type, tr_wh, tr_loc, tr_qty, tr_base_qty, tr_uom, tr_eff_date, tr_timestamp, tr_ref, tr_serial, tr_program , tr_userid " +
                         " FROM  tran_mstr  " +
                         " where tr_eff_date >= " + "'" + dfdate.format(dcfrom.getDate())  + "'" + 
                         " AND tr_eff_date <= " + "'" + dfdate.format(dcto.getDate()) + "'" + 
-                        " AND tr_part >= " + "'" + frompart + "'" + 
-                        " AND tr_part <= " + "'" + topart + "'" + 
+                        " AND tr_item >= " + "'" + frompart + "'" + 
+                        " AND tr_item <= " + "'" + topart + "'" + 
                         " AND tr_type = " + "'" + ddtype.getSelectedItem().toString() + "'" +
                          " order by tr_ent_date desc ;");     
                  }
@@ -468,7 +468,7 @@ try {
                     i++;
                         mymodel.addRow(new Object[]{
                                 res.getString("tr_id"),
-                                res.getString("tr_part"),
+                                res.getString("tr_item"),
                                 res.getString("tr_type"),
                                 res.getDouble("tr_qty"),
                                 res.getString("tr_uom"),

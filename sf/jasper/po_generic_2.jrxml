@@ -14,7 +14,18 @@
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[select po_nbr, it_desc,  po_shipvia, po_vend, po_rmks, pod_part, pod_vendpart, pod_ord_qty, pod_netprice, vd_addr, vd_name, vd_line1, vd_line2, vd_city, vd_state, vd_zip, vd_city || " " || vd_state || " " || vd_zip as 'vd_citystatezip',site_desc, site_line1, site_city || " " || site_state || " " || site_zip as 'site_csz' from pod_mstr left outer join item_mstr on it_item = pod_part inner join po_mstr on po_nbr = pod_nbr inner join vd_mstr on vd_addr = po_vend inner join site_mstr on site_site = po_site where pod_nbr =  $P{myid};]]>
+		<![CDATA[select po_nbr, it_desc,  po_shipvia, po_vend, po_rmks, 
+pod_item, pod_venditem, pod_ord_qty, pod_netprice, 
+vd_addr, vd_name, vd_line1, vd_line2, vd_city, vd_state, vd_zip, 
+vd_city || " " || vd_state || " " || vd_zip as 'vd_citystatezip', 
+site_desc, site_line1, 
+site_city || " " || site_state || " " || site_zip as 'site_csz' 
+from pod_mstr 
+left outer join item_mstr on it_item = pod_item 
+inner join po_mstr on po_nbr = pod_nbr 
+inner join vd_mstr on vd_addr = po_vend 
+inner join site_mstr on site_site = po_site 
+where pod_nbr =  $P{myid};]]>
 	</queryString>
 	<field name="po_nbr" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
@@ -28,10 +39,10 @@
 	<field name="po_rmks" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="pod_part" class="java.lang.String">
+	<field name="pod_item" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="pod_vendpart" class="java.lang.String">
+	<field name="pod_venditem" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="pod_ord_qty" class="java.lang.Integer">
@@ -312,7 +323,7 @@
 		<band height="35" splitType="Stretch">
 			<textField>
 				<reportElement x="19" y="0" width="171" height="16" uuid="978682a3-4259-41c3-adae-54872ecfe90a"/>
-				<textFieldExpression><![CDATA[$F{pod_part}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{pod_item}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="344" y="0" width="72" height="16" uuid="edbe7124-d60b-42b0-a896-8522f841a299"/>
@@ -328,7 +339,7 @@
 			</textField>
 			<textField>
 				<reportElement x="218" y="0" width="120" height="16" uuid="ee72a0da-c3b3-48c4-a45e-ef0e73f30c87"/>
-				<textFieldExpression><![CDATA[$F{pod_vendpart}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{pod_venditem}]]></textFieldExpression>
 			</textField>
 			<textField pattern="¤ #,##0.00">
 				<reportElement x="489" y="0" width="72" height="16" uuid="4d12e3fa-309d-4b3b-bef2-866f79abdd66"/>

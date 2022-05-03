@@ -542,7 +542,7 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
-                 res = st.executeQuery("select rvd_id, rvd_rline, rvd_part from recv_det where rvd_id = " + "'" + x[0] + "'" + 
+                 res = st.executeQuery("select rvd_id, rvd_rline, rvd_item from recv_det where rvd_id = " + "'" + x[0] + "'" + 
                                       " and rvd_voqty > 0 " + ";");
                 int i = 0;
                 while (res.next()) {
@@ -741,7 +741,7 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbkey.setText(rv.rv_id());
         
         for (recv_det rvd : rvdlist) {
-            myrecvdetmodel.addRow(new Object[]{rvd.rvd_rline(), rvd.rvd_part(), rvd.rvd_po(), 
+            myrecvdetmodel.addRow(new Object[]{rvd.rvd_rline(), rvd.rvd_item(), rvd.rvd_po(), 
                 rvd.rvd_poline(), rvd.rvd_qty().replace('.', defaultDecimalSeparator), rvd.rvd_uom(), rvd.rvd_listprice().replace('.', defaultDecimalSeparator),
                 rvd.rvd_disc().replace('.', defaultDecimalSeparator), rvd.rvd_netprice().replace('.', defaultDecimalSeparator), rvd.rvd_loc(), rvd.rvd_wh(),
                 rvd.rvd_serial(), rvd.rvd_lot(), rvd.rvd_cost().replace('.', defaultDecimalSeparator)});
@@ -1371,16 +1371,16 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
             try {
                     // at this time you cannot have the same item on the PO more than once
                 
-                res = st.executeQuery("select itc_total, it_loc, it_wh, pod_nbr, pod_line, pod_part, pod_uom, pod_vendpart, pod_netprice, pod_rcvd_qty, pod_ord_qty, pod_ord_date, pod_due_date, pod_status, pod_site from pod_mstr " +
+                res = st.executeQuery("select itc_total, it_loc, it_wh, pod_nbr, pod_line, pod_item, pod_uom, pod_venditem, pod_netprice, pod_rcvd_qty, pod_ord_qty, pod_ord_date, pod_due_date, pod_status, pod_site from pod_mstr " +
                        " inner join po_mstr on po_nbr = pod_nbr " +
-                       " left outer join item_mstr on it_item = pod_part " +
-                       " left outer join item_cost on itc_item = pod_part and itc_set = 'standard' and itc_site = po_site " + 
+                       " left outer join item_mstr on it_item = pod_item " +
+                       " left outer join item_cost on itc_item = pod_item and itc_set = 'standard' and itc_site = po_site " + 
                        " where " +
                        " pod_nbr = " + "'" + mypo + "'" + 
                        " AND pod_line = " + "'" + myline + "'" +
                        ";");
                 while (res.next()) {
-                    lblitem.setText(res.getString("pod_part"));
+                    lblitem.setText(res.getString("pod_item"));
                     tbline.setText(res.getString("pod_line"));
                     tbprice.setText(res.getString("pod_netprice"));
                     if (res.getString("itc_total") != null)
@@ -1390,7 +1390,7 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
                     if (res.getString("it_wh") != null)
                     ddloc.setSelectedItem(res.getString("it_wh"));
                     ddsite.setSelectedItem(res.getString("pod_site"));
-                    lblvendpart.setText(res.getString("pod_vendpart"));
+                    lblvendpart.setText(res.getString("pod_venditem"));
                     duedate.setText(res.getString("pod_due_date"));
                     tbqtyrcvd.setText(res.getString("pod_rcvd_qty"));
                     tbqtyord.setText(res.getString("pod_ord_qty"));
@@ -1495,7 +1495,7 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
             ResultSet res = null;
             try {
                     // at this time you cannot have the same item on the PO more than once
-                res = st.executeQuery("select pod_line, pod_part, pod_site from pod_mstr " +
+                res = st.executeQuery("select pod_line, pod_item, pod_site from pod_mstr " +
                        " inner join po_mstr on po_nbr = pod_nbr where pod_nbr = " + "'" + mypo + "'" + ";");
                 while (res.next()) {
                    ddline.addItem(res.getString("pod_line"));

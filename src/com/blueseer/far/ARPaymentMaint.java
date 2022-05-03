@@ -742,7 +742,7 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
             
                  /* ok....let's get the current state of this line item on the sales order */
                  res = st.executeQuery("select * from sod_det where sod_nbr = " + "'" + thisorder + "'" + 
-                                     " AND sod_part = " + "'" + thispart + "'" + ";");
+                                     " AND sod_item = " + "'" + thispart + "'" + ";");
                while (res.next()) {     
                  i++;
                    if (Double.valueOf(res.getString("sod_recvped_qty") + thisrecvqty) < Double.valueOf(res.getString("sod_ord_qty")) ) {
@@ -759,7 +759,7 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
                  st.executeUpdate("update sod_det set sod_recvped_qty = " + "'" + thisrecvpedtotal + "'" + 
                                   "," + " sod_status = " + "'" + thislinestatus + "'" +
                                   " where sod_nbr = " + "'" + thisorder + "'" + 
-                                  " and sod_part = " + "'" + thispart + "'" + 
+                                  " and sod_item = " + "'" + thispart + "'" + 
                                   " and sod_po = " + "'" + thispo + "'" +
                      ";");
                  

@@ -89,13 +89,13 @@ public class RPData {
               }
                  if (autoitem) {
                  res = st.executeQuery("SELECT it_item, it_desc, it_code, it_site, plan_nbr, plan_type, plan_order, case plan_is_sched when '1' then 'yes' else 'no' end plan_is_sched , plan_cell, plan_qty_sched, plan_date_sched, case plan_status when '1' then 'complete' when '0' then 'open' else 'void' end plan_status  " +
-                        " FROM  item_mstr left outer join plan_mstr on plan_part = it_item  " +
+                        " FROM  item_mstr left outer join plan_mstr on plan_item = it_item  " +
                         " where cast(it_item as decimal) >= " + "'" + from + "'" +
                         " and cast(it_item as decimal) <= " + "'" + to + "'" +
                         " order by plan_nbr ;");
                  } else {
                   res = st.executeQuery("SELECT it_item, it_desc, it_code, it_site, plan_nbr, plan_type, plan_order, case plan_is_sched when '1' then 'yes' else 'no' end plan_is_sched , plan_cell, plan_qty_sched, plan_date_sched, case plan_status when '1' then 'complete' when '0' then 'open' else 'void' end plan_status  " +
-                        " FROM  item_mstr left outer join plan_mstr on plan_part = it_item  " +
+                        " FROM  item_mstr left outer join plan_mstr on plan_item = it_item  " +
                         " where it_item >= " + "'" + from + "'" +
                         " and it_item <= " + "'" + to + "'" +
                         " order by plan_nbr ;");   
@@ -171,8 +171,8 @@ public class RPData {
               if (to.isEmpty()) {
                   to = bsmf.MainFrame.hinbr;
               }  
-                 res = st.executeQuery("SELECT sod_part, sod_nbr, sod_line, it_desc, it_code, it_site, plan_nbr, plan_type, plan_order, case plan_is_sched when '1' then 'yes' else 'no' end plan_is_sched , plan_cell, plan_qty_sched, plan_date_sched, case plan_status when '1' then 'complete' when '0' then 'open' else 'void' end plan_status  " +
-                        " FROM  sod_det inner join item_mstr on sod_part = it_item left outer join plan_mstr on plan_order = sod_nbr and plan_line = sod_line  " +
+                 res = st.executeQuery("SELECT sod_item, sod_nbr, sod_line, it_desc, it_code, it_site, plan_nbr, plan_type, plan_order, case plan_is_sched when '1' then 'yes' else 'no' end plan_is_sched , plan_cell, plan_qty_sched, plan_date_sched, case plan_status when '1' then 'complete' when '0' then 'open' else 'void' end plan_status  " +
+                        " FROM  sod_det inner join item_mstr on sod_item = it_item left outer join plan_mstr on plan_order = sod_nbr and plan_line = sod_line  " +
                         " where cast(sod_nbr as decimal) >= " + "'" + from + "'" +
                         " and cast(sod_nbr as decimal) <= " + "'" + to + "'" +
                         " order by sod_line ;");
@@ -181,7 +181,7 @@ public class RPData {
                         mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, 
                                    res.getString("sod_nbr"),
                                    res.getString("sod_line"),
-                                   res.getString("sod_part"),
+                                   res.getString("sod_item"),
                                    res.getString("it_desc"),
                                    res.getString("it_code"),
                                    res.getString("it_site"),

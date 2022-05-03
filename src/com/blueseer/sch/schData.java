@@ -51,13 +51,13 @@ public class schData {
           // From perspective of "has it been scanned...or is there a 1 in lbl_scan which is set when label is scanned
           // assume it's false i.e. hasn't been scanned.
         String x = "";
-        String sql = "select plan_part from plan_mstr where plan_nbr = ? ;";
+        String sql = "select plan_item from plan_mstr where plan_nbr = ? ;";
         try (Connection con = DriverManager.getConnection(url + db, user, pass);
             PreparedStatement ps = con.prepareStatement(sql);) {
             ps.setString(1, serialno);  
             try (ResultSet res = ps.executeQuery();) {
                while (res.next()) {
-                   x = res.getString("plan_part");
+                   x = res.getString("plan_item");
                }
             }
         } catch (SQLException e) {

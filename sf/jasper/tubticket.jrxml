@@ -20,7 +20,7 @@
 		<![CDATA[SELECT
      pland_id,
      pland_parent,
-     plan_part,
+     plan_item,
      plan_qty_sched,
      pland_qty,
      plan_date_due,
@@ -34,7 +34,7 @@
 FROM
      plan_mstr
 inner join pland_mstr on pland_parent = plan_nbr
-inner join item_mstr on it_item = plan_part
+inner join item_mstr on it_item = plan_item
 inner join wf_mstr on wf_id = it_wf
 where plan_nbr = $P{myid};]]>
 	</queryString>
@@ -44,7 +44,7 @@ where plan_nbr = $P{myid};]]>
 	<field name="pland_parent" class="java.lang.Integer">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="plan_part" class="java.lang.String">
+	<field name="plan_item" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="plan_qty_sched" class="java.lang.Integer">
@@ -212,7 +212,7 @@ where plan_nbr = $P{myid};]]>
 				<textElement>
 					<font size="12" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{plan_part}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{plan_item}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
@@ -253,7 +253,7 @@ where plan_nbr = $P{myid};]]>
 					<subreportParameterExpression><![CDATA[$F{wf_op}]]></subreportParameterExpression>
 				</subreportParameter>
 				<subreportParameter name="part">
-					<subreportParameterExpression><![CDATA[$F{plan_part}]]></subreportParameterExpression>
+					<subreportParameterExpression><![CDATA[$F{plan_item}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "routing.jasper"]]></subreportExpression>
