@@ -388,6 +388,7 @@
                                           <Component id="tbdisccode" alignment="0" max="32767" attributes="0"/>
                                           <Component id="ddterms" alignment="0" max="32767" attributes="0"/>
                                           <Component id="ddcc" alignment="0" min="-2" pref="97" max="-2" attributes="0"/>
+                                          <Component id="cb850" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
                               </Group>
@@ -435,6 +436,7 @@
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="ddcurr" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel33" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="cb850" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
@@ -710,6 +712,11 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Currency"/>
                 <Property name="name" type="java.lang.String" value="lblcurrency" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JCheckBox" name="cb850">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Export 850"/>
               </Properties>
             </Component>
           </SubComponents>

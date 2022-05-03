@@ -4652,7 +4652,7 @@ public class OVData {
                         st.executeUpdate(" insert into vd_mstr "
                                 + "(vd_addr, vd_site, vd_name, vd_line1, vd_line2, vd_line3, vd_city, vd_state, vd_zip, vd_country, vd_dateadd, vd_datemod, "
                                 + " vd_usermod, vd_group, vd_market, vd_buyer, vd_terms, vd_shipvia, vd_price_code, vd_disc_code, vd_tax_code, "
-                                + " vd_ap_acct, vd_ap_cc, vd_remarks, vd_freight_type, vd_bank, vd_curr, vd_misc, vd_phone, vd_email ) "
+                                + " vd_ap_acct, vd_ap_cc, vd_remarks, vd_freight_type, vd_bank, vd_curr, vd_misc, vd_phone, vd_email, vd_is850export ) "
                                 + " values ( "
                                 + "'" + ld[0] + "'" + ","
                                 + "'" + ld[1] + "'" + ","
@@ -4683,7 +4683,8 @@ public class OVData {
                                 + "'" + ld[23] + "'" + ","
                                 + "'" + ld[24] + "'" + ","
                                 + "'" + ld[25] + "'" + ","
-                                + "'" + ld[26] + "'"
+                                + "'" + ld[26] + "'" + ","
+                                + "'" + ld[27] + "'"        
                                 + " );"
                         );
                     }

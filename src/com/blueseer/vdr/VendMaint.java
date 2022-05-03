@@ -536,7 +536,7 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeer {
                  ddcurr.setSelectedItem(res.getString("vd_curr"));
                 tbmainphone.setText(res.getString("vd_phone"));
                 tbmainemail.setText(res.getString("vd_email"));
-                
+                cb850.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("vd_is850export")));
                 }
                // custom get contacts
                refreshContactTable(key[0]);
@@ -617,7 +617,8 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeer {
                 ddcurr.getSelectedItem().toString(),
                 tbmisc.getText(), 
                 tbmainphone.getText(),
-                tbmainemail.getText()
+                tbmainemail.getText(),
+                String.valueOf(BlueSeerUtils.boolToInt(cb850.isSelected()))
                 );
         return x;
     }
@@ -916,6 +917,7 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeer {
         btdelete = new javax.swing.JButton();
         ddcurr = new javax.swing.JComboBox<>();
         jLabel33 = new javax.swing.JLabel();
+        cb850 = new javax.swing.JCheckBox();
         contactPanel = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         contacttable = new javax.swing.JTable();
@@ -1182,6 +1184,8 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeer {
         jLabel33.setText("Currency");
         jLabel33.setName("lblcurrency"); // NOI18N
 
+        cb850.setText("Export 850");
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -1239,7 +1243,8 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeer {
                                     .addComponent(tbtaxcode)
                                     .addComponent(tbdisccode)
                                     .addComponent(ddterms, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(ddcc, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                                    .addComponent(ddcc, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(cb850))))))
                 .addGap(62, 62, 62))
         );
         jPanel3Layout.setVerticalGroup(
@@ -1272,7 +1277,8 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeer {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ddcurr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel33))
+                    .addComponent(jLabel33)
+                    .addComponent(cb850))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ddcarrier, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1572,6 +1578,7 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeer {
     private javax.swing.JButton btlookup;
     private javax.swing.JButton btnew;
     private javax.swing.JButton btupdate;
+    private javax.swing.JCheckBox cb850;
     private javax.swing.JPanel contactPanel;
     private javax.swing.JTable contacttable;
     private javax.swing.JComboBox<String> ddaccount;
