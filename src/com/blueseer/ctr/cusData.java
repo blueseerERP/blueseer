@@ -1317,6 +1317,181 @@ public class cusData {
         return list;
     }
     
+    public static String[] addCupMstr(cup_mstr x) {
+        String[] m = new String[2];
+        String sqlSelect = "SELECT * FROM  cup_mstr where cup_citem = ? and cup_cust = ?";
+        String sqlInsert = "insert into cup_mstr (cup_cust, cup_item, cup_citem, cup_citem2, " +
+         "cup_upc, cup_userid, cup_ts, cup_misc, cup_sku) " 
+                        + " values (?,?,?,?,?,?,?,?,?); "; 
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+             PreparedStatement ps = con.prepareStatement(sqlSelect);) {
+             ps.setString(1, x.cup_citem);
+             ps.setString(2, x.cup_cust);
+          try (ResultSet res = ps.executeQuery();
+               PreparedStatement psi = con.prepareStatement(sqlInsert);) {  
+            if (! res.isBeforeFirst()) {
+            psi.setString(1, x.cup_cust);
+            psi.setString(2, x.cup_item);
+            psi.setString(3, x.cup_citem);
+            psi.setString(4, x.cup_citem2);
+            psi.setString(5, x.cup_upc);
+            psi.setString(6, x.cup_userid);
+            psi.setString(7, x.cup_ts);
+            psi.setString(8, x.cup_misc);
+            psi.setString(9, x.cup_sku);
+            int rows = psi.executeUpdate();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+            } else {
+            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists};    
+            }
+          } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+          }
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+
+    public static String[] addOrUpdateCupMstr(cup_mstr x) {
+        String[] m = new String[2];
+        String sqlSelect = "SELECT * FROM  cup_mstr where cup_citem = ? and cup_cust = ?";
+        String sqlInsert = "insert into cup_mstr (cup_cust, cup_item, cup_citem, cup_citem2, " +
+         "cup_upc, cup_userid, cup_ts, cup_misc, cup_sku) " 
+                        + " values (?,?,?,?,?,?,?,?,?); "; 
+        String sqlUpdate = "update cup_mstr set cup_item = ?, cup_citem2 = ?, cup_upc = ?, " +
+                " cup_userid = ?, cup_ts = ?, cup_misc = ?, cup_sku = ?  " +   
+                          " where cup_citem = ? and cup_cust = ? ; ";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+             PreparedStatement ps = con.prepareStatement(sqlSelect);) {
+             ps.setString(1, x.cup_citem);
+             ps.setString(2, x.cup_cust);
+          try (ResultSet res = ps.executeQuery();
+               PreparedStatement psi = con.prepareStatement(sqlInsert);
+               PreparedStatement psu = con.prepareStatement(sqlUpdate);) {  
+            if (! res.isBeforeFirst()) {
+            psi.setString(1, x.cup_cust);
+            psi.setString(2, x.cup_item);
+            psi.setString(3, x.cup_citem);
+            psi.setString(4, x.cup_citem2);
+            psi.setString(5, x.cup_upc);
+            psi.setString(6, x.cup_userid);
+            psi.setString(7, x.cup_ts);
+            psi.setString(8, x.cup_misc);
+            psi.setString(9, x.cup_sku); 
+            int rows = psi.executeUpdate();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+            } else {
+            psu.setString(1, x.cup_item);
+            psu.setString(2, x.cup_citem2);
+            psu.setString(3, x.cup_upc);
+            psu.setString(4, x.cup_userid);
+            psu.setString(5, x.cup_ts);
+            psu.setString(6, x.cup_misc);
+            psu.setString(7, x.cup_sku);
+            psu.setString(8, x.cup_citem);
+            psu.setString(9, x.cup_cust);
+            int rows = psu.executeUpdate();    
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};    
+            }
+          } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+          }
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+
+    public static String[] updateCupMstr(cup_mstr x) {
+        String[] m = new String[2];
+        String sql = "update cup_mstr set cup_item = ?, cup_citem2 = ?, cup_upc = ?, " +
+                " cup_userid = ?, cup_ts = ?, cup_misc = ?, cup_sku = ?  " +   
+                          " where cup_citem = ? and cup_cust = ? ; ";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, x.cup_item);
+        ps.setString(2, x.cup_citem2);
+        ps.setString(3, x.cup_upc);
+        ps.setString(4, x.cup_userid);
+        ps.setString(5, x.cup_ts);
+        ps.setString(6, x.cup_misc);
+        ps.setString(7, x.cup_sku);
+        ps.setString(8, x.cup_citem);
+        ps.setString(9, x.cup_cust);
+        int rows = ps.executeUpdate();
+        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+    
+    public static String[] deleteCupMstr(cup_mstr x) { 
+       String[] m = new String[2];
+        String sql = "delete from cup_mstr where cup_citem = ? and cup_cust = ?; ";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, x.cup_citem);
+        ps.setString(2, x.cup_cust);
+        int rows = ps.executeUpdate();
+        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+    
+    public static cup_mstr getCupMstr(String[] x) {
+        cup_mstr r = null;
+        String[] m = new String[2];
+        String sql = "";
+         if (x.length >= 2 && ! x[1].isEmpty()) {
+            sql = "select * from cup_mstr where cup_cust = ? and cup_citem = ?;";
+         } else {
+            sql = "select * from cup_mstr where cup_citem = ? limit 1 ;";  
+         }
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, x[0]);
+        if (x.length >= 2 && ! x[1].isEmpty()) {
+        ps.setString(2, x[1]);
+        }
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new cup_mstr(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new cup_mstr(m, res.getString("cup_cust"), 
+                            res.getString("cup_item"),
+                            res.getString("cup_citem"),
+                            res.getString("cup_citem2"),
+                            res.getString("cup_upc"),
+                            res.getString("cup_userid"),
+                            res.getString("cup_ts"),    
+                            res.getString("cup_misc"),
+                            res.getString("cup_sku")
+                        );
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new cup_mstr(m);
+        }
+        return r;
+    }
+    
+    
          
     // miscellaneous functions
     public static String[] getCustInfo(String cust) {
@@ -2166,6 +2341,14 @@ public class cusData {
             this(m,"","","","","","","");
         }
     }
+    
+    public record cup_mstr(String[] m, String cup_cust, String cup_item, String cup_citem, String cup_citem2, 
+    String cup_upc, String cup_userid, String cup_ts, String cup_misc, String cup_sku) {
+        public cup_mstr(String[] m) {
+            this(m,"","","","","","","","","");
+        }
+    }
+    
     
     public record cust_term(String[] m, String cut_code, String cut_desc, String cut_days, 
         String cut_discdays, String cut_discpercent, String cut_syscode, String cut_mfi,

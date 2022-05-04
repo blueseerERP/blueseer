@@ -29,14 +29,19 @@ package com.blueseer.ctr;
 import bsmf.MainFrame;
 import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.pass;
-import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.ctr.cusData.addCupMstr;
+import com.blueseer.ctr.cusData.cup_mstr;
+import static com.blueseer.ctr.cusData.deleteCupMstr;
+import static com.blueseer.ctr.cusData.getCupMstr;
+import static com.blueseer.ctr.cusData.updateCupMstr;
 import com.blueseer.inv.invData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.checkLength;
+import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
@@ -50,14 +55,12 @@ import static com.blueseer.utl.BlueSeerUtils.lurb2;
 import static com.blueseer.utl.BlueSeerUtils.lurb3;
 import static com.blueseer.utl.BlueSeerUtils.lurb4;
 import com.blueseer.utl.DTData;
-import com.blueseer.utl.IBlueSeer;
+import com.blueseer.utl.IBlueSeerT;
 import com.blueseer.utl.OVData;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Connection;
@@ -67,8 +70,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -85,11 +86,11 @@ import javax.swing.SwingWorker;
  *
  * @author vaughnte
  */
-public class CustXrefMaint extends javax.swing.JPanel implements IBlueSeer {
+public class CustXrefMaint extends javax.swing.JPanel implements IBlueSeerT {
 
      // global variable declarations
                 boolean isLoad = false;
-    
+                private static cup_mstr x = null;
     // global datatablemodel declarations       
         
     
@@ -99,15 +100,15 @@ public class CustXrefMaint extends javax.swing.JPanel implements IBlueSeer {
     }
 
     // interface functions implemented
-    public void executeTask(String x, String[] y) { 
+    public void executeTask(dbaction x, String[] y) { 
       
         class Task extends SwingWorker<String[], Void> {
        
           String type = "";
           String[] key = null;
           
-          public Task(String type, String[] key) { 
-              this.type = type;
+          public Task(dbaction type, String[] key) { 
+              this.type = type.name();
               this.key = key;
           } 
            
@@ -146,9 +147,8 @@ public class CustXrefMaint extends javax.swing.JPanel implements IBlueSeer {
             BlueSeerUtils.endTask(message);
            if (this.type.equals("delete")) {
              initvars(null);  
-           } else if (this.type.equals("get") && message[0].equals("1")) {
-             tbkey.requestFocus();
-           } else if (this.type.equals("get") && message[0].equals("0")) {
+           } else if (this.type.equals("get")) {
+             updateForm();  
              tbkey.requestFocus();
            } else {
              initvars(null);  
@@ -294,6 +294,7 @@ public class CustXrefMaint extends javax.swing.JPanel implements IBlueSeer {
         ddpart.setSelectedIndex(0);
         }
          tbkey.setText("");
+         custitem2.setText("");
         skunbr.setText("");
         upcnbr.setText("");
         misc.setText("");
@@ -318,22 +319,19 @@ public class CustXrefMaint extends javax.swing.JPanel implements IBlueSeer {
         tbkey.requestFocus();
     }
     
-    public String[] setAction(int i) {
+    public void setAction(String[] x) {
         String[] m = new String[2];
-        if (i > 0) {
-            m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
+        if (x[0].equals("0")) {
                    setPanelComponentState(this, true);
                    btadd.setEnabled(false);
                    tbkey.setEditable(false);
                    tbkey.setForeground(Color.blue);
         } else {
-           m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
                    tbkey.setForeground(Color.red); 
         }
-        return m;
     }
     
-    public boolean validateInput(String x) {
+    public boolean validateInput(dbaction x) {
        
         Map<String,Integer> f = OVData.getTableInfo("cup_mstr");
         int fc;
@@ -397,7 +395,7 @@ public class CustXrefMaint extends javax.swing.JPanel implements IBlueSeer {
         btlookup.setEnabled(true);
         
         if (arg != null && arg.length > 0) {
-            executeTask("get",arg);
+            executeTask(dbaction.get,arg);
         } else {
             tbkey.setEnabled(true);
             tbkey.setEditable(true);
@@ -406,203 +404,47 @@ public class CustXrefMaint extends javax.swing.JPanel implements IBlueSeer {
     }
     
     public String[] addRecord(String[] x) {
-     String[] m = new String[2];
-     
-     try {
-
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                boolean proceed = true;
-                int i = 0;
-                
-                proceed = validateInput("addRecord");
-                
-                if (proceed) {
-
-                    res = st.executeQuery("select * from cup_mstr where cup_citem = " + 
-                      "'" + tbkey.getText().toString() + "'" +
-                      " and cup_cust = " + "'" + ddcust.getSelectedItem().toString() + "'" +
-                      ";");
-                    while (res.next()) {
-                        i++;
-                    }
-                    if (i == 0) {
-                        st.executeUpdate("insert into cup_mstr "
-                        + "(cup_cust, cup_item, cup_citem, cup_citem2, cup_sku, cup_upc, cup_misc, cup_userid"
-                        + " ) "
-                        + " values ( " + "'" + ddcust.getSelectedItem() + "'" + ","
-                        + "'" + ddpart.getSelectedItem() + "'" + ","
-                        + "'" + tbkey.getText() + "'" + ","
-                        + "'" + custitem2.getText() + "'" + ","
-                        + "'" + skunbr.getText() + "'" + ","
-                        + "'" + upcnbr.getText() + "'" + ","
-                        + "'" + misc.getText() + "'"  + ","
-                        + "'" + bsmf.MainFrame.userid.toString() + "'"
-                        + ")"
-                        + ";");
-                        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
-                    } else {
-                       m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists}; 
-                    }
-
-                   initvars(null);
-                   
-                } // if proceed
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordSQLError};  
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordConnError};
-        }
-     
-     return m;
+     String[] m = addCupMstr(createRecord());
+         return m;
      }
      
     public String[] updateRecord(String[] x) {
-     String[] m = new String[2];
-     
-     try {
-            boolean proceed = true;
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            try {
-                   
-               proceed = validateInput("updateRecord");
-                
-                if (proceed) {
-                    st.executeUpdate("update cup_mstr set "
-                            + " cup_item = " + "'" + ddpart.getSelectedItem() + "'" + ","
-                            + " cup_citem2 = " + "'" + custitem2.getText() + "'" + ","
-                            + " cup_sku = "  + "'" + skunbr.getText() + "'" + ","
-                            + " cup_upc = "  + "'" + upcnbr.getText() + "'" + ","
-                            + " cup_misc = "  + "'" + misc.getText() + "'"  + ","
-                            + " cup_userid = "  + "'" + bsmf.MainFrame.userid.toString() + "'"
-                            + " where cup_cust = " + "'" + ddcust.getSelectedItem() + "'" 
-                            + " and cup_citem = " + "'" + tbkey.getText() + "'"
-                        + ";");
-                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
-                    initvars(null);
-                } 
-         
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordSQLError};  
-            } finally {
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordConnError};
-        }
-     
-     return m;
+     String[] m = updateCupMstr(createRecord());
+         return m;
      }
      
     public String[] deleteRecord(String[] x) {
      String[] m = new String[2];
         boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
         if (proceed) {
-        try {
-
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            try {
-                   int i = st.executeUpdate("delete from cup_mstr where cup_citem = " + 
-                      "'" + tbkey.getText().toString() + "'" +
-                      " and cup_cust = " + "'" + ddcust.getSelectedItem().toString() + "'" +
-                      ";");
-                    if (i > 0) {
-                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
-                    initvars(null);
-                    }
-                } catch (SQLException s) {
-                 MainFrame.bslog(s); 
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordSQLError};  
-            } finally {
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordConnError};
-        }
+         m = deleteCupMstr(createRecord());  
+         initvars(null);
         } else {
            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
         }
-     return m;
+         return m;
      }
       
-    public String[] getRecord(String[] x) {
-       String[] m = new String[2];
-       
-        try {
-
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                int i = 0;
-                if (x == null || x.length < 1) { return new String[]{}; };
-                // two key system....make accomodation for first key action performed returning first record where it exists..else grab specific rec with both keys
-                if (x.length == 1) {
-                res = st.executeQuery("select * from cup_mstr where cup_citem = " + "'" + x[0] + "'"  + " limit 1 ;"); 
-                } 
-                if (x.length == 2) {
-                 res = st.executeQuery("SELECT * FROM  cup_mstr left outer join cm_mstr on cm_code = cup_cust where " +
-                    " cup_cust = " + "'" + x[0] + "'" + 
-                    " AND cup_citem = " + "'" + x[1] + "'" + ";") ;  
-                }
-                
-                        
-                while (res.next()) {
-                    i++;
-                    ddcust.setSelectedItem(res.getString("cup_cust"));
-                     ddpart.setSelectedItem(res.getString("cup_item"));
-                     tbkey.setText(res.getString("cup_citem"));
-                     custitem2.setText(res.getString("cup_citem2"));
-                    skunbr.setText(res.getString("cup_sku"));
-                    upcnbr.setText(res.getString("cup_upc"));
-                    misc.setText(res.getString("cup_misc"));
-                }
-               
-                // set Action if Record found (i > 0)
-                m = setAction(i);
-                
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};  
-        }
-      return m;
+    public String[] getRecord(String[] key) {
+       x = getCupMstr(key);
+        return x.m();
     }
+
+    public cup_mstr createRecord() { 
+        cup_mstr x = new cup_mstr(null, 
+                ddcust.getSelectedItem().toString(),
+                ddpart.getSelectedItem().toString(),
+                tbkey.getText(),
+                custitem2.getText(),
+                upcnbr.getText(),
+                bsmf.MainFrame.userid,
+                "", // cup_ts
+                misc.getText(),
+                skunbr.getText()
+                );
+        return x;
+    }
+    
     
     public void lookUpFrame() {
         
@@ -653,7 +495,18 @@ public class CustXrefMaint extends javax.swing.JPanel implements IBlueSeer {
                 getClassLabelTag("lblupc", this.getClass().getSimpleName())); 
         
     }
-
+    
+    public String[] updateForm() {
+        ddcust.setSelectedItem(x.cup_cust());
+        ddpart.setSelectedItem(x.cup_item());
+        tbkey.setText(x.cup_citem());
+        custitem2.setText(x.cup_citem2());
+        skunbr.setText(x.cup_sku());
+        upcnbr.setText(x.cup_upc());
+        misc.setText(x.cup_misc());
+        setAction(x.m());
+        return x.m();  
+    }
     
    
     
@@ -861,27 +714,27 @@ public class CustXrefMaint extends javax.swing.JPanel implements IBlueSeer {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
-        if (! validateInput("addRecord")) {
+        if (! validateInput(dbaction.add)) {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("add", new String[]{tbkey.getText()});
+        executeTask(dbaction.add, new String[]{tbkey.getText()});
     }//GEN-LAST:event_btaddActionPerformed
 
     private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
-      if (! validateInput("deleteRecord")) {
+      if (! validateInput(dbaction.delete)) {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("delete", new String[]{tbkey.getText()});   
+        executeTask(dbaction.delete, new String[]{tbkey.getText()});   
     }//GEN-LAST:event_btdeleteActionPerformed
 
     private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
-       if (! validateInput("updateRecord")) {
+       if (! validateInput(dbaction.update)) {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("update", new String[]{tbkey.getText()});
+        executeTask(dbaction.update, new String[]{tbkey.getText()});
     }//GEN-LAST:event_btupdateActionPerformed
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
@@ -894,7 +747,7 @@ public class CustXrefMaint extends javax.swing.JPanel implements IBlueSeer {
     }//GEN-LAST:event_btclearActionPerformed
 
     private void tbkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkeyActionPerformed
-        executeTask("get", new String[]{tbkey.getText()});
+        executeTask(dbaction.get, new String[]{tbkey.getText()});
     }//GEN-LAST:event_tbkeyActionPerformed
 
     private void btlookupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btlookupActionPerformed
