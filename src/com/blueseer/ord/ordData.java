@@ -42,8 +42,10 @@ import java.sql.SQLException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.logging.Level;
@@ -1506,6 +1508,125 @@ public class ordData {
     
     
     // miscellaneous SQL queries
+    public static String[] getSOMstrHeaderEDI(String order) {
+        String[] x = new String[12];
+        try{
+        Class.forName(driver).newInstance();
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+         // so, po, cust, ship, site, type, orddate, duedate, shipvia, rmks, cur, status
+           res = st.executeQuery("SELECT * from so_mstr " +
+                   " where so_nbr = " + "'" + order + "'" + ";");
+                        while (res.next()) {
+                          x[0] = res.getString("so_nbr");
+                          x[1] = res.getString("so_po");
+                          x[2] = res.getString("so_cust");
+                          x[3] = res.getString("so_ship");
+                          x[4] = res.getString("so_site");
+                          x[5] = res.getString("so_type");
+                          x[6] = res.getString("so_ord_date");
+                          x[7] = res.getString("so_due_date");
+                          x[8] = res.getString("so_shipvia");
+                          x[9] = res.getString("so_rmks");
+                          x[10] = res.getString("so_curr");
+                          x[11] = res.getString("so_status");
+                        }
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+        return x;
+    }
+    
+    public static ArrayList<String[]> getSOMstrdetailsEDI(String order) {
+        ArrayList<String[]> lines = new ArrayList<String[]>();
+        try{
+        Class.forName(driver).newInstance();
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+           // line, item, custitem, qty, price, uom, desc, custline, custuom, custprice
+           res = st.executeQuery("SELECT * from sod_det " +
+                   " where sod_nbr = " + "'" + order + "'" + ";");
+                        while (res.next()) {
+                          String[] s = new String[7];
+                          for (int z = 0; z < 10; z++) {
+                          s[10] = "";
+                          }
+                          s[0] = res.getString("sod_line");
+                          s[1] = res.getString("sod_item");
+                          s[2] = res.getString("sod_custitem");
+                          s[3] = res.getString("sod_ord_qty");
+                          s[4] = res.getString("sod_netprice");
+                          s[5] = res.getString("sod_uom");
+                          s[6] = res.getString("sod_desc");
+                          s[7] = res.getString("sod_custline");
+                          s[8] = res.getString("sod_custuom");
+                          s[9] = res.getString("sod_custprice");
+                          lines.add(s);
+                        }
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+        return lines;
+    }
+    
+    public static String getSOOrderBillto(String order) {
+         String billto = "";
+          try{
+
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try{
+            
+           java.util.Date now = new java.util.Date();
+            DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+            DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
+            String mydate = dfdate.format(now);
+
+
+
+                  res = st.executeQuery("select so_cust from so_mstr where so_nbr = " + "'" + order + "'" +";");
+                while (res.next()) {
+                    billto = res.getString("so_cust");
+                }
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+
+        } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+
+    }
+         return billto;
+     }
+
+    
     public static Double getOrderItemAllocatedQty(String item, String site) {
        Double qty = 0.00;
      try{

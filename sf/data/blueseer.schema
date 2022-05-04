@@ -1068,7 +1068,8 @@ CREATE TABLE IF NOT EXISTS `po_mstr` (
   `po_export_850` tinyint(1) NOT NULL DEFAULT '0',
   `po_import_855` tinyint(1) NOT NULL DEFAULT '0',
   `po_import_856` tinyint(1) NOT NULL DEFAULT '0',
-  `po_ship` varchar(10)  NOT NULL DEFAULT ''
+  `po_ship` varchar(10)  NOT NULL DEFAULT '',
+  `po_edistatus` varchar(10)  NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `pod_mstr` (
   `pod_nbr` varchar(8)  NOT NULL DEFAULT '',

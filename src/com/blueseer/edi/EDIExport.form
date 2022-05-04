@@ -157,7 +157,7 @@
                 <StringItem index="1" value="Web Commerce Order"/>
                 <StringItem index="2" value="Advance Ship Notice"/>
                 <StringItem index="3" value="Invoice"/>
-                <StringItem index="4" value="PO Acknowledgement"/>
+                <StringItem index="4" value="Order Acknowledgement"/>
               </StringArray>
             </Property>
           </Properties>

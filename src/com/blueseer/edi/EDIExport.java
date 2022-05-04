@@ -341,6 +341,27 @@ public class EDIExport extends javax.swing.JPanel {
         return m;
     }
     
+    public String[] exportACKs(ArrayList<String> list) {
+        String[] m = new String[]{"", ""};
+        int l_error = 0;
+        int g_error = 0;
+        String status = "";
+        for (String x : list) {
+          l_error = EDI.Create855(x); 
+          if (l_error == 0) {
+            status = "success";
+            EDData.updateEDIOrderStatus(x);   
+          } else {
+            g_error = l_error;  
+            status = "error";  
+          }
+          tacomments.append("exporting number: " + x + "  Return Code: " + status + "\n");
+        }
+        m[0] = String.valueOf(g_error);
+        m[1] = "Processing Complete";
+        return m;
+    }
+    
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -384,7 +405,7 @@ public class EDIExport extends javax.swing.JPanel {
         jLabel1.setText("Document Type");
         jLabel1.setName("lblid"); // NOI18N
 
-        dddoctype.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Purchase Order", "Web Commerce Order", "Advance Ship Notice", "Invoice", "PO Acknowledgement" }));
+        dddoctype.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Purchase Order", "Web Commerce Order", "Advance Ship Notice", "Invoice", "Order Acknowledgement" }));
         dddoctype.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 dddoctypeActionPerformed(evt);
@@ -497,6 +518,9 @@ public class EDIExport extends javax.swing.JPanel {
         }
         if (dddoctype.getSelectedItem().toString().equals("Purchase Order")) {
           list = EDData.getEDIPOs(tbnbrfrom.getText(), tbnbrto.getText(), BlueSeerUtils.setDateFormat(dcfrom.getDate()), BlueSeerUtils.setDateFormat(dcto.getDate()), cboverride.isSelected());
+        }
+        if (dddoctype.getSelectedItem().toString().equals("Order Acknowledgement")) {
+          list = EDData.getEDIACKs(tbnbrfrom.getText(), tbnbrto.getText(), BlueSeerUtils.setDateFormat(dcfrom.getDate()), BlueSeerUtils.setDateFormat(dcto.getDate()), cboverride.isSelected());
         }
         setPanelComponentState(this, false);
         tacomments.setText("");

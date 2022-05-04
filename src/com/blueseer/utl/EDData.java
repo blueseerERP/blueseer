@@ -1020,7 +1020,52 @@ public class EDData {
         return mylist;
         
     }
+
+    public static ArrayList<String> getEDIACKs(String fromnbr, String tonbr, String fromdate, String todate, boolean override) {
+       ArrayList mylist = new ArrayList();
+        try{
+            Class.forName(driver);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                
+                if (override) {
+                 res = st.executeQuery("select so_nbr from so_mstr where " +
+                        " so_nbr >= " + "'" + fromnbr + "'" + 
+                        " and so_nbr <= " + "'" + tonbr + "'" +
+                        " and so_ord_date >= " + "'" + fromdate + "'" +
+                        " and so_ord_date <= " + "'" + todate + "'" +
+                        " ;");   
+                } else {
+                 res = st.executeQuery("select so_nbr from so_mstr where " +
+                        " so_nbr >= " + "'" + fromnbr + "'" + 
+                        " and so_nbr <= " + "'" + tonbr + "'" +
+                        " and so_ord_date >= " + "'" + fromdate + "'" +
+                        " and so_ord_date <= " + "'" + todate + "'" +
+                        " and so_export_855 = '0' ;");   
+                }
+                
+               while (res.next()) {
+                   mylist.add(res.getString("so_nbr"));
+                }
+           }
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return mylist;
         
+    }
+        
+    
     public static void updateEDIPOStatus(String po) {
        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd"); 
        try{
@@ -1056,6 +1101,32 @@ public class EDData {
            st.executeUpdate(
                  " update ship_mstr set sh_export_856 = '1' " +
                  " where sh_id = " + "'" + shipper + "'" + ";" );
+        }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+            
+            if (st != null) {
+                st.close();
+            }
+            con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+
+   }
+    
+    public static void updateEDIOrderStatus(String order) {
+       DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd"); 
+       try{
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        try{
+           st.executeUpdate(
+                 " update so_mstr set so_export_855 = '1' " +
+                 " where so_nbr = " + "'" + order + "'" + ";" );
         }
         catch (SQLException s){
              MainFrame.bslog(s);

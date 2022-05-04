@@ -241,7 +241,7 @@ public class purData {
     private static int _updatePOMstr(po_mstr x, Connection con, PreparedStatement ps) throws SQLException {
         int rows = 0;
         String sql = "update po_mstr set po_status = ?, po_rmks = ?,  " +
-                "po_site = ?, po_buyer = ?, po_due_date = ?, po_shipvia = ?, po_ship = ? " +               
+                "po_site = ?, po_buyer = ?, po_due_date = ?, po_shipvia = ?, po_ship = ?, po_edistatus = ? " +               
                  " where po_nbr = ? ; ";
 	ps = con.prepareStatement(sql) ;
         ps.setString(7, x.po_nbr);
@@ -252,6 +252,7 @@ public class purData {
             ps.setString(5, x.po_due_date);
             ps.setString(6, x.po_shipvia);
             ps.setString(7, x.po_ship);
+            ps.setString(8, x.po_edistatus); 
             rows = ps.executeUpdate();
         return rows;
     }
@@ -515,7 +516,7 @@ public class purData {
                         res.getString("po_shipvia"), res.getString("po_status"), res.getString("po_userid"), 
                         res.getString("po_type"), res.getString("po_curr"), res.getString("po_terms"), 
                         res.getString("po_site"), res.getString("po_buyer"), res.getString("po_ap_acct"), 
-                        res.getString("po_ap_cc"), res.getString("po_ship"));
+                        res.getString("po_ap_cc"), res.getString("po_ship"), res.getString("po_edistatus"));
                     }
                 }
             }
@@ -545,7 +546,7 @@ public class purData {
                         res.getString("po_shipvia"), res.getString("po_status"), res.getString("po_userid"), 
                         res.getString("po_type"), res.getString("po_curr"), res.getString("po_terms"), 
                         res.getString("po_site"), res.getString("po_buyer"), res.getString("po_ap_acct"), 
-                        res.getString("po_ap_cc"), res.getString("po_ship"));
+                        res.getString("po_ap_cc"), res.getString("po_ship"), res.getString("po_edistatus"));
                 }
             }
             return r;
@@ -1064,7 +1065,7 @@ public class purData {
         return lines;
     }
     
-    public static String[] getPOHeaderEDI(String order) {
+    public static String[] getPOMstrHeaderEDI(String order) {
         String[] x = new String[10];
         try{
         Class.forName(driver).newInstance();
@@ -1099,7 +1100,7 @@ public class purData {
         return x;
     }
     
-    public static ArrayList<String[]> getPOdetailsEDI(String order) {
+    public static ArrayList<String[]> getPOMstrdetailsEDI(String order) {
         ArrayList<String[]> lines = new ArrayList<String[]>();
         try{
         Class.forName(driver).newInstance();
@@ -1256,6 +1257,50 @@ public class purData {
 
    }
  
+    public static String[] updatePOFromAck(String po, String status) {
+        String[] m = new String[]{"",""};
+        String postat = "";
+        try {
+            
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            try {
+                if (status.equals("AC") || status.equals("AD")) {
+                  postat = "accepted";  
+                } else {
+                    postat = "rejected";
+                }
+                    st.executeUpdate(
+                            " update po_mstr set po_edistatus = " + "'" + status + "'"
+                            + ", po_import_855 = '1' "
+                            + " where po_nbr = " + "'" + po + "'" + ";");
+                    
+                    m[0] = "success";
+                    m[1] = "po: " + po;
+               
+
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                m[0] = "error";
+                m[1] = "Exception processing 855";
+            } finally {
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+            m[0] = "error";
+            m[1] = "Exception processing 855";
+        }
+        
+        return m;
+    }
+
+    
     public record purchaseOrder(String[] m, po_mstr po, po_addr poa, ArrayList<pod_mstr> pod) {
         public purchaseOrder(String[] m) {
             this (m, null, null, null);
@@ -1267,10 +1312,10 @@ public class purData {
      String po_ord_date, String po_due_date, String po_rmks, String po_shipvia,
     String po_status, String po_userid, String po_type, String po_curr,
     String po_terms, String po_site, String po_buyer, String po_ap_acct, String po_ap_cc, 
-    String po_ship ) {
+    String po_ship, String po_edistatus ) {
         public po_mstr(String[] m) {
             this(m, "", "", "", "", "", "", "", "", "", "",
-                    "", "", "", "", "", ""
+                    "", "", "", "", "", "", ""
                     );
         }
     }
