@@ -36,6 +36,7 @@ import com.blueseer.ctr.cusData;
 import com.blueseer.fgl.fglData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -49,8 +50,10 @@ import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import static com.blueseer.utl.BlueSeerUtils.lurb2;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeer;
+import com.blueseer.utl.IBlueSeerT;
 import static com.blueseer.vdr.venData.addVendMstr;
 import static com.blueseer.vdr.venData.deleteVendMstr;
+import static com.blueseer.vdr.venData.getVendMstr;
 import static com.blueseer.vdr.venData.updateVendMstr;
 import com.blueseer.vdr.venData.vd_mstr;
 import java.awt.Color;
@@ -83,12 +86,13 @@ import javax.swing.SwingWorker;
  *
  * @author vaughnte
  */
-public class VendMaint extends javax.swing.JPanel implements IBlueSeer {
+public class VendMaint extends javax.swing.JPanel implements IBlueSeerT {
 
      
     // global variable declarations
                 boolean isLoad = false;
-    
+                public static vd_mstr k = null;
+                
    // global datatablemodel declarations  
     javax.swing.table.DefaultTableModel contactmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
@@ -112,15 +116,15 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeer {
     
                   
         // interface functions implemented
-    public void executeTask(String x, String[] y) { 
+    public void executeTask(dbaction x, String[] y) { 
       
         class Task extends SwingWorker<String[], Void> {
        
           String type = "";
           String[] key = null;
           
-          public Task(String type, String[] key) { 
-              this.type = type;
+          public Task(dbaction type, String[] key) { 
+              this.type = type.name();
               this.key = key;
           } 
            
@@ -159,9 +163,8 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeer {
             BlueSeerUtils.endTask(message);
            if (this.type.equals("delete")) {
              initvars(null);  
-           } else if (this.type.equals("get") && message[0].equals("1")) {
-             tbkey.requestFocus();
-           } else if (this.type.equals("get") && message[0].equals("0")) {
+           } else if (this.type.equals("get")) {
+             updateForm();  
              tbkey.requestFocus();
            } else {
              initvars(null);  
@@ -421,22 +424,19 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeer {
         tbkey.requestFocus();
     }
     
-    public String[] setAction(int i) {
+    public void setAction(String[] x) {
         String[] m = new String[2];
-        if (i > 0) {
-            m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
+        if (x[0].equals("0")) { 
                    setPanelComponentState(this, true);
                    btadd.setEnabled(false);
                    tbkey.setEditable(false);
                    tbkey.setForeground(Color.blue);
         } else {
-           m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
                    tbkey.setForeground(Color.red); 
         }
-        return m;
     }
      
-    public boolean validateInput(String x) {
+    public boolean validateInput(dbaction x) {
         boolean b = true;
                 if (OVData.isValidVendor(tbkey.getText()) &&  x.equals("addRecord")) {
                   b = false;
@@ -477,7 +477,7 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeer {
       
         
         if (arg != null && arg.length > 0) {
-            executeTask("get",arg);
+            executeTask(dbaction.get,arg);
         } else {
             tbkey.setEnabled(true);
             tbkey.setEditable(true);
@@ -486,81 +486,9 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeer {
     }
    
     public String[] getRecord(String[] key) {
-         String[] m = new String[2];
-         try {
-           
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                
-                contactmodel.setRowCount(0);
-                int i = 0;
-                res = st.executeQuery("select * from vd_mstr where vd_addr = " + "'" + key[0] + "'"  + ";");
-                while (res.next()) {
-                    i++;
-                tbkey.setText(res.getString("vd_addr"));
-                tbname.setText(res.getString("vd_name"));
-                tbline1.setText(res.getString("vd_line1"));
-                tbline2.setText(res.getString("vd_line2"));
-                tbline3.setText(res.getString("vd_line3"));
-                tbcity.setText(res.getString("vd_city"));
-                ddstate.setSelectedItem(res.getString("vd_state"));
-               ddcountry.setSelectedItem(res.getString("vd_country"));
-                if (res.getString("vd_country").equals("US")) {
-                    ddcountry.setSelectedItem("USA");
-                } 
-                if (res.getString("vd_country").equals("United States")) {
-                    ddcountry.setSelectedItem("USA");
-                } 
-                 if (res.getString("vd_country").equals("CA")) {
-                    ddcountry.setSelectedItem("Canada");
-                } 
-                tbzip.setText(res.getString("vd_zip"));
-                
-                tbdateadded.setText(res.getString("vd_dateadd"));
-                tbdatemod.setText(res.getString("vd_datemod"));
-                tbgroup.setText(res.getString("vd_group"));
-                tbmarket.setText(res.getString("vd_market"));
-                tbbuyer.setText(res.getString("vd_buyer"));
-                ddcarrier.setSelectedItem(res.getString("vd_shipvia"));
-                tbmisc.setText(res.getString("vd_misc"));
-                ddterms.setSelectedItem(res.getString("vd_terms"));
-                tbpricecode.setText(res.getString("vd_price_code"));
-                tbdisccode.setText(res.getString("vd_disc_code"));
-                tbtaxcode.setText(res.getString("vd_tax_code"));
-                ddaccount.setSelectedItem(res.getString("vd_ap_acct"));
-                ddcc.setSelectedItem(res.getString("vd_ap_cc"));
-                tbremarks.setText(res.getString("vd_remarks"));
-                ddbank.setSelectedItem(res.getString("vd_bank"));
-                 ddcurr.setSelectedItem(res.getString("vd_curr"));
-                tbmainphone.setText(res.getString("vd_phone"));
-                tbmainemail.setText(res.getString("vd_email"));
-                cb850.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("vd_is850export")));
-                }
-               // custom get contacts
-               refreshContactTable(key[0]);
-               
-                // set Action if Record found (i > 0)
-                m = setAction(i);
-                
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};  
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1020, Thread.currentThread().getStackTrace()[1].getMethodName())};  
-        }
-      return m;
+        vd_mstr z = getVendMstr(key);
+        k = z;
+        return k.m();
      }
     
     public String[] addRecord(String[] key) {
@@ -668,6 +596,50 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeer {
         
     }
 
+    public String[] updateForm() {
+        tbkey.setText(k.vd_addr());
+        tbname.setText(k.vd_name());
+        tbline1.setText(k.vd_line1());
+        tbline2.setText(k.vd_line2());
+        tbline3.setText(k.vd_line3());
+        tbcity.setText(k.vd_city());
+        ddstate.setSelectedItem(k.vd_state());
+       ddcountry.setSelectedItem(k.vd_country());
+        if (k.vd_country().equals("US")) {
+            ddcountry.setSelectedItem("USA");
+        } 
+        if (k.vd_country().equals("United States")) {
+            ddcountry.setSelectedItem("USA");
+        } 
+         if (k.vd_country().equals("CA")) {
+            ddcountry.setSelectedItem("Canada");
+        } 
+        tbzip.setText(k.vd_zip());
+
+        tbdateadded.setText(k.vd_dateadd());
+        tbdatemod.setText(k.vd_datemod());
+        tbgroup.setText(k.vd_group());
+        tbmarket.setText(k.vd_market());
+        tbbuyer.setText(k.vd_buyer());
+        ddcarrier.setSelectedItem(k.vd_shipvia());
+        tbmisc.setText(k.vd_misc());
+        ddterms.setSelectedItem(k.vd_terms());
+        tbpricecode.setText(k.vd_price_code());
+        tbdisccode.setText(k.vd_disc_code());
+        tbtaxcode.setText(k.vd_tax_code());
+        ddaccount.setSelectedItem(k.vd_ap_acct());
+        ddcc.setSelectedItem(k.vd_ap_cc());
+        tbremarks.setText(k.vd_remarks());
+        ddbank.setSelectedItem(k.vd_bank());
+         ddcurr.setSelectedItem(k.vd_curr());
+        tbmainphone.setText(k.vd_phone());
+        tbmainemail.setText(k.vd_email());
+        cb850.setSelected(BlueSeerUtils.ConvertStringToBool(k.vd_is850export()));
+        refreshContactTable(k.vd_addr());
+        setAction(k.m());
+        return k.m();  
+    }
+    
     
     // custom functions
     public void overrideComponentState() {
@@ -1488,11 +1460,11 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeer {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
-          if (! validateInput("addRecord")) {
+          if (! validateInput(dbaction.add)) {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("add", new String[]{tbkey.getText()});
+        executeTask(dbaction.add, new String[]{tbkey.getText()});
     }//GEN-LAST:event_btaddActionPerformed
 
     private void btAddContactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAddContactActionPerformed
@@ -1510,11 +1482,11 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeer {
     }//GEN-LAST:event_btDeleteContactActionPerformed
 
     private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
-        if (! validateInput("updateRecord")) {
+        if (! validateInput(dbaction.update)) {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("update", new String[]{tbkey.getText()});
+        executeTask(dbaction.update, new String[]{tbkey.getText()});
        
     }//GEN-LAST:event_btupdateActionPerformed
 
@@ -1547,16 +1519,16 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeer {
     }//GEN-LAST:event_contacttableMouseClicked
 
     private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
-          if (! validateInput("deleteRecord")) {
+          if (! validateInput(dbaction.delete)) {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask("delete", new String[]{tbkey.getText()});  
+        executeTask(dbaction.delete, new String[]{tbkey.getText()});  
     }//GEN-LAST:event_btdeleteActionPerformed
 
     private void tbkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkeyActionPerformed
         if (! btadd.isEnabled())
-        executeTask("get", new String[]{tbkey.getText()});
+        executeTask(dbaction.get, new String[]{tbkey.getText()});
     }//GEN-LAST:event_tbkeyActionPerformed
 
     private void btclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearActionPerformed
