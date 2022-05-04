@@ -5007,6 +5007,19 @@ public class OVData {
                     "'" +  "9999" + "'" + "," + 
                     "'" +  "someremarks" + "'" +  ");"
                    );  
+                    st.executeUpdate(" insert into po_addr (poa_code, poa_shipto, " +
+                            "poa_name, poa_line1, poa_city, poa_state, poa_zip, poa_country ) " +
+                            " values ( " +
+                            "'" +  String.valueOf(indexnbr) + "'" + "," +
+                            "'" +  "1000" + "'" + "," +
+                            "'" +  "MFG Company" + "'" + "," +
+                            "'" +  "Dusty Way Canyon Road" + "'" + "," +
+                            "'" +  "Dodge City" + "'" + "," +
+                            "'" +  "KS" + "'" + "," +
+                            "'" +  "65455" + "'" + "," +
+                            "'" +  "US" + "'" +  ");"
+                            );
+                    
                 count = (int) (Math.random() * (5 - 1)) + 1;
                 for (int z = 0; z <= count; z++ ) {
                 qty = (int) (Math.random() * (200 - 10)) + 10;   
