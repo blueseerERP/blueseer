@@ -391,7 +391,7 @@
                                   <Component id="cbisallocated" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                   <Group type="102" attributes="0">
                                       <Group type="103" groupAlignment="0" attributes="0">
                                           <Component id="jLabel81" alignment="1" min="-2" max="-2" attributes="0"/>
@@ -405,7 +405,11 @@
                                           <Component id="ddtax" alignment="0" min="-2" pref="137" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
-                                  <Component id="cbissourced" min="-2" max="-2" attributes="0"/>
+                                  <Group type="102" attributes="0">
+                                      <Component id="cbissourced" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="32767" attributes="0"/>
+                                      <Component id="cbconfirm" min="-2" max="-2" attributes="0"/>
+                                  </Group>
                               </Group>
                           </Group>
                       </Group>
@@ -488,6 +492,7 @@
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="cbisallocated" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="cbissourced" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="cbconfirm" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="32767" attributes="0"/>
                           </Group>
@@ -646,6 +651,11 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Allocation?"/>
                 <Property name="name" type="java.lang.String" value="cballocation" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JCheckBox" name="cbconfirm">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Confirmed"/>
               </Properties>
             </Component>
           </SubComponents>

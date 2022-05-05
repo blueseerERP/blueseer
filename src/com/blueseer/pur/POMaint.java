@@ -391,8 +391,8 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
         totlines.setText("");
         vendnumber.setText("");
         tbbuyer.setText("");
-        cbblanket.setEnabled(true);
-        
+        cbblanket.setSelected(true);
+        cbconfirm.setSelected(false);
         
         
         ddsite.removeAllItems();
@@ -630,7 +630,11 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
                 ddsite.getSelectedItem().toString(),
                 tbbuyer.getText(),  
                 acct,
-                cc, tbshipcode.getText(), ddedistatus.getSelectedItem().toString());
+                cc, 
+                tbshipcode.getText(), 
+                ddedistatus.getSelectedItem().toString(),
+                String.valueOf(BlueSeerUtils.boolToInt(cbconfirm.isSelected()))
+        );
         return x;  
     }
     
@@ -958,6 +962,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
         remarks.setText(po.po_rmks());
         duedate.setDate(bsmf.MainFrame.dfdate.parse(po.po_due_date()));
         blanket = po.po_type();
+        cbconfirm.setSelected(BlueSeerUtils.ConvertStringToBool(po.po_confirm()));
         if (blanket != null && blanket.compareTo("BLANKET") == 0)
         cbblanket.setSelected(true);
         else
@@ -1460,6 +1465,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel10 = new javax.swing.JLabel();
         ddedistatus = new javax.swing.JComboBox<>();
         jLabel11 = new javax.swing.JLabel();
+        cbconfirm = new javax.swing.JCheckBox();
         panelDetail = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         qtyshipped = new javax.swing.JTextField();
@@ -1664,6 +1670,8 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
 
         jLabel11.setText("EDI Status");
 
+        cbconfirm.setText("Confirmed");
+
         javax.swing.GroupLayout panelMainLayout = new javax.swing.GroupLayout(panelMain);
         panelMain.setLayout(panelMainLayout);
         panelMainLayout.setHorizontalGroup(
@@ -1717,7 +1725,8 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
                             .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                 .addComponent(ddedistatus, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(ddtype, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(ddcurr, javax.swing.GroupLayout.Alignment.LEADING, 0, 99, Short.MAX_VALUE))))
+                                .addComponent(ddcurr, javax.swing.GroupLayout.Alignment.LEADING, 0, 99, Short.MAX_VALUE))
+                            .addComponent(cbconfirm)))
                     .addGroup(panelMainLayout.createSequentialGroup()
                         .addComponent(btpoprint)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1809,12 +1818,17 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
                         .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(ddedistatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel11))))
-                .addGap(2, 2, 2)
-                .addComponent(cbblanket)
-                .addGap(2, 2, 2)
-                .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(remarks, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel86))
+                .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelMainLayout.createSequentialGroup()
+                        .addGap(2, 2, 2)
+                        .addComponent(cbblanket)
+                        .addGap(2, 2, 2)
+                        .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(remarks, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel86)))
+                    .addGroup(panelMainLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(cbconfirm)))
                 .addGap(34, 34, 34)
                 .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -2541,6 +2555,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JButton btupdate;
     private javax.swing.JButton btupdateitem;
     private javax.swing.JCheckBox cbblanket;
+    private javax.swing.JCheckBox cbconfirm;
     private javax.swing.JComboBox<String> ddcurr;
     private javax.swing.JComboBox<String> ddedistatus;
     private static javax.swing.JComboBox ddpart;

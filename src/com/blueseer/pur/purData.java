@@ -241,10 +241,11 @@ public class purData {
     private static int _updatePOMstr(po_mstr x, Connection con, PreparedStatement ps) throws SQLException {
         int rows = 0;
         String sql = "update po_mstr set po_status = ?, po_rmks = ?,  " +
-                "po_site = ?, po_buyer = ?, po_due_date = ?, po_shipvia = ?, po_ship = ?, po_edistatus = ? " +               
+                "po_site = ?, po_buyer = ?, po_due_date = ?, po_shipvia = ?, po_ship = ?, po_edistatus = ?, " +
+                "po_confirm = ? " +
                  " where po_nbr = ? ; ";
 	ps = con.prepareStatement(sql) ;
-        ps.setString(7, x.po_nbr);
+        ps.setString(10, x.po_nbr);
             ps.setString(1, x.po_status);
             ps.setString(2, x.po_rmks);
             ps.setString(3, x.po_site);
@@ -253,6 +254,7 @@ public class purData {
             ps.setString(6, x.po_shipvia);
             ps.setString(7, x.po_ship);
             ps.setString(8, x.po_edistatus); 
+            ps.setString(9, x.po_confirm); 
             rows = ps.executeUpdate();
         return rows;
     }
@@ -516,7 +518,8 @@ public class purData {
                         res.getString("po_shipvia"), res.getString("po_status"), res.getString("po_userid"), 
                         res.getString("po_type"), res.getString("po_curr"), res.getString("po_terms"), 
                         res.getString("po_site"), res.getString("po_buyer"), res.getString("po_ap_acct"), 
-                        res.getString("po_ap_cc"), res.getString("po_ship"), res.getString("po_edistatus"));
+                        res.getString("po_ap_cc"), res.getString("po_ship"), res.getString("po_edistatus"),
+                        res.getString("po_confirm"));
                     }
                 }
             }
@@ -546,7 +549,8 @@ public class purData {
                         res.getString("po_shipvia"), res.getString("po_status"), res.getString("po_userid"), 
                         res.getString("po_type"), res.getString("po_curr"), res.getString("po_terms"), 
                         res.getString("po_site"), res.getString("po_buyer"), res.getString("po_ap_acct"), 
-                        res.getString("po_ap_cc"), res.getString("po_ship"), res.getString("po_edistatus"));
+                        res.getString("po_ap_cc"), res.getString("po_ship"), res.getString("po_edistatus"),
+                        res.getString("po_confirm"));
                 }
             }
             return r;
@@ -1312,10 +1316,10 @@ public class purData {
      String po_ord_date, String po_due_date, String po_rmks, String po_shipvia,
     String po_status, String po_userid, String po_type, String po_curr,
     String po_terms, String po_site, String po_buyer, String po_ap_acct, String po_ap_cc, 
-    String po_ship, String po_edistatus ) {
+    String po_ship, String po_edistatus, String po_confirm ) {
         public po_mstr(String[] m) {
             this(m, "", "", "", "", "", "", "", "", "", "",
-                    "", "", "", "", "", "", ""
+                    "", "", "", "", "", "", "", ""
                     );
         }
     }
