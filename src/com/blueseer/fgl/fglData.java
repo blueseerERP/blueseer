@@ -351,6 +351,118 @@ public class fglData {
     }
     
     
+    public static String[] addDeptMstr(dept_mstr x) {
+        String[] m = new String[2];
+        String sqlSelect = "select * from dept_mstr where dept_id = ?";
+        String sqlInsert = "insert into dept_mstr (dept_id, dept_desc, dept_cop_acct, dept_lbr_acct, "
+                + " dept_bdn_acct, dept_lbr_usg_acct, dept_lbr_rate_acct, dept_bdn_usg_acct, dept_bdn_rate_acct  )  " +
+                " values (?,?,?,?,?,?,?,?,?); "; 
+      
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+             PreparedStatement ps = con.prepareStatement(sqlSelect);) {
+             ps.setString(1, x.dept_id);
+          try (ResultSet res = ps.executeQuery();
+               PreparedStatement psi = con.prepareStatement(sqlInsert);) {  
+            if (! res.isBeforeFirst()) {
+            psi.setString(1, x.dept_id);
+            psi.setString(2, x.dept_desc);
+            psi.setString(3, x.dept_cop_acct);
+            psi.setString(4, x.dept_lbr_acct);
+            psi.setString(5, x.dept_bdn_acct);
+            psi.setString(6, x.dept_lbr_usg_acct);
+            psi.setString(7, x.dept_lbr_rate_acct);
+            psi.setString(8, x.dept_bdn_usg_acct);
+            psi.setString(9, x.dept_bdn_rate_acct);
+            int rows = psi.executeUpdate();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+            } else {
+            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists};    
+            }
+          } 
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+    
+    public static String[] updateDeptMstr(dept_mstr x) {
+        String[] m = new String[2];
+        String sql = "update dept_mstr set dept_desc = ?, dept_cop_acct = ?, dept_lbr_acct = ?, "
+                + " dept_bdn_acct = ?, dept_lbr_usg_acct= ?, dept_lbr_rate_acct = ?, dept_bdn_usg_acct = ?, dept_bdn_rate_acct = ? " +
+                " where dept_id = ? ";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, x.dept_desc);
+        ps.setString(2, x.dept_cop_acct);
+        ps.setString(3, x.dept_lbr_acct);
+        ps.setString(4, x.dept_bdn_acct);
+        ps.setString(5, x.dept_lbr_usg_acct);
+        ps.setString(6, x.dept_lbr_rate_acct);
+        ps.setString(7, x.dept_bdn_usg_acct);
+        ps.setString(8, x.dept_bdn_rate_acct);
+        ps.setString(9, x.dept_id);
+        int rows = ps.executeUpdate();
+        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+    
+    public static String[] deleteDeptMstr(dept_mstr x) { 
+       String[] m = new String[2];
+        String sql = "delete from dept_mstr where dept_id = ?; ";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, x.dept_id);
+        int rows = ps.executeUpdate();
+        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+        
+    public static dept_mstr getDeptMstr(String[] x) {
+        dept_mstr r = null;
+        String[] m = new String[2];
+        String sql = "select * from dept_mstr where dept_id = ? ;";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, x[0]);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new dept_mstr(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new dept_mstr(m, res.getString("dept_id"), 
+                            res.getString("dept_desc"),    
+                            res.getString("dept_cop_acct"),
+                            res.getString("dept_lbr_acct"),
+                            res.getString("dept_bdn_acct"),
+                            res.getString("dept_lbr_usg_acct"),
+                            res.getString("dept_lbr_rate_acct"),    
+                            res.getString("dept_bdn_usg_acct"),
+                            res.getString("dept_bdn_rate_acct")
+                        );
+                    }
+                }
+            } 
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new dept_mstr(m);
+        }
+        return r;
+    }
+   
+    
+    
     public static String[] addUpdateGLCtrl(gl_ctrl x) {
         int rows = 0;
         String[] m = new String[2];
@@ -4521,6 +4633,15 @@ return myarray;
             this(m, "", "", "", "", "", "", "", "0");
         }
     }
+    
+    public record dept_mstr(String[] m, String dept_id, String dept_desc, String dept_cop_acct, 
+        String dept_lbr_acct, String dept_bdn_acct, String dept_lbr_usg_acct, String dept_lbr_rate_acct, 
+        String dept_bdn_usg_acct, String dept_bdn_rate_acct) {
+        public dept_mstr(String[] m) {
+            this(m, "", "", "", "", "", "", "", "", "");
+        }
+    }
+    
     
     public record CurrMstr(String[] m, String id, String desc) {
         public CurrMstr(String[] m) {
