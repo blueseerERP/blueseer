@@ -62,6 +62,11 @@ public class Generic855o extends com.blueseer.edi.EDIMap {
     String[] h = getSOMstrHeaderEDI(key);  // 13 elements...see declaration 
     // so, po, cust, ship, site, type, orddate, duedate, shipvia, rmks, cur, status
     
+    if (h[0] == null || h[0].isEmpty()) {
+    setError("Cannot find order number:" + key);
+    return error; 
+    }
+    
      /* Begin Mapping Segments */ 
     String status = "AD";  // accept by default
     String itemstatus = "IA"; // accept by default

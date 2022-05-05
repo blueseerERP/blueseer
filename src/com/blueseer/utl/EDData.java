@@ -549,7 +549,7 @@ public class EDData {
     public static String[] getEDITPDefaults(String doctype, String gssndid, String gsrcvid) {
            
                     
-             String[] mystring = new String[]{"","","","","","","0","0","0","","","","","","","","",""};
+             String[] mystring = new String[]{"","","","","","","0","0","0","","","","","","","","","","",""};
         try{
             Class.forName(driver);
             Connection con = DriverManager.getConnection(url + db, user, pass);
@@ -582,6 +582,8 @@ public class EDData {
                         mystring[15] = res.getString("edi_filetypeout");
                         mystring[16] = res.getString("edi_ifs");
                         mystring[17] = res.getString("edi_ofs");
+                        mystring[18] = res.getString("edi_id");
+                        mystring[19] = res.getString("edi_doc");
                     }
            }
             catch (SQLException s) {
@@ -897,19 +899,21 @@ public class EDData {
             try{
                 
                 if (override) {
-                 res = st.executeQuery("select sh_id from ship_mstr where " +
-                        " sh_id >= " + "'" + fromnbr + "'" + 
+                 res = st.executeQuery("select sh_id from ship_mstr  " +
+                        " inner join cm_mstr on cm_code = sh_cust " +  
+                        " where sh_id >= " + "'" + fromnbr + "'" + 
                         " and sh_id <= " + "'" + tonbr + "'" +
                         " and sh_confdate >= " + "'" + fromdate + "'" +
                         " and sh_confdate <= " + "'" + todate + "'" +
-                        " and sh_status = '1' ;");   
+                        " and sh_status = '1' and cm_is810export = '1'  ;");   
                 } else {
-                 res = st.executeQuery("select sh_id from ship_mstr where " +
-                        " sh_id >= " + "'" + fromnbr + "'" + 
+                 res = st.executeQuery("select sh_id from ship_mstr  " +
+                        " inner join cm_mstr on cm_code = sh_cust " + 
+                        " where sh_id >= " + "'" + fromnbr + "'" + 
                         " and sh_id <= " + "'" + tonbr + "'" +
                         " and sh_confdate >= " + "'" + fromdate + "'" +
                         " and sh_confdate <= " + "'" + todate + "'" +
-                        " and sh_status = '1' " +
+                        " and sh_status = '1' and cm_is810export = '1' " +
                         " and sh_export_810 = '0' ;");   
                 }
                 
@@ -942,19 +946,21 @@ public class EDData {
             try{
                 
                 if (override) {
-                 res = st.executeQuery("select sh_id from ship_mstr where " +
-                        " sh_id >= " + "'" + fromnbr + "'" + 
+                 res = st.executeQuery("select sh_id from ship_mstr  " +
+                        " inner join cm_mstr on cm_code = sh_cust " +  
+                        " where sh_id >= " + "'" + fromnbr + "'" + 
                         " and sh_id <= " + "'" + tonbr + "'" +
                         " and sh_confdate >= " + "'" + fromdate + "'" +
                         " and sh_confdate <= " + "'" + todate + "'" +
-                        " and sh_status = '1' ;");   
+                        " and sh_status = '1' and cm_is856export = '1' ;");   
                 } else {
-                 res = st.executeQuery("select sh_id from ship_mstr where " +
-                        " sh_id >= " + "'" + fromnbr + "'" + 
+                 res = st.executeQuery("select sh_id from ship_mstr  " +
+                        " inner join cm_mstr on cm_code = sh_cust " +  
+                        " where sh_id >= " + "'" + fromnbr + "'" + 
                         " and sh_id <= " + "'" + tonbr + "'" +
                         " and sh_confdate >= " + "'" + fromdate + "'" +
                         " and sh_confdate <= " + "'" + todate + "'" +
-                        " and sh_status = '1' " +
+                        " and sh_status = '1' and cm_is856export = '1'  " +
                         " and sh_export_856 = '0' ;");   
                 }
                 

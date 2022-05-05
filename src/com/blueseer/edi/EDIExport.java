@@ -207,8 +207,8 @@ public class EDIExport extends javax.swing.JPanel {
        tacomments.setText("");
        dcfrom.setDate(today);
        dcto.setDate(today);
-       tbnbrfrom.setText(bsmf.MainFrame.lowchar);
-       tbnbrto.setText(bsmf.MainFrame.hichar);
+       tbnbrfrom.setText("");
+       tbnbrto.setText("");
        cboverride.setSelected(false);
        isLoad = false;
        
@@ -242,6 +242,9 @@ public class EDIExport extends javax.swing.JPanel {
             }
             if (x.equals("Purchase Order")) {
                  message = exportPurchaseOrders(y);
+            }
+            if (x.equals("Order Acknowledgement")) {
+                 message = exportACKs(y);
             }
             return message;
         }
@@ -510,17 +513,35 @@ public class EDIExport extends javax.swing.JPanel {
 
     private void btcommitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcommitActionPerformed
         ArrayList<String> list = new ArrayList<String>();
+        String fromnbr = "";
+        String tonbr = "";
+        if (tbnbrfrom.getText().isEmpty()) {
+           fromnbr = bsmf.MainFrame.lowchar; 
+        } else {
+            fromnbr = tbnbrfrom.getText();
+        }
+        if (tbnbrto.getText().isEmpty()) {
+           tonbr = bsmf.MainFrame.hichar; 
+        } else {
+            tonbr = tbnbrto.getText();
+        }
+       
+        if (dddoctype.getSelectedItem() == null || dddoctype.getSelectedItem().toString().isEmpty()) {
+            bsmf.MainFrame.show("Must choose a valid selection");
+            dddoctype.requestFocus();
+            return ;
+        }
         if (dddoctype.getSelectedItem().toString().equals("Invoice")) {
-          list = EDData.getEDIInvoices(tbnbrfrom.getText(), tbnbrto.getText(), BlueSeerUtils.setDateFormat(dcfrom.getDate()), BlueSeerUtils.setDateFormat(dcto.getDate()), cboverride.isSelected());
+          list = EDData.getEDIInvoices(fromnbr, tonbr, BlueSeerUtils.setDateFormat(dcfrom.getDate()), BlueSeerUtils.setDateFormat(dcto.getDate()), cboverride.isSelected());
         }
         if (dddoctype.getSelectedItem().toString().equals("Advance Ship Notice")) {
-          list = EDData.getEDIASNs(tbnbrfrom.getText(), tbnbrto.getText(), BlueSeerUtils.setDateFormat(dcfrom.getDate()), BlueSeerUtils.setDateFormat(dcto.getDate()), cboverride.isSelected());
+          list = EDData.getEDIASNs(fromnbr, tonbr, BlueSeerUtils.setDateFormat(dcfrom.getDate()), BlueSeerUtils.setDateFormat(dcto.getDate()), cboverride.isSelected());
         }
         if (dddoctype.getSelectedItem().toString().equals("Purchase Order")) {
-          list = EDData.getEDIPOs(tbnbrfrom.getText(), tbnbrto.getText(), BlueSeerUtils.setDateFormat(dcfrom.getDate()), BlueSeerUtils.setDateFormat(dcto.getDate()), cboverride.isSelected());
+          list = EDData.getEDIPOs(fromnbr, tonbr, BlueSeerUtils.setDateFormat(dcfrom.getDate()), BlueSeerUtils.setDateFormat(dcto.getDate()), cboverride.isSelected());
         }
         if (dddoctype.getSelectedItem().toString().equals("Order Acknowledgement")) {
-          list = EDData.getEDIACKs(tbnbrfrom.getText(), tbnbrto.getText(), BlueSeerUtils.setDateFormat(dcfrom.getDate()), BlueSeerUtils.setDateFormat(dcto.getDate()), cboverride.isSelected());
+          list = EDData.getEDIACKs(fromnbr, tonbr, BlueSeerUtils.setDateFormat(dcfrom.getDate()), BlueSeerUtils.setDateFormat(dcto.getDate()), cboverride.isSelected());
         }
         setPanelComponentState(this, false);
         tacomments.setText("");

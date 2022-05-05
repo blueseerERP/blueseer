@@ -1868,6 +1868,7 @@ public class EDI {
         // errorcode = 0 ... clean exit
         // errorcode = 1 ... no record found in getEDIXrefOut/getEDITPDefaults
         // errorcode = 2 ... any catch error below ...try running from command line to see trace dump
+        // errorcode = 3 ... error in map...see edi log
         
         String billto = "";
         String doctype = "856";
@@ -1906,6 +1907,9 @@ public class EDI {
         messages.add(new String[]{"info","edi_xref: " + ids[0] + "/" + ids[1] + "/" + ids[2] + "/" + ids[3] + "/" + ids[4]});
         
         String[] defaults = EDData.getEDITPDefaults(doctype, EDData.getEDIgsid(), ids[1]  ); //810, ourGS, theirsGS
+        messages.add(new String[]{"info","edi_mstr (id,doc): " + defaults[18] + "/" + defaults[19]});
+        messages.add(new String[]{"info","edi_mstr (sndISA/GS,rcvISA/GS): " + defaults[0] + "/" + defaults[2] + "/" + defaults[3] + "/" + defaults[5]});
+        
         c[9] = defaults[7]; 
         c[10] = defaults[6]; 
         c[11] = defaults[8]; 
@@ -1943,6 +1947,9 @@ public class EDI {
         String[] oString = (String[]) oc;
         messages.add(new String[]{oString[0], oString[1]});
         EDData.updateEDIIDX(idxnbr, c); 
+        if (oString[0].equals("error")) {
+            errorcode = 3;
+        }
         } catch (InvocationTargetException ex) {
         errorcode = 2;    
         if (c[12].isEmpty()) {
@@ -1977,6 +1984,7 @@ public class EDI {
         // errorcode = 0 ... clean exit
         // errorcode = 1 ... no record found in getEDIXrefOut/getEDITPDefaults
         // errorcode = 2 ... any catch error below ...try running from command line to see trace dump
+        // errorcode = 3 ... error in map...see edi log
         
         String billto = "";
         String doctype = "855";
@@ -2010,11 +2018,14 @@ public class EDI {
         c[20] = "999999";
         
         // get Delimiters from Cust Defaults
-        
         String[] ids = EDData.getEDIXrefOut(billto, "ST");
         messages.add(new String[]{"info","edi_xref: " + ids[0] + "/" + ids[1] + "/" + ids[2] + "/" + ids[3] + "/" + ids[4]});
+        // tpid, gsid, tpaddr, ovaddr, type
         
         String[] defaults = EDData.getEDITPDefaults(doctype, EDData.getEDIgsid(), ids[1]  ); //810, ourGS, theirsGS
+        messages.add(new String[]{"info","edi_mstr (id,doc): " + defaults[18] + "/" + defaults[19]});
+        messages.add(new String[]{"info","edi_mstr (sndISA/GS,rcvISA/GS): " + defaults[0] + "/" + defaults[2] + "/" + defaults[3] + "/" + defaults[5]});
+        
         c[9] = defaults[7]; 
         c[10] = defaults[6]; 
         c[11] = defaults[8]; 
@@ -2052,6 +2063,9 @@ public class EDI {
         String[] oString = (String[]) oc;
         messages.add(new String[]{oString[0], oString[1]});
         EDData.updateEDIIDX(idxnbr, c); 
+        if (oString[0].equals("error")) {
+            errorcode = 3;
+        }
         } catch (InvocationTargetException ex) {
         errorcode = 2;    
         if (c[12].isEmpty()) {
@@ -2087,6 +2101,7 @@ public class EDI {
         // errorcode = 0 ... clean exit
         // errorcode = 1 ... no record found in getEDIXrefOut/getEDITPDefaults
         // errorcode = 2 ... any catch error below ...try running from command line to see trace dump
+        // errorcode = 3 ... error in map...see edi log
         
         String billto = "";
         String doctype = "810";
@@ -2125,6 +2140,9 @@ public class EDI {
         messages.add(new String[]{"info","edi_xref: " + ids[0] + "/" + ids[1] + "/" + ids[2] + "/" + ids[3] + "/" + ids[4]});
         
         String[] defaults = EDData.getEDITPDefaults(doctype, EDData.getEDIgsid(), ids[1]  ); //810, ourGS, theirsGS
+        messages.add(new String[]{"info","edi_mstr (id,doc): " + defaults[18] + "/" + defaults[19]});
+        messages.add(new String[]{"info","edi_mstr (sndISA/GS,rcvISA/GS): " + defaults[0] + "/" + defaults[2] + "/" + defaults[3] + "/" + defaults[5]});
+        
         c[9] = defaults[7]; 
         c[10] = defaults[6]; 
         c[11] = defaults[8]; 
@@ -2162,6 +2180,9 @@ public class EDI {
         String[] oString = (String[]) oc;
         messages.add(new String[]{oString[0], oString[1]});
         EDData.updateEDIIDX(idxnbr, c); 
+        if (oString[0].equals("error")) {
+            errorcode = 3;
+        }
         } catch (InvocationTargetException ex) {
         errorcode = 2;    
         if (c[12].isEmpty()) {
@@ -2196,6 +2217,7 @@ public class EDI {
         // errorcode = 0 ... clean exit
         // errorcode = 1 ... no record found in getEDIXrefOut/getEDITPDefaults
         // errorcode = 2 ... any catch error below ...try running from command line to see trace dump
+        // errorcode = 3 ... error in map...see edi log
         
         String vendor = "";
         String doctype = "850";
@@ -2234,6 +2256,9 @@ public class EDI {
         messages.add(new String[]{"info","edi_xref: " + ids[0] + "/" + ids[1] + "/" + ids[2] + "/" + ids[3] + "/" + ids[4]});
         
         String[] defaults = EDData.getEDITPDefaults(doctype, EDData.getEDIgsid(), ids[1]  ); //810, ourGS, theirsGS
+        messages.add(new String[]{"info","edi_mstr (id,doc): " + defaults[18] + "/" + defaults[19]});
+        messages.add(new String[]{"info","edi_mstr (sndISA/GS,rcvISA/GS): " + defaults[0] + "/" + defaults[2] + "/" + defaults[3] + "/" + defaults[5]});
+        
         c[9] = defaults[7]; 
         c[10] = defaults[6]; 
         c[11] = defaults[8]; 
@@ -2271,6 +2296,9 @@ public class EDI {
         String[] oString = (String[]) oc;
         messages.add(new String[]{oString[0], oString[1]});
         EDData.updateEDIIDX(idxnbr, c); 
+        if (oString[0].equals("error")) {
+            errorcode = 3;
+        }
         } catch (InvocationTargetException ex) {
         errorcode = 2;    
         if (c[12].isEmpty()) {

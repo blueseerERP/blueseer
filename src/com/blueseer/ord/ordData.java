@@ -1514,9 +1514,10 @@ public class ordData {
         try{
         Class.forName(driver).newInstance();
         Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
         try{
-            Statement st = con.createStatement();
-            ResultSet res = null;
+            
          // so, po, cust, ship, site, type, orddate, duedate, shipvia, rmks, cur, status
            res = st.executeQuery("SELECT * from so_mstr " +
                    " where so_nbr = " + "'" + order + "'" + ";");
@@ -1537,8 +1538,11 @@ public class ordData {
        }
         catch (SQLException s){
              MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
         }
-        con.close();
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -1551,16 +1555,17 @@ public class ordData {
         try{
         Class.forName(driver).newInstance();
         Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
         try{
-            Statement st = con.createStatement();
-            ResultSet res = null;
+            
            // line, item, custitem, qty, price, uom, desc, custline, custuom, custprice
            res = st.executeQuery("SELECT * from sod_det " +
                    " where sod_nbr = " + "'" + order + "'" + ";");
                         while (res.next()) {
-                          String[] s = new String[7];
+                          String[] s = new String[10];
                           for (int z = 0; z < 10; z++) {
-                          s[10] = "";
+                          s[z] = "";
                           }
                           s[0] = res.getString("sod_line");
                           s[1] = res.getString("sod_item");
@@ -1574,11 +1579,14 @@ public class ordData {
                           s[9] = res.getString("sod_custprice");
                           lines.add(s);
                         }
-       }
+        }
         catch (SQLException s){
              MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
         }
-        con.close();
     }
     catch (Exception e){
         MainFrame.bslog(e);

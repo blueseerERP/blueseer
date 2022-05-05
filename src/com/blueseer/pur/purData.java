@@ -1046,11 +1046,11 @@ public class purData {
     public static ArrayList<String> getPOLines(String order) {
         ArrayList<String> lines = new ArrayList<String>();
         try{
-        Class.forName(driver).newInstance();
         Connection con = DriverManager.getConnection(url + db, user, pass);
-        try{
-            Statement st = con.createStatement();
+        Statement st = con.createStatement();
             ResultSet res = null;
+        try{
+            
 
            res = st.executeQuery("SELECT pod_line from pod_mstr " +
                    " where pod_nbr = " + "'" + order + "'" + ";");
@@ -1060,8 +1060,11 @@ public class purData {
        }
         catch (SQLException s){
              MainFrame.bslog(s);
+        } finally {
+            if (res != null) res.close();
+            if (st != null) st.close();
+            con.close();
         }
-        con.close();
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -1072,11 +1075,11 @@ public class purData {
     public static String[] getPOMstrHeaderEDI(String order) {
         String[] x = new String[10];
         try{
-        Class.forName(driver).newInstance();
         Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
         try{
-            Statement st = con.createStatement();
-            ResultSet res = null;
+            
          // po, vend, ship, site, type, orddate, duedate, shipvia, rmks, cur
            res = st.executeQuery("SELECT * from po_mstr " +
                    " where po_nbr = " + "'" + order + "'" + ";");
@@ -1095,8 +1098,11 @@ public class purData {
        }
         catch (SQLException s){
              MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
         }
-        con.close();
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -1107,11 +1113,11 @@ public class purData {
     public static ArrayList<String[]> getPOMstrdetailsEDI(String order) {
         ArrayList<String[]> lines = new ArrayList<String[]>();
         try{
-        Class.forName(driver).newInstance();
         Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
         try{
-            Statement st = con.createStatement();
-            ResultSet res = null;
+            
            // line, item, venditem, qty, price, uom, desc
            res = st.executeQuery("SELECT * from pod_mstr " +
                    " where pod_nbr = " + "'" + order + "'" + ";");
@@ -1132,8 +1138,11 @@ public class purData {
        }
         catch (SQLException s){
              MainFrame.bslog(s);
+        } finally {
+            if (res != null) res.close();
+            if (st != null) st.close();
+            con.close();
         }
-        con.close();
     }
     catch (Exception e){
         MainFrame.bslog(e);
