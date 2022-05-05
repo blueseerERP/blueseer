@@ -621,6 +621,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
            
                    setPanelComponentState(this, true);
                    btadd.setEnabled(false);
+                   ddcust.setEnabled(false);
                    tbkey.setEditable(false);
                    tbkey.setForeground(Color.blue);
                    
@@ -631,7 +632,6 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
                     if (ddstatus.getSelectedItem().toString().compareTo(getGlobalProgTag("closed")) == 0) {
                              lblstatus.setText(getMessageTag(1097));
                              lblstatus.setForeground(Color.blue);
-                             setPanelComponentState(this, true);  //allowed to see but not update
                              btnew.setEnabled(true);
                              btlookup.setEnabled(true);
                              btclear.setEnabled(true);
@@ -646,7 +646,6 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
                              
                              lblstatus.setText(getMessageTag(1098));
                              lblstatus.setForeground(Color.red);
-                              setPanelComponentState(this, true);
                               btadd.setEnabled(false);
                               btprintinvoice.setEnabled(false);
                               btprintps.setEnabled(false);

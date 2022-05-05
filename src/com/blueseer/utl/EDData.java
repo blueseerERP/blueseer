@@ -987,18 +987,22 @@ public class EDData {
             try{
                 
                 if (override) {
-                 res = st.executeQuery("select po_nbr from po_mstr where " +
-                        " po_nbr >= " + "'" + fromnbr + "'" + 
+                 res = st.executeQuery("select po_nbr from po_mstr  " +
+                        " inner join vd_mstr on vd_addr = po_vend " + 
+                        " where po_nbr >= " + "'" + fromnbr + "'" + 
                         " and po_nbr <= " + "'" + tonbr + "'" +
                         " and po_ord_date >= " + "'" + fromdate + "'" +
                         " and po_ord_date <= " + "'" + todate + "'" +
+                        " and po_confirmed = '1' and vd_is850export = '1' " +        
                         " ;");   
                 } else {
-                 res = st.executeQuery("select po_nbr from po_mstr where " +
-                        " po_nbr >= " + "'" + fromnbr + "'" + 
+                 res = st.executeQuery("select po_nbr from po_mstr  " +
+                        " inner join vd_mstr on vd_addr = po_vend " + 
+                        " where po_nbr >= " + "'" + fromnbr + "'" + 
                         " and po_nbr <= " + "'" + tonbr + "'" +
                         " and po_ord_date >= " + "'" + fromdate + "'" +
                         " and po_ord_date <= " + "'" + todate + "'" +
+                        " and po_confirmed = '1' and vd_is850export = '1' " +        
                         " and po_export_850 = '0' ;");   
                 }
                 
@@ -1031,18 +1035,22 @@ public class EDData {
             try{
                 
                 if (override) {
-                 res = st.executeQuery("select so_nbr from so_mstr where " +
-                        " so_nbr >= " + "'" + fromnbr + "'" + 
+                 res = st.executeQuery("select so_nbr from so_mstr  " +
+                        " inner join cm_mstr on cm_code = so_cust " + 
+                        " where so_nbr >= " + "'" + fromnbr + "'" + 
                         " and so_nbr <= " + "'" + tonbr + "'" +
                         " and so_ord_date >= " + "'" + fromdate + "'" +
                         " and so_ord_date <= " + "'" + todate + "'" +
+                        " and so_confirmed = '1' and cm_is855export = '1' " +        
                         " ;");   
                 } else {
-                 res = st.executeQuery("select so_nbr from so_mstr where " +
-                        " so_nbr >= " + "'" + fromnbr + "'" + 
+                 res = st.executeQuery("select so_nbr from so_mstr  " +
+                        " inner join cm_mstr on cm_code = so_cust " +  
+                        " where so_nbr >= " + "'" + fromnbr + "'" + 
                         " and so_nbr <= " + "'" + tonbr + "'" +
                         " and so_ord_date >= " + "'" + fromdate + "'" +
                         " and so_ord_date <= " + "'" + todate + "'" +
+                        " and so_confirmed = '1' and cm_is855export = '1' " +          
                         " and so_export_855 = '0' ;");   
                 }
                 

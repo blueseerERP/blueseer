@@ -405,7 +405,15 @@
                                   <Component id="ddtax" alignment="0" max="32767" attributes="0"/>
                                   <Component id="tbdatemod" alignment="0" max="32767" attributes="0"/>
                                   <Component id="tbmarket" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="cbonhold" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Group type="102" attributes="0">
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="cbonhold" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Component id="cb855" min="-2" max="-2" attributes="0"/>
+                                          <Component id="cb856" min="-2" max="-2" attributes="0"/>
+                                          <Component id="cb810" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                  </Group>
                               </Group>
                           </Group>
                           <Group type="102" attributes="0">
@@ -514,12 +522,16 @@
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="jLabel40" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="ddlabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="cb855" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="tbshpformat" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel42" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="cb856" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="cb810" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="btadd" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -785,6 +797,21 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Currency"/>
                 <Property name="name" type="java.lang.String" value="lblcurrency" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JCheckBox" name="cb855">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Export 855"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JCheckBox" name="cb856">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Export 856"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JCheckBox" name="cb810">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Export 810"/>
               </Properties>
             </Component>
           </SubComponents>

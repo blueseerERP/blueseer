@@ -241,7 +241,10 @@ CREATE TABLE IF NOT EXISTS `cm_mstr` (
   `cm_aliascode` varchar(50) NOT NULL  DEFAULT '',
   `cm_label` varchar(100) NOT NULL  DEFAULT '',
   `cm_phone` varchar(15) NOT NULL  DEFAULT '',
-  `cm_email` varchar(60) NOT NULL  DEFAULT ''
+  `cm_email` varchar(60) NOT NULL  DEFAULT '',
+  `cm_is855export` tinyint(1) NOT NULL DEFAULT '0',
+  `cm_is856export` tinyint(1) NOT NULL DEFAULT '0',
+  `cm_is810export` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `cmc_det` (
   `cmc_id` int(12) NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -1069,7 +1072,8 @@ CREATE TABLE IF NOT EXISTS `po_mstr` (
   `po_import_855` tinyint(1) NOT NULL DEFAULT '0',
   `po_import_856` tinyint(1) NOT NULL DEFAULT '0',
   `po_ship` varchar(10)  NOT NULL DEFAULT '',
-  `po_edistatus` varchar(10)  NOT NULL DEFAULT ''
+  `po_edistatus` varchar(10)  NOT NULL DEFAULT '',
+  `po_confirmed` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `pod_mstr` (
   `pod_nbr` varchar(8)  NOT NULL DEFAULT '',
@@ -1698,7 +1702,8 @@ CREATE TABLE IF NOT EXISTS `so_mstr` (
   `so_site` varchar(10) NOT NULL  DEFAULT '',
   `so_isallocated` varchar(1) NOT NULL  DEFAULT '',
   `so_export_855` tinyint(1) NOT NULL DEFAULT '0',
-  `so_entrytype` varchar(10)  NOT NULL DEFAULT ''
+  `so_entrytype` varchar(10)  NOT NULL DEFAULT '',
+  `so_confirmed` tinyint(1)  NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `so_tax` (
   `sot_nbr` varchar(8) NOT NULL,

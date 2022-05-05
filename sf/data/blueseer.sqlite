@@ -263,7 +263,11 @@ CREATE TABLE "cm_mstr" (
   "cm_aliascode" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
   "cm_label" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
   "cm_phone" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
-  "cm_email" varchar(60) NOT NULL COLLATE NOCASE DEFAULT '');
+  "cm_email" varchar(60) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cm_is855export" tinyint(1) DEFAULT '0',
+  "cm_is856export" tinyint(1) DEFAULT '0',
+  "cm_is810export" tinyint(1) DEFAULT '0'
+);
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -1294,7 +1298,8 @@ CREATE TABLE "po_mstr" (
   "po_import_855" tinyint(1) NOT NULL DEFAULT '0',
   "po_import_856" tinyint(1) NOT NULL DEFAULT '0',
   "po_ship" varchar(10) COLLATE NOCASE DEFAULT '',
-  "po_edistatus" varchar(10) COLLATE NOCASE DEFAULT ''
+  "po_edistatus" varchar(10) COLLATE NOCASE DEFAULT '',
+  "po_confirmed" tinyint(1) NOT NULL DEFAULT '0'
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -2024,7 +2029,8 @@ CREATE TABLE "so_mstr" (
   "so_site" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
   "so_isallocated" varchar(1) NOT NULL COLLATE NOCASE DEFAULT '',
   "so_export_855" tinyint(1) NOT NULL DEFAULT '0',
-  "so_entrytype" varchar(10) NOT NULL COLLATE NOCASE DEFAULT ''
+  "so_entrytype" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
+  "so_confirmed" tinyint(1) NOT NULL DEFAULT '0'
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;

@@ -390,6 +390,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbtotdollars.setText("");
         totlines.setText("");
         vendnumber.setText("");
+        tbbuyer.setText("");
         cbblanket.setEnabled(true);
         
         
@@ -508,23 +509,19 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
         if (x[0].equals("0")) {
                    setPanelComponentState(this, true);
                    btadd.setEnabled(false);
+                   ddvend.setEnabled(false);
                    tbkey.setEditable(false);
                    tbkey.setForeground(Color.blue);
                     refreshDisplayTotals();
                     
                     if (ddstatus.getSelectedItem().toString().compareTo(getGlobalProgTag("closed")) == 0) {
-                             setPanelComponentState(this, true);  //allowed to see but not update
                              btnew.setEnabled(true);
                              btlookup.setEnabled(true);
                              btclear.setEnabled(true);
                              btpoprint.setEnabled(true);
-                             btadd.setEnabled(false);
                              btupdate.setEnabled(false);
                              btdelete.setEnabled(false);
-                    } else {
-                              setPanelComponentState(this, true);
-                              btadd.setEnabled(false);
-                    }
+                    } 
                    
         } else {
                    tbkey.setForeground(Color.red); 

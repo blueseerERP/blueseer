@@ -1678,6 +1678,9 @@ public class MassLoad extends javax.swing.JPanel {
         list.add("cm_label,s,100,optional,unvalidated");
         list.add("cm_phone,s,15,optional,unvalidated");
         list.add("cm_email,s,60,optional,unvalidated");
+        list.add("cm_is855export,i,1,optional,unvalidated");
+        list.add("cm_is856export,i,1,optional,unvalidated");
+        list.add("cm_is810export,i,1,optional,unvalidated");
         return list;
     }
     
