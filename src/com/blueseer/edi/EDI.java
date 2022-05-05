@@ -1600,7 +1600,8 @@ public class EDI {
                  e.remarks,
                  "DISCRETE",
                  "", // tax
-                "0" // isSourced
+                "0", // isSourced
+                "0" // isConfirmed
                 );
         // detail
         ArrayList<ordData.sod_det> detail = new ArrayList<ordData.sod_det>();

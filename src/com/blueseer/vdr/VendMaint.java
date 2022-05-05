@@ -321,9 +321,10 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbbuyer.setText("0");
         tbmainphone.setText("");
         tbmainemail.setText("");
-        
         tbremarks.setText("");
        
+        cb850.setSelected(false);
+        
         tbsalesrep.setText("");
         tbgroup.setText("");
         tbmarket.setText("");
@@ -365,7 +366,7 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeerT {
         for (int i = 0; i < curr.size(); i++) {
             ddcurr.addItem(curr.get(i));
         }
-         ddcurr.setSelectedItem(OVData.getDefaultCurrency());
+        ddcurr.setSelectedItem(OVData.getDefaultCurrency());
         
         ddbank.removeAllItems();
         ArrayList bank = OVData.getbanklist();
@@ -386,9 +387,8 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeerT {
             ddcc.addItem(ccs.get(i).toString());
         }
         
-         if (ddcurr.getItemCount() > 0)
-        ddcurr.setSelectedIndex(0);
-         if (ddbank.getItemCount() > 0)
+       
+        if (ddbank.getItemCount() > 0)
         ddbank.setSelectedIndex(0);
          if (ddcarrier.getItemCount() > 0)
         ddcarrier.setSelectedIndex(0);

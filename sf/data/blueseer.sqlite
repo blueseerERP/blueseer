@@ -1299,7 +1299,7 @@ CREATE TABLE "po_mstr" (
   "po_import_856" tinyint(1) NOT NULL DEFAULT '0',
   "po_ship" varchar(10) COLLATE NOCASE DEFAULT '',
   "po_edistatus" varchar(10) COLLATE NOCASE DEFAULT '',
-  "po_confirmed" tinyint(1) NOT NULL DEFAULT '0'
+  "po_confirm" tinyint(1) NOT NULL DEFAULT '0'
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -2030,7 +2030,7 @@ CREATE TABLE "so_mstr" (
   "so_isallocated" varchar(1) NOT NULL COLLATE NOCASE DEFAULT '',
   "so_export_855" tinyint(1) NOT NULL DEFAULT '0',
   "so_entrytype" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
-  "so_confirmed" tinyint(1) NOT NULL DEFAULT '0'
+  "so_confirm" tinyint(1) NOT NULL DEFAULT '0'
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
