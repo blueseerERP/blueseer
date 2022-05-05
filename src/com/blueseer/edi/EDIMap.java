@@ -603,7 +603,7 @@ public abstract class EDIMap implements EDIMapi {
                 outdir = EDData.getEDIOutDir();
             }
         }
-
+        
         if (outfile.isEmpty()) {
             outfile = tp[10] + String.format("%07d", filenumber) + "." + tp[11];
         }

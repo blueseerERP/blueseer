@@ -2716,9 +2716,11 @@ public class EDI {
          String filename = defaults[10] + "." + String.valueOf(filenumber) + "." + defaults[11];
         
          //  if filepath is defined...use this for explicit file path relative to root
+        /*  don't do this...TEV 20220505...done downstream
          if (! defaults[9].isEmpty()) {
              filename = defaults[9] + "/" + filename;
          }
+         */
          
          //File f = new File(defaults[9] + defaults[10] + "." + String.valueOf(filenumber) + "." + defaults[11]);
          //BufferedWriter output;
@@ -3215,7 +3217,7 @@ public class EDI {
     
    // SmbFile folder = new SmbFile("smb://10.17.2.55/edi/", auth);
     
-        
+   // bsmf.MainFrame.show(dir + " -- " + filename);
     Path path = FileSystems.getDefault().getPath(dir + "/" + filename);
     Path archpath = FileSystems.getDefault().getPath(EDData.getEDIOutArch() + "/" + filename);
     
