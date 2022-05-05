@@ -4830,6 +4830,7 @@ public class OVData {
             boolean myreturn = true;
             ArrayList<String[]> items = invData.getItemsAndPriceByType("FG");
             ArrayList<String> custs = cusData.getcustmstrlist();
+            String curr = OVData.getDefaultCurrency();
             try {
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
@@ -4870,7 +4871,7 @@ public class OVData {
                     if (j == 0) {
                     st.executeUpdate(" insert into so_mstr " 
                     + "(so_nbr, so_cust, so_ship, so_po, so_ord_date, so_due_date, " 
-                    + "so_create_date, so_userid, so_status,"
+                    + "so_create_date, so_userid, so_status, so_curr, "
                     + "so_rmks, so_terms, so_ar_acct, so_ar_cc, so_shipvia, so_type, so_site, so_onhold ) "
                     + " values ( " + 
                     "'" +  String.valueOf(indexnbr) + "'" + "," + 
@@ -4881,7 +4882,8 @@ public class OVData {
                     "'" +  sduedate + "'" + "," +  
                     "'" +  now + "'" + "," +  
                     "'" +  "admin" + "'" + "," +
-                    "'" +  "open" + "'" + "," +      
+                    "'" +  "open" + "'" + "," +  
+                    "'" +  curr + "'" + "," +        
                     "'" +  "" + "'" + "," + 
                     "'" +  "N30" + "'" + "," + 
                     "'" +  "20000000" + "'" + "," + 
@@ -4943,7 +4945,6 @@ public class OVData {
     public static boolean createTestDataPO() {
             boolean myreturn = true;
             ArrayList<String[]> items = invData.getItemsAndPriceByType("FG");
-            ArrayList<String> custs = cusData.getcustmstrlist();
             try {
             
             Connection con = DriverManager.getConnection(url + db, user, pass);
