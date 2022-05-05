@@ -83,8 +83,8 @@ import javax.swing.JViewport;
 public class BankMaint extends javax.swing.JPanel implements IBlueSeerT {
 
     // global variable declarations
-                boolean isLoad = false;
-    
+        boolean isLoad = false;
+        public static BankMstr x = null;
     // global datatablemodel declarations       
                 
       
@@ -144,9 +144,8 @@ public class BankMaint extends javax.swing.JPanel implements IBlueSeerT {
             BlueSeerUtils.endTask(message);
            if (this.type.equals("delete")) {
              initvars(null);  
-           } else if (this.type.equals("get") && message[0].equals("1")) {
-             tbkey.requestFocus();
-           } else if (this.type.equals("get") && message[0].equals("0")) {
+           } else if (this.type.equals("get")) {
+             updateForm();
              tbkey.requestFocus();
            } else {
              initvars(null);  
@@ -438,16 +437,7 @@ public class BankMaint extends javax.swing.JPanel implements IBlueSeerT {
      }
       
     public String[] getRecord(String[] key) {
-       BankMstr x = getBankMstr(key);
-        tbkey.setText(x.id());
-        tbdesc.setText(x.desc());
-        tbacct.setText(x.account());
-        tbroute.setText(x.routing());
-        tbassignedID.setText(x.assignedID());
-        ddcurr.setSelectedItem(x.currency());
-        ddsite.setSelectedItem(x.site());
-        cbactive.setSelected(BlueSeerUtils.ConvertStringToBool(String.valueOf(x.cbactive())));
-        setAction(x.m());
+        x = getBankMstr(key);
         return x.m();
     }
     
@@ -492,6 +482,18 @@ public class BankMaint extends javax.swing.JPanel implements IBlueSeerT {
         
     }
 
+    public void updateForm() {
+        tbkey.setText(x.id());
+        tbdesc.setText(x.desc());
+        tbacct.setText(x.account());
+        tbroute.setText(x.routing());
+        tbassignedID.setText(x.assignedID());
+        ddcurr.setSelectedItem(x.currency());
+        ddsite.setSelectedItem(x.site());
+        cbactive.setSelected(BlueSeerUtils.ConvertStringToBool(String.valueOf(x.cbactive())));
+        setAction(x.m()); 
+    }
+    
    
     /**
      * This method is called from within the constructor to initialize the form.
