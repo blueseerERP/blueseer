@@ -1718,8 +1718,9 @@ public class EDI {
     
     }
     
-    public static void createFOMSTRFrom204i(edi204i e, String[] control) {
-             control[7] = e.custfo;
+    public static String[] createFOMSTRFrom204i(edi204i e, String[] control) {
+            String[] m = new String[]{"",""}; 
+            control[7] = e.custfo;
              String fo = EDData.CreateFOMSTRFrom204i(control, e.custfo, e.carrier, e.equiptype, e.remarks, e.bol, e.cust, e.tpid, e.weight, e.ref);  
              for (int j = 0; j < e.getDetCount(); j++ ) {
                EDData.CreateFODDETFrom204i(fo,
@@ -1746,8 +1747,13 @@ public class EDI {
                // System.out.println(((edi850)e.get(i)).getDetCustItem(j));
                }
              
-             
-    
+       if (! fo.isEmpty()) {
+            m[0] = "success";
+            m[1] = m[1] + ": " + fo;
+        } else {
+            m[0] = "error";
+        }      
+      return m;
     } 
      
     public static void createFOTDETFrom214(edi214 e, String[] control) {
