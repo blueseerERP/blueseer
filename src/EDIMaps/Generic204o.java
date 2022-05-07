@@ -26,21 +26,9 @@ SOFTWARE.
 
 package EDIMaps;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import com.blueseer.utl.OVData;
-import com.blueseer.edi.EDI;
-import com.blueseer.edi.EDI.*;
-import com.blueseer.utl.BlueSeerUtils;
 
 
 /**
@@ -50,8 +38,6 @@ import com.blueseer.utl.BlueSeerUtils;
 public class Generic204o extends com.blueseer.edi.EDIMap {
     
     public String[] Mapdata(ArrayList doc, String[] c) throws IOException {
-   com.blueseer.edi.EDI edi = new com.blueseer.edi.EDI();
-     String doctype = c[1];
      String key = doc.get(0).toString(); 
         
      // set the super class variables per the inbound array passed from the Processor (See EDIMap javadoc for defs)

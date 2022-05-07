@@ -26,116 +26,58 @@ SOFTWARE.
 
 package EDIMaps;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
+
 import java.io.IOException;
 import java.text.DateFormat;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import com.blueseer.utl.OVData;
-import com.blueseer.edi.EDI;
-import com.blueseer.edi.EDI.*;
-import com.blueseer.utl.BlueSeerUtils;
-import com.blueseer.utl.EDData;
 
 
 /**
  *
  * @author vaughnte
  */
-public class Generic990o {
+public class Generic990o extends com.blueseer.edi.EDIMap {
     
-    public static String[] Mapdata(String[] control, String nbr, String tp, String response) throws IOException {
-        com.blueseer.edi.EDI edi = new com.blueseer.edi.EDI();
-     String doctype = "990";
+     public String[] Mapdata(ArrayList doc, String[] c) throws IOException {
+     String key = doc.get(0).toString(); 
         
-     
-     DateFormat dfdate = new SimpleDateFormat("yyyyMMdd");
-     Date now = new Date();
-       
-       // get delimiters for this trading partner, doctype, docdirection
-        String[] delimiters = EDData.getDelimiters(tp, doctype);
-        String dir = EDData.getEDICustDir(doctype, tp, "");
-         String sd = delimiters[0];
-         String ed = delimiters[1];
-         String ud = delimiters[2];
+        // set the super class variables per the inbound array passed from the Processor (See EDIMap javadoc for defs)
+        setControl(c);    
+  
+        
          
-         int i = 0;
-         int segcount = 0;
-         int hdrsegcount = 0;
-         int detsegcount = 0;
-         
-         // envelope array holds in this order (isa, gs, ge, iea, filename, controlnumber)
-         String[] envelope = EDI.generateEnvelope(doctype, tp, "");
-         String ISA = envelope[0];
-         String GS = envelope[1];
-         String GE = envelope[2];
-         String IEA = envelope[3];
-         String filename = envelope[4];
-         String isactrl = envelope[5];
-         String gsctrl = envelope[6];
-         String stctrl = "0001"; // String.format("%09d", gsctrl);
-        
-         // assign missing pieces of control (filename, isactrl, gsctrl, stctrl) which are characteristic of ALL outbound documents.  This must be done for ALL outbound maps
-        control[3] = filename;
-        control[4] = isactrl;
-        control[5] = gsctrl;
-        control[6] = stctrl;
-        
          
          // now lets get order header info 
          // fonbr, ref, site, wh, date, remarks, carrier, carrier_assigned, reasoncode, custfo, type
-         String[] h = OVData.getFreightOrderHeaderArray(nbr);
-         
-       
+        String[] h = OVData.getFreightOrderHeaderArray(key);
+        String status = "";
+        DateFormat dfdate = new SimpleDateFormat("yyyyMMdd");
+        Date now = new Date();
         
-        
-        String ST = "ST" + ed + doctype + ed + stctrl + sd;
-        hdrsegcount = 2; // "ST and SE" included
-         
-         String Header = "";
-         String yesno = "";
-         if (response.equals("Accepted")) {
-             yesno = "A";
+        if (h[11].equals("Accepted")) {
+             status = "A";
          } else {
-             yesno = "E";
+             status = "E";
          }
-         ArrayList<String> S = new ArrayList();
-         S.add("B1" + ed + h[7] + ed + nbr + ed + dfdate.format(now) + ed + yesno + ed + ed + h[8]);
-         S.add("L11" + ed + h[9] + ed + "DO" + ed + h[1]);
-         hdrsegcount += 2;
-         
-         for (String s : S) {
-             Header += (EDI.trimSegment(s, ed).toUpperCase() + sd);
-         }
-         
-         
-            
-         segcount = hdrsegcount;
-         
-         String SE = "SE" + ed + String.valueOf(segcount) + ed + "0001" + sd;
-                         
-         
-                 
-                 // concat and send content to edi.writeFile
-                 String content = ISA + GS + ST + Header + SE + GE + IEA;
-                 edi.writeFile(content, dir, filename); 
-                 
-        /*
-         output.write(ISA);
-         output.write(GS);
-         output.write(ST);
-         output.write(Header);
-         output.write(Detail);
-         output.write(Trailer);
-         output.close();
- */
-                 return control; 
+        
+        mapSegment("B1","e01",h[7]);
+        mapSegment("B1","e02",key);
+        mapSegment("B1","e03",dfdate.format(now));
+        mapSegment("B1","e04",status);
+        mapSegment("B1","e06",h[8]);
+        commitSegment("B1");
+        
+        mapSegment("L11","e01",h[9]);
+        mapSegment("L11","e02","DO");
+        mapSegment("L11","e03",h[1]);
+        commitSegment("L11");
+        
+        
+      // Package it      
+    return packagePayLoad(c);
 }
 
 }

@@ -10697,7 +10697,7 @@ return myarray;
 
     
     public static String[] getFreightOrderHeaderArray(String order) {
-          String header[] = new String[11];
+          String header[] = new String[12];
     try{
 
         Connection con = DriverManager.getConnection(url + db, user, pass);
@@ -10712,17 +10712,18 @@ return myarray;
 
                 res = st.executeQuery("select * from fo_mstr where fo_nbr = " + "'" + order + "'" +";");
                 while (res.next()) {
-                    header[0] = res.getString("fo_nbr").toUpperCase();
-                    header[1] = res.getString("fo_ref").toUpperCase();
-                    header[2] = res.getString("fo_site").toUpperCase();
-                    header[3] = res.getString("fo_wh").toUpperCase();
-                    header[4] = res.getString("fo_date").toUpperCase();
-                    header[5] = res.getString("fo_rmks").toUpperCase();
-                    header[6] = res.getString("fo_carrier").toUpperCase();
-                    header[7] = res.getString("fo_carrier_assigned").toUpperCase();
-                    header[8] = res.getString("fo_reasoncode").toUpperCase();
-                    header[9] = res.getString("fo_custfo").toUpperCase();
-                    header[10] = res.getString("fo_type").toUpperCase();
+                    header[0] = res.getString("fo_nbr");
+                    header[1] = res.getString("fo_ref");
+                    header[2] = res.getString("fo_site");
+                    header[3] = res.getString("fo_wh");
+                    header[4] = res.getString("fo_date");
+                    header[5] = res.getString("fo_rmks");
+                    header[6] = res.getString("fo_carrier");
+                    header[7] = res.getString("fo_carrier_assigned");
+                    header[8] = res.getString("fo_reasoncode");
+                    header[9] = res.getString("fo_custfo");
+                    header[10] = res.getString("fo_type");
+                    header[11] = res.getString("fo_status");
                 }
        }
         catch (SQLException s){
