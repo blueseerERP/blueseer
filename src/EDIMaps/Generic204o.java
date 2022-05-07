@@ -56,10 +56,7 @@ public class Generic204o extends com.blueseer.edi.EDIMap {
         
      // set the super class variables per the inbound array passed from the Processor (See EDIMap javadoc for defs)
     setControl(c);    
-    
-    // set the envelope segments (ISA, GS, ST, SE, GE, IEA)...the default is to create envelope from DB read...-x will override this and keep inbound envelopes
-    // you can then override individual envelope elements as desired
-    setOutPutEnvelopeStrings(c);
+  
         
          
         
@@ -71,25 +68,30 @@ public class Generic204o extends com.blueseer.edi.EDIMap {
          // fod_line, fod_type, fod_shipper, fod_ref, fod_shipdate, fod_shiptime, fod_delvdate, fod_delvtime, fod_code, fod_name, fod_addr1, fod_addr2, fod_city, fod_state, fod_zip ...
          // fod_phone, fod_contact, fod_remarks, fod_pallets, fod_boxes, fod_weight, fod_wt_uom 
          // 20 elements
-         ArrayList<String[]> dt = OVData.getFreightOrderDetailArray(key);
-         
-         
-         // get Shipto Address (9 elements)  id, name, line1, line2, line3, city, state, zip, country
-      //   String[] st = OVData.getShipToAddressArray(h[2], h[3]);
-         
+        ArrayList<String[]> dt = OVData.getFreightOrderDetailArray(key);
+    
+        mapSegment("B2","e01","");
+        mapSegment("B2","e02",h[7]);
+        mapSegment("B2","e03",h[0]);
+        mapSegment("B2","e06","PP");
+        commitSegment("B2");
         
-        
-        
-       
-         H.add("B2" + ed + ed + h[7] + ed + h[0] + ed + ed + ed + "PP");
-         H.add("B2A" + ed + "00" + ed + "LT");
-         if (! h[1].isEmpty())  {
-           H.add("L11" + ed + h[1] + ed + "OQ");
-         }
+        mapSegment("B2A","e01","00");
+        mapSegment("B2A","e02","LT");
+        commitSegment("B2A");
          
-         if (! h[5].isEmpty()) {
-             H.add("NTE" + ed + ed + h[5]);
-         }
+         
+        if (! h[1].isEmpty())  {
+          mapSegment("L11","e01",h[1]);
+          mapSegment("L11","e02","OQ");
+          commitSegment("L11");
+        }
+         
+        if (! h[5].isEmpty()) {
+            mapSegment("NTE","e01","");
+            mapSegment("NTE","e02",h[5]);
+            commitSegment("NTE");
+        }
         
          
          int z = 0;
@@ -99,50 +101,112 @@ public class Generic204o extends com.blueseer.edi.EDIMap {
              z++;
             
              
-             if (d[1].equals("LD")) {   // there should always ONLY BE 1 LD
+            if (d[1].equals("LD")) {   // there should always ONLY BE 1 LD
                totqty = Integer.valueOf(d[18]);
                totwt = Double.valueOf(d[20]);
-             D.add("S5" + ed + String.valueOf(z) + ed + d[1]);
-             D.add("G62" + ed + "69" + ed + d[4] + ed + "EP" + ed + d[5] + ed + "LT"); // shipdate if z = 1...i.e. 1st record is always pickup....shipdate = date pickup from warehouse
-             D.add("N1" + ed + "SF" + ed + d[9] + ed + "92" + ed + d[8]);
-             D.add("N2" + ed + d[9]);
-             D.add("N3" + ed + d[10]);
-             D.add("N4" + ed + d[12] + ed + d[13] + ed + d[14]);
+            mapSegment("S5","e01",String.valueOf(z));
+            mapSegment("S5","e02",d[1]);
+            commitSegment("S5");
+            
+            mapSegment("G62","e01","69");
+            mapSegment("G62","e02",d[4]);
+            mapSegment("G62","e03","EP");
+            mapSegment("G62","e04",d[5]);
+            mapSegment("G62","e05","LT");
+            commitSegment("G62");
+            
+            mapSegment("N1","e01","SF");
+            mapSegment("N1","e02",d[9]);
+            mapSegment("N1","e03","92");
+            mapSegment("N1","e04",d[8]);
+            commitSegment("N1");
+            
+            mapSegment("N2","e01",d[9]);
+            commitSegment("N2");
+            
+            mapSegment("N3","e01",d[10]);
+            commitSegment("N3");
+           
+            mapSegment("N4","e01",d[12]);
+            mapSegment("N4","e02",d[13]);
+            mapSegment("N4","e03",d[14]);
+            commitSegment("N4");
+            
              
+            if (! d[16].isEmpty() && ! d[15].isEmpty()) {
+            mapSegment("G61","e01","SD");
+            mapSegment("G61","e02",d[16]);
+            mapSegment("G61","e03","TE");
+            mapSegment("G61","e04",d[15]);
+            commitSegment("G61");
+            }
+             
+            } else {
+            mapSegment("S5","e01",String.valueOf(z));
+            mapSegment("S5","e02",d[1]);
+            commitSegment("S5");
+            
+            if (! d[16].isEmpty() && ! d[15].isEmpty()) {
+            mapSegment("G62","e01","70");
+            mapSegment("G62","e02",d[4]);
+            mapSegment("G62","e03","G");
+            mapSegment("G62","e04",d[7]);
+            mapSegment("G62","e05","LT");
+            commitSegment("G62");
+            }
+            
+            mapSegment("N1","e01","ST");
+            mapSegment("N1","e02",d[9]);
+            mapSegment("N1","e03","92");
+            mapSegment("N1","e04",d[8]);
+            commitSegment("N1");
+            
+            mapSegment("N2","e01",d[9]);
+            commitSegment("N2");
+            
+            mapSegment("N3","e01",d[10]);
+            commitSegment("N3");
+           
+            mapSegment("N4","e01",d[12]);
+            mapSegment("N4","e02",d[13]);
+            mapSegment("N4","e03",d[14]);
+            commitSegment("N4");
+            
+            
              if (! d[16].isEmpty() && ! d[15].isEmpty()) {
-             D.add("G61" + ed + "SD" + ed + d[16] + ed + "TE" + ed + d[15]);
+             mapSegment("G61","e01","SD");
+             mapSegment("G61","e02",d[16]);
+             mapSegment("G61","e03","TE");
+             mapSegment("G61","e04",d[15]);
+             commitSegment("G61");
              }
              
-             } else {
-             D.add("S5" + ed + String.valueOf(z) + ed + d[1]);
-             D.add("G62" + ed + "70" + ed + d[4] + ed + "G" + ed + d[7] + ed + "LT"); // delvdate if z <> 1...i.e. all other records are delivery dates    
-             D.add("N1" + ed + "ST" + ed + d[9] + ed + "92" + ed + d[8]);
-             D.add("N2" + ed + d[9]);
-             D.add("N3" + ed + d[10]);
-             D.add("N4" + ed + d[12] + ed + d[13] + ed + d[14]);
-             if (! d[16].isEmpty() && ! d[15].isEmpty()) {
-             D.add("G61" + ed + "SD" + ed + d[16] + ed + "TE" + ed + d[15]);
-             }
-             D.add("OID" + ed + d[2] +  ed + d[3]);
-             D.add("L5" + ed + ed + "TBD");
-             D.add("AT8" + ed + "G" + ed + "L" + ed + d[20]);
-             }
+             mapSegment("OID","e01",d[2]);
+             mapSegment("OID","e02",d[3]);
+             commitSegment("OID");
+             
+             mapSegment("L5","e01","");
+             mapSegment("L5","e02","TBD");
+             commitSegment("L5");
+             
+             mapSegment("AT8","e01","G");
+             mapSegment("AT8","e02","L");
+             mapSegment("AT8","e03",d[20]);
+             commitSegment("AT8");
+             
+             
+            }
          }  
          
         
-         
-         
-        
-        T.add("L3" + ed + String.valueOf(totwt) + ed + "G");
+         mapSegment("L3","e01",String.valueOf(totwt));
+         mapSegment("L3","e02","G");
+         commitSegment("L3");
          
             
        // Package it      
-    packagePayLoad(c);
-    
-    // Write to outfile
-    edi.writeFile(content, "", outfile);  // you can override output directory by assign 2nd parameter here instead of ""
-          
-    return c;  
+    return packagePayLoad(c);
+   
 }
 
 }
