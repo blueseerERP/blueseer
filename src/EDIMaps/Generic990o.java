@@ -28,11 +28,10 @@ package EDIMaps;
 
 
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import com.blueseer.utl.OVData;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 
 /**
@@ -54,8 +53,7 @@ public class Generic990o extends com.blueseer.edi.EDIMap {
          // fonbr, ref, site, wh, date, remarks, carrier, carrier_assigned, reasoncode, custfo, type
         String[] h = OVData.getFreightOrderHeaderArray(key);
         String status = "";
-        DateFormat dfdate = new SimpleDateFormat("yyyyMMdd");
-        Date now = new Date();
+        String  now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
         
         if (h[11].equals("Accepted")) {
              status = "A";
@@ -65,7 +63,7 @@ public class Generic990o extends com.blueseer.edi.EDIMap {
         
         mapSegment("B1","e01",h[7]);
         mapSegment("B1","e02",key);
-        mapSegment("B1","e03",dfdate.format(now));
+        mapSegment("B1","e03",now);
         mapSegment("B1","e04",status);
         mapSegment("B1","e06",h[8]);
         commitSegment("B1");

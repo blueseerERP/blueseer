@@ -46,8 +46,6 @@ import static com.blueseer.utl.EDData.writeEDILog;
 public class Generic997i {
     
     public static void Mapdata(ArrayList doc, String flddelim, String subdelim, String[] control) {
-     
-    edi997i e = null;  
     
      String isaSenderID = "";
      String isaReceiverID = "";
