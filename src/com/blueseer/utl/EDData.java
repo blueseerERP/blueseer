@@ -1106,6 +1106,35 @@ public class EDData {
 
    }
     
+    public static void updateEDIPOStatus(ArrayList<String> orders) {
+       DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd"); 
+       try{
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        try{
+            for (String x : orders) {
+            st.executeUpdate(
+                 " update po_mstr set po_export_850 = '1' " +
+                 " where po_nbr = " + "'" + x + "'" + ";" );
+            }
+        }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+            
+            if (st != null) {
+                st.close();
+            }
+            con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+
+   }
+    
+    
     public static void updateEDIASNStatus(String shipper) {
        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd"); 
        try{
@@ -1132,6 +1161,35 @@ public class EDData {
 
    }
     
+    public static void updateEDIASNStatus(ArrayList<String> shippers) {
+       DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd"); 
+       try{
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        try{
+            for (String s : shippers) {
+             st.executeUpdate(
+                 " update ship_mstr set sh_export_856 = '1' " +
+                 " where sh_id = " + "'" + s + "'" + ";" );
+             }
+        }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+            
+            if (st != null) {
+                st.close();
+            }
+            con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+
+   }
+    
+    
     public static void updateEDIOrderStatus(String order) {
        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd"); 
        try{
@@ -1141,6 +1199,34 @@ public class EDData {
            st.executeUpdate(
                  " update so_mstr set so_export_855 = '1' " +
                  " where so_nbr = " + "'" + order + "'" + ";" );
+        }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+            
+            if (st != null) {
+                st.close();
+            }
+            con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+
+   }
+    
+    public static void updateEDIOrderStatus(ArrayList<String> orders) {
+       DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd"); 
+       try{
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        try{
+            for (String x : orders) { 
+            st.executeUpdate(
+                 " update so_mstr set so_export_855 = '1' " +
+                 " where so_nbr = " + "'" + x + "'" + ";" );
+            }
         }
         catch (SQLException s){
              MainFrame.bslog(s);

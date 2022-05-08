@@ -30,26 +30,107 @@ package com.blueseer.edi;
  * @author vaughnte
  */
 import static bsmf.MainFrame.tags;
+import com.blueseer.utl.BlueSeerUtils;
 import com.blueseer.utl.EDData;
-import com.blueseer.utl.OVData;
 import java.io.*;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
-import jcifs.smb.NtlmPasswordAuthentication;
-import jcifs.smb.SmbException;
-import jcifs.smb.SmbFile;
-import jcifs.smb.SmbFileOutputStream;
 
 public class EDILoad {
+ public static boolean isDebug = false;   
     
     
+public static void main(String[] args) {
+ 
+    bsmf.MainFrame.setConfig();
+    tags = ResourceBundle.getBundle("resources.bs", Locale.getDefault());
+    String[] vs = checkargs(args);  
+    String prog = vs[0];
+    String[] doctypes = null;
+    if (vs[1] != null && ! vs[1].isEmpty()) {
+     doctypes = vs[1].split(",");
+    }
+    String myargs = String.join(",", args);
+    switch (prog) {
+        
+        case "translation" :
+            runTranslation(args);
+            break;
+        case "exportFromDB" :
+            runExport(doctypes);
+            break;
+        default:
+            System.out.println("Unable to process arguments " + myargs);
+        
+    }
+    runTranslation(args);
     
-public static void main(String args[]) {
- try {
+    System.exit(0);
+}
+
+public static String[] checkargs(String[] args) {
+        List<String> legitargs = Arrays.asList("-i", "-o", "-debug");
+     
+        String[] vals = new String[9]; // last element is the program type (single or mulitiple)
+        Arrays.fill(vals, "");
+        
+        String myargs = String.join(",", args);
+        
+       
+         
+         
+        // now process the qualifiers
+        for (int i = 0; i < args.length ;i++) {
+            if (args[i].substring(0,1).equals("-")) {
+              
+              // first make sure -xx argument qualifier is legit  
+              if (! legitargs.contains(args[i])) {
+                  System.out.println("Bad Qualifier");
+                  System.exit(1);
+              }
+              
+              
+              
+               if ( (args.length > i+1 && args[i+1] != null) || (args[i].equals("-i")) ) {
+                
+                 switch (args[i].toLowerCase()) {                    
+                    case "-i" :
+                        vals[1] = ""; // no parameters for translation
+                        vals[0] = "translation"; 
+                        break;      
+                    case "-o" :
+                        vals[1] = args[i+1];
+                        vals[0] = "exportFromDB"; 
+                        break;  
+                    case "-debug" :
+                        isDebug = true; 
+                        break; 
+                    default:
+                        System.out.println("Unable to process arguments " + myargs);
+                        System.exit(1);
+                 }
+                                    
+               } else {
+                  System.out.println("missing value for qualifier " + myargs);
+                  System.exit(1);
+               }
+            }
+             
+           
+         }
+        return vals;
+    }
+
+
+public static void runTranslation(String[] args) {
+    try {
      
             boolean isDebug = false;
             if (args != null && args.length > 0) {
@@ -57,8 +138,7 @@ public static void main(String args[]) {
                     isDebug = true;
                 }
             }
-            bsmf.MainFrame.setConfig();
-            tags = ResourceBundle.getBundle("resources.bs", Locale.getDefault());
+           
             String inDir = EDData.getEDIInDir();
             String inArch = EDData.getEDIInArch(); 
             String ErrorDir = EDData.getEDIErrorDir(); 
@@ -108,12 +188,62 @@ public static void main(String args[]) {
               }
        } catch (IOException ex) {
           ex.printStackTrace();
-       }
-  catch (ClassNotFoundException ex) {
+       } catch (ClassNotFoundException ex) {
           ex.printStackTrace();
        }
 }
 
+public static void runExport(String[] docs) {
+        if (docs == null) {
+            System.out.println("no doc list for -o exports");
+            return;
+        }
+        List<String> allowed = Arrays.asList(docs);
+        // invoices
+        if (! allowed.contains("810")) {
+          ArrayList<String> list = EDData.getEDIInvoices(bsmf.MainFrame.lowchar, bsmf.MainFrame.hichar, bsmf.MainFrame.lowdate, bsmf.MainFrame.hidate, false);
+          ArrayList<String> updateList = new ArrayList<String>();  
+            for (String x : list) {
+              if (EDI.Create810(x) == 0) {
+                updateList.add(x);
+              } 
+            }
+            EDData.updateEDIInvoiceStatus(updateList);             
+        }
+        // acknowledgements
+        if (! allowed.contains("855")) {
+          ArrayList<String> list = EDData.getEDIACKs(bsmf.MainFrame.lowchar, bsmf.MainFrame.hichar, bsmf.MainFrame.lowdate, bsmf.MainFrame.hidate, false);
+          ArrayList<String> updateList = new ArrayList<String>();  
+            for (String x : list) {
+              if (EDI.Create855(x) == 0) {
+                updateList.add(x);
+              } 
+            }
+            EDData.updateEDIOrderStatus(updateList);             
+        }
+        // ASNs
+        if (! allowed.contains("856")) {
+          ArrayList<String> list = EDData.getEDIASNs(bsmf.MainFrame.lowchar, bsmf.MainFrame.hichar, bsmf.MainFrame.lowdate, bsmf.MainFrame.hidate, false);
+          ArrayList<String> updateList = new ArrayList<String>();  
+            for (String x : list) {
+              if (EDI.Create856(x) == 0) {
+                updateList.add(x);
+              } 
+            }
+            EDData.updateEDIASNStatus(updateList);             
+        }
+        // Purchase Orders
+        if (! allowed.contains("850")) {
+          ArrayList<String> list = EDData.getEDIPOs(bsmf.MainFrame.lowchar, bsmf.MainFrame.hichar, bsmf.MainFrame.lowdate, bsmf.MainFrame.hidate, false);
+          ArrayList<String> updateList = new ArrayList<String>();  
+            for (String x : list) {
+              if (EDI.Create850(x) == 0) {
+                updateList.add(x);
+              } 
+            }
+            EDData.updateEDIPOStatus(updateList);             
+        }
+}
 
 
 } // class
