@@ -37,8 +37,6 @@ public interface EDIMapi {
     public String[] Mapdata(ArrayList doc, String[] c) throws IOException;
         
     public void setControl(String[] c);
-    
-    public void setOutPutEnvelopeStrings(String[] c);
-    
+   
     public String[] packagePayLoad(String[] c);
 }

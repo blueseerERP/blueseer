@@ -27,10 +27,7 @@ SOFTWARE.
 package EDIMaps;
 
 import java.util.ArrayList;
-import com.blueseer.edi.EDI;
-import com.blueseer.utl.OVData;
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -43,22 +40,26 @@ public class ACME850 extends com.blueseer.edi.EDIMap {
     
     public String[] Mapdata(ArrayList doc, String[] c) throws IOException  {
         
-    // These master variables must be set for all maps    
-    setControl(c);    // set the super class variables per the inbound array passed from the Processor (See EDIMap javadoc for defs)
-  
-    if (isError) { return error;}  // check errors for master variables
     
-    mappedInput = mapInput(c, doc, ISF);
-    setReference(getInput("BEG",3)); // must be ran after mappedInput
+    setControl(c);    //required...set the super class variables per the inbound array passed from the Processor (See EDIMap javadoc for defs)
     
-    // set some global variables if necessary
+    if (isError) { return error;}  //required...check errors for master variables
+    
+    mappedInput = mapInput(c, doc, ISF); //required...sets the source data structure for all subsequent map functions
+    
+    setReference(getInput("BEG",3)); //optional...but must be ran after mappedInput
+    
+    debuginput(mappedInput);  //optional... for debug purposes
+    
+    //optional...set some global variables as necessary
     String  now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
     String mandt = "110";
     String docnum = String.format("%016d",Integer.valueOf(c[4]));
-    
     int segnum = 0;
     int psgnum = 0;
     int hlevel = 0;
+    
+    // begin mapping
     
        mapSegment("EDI_DC","tabnam","40_U");
        mapSegment("EDI_DC","mandt",mandt);
@@ -243,8 +244,11 @@ public class ACME850 extends com.blueseer.edi.EDIMap {
 
     }
    
+    // end mapping
         
-    return packagePayLoad(c);
+    mappedInput.clear();
+    
+    return packagePayLoad(c); //required...sets output payload
 }
 
     
