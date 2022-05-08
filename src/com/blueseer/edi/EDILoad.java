@@ -37,6 +37,8 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -45,7 +47,7 @@ import java.util.ResourceBundle;
 
 public class EDILoad {
  public static boolean isDebug = false;   
-    
+ public static String  now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));   
     
 public static void main(String[] args) {
  
@@ -70,7 +72,6 @@ public static void main(String[] args) {
             System.out.println("Unable to process arguments " + myargs);
         
     }
-    runTranslation(args);
     
     System.exit(0);
 }
@@ -95,8 +96,6 @@ public static String[] checkargs(String[] args) {
                   System.out.println("Bad Qualifier");
                   System.exit(1);
               }
-              
-              
               
                if ( (args.length > i+1 && args[i+1] != null) || (args[i].equals("-i")) ) {
                 
@@ -198,47 +197,60 @@ public static void runExport(String[] docs) {
             System.out.println("no doc list for -o exports");
             return;
         }
+        System.out.println("exporting documents...");
         List<String> allowed = Arrays.asList(docs);
         // invoices
-        if (! allowed.contains("810")) {
+        if (allowed.contains("810")) {
           ArrayList<String> list = EDData.getEDIInvoices(bsmf.MainFrame.lowchar, bsmf.MainFrame.hichar, bsmf.MainFrame.lowdate, bsmf.MainFrame.hidate, false);
           ArrayList<String> updateList = new ArrayList<String>();  
             for (String x : list) {
               if (EDI.Create810(x) == 0) {
                 updateList.add(x);
-              } 
+                System.out.println(now + " exporting 810: " + x + " Success");
+              } else {
+                System.out.println(now + " exporting 810: " + x + " Failed");  
+              }
             }
             EDData.updateEDIInvoiceStatus(updateList);             
         }
         // acknowledgements
-        if (! allowed.contains("855")) {
+        if (allowed.contains("855")) {
           ArrayList<String> list = EDData.getEDIACKs(bsmf.MainFrame.lowchar, bsmf.MainFrame.hichar, bsmf.MainFrame.lowdate, bsmf.MainFrame.hidate, false);
           ArrayList<String> updateList = new ArrayList<String>();  
             for (String x : list) {
               if (EDI.Create855(x) == 0) {
                 updateList.add(x);
-              } 
+                 System.out.println(now + " exporting 855: " + x + " Success");
+              } else {
+                System.out.println(now + " exporting 855: " + x + " Failed");   
+              }
             }
             EDData.updateEDIOrderStatus(updateList);             
         }
         // ASNs
-        if (! allowed.contains("856")) {
+        if (allowed.contains("856")) {
           ArrayList<String> list = EDData.getEDIASNs(bsmf.MainFrame.lowchar, bsmf.MainFrame.hichar, bsmf.MainFrame.lowdate, bsmf.MainFrame.hidate, false);
           ArrayList<String> updateList = new ArrayList<String>();  
             for (String x : list) {
               if (EDI.Create856(x) == 0) {
                 updateList.add(x);
-              } 
+                System.out.println(now + " exporting 856: " + x + " Success");
+              } else {
+                System.out.println(now + " exporting 856: " + x + " Failed");  
+              }
             }
             EDData.updateEDIASNStatus(updateList);             
         }
         // Purchase Orders
-        if (! allowed.contains("850")) {
+        if (allowed.contains("850")) {
           ArrayList<String> list = EDData.getEDIPOs(bsmf.MainFrame.lowchar, bsmf.MainFrame.hichar, bsmf.MainFrame.lowdate, bsmf.MainFrame.hidate, false);
           ArrayList<String> updateList = new ArrayList<String>();  
             for (String x : list) {
               if (EDI.Create850(x) == 0) {
                 updateList.add(x);
+                System.out.println(now + " exporting 850: " + x + " Success");
+              } else {
+                System.out.println(now + " exporting 850: " + x + " Failed");   
               } 
             }
             EDData.updateEDIPOStatus(updateList);             
