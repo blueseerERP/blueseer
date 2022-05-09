@@ -1504,6 +1504,97 @@ public class cusData {
         return r;
     }
     
+    public static String[] addFreightMstr(frt_mstr x) {
+        String[] m = new String[2];
+        String sqlSelect = "SELECT * FROM  frt_mstr where frt_code = ?";
+        String sqlInsert = "insert into frt_mstr (frt_code, frt_desc, frt_apply ) "
+                        + " values (?,?,?); "; 
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+             PreparedStatement ps = con.prepareStatement(sqlSelect);) {
+             ps.setString(1, x.frt_code);
+          try (ResultSet res = ps.executeQuery();
+               PreparedStatement psi = con.prepareStatement(sqlInsert);) {  
+            if (! res.isBeforeFirst()) {
+            psi.setString(1, x.frt_code);
+            psi.setString(2, x.frt_desc);
+            psi.setString(3, x.frt_apply);
+            int rows = psi.executeUpdate();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+            } else {
+            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists};    
+            }
+          } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+          }
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+
+    public static String[] updateFreightMstr(frt_mstr x) {
+        String[] m = new String[2];
+        String sql = "update frt_mstr set frt_desc = ?, frt_apply = ? " +   
+                          " where frt_code = ? ; ";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, x.frt_desc);
+        ps.setString(2, x.frt_apply);
+        ps.setString(3, x.frt_code);
+        int rows = ps.executeUpdate();
+        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+        
+    public static frt_mstr getFreightMstr(String[] x) {
+        frt_mstr r = null;
+        String[] m = new String[2];
+        String sql = "select * from frt_mstr where frt_code = ? ;";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, x[0]);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new frt_mstr(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new frt_mstr(m, res.getString("frt_code"), 
+                            res.getString("frt_desc"),
+                            res.getString("frt_apply")
+                        );
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new frt_mstr(m);
+        }
+        return r;
+    }
+    
+    public static String[] deleteFreightMstr(frt_mstr x) { 
+       String[] m = new String[2];
+        String sql = "delete from frt_mstr where frt_code = ?; ";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, x.frt_code);
+        int rows = ps.executeUpdate();
+        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
     
          
     // miscellaneous functions
@@ -2391,5 +2482,10 @@ public class cusData {
         }
     } 
     
-    
+    public record frt_mstr (String[] m, String frt_code, String frt_desc, String frt_apply) {
+        public frt_mstr(String[] m) {
+            this(m,"","","");
+        }
+    } 
+     
 }
