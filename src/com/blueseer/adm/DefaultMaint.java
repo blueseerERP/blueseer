@@ -27,40 +27,24 @@ SOFTWARE.
 package com.blueseer.adm;
 
 import bsmf.MainFrame;
-import static bsmf.MainFrame.db;
-import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
-import static bsmf.MainFrame.url;
-import static bsmf.MainFrame.user;
 import static com.blueseer.adm.admData.addUpdateOVMstr;
 import static com.blueseer.adm.admData.getOVMstr;
 import com.blueseer.adm.admData.ov_mstr;
 import com.blueseer.utl.BlueSeerUtils;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
-import com.blueseer.utl.IBlueSeer;
 import com.blueseer.utl.IBlueSeerc;
 import com.blueseer.utl.OVData;
-import java.awt.Color;
 import java.awt.Component;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Locale;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
-import javax.swing.JTable;
-import javax.swing.JViewport;
 import javax.swing.SwingWorker;
 
 /**
@@ -243,8 +227,7 @@ public class DefaultMaint extends javax.swing.JPanel implements IBlueSeerc {
     }
     
     public String[] getRecord(String[] key) {
-       ov_mstr z = getOVMstr(key);
-       x = z;
+       x = getOVMstr(key);
       return x.m();  
     }
     
