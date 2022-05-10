@@ -49,7 +49,7 @@ set "DB=bsdb"
 cd %~dp0
 
 @echo "creating bs.cfg file...."
-@echo DBTYPE=mysql>>bs.cfg
+@echo DBTYPE=mysql>bs.cfg
 @echo DB=%DB%>>bs.cfg
 @echo USER=bs_user>>bs.cfg
 @echo PASS=bspasswd>>bs.cfg
