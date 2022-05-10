@@ -40,7 +40,7 @@ public class ACME850 extends com.blueseer.edi.EDIMap {
     
     public String[] Mapdata(ArrayList doc, String[] c) throws IOException  {
         
-    
+    /* SECTION 1*/
     setControl(c);    //required...set the super class variables per the inbound array passed from the Processor (See EDIMap javadoc for defs)
     
     if (isError) { return error;}  //required...check errors for master variables
@@ -59,7 +59,7 @@ public class ACME850 extends com.blueseer.edi.EDIMap {
     int psgnum = 0;
     int hlevel = 0;
     
-    // begin mapping
+    // begin mapping  /* SECTION 2*/
     
        mapSegment("EDI_DC","tabnam","40_U");
        mapSegment("EDI_DC","mandt",mandt);
@@ -245,7 +245,8 @@ public class ACME850 extends com.blueseer.edi.EDIMap {
     }
    
     // end mapping
-        
+      
+    /* SECTION 3 */
     mappedInput.clear();
     
     return packagePayLoad(c); //required...sets output payload
