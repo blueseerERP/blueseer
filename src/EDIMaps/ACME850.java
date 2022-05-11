@@ -91,10 +91,8 @@ public class ACME850 extends com.blueseer.edi.EDIMap {
 
 
       // E2EDK14 loop
-      ArrayList<String> loop = getLoopKeys("N1");
-       int j = 0;
-       for (String key : loop) {
-      j++;    
+      int n1count = getLoopCount("N1");
+       for (int i = 1; i <= n1count; i++) {
       segnum++;
       hlevel++;
       mapSegment("E2EDK14","mandt",mandt);
@@ -102,17 +100,15 @@ public class ACME850 extends com.blueseer.edi.EDIMap {
       mapSegment("E2EDK14", "segnum", String.format("%06d",segnum));
       mapSegment("E2EDK14", "psgnum", String.format("%06d",psgnum));
       mapSegment("E2EDK14", "hlevel", String.format("%02d",hlevel));
-      mapSegment("E2EDK14","qualf",getGroupInput(key,1));
-      mapSegment("E2EDK14","orgid",getGroupInput(key,4));
+      mapSegment("E2EDK14","qualf",getInput("N1",1,i));
+      mapSegment("E2EDK14","orgid",getInput("N1",4,i));
       commitSegment("E2EDK14");  
        }
               
                
        // DTM Loop
-       ArrayList<String> dtmloop = getLoopKeys("DTM");
-       int i = 0;
-       for (String key : dtmloop) {
-          i++;
+       int dtmcount = getLoopCount("DTM");
+       for (int i = 1; i <= dtmcount; i++) {
           segnum++;
           hlevel++;
           mapSegment("E2EDK03","mandt",mandt);
@@ -120,13 +116,13 @@ public class ACME850 extends com.blueseer.edi.EDIMap {
           mapSegment("E2EDK03", "segnum", String.format("%06d",segnum));
           mapSegment("E2EDK03", "psgnum", String.format("%06d",psgnum));
           mapSegment("E2EDK03", "hlevel", String.format("%02d",hlevel));
-          mapSegment("E2EDK03","iddat",getLoopInput(key,1,i));
-          mapSegment("E2EDK03","datum",getLoopInput(key,2,i));
+          mapSegment("E2EDK03","iddat",getInput("DTM",1,i));
+          mapSegment("E2EDK03","datum",getInput("DTM",2,i));
           commitSegment("E2EDK03");   
        }
                
-       int m = getGroupCount("N1");
-       for (j = 1; j <= m; j++) {
+       // N1 loop
+       for (int i = 1; i <= n1count; i++) {
           segnum++;
           hlevel++;
           mapSegment("E2EDKA1","mandt",mandt);
@@ -134,15 +130,15 @@ public class ACME850 extends com.blueseer.edi.EDIMap {
           mapSegment("E2EDKA1", "segnum", String.format("%06d",segnum));
           mapSegment("E2EDKA1", "psgnum", String.format("%06d",psgnum));
           mapSegment("E2EDKA1", "hlevel", String.format("%02d",hlevel));
-          mapSegment("E2EDKA1","parvw",getInput("N1",1, j));
-          mapSegment("E2EDKA1","lifnr",getInput("N1",4, j));
-          mapSegment("E2EDKA1","name1",getInput("N1",2, j));
-          mapSegment("E2EDKA1","stras",getInput("N1:N3",1, j));
-          mapSegment("E2EDKA1","stras2",getInput("N1:N3",2, j));
-          mapSegment("E2EDKA1","ort01",getInput("N1:N4",1, j));
-          mapSegment("E2EDKA1","regio",getInput("N1:N4",2, j));
-          mapSegment("E2EDKA1","pstlz",getInput("N1:N4",3, j));
-          mapSegment("E2EDKA1","isoal",getInput("N1:N4",4, j));
+          mapSegment("E2EDKA1","parvw",getInput("N1",1, i));
+          mapSegment("E2EDKA1","lifnr",getInput("N1",4, i));
+          mapSegment("E2EDKA1","name1",getInput("N1",2, i));
+          mapSegment("E2EDKA1","stras",getInput("N1:N3",1, i));
+          mapSegment("E2EDKA1","stras2",getInput("N1:N3",2, i));
+          mapSegment("E2EDKA1","ort01",getInput("N1:N4",1, i));
+          mapSegment("E2EDKA1","regio",getInput("N1:N4",2, i));
+          mapSegment("E2EDKA1","pstlz",getInput("N1:N4",3, i));
+          mapSegment("E2EDKA1","isoal",getInput("N1:N4",4, i));
           commitSegment("E2EDKA1");
       }
       segnum++;
@@ -170,10 +166,9 @@ public class ACME850 extends com.blueseer.edi.EDIMap {
       mapSegment("E2EDKT1","tsspras_iso","EN");
       commitSegment("E2EDKT1");
 
-      ArrayList<String> msg = getLoopKeys("MSG");
-       int v = 0;
-       for (String key : msg) {
-          v++;
+      int msgcount = getLoopCount("MSG");
+       
+       for (int i = 1; i <= msgcount; i++) {
           segnum++;
           hlevel++;
           mapSegment("E2EDKT2","mandt",mandt);
@@ -181,13 +176,13 @@ public class ACME850 extends com.blueseer.edi.EDIMap {
           mapSegment("E2EDKT2", "segnum", String.format("%06d",segnum));
           mapSegment("E2EDKT2", "psgnum", String.format("%06d",psgnum));
           mapSegment("E2EDKT2", "hlevel", String.format("%02d",hlevel));
-          mapSegment("E2EDKT2","tdline",getLoopInput(key,2,v));
+          mapSegment("E2EDKT2","tdline",getLoopInput("MSG",2,i));
           commitSegment("E2EDKT2");  
        } 
 
     // line items
-    int po1count = getGroupCount("PO1");
-    for (j = 1; j <= po1count; j++) {
+    int po1count = getLoopCount("PO1");
+    for (int i = 1; i <= po1count; i++) {
       segnum++;
       hlevel++;  
       mapSegment("E2EDP01","mandt",mandt);
@@ -195,13 +190,13 @@ public class ACME850 extends com.blueseer.edi.EDIMap {
       mapSegment("E2EDP01", "segnum", String.format("%06d",segnum));
       mapSegment("E2EDP01", "psgnum", String.format("%06d",psgnum));
       mapSegment("E2EDP01", "hlevel", String.format("%02d",hlevel));
-      mapSegment("E2EDP01", "posex", String.format("%06d",j));
-      mapSegment("E2EDP01","menge",getInput("PO1",2, j));
-      mapSegment("E2EDP01","menee",getInput("PO1",3, j));
+      mapSegment("E2EDP01", "posex", String.format("%06d",i));
+      mapSegment("E2EDP01","menge",getInput("PO1",2, i));
+      mapSegment("E2EDP01","menee",getInput("PO1",3, i));
       mapSegment("E2EDP01","pmene","EA");
-      mapSegment("E2EDP01","vprei",getInput("PO1",4, j));
-      mapSegment("E2EDP01","matnr",getInput("PO1",7, j));
-      mapSegment("E2EDP01","matnr_external",getInput("PO1",9, j));
+      mapSegment("E2EDP01","vprei",getInput("PO1",4, i));
+      mapSegment("E2EDP01","matnr",getInput("PO1",7, i));
+      mapSegment("E2EDP01","matnr_external",getInput("PO1",9, i));
       commitSegment("E2EDP01");
 
       segnum++;
@@ -212,7 +207,7 @@ public class ACME850 extends com.blueseer.edi.EDIMap {
       mapSegment("E2EDP02", "psgnum", String.format("%06d",psgnum));
       mapSegment("E2EDP02", "hlevel", String.format("%02d",hlevel));
       mapSegment("E2EDP02", "qualf", "001");
-      mapSegment("E2EDP02","belnr",getInput("PO1",7, j));
+      mapSegment("E2EDP02","belnr",getInput("PO1",7, i));
       commitSegment("E2EDP02");
 
       segnum++;
@@ -222,7 +217,7 @@ public class ACME850 extends com.blueseer.edi.EDIMap {
       mapSegment("E2EDP20", "segnum", String.format("%06d",segnum));
       mapSegment("E2EDP20", "psgnum", String.format("%06d",psgnum));
       mapSegment("E2EDP20", "hlevel", String.format("%02d",hlevel));
-      mapSegment("E2EDP20", "wmeng", getInput("PO1",2, j));
+      mapSegment("E2EDP20", "wmeng", getInput("PO1",2, i));
       commitSegment("E2EDP20");
 
       segnum++;
@@ -234,12 +229,12 @@ public class ACME850 extends com.blueseer.edi.EDIMap {
       mapSegment("E2EDP19", "hlevel", String.format("%02d",hlevel));
       if (i == 0) {
       mapSegment("E2EDP19", "qualf", "001");
-      mapSegment("E2EDP19", "idtnr", getInput("PO1",7, j));
+      mapSegment("E2EDP19", "idtnr", getInput("PO1",7, i));
       } else {
       mapSegment("E2EDP19", "qualf", "002");
-      mapSegment("E2EDP19", "idtnr", getInput("PO1",9, j));  
+      mapSegment("E2EDP19", "idtnr", getInput("PO1",9, i));  
       }
-      mapSegment("E2EDP19", "ktext", getInput("PO1:PID",5, j));
+      mapSegment("E2EDP19", "ktext", getInput("PO1:PID",5, i));
       commitSegment("E2EDP19");
 
     }

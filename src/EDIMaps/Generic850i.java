@@ -86,6 +86,8 @@ public class Generic850i extends com.blueseer.edi.EDIMap {
     e.setDueDate(now);    
     }   
 
+   
+    
     int n1count = getGroupCount("N1");
     boolean isN1ST = false;
     for (i = 1; i <= n1count; i++) {

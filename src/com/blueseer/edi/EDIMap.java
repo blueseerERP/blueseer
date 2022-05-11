@@ -1317,6 +1317,21 @@ public abstract class EDIMap implements EDIMapi {
          return count;
      }
     
+    public static int getLoopCount(String segment) {
+         
+         int count = 0;
+         String[] k = null;
+         segment = ":" + segment; // preprend blank
+         for (Map.Entry<String, String[]> z : mappedInput.entrySet()) {
+             if (z.getKey().split("\\+")[0].equals(segment)) {
+                 count++;
+             }
+         }
+        
+         return count;
+     }
+    
+    
     public static String getLoopInput(String key, Integer element, Integer i) {
          String x = "";
          String[] k = null;
