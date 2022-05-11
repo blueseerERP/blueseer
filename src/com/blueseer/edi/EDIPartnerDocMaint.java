@@ -656,10 +656,10 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
         jLabel8.setText("outFileType");
         jLabel8.setName("lbloutfiletype"); // NOI18N
 
-        jLabel19.setText("IFS File");
+        jLabel19.setText("ISF File");
         jLabel19.setName("lblifs"); // NOI18N
 
-        jLabel20.setText("OFS File");
+        jLabel20.setText("OSF File");
         jLabel20.setName("lblofs"); // NOI18N
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);

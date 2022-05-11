@@ -586,13 +586,13 @@
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel19">
               <Properties>
-                <Property name="text" type="java.lang.String" value="IFS File"/>
+                <Property name="text" type="java.lang.String" value="ISF File"/>
                 <Property name="name" type="java.lang.String" value="lblifs" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel20">
               <Properties>
-                <Property name="text" type="java.lang.String" value="OFS File"/>
+                <Property name="text" type="java.lang.String" value="OSF File"/>
                 <Property name="name" type="java.lang.String" value="lblofs" noResource="true"/>
               </Properties>
             </Component>
