@@ -1,31 +1,10 @@
-# Version 6.1 Patch file
+# Version 6.2 Patch file
 #
 # bszip.ps1 maintains a running account of patches.   All lines in the patch file will be commented out except the
 # current patch.   There can only be one line starting with 'patch=' in the .patch file rolling forward.
 # Once a new patch is added with comments...the previous patch= is commented out
 #
 patch=0
-# First release of 6.1
+# First release of 6.2
 patch=1
-# Bug fix #39 Site Master deletion issue and #40 customer price mass load issue
-#
-patch=2
-# lang pack updates
-patch=3
-# introduction of romanian lang and bug fix for #44 foreign currency issue; several data imports routines allowed 'update' capability #42
-patch=4
-# bug fix for #45 and added type field to item master browse menu; patch for #46
-patch=5
-# UI improvements with enhancement #48
-patch=6
-# BOM updates to costing issues ; rounding problem
-patch=7
-# Freeze UI issue fix for ItemMaint, BOMMaint, CustMaint, OrderMaint, POMaint, SiteMstr, UserMstr, DefaultMstr
-patch=8
-# Freeze UI cleanup #49 ; addition of patch loading mechanism #50 
-patch=9
-# bug fixes #51, #52, and chartview cleanup
-patch=10
-# emergency patch for #54 and ARMemo Refactor
-patch=11
-# new class addition EDIXrefMaint and item related field lengths to 36 chars
+# bug fix #57 as well as updates to EDI labels and auto loading mechanics
