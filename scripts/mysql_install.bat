@@ -7,12 +7,6 @@
 
 set /p IP=Enter the database server IP addr (ex: 10.15.2.2 or localhost):%=%
 
-if /I "%IP%"=="10.17.2.5" (
-@echo "cannot use this IP address..failsafe"
-pause 2
-exit /b ) 
-
-
 set /p pass=Enter the administrator password for the MySQL Database:%=%
 
 set /p lang=Enter the two character language code (en,de,fr,es,tr,etc):%=%
@@ -37,6 +31,9 @@ set "country=TR"
 )
 if "%lang%"=="de" (
 set "country=DE"
+)
+if "%lang%"=="ro" (
+set "country=RO"
 )
 
 
