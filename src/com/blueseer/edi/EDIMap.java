@@ -589,6 +589,14 @@ public abstract class EDIMap implements EDIMapi {
          // concatenate all output strings to string variable 'content' 
         writeOMD(c, tp);
         
+        // create out batch file name
+         int filenumber = OVData.getNextNbr("edifile");
+         String batchfile = "X" + String.format("%07d", filenumber);
+         String outfilemulti = "";
+        if (outfile.isEmpty()) {
+            outfile = tp[10] + String.format("%07d", filenumber) + "." + tp[11];
+        }
+        
         if (tp[15].equals("X12")) {
            setOutPutEnvelopeStrings(c);
            String s = delimConvertIntToStr(tp[7]); // segment delimiter
@@ -597,14 +605,17 @@ public abstract class EDIMap implements EDIMapi {
              // write to hash map with key = doctype , outsender , outreceiver
              String hk = doctype + "," + outsender + "," + outreceiver;
              
-                if (hanoi.containsKey(hk)) {
+                if (hanoi != null && hanoi.containsKey(hk)) {
                         ArrayList<String> g = hanoi.get(hk);
+                        outfilemulti = g.get(2);
                         g.add(content);
 			hanoi.put(hk, g);
 		} else {
+                        outfilemulti = outfile;
                         ArrayList<String> g = new ArrayList<String>();
                         g.add(ISA);
                         g.add(GS);
+                        g.add(outfilemulti);
                         g.add(content);
 			hanoi.put(hk, g);
 		}
@@ -614,9 +625,7 @@ public abstract class EDIMap implements EDIMapi {
            }
         }
 
-        // create out batch file name
-         int filenumber = OVData.getNextNbr("edifile");
-         String batchfile = "X" + String.format("%07d", filenumber);
+        
 
         if (outdir.isEmpty()) {
             outdir = tp[9];
@@ -625,13 +634,16 @@ public abstract class EDIMap implements EDIMapi {
             }
         }
         
-        if (outfile.isEmpty()) {
-            outfile = tp[10] + String.format("%07d", filenumber) + "." + tp[11];
-        }
+        
 
         c[7] = ref;
         c[15] = tp[14];
         c[25] = batchfile;
+        if (tp[20].equals("0")) { // if single package
+            c[8] = outfile;
+        } else {
+            c[8] = outfilemulti;    
+        }
         c[27] = outdir;
         c[29] = tp[15];
         c[6] = stctrl;

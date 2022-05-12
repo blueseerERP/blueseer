@@ -1160,20 +1160,19 @@ public class EDI {
                 String ele = delimConvertIntToStr(tp[6]); // element delimiter
                 String ele_esc = escapeDelimiter(ele);
                 String outdir = tp[9];
-                int filenumber = OVData.getNextNbr("edifile");
-                String outfile = tp[10] + String.format("%07d", filenumber) + "." + tp[11];
+                String outfile = z.getValue().get(2);
                 c = 0;
                 content = "";
                 String isactrl = z.getValue().get(0).split(ele_esc,-1)[13];
                 String gsctrl = z.getValue().get(1).split(ele_esc,-1)[6];
                 for (String s : z.getValue()) {
                     c++;
-                    if (c > 2) {
+                    if (c > 3) {
                         content += s;
                     }
                 }
                 content = z.getValue().get(0)+ seg + z.getValue().get(1) + seg + content;
-                content += "GE" + ele + String.valueOf(c - 2) + ele + gsctrl + seg;
+                content += "GE" + ele + String.valueOf(c - 3) + ele + gsctrl + seg;
                 content += "IEA" + ele + "1" + ele + isactrl + seg;
                 
                 // now write out to file
@@ -1189,7 +1188,7 @@ public class EDI {
                 }
             } // for each key (doctype, gssender, gsreceiver) of hanoi
         }
-        hanoi = null;
+        hanoi.clear();
     }
     
     public static void processX12(Map<Integer, Object[]> ISAmap, char[] cbuf, String batchfile, int idxnbr)   {
