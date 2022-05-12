@@ -4651,7 +4651,7 @@ public class DTData {
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
-                  res = st.executeQuery("select * from edi_mstr inner join edpd_partner on edpd_alias = edi_id inner join edp_partner on edp_id = edpd_parent order by edi_id;" );
+                  res = st.executeQuery("select * from edi_mstr inner join edpd_partner on edpd_parent = edi_id inner join edp_partner on edp_id = edpd_parent order by edi_id;" );
                     while (res.next()) {
                         mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("edi_id"),
                                    res.getString("edi_doc"),

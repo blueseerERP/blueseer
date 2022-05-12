@@ -660,7 +660,7 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
         cbfa.setText("Functional Acknowledgement?");
         cbfa.setName("cbfunctional"); // NOI18N
 
-        ddoutfiletype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "FF", "X12" }));
+        ddoutfiletype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "FF", "X12", "DB" }));
 
         jLabel2.setText("outDocType");
         jLabel2.setName("lbloutdoctype"); // NOI18N

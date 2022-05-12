@@ -113,7 +113,7 @@ public class Generic850i extends com.blueseer.edi.EDIMap {
    // NOTE: it's imperative that we have an internal billto code assign for pricing and discounts look up during the detail loop
    // if here and we have a blank billto...then error out
    if (e.getOVBillTo().isEmpty()) {
-   setError("No internal Billto Found PO:" + po);
+   setError("No internal Billto Found PO: " + po);
    return error; 
    }
 

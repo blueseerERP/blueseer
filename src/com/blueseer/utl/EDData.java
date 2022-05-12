@@ -1994,7 +1994,6 @@ public class EDData {
             Class.forName(driver);
             Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
-            ResultSet res = null;
             try {
                 
                 String[] c = control;
@@ -2020,8 +2019,10 @@ public class EDData {
                             + ";");
             } catch (SQLException s) {
                  MainFrame.bslog(s);
+            } finally {
+               if (st != null) st.close();
+               con.close();
             }
-            con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -2032,7 +2033,6 @@ public class EDData {
             Class.forName(driver);
             Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
-            ResultSet res = null;
             try {
                 
                 String[] c = control;
@@ -2059,8 +2059,10 @@ public class EDData {
                 }
             } catch (SQLException s) {
                  MainFrame.bslog(s);
+            } finally {
+               if (st != null) st.close();
+               con.close();
             }
-            con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -2089,7 +2091,7 @@ public class EDData {
                 MainFrame.bslog(s);
             } finally {
                if (st != null) st.close();
-               if (con != null) con.close();
+               con.close();
             }
         } catch (Exception e) {
             MainFrame.bslog(e);
@@ -2107,11 +2109,15 @@ public class EDData {
                 
                 
                 res = st.executeQuery("select elg_severity from edi_log " +
-                        " where elg_comkey = " + "'" + comkey + "'" + ";");
+                        " where elg_comkey = " + "'" + comkey + "'" + " order by elg_id;");
                 while (res.next()) {
                     if (res.getString("elg_severity").toLowerCase().equals("error")) {
                         x = "error";
                     }
+                    if (res.getString("elg_severity").toLowerCase().equals("success")) {
+                       x = "success";; 
+                    }
+                    // last one wins...order by is important!
                 }
                         st.executeUpdate("update edi_file set " 
                             + " edf_status = " + "'" + x + "'" + "," 
@@ -2122,13 +2128,38 @@ public class EDData {
                             + ";");
             } catch (SQLException s) {
                  MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
             }
-            con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
       }
    
+    public static void updateEDIFileLogStatusManual(String comkey) {
+        try {
+            Class.forName(driver);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            try {
+                st.executeUpdate("update edi_file set " 
+                    + " edf_status = 'success' "       
+                    + " where edf_comkey = " + "'" + comkey + "'"  
+                    + ";");
+            } catch (SQLException s) {
+                 MainFrame.bslog(s);
+            } finally {
+               if (st != null) st.close();
+               con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+    }
+   
+    
     public static String getEDIBatchFromedi_file(String comkey) {
         String x = "";
         try {
@@ -2181,7 +2212,7 @@ public class EDData {
             } finally {
                if (res != null) res.close();
                if (st != null) st.close();
-               if (con != null) con.close();
+               con.close();
             }
         } catch (Exception e) {
             MainFrame.bslog(e);
@@ -2215,7 +2246,7 @@ public class EDData {
             } finally {
                if (res != null) res.close();
                if (st != null) st.close();
-               if (con != null) con.close();
+               con.close();
             }
         } catch (Exception e) {
             MainFrame.bslog(e);
@@ -2249,7 +2280,7 @@ public class EDData {
             } finally {
                if (res != null) res.close();
                if (st != null) st.close();
-               if (con != null) con.close();
+               con.close();
             }
         } catch (Exception e) {
             MainFrame.bslog(e);
@@ -2376,7 +2407,7 @@ public class EDData {
                 MainFrame.bslog(s);
             } finally {
                if (st != null) st.close();
-               if (con != null) con.close();
+               con.close();
             }
         } catch (Exception e) {
             MainFrame.bslog(e);
@@ -2435,7 +2466,7 @@ public class EDData {
                 MainFrame.bslog(s);
             } finally {
                if (st != null) st.close();
-               if (con != null) con.close();
+               con.close();
             }
         } catch (Exception e) {
             MainFrame.bslog(e);
@@ -2462,7 +2493,7 @@ public class EDData {
                 MainFrame.bslog(s);
             } finally {
                if (st != null) st.close();
-               if (con != null) con.close();
+               con.close();
             }
         } catch (Exception e) {
             MainFrame.bslog(e);
@@ -2493,7 +2524,7 @@ public class EDData {
                 MainFrame.bslog(s);
             } finally {
                if (st != null) st.close();
-               if (con != null) con.close();
+               con.close();
             }
         } catch (Exception e) {
             MainFrame.bslog(e);
@@ -2521,7 +2552,7 @@ public class EDData {
                 MainFrame.bslog(s);
             } finally {
                if (st != null) st.close();
-               if (con != null) con.close();
+               con.close();
             }
         } catch (Exception e) {
             MainFrame.bslog(e);

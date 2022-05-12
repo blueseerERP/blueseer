@@ -34,7 +34,9 @@ import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.utl.EDData;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import static com.blueseer.utl.EDData.updateEDIFileLogStatusManual;
 import java.awt.Color;
 import java.awt.Component;
 import java.io.IOException;
@@ -277,8 +279,8 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                     // now check detail log...if 'any' errors....set status to clicknocheck...unless last is 'success'
                     resdetail = st2.executeQuery("select elg_severity from edi_log " +
                         " where elg_comkey = " + "'" + res.getInt("edx_comkey") + "'" 
-                        + " and elg_idxnbr = " + "'" + res.getInt("edx_id") + "'"
-                        +  " order by elg_idxnbr;");
+                       // + " and elg_idxnbr = " + "'" + res.getInt("edx_id") + "'"
+                        +  " order by elg_id;");
                     while (resdetail.next()) {
                         if (resdetail.getString("elg_severity").equals("error")) {
                            statusImage = BlueSeerUtils.clicknocheck; 
@@ -597,6 +599,7 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
         detailpanel.setVisible(false);
         textpanel.setVisible(false);
         btreprocess.setEnabled(false);
+        btclearstatus.setEnabled(false);
           
     }
     /**
@@ -642,6 +645,7 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
         tbref = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         btreprocess = new javax.swing.JButton();
+        btclearstatus = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
         tbtoterrors = new javax.swing.JLabel();
@@ -793,6 +797,13 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
             }
         });
 
+        btclearstatus.setText("Clear Status");
+        btclearstatus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btclearstatusActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -834,13 +845,16 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btreprocess)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cbshowall)
-                                .addGap(60, 60, 60)
-                                .addComponent(jLabel1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(tbsegdelim, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lbsegdelim, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(btclearstatus)
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addComponent(cbshowall)
+                                        .addGap(60, 60, 60)
+                                        .addComponent(jLabel1)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(tbsegdelim, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(lbsegdelim, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)))))))
                 .addContainerGap(12, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -867,14 +881,15 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(rbFileLog)
                         .addComponent(rbDocLog)))
-                .addGap(6, 6, 6)
+                .addGap(5, 5, 5)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(tbtradeid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tbdoc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3)
                     .addComponent(jLabel4)
                     .addComponent(jLabel7)
-                    .addComponent(tbref, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(tbref, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btclearstatus))
                 .addContainerGap())
         );
 
@@ -936,7 +951,7 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addGap(41, 41, 41)
-                .addComponent(tablepanel, javax.swing.GroupLayout.DEFAULT_SIZE, 367, Short.MAX_VALUE))
+                .addComponent(tablepanel, javax.swing.GroupLayout.DEFAULT_SIZE, 365, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -1152,10 +1167,12 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
         if (rbDocLog.isSelected()) {
             tbref.setEnabled(true);
             btreprocess.setEnabled(false);
+            btclearstatus.setEnabled(false);
             getDocLogView();
         } else {
             tbref.setEnabled(false);
             btreprocess.setEnabled(true);
+            btclearstatus.setEnabled(true);
             getFileLogView();
         }
     }//GEN-LAST:event_rbDocLogActionPerformed
@@ -1164,10 +1181,12 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
           if (rbDocLog.isSelected()) {
             tbref.setEnabled(true);
             btreprocess.setEnabled(false);
+            btclearstatus.setEnabled(false);
             getDocLogView();
         } else {
             tbref.setEnabled(false);
             btreprocess.setEnabled(true);
+            btclearstatus.setEnabled(true);
             getFileLogView();
         }
     }//GEN-LAST:event_rbFileLogActionPerformed
@@ -1200,9 +1219,20 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
         
     }//GEN-LAST:event_btreprocessActionPerformed
 
+    private void btclearstatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearstatusActionPerformed
+         int[] rows = tablereport.getSelectedRows();
+        for (int i : rows) {
+            updateEDIFileLogStatusManual(tablereport.getValueAt(i,2).toString());
+        }
+        if (rows.length >= 1) {
+        getFileLogView();
+        }
+    }//GEN-LAST:event_btclearstatusActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btRun;
+    private javax.swing.JButton btclearstatus;
     private javax.swing.JButton btdetail;
     private javax.swing.JButton bthidetext;
     private javax.swing.JButton btreprocess;

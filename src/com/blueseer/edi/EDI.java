@@ -1334,6 +1334,7 @@ public class EDI {
             if (GlobalDebug)   
             System.out.println("Entering Map " + map + " with: " +  c[1] + "/" + gs02 + "/" + gs03);    
 
+            messages.add(new String[]{"info","Found Map: " + map + " with " + c[1] + "/" + gs02 + "/" + gs03});
             messages.add(new String[]{"info","Using Map: " + map + " for docID: " + c[6]});
             
                // at this point I should have a doc set (ST to SE) and a map ...now call map to operate on doc 
