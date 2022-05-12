@@ -54,6 +54,7 @@ public class ACME850 extends com.blueseer.edi.EDIMap {
     //optional...set some global variables as necessary
     String  now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
     String mandt = "110";
+    String test = mandt.substring(0,6);
     String docnum = String.format("%016d",Integer.valueOf(c[4]));
     int segnum = 0;
     int psgnum = 0;

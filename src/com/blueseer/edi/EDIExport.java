@@ -30,6 +30,7 @@ import com.blueseer.utl.*;
 import bsmf.MainFrame;
 import static bsmf.MainFrame.tags;
 import static com.blueseer.ctr.cusData.addCustMstrMass;
+import static com.blueseer.edi.EDI.edilog;
 import com.blueseer.inv.invData;
 import static com.blueseer.inv.invData.addItemMasterMass;
 import com.blueseer.utl.OVData;
@@ -259,7 +260,7 @@ public class EDIExport extends javax.swing.JPanel {
             BlueSeerUtils.endTask(message);
             setState(); 
             } catch (Exception e) {
-                MainFrame.bslog(e);
+                edilog(e);
             } 
         }
     }  

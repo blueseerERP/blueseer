@@ -32,6 +32,7 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.edi.EDI.edilog;
 import com.blueseer.utl.EDData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -313,7 +314,7 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                 tbtot.setText(String.valueOf(i));
 
             } catch (SQLException s) {
-                MainFrame.bslog(s);
+                edilog(s);
                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             } finally {
                 if (res != null) {
@@ -331,7 +332,7 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                 con.close();
             }
         } catch (Exception e) {
-            MainFrame.bslog(e);
+            edilog(e);
         }
    }
     
@@ -424,7 +425,7 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                 tbtot.setText(String.valueOf(i));
 
             } catch (SQLException s) {
-                MainFrame.bslog(s);
+                edilog(s);
                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             } finally {
                 if (res != null) {
@@ -436,7 +437,7 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                 con.close();
             }
         } catch (Exception e) {
-            MainFrame.bslog(e);
+            edilog(e);
         }
    }
     
@@ -536,7 +537,7 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                 this.repaint();
 
             } catch (SQLException s) {
-                MainFrame.bslog(s);
+                edilog(s);
                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             } finally {
                 if (res != null) {
@@ -548,7 +549,7 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                 con.close();
             }
         } catch (Exception e) {
-            MainFrame.bslog(e);
+            edilog(e);
         }
 
     }
@@ -1002,11 +1003,11 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                             }
                          }
                      } catch (MalformedURLException ex) {
-                         bsmf.MainFrame.bslog(ex);
+                         edilog(ex);
                      } catch (SmbException ex) {
-                         bsmf.MainFrame.bslog(ex);
+                         edilog(ex);
                      } catch (IOException ex) {
-                         bsmf.MainFrame.bslog(ex);
+                         edilog(ex);
                      }
                      tafile.setCaretPosition(0);
                      textpanel.setVisible(true);
@@ -1043,11 +1044,11 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                     }
                  }
              } catch (MalformedURLException ex) {
-                 bsmf.MainFrame.bslog(ex);
+                 edilog(ex);
              } catch (SmbException ex) {
-                 bsmf.MainFrame.bslog(ex);
+                 edilog(ex);
              } catch (IOException ex) {
-                 bsmf.MainFrame.bslog(ex);
+                 edilog(ex);
              }
              tafile.setCaretPosition(0);
              textpanel.setVisible(true);
@@ -1081,11 +1082,11 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                     }
                  }
              } catch (MalformedURLException ex) {
-                 bsmf.MainFrame.bslog(ex);
+                 edilog(ex);
              } catch (SmbException ex) {
-                 bsmf.MainFrame.bslog(ex);
+                 edilog(ex);
              } catch (IOException ex) {
-                 bsmf.MainFrame.bslog(ex);
+                 edilog(ex);
              }
              tafile.setCaretPosition(0);
              textpanel.setVisible(true);
@@ -1117,11 +1118,11 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                     }
                  }
              } catch (MalformedURLException ex) {
-                 bsmf.MainFrame.bslog(ex);
+                 edilog(ex);
              } catch (SmbException ex) {
-                 bsmf.MainFrame.bslog(ex);
+                 edilog(ex);
              } catch (IOException ex) {
-                 bsmf.MainFrame.bslog(ex);
+                 edilog(ex);
              }
              tafile.setCaretPosition(0);
              textpanel.setVisible(true);
@@ -1191,9 +1192,9 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                        String result = m[0] + " of " + m[1];
                        bsmf.MainFrame.show(getMessageTag(1163,result));
                     } catch (IOException ex) {
-                        MainFrame.bslog(ex);
+                        edilog(ex);
                     } catch (ClassNotFoundException ex) {
-                        MainFrame.bslog(ex);
+                        edilog(ex);
                     }
             }
         }

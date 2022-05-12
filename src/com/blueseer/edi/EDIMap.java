@@ -26,6 +26,7 @@ SOFTWARE.
 package com.blueseer.edi;
 
 import bsmf.MainFrame;
+import static com.blueseer.edi.EDI.edilog;
 import static com.blueseer.edi.EDI.trimSegment;
 import com.blueseer.utl.BlueSeerUtils;
 import com.blueseer.utl.EDData;
@@ -646,9 +647,9 @@ public abstract class EDIMap implements EDIMapi {
                 // Write to outfile
                 EDI.writeFile(content, outdir, outfile);  // you can override output directory by assign 2nd parameter here instead of ""
             } catch (SmbException ex) {
-                MainFrame.bslog(ex);
+                edilog(ex);
             } catch (IOException ex) {
-                MainFrame.bslog(ex);
+                edilog(ex);
             }
 
         // need confirmation file was created    
@@ -760,10 +761,10 @@ public abstract class EDIMap implements EDIMapi {
 			
 		OSF = hm;
                 } catch (FileNotFoundException ex) {
-             MainFrame.bslog(ex);
+             edilog(ex);
             setError("outbound structure file not found: " + EDData.getEDIStructureDir() + "/" + adf);
         } catch (IOException ex) {
-             MainFrame.bslog(ex);
+             edilog(ex);
             setError("outbound structure file IOException");
         }
 }
@@ -812,10 +813,10 @@ public abstract class EDIMap implements EDIMapi {
                 
                 
         }   catch (FileNotFoundException ex) {
-            MainFrame.bslog(ex);
+            edilog(ex);
             setError("inbound structure file not found");
         } catch (IOException ex) {
-            MainFrame.bslog(ex);
+            edilog(ex);
             setError("inbound structure file IOException");
         }
 	}

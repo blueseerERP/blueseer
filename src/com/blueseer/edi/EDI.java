@@ -46,6 +46,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.PrintStream;
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -58,6 +59,8 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -86,6 +89,44 @@ import jcifs.smb.SmbFileOutputStream;
  */
 public class EDI {
     public static boolean GlobalDebug = false;
+    private static Path edilogpath = FileSystems.getDefault().getPath("edi/error.log");
+    
+    public static void edilog(String s) {
+        BufferedWriter output = null;
+        String  now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+        try {
+            output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(edilogpath.toFile())));
+            output.write("TIMESTAMP: " + now + "" + "\n");
+            output.write(s);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(EDI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(EDI.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try { 
+                output.close();
+            } catch (IOException ex) {
+                Logger.getLogger(EDI.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+         
+              
+    }
+    
+    public static void edilog(Throwable t) {
+        PrintStream ps = null;
+        String  now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+        try {
+            ps = new PrintStream(new FileOutputStream(edilogpath.toFile(), true));
+            ps.print("TIMESTAMP: " + now + "" + "\n");
+            t.printStackTrace(ps);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(EDI.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            ps.close();
+        }    
+    }
+    
     
     public static String[] initEDIControl() {   
         String[] controlarray = new String[39];
@@ -906,7 +947,7 @@ public class EDI {
                              InstantiationException | NoSuchMethodException |
                             InvocationTargetException ex) {
                         EDData.writeEDILog(control, "error", "unable to find map class for " + senderid + " / " + doctype);
-                        MainFrame.bslog(ex);
+                        edilog(ex);
                     }
                }   else {
                    EDData.writeEDILog(control, "error", "no edi_mstr map for " + senderid + " / " + doctype);
@@ -976,7 +1017,7 @@ public class EDI {
                              InstantiationException | NoSuchMethodException |
                             InvocationTargetException ex) {
                         EDData.writeEDILog(control, "error", "unable to find map class for " + senderid + " / " + doctype);
-                        MainFrame.bslog(ex);
+                        edilog(ex);
                     }
                }   else {
                    EDData.writeEDILog(control, "error", "no edi_mstr map for " + senderid + " / " + doctype);
@@ -1086,7 +1127,7 @@ public class EDI {
                              InstantiationException | NoSuchMethodException |
                             InvocationTargetException ex) {
                         EDData.writeEDILog(control, "error", "unable to find map class for " + senderid + " / " + doctype);
-                        MainFrame.bslog(ex);
+                        edilog(ex);
                     }
                }   else {
                    EDData.writeEDILog(control, "error", "no edi_mstr map for " + senderid + " / " + doctype);
@@ -1261,19 +1302,19 @@ public class EDI {
                     if (c[12].isEmpty()) {
                     messages.add(new String[]{"error", "invocation exception in map class " + map + "/" + c[0] + " / " + c[1]});    
                     }
-                    MainFrame.bslog(ex); 
+                    edilog(ex);  
                 } catch (ClassNotFoundException ex) {
                     if (c[12].isEmpty()) {
                     messages.add(new String[]{"error", "Map Class not found " + map + "/" + c[0] + " / " + c[1]});        
                     }
-                    MainFrame.bslog(ex); 
+                    edilog(ex); 
                 } catch (IllegalAccessException |
                          InstantiationException | NoSuchMethodException ex
                         ) {
                     if (c[12].isEmpty()) {
                     messages.add(new String[]{"error", "IllegalAccess|Instantiation|NoSuchMethod " + map + "/" + c[0] + " / " + c[1]});        
                    }
-                    MainFrame.bslog(ex);
+                    edilog(ex);
                 }
 
            }
@@ -1381,19 +1422,19 @@ public class EDI {
                         if (c[12].isEmpty()) {
                         EDData.writeEDILog(c, "error", "invocation exception in map class " + map + "/" + c[0] + " / " + c[1]);
                         } 
-                        MainFrame.bslog(ex);
+                        edilog(ex);
                     } catch (ClassNotFoundException ex) {
                         if (c[12].isEmpty()) {
                         EDData.writeEDILog(c, "error", "Map Class not found " + map + "/" + c[0] + " / " + c[1]);
                         }
-                        MainFrame.bslog(ex); 
+                        edilog(ex); 
                     } catch (IllegalAccessException |
                              InstantiationException | NoSuchMethodException ex
                             ) {
                         if (c[12].isEmpty()) {
                         EDData.writeEDILog(c, "error", "IllegalAccess|Instantiation|NoSuchMethod " + map + "/" + c[0] + " / " + c[1]);
                         }
-                        MainFrame.bslog(ex);
+                        edilog(ex);
                     }
                    
                }
@@ -1961,13 +2002,13 @@ public class EDI {
         if (c[12].isEmpty()) {
         messages.add(new String[]{"error", "invocation exception in map class " + map + "/" + c[0] + " / " + c[1]});    
         }
-        MainFrame.bslog(ex); 
+        edilog(ex); 
         } catch (ClassNotFoundException ex) {
         errorcode = 2;    
         if (c[12].isEmpty()) {
         messages.add(new String[]{"error", "Map Class not found " + map + "/" + c[0] + " / " + c[1]});        
         }
-        MainFrame.bslog(ex); 
+        edilog(ex); 
         } catch (IllegalAccessException |
              InstantiationException | NoSuchMethodException ex
             ) {
@@ -1975,7 +2016,7 @@ public class EDI {
         if (c[12].isEmpty()) {
         messages.add(new String[]{"error", "IllegalAccess|Instantiation|NoSuchMethod " + map + "/" + c[0] + " / " + c[1]});        
        }
-        MainFrame.bslog(ex);
+        edilog(ex);
        } finally {
           EDData.writeEDILogMulti(c, messages);
           messages.clear();  // clear message here...and at 997...and at end   
@@ -2077,13 +2118,13 @@ public class EDI {
         if (c[12].isEmpty()) {
         messages.add(new String[]{"error", "invocation exception in map class " + map + "/" + c[0] + " / " + c[1]});    
         }
-        MainFrame.bslog(ex); 
+        edilog(ex); 
         } catch (ClassNotFoundException ex) {
         errorcode = 2;    
         if (c[12].isEmpty()) {
         messages.add(new String[]{"error", "Map Class not found " + map + "/" + c[0] + " / " + c[1]});        
         }
-        MainFrame.bslog(ex); 
+        edilog(ex); 
         } catch (IllegalAccessException |
              InstantiationException | NoSuchMethodException ex
             ) {
@@ -2091,7 +2132,7 @@ public class EDI {
         if (c[12].isEmpty()) {
         messages.add(new String[]{"error", "IllegalAccess|Instantiation|NoSuchMethod " + map + "/" + c[0] + " / " + c[1]});        
        }
-        MainFrame.bslog(ex);
+        edilog(ex);
        } finally {
           EDData.writeEDILogMulti(c, messages);
           messages.clear();  // clear message here...and at 997...and at end   
@@ -2194,13 +2235,13 @@ public class EDI {
         if (c[12].isEmpty()) {
         messages.add(new String[]{"error", "invocation exception in map class " + map + "/" + c[0] + " / " + c[1]});    
         }
-        MainFrame.bslog(ex); 
+        edilog(ex); 
         } catch (ClassNotFoundException ex) {
         errorcode = 2;    
         if (c[12].isEmpty()) {
         messages.add(new String[]{"error", "Map Class not found " + map + "/" + c[0] + " / " + c[1]});        
         }
-        MainFrame.bslog(ex); 
+        edilog(ex); 
         } catch (IllegalAccessException |
              InstantiationException | NoSuchMethodException ex
             ) {
@@ -2208,7 +2249,7 @@ public class EDI {
         if (c[12].isEmpty()) {
         messages.add(new String[]{"error", "IllegalAccess|Instantiation|NoSuchMethod " + map + "/" + c[0] + " / " + c[1]});        
        }
-        MainFrame.bslog(ex);
+        edilog(ex);
        } finally {
           EDData.writeEDILogMulti(c, messages);
           messages.clear();  // clear message here...and at 997...and at end   
@@ -2310,13 +2351,13 @@ public class EDI {
         if (c[12].isEmpty()) {
         messages.add(new String[]{"error", "invocation exception in map class " + map + "/" + c[0] + " / " + c[1]});    
         }
-        MainFrame.bslog(ex); 
+        edilog(ex); 
         } catch (ClassNotFoundException ex) {
         errorcode = 2;    
         if (c[12].isEmpty()) {
         messages.add(new String[]{"error", "Map Class not found " + map + "/" + c[0] + " / " + c[1]});        
         }
-        MainFrame.bslog(ex); 
+        edilog(ex); 
         } catch (IllegalAccessException |
              InstantiationException | NoSuchMethodException ex
             ) {
@@ -2324,7 +2365,7 @@ public class EDI {
         if (c[12].isEmpty()) {
         messages.add(new String[]{"error", "IllegalAccess|Instantiation|NoSuchMethod " + map + "/" + c[0] + " / " + c[1]});        
        }
-        MainFrame.bslog(ex);
+        edilog(ex);
        } finally {
           EDData.writeEDILogMulti(c, messages);
           messages.clear();  // clear message here...and at 997...and at end   
@@ -2409,7 +2450,7 @@ public class EDI {
                             InvocationTargetException ex) {
                         EDData.writeEDILog(c_in, "error", "unable to find map class or invocation error for " + w + " / " + doctype);
                         errorcode = 3;
-                        MainFrame.bslog(ex);
+                        edilog(ex);
                     }
                     
                     
@@ -2496,7 +2537,7 @@ public class EDI {
                             InvocationTargetException ex) {
                         EDData.writeEDILog(c_in, "error", "unable to find map class or invocation error for " + ca + " / " + doctype);
                         errorcode = 3;
-                        MainFrame.bslog(ex);
+                        edilog(ex);
                     }
         
                    
@@ -2588,7 +2629,7 @@ public class EDI {
                             InvocationTargetException ex) {
                         EDData.writeEDILog(c_in, "error", "unable to find map class or invocation error for " + tp + " / " + doctype);
                         errorcode = 3;
-                        MainFrame.bslog(ex);
+                        edilog(ex);
                     }
            
      
@@ -2671,7 +2712,7 @@ public class EDI {
                             InvocationTargetException ex) {
                         EDData.writeEDILog(c_in, "error", "unable to find map class or invocation error for " + c_in + " / " + doctype);
                         errorcode = 3;
-                        MainFrame.bslog(ex);
+                        edilog(ex);
                     }
            
      
@@ -2990,9 +3031,9 @@ public class EDI {
             Files.copy(new File(EDData.getEDIOutDir() + "/" + filename).toPath(), new File(EDData.getEDIBatchDir() + "/" + batchfile).toPath(), StandardCopyOption.REPLACE_EXISTING);
            
         } catch (SmbException ex) {
-            MainFrame.bslog(ex);
+            edilog(ex);
         } catch (IOException ex) {
-            MainFrame.bslog(ex);
+            edilog(ex);
         }
          
          

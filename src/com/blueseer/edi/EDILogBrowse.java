@@ -35,6 +35,7 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.edi.EDI.edilog;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.EDData;
@@ -338,7 +339,7 @@ public class EDILogBrowse extends javax.swing.JPanel {
                 }
 
             } catch (SQLException s) {
-                MainFrame.bslog(s);
+                edilog(s);
                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             } finally {
                 if (res != null) {
@@ -350,7 +351,7 @@ public class EDILogBrowse extends javax.swing.JPanel {
                 con.close();
             }
         } catch (Exception e) {
-            MainFrame.bslog(e);
+            edilog(e);
         }
    }
     
