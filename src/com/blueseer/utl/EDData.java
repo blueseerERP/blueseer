@@ -2375,12 +2375,12 @@ public class EDData {
                             + "'" + c[6] + "'" + ","
                             + "'" + c[17] + "'" + ","
                             + "'" + c[18] + "'" + ","
-                            + "'" + c[19] + "'" + ","
-                            + "'" + c[20] + "'" + ","
-                            + "'" + c[31] + "'" + ","  // outisastart
-                            + "'" + c[32] + "'" + ","  // outisaend
-                            + "'" + c[33] + "'" + ","   // outdocstart
-                            + "'" + c[34] + "'" + ","  // outdocend                
+                            + "'" + Integer.valueOf(c[19]) + "'" + ","
+                            + "'" + Integer.valueOf(c[20]) + "'" + ","
+                            + "'" + Integer.valueOf(c[31]) + "'" + ","  // outisastart
+                            + "'" + Integer.valueOf(c[32]) + "'" + ","  // outisaend
+                            + "'" + Integer.valueOf(c[33]) + "'" + ","   // outdocstart
+                            + "'" + Integer.valueOf(c[34]) + "'" + ","  // outdocend                
                             + "'" + c[7] + "'" + "," 
                             + "'" + c[26] + "'" + ","      
                             + "'" + c[3] + "'" + ","

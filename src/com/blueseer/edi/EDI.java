@@ -176,7 +176,7 @@ public class EDI {
             
               */
                for (int i = 0; i < 39; i++) {
-                   controlarray[i] = (i == 35 || i == 36 || i == 37 ||
+                   controlarray[i] = (i == 31 || i == 32 || i == 33 || i == 34 || i == 35 || i == 36 || i == 37 ||
                            i == 9 || i == 10 || i == 11) ? "0" : "";
                 }
                 return controlarray;
@@ -1275,7 +1275,6 @@ public class EDI {
           c[18] = String.valueOf(end);
           c[19] = String.valueOf(k[0]);
           c[20] = String.valueOf(k[1]);
-          
           
           
           int j = Integer.valueOf(c[10]);
