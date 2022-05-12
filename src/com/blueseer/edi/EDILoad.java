@@ -30,6 +30,7 @@ package com.blueseer.edi;
  * @author vaughnte
  */
 import static bsmf.MainFrame.tags;
+import static com.blueseer.edi.EDI.packageEnvelopes;
 import com.blueseer.utl.BlueSeerUtils;
 import com.blueseer.utl.EDData;
 import java.io.*;
@@ -255,6 +256,9 @@ public static void runExport(String[] docs) {
             }
             EDData.updateEDIPOStatus(updateList);             
         }
+        
+        // if hanoi is not null
+        packageEnvelopes();
 }
 
 

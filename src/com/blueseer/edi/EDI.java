@@ -29,6 +29,7 @@ package com.blueseer.edi;
 import bsmf.MainFrame;
 import static bsmf.MainFrame.defaultDecimalSeparator;
 import com.blueseer.ctr.cusData;
+import static com.blueseer.edi.EDIMap.delimConvertIntToStr;
 import com.blueseer.ord.ordData;
 import static com.blueseer.ord.ordData.addOrderTransaction;
 import com.blueseer.pur.purData;
@@ -89,6 +90,8 @@ import jcifs.smb.SmbFileOutputStream;
  */
 public class EDI {
     public static boolean GlobalDebug = false;
+    public static Map<String, ArrayList<String>> hanoi = new HashMap<>();
+    
     private static Path edilogpath = FileSystems.getDefault().getPath("edi/error.log");
     
     public static void edilog(String s) {
@@ -713,6 +716,10 @@ public class EDI {
          }  // if x12
          
        EDData.updateEDIFileLogStatus(c[22], c[0], editype[0], editype[1]);   
+       
+       // if hanoi is not empty...must have some multi-doc envelopes to create
+       packageEnvelopes();
+       
        return m;  
     }
     
@@ -1141,7 +1148,49 @@ public class EDI {
       
 }
     
-    
+    public static void packageEnvelopes() {
+        if (hanoi != null && hanoi.size() > 0) {
+            int c = 0;
+            String content = "";
+            for (Map.Entry<String, ArrayList<String>> z : hanoi.entrySet()) {
+                String[] k = z.getKey().split(",", -1);
+                String[] tp = EDData.getEDITPDefaults(k[0], k[1], k[2]);
+                String seg = delimConvertIntToStr(tp[7]); // segment delimiter
+                String seg_esc = escapeDelimiter(seg);
+                String ele = delimConvertIntToStr(tp[6]); // element delimiter
+                String ele_esc = escapeDelimiter(ele);
+                String outdir = tp[9];
+                int filenumber = OVData.getNextNbr("edifile");
+                String outfile = tp[10] + String.format("%07d", filenumber) + "." + tp[11];
+                c = 0;
+                content = "";
+                String isactrl = z.getValue().get(0).split(ele_esc,-1)[13];
+                String gsctrl = z.getValue().get(1).split(ele_esc,-1)[6];
+                for (String s : z.getValue()) {
+                    c++;
+                    if (c > 2) {
+                        content += s;
+                    }
+                }
+                content = z.getValue().get(0)+ seg + z.getValue().get(1) + seg + content;
+                content += "GE" + ele + String.valueOf(c - 2) + ele + gsctrl + seg;
+                content += "IEA" + ele + "1" + ele + isactrl + seg;
+                
+                // now write out to file
+                if (outdir.isEmpty()) {
+                    outdir = EDData.getEDIOutDir();
+                }
+                try {
+                    EDI.writeFile(content, outdir, outfile);
+                } catch (SmbException ex) {
+                    edilog(ex);
+                } catch (IOException ex) {
+                    edilog(ex);
+                }
+            } // for each key (doctype, gssender, gsreceiver) of hanoi
+        }
+        hanoi = null;
+    }
     
     public static void processX12(Map<Integer, Object[]> ISAmap, char[] cbuf, String batchfile, int idxnbr)   {
     

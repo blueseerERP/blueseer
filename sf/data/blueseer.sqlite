@@ -307,7 +307,9 @@ CREATE TABLE "edi_mstr" (
   "edi_filetypeout" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
   "edi_ifs" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
   "edi_ofs" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
-  "edi_fa_required" tinyint(1) NOT NULL DEFAULT '0');
+  "edi_fa_required" tinyint(1) NOT NULL DEFAULT '0',
+  "edi_envelopeall" tinyint(1) NOT NULL DEFAULT '0'
+);
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;

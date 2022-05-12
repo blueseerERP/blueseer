@@ -538,18 +538,19 @@ public class EDData {
        }
     
     
-        /** Returns 15 element Array with Customer (billto) specific EDI setup information
+        /** Returns 21 element Array with Customer (billto) specific EDI setup information
          * 
          * @param billto
          * @param doctype
          * @param dir
          * @return Array with 0=ISA, 1=ISAQUAL, 2=GS, 3=BS_ISA, 4=BS_ISA_QUAL, 5=BS_GS, 6=ELEMDELIM, 7=SEGDELIM, 8=SUBDELIM, 9=FILEPATH, 10=FILEPREFIX, 11=FILESUFFIX,
-         * @return 12=X12VERSION, 13=SUPPCODE, 14=edi_doctypeout, 15=edi_filetypeout, 16=edi_ifs, 17=edi_ofs
+         * @return 12=X12VERSION, 13=SUPPCODE, 14=edi_doctypeout, 15=edi_filetypeout, 16=edi_ifs, 17=edi_ofs, 
+         * @return 18=ediid, 19=edidoc, 20=envelopeall
          */
     public static String[] getEDITPDefaults(String doctype, String gssndid, String gsrcvid) {
            
                     
-             String[] mystring = new String[]{"","","","","","","0","0","0","","","","","","","","","","",""};
+             String[] mystring = new String[]{"","","","","","","0","0","0","","","","","","","","","","","",""};
         try{
             Class.forName(driver);
             Connection con = DriverManager.getConnection(url + db, user, pass);
@@ -584,6 +585,7 @@ public class EDData {
                         mystring[17] = res.getString("edi_ofs");
                         mystring[18] = res.getString("edi_id");
                         mystring[19] = res.getString("edi_doc");
+                        mystring[20] = res.getString("edi_envelopeall");
                     }
            }
             catch (SQLException s) {

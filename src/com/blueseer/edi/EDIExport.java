@@ -31,6 +31,7 @@ import bsmf.MainFrame;
 import static bsmf.MainFrame.tags;
 import static com.blueseer.ctr.cusData.addCustMstrMass;
 import static com.blueseer.edi.EDI.edilog;
+import static com.blueseer.edi.EDI.packageEnvelopes;
 import com.blueseer.inv.invData;
 import static com.blueseer.inv.invData.addItemMasterMass;
 import com.blueseer.utl.OVData;
@@ -247,6 +248,8 @@ public class EDIExport extends javax.swing.JPanel {
             if (x.equals("Order Acknowledgement")) {
                  message = exportACKs(y);
             }
+            
+            
             return message;
         }
       
@@ -298,6 +301,9 @@ public class EDIExport extends javax.swing.JPanel {
           }
           tacomments.append("exporting number: " + x + "  Return Code: " + status + "\n");
         }
+        // if hanoi is not null
+            packageEnvelopes();
+            
         m[0] = String.valueOf(g_error);
         m[1] = "Processing Complete";
         return m;
@@ -319,6 +325,8 @@ public class EDIExport extends javax.swing.JPanel {
           }
           tacomments.append("exporting number: " + x + "  Return Code: " + status + "\n");
         }
+        // if hanoi is not null
+            packageEnvelopes();
         m[0] = String.valueOf(g_error);
         m[1] = "Processing Complete";
         return m;
@@ -340,6 +348,8 @@ public class EDIExport extends javax.swing.JPanel {
           }
           tacomments.append("exporting number: " + x + "  Return Code: " + status + "\n");
         }
+        // if hanoi is not null
+            packageEnvelopes();
         m[0] = String.valueOf(g_error);
         m[1] = "Processing Complete";
         return m;
@@ -361,6 +371,8 @@ public class EDIExport extends javax.swing.JPanel {
           }
           tacomments.append("exporting number: " + x + "  Return Code: " + status + "\n");
         }
+        // if hanoi is not null
+            packageEnvelopes();
         m[0] = String.valueOf(g_error);
         m[1] = "Processing Complete";
         return m;

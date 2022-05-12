@@ -279,7 +279,9 @@ CREATE TABLE IF NOT EXISTS `edi_mstr` (
   `edi_filetypeout` varchar(15) NOT NULL  DEFAULT '',
   `edi_ifs` varchar(50) NOT NULL  DEFAULT '',
   `edi_ofs` varchar(50) NOT NULL  DEFAULT '',
-  `edi_fa_required` tinyint(1) NOT NULL DEFAULT '0') ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `edi_fa_required` tinyint(1) NOT NULL DEFAULT '0',
+  `edi_envelopeall` tinyint(1) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `cms_det` (
   `cms_code` varchar(10) NOT NULL  DEFAULT '',
   `cms_shipto` varchar(10) NOT NULL  DEFAULT '',

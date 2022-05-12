@@ -27,6 +27,7 @@ package com.blueseer.edi;
 
 import bsmf.MainFrame;
 import static com.blueseer.edi.EDI.edilog;
+import static com.blueseer.edi.EDI.hanoi;
 import static com.blueseer.edi.EDI.trimSegment;
 import com.blueseer.utl.BlueSeerUtils;
 import com.blueseer.utl.EDData;
@@ -591,7 +592,26 @@ public abstract class EDIMap implements EDIMapi {
         if (tp[15].equals("X12")) {
            setOutPutEnvelopeStrings(c);
            String s = delimConvertIntToStr(tp[7]); // segment delimiter
-           content = ISA + s + GS + s + ST + s + content  + SE + s + GE + s + IEA + s;
+           if (tp[20].equals("1")) { // if envelopeall...then multi envelope
+             content = ST + s + content  + SE + s;
+             // write to hash map with key = doctype , outsender , outreceiver
+             String hk = doctype + "," + outsender + "," + outreceiver;
+             
+                if (hanoi.containsKey(hk)) {
+                        ArrayList<String> g = hanoi.get(hk);
+                        g.add(content);
+			hanoi.put(hk, g);
+		} else {
+                        ArrayList<String> g = new ArrayList<String>();
+                        g.add(ISA);
+                        g.add(GS);
+                        g.add(content);
+			hanoi.put(hk, g);
+		}
+                
+           } else {  // else single envelope
+             content = ISA + s + GS + s + ST + s + content  + SE + s + GE + s + IEA + s;  
+           }
         }
 
         // create out batch file name
@@ -641,25 +661,28 @@ public abstract class EDIMap implements EDIMapi {
             setError("out file type is unknown");
             return error;
         }
-            try {
-                // Write output batch file
-                EDI.writeFile(content, EDData.getEDIBatchDir(), batchfile);
-                // Write to outfile
-                EDI.writeFile(content, outdir, outfile);  // you can override output directory by assign 2nd parameter here instead of ""
-            } catch (SmbException ex) {
-                edilog(ex);
-            } catch (IOException ex) {
-                edilog(ex);
+        try {
+            // Write output batch file
+            EDI.writeFile(content, EDData.getEDIBatchDir(), batchfile);
+            // Write to outfile if single
+             if (tp[20].equals("0")) { // Write to outfile if single envelope...else done at end of EDI.processor
+             EDI.writeFile(content, outdir, outfile);  // you can override output directory by assign 2nd parameter here instead of ""
+             }
+        } catch (SmbException ex) {
+            edilog(ex);
+        } catch (IOException ex) {
+            edilog(ex);
+        }
+
+        // need confirmation file was created   
+        if (tp[20].equals("0")) { // if single package
+            File file = new File(outdir + "/" + outfile);
+            if (! file.exists()) {
+                setError("output file not created: " + file.getPath().toString());
+                return error;
+            } else {
+                c[23] = "success";
             }
-
-        // need confirmation file was created    
-        File file = new File(outdir + "/" + outfile);
-
-        if (! file.exists()) {
-            setError("output file not created: " + file.getPath().toString());
-            return error;
-        } else {
-            c[23] = "success";
         }
 
      return new String[]{"success","transaction mapped successfully"};

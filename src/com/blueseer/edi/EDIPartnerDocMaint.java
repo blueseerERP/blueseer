@@ -125,6 +125,7 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
                     tbsndq.setText(res.getString("edi_sndq"));
                     tbsupplier.setText(res.getString("edi_supcode"));
                     cbfa.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("edi_fa_required")));
+                    cbenvelopeall.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("edi_envelopeall")));
                    
                     
                 }
@@ -197,6 +198,7 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
         tbkey.setText("");
         tbattributekey.setText("");
         tbattributevalue.setText("");
+        cbenvelopeall.setSelected(false);
         
     }
     
@@ -229,6 +231,8 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
         tbfileprefix.setEnabled(true);
         tbfilesuffix.setEnabled(true);
         tbkey.setEnabled(true);
+        cbenvelopeall.setEnabled(true);
+        cbfa.setEnabled(true);
      
         tbattributekey.setEnabled(true);
         tbattributevalue.setEnabled(true);
@@ -263,7 +267,8 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
         tbfileprefix.setEnabled(false);
         tbfilesuffix.setEnabled(false);
         tbkey.setEnabled(false);
-      
+        cbenvelopeall.setEnabled(false);
+        cbfa.setEnabled(false);
         tbattributekey.setEnabled(false);
         tbattributevalue.setEnabled(false);
     }
@@ -405,6 +410,7 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
         dddoc = new javax.swing.JComboBox<>();
         tbrcvisa = new javax.swing.JTextField();
         btlookup = new javax.swing.JButton();
+        cbenvelopeall = new javax.swing.JCheckBox();
         jPanel3 = new javax.swing.JPanel();
         jLabel11 = new javax.swing.JLabel();
         tbfilepath = new javax.swing.JTextField();
@@ -510,6 +516,8 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
             }
         });
 
+        cbenvelopeall.setText("Multi-Envelope");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -532,9 +540,6 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
                         .addComponent(jLabel16)))
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tbsndq, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(3, 3, 3)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
@@ -555,7 +560,12 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(tbrcvisa, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(dddoc, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(dddoc, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cbenvelopeall)
+                            .addComponent(tbsndq, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(17, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -600,6 +610,8 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbsndq, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel16))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(cbenvelopeall)
                 .addContainerGap())
         );
 
@@ -870,6 +882,7 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
             try {
                 boolean proceed = true;
                 String fa = "";
+                String envelopeall = "";
                 int i = 0;
                 
                 // check the site field
@@ -894,6 +907,12 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
                     fa = "0";
                 }
                 
+                if ( cbenvelopeall.isSelected() ) {
+                   envelopeall = "1";    
+                } else {
+                    envelopeall = "0";
+                }
+                
                 if (proceed) {
 
                     res = st.executeQuery("SELECT edi_id, edi_doc FROM  edi_mstr where edi_id = " + "'" + tbkey.getText() + "'" +
@@ -909,7 +928,7 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
                         st.executeUpdate("insert into edi_mstr "
                             + "(edi_id, edi_doc, edi_sndisa, edi_sndq, " 
                             + "edi_sndgs, edi_map, edi_eledelim, edi_segdelim, edi_subdelim, edi_fileprefix, edi_filesuffix, edi_filepath, "
-                            + "edi_version, edi_rcvisa, edi_rcvgs, edi_rcvq, edi_supcode, edi_doctypeout, edi_filetypeout, edi_ifs, edi_ofs, edi_fa_required ) "
+                            + "edi_version, edi_rcvisa, edi_rcvgs, edi_rcvq, edi_supcode, edi_doctypeout, edi_filetypeout, edi_ifs, edi_ofs, edi_fa_required, edi_envelopeall ) "
                             + " values ( " + "'" + tbkey.getText() + "'" + ","
                                 + "'" + dddoc.getSelectedItem().toString() + "'" + ","
                                 + "'" + tbsndisa.getText() + "'" + ","
@@ -931,7 +950,8 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
                                 + "'" + ddoutfiletype.getSelectedItem().toString() + "'" + ","
                                 + "'" + tbIFS.getText() + "'"  + ","
                                 + "'" + tbOFS.getText() + "'"  + ","        
-                                + "'" + fa + "'"
+                                + "'" + fa + "'" + ","
+                                + "'" + envelopeall + "'"
                             + ")"
                             + ";");
                         bsmf.MainFrame.show(getMessageTag(1007));
@@ -964,6 +984,7 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
             boolean proceed = true;
            
             String fa = "";
+            String envelopeall = "";
             Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             try {
@@ -995,6 +1016,11 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
                 } else {
                     fa = "0";
                 }
+                if ( cbenvelopeall.isSelected() ) {
+                   envelopeall = "1";    
+                } else {
+                    envelopeall = "0";
+                }
                 
                 if (proceed) {
                     st.executeUpdate("update edi_mstr set edi_sndisa = " + "'" + tbsndisa.getText() + "'" + ","
@@ -1016,7 +1042,8 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
                             + "edi_filetypeout = " + "'" + ddoutfiletype.getSelectedItem() + "'"  + ","        
                             + "edi_ifs = " + "'" + tbIFS.getText() + "'" + ","
                             + "edi_ofs = " + "'" + tbOFS.getText() + "'" + ","        
-                            + "edi_fa_required = " + "'" + fa + "'"
+                            + "edi_fa_required = " + "'" + fa + "'" + ","
+                            + "edi_envelopeall = " + "'" + envelopeall + "'"    
                             + " where edi_id = " + "'" + tbkey.getText() + "'"     
                             + " AND edi_doc = " + "'" + dddoc.getSelectedItem().toString() + "'"
                             + " AND edi_rcvgs = " + "'" + tbrcvgs.getText() + "'"
@@ -1192,6 +1219,7 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
     private javax.swing.JButton btnew;
     private javax.swing.JButton btupdate;
     private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.JCheckBox cbenvelopeall;
     private javax.swing.JCheckBox cbfa;
     private javax.swing.JComboBox<String> dddoc;
     private javax.swing.JComboBox<String> ddoutdoctype;
