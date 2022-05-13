@@ -113,11 +113,11 @@ begin
   SetArrayLength(lines, 2);
   mylang := 'LANGUAGE=en';
   mycountry := 'COUNTRY=US';
-  if IsComponentSelected('french') then begin mylang := 'LANGUAGE=fr'; mycountry := 'COUNTRY=FR'; end
-  if IsComponentSelected('spanish') then begin mylang := 'LANGUAGE=es'; mycountry := 'COUNTRY=ES'; end
-  if IsComponentSelected('turkish') then begin mylang := 'LANGUAGE=tr'; mycountry := 'COUNTRY=TR'; end
-  if IsComponentSelected('german') then begin mylang := 'LANGUAGE=de'; mycountry := 'COUNTRY=DE'; end
-  if IsComponentSelected('romanian') then begin mylang := 'LANGUAGE=ro'; mycountry := 'COUNTRY=RO'; end
+  if IsComponentSelected('french') then begin mylang := 'LANGUAGE=fr'; mycountry := 'COUNTRY=FR'; end;
+  if IsComponentSelected('spanish') then begin mylang := 'LANGUAGE=es'; mycountry := 'COUNTRY=ES'; end;
+  if IsComponentSelected('turkish') then begin mylang := 'LANGUAGE=tr'; mycountry := 'COUNTRY=TR'; end;
+  if IsComponentSelected('german') then begin mylang := 'LANGUAGE=de'; mycountry := 'COUNTRY=DE'; end;
+  if IsComponentSelected('romanian') then begin mylang := 'LANGUAGE=ro'; mycountry := 'COUNTRY=RO'; end;
   lines[0] := mylang;
   lines[1] := mycountry;
   Result := SaveStringsToFile(filename,lines,true);
