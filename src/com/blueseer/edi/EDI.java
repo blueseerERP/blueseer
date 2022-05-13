@@ -1151,7 +1151,10 @@ public class EDI {
     public static void packageEnvelopes() {
         if (hanoi != null && hanoi.size() > 0) {
             int c = 0;
+            int docid = 0;
             String content = "";
+            String ST = "";
+            String SE = "";
             for (Map.Entry<String, ArrayList<String>> z : hanoi.entrySet()) {
                 String[] k = z.getKey().split(",", -1);
                 String[] tp = EDData.getEDITPDefaults(k[0], k[1], k[2]);
@@ -1162,13 +1165,18 @@ public class EDI {
                 String outdir = tp[9];
                 String outfile = z.getValue().get(2);
                 c = 0;
+                docid = 0;
                 content = "";
                 String isactrl = z.getValue().get(0).split(ele_esc,-1)[13];
                 String gsctrl = z.getValue().get(1).split(ele_esc,-1)[6];
                 for (String s : z.getValue()) {
                     c++;
                     if (c > 3) {
-                        content += s;
+                        docid++;
+                        ST = "ST" + ele + k[0] + ele + String.format("%04d", docid);
+                        SE = "SE" + ele + String.valueOf(s.chars().filter(ch -> ch == seg_esc.charAt(0)).count() + 2) + ele + String.format("%04d", docid);
+                       // content += ("ST" + ele + k[0] + ele + String.format("%04d", docid) + seg + s + "SE" + ele + s.chars().filter(ch -> ch == seg_esc.charAt(0)).count() + ele + String.format("%04d", docid) + seg);
+                        content += ST + seg + s + SE + seg;
                     }
                 }
                 content = z.getValue().get(0)+ seg + z.getValue().get(1) + seg + content;

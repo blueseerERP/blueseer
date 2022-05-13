@@ -286,7 +286,7 @@ public abstract class EDIMap implements EDIMapi {
            outfile = filename;  
            isactrl = envelope[5];
            gsctrl = envelope[6];
-           stctrl = String.format("%09d", Integer.valueOf(gsctrl));
+           stctrl = String.format("%04d", 1);
            ST = "ST" + ed + outputdoctype + ed + stctrl ;
            SE = "SE" + ed + String.valueOf(segcount) + ed + stctrl;  
            
@@ -601,7 +601,8 @@ public abstract class EDIMap implements EDIMapi {
            setOutPutEnvelopeStrings(c);
            String s = delimConvertIntToStr(tp[7]); // segment delimiter
            if (tp[20].equals("1")) { // if envelopeall...then multi envelope
-             content = ST + s + content  + SE + s;
+            // content = ST + s + content  + SE + s;
+            
              // write to hash map with key = doctype , outsender , outreceiver
              String hk = doctype + "," + outsender + "," + outreceiver;
              
