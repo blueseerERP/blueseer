@@ -8,3 +8,5 @@ patch=0
 # First release of 6.2
 patch=1
 # bug fix #57 as well as updates to EDI labels and auto loading mechanics
+patch=2
+# EDI mods to ST doc id and envelope multi packaging
