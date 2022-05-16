@@ -27,6 +27,7 @@ package com.blueseer.edi;
 
 import bsmf.MainFrame;
 import static bsmf.MainFrame.db;
+import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
@@ -37,6 +38,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 
 /**
  *
@@ -400,6 +403,64 @@ public class ediData {
                r = new map_struct(m);
         }
         return r;
+    }
+    
+    //misc
+    
+    public static ArrayList getMapMstrList() {
+       ArrayList mylist = new ArrayList();
+        try{
+            Class.forName(driver);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                res = st.executeQuery("select map_id from map_mstr; ");
+               while (res.next()) {
+                   mylist.add(res.getString("map_id"));
+                }
+           }
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return mylist;
+        
+    }
+    
+    public static ArrayList getMapStructList() {
+       ArrayList mylist = new ArrayList();
+        try{
+            Class.forName(driver);
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                res = st.executeQuery("select mps_id from map_struct; ");
+               while (res.next()) {
+                   mylist.add(res.getString("mps_id"));
+                }
+           }
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return mylist;
+        
     }
     
     

@@ -69,15 +69,14 @@
                                   <Component id="ddofs" pref="132" max="32767" attributes="0"/>
                                   <Component id="ddifs" max="32767" attributes="0"/>
                               </Group>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="lbaccountname" min="-2" pref="191" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="195" max="-2" attributes="0"/>
                           </Group>
                           <Component id="tbversion" alignment="0" min="-2" pref="132" max="-2" attributes="0"/>
                       </Group>
                       <Component id="tbdesc" alignment="0" min="-2" pref="269" max="-2" attributes="0"/>
                       <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
-                          <Component id="ddfiletypeout" alignment="0" pref="132" max="32767" attributes="0"/>
-                          <Component id="dddoctypeout" alignment="0" max="32767" attributes="0"/>
+                          <Component id="ddoutfiletype" alignment="0" pref="132" max="32767" attributes="0"/>
+                          <Component id="ddoutdoctype" alignment="0" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
@@ -105,12 +104,9 @@
                       <Component id="lbldesc" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="lbaccountname" alignment="0" min="-2" pref="20" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="ddifs" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="lbltype" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="ddifs" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="lbltype" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
@@ -124,12 +120,12 @@
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="dddoctypeout" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="ddoutdoctype" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="ddfiletypeout" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="ddoutfiletype" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace pref="56" max="32767" attributes="0"/>
@@ -169,9 +165,6 @@
               <StringArray count="0"/>
             </Property>
           </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ddifsActionPerformed"/>
-          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btupdate">
           <Properties>
@@ -228,8 +221,6 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btdeleteActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JLabel" name="lbaccountname">
-        </Component>
         <Component class="javax.swing.JButton" name="btclear">
           <Properties>
             <Property name="text" type="java.lang.String" value="Clear"/>
@@ -258,7 +249,7 @@
             <Property name="name" type="java.lang.String" value="lblversion" noResource="true"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JComboBox" name="dddoctypeout">
+        <Component class="javax.swing.JComboBox" name="ddoutdoctype">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
               <StringArray count="0"/>
@@ -268,7 +259,7 @@
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
           </AuxValues>
         </Component>
-        <Component class="javax.swing.JComboBox" name="ddfiletypeout">
+        <Component class="javax.swing.JComboBox" name="ddoutfiletype">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
               <StringArray count="3">

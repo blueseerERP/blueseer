@@ -26,16 +26,15 @@ SOFTWARE.
 
 package com.blueseer.edi;
 
-import com.blueseer.fgl.*;
 import bsmf.MainFrame;
 import static bsmf.MainFrame.tags;
+import static com.blueseer.edi.ediData.addMapMstr;
+import static com.blueseer.edi.ediData.deleteMapMstr;
+import static com.blueseer.edi.ediData.getMapMstr;
+import com.blueseer.edi.ediData.map_mstr;
+import static com.blueseer.edi.ediData.updateMapMstr;
 import com.blueseer.utl.OVData;
 import java.util.ArrayList;
-import com.blueseer.fgl.fglData.AcctMstr;
-import static com.blueseer.fgl.fglData.addAcctMstr;
-import static com.blueseer.fgl.fglData.deleteAcctMstr;
-import static com.blueseer.fgl.fglData.getAcctMstr;
-import static com.blueseer.fgl.fglData.updateAcctMstr;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.checkLength;
@@ -53,17 +52,14 @@ import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeerT;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.lang.reflect.Field;
 import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -71,7 +67,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JViewport;
-import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 
 /**
@@ -83,7 +78,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
     
     // global variable declarations
                 boolean isLoad = false;
-                public static AcctMstr x = null;
+                public static map_mstr x = null;
     
    // global datatablemodel declarations   
    
@@ -141,11 +136,8 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
             BlueSeerUtils.endTask(message);
            if (this.type.equals("delete")) {
              initvars(null);  
-           } else if (this.type.equals("get") && message[0].equals("1")) {
+           } else if (this.type.equals("get")) {
              updateForm();
-             tbkey.requestFocus();
-           } else if (this.type.equals("get") && message[0].equals("0")) {
-             updateForm();  
              tbkey.requestFocus();
            } else {
              initvars(null);  
@@ -275,16 +267,24 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         isLoad = true;
         tbkey.setText("");
         tbdesc.setText("");
-        tbkey.setText("");
-        lbaccountname.setText("");
-        cbdisplay.setSelected(false);
+        tbversion.setText("");
         
         ddofs.removeAllItems();
-        ArrayList<String> curr = fglData.getCurrlist();
-        for (int i = 0; i < curr.size(); i++) {
-            ddofs.addItem(curr.get(i));
+        ddifs.removeAllItems();
+        ArrayList<String> structs = ediData.getMapStructList();
+        for (int i = 0; i < structs.size(); i++) {
+            ddofs.addItem(structs.get(i));
         }
-        ddofs.setSelectedItem(OVData.getDefaultCurrency());
+        for (int i = 0; i < structs.size(); i++) {
+            ddifs.addItem(structs.get(i));
+        }
+        
+        ddoutdoctype.removeAllItems();
+        ArrayList<String> mylist = OVData.getCodeMstrKeyList("edidoctype");
+        for (int i = 0; i < mylist.size(); i++) {
+            ddoutdoctype.addItem(mylist.get(i));
+        }
+        
         
        isLoad = false;
     }
@@ -385,17 +385,18 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
     }
    
     public String[] getRecord(String[] key) {
-        AcctMstr z = getAcctMstr(key);        
-        x = z;
+        x = getMapMstr(key);   
         return x.m();
     }
     
-    public AcctMstr createRecord() { 
-        AcctMstr x = new AcctMstr(null, tbkey.getText().toString(),
+    public map_mstr createRecord() { 
+        map_mstr x = new map_mstr(null, tbkey.getText().toString(),
                 tbdesc.getText().toUpperCase(),
+                tbversion.getText().toUpperCase(),
                 ddifs.getSelectedItem().toString(),
                 ddofs.getSelectedItem().toString(),
-                String.valueOf(BlueSeerUtils.boolToInt(cbdisplay.isSelected()))
+                ddoutdoctype.getSelectedItem().toString(),
+                ddoutfiletype.getSelectedItem().toString()
                 );
         /* potential validation mechanism...would need association between record field and input field
         for(Field f : x.getClass().getDeclaredFields()){
@@ -406,12 +407,12 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
     }
        
     public String[] addRecord(String[] key) {
-         String[] m = addAcctMstr(createRecord());
+         String[] m = addMapMstr(createRecord());
          return m;
     }
         
     public String[] updateRecord(String[] key) {
-         String[] m = updateAcctMstr(createRecord());
+         String[] m = updateMapMstr(createRecord());
          return m;
     }
     
@@ -419,7 +420,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         String[] m = new String[2];
         boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
         if (proceed) {
-         m = deleteAcctMstr(createRecord()); 
+         m = deleteMapMstr(createRecord()); 
          initvars(null);
         } else {
            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
@@ -433,9 +434,9 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         lual = new ActionListener() {
         public void actionPerformed(ActionEvent event) {
         if (lurb1.isSelected()) {  
-         luModel = DTData.getAcctBrowseUtil(luinput.getText(),0, "ac_id");
+         luModel = DTData.getMapBrowseUtil(luinput.getText(),0, "map_id"); 
         } else {
-         luModel = DTData.getAcctBrowseUtil(luinput.getText(),0, "ac_desc");   
+         luModel = DTData.getMapBrowseUtil(luinput.getText(),0, "map_desc");   
         }
         luTable.setModel(luModel);
         luTable.getColumnModel().getColumn(0).setMaxWidth(50);
@@ -456,7 +457,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 int column = target.getSelectedColumn();
                 if ( column == 0) {
                 ludialog.dispose();
-                initvars(new String[]{target.getValueAt(row,1).toString(), target.getValueAt(row,2).toString()});
+                initvars(new String[]{target.getValueAt(row,1).toString()});
                 }
             }
         };
@@ -469,11 +470,12 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
     }
 
     public void updateForm() {
-        tbdesc.setText(x.desc());
-        tbkey.setText(x.id());
-        ddofs.setSelectedItem(x.currency());
-        cbdisplay.setSelected(BlueSeerUtils.ConvertStringToBool(String.valueOf(x.cbdisplay())));
-        ddifs.setSelectedItem(x.type());
+        tbdesc.setText(x.map_desc());
+        tbkey.setText(x.map_id());
+        ddofs.setSelectedItem(x.map_ofs());
+        ddifs.setSelectedItem(x.map_ifs());
+        ddoutdoctype.setSelectedItem(x.map_outdoctype());
+        ddoutfiletype.setSelectedItem(x.map_outfiletype());
         setAction(x.m()); 
     }
     
@@ -499,13 +501,12 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         lblcurrency = new javax.swing.JLabel();
         btnew = new javax.swing.JButton();
         btdelete = new javax.swing.JButton();
-        lbaccountname = new javax.swing.JLabel();
         btclear = new javax.swing.JButton();
         btlookup = new javax.swing.JButton();
         tbversion = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
-        dddoctypeout = new javax.swing.JComboBox<>();
-        ddfiletypeout = new javax.swing.JComboBox<>();
+        ddoutdoctype = new javax.swing.JComboBox<>();
+        ddoutfiletype = new javax.swing.JComboBox<>();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
 
@@ -519,12 +520,6 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
 
         lbldesc.setText("Desc");
         lbldesc.setName("lbldesc"); // NOI18N
-
-        ddifs.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ddifsActionPerformed(evt);
-            }
-        });
 
         btupdate.setText("Update");
         btupdate.setName("btupdate"); // NOI18N
@@ -589,7 +584,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         jLabel1.setText("Version");
         jLabel1.setName("lblversion"); // NOI18N
 
-        ddfiletypeout.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "FF", "X12", "DB" }));
+        ddoutfiletype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "FF", "X12", "DB" }));
 
         jLabel2.setText("Doc Type Out");
         jLabel2.setName("lbldoctypeout"); // NOI18N
@@ -632,13 +627,12 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                             .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                 .addComponent(ddofs, 0, 132, Short.MAX_VALUE)
                                 .addComponent(ddifs, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(lbaccountname, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGap(195, 195, 195))
                         .addComponent(tbversion, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(ddfiletypeout, javax.swing.GroupLayout.Alignment.LEADING, 0, 132, Short.MAX_VALUE)
-                        .addComponent(dddoctypeout, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(ddoutfiletype, javax.swing.GroupLayout.Alignment.LEADING, 0, 132, Short.MAX_VALUE)
+                        .addComponent(ddoutdoctype, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panelmaintLayout.setVerticalGroup(
@@ -658,11 +652,9 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                     .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbldesc))
                 .addGap(11, 11, 11)
-                .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lbaccountname, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(ddifs, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(lbltype)))
+                .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ddifs, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbltype))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ddofs, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -673,11 +665,11 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                     .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(dddoctypeout, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ddoutdoctype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ddfiletypeout, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ddoutfiletype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 56, Short.MAX_VALUE)
                 .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -718,24 +710,6 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         executeTask(dbaction.delete, new String[]{tbkey.getText()});   
     }//GEN-LAST:event_btdeleteActionPerformed
 
-    private void ddifsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddifsActionPerformed
-        if (ddifs.getSelectedItem().toString().equals("E")) {
-            lbaccountname.setText(getClassLabelTag("ExpenseType", this.getClass().getSimpleName()));
-        } else if (ddifs.getSelectedItem().toString().equals("A")) {
-            lbaccountname.setText(getClassLabelTag("AssetType", this.getClass().getSimpleName()));
-        } else if (ddifs.getSelectedItem().toString().equals("I")) {
-            lbaccountname.setText(getClassLabelTag("IncomeType", this.getClass().getSimpleName()));
-        } else if (ddifs.getSelectedItem().toString().equals("L")) {
-            lbaccountname.setText(getClassLabelTag("liabilityType", this.getClass().getSimpleName()));
-        } else if (ddifs.getSelectedItem().toString().equals("O")) {
-            lbaccountname.setText(getClassLabelTag("OwnersEquityType", this.getClass().getSimpleName()));
-        } else if (ddifs.getSelectedItem().toString().equals("M")) {
-            lbaccountname.setText(getClassLabelTag("MiscellaneousType", this.getClass().getSimpleName()));    
-        } else {
-            lbaccountname.setText(getClassLabelTag("UnknownAccountType", this.getClass().getSimpleName()));
-        }
-    }//GEN-LAST:event_ddifsActionPerformed
-
     private void tbkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkeyActionPerformed
       if (! btadd.isEnabled())
         executeTask(dbaction.get, new String[]{tbkey.getText()});
@@ -758,14 +732,13 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
     private javax.swing.JButton btlookup;
     private javax.swing.JButton btnew;
     private javax.swing.JButton btupdate;
-    private javax.swing.JComboBox<String> dddoctypeout;
-    private javax.swing.JComboBox<String> ddfiletypeout;
     private javax.swing.JComboBox ddifs;
     private javax.swing.JComboBox ddofs;
+    private javax.swing.JComboBox<String> ddoutdoctype;
+    private javax.swing.JComboBox<String> ddoutfiletype;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel lbaccountname;
     private javax.swing.JLabel lblcurrency;
     private javax.swing.JLabel lbldesc;
     private javax.swing.JLabel lblid;
