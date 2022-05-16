@@ -392,6 +392,171 @@ public class venData {
         return r;
     }
     
+    public static String[] addVdpMstr(vdp_mstr x) {
+        String[] m = new String[2];
+        String sqlSelect = "SELECT * FROM  vdp_mstr where vdp_vitem = ? and vdp_vend = ?";
+        String sqlInsert = "insert into vdp_mstr (vdp_vend, vdp_item, vdp_vitem, " +
+         "vdp_upc, vdp_userid, vdp_misc, vdp_sku) " 
+                        + " values (?,?,?,?,?,?,?); "; 
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+             PreparedStatement ps = con.prepareStatement(sqlSelect);) {
+             ps.setString(1, x.vdp_vitem);
+             ps.setString(2, x.vdp_vend);
+          try (ResultSet res = ps.executeQuery();
+               PreparedStatement psi = con.prepareStatement(sqlInsert);) {  
+            if (! res.isBeforeFirst()) {
+            psi.setString(1, x.vdp_vend);
+            psi.setString(2, x.vdp_item);
+            psi.setString(3, x.vdp_vitem);
+            psi.setString(4, x.vdp_upc);
+            psi.setString(5, x.vdp_userid);
+            psi.setString(6, x.vdp_misc);
+            psi.setString(7, x.vdp_sku);
+            int rows = psi.executeUpdate();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+            } else {
+            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists};    
+            }
+          } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+          }
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+
+    public static String[] addOrUpdateVdpMstr(vdp_mstr x) {
+        String[] m = new String[2];
+        String sqlSelect = "SELECT * FROM  vdp_mstr where vdp_vitem = ? and vdp_vend = ?";
+        String sqlInsert = "insert into vdp_mstr (vdp_vend, vdp_item, vdp_vitem, " +
+         "vdp_upc, vdp_userid, vdp_misc, vdp_sku) " 
+                        + " values (?,?,?,?,?,?,?); "; 
+        String sqlUpdate = "update vdp_mstr set vdp_item = ?, vdp_upc = ?, " +
+                " vdp_userid = ?, vdp_misc = ?, vdp_sku = ?  " +   
+                          " where vdp_vitem = ? and vdp_vend = ? ; ";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+             PreparedStatement ps = con.prepareStatement(sqlSelect);) {
+             ps.setString(1, x.vdp_vitem);
+             ps.setString(2, x.vdp_vend);
+          try (ResultSet res = ps.executeQuery();
+               PreparedStatement psi = con.prepareStatement(sqlInsert);
+               PreparedStatement psu = con.prepareStatement(sqlUpdate);) {  
+            if (! res.isBeforeFirst()) {
+            psi.setString(1, x.vdp_vend);
+            psi.setString(2, x.vdp_item);
+            psi.setString(3, x.vdp_vitem);
+            psi.setString(4, x.vdp_upc);
+            psi.setString(5, x.vdp_userid);
+            psi.setString(6, x.vdp_misc);
+            psi.setString(7, x.vdp_sku); 
+            int rows = psi.executeUpdate();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+            } else {
+            psu.setString(1, x.vdp_item);
+            psu.setString(2, x.vdp_upc);
+            psu.setString(3, x.vdp_userid);
+            psu.setString(4, x.vdp_misc);
+            psu.setString(5, x.vdp_sku);
+            psu.setString(6, x.vdp_vitem);
+            psu.setString(7, x.vdp_vend);
+            int rows = psu.executeUpdate();    
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};    
+            }
+          } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+          }
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+
+    public static String[] updateVdpMstr(vdp_mstr x) {
+        String[] m = new String[2];
+        String sql = "update vdp_mstr set vdp_item = ?, vdp_upc = ?, " +
+                " vdp_userid = ?, vdp_misc = ?, vdp_sku = ?  " +   
+                          " where vdp_vitem = ? and vdp_vend = ? ; ";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, x.vdp_item);
+            ps.setString(2, x.vdp_upc);
+            ps.setString(3, x.vdp_userid);
+            ps.setString(4, x.vdp_misc);
+            ps.setString(5, x.vdp_sku);
+            ps.setString(6, x.vdp_vitem);
+            ps.setString(7, x.vdp_vend);
+        int rows = ps.executeUpdate();
+        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+    
+    public static String[] deleteVdpMstr(vdp_mstr x) { 
+       String[] m = new String[2];
+        String sql = "delete from vdp_mstr where vdp_vitem = ? and vdp_vend = ?; ";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, x.vdp_vitem);
+        ps.setString(2, x.vdp_vend);
+        int rows = ps.executeUpdate();
+        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+    
+    public static vdp_mstr getVdpMstr(String[] x) {
+        vdp_mstr r = null;
+        String[] m = new String[2];
+        String sql = "";
+         if (x.length >= 2 && ! x[1].isEmpty()) {
+            sql = "select * from vdp_mstr where vdp_vend = ? and vdp_vitem = ?;";
+         } else {
+            sql = "select * from vdp_mstr where vdp_vitem = ? limit 1 ;";  
+         }
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, x[0]);
+        if (x.length >= 2 && ! x[1].isEmpty()) {
+        ps.setString(2, x[1]);
+        }
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new vdp_mstr(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new vdp_mstr(m, res.getString("vdp_vend"), 
+                            res.getString("vdp_item"),
+                            res.getString("vdp_vitem"),
+                            res.getString("vdp_upc"),
+                            res.getString("vdp_userid"),
+                            res.getString("vdp_misc"),
+                            res.getString("vdp_sku")
+                        );
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new vdp_mstr(m);
+        }
+        return r;
+    }
+    
+    
     
     // misc
     
