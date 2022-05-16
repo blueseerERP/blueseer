@@ -573,6 +573,26 @@ CREATE TABLE "edi_file" (
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
+CREATE TABLE "map_mstr" (
+  "map_id" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
+  "map_desc" varchar(130) NOT NULL COLLATE NOCASE DEFAULT '',
+  "map_version" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
+  "map_ifs" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "map_ofs" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "map_outdoctype" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "map_outfiletype" varchar(30) NOT NULL COLLATE NOCASE DEFAULT ''
+);
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE "map_struct" (
+  "mps_id" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "mps_desc" varchar(130) NOT NULL COLLATE NOCASE DEFAULT '',
+  "mps_version" varchar(15) NOT NULL COLLATE NOCASE DEFAULT ''
+);
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "edpd_partner" (
   "edpd_parent" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
   "edpd_alias" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',

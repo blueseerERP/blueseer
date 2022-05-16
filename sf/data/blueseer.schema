@@ -36,6 +36,20 @@ CREATE TABLE IF NOT EXISTS `edpd_partner` (
   `edpd_alias` varchar(15)  NOT NULL DEFAULT '',
   `edpd_default` tinyint(1)  NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `map_mstr` (
+  `map_id` varchar(80)  NOT NULL DEFAULT '',
+  `map_desc` varchar(130)  NOT NULL DEFAULT '',
+  `map_version` varchar(15)  NOT NULL DEFAULT '',
+  `map_ifs` varchar(30)  NOT NULL DEFAULT '',
+  `map_ofs` varchar(30)  NOT NULL DEFAULT '',
+  `map_outdoctype` varchar(30)  NOT NULL DEFAULT '',
+  `map_outfiletype` varchar(30)  NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `map_struct` (
+  `mps_id` varchar(30)  NOT NULL DEFAULT '',
+  `mps_desc` varchar(130)  NOT NULL DEFAULT '',
+  `mps_version` varchar(15)  NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `ap_ctrl` (
   `apc_bank` varchar(10)  NOT NULL DEFAULT '',
   `apc_assetacct` varchar(12)  NOT NULL DEFAULT '',
