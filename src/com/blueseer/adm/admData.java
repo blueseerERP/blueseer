@@ -56,8 +56,6 @@ import java.util.Currency;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.MissingResourceException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;

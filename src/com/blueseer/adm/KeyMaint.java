@@ -26,14 +26,8 @@ SOFTWARE.
 
 package com.blueseer.adm;
 
-import com.blueseer.fgl.*;
 import bsmf.MainFrame;
-import static bsmf.MainFrame.db;
-import static bsmf.MainFrame.dfdate;
-import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
-import static bsmf.MainFrame.url;
-import static bsmf.MainFrame.user;
 import static com.blueseer.adm.admData.addCounter;
 import com.blueseer.adm.admData.counter;
 import static com.blueseer.adm.admData.deleteCounter;
@@ -55,37 +49,21 @@ import com.blueseer.utl.OVData;
 import com.blueseer.utl.DTData;
 import java.awt.Color;
 import java.awt.Component;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.SwingWorker;
-import com.blueseer.utl.IBlueSeer;
 import com.blueseer.utl.IBlueSeerT;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.sql.Connection;
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JDialog;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
-import javax.swing.JTextField;
 import javax.swing.JViewport;
 
 /**

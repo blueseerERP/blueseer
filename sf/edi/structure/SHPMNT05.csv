@@ -1,4 +1,4 @@
-#segment,parent,loopcount,isgroup,islandmark,field,Desc,min,max,align
+#segment,parent,loopcount,isgroup,islandmark,field,desc,min,max,align
 EDI_DC,,1,no,yes,landmark,landmark,6,6,-
 EDI_DC,,1,no,no,tabnam,Name of table structure,4,4,-
 EDI_DC,,1,no,no,mandt,Client,3,3,-

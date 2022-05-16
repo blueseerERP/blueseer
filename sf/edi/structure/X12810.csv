@@ -1,4 +1,4 @@
-#xxx,parent,LoopCount,isgroup,islandmark,field,desc,min,max,align
+#segment,parent,loopcount,isgroup,islandmark,field,desc,min,max,align
 BIG,,1,no,yes,landmark,landmark,3,3,-
 BIG,,1,no,no,e01,,0,50,-
 BIG,,1,no,no,e02,,0,50,-
