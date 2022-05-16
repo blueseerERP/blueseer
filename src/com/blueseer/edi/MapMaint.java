@@ -24,8 +24,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
 
-package com.blueseer.fgl;
+package com.blueseer.edi;
 
+import com.blueseer.fgl.*;
 import bsmf.MainFrame;
 import static bsmf.MainFrame.tags;
 import com.blueseer.utl.OVData;
@@ -77,7 +78,7 @@ import javax.swing.SwingWorker;
  *
  * @author vaughnte
  */
-public class AcctMaint extends javax.swing.JPanel implements IBlueSeerT  {    
+public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {    
 
     
     // global variable declarations
@@ -86,7 +87,7 @@ public class AcctMaint extends javax.swing.JPanel implements IBlueSeerT  {
     
    // global datatablemodel declarations   
    
-    public AcctMaint() {
+    public MapMaint() {
         initComponents();
         setLanguageTags(this);
     }
@@ -278,12 +279,12 @@ public class AcctMaint extends javax.swing.JPanel implements IBlueSeerT  {
         lbaccountname.setText("");
         cbdisplay.setSelected(false);
         
-        ddcur.removeAllItems();
+        ddofs.removeAllItems();
         ArrayList<String> curr = fglData.getCurrlist();
         for (int i = 0; i < curr.size(); i++) {
-            ddcur.addItem(curr.get(i));
+            ddofs.addItem(curr.get(i));
         }
-        ddcur.setSelectedItem(OVData.getDefaultCurrency());
+        ddofs.setSelectedItem(OVData.getDefaultCurrency());
         
        isLoad = false;
     }
@@ -324,7 +325,7 @@ public class AcctMaint extends javax.swing.JPanel implements IBlueSeerT  {
             return false;
         } 
 
-        if (ddcur.getSelectedItem() == null || ddcur.getSelectedItem().toString().isEmpty()) {
+        if (ddofs.getSelectedItem() == null || ddofs.getSelectedItem().toString().isEmpty()) {
             bsmf.MainFrame.show(getMessageTag(1029));
             return false;
         }
@@ -392,8 +393,8 @@ public class AcctMaint extends javax.swing.JPanel implements IBlueSeerT  {
     public AcctMstr createRecord() { 
         AcctMstr x = new AcctMstr(null, tbkey.getText().toString(),
                 tbdesc.getText().toUpperCase(),
-                ddtype.getSelectedItem().toString(),
-                ddcur.getSelectedItem().toString(),
+                ddifs.getSelectedItem().toString(),
+                ddofs.getSelectedItem().toString(),
                 String.valueOf(BlueSeerUtils.boolToInt(cbdisplay.isSelected()))
                 );
         /* potential validation mechanism...would need association between record field and input field
@@ -470,9 +471,9 @@ public class AcctMaint extends javax.swing.JPanel implements IBlueSeerT  {
     public void updateForm() {
         tbdesc.setText(x.desc());
         tbkey.setText(x.id());
-        ddcur.setSelectedItem(x.currency());
+        ddofs.setSelectedItem(x.currency());
         cbdisplay.setSelected(BlueSeerUtils.ConvertStringToBool(String.valueOf(x.cbdisplay())));
-        ddtype.setSelectedItem(x.type());
+        ddifs.setSelectedItem(x.type());
         setAction(x.m()); 
     }
     
@@ -488,8 +489,8 @@ public class AcctMaint extends javax.swing.JPanel implements IBlueSeerT  {
         panelmaint = new javax.swing.JPanel();
         lblid = new javax.swing.JLabel();
         lbldesc = new javax.swing.JLabel();
-        ddcur = new javax.swing.JComboBox();
-        ddtype = new javax.swing.JComboBox();
+        ddofs = new javax.swing.JComboBox();
+        ddifs = new javax.swing.JComboBox();
         btupdate = new javax.swing.JButton();
         btadd = new javax.swing.JButton();
         tbkey = new javax.swing.JTextField();
@@ -499,24 +500,29 @@ public class AcctMaint extends javax.swing.JPanel implements IBlueSeerT  {
         btnew = new javax.swing.JButton();
         btdelete = new javax.swing.JButton();
         lbaccountname = new javax.swing.JLabel();
-        cbdisplay = new javax.swing.JCheckBox();
         btclear = new javax.swing.JButton();
         btlookup = new javax.swing.JButton();
+        tbversion = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        dddoctypeout = new javax.swing.JComboBox<>();
+        ddfiletypeout = new javax.swing.JComboBox<>();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
+        panelmaint.setBorder(javax.swing.BorderFactory.createTitledBorder("Map Maintenance / Register"));
         panelmaint.setName("panelmaint"); // NOI18N
 
-        lblid.setText("Account");
+        lblid.setText("Map");
         lblid.setName("lblid"); // NOI18N
 
         lbldesc.setText("Desc");
         lbldesc.setName("lbldesc"); // NOI18N
 
-        ddtype.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "A", "E", "I", "L", "O", "M" }));
-        ddtype.addActionListener(new java.awt.event.ActionListener() {
+        ddifs.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ddtypeActionPerformed(evt);
+                ddifsActionPerformed(evt);
             }
         });
 
@@ -542,11 +548,11 @@ public class AcctMaint extends javax.swing.JPanel implements IBlueSeerT  {
             }
         });
 
-        lbltype.setText("Type");
-        lbltype.setName("lbltype"); // NOI18N
+        lbltype.setText("IFS Structure");
+        lbltype.setName("lblifs"); // NOI18N
 
-        lblcurrency.setText("Currency");
-        lblcurrency.setName("lblcurrency"); // NOI18N
+        lblcurrency.setText("OFS Structure");
+        lblcurrency.setName("lblofs"); // NOI18N
 
         btnew.setText("New");
         btnew.setName("btnew"); // NOI18N
@@ -561,14 +567,6 @@ public class AcctMaint extends javax.swing.JPanel implements IBlueSeerT  {
         btdelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdeleteActionPerformed(evt);
-            }
-        });
-
-        cbdisplay.setText("Show this account in Expense DropDowns");
-        cbdisplay.setName("cbdisplay"); // NOI18N
-        cbdisplay.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbdisplayActionPerformed(evt);
             }
         });
 
@@ -588,6 +586,17 @@ public class AcctMaint extends javax.swing.JPanel implements IBlueSeerT  {
             }
         });
 
+        jLabel1.setText("Version");
+        jLabel1.setName("lblversion"); // NOI18N
+
+        ddfiletypeout.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "FF", "X12", "DB" }));
+
+        jLabel2.setText("Doc Type Out");
+        jLabel2.setName("lbldoctypeout"); // NOI18N
+
+        jLabel3.setText("File Type Out");
+        jLabel3.setName("lblfiletypeout"); // NOI18N
+
         javax.swing.GroupLayout panelmaintLayout = new javax.swing.GroupLayout(panelmaint);
         panelmaint.setLayout(panelmaintLayout);
         panelmaintLayout.setHorizontalGroup(
@@ -598,7 +607,10 @@ public class AcctMaint extends javax.swing.JPanel implements IBlueSeerT  {
                     .addComponent(lblid)
                     .addComponent(lbldesc)
                     .addComponent(lbltype)
-                    .addComponent(lblcurrency))
+                    .addComponent(lblcurrency)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelmaintLayout.createSequentialGroup()
@@ -616,15 +628,17 @@ public class AcctMaint extends javax.swing.JPanel implements IBlueSeerT  {
                             .addComponent(btupdate)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(btadd))
-                        .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panelmaintLayout.createSequentialGroup()
-                                .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(ddcur, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(ddtype, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lbaccountname, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(cbdisplay)))
-                    .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(panelmaintLayout.createSequentialGroup()
+                            .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(ddofs, 0, 132, Short.MAX_VALUE)
+                                .addComponent(ddifs, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(lbaccountname, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(tbversion, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(ddfiletypeout, javax.swing.GroupLayout.Alignment.LEADING, 0, 132, Short.MAX_VALUE)
+                        .addComponent(dddoctypeout, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panelmaintLayout.setVerticalGroup(
@@ -647,20 +661,30 @@ public class AcctMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lbaccountname, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(ddtype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(ddifs, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(lbltype)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ddcur, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ddofs, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblcurrency))
-                .addGap(5, 5, 5)
-                .addComponent(cbdisplay)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbversion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(dddoctypeout, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ddfiletypeout, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 56, Short.MAX_VALUE)
                 .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btadd)
                     .addComponent(btupdate)
                     .addComponent(btdelete))
-                .addContainerGap(19, Short.MAX_VALUE))
+                .addGap(19, 19, 19))
         );
 
         add(panelmaint);
@@ -694,27 +718,23 @@ public class AcctMaint extends javax.swing.JPanel implements IBlueSeerT  {
         executeTask(dbaction.delete, new String[]{tbkey.getText()});   
     }//GEN-LAST:event_btdeleteActionPerformed
 
-    private void ddtypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddtypeActionPerformed
-        if (ddtype.getSelectedItem().toString().equals("E")) {
+    private void ddifsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddifsActionPerformed
+        if (ddifs.getSelectedItem().toString().equals("E")) {
             lbaccountname.setText(getClassLabelTag("ExpenseType", this.getClass().getSimpleName()));
-        } else if (ddtype.getSelectedItem().toString().equals("A")) {
+        } else if (ddifs.getSelectedItem().toString().equals("A")) {
             lbaccountname.setText(getClassLabelTag("AssetType", this.getClass().getSimpleName()));
-        } else if (ddtype.getSelectedItem().toString().equals("I")) {
+        } else if (ddifs.getSelectedItem().toString().equals("I")) {
             lbaccountname.setText(getClassLabelTag("IncomeType", this.getClass().getSimpleName()));
-        } else if (ddtype.getSelectedItem().toString().equals("L")) {
+        } else if (ddifs.getSelectedItem().toString().equals("L")) {
             lbaccountname.setText(getClassLabelTag("liabilityType", this.getClass().getSimpleName()));
-        } else if (ddtype.getSelectedItem().toString().equals("O")) {
+        } else if (ddifs.getSelectedItem().toString().equals("O")) {
             lbaccountname.setText(getClassLabelTag("OwnersEquityType", this.getClass().getSimpleName()));
-        } else if (ddtype.getSelectedItem().toString().equals("M")) {
+        } else if (ddifs.getSelectedItem().toString().equals("M")) {
             lbaccountname.setText(getClassLabelTag("MiscellaneousType", this.getClass().getSimpleName()));    
         } else {
             lbaccountname.setText(getClassLabelTag("UnknownAccountType", this.getClass().getSimpleName()));
         }
-    }//GEN-LAST:event_ddtypeActionPerformed
-
-    private void cbdisplayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbdisplayActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cbdisplayActionPerformed
+    }//GEN-LAST:event_ddifsActionPerformed
 
     private void tbkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkeyActionPerformed
       if (! btadd.isEnabled())
@@ -738,9 +758,13 @@ public class AcctMaint extends javax.swing.JPanel implements IBlueSeerT  {
     private javax.swing.JButton btlookup;
     private javax.swing.JButton btnew;
     private javax.swing.JButton btupdate;
-    private javax.swing.JCheckBox cbdisplay;
-    private javax.swing.JComboBox ddcur;
-    private javax.swing.JComboBox ddtype;
+    private javax.swing.JComboBox<String> dddoctypeout;
+    private javax.swing.JComboBox<String> ddfiletypeout;
+    private javax.swing.JComboBox ddifs;
+    private javax.swing.JComboBox ddofs;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel lbaccountname;
     private javax.swing.JLabel lblcurrency;
     private javax.swing.JLabel lbldesc;
@@ -749,5 +773,6 @@ public class AcctMaint extends javax.swing.JPanel implements IBlueSeerT  {
     private javax.swing.JPanel panelmaint;
     private javax.swing.JTextField tbdesc;
     private javax.swing.JTextField tbkey;
+    private javax.swing.JTextField tbversion;
     // End of variables declaration//GEN-END:variables
 }

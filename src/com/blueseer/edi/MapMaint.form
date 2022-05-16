@@ -23,19 +23,27 @@
   <SubComponents>
     <Container class="javax.swing.JPanel" name="panelmaint">
       <Properties>
+        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+          <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+            <TitledBorder title="Map Maintenance / Register"/>
+          </Border>
+        </Property>
         <Property name="name" type="java.lang.String" value="panelmaint" noResource="true"/>
       </Properties>
 
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="1" attributes="0">
                       <Component id="lblid" min="-2" max="-2" attributes="0"/>
                       <Component id="lbldesc" min="-2" max="-2" attributes="0"/>
                       <Component id="lbltype" min="-2" max="-2" attributes="0"/>
                       <Component id="lblcurrency" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
@@ -56,19 +64,21 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="btadd" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" attributes="0">
-                                  <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                      <Component id="ddcur" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="ddtype" alignment="0" min="-2" pref="105" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="lbaccountname" min="-2" pref="191" max="-2" attributes="0"/>
+                          <Group type="102" alignment="1" attributes="0">
+                              <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                  <Component id="ddofs" pref="132" max="32767" attributes="0"/>
+                                  <Component id="ddifs" max="32767" attributes="0"/>
                               </Group>
-                              <Component id="cbdisplay" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="lbaccountname" min="-2" pref="191" max="-2" attributes="0"/>
                           </Group>
+                          <Component id="tbversion" alignment="0" min="-2" pref="132" max="-2" attributes="0"/>
                       </Group>
                       <Component id="tbdesc" alignment="0" min="-2" pref="269" max="-2" attributes="0"/>
+                      <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
+                          <Component id="ddfiletypeout" alignment="0" pref="132" max="32767" attributes="0"/>
+                          <Component id="dddoctypeout" alignment="0" max="32767" attributes="0"/>
+                      </Group>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -98,24 +108,37 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="lbaccountname" alignment="0" min="-2" pref="20" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="ddtype" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="ddifs" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="lbltype" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="ddcur" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="ddofs" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="lblcurrency" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
-                  <Component id="cbdisplay" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="tbversion" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="dddoctypeout" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="ddfiletypeout" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace pref="56" max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="btadd" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="btupdate" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="btdelete" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="19" max="32767" attributes="0"/>
+                  <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -123,7 +146,7 @@
       <SubComponents>
         <Component class="javax.swing.JLabel" name="lblid">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Account"/>
+            <Property name="text" type="java.lang.String" value="Map"/>
             <Property name="name" type="java.lang.String" value="lblid" noResource="true"/>
           </Properties>
         </Component>
@@ -133,28 +156,21 @@
             <Property name="name" type="java.lang.String" value="lbldesc" noResource="true"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JComboBox" name="ddcur">
+        <Component class="javax.swing.JComboBox" name="ddofs">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
               <StringArray count="0"/>
             </Property>
           </Properties>
         </Component>
-        <Component class="javax.swing.JComboBox" name="ddtype">
+        <Component class="javax.swing.JComboBox" name="ddifs">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="6">
-                <StringItem index="0" value="A"/>
-                <StringItem index="1" value="E"/>
-                <StringItem index="2" value="I"/>
-                <StringItem index="3" value="L"/>
-                <StringItem index="4" value="O"/>
-                <StringItem index="5" value="M"/>
-              </StringArray>
+              <StringArray count="0"/>
             </Property>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ddtypeActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ddifsActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btupdate">
@@ -182,16 +198,16 @@
         </Component>
         <Component class="javax.swing.JLabel" name="lbltype">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Type"/>
-            <Property name="name" type="java.lang.String" value="lbltype" noResource="true"/>
+            <Property name="text" type="java.lang.String" value="IFS Structure"/>
+            <Property name="name" type="java.lang.String" value="lblifs" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="tbdesc">
         </Component>
         <Component class="javax.swing.JLabel" name="lblcurrency">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Currency"/>
-            <Property name="name" type="java.lang.String" value="lblcurrency" noResource="true"/>
+            <Property name="text" type="java.lang.String" value="OFS Structure"/>
+            <Property name="name" type="java.lang.String" value="lblofs" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="btnew">
@@ -214,15 +230,6 @@
         </Component>
         <Component class="javax.swing.JLabel" name="lbaccountname">
         </Component>
-        <Component class="javax.swing.JCheckBox" name="cbdisplay">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Show this account in Expense DropDowns"/>
-            <Property name="name" type="java.lang.String" value="cbdisplay" noResource="true"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbdisplayActionPerformed"/>
-          </Events>
-        </Component>
         <Component class="javax.swing.JButton" name="btclear">
           <Properties>
             <Property name="text" type="java.lang.String" value="Clear"/>
@@ -242,6 +249,50 @@
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btlookupActionPerformed"/>
           </Events>
+        </Component>
+        <Component class="javax.swing.JTextField" name="tbversion">
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel1">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Version"/>
+            <Property name="name" type="java.lang.String" value="lblversion" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="dddoctypeout">
+          <Properties>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+              <StringArray count="0"/>
+            </Property>
+          </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+          </AuxValues>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="ddfiletypeout">
+          <Properties>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+              <StringArray count="3">
+                <StringItem index="0" value="FF"/>
+                <StringItem index="1" value="X12"/>
+                <StringItem index="2" value="DB"/>
+              </StringArray>
+            </Property>
+          </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+          </AuxValues>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel2">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Doc Type Out"/>
+            <Property name="name" type="java.lang.String" value="lbldoctypeout" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel3">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="File Type Out"/>
+            <Property name="name" type="java.lang.String" value="lblfiletypeout" noResource="true"/>
+          </Properties>
         </Component>
       </SubComponents>
     </Container>
