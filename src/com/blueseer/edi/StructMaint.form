@@ -25,7 +25,7 @@
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-            <TitledBorder title="Map Maintenance / Register"/>
+            <TitledBorder title="EDI File Structure Register"/>
           </Border>
         </Property>
         <Property name="name" type="java.lang.String" value="panelmaint" noResource="true"/>
@@ -35,15 +35,11 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="43" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="1" attributes="0">
                       <Component id="lblid" min="-2" max="-2" attributes="0"/>
                       <Component id="lbldesc" min="-2" max="-2" attributes="0"/>
-                      <Component id="lbltype" min="-2" max="-2" attributes="0"/>
-                      <Component id="lblcurrency" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
-                      <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
-                      <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
@@ -58,26 +54,16 @@
                       </Group>
                       <Group type="103" alignment="0" groupAlignment="1" attributes="0">
                           <Group type="102" attributes="0">
+                              <EmptySpace min="-2" pref="134" max="-2" attributes="0"/>
                               <Component id="btdelete" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="btupdate" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="btadd" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <Group type="102" alignment="1" attributes="0">
-                              <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                  <Component id="ddofs" pref="132" max="32767" attributes="0"/>
-                                  <Component id="ddifs" max="32767" attributes="0"/>
-                              </Group>
-                              <EmptySpace min="-2" pref="195" max="-2" attributes="0"/>
-                          </Group>
                           <Component id="tbversion" alignment="0" min="-2" pref="132" max="-2" attributes="0"/>
                       </Group>
                       <Component id="tbdesc" alignment="0" min="-2" pref="269" max="-2" attributes="0"/>
-                      <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
-                          <Component id="ddoutfiletype" alignment="0" pref="132" max="32767" attributes="0"/>
-                          <Component id="ddoutdoctype" alignment="0" max="32767" attributes="0"/>
-                      </Group>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -103,32 +89,12 @@
                       <Component id="tbdesc" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="lbldesc" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="ddifs" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="lbltype" alignment="3" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="ddofs" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="lblcurrency" alignment="3" min="-2" max="-2" attributes="0"/>
-                  </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="tbversion" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="ddoutdoctype" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="ddoutfiletype" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace pref="56" max="32767" attributes="0"/>
+                  <EmptySpace pref="156" max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="btadd" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="btupdate" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -142,7 +108,7 @@
       <SubComponents>
         <Component class="javax.swing.JLabel" name="lblid">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Map"/>
+            <Property name="text" type="java.lang.String" value="Structure File"/>
             <Property name="name" type="java.lang.String" value="lblid" noResource="true"/>
           </Properties>
         </Component>
@@ -150,20 +116,6 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Desc"/>
             <Property name="name" type="java.lang.String" value="lbldesc" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JComboBox" name="ddofs">
-          <Properties>
-            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="0"/>
-            </Property>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JComboBox" name="ddifs">
-          <Properties>
-            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="0"/>
-            </Property>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="btupdate">
@@ -189,19 +141,7 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tbkeyActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JLabel" name="lbltype">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="IFS Structure"/>
-            <Property name="name" type="java.lang.String" value="lblifs" noResource="true"/>
-          </Properties>
-        </Component>
         <Component class="javax.swing.JTextField" name="tbdesc">
-        </Component>
-        <Component class="javax.swing.JLabel" name="lblcurrency">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="OFS Structure"/>
-            <Property name="name" type="java.lang.String" value="lblofs" noResource="true"/>
-          </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="btnew">
           <Properties>
@@ -247,42 +187,6 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Version"/>
             <Property name="name" type="java.lang.String" value="lblversion" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JComboBox" name="ddoutdoctype">
-          <Properties>
-            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="0"/>
-            </Property>
-          </Properties>
-          <AuxValues>
-            <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
-          </AuxValues>
-        </Component>
-        <Component class="javax.swing.JComboBox" name="ddoutfiletype">
-          <Properties>
-            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="3">
-                <StringItem index="0" value="FF"/>
-                <StringItem index="1" value="X12"/>
-                <StringItem index="2" value="DB"/>
-              </StringArray>
-            </Property>
-          </Properties>
-          <AuxValues>
-            <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
-          </AuxValues>
-        </Component>
-        <Component class="javax.swing.JLabel" name="jLabel2">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Doc Type Out"/>
-            <Property name="name" type="java.lang.String" value="lbldoctypeout" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JLabel" name="jLabel3">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="File Type Out"/>
-            <Property name="name" type="java.lang.String" value="lblfiletypeout" noResource="true"/>
           </Properties>
         </Component>
       </SubComponents>

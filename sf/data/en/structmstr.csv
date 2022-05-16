@@ -1,0 +1,8 @@
+ORDERS05,SAP ORDERS IDOC,generic
+SHPMNT05,SAP SHIPMENT IDOC,generic
+INVOIC02,SAP INVOICE IDOC,generic
+X12856,X12 Advance Shipping Notice,generic
+X12850,X12 Purchase Order,generic
+X12855,X12 Order Acknowledgment,generic
+X12810,X12 Invoice,generic
+DB,System Database I/O,generic

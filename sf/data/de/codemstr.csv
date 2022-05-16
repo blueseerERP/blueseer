@@ -17,6 +17,8 @@ ItemType,RAW,Rohmaterial,0
 ItemType,SUB,Unterbaugruppe,0
 ItemType,ASSET,Anlage,1
 ItemType,SERVICE,Service,1
+edidoctype,dbin,,1
+edidoctype,dbout,,1
 edidoctype,850idoc,,1
 edidoctype,856idoc,,1
 edidoctype,810idoc,,1

@@ -17,6 +17,8 @@ ItemType,RAW,Matière première,0
 ItemType,SUB,Sous-assemblage,0
 ItemType,ASSET,Actif,1
 ItemType,SERVICE,Service,1
+edidoctype,dbin,,1
+edidoctype,dbout,,1
 edidoctype,850idoc,,1
 edidoctype,856idoc,,1
 edidoctype,810idoc,,1

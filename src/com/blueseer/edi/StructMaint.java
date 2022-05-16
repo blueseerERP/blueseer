@@ -28,13 +28,12 @@ package com.blueseer.edi;
 
 import bsmf.MainFrame;
 import static bsmf.MainFrame.tags;
-import static com.blueseer.edi.ediData.addMapMstr;
-import static com.blueseer.edi.ediData.deleteMapMstr;
-import static com.blueseer.edi.ediData.getMapMstr;
-import com.blueseer.edi.ediData.map_mstr;
-import static com.blueseer.edi.ediData.updateMapMstr;
+import static com.blueseer.edi.ediData.addMapStruct;
+import static com.blueseer.edi.ediData.deleteMapStruct;
+import static com.blueseer.edi.ediData.getMapStruct;
+import com.blueseer.edi.ediData.map_struct;
+import static com.blueseer.edi.ediData.updateMapStruct;
 import com.blueseer.utl.OVData;
-import java.util.ArrayList;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.checkLength;
@@ -73,16 +72,16 @@ import javax.swing.SwingWorker;
  *
  * @author vaughnte
  */
-public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {    
+public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {    
 
     
     // global variable declarations
                 boolean isLoad = false;
-                public static map_mstr x = null;
+                public static map_struct x = null;
     
    // global datatablemodel declarations   
    
-    public MapMaint() {
+    public StructMaint() {
         initComponents();
         setLanguageTags(this);
     }
@@ -269,23 +268,6 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         tbdesc.setText("");
         tbversion.setText("");
         
-        ddofs.removeAllItems();
-        ddifs.removeAllItems();
-        ArrayList<String> structs = ediData.getMapStructList();
-        for (int i = 0; i < structs.size(); i++) {
-            ddofs.addItem(structs.get(i));
-        }
-        for (int i = 0; i < structs.size(); i++) {
-            ddifs.addItem(structs.get(i));
-        }
-        
-        ddoutdoctype.removeAllItems();
-        ArrayList<String> mylist = OVData.getCodeMstrKeyList("edidoctype");
-        for (int i = 0; i < mylist.size(); i++) {
-            ddoutdoctype.addItem(mylist.get(i));
-        }
-        
-        
        isLoad = false;
     }
     
@@ -317,31 +299,31 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
     }
      
     public boolean validateInput(dbaction x) {
-        Map<String,Integer> f = OVData.getTableInfo("map_mstr");
+        Map<String,Integer> f = OVData.getTableInfo("map_struct");
         int fc;
 
-        fc = checkLength(f,"map_id");
+        fc = checkLength(f,"mps_id");
         if (tbkey.getText().length() > fc || tbkey.getText().isEmpty()) {
             bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
             tbkey.requestFocus();
             return false;
         }
 
-         fc = checkLength(f,"map_desc");
+         fc = checkLength(f,"mps_desc");
         if (tbdesc.getText().length() > fc) {
             bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
             tbdesc.requestFocus();
             return false;
         }
         
-        fc = checkLength(f,"map_version");
+        fc = checkLength(f,"mps_version");
         if (tbversion.getText().length() > fc) {
             bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
             tbversion.requestFocus();
             return false;
         }
        
-         if (! BlueSeerUtils.isClassFile(tbkey.getText())) {
+         if (! BlueSeerUtils.isFile("edi/structure", tbkey.getText() + ".csv")) {
                     bsmf.MainFrame.show(getMessageTag(1145,tbkey.getText()));
                     tbkey.requestFocus();
                     return false;
@@ -369,18 +351,14 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
     }
    
     public String[] getRecord(String[] key) {
-        x = getMapMstr(key);   
+        x = getMapStruct(key);   
         return x.m();
     }
     
-    public map_mstr createRecord() { 
-        map_mstr x = new map_mstr(null, tbkey.getText(),
+    public map_struct createRecord() { 
+        map_struct x = new map_struct(null, tbkey.getText(),
                 tbdesc.getText(),
-                tbversion.getText(),
-                ddifs.getSelectedItem().toString(),
-                ddofs.getSelectedItem().toString(),
-                ddoutdoctype.getSelectedItem().toString(),
-                ddoutfiletype.getSelectedItem().toString()
+                tbversion.getText()
                 );
         /* potential validation mechanism...would need association between record field and input field
         for(Field f : x.getClass().getDeclaredFields()){
@@ -391,12 +369,12 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
     }
        
     public String[] addRecord(String[] key) {
-         String[] m = addMapMstr(createRecord());
+         String[] m = addMapStruct(createRecord());
          return m;
     }
         
     public String[] updateRecord(String[] key) {
-         String[] m = updateMapMstr(createRecord());
+         String[] m = updateMapStruct(createRecord());
          return m;
     }
     
@@ -404,7 +382,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         String[] m = new String[2];
         boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
         if (proceed) {
-         m = deleteMapMstr(createRecord()); 
+         m = deleteMapStruct(createRecord()); 
          initvars(null);
         } else {
            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
@@ -418,9 +396,9 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         lual = new ActionListener() {
         public void actionPerformed(ActionEvent event) {
         if (lurb1.isSelected()) {  
-         luModel = DTData.getMapBrowseUtil(luinput.getText(),0, "map_id"); 
+         luModel = DTData.getMapStructBrowseUtil(luinput.getText(),0, "mps_id");  
         } else {
-         luModel = DTData.getMapBrowseUtil(luinput.getText(),0, "map_desc");   
+         luModel = DTData.getMapStructBrowseUtil(luinput.getText(),0, "mps_desc");   
         }
         luTable.setModel(luModel);
         luTable.getColumnModel().getColumn(0).setMaxWidth(50);
@@ -454,13 +432,9 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
     }
 
     public void updateForm() {
-        tbdesc.setText(x.map_desc());
-        tbkey.setText(x.map_id());
-        tbversion.setText(x.map_version());
-        ddofs.setSelectedItem(x.map_ofs());
-        ddifs.setSelectedItem(x.map_ifs());
-        ddoutdoctype.setSelectedItem(x.map_outdoctype());
-        ddoutfiletype.setSelectedItem(x.map_outfiletype());
+        tbdesc.setText(x.mps_desc());
+        tbkey.setText(x.mps_id());
+        tbversion.setText(x.mps_version());
         setAction(x.m()); 
     }
     
@@ -476,31 +450,23 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         panelmaint = new javax.swing.JPanel();
         lblid = new javax.swing.JLabel();
         lbldesc = new javax.swing.JLabel();
-        ddofs = new javax.swing.JComboBox();
-        ddifs = new javax.swing.JComboBox();
         btupdate = new javax.swing.JButton();
         btadd = new javax.swing.JButton();
         tbkey = new javax.swing.JTextField();
-        lbltype = new javax.swing.JLabel();
         tbdesc = new javax.swing.JTextField();
-        lblcurrency = new javax.swing.JLabel();
         btnew = new javax.swing.JButton();
         btdelete = new javax.swing.JButton();
         btclear = new javax.swing.JButton();
         btlookup = new javax.swing.JButton();
         tbversion = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
-        ddoutdoctype = new javax.swing.JComboBox<>();
-        ddoutfiletype = new javax.swing.JComboBox<>();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
-        panelmaint.setBorder(javax.swing.BorderFactory.createTitledBorder("Map Maintenance / Register"));
+        panelmaint.setBorder(javax.swing.BorderFactory.createTitledBorder("EDI File Structure Register"));
         panelmaint.setName("panelmaint"); // NOI18N
 
-        lblid.setText("Map");
+        lblid.setText("Structure File");
         lblid.setName("lblid"); // NOI18N
 
         lbldesc.setText("Desc");
@@ -527,12 +493,6 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 tbkeyActionPerformed(evt);
             }
         });
-
-        lbltype.setText("IFS Structure");
-        lbltype.setName("lblifs"); // NOI18N
-
-        lblcurrency.setText("OFS Structure");
-        lblcurrency.setName("lblofs"); // NOI18N
 
         btnew.setText("New");
         btnew.setName("btnew"); // NOI18N
@@ -569,28 +529,16 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         jLabel1.setText("Version");
         jLabel1.setName("lblversion"); // NOI18N
 
-        ddoutfiletype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "FF", "X12", "DB" }));
-
-        jLabel2.setText("Doc Type Out");
-        jLabel2.setName("lbldoctypeout"); // NOI18N
-
-        jLabel3.setText("File Type Out");
-        jLabel3.setName("lblfiletypeout"); // NOI18N
-
         javax.swing.GroupLayout panelmaintLayout = new javax.swing.GroupLayout(panelmaint);
         panelmaint.setLayout(panelmaintLayout);
         panelmaintLayout.setHorizontalGroup(
             panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelmaintLayout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(43, 43, 43)
                 .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(lblid)
                     .addComponent(lbldesc)
-                    .addComponent(lbltype)
-                    .addComponent(lblcurrency)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel3))
+                    .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelmaintLayout.createSequentialGroup()
@@ -603,21 +551,14 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                         .addComponent(btclear))
                     .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addGroup(panelmaintLayout.createSequentialGroup()
+                            .addGap(134, 134, 134)
                             .addComponent(btdelete)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(btupdate)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(btadd))
-                        .addGroup(panelmaintLayout.createSequentialGroup()
-                            .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(ddofs, 0, 132, Short.MAX_VALUE)
-                                .addComponent(ddifs, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGap(195, 195, 195))
                         .addComponent(tbversion, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(ddoutfiletype, javax.swing.GroupLayout.Alignment.LEADING, 0, 132, Short.MAX_VALUE)
-                        .addComponent(ddoutdoctype, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panelmaintLayout.setVerticalGroup(
@@ -636,27 +577,11 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbldesc))
-                .addGap(11, 11, 11)
-                .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ddifs, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbltype))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ddofs, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblcurrency))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbversion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ddoutdoctype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ddoutfiletype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 56, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 156, Short.MAX_VALUE)
                 .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btadd)
                     .addComponent(btupdate)
@@ -717,17 +642,9 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
     private javax.swing.JButton btlookup;
     private javax.swing.JButton btnew;
     private javax.swing.JButton btupdate;
-    private javax.swing.JComboBox ddifs;
-    private javax.swing.JComboBox ddofs;
-    private javax.swing.JComboBox<String> ddoutdoctype;
-    private javax.swing.JComboBox<String> ddoutfiletype;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel lblcurrency;
     private javax.swing.JLabel lbldesc;
     private javax.swing.JLabel lblid;
-    private javax.swing.JLabel lbltype;
     private javax.swing.JPanel panelmaint;
     private javax.swing.JTextField tbdesc;
     private javax.swing.JTextField tbkey;

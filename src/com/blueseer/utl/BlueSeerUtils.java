@@ -41,7 +41,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
 import java.io.StringWriter;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -817,6 +820,14 @@ public class BlueSeerUtils {
        }
     }
     
+    public static boolean isFile(String dir, String file) {
+        Path mypath = FileSystems.getDefault().getPath(dir + "/" + file);
+            if (! mypath.toFile().exists()) {
+                return false;
+            } else {
+                return true;
+            }
+    }
     
     public static boolean isSet(ArrayList list, Integer index) {
      return index != null && index >=0 && index < list.size() && list.get(index) != null;

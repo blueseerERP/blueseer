@@ -1,0 +1,2 @@
+EDIMaps.ACME850,ACME Purchase Order,generic,X12850,850idoc,850idoc,FF
+EDIMaps.ACME856,ACME Advance Shipping Notice,generic,856idoc,X12856,856,X12

@@ -62,3 +62,5 @@ insert into task_det (taskd_id, taskd_owner, taskd_desc, taskd_sequence) values 
 .import usrmstr.csv user_mstr
 .import permwmstr.csv perm_mstr
 .import mockmstr.csv mock_mstr
+.import structmstr.csv map_struct
+.import mapmstr.csv map_mstr

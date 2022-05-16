@@ -1,0 +1,2 @@
+ACME850,ACME Purchase Order,generic,X12850,dbin,850,DB
+ACME856,ACME Advance Shipping Notice,generic,dbout,X12856,856,X12
