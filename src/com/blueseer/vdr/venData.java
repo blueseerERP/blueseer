@@ -806,4 +806,19 @@ return myitem;
         }
     } 
     
+    public record vdp_mstr(String[] m, String vdp_vend, String vdp_item, String vdp_vitem,  
+    String vdp_upc, String vdp_userid, String vdp_misc, String vdp_sku) {
+        public vdp_mstr(String[] m) {
+            this(m,"","","","","","","");
+        }
+    }
+ 
+    public record vpr_mstr(String[] m, String vpr_vend, String vpr_item, String vpr_type,  
+    String vpr_desc, String vpr_uom, String vpr_curr, String vpr_price) {
+        public vpr_mstr(String[] m) {
+            this(m,"","","","","","","");
+        }
+    }
+  
+     
 }
