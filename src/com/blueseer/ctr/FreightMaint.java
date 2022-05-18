@@ -35,6 +35,7 @@ import static com.blueseer.ctr.cusData.getFreightMstr;
 import static com.blueseer.ctr.cusData.updateFreightMstr;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.checkLength;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -54,6 +55,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -296,27 +298,26 @@ public class FreightMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
     
     public boolean validateInput(dbaction x) {
-        boolean b = true;
+       
                
-                
-                if (tbkey.getText().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1024));
-                    tbkey.requestFocus();
-                    return b;
-                }
-                
-                if (tbdesc.getText().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1024));
-                    tbdesc.requestFocus();
-                    return b;
-                }
-                
-                
-                
+        Map<String,Integer> f = OVData.getTableInfo("frt_mstr");
+        int fc;
+
+        fc = checkLength(f,"frt_code");
+        if (tbkey.getText().length() > fc || tbkey.getText().isEmpty()) {
+            bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+            tbkey.requestFocus();
+            return false;
+        }     
+         
+        fc = checkLength(f,"frt_desc");
+        if (tbdesc.getText().length() > fc ) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tbdesc.requestFocus();
+            return false;
+        } 
                
-        return b;
+        return true;
     }
     
     public void initvars(String[] arg) {
