@@ -25,27 +25,15 @@ SOFTWARE.
  */
 package com.blueseer.ctr;
 
-import com.blueseer.ord.*;
 import com.blueseer.utl.BlueSeerUtils;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import bsmf.MainFrame;
-import static bsmf.MainFrame.db;
-import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
-import static bsmf.MainFrame.url;
-import static bsmf.MainFrame.user;
 import static com.blueseer.ctr.cusData.addUpdateCMCtrl;
 import com.blueseer.ctr.cusData.cm_ctrl;
 import static com.blueseer.ctr.cusData.getCMCtrl;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
-import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.IBlueSeerc;
-import com.blueseer.utl.OVData;
 import java.awt.Component;
-import java.sql.Connection;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
