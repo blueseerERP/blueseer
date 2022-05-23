@@ -579,6 +579,8 @@ CREATE TABLE "map_mstr" (
   "map_version" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
   "map_ifs" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "map_ofs" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "map_indoctype" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "map_infiletype" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "map_outdoctype" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "map_outfiletype" varchar(30) NOT NULL COLLATE NOCASE DEFAULT ''
 );

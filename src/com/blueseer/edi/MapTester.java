@@ -28,6 +28,7 @@ package com.blueseer.edi;
 
 import com.blueseer.rcv.*;
 import bsmf.MainFrame;
+import static bsmf.MainFrame.bslog;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import static bsmf.MainFrame.checkperms;
@@ -69,15 +70,23 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.edi.EDI.edilog;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import com.blueseer.utl.EDData;
 import com.blueseer.vdr.venData;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.text.DecimalFormatSymbols;
+import java.util.List;
 import java.util.Locale;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -188,9 +197,7 @@ public class MapTester extends javax.swing.JPanel {
                 }
                
               
-                tabledetail.setModel(modeldetail);
-                 tabledetail.getColumnModel().getColumn(6).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
-                this.repaint();
+            
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
@@ -254,54 +261,38 @@ public class MapTester extends javax.swing.JPanel {
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
         DateFormat dfyear = new SimpleDateFormat("yyyy");
         DateFormat dfperiod = new SimpleDateFormat("M");
-        
-        mymodel.setNumRows(0);
-        modeldetail.setNumRows(0);
-        tablereport.setModel(mymodel);
-        tabledetail.setModel(modeldetail);
-        
-           tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
-           tablereport.getColumnModel().getColumn(1).setMaxWidth(100);
-         
        
-          
-         
-                //          ReportPanel.TableReport.getColumn("CallID").setCellEditor(
-                    //       new ButtonEditor(new JCheckBox()));
-        
-        
+        tainput.setText("");
+        taoutput.setText("");
         
         
         btdetail.setEnabled(false);
-        detailpanel.setVisible(false);
-        
-        ddsite.removeAllItems();
-        ArrayList sites = OVData.getSiteList();
-        for (Object site : sites) {
-            ddsite.addItem(site);
-        }
-        
-        ddvendfrom.removeAllItems();
-        ArrayList vends = venData.getVendMstrList();
-        for (Object vend : vends) {
-            ddvendfrom.addItem(vend);
-        }
-        ddvendto.removeAllItems();
-        for (Object vend : vends) {
-            ddvendto.addItem(vend);
-        }
-        
-        
-         if (ddvendfrom.getItemCount() > 0)
-        ddvendfrom.setSelectedIndex(0);
-        
-        if (ddvendto.getItemCount() > 0)
-        ddvendto.setSelectedIndex(ddvendto.getItemCount() - 1);
-        
-        
-          
+        outputpanel.setVisible(false);
           
     }
+   
+     public File getfile() {
+        
+        File file = null;
+        fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        int returnVal = fc.showOpenDialog(this);
+       
+
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            try {
+            file = fc.getSelectedFile();
+            String SourceDir = file.getAbsolutePath();
+            file = new File(SourceDir);
+            
+            }
+            catch (Exception ex) {
+            ex.printStackTrace();
+            }
+        } 
+        return file;
+    }
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -311,80 +302,49 @@ public class MapTester extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        fc = new javax.swing.JFileChooser();
         jPanel1 = new javax.swing.JPanel();
         tablepanel = new javax.swing.JPanel();
-        summarypanel = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        tablereport = new javax.swing.JTable();
-        detailpanel = new javax.swing.JPanel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        tabledetail = new javax.swing.JTable();
+        inputpanel = new javax.swing.JPanel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        tainput = new javax.swing.JTextArea();
+        outputpanel = new javax.swing.JPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        taoutput = new javax.swing.JTextArea();
         jPanel2 = new javax.swing.JPanel();
         btdetail = new javax.swing.JButton();
-        jLabel4 = new javax.swing.JLabel();
         btRun = new javax.swing.JButton();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        ddvendto = new javax.swing.JComboBox();
-        ddvendfrom = new javax.swing.JComboBox();
-        ddsite = new javax.swing.JComboBox();
+        ddmap = new javax.swing.JComboBox();
         jLabel6 = new javax.swing.JLabel();
-        tbfrompo = new javax.swing.JTextField();
-        tbtopo = new javax.swing.JTextField();
+        btupload = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Receiver Browse"));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Map Tester"));
         jPanel1.setName("panelmain"); // NOI18N
 
         tablepanel.setLayout(new javax.swing.BoxLayout(tablepanel, javax.swing.BoxLayout.LINE_AXIS));
 
-        summarypanel.setLayout(new java.awt.BorderLayout());
+        inputpanel.setLayout(new java.awt.BorderLayout());
 
-        tablereport.setAutoCreateRowSorter(true);
-        tablereport.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        tablereport.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tablereportMouseClicked(evt);
-            }
-        });
-        jScrollPane1.setViewportView(tablereport);
+        tainput.setColumns(20);
+        tainput.setRows(5);
+        jScrollPane4.setViewportView(tainput);
 
-        summarypanel.add(jScrollPane1, java.awt.BorderLayout.CENTER);
+        inputpanel.add(jScrollPane4, java.awt.BorderLayout.CENTER);
 
-        tablepanel.add(summarypanel);
+        tablepanel.add(inputpanel);
 
-        detailpanel.setLayout(new java.awt.BorderLayout());
+        outputpanel.setLayout(new java.awt.BorderLayout());
 
-        tabledetail.setAutoCreateRowSorter(true);
-        tabledetail.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jScrollPane2.setViewportView(tabledetail);
+        taoutput.setColumns(20);
+        taoutput.setRows(5);
+        jScrollPane3.setViewportView(taoutput);
 
-        detailpanel.add(jScrollPane2, java.awt.BorderLayout.CENTER);
+        outputpanel.add(jScrollPane3, java.awt.BorderLayout.CENTER);
 
-        tablepanel.add(detailpanel);
+        tablepanel.add(outputpanel);
 
         btdetail.setText("Hide Detail");
         btdetail.setName("bthidedetail"); // NOI18N
@@ -394,9 +354,6 @@ public class MapTester extends javax.swing.JPanel {
             }
         });
 
-        jLabel4.setText("To Vend");
-        jLabel4.setName("lbltovend"); // NOI18N
-
         btRun.setText("Run");
         btRun.setName("btrun"); // NOI18N
         btRun.addActionListener(new java.awt.event.ActionListener() {
@@ -405,17 +362,16 @@ public class MapTester extends javax.swing.JPanel {
             }
         });
 
-        jLabel5.setText("Site");
-        jLabel5.setName("lblsite"); // NOI18N
-
-        jLabel1.setText("From Vend");
-        jLabel1.setName("lblfromvend"); // NOI18N
-
-        jLabel3.setText("To Receiver");
-        jLabel3.setName("lbltoreceiver"); // NOI18N
-
-        jLabel6.setText("From Receiver");
+        jLabel6.setText("Map");
         jLabel6.setName("lblfromreceiver"); // NOI18N
+
+        btupload.setText("Upload");
+        btupload.setName("btupload"); // NOI18N
+        btupload.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btuploadActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -423,29 +379,13 @@ public class MapTester extends javax.swing.JPanel {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel6)
-                    .addComponent(jLabel3))
+                .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(tbtopo, javax.swing.GroupLayout.DEFAULT_SIZE, 94, Short.MAX_VALUE)
-                            .addComponent(tbfrompo))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(ddvendfrom, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(ddvendto, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(ddmap, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel5)
-                .addGap(4, 4, 4)
-                .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
                 .addComponent(btRun)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 158, Short.MAX_VALUE)
+                .addComponent(btupload)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btdetail)
                 .addContainerGap())
@@ -455,22 +395,12 @@ public class MapTester extends javax.swing.JPanel {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(ddvendfrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ddmap, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btRun)
                     .addComponent(btdetail)
-                    .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5)
-                    .addComponent(tbfrompo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel4)
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(ddvendto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel3)
-                        .addComponent(tbtopo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jLabel6)
+                    .addComponent(btupload))
+                .addContainerGap(39, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -522,134 +452,68 @@ public class MapTester extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRunActionPerformed
+        String[] c = EDI.initEDIControl();
+        c[0] = "TESTSENDER";
+        c[21] = "TESTRECEIVER";
+        
+        ArrayList<String> doc = new ArrayList<String>();
+        try {
+                Class cls = Class.forName(ddmap.getSelectedItem().toString());
+                Object obj = cls.newInstance();
+                Method method = cls.getDeclaredMethod("Mapdata", ArrayList.class, String[].class);
+                Object oc = method.invoke(obj, doc, c);
+                String[] oString = (String[]) oc;
 
-    
-try {
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
-                int i = 0;
-               
-               mymodel.setNumRows(0);
-        
-            
-                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-                
-                 String pofrom = tbfrompo.getText();
-                 String poto = tbtopo.getText();
-                 
-                 if (pofrom.isEmpty()) {
-                     pofrom = bsmf.MainFrame.lownbr;
-                 }
-                  if (poto.isEmpty()) {
-                     poto = bsmf.MainFrame.hinbr;
-                 }
-                  
-                 String vendfrom = "";
-                 String vendto = "";
-                 if (ddvendfrom.getSelectedItem() != null)
-                     vendfrom = ddvendfrom.getSelectedItem().toString();
-                 
-                 if (ddvendto.getSelectedItem() != null)
-                     vendto = ddvendto.getSelectedItem().toString();
-                      
-                  
-                 
-         //     new String[]{"Detail", "PO", "Vend", "Line", "Part", "Type", "Status", "OrdQty", "RecvQty"});   
-             res = st.executeQuery("select rv_id, rv_vend, rv_packingslip, rv_recvdate, rv_status, rv_ref, rv_rmks " +
-                         " from recv_mstr where " +
-                        " rv_vend >= " + "'" + vendfrom + "'" + " AND " +
-                        " rv_vend <= " + "'" + vendto + "'" + " AND " +
-                     " rv_id >= " + "'" + pofrom + "'" + " AND " +
-                        " rv_id <= " + "'" + poto + "'" + 
-                        " order by rv_id ;");
-                     
-                  
-                
-                       while (res.next()) {
-                    mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, BlueSeerUtils.clickbasket, 
-                        res.getString("rv_id"),
-                        res.getString("rv_vend"),
-                        res.getString("rv_packingslip"),
-                        res.getString("rv_recvdate"),
-                        res.getString("rv_status"),
-                        res.getString("rv_ref"),
-                        res.getString("rv_rmks")
-                    });
-               
-             
-                   
-                } // while   
-                    
-                 
-        
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            } finally {
-                if (res != null) {
-                    res.close();
+                } catch (InvocationTargetException ex) {
+                  taoutput.setText(ex.toString());
+                } catch (ClassNotFoundException ex) {
+                  taoutput.setText(ex.toString());
+                } catch (IllegalAccessException |
+                         InstantiationException | NoSuchMethodException ex
+                        ) {
+                  taoutput.setText(ex.toString());
                 }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-       
+
     }//GEN-LAST:event_btRunActionPerformed
 
     private void btdetailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdetailActionPerformed
-       detailpanel.setVisible(false);
+       outputpanel.setVisible(false);
        btdetail.setEnabled(false);
     }//GEN-LAST:event_btdetailActionPerformed
 
-    private void tablereportMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablereportMouseClicked
-        
-        int row = tablereport.rowAtPoint(evt.getPoint());
-        int col = tablereport.columnAtPoint(evt.getPoint());
-        if ( col == 1) {
-                getdetail(tablereport.getValueAt(row, 2).toString());
-                btdetail.setEnabled(true);
-                detailpanel.setVisible(true);
-              
+    private void btuploadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btuploadActionPerformed
+        File myfile = getfile();
+        tainput.setText("");
+        if (myfile != null) {
+            try {   
+                List<String> lines = Files.readAllLines(myfile.toPath());
+                for (String segment : lines ) {
+                        tainput.append(segment);
+                        tainput.append("\n");
+                }
+            } catch (IOException ex) {
+                bslog(ex);
+            }   
         }
-        if ( col == 0) {
-                String mypanel = "ReceiverMaintMenu";
-               if (! checkperms(mypanel)) { return; }
-              String[] args = new String[]{tablereport.getValueAt(row, 2).toString()};
-               reinitpanels(mypanel, true, args);
-              
-        }
-    }//GEN-LAST:event_tablereportMouseClicked
+    }//GEN-LAST:event_btuploadActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btRun;
     private javax.swing.JButton btdetail;
-    private javax.swing.JComboBox ddsite;
-    private javax.swing.JComboBox ddvendfrom;
-    private javax.swing.JComboBox ddvendto;
-    private javax.swing.JPanel detailpanel;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
+    private javax.swing.JButton btupload;
+    private javax.swing.JComboBox ddmap;
+    private javax.swing.JFileChooser fc;
+    private javax.swing.JPanel inputpanel;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JPanel summarypanel;
-    private javax.swing.JTable tabledetail;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JPanel outputpanel;
     private javax.swing.JPanel tablepanel;
-    private javax.swing.JTable tablereport;
-    private javax.swing.JTextField tbfrompo;
-    private javax.swing.JTextField tbtopo;
+    private javax.swing.JTextArea tainput;
+    private javax.swing.JTextArea taoutput;
     // End of variables declaration//GEN-END:variables
 }

@@ -678,9 +678,9 @@ public abstract class EDIMap implements EDIMapi {
             // Write output batch file
             EDI.writeFile(content, EDData.getEDIBatchDir(), batchfile);
             // Write to outfile if single
-             if (tp[20].equals("0")) { // Write to outfile if single envelope...else done at end of EDI.processor
-             EDI.writeFile(content, outdir, outfile);  // you can override output directory by assign 2nd parameter here instead of ""
-             }
+            if (tp[20].equals("0")) { // Write to outfile if single envelope...else done at end of EDI.processor
+            EDI.writeFile(content, outdir, outfile);  // you can override output directory by assign 2nd parameter here instead of ""
+            }
         } catch (SmbException ex) {
             edilog(ex);
         } catch (IOException ex) {

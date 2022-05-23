@@ -42,6 +42,8 @@ CREATE TABLE IF NOT EXISTS `map_mstr` (
   `map_version` varchar(15)  NOT NULL DEFAULT '',
   `map_ifs` varchar(30)  NOT NULL DEFAULT '',
   `map_ofs` varchar(30)  NOT NULL DEFAULT '',
+  `map_indoctype` varchar(30)  NOT NULL DEFAULT '',
+  `map_infiletype` varchar(30)  NOT NULL DEFAULT '',
   `map_outdoctype` varchar(30)  NOT NULL DEFAULT '',
   `map_outfiletype` varchar(30)  NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

@@ -1,2 +1,7 @@
-ACME850,ACME Purchase Order,generic,X12850,dbin,850,DB
-ACME856,ACME Advance Shipping Notice,generic,dbout,X12856,856,X12
+EDIMaps.ACME850,ACME Purchase Order,generic,X12850,850idoc,850,X12,850idoc,FF
+EDIMaps.ACME856,ACME Advance Shipping Notice,generic,856idoc,X12856,856idoc,FF,856,X12
+EDIMaps.Generic850i,Purchase Order to Database,generic,X12850,850db,850,X12,850,DB
+EDIMaps.Generic855i,Acknowledgment Order to Database,generic,X12855,855db,855,X12,855,DB
+EDIMaps.Generic856o,Database to ASN,generic,856db,X12856,856db,DB,856,X12
+EDIMaps.Generic810o,Database to Invoice,generic,810db,X12810,810db,DB,810,X12
+EDIMaps.Generic855o,Database to Acknowledgement,generic,855db,X12855,855db,DB,855,X12

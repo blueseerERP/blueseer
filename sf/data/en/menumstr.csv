@@ -212,6 +212,7 @@ EDIXrefMaint,,com.blueseer.edi.EDIXrefMaint,JMenuItem,edix
 EDIExport,,com.blueseer.edi.EDIExport,JMenuItem,edit
 MapMaint,,com.blueseer.edi.MapMaint,JMenuItem,mapm
 StructMaint,,com.blueseer.edi.StructMaint,JMenuItem,mpsm
+MapTester,,com.blueseer.edi.MapTester,JMenuItem,mapt
 ARAgingView,,com.blueseer.far.ARAgingView,JMenuItem,arav
 APAgingView,,com.blueseer.fap.APAgingView,JMenuItem,apav
 GLControl,,com.blueseer.fgl.GLControl,JMenuItem,glcc
