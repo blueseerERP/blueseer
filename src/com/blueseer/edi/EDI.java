@@ -600,6 +600,9 @@ public class EDI {
         if (editype[0].equals("X12")) {
             // create batch file and assign to control replacing infile name 
          // now lets see how many ISAs and STs within those ISAs and write character positions of each
+         
+         Map<Integer, Object[]> ISAmap = createIMAP(cbuf, c, "", "", "", "");
+        /* 
          Map<Integer, Object[]> ISAmap = new HashMap<Integer, Object[]>();
          int start = 0;
          int end = 0;
@@ -705,7 +708,7 @@ public class EDI {
                     
                 } 
             }
-        
+        */
             
              if (isOverride.isEmpty()) {
              processX12(ISAmap, cbuf, batchfile, idxnbr);
@@ -723,7 +726,118 @@ public class EDI {
        return m;  
     }
     
-    
+    public static Map<Integer, Object[]> createIMAP(char[] cbuf, String[] c, String infile, String outfile, String map, String isOverride) {
+         Map<Integer, Object[]> ISAmap = new HashMap<Integer, Object[]>();
+         String[] m = new String[]{"0",""};
+         int start = 0;
+         int end = 0;
+         int isacount = 0;
+         int isactrl = 0;
+         int gscount = 0;
+         int stcount = 0;
+         int ststart = 0;
+         int sestart = 0;
+         String ed_escape = "";
+         String sd_escape = "";
+         int gsstart = 0;
+         String doctype = "";
+         String docid = "";
+         ArrayList<String> isaList = new ArrayList<String>();
+          
+          char e = 0;
+          char s = 0;
+          char u = 0;
+          int mark = 0;
+          
+           
+           Map<Integer, ArrayList> stse_hash = new HashMap<Integer, ArrayList>();
+           ArrayList<Object> docs = new ArrayList<Object>();
+          
+            for (int i = 0; i < cbuf.length; i++) {
+             if ( ((i+103) <= cbuf.length) && cbuf[i] == 'I' && cbuf[i+1] == 'S' && cbuf[i+2] == 'A' 
+                        && (cbuf[i+103] == cbuf[i+3]) && (cbuf[i+103] == cbuf[i+6]) ) {
+                    e = cbuf[i+103];
+                    u = cbuf[i+104];
+                    s = cbuf[i+105];
+                    mark = i;
+                    // lets bale if not proper ISA envelope.....unless the 106 is carriage return...then ok
+                /*
+                if (i == mark && cbuf[mark+106] != 'G' && cbuf[mark+107] != 'S' && ! String.format("%02x",(int) cbuf[mark+106]).equals("0a")) {
+                        return m = new String[]{"1","malformed envelope"};
+                }
+                */
+                    ed_escape = escapeDelimiter(String.valueOf(e));
+                    sd_escape = escapeDelimiter(String.valueOf(s));
+                    if (String.format("%02x",(int) cbuf[i+105]).equals("0d") && String.format("%02x",(int) cbuf[i+106]).equals("0a"))
+                        s = cbuf[i+106];
+                    start = i;
+                    isaList.add("ISA" + ":" + String.valueOf(i) + ":" + String.format("%02x",(int) s) );
+                    isacount++;
+                    String[] isa = new String(cbuf, i, 105).split(ed_escape);
+                    isactrl = Integer.valueOf(isa[13]);
+                    
+                     // set control
+                   
+                    c[0] = isa[6].trim(); // senderid
+                    c[21] = isa[8].trim(); // receiverid
+                    c[2] = map;
+                    c[3] = infile;
+                    c[4] = isa[13]; //isactrlnbr
+                    c[8] = outfile;
+                    c[9] = String.valueOf((int) s);
+                    c[10] = String.valueOf((int) e);
+                    c[11] = String.valueOf((int) u);
+                    c[12] = isOverride;
+                    c[13] = new String(cbuf,i,105);
+                    c[15] = "0"; // inbound
+                    
+                }
+                if (i > 1 && cbuf[i-1] == s && cbuf[i] == 'G' && cbuf[i+1] == 'S') {
+                    gscount++;
+                    isaList.add("GS" + ":" + String.valueOf(i));
+                    gsstart = i;
+                    String[] gs = new String(cbuf, gsstart, 90).split(ed_escape);
+                    c[5] = gs[6]; // gsctrlnbr
+                    gs[8] = gs[8].split(sd_escape)[0];
+                    c[14] = String.join(String.valueOf(e), Arrays.copyOfRange(gs, 0, 9));
+                    
+                }
+                if (i > 1 && cbuf[i-1] == s && cbuf[i] == 'S' && cbuf[i+1] == 'T') {
+                   
+                    stcount++;
+                    isaList.add("ST" + ":" + String.valueOf(i));
+                    ststart = i;
+                    
+                    String[] st = new String(cbuf, i, 16).split(ed_escape);
+                    doctype = st[1]; // doctype
+                    docid = st[2].split(sd_escape)[0]; //docID  // to separate 2nd element of ST because grabbing 16 characters in buffer
+                   
+                   // System.out.println(c[0] + "/" + c[1] + "/" + c[4] + "/" + c[5]);
+                } 
+                if (i > 1 && cbuf[i-1] == s && cbuf[i] == 'S' && cbuf[i+1] == 'E') {
+                    isaList.add("SE" + ":" + String.valueOf(i));
+                    sestart = i;
+                    // add to hash if hash doesn't exist or insert into hash
+                    docs.add(new Object[] {new Integer[] {ststart, sestart}, doctype, docid});
+                    // painful reminder that you have to create copy of array at instance in time
+                    ArrayList copydocs = new ArrayList(docs);
+                    stse_hash.put(isacount, copydocs);
+                }
+                if (i > 1 && cbuf[i-1] == s && cbuf[i] == 'I' && cbuf[i+1] == 'E' && cbuf[i+2] == 'A') {
+                    end = i + 14 + Integer.valueOf(String.valueOf(gscount).length()) + 1;
+                    // now add to ISAmap
+                   HashMap<Integer,ArrayList> mycopy = new HashMap<Integer,ArrayList>(stse_hash);
+                  ISAmap.put(isacount, new Object[] {start, end, (int) s, (int) e, (int) u, mycopy, c});
+                    isaList.add("IEA" + ":" + String.valueOf(i));
+                    stcount = 0;
+                    docs.clear();
+                    stse_hash.remove(isacount);
+                    
+                } 
+            }
+            
+            return ISAmap;
+    }
     
     public static String[] getEDIType(char[] cbuf, String filename) {
     String[] type = new String[]{"",""};

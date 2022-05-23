@@ -70,12 +70,17 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.edi.EDI.createIMAP;
 import static com.blueseer.edi.EDI.edilog;
+import static com.blueseer.edi.ediData.getMapMstr;
+import com.blueseer.edi.ediData.map_mstr;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.EDData;
 import com.blueseer.vdr.venData;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.file.Files;
@@ -100,6 +105,7 @@ import javax.swing.JTabbedPane;
 public class MapTester extends javax.swing.JPanel {
  
      public Map<String, ArrayList<String>> map = new HashMap<String, ArrayList<String>>();
+     File infile = null;
      
     javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                         new String[]{
@@ -265,6 +271,11 @@ public class MapTester extends javax.swing.JPanel {
         tainput.setText("");
         taoutput.setText("");
         
+        ddmap.removeAllItems();
+        ArrayList<String> maps = ediData.getMapMstrList();
+        for (int i = 0; i < maps.size(); i++) {
+            ddmap.addItem(maps.get(i));
+        }
         
         btdetail.setEnabled(false);
         outputpanel.setVisible(false);
@@ -453,25 +464,91 @@ public class MapTester extends javax.swing.JPanel {
 
     private void btRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRunActionPerformed
         String[] c = EDI.initEDIControl();
-        c[0] = "TESTSENDER";
-        c[21] = "TESTRECEIVER";
+        map_mstr x = getMapMstr(new String[]{ddmap.getSelectedItem().toString()});
+        
+        
+        // now absorb file into doc structure for input into map
+        // ...only processing the first doc in a envelope if file contains multiple...for testing purposes
+         BufferedReader f = null;
+         char[] cbuf = null;
+         try {
+         f = new BufferedReader(new FileReader(infile));
+         cbuf = new char[(int) infile.length()];
+         f.read(cbuf); 
+         } catch (IOException ex) {
+             taoutput.setText(ex.toString());
+             return;
+         }
+       
+         // beginning of needs revamping 
+         
+        Map<Integer, Object[]> ISAmap = createIMAP(cbuf, c, "", "", "", "");
+        Map<Integer, ArrayList> d = null;
+        char segdelim = 0;
+        int loopcount = 0;
+        for (Map.Entry<Integer, Object[]> isa : ISAmap.entrySet()) {
+           loopcount++;
+           if (loopcount > 1) {
+               break;
+           }
+           d = (HashMap<Integer, ArrayList>) isa.getValue()[5];
+           segdelim = (char) Integer.valueOf(isa.getValue()[2].toString()).intValue();
+        }
+        
+        Integer[] k = null;
+        for (Map.Entry<Integer, ArrayList> z : d.entrySet()) {
+         for (Object r : z.getValue()) {
+            Object[] b = (Object[]) r ;        
+            k = (Integer[])b[0];
+            //String doctype = (String)b[1];
+            //String docid = (String)b[2];
+         }
+        }
         
         ArrayList<String> doc = new ArrayList<String>();
+        StringBuilder segment = new StringBuilder();
+        for (int i = k[0]; i < k[1]; i++) {
+            if (cbuf[i] == segdelim) {
+                doc.add(segment.toString());
+                segment.delete(0, segment.length());
+            } else {
+                if (! (String.format("%02x",(int) cbuf[i]).equals("0d") || String.format("%02x",(int) cbuf[i]).equals("0a")) ) {
+                    segment.append(cbuf[i]);
+                } 
+            }
+        }
+   // end of needs revamping
+   
+        c[0] = "SYSSENDER";
+        c[21] = "SYSRECEIVER";
+        c[1] = x.map_indoctype();
+        c[15] = x.map_outdoctype();
+        c[2] = x.map_id();
+        c[28] = x.map_infiletype();
+        c[29] = x.map_outfiletype();
+   
         try {
-                Class cls = Class.forName(ddmap.getSelectedItem().toString());
+                Class cls = Class.forName(x.map_id());
                 Object obj = cls.newInstance();
                 Method method = cls.getDeclaredMethod("Mapdata", ArrayList.class, String[].class);
                 Object oc = method.invoke(obj, doc, c);
                 String[] oString = (String[]) oc;
-
+                taoutput.setText(oString[0]);
+                if (oString.length > 1) {
+                    taoutput.append("\n" + oString[1]);
+                }
+                outputpanel.setVisible(true);
                 } catch (InvocationTargetException ex) {
                   taoutput.setText(ex.toString());
+                  edilog(ex);
                 } catch (ClassNotFoundException ex) {
                   taoutput.setText(ex.toString());
+                  edilog(ex);
                 } catch (IllegalAccessException |
                          InstantiationException | NoSuchMethodException ex
                         ) {
                   taoutput.setText(ex.toString());
+                  edilog(ex);
                 }
 
     }//GEN-LAST:event_btRunActionPerformed
@@ -482,11 +559,11 @@ public class MapTester extends javax.swing.JPanel {
     }//GEN-LAST:event_btdetailActionPerformed
 
     private void btuploadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btuploadActionPerformed
-        File myfile = getfile();
+        infile = getfile();
         tainput.setText("");
-        if (myfile != null) {
+        if (infile != null) {
             try {   
-                List<String> lines = Files.readAllLines(myfile.toPath());
+                List<String> lines = Files.readAllLines(infile.toPath());
                 for (String segment : lines ) {
                         tainput.append(segment);
                         tainput.append("\n");

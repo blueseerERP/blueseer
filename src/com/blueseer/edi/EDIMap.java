@@ -29,6 +29,7 @@ import bsmf.MainFrame;
 import static com.blueseer.edi.EDI.edilog;
 import static com.blueseer.edi.EDI.hanoi;
 import static com.blueseer.edi.EDI.trimSegment;
+import static com.blueseer.edi.ediData.getMapMstr;
 import com.blueseer.utl.BlueSeerUtils;
 import com.blueseer.utl.EDData;
 import com.blueseer.utl.OVData;
@@ -238,8 +239,21 @@ public abstract class EDIMap implements EDIMapi {
         isOverride = Boolean.valueOf(c[12]); // isOverrideEnvelope
         GlobalDebug = Boolean.valueOf(c[30]);
         
+        
+        
         setControlISA(c[13].split(EDI.escapeDelimiter(ed), -1));  // EDIMap.setISA
         setControlGS(c[14].split(EDI.escapeDelimiter(ed), -1));   // EDIMap.setGS
+        
+        if (c[0].equals("SYSSENDER")) {
+           // c values override lookup below for map tester
+           ediData.map_mstr x = getMapMstr(new String[]{c[2]});
+           outsender = c[0];
+           outreceiver = c[21];
+           outputdoctype = c[0];
+           outputfiletype = c[29];
+           setOutputStructureFile(x.map_ofs());
+           return;
+        }
         
         if (c[28].equals("X12")) {
         outsender = gsArrayIN[2];
@@ -250,6 +264,8 @@ public abstract class EDIMap implements EDIMapi {
         }
         
         String[] tp = EDData.getEDITPDefaults(outputdoctype, outsender, outreceiver );
+    //    bsmf.MainFrame.show(outputdoctype + "/" + outsender + "/" + outreceiver );
+    //    bsmf.MainFrame.show(tp[14] + "/" + tp[15] + "/" + tp[16] + "/" + tp[17] );
         setOutPutDocType(tp[14]);
         setOutPutFileType(tp[15]);
         if (! tp[16].equals("DB")) {
@@ -570,6 +586,11 @@ public abstract class EDIMap implements EDIMapi {
 
     public String[] packagePayLoad(String[] c) {
      
+        if (c[0].equals("SYSSENDER")) {
+            writeOMD(c, EDData.getEDITPDefaults(c[1], "SYSSENDER", "SYSRECEIVER" ));
+            return new String[]{content};
+        }
+        
         if (c[29].equals("DB")) {
             return new String[]{c[23],c[38]};
         }
@@ -1135,6 +1156,7 @@ public abstract class EDIMap implements EDIMapi {
  		}
          } // if FF
          
+        // bsmf.MainFrame.show("here..." + outputfiletype + ": " + content);
     	OMD.clear();
         HASH.clear();
         ISF.clear();
