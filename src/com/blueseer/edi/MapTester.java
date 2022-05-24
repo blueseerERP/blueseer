@@ -80,7 +80,11 @@ import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.EDData;
 import com.blueseer.vdr.venData;
 import java.io.BufferedReader;
+import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.file.Files;
@@ -278,6 +282,7 @@ public class MapTester extends javax.swing.JPanel {
         }
         
         btdetail.setEnabled(false);
+        btRun.setEnabled(false);
         outputpanel.setVisible(false);
           
     }
@@ -520,39 +525,59 @@ public class MapTester extends javax.swing.JPanel {
       
    // end of needs revamping
    
-        c[0] = "SYSSENDER";
-        c[21] = "SYSRECEIVER";
+        c[0] = "MapTester";
+        c[21] = "MapTester";
         c[1] = x.map_indoctype();
+       // c[9] = "10";
+       // c[10] = "42";
+       // c[11] = "0";
         c[15] = x.map_outdoctype();
         c[2] = x.map_id();
         c[28] = x.map_infiletype();
         c[29] = x.map_outfiletype();
         c[30] = "1";
-   
+        StringWriter sw = null;
+
         try {
+           
                 Class cls = Class.forName(x.map_id());
                 Object obj = cls.newInstance();
                 Method method = cls.getDeclaredMethod("Mapdata", ArrayList.class, String[].class);
                 Object oc = method.invoke(obj, doc, c);
                 String[] oString = (String[]) oc;
                 taoutput.setText(oString[0]);
-                /*
+                
                 if (oString.length > 1) {
                     taoutput.append("\n" + oString[1]);
                 }
-                */
+                
                 outputpanel.setVisible(true);
+                btdetail.setEnabled(true);
                 } catch (InvocationTargetException ex) {
-                  taoutput.setText(ex.toString());
+                  sw = new StringWriter();
+                  ex.printStackTrace(new PrintWriter(sw));
+                  taoutput.setText(sw.toString());
                   edilog(ex);
                 } catch (ClassNotFoundException ex) {
-                  taoutput.setText(ex.toString());
+                  sw = new StringWriter();
+                  ex.printStackTrace(new PrintWriter(sw));
+                  taoutput.setText(sw.toString());
                   edilog(ex);
                 } catch (IllegalAccessException |
                          InstantiationException | NoSuchMethodException ex
                         ) {
-                  taoutput.setText(ex.toString());
+                  sw = new StringWriter();  
+                  ex.printStackTrace(new PrintWriter(sw));
+                  taoutput.setText(sw.toString());
                   edilog(ex);
+                } finally {
+                     try {
+                        if (sw != null) { 
+                         sw.close();
+                        }
+                    } catch (IOException ex1) {
+                        edilog(ex1);
+                    }
                 }
 
     }//GEN-LAST:event_btRunActionPerformed
@@ -572,9 +597,12 @@ public class MapTester extends javax.swing.JPanel {
                         tainput.append(segment);
                         tainput.append("\n");
                 }
+                btRun.setEnabled(true);
             } catch (IOException ex) {
                 bslog(ex);
             }   
+        } else {
+            btRun.setEnabled(false);
         }
     }//GEN-LAST:event_btuploadActionPerformed
 

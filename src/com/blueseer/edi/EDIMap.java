@@ -244,15 +244,16 @@ public abstract class EDIMap implements EDIMapi {
         setControlISA(c[13].split(EDI.escapeDelimiter(ed), -1));  // EDIMap.setISA
         setControlGS(c[14].split(EDI.escapeDelimiter(ed), -1));   // EDIMap.setGS
         
-        if (c[0].equals("SYSSENDER")) {
+        if (c[0].equals("MapTester")) {
            // c values override lookup below for map tester
            ediData.map_mstr x = getMapMstr(new String[]{c[2]});
            outsender = c[0];
            outreceiver = c[21];
-           outputdoctype = c[0];
+           outputdoctype = c[15];
            outputfiletype = c[29];
-           setInputStructureFile(x.map_ifs());
-           setOutputStructureFile(x.map_ofs());
+           setInputStructureFile(x.map_ifs() + ".csv");
+           setOutputStructureFile(x.map_ofs() + ".csv");
+          // bsmf.MainFrame.show(outsender + "/" + outreceiver + "/" + outputdoctype + "/" + outputfiletype + "/" + ifsfile + "/" + ofsfile);
            return;
         }
         
@@ -587,8 +588,9 @@ public abstract class EDIMap implements EDIMapi {
 
     public String[] packagePayLoad(String[] c) {
      
-        if (c[0].equals("SYSSENDER")) {
-            writeOMD(c, EDData.getEDITPDefaults(c[1], "SYSSENDER", "SYSRECEIVER" ));
+        if (c[0].equals("MapTester")) {
+           // writeOMD(c, EDData.getEDITPDefaults(c[1], "SYSSENDER", "SYSRECEIVER" ));
+            writeOMD(c, null);
             return new String[]{content};
         }
         
@@ -782,8 +784,7 @@ public abstract class EDIMap implements EDIMapi {
          
          HASH.clear();
      }
-    
-    
+        
     public void readOSF(String adf)  {
         
 	        Map<String, ArrayList<String[]>> hm = new LinkedHashMap<String, ArrayList<String[]>>();
@@ -1067,14 +1068,25 @@ public abstract class EDIMap implements EDIMapi {
     public static String[] writeOMD(String[] c, String[] tp) {
          String[] r = new String[2];
     	 String segment = "";
+         String s = "";
+         String e = "";
     	 content = "";
         
     	 Map<String, HashMap<String,String>> MD = new LinkedHashMap<String, HashMap<String,String>>(OMD);
     	 
     	 if (outputfiletype.equals("X12")) {
          segcount = 0;  // init segment count for this doc
-         String s = delimConvertIntToStr(tp[7]); // segment delimiter
-         String e = delimConvertIntToStr(tp[6]); // element delimiter
+         if (tp == null || tp[7].equals("0")) {
+            s = delimConvertIntToStr("10"); // segment delimiter 
+         } else {
+            s = delimConvertIntToStr(tp[7]); // segment delimiter 
+         }
+         if (tp == null || tp[6].equals("0")) {
+            e = delimConvertIntToStr("42"); // segment delimiter 
+         } else {
+            e = delimConvertIntToStr(tp[6]); // segment delimiter 
+         }
+         
     	 for (Map.Entry<String, HashMap<String,String>> z : MD.entrySet()) {
  		//	ArrayList<String[]> fields = z.getValue();
  			

@@ -228,10 +228,10 @@ public class ediData {
             psi.setString(3, x.map_version);
             psi.setString(4, x.map_ifs);
             psi.setString(5, x.map_ofs);
-            psi.setString(6, x.map_infiletype);
-            psi.setString(7, x.map_ifs);
-            psi.setString(8, x.map_outfiletype);
-            psi.setString(9, x.map_ofs);
+            psi.setString(6, x.map_indoctype);
+            psi.setString(7, x.map_infiletype);
+            psi.setString(8, x.map_outdoctype);
+            psi.setString(9, x.map_outfiletype);
             
             int rows = psi.executeUpdate();
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
