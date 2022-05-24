@@ -72,6 +72,7 @@ import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import static com.blueseer.edi.EDI.createIMAP;
 import static com.blueseer.edi.EDI.edilog;
+import static com.blueseer.edi.EDI.getEDIType;
 import static com.blueseer.edi.ediData.getMapMstr;
 import com.blueseer.edi.ediData.map_mstr;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
@@ -485,8 +486,11 @@ public class MapTester extends javax.swing.JPanel {
              return;
          }
        
-         // beginning of needs revamping 
-         
+        // beginning of needs revamping 
+        String[] editype = getEDIType(cbuf, infile.getName());
+        ArrayList<String> doc = new ArrayList<String>();
+        
+        if (editype[0].equals("X12")) {
         Map<Integer, Object[]> ISAmap = createIMAP(cbuf, c, "", "", "", "");
         Map<Integer, ArrayList> d = null;
         char segdelim = 0;
@@ -509,8 +513,7 @@ public class MapTester extends javax.swing.JPanel {
             //String docid = (String)b[2];
          }
         }
-        
-        ArrayList<String> doc = new ArrayList<String>();
+       
         StringBuilder segment = new StringBuilder();
         for (int i = k[0]; i < k[1]; i++) {
             if (cbuf[i] == segdelim) {
@@ -522,6 +525,27 @@ public class MapTester extends javax.swing.JPanel {
                 } 
             }
         }
+        }
+        
+        char segdelim = (char) Integer.valueOf("10").intValue(); 
+        if (editype[0].equals("FF")) {
+           StringBuilder segment = new StringBuilder();
+           for (int i = 0; i < cbuf.length; i++) {
+                if (cbuf[i] == segdelim) {
+                    doc.add(segment.toString());
+                    segment.delete(0, segment.length());
+                } else {
+                    if (! (String.format("%02x",(int) cbuf[i]).equals("0d") || String.format("%02x",(int) cbuf[i]).equals("0a")) ) {
+                        segment.append(cbuf[i]);
+                    } 
+                }
+            }
+        }
+        
+         if (editype[0].isEmpty()) {
+            bsmf.MainFrame.show("unknown file type");
+            return;
+         }
       
    // end of needs revamping
    
