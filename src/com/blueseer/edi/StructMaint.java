@@ -323,7 +323,7 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
             return false;
         }
        
-         if (! BlueSeerUtils.isFile("edi/structure", tbkey.getText() + ".csv")) {
+         if (! BlueSeerUtils.isFile("edi/structure", tbkey.getText())) {
                     bsmf.MainFrame.show(getMessageTag(1145,tbkey.getText()));
                     tbkey.requestFocus();
                     return false;

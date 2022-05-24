@@ -251,8 +251,8 @@ public abstract class EDIMap implements EDIMapi {
            outreceiver = c[21];
            outputdoctype = c[15];
            outputfiletype = c[29];
-           setInputStructureFile(x.map_ifs() + ".csv");
-           setOutputStructureFile(x.map_ofs() + ".csv");
+           setInputStructureFile(x.map_ifs());
+           setOutputStructureFile(x.map_ofs());
           // bsmf.MainFrame.show(outsender + "/" + outreceiver + "/" + outputdoctype + "/" + outputfiletype + "/" + ifsfile + "/" + ofsfile);
            return;
         }

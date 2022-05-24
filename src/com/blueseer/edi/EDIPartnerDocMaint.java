@@ -36,6 +36,7 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.edi.ediData.getMapMstr;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -78,7 +79,7 @@ import javax.swing.JTable;
 public class EDIPartnerDocMaint extends javax.swing.JPanel {
 
     DefaultListModel listmodel = new DefaultListModel();
-    
+    boolean isLoad = false;
     /**
      * Creates new form CarrierMaintPanel
      */
@@ -112,7 +113,7 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
                     tbrcvisa.setText(res.getString("edi_rcvisa"));
                     tbrcvq.setText(res.getString("edi_rcvq"));
                     tbrcvgs.setText(res.getString("edi_rcvgs"));
-                    tbmap.setText(res.getString("edi_map"));
+                    ddmap.setSelectedItem(res.getString("edi_map"));
                     tbelement.setText(res.getString("edi_eledelim"));
                     tbsegment.setText(res.getString("edi_segdelim"));
                     tbsub.setText(res.getString("edi_subdelim"));
@@ -178,13 +179,18 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
             ddoutdoctype.addItem(mylist.get(i));
         }
         
+        ddmap.removeAllItems();
+        ArrayList<String> maps = ediData.getMapMstrList();
+        for (int i = 0; i < maps.size(); i++) {
+            ddmap.addItem(maps.get(i));
+        }
+        
         tbrcvisa.setText("");
         tbrcvq.setText("");
         tbrcvgs.setText("");
         tbsndisa.setText("");
         tbsndgs.setText("");
         tbsndq.setText("");
-        tbmap.setText("");
         tbversion.setText("");
         tbsupplier.setText("");
         tbelement.setText("");
@@ -216,18 +222,18 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
         tbsndisa.setEnabled(true);
         tbsndgs.setEnabled(true);
         tbsndq.setEnabled(true);
-        tbmap.setEnabled(true);
+        ddmap.setEnabled(true);
         dddoc.setEnabled(true);
-        ddoutfiletype.setEnabled(true);
-        ddoutdoctype.setEnabled(true);
+     //   ddoutfiletype.setEnabled(true);
+     //   ddoutdoctype.setEnabled(true);
         tbversion.setEnabled(true);
         tbsupplier.setEnabled(true);
         tbelement.setEnabled(true);
         tbsegment.setEnabled(true);
         tbsub.setEnabled(true);
         tbfilepath.setEnabled(true);
-        tbIFS.setEnabled(true);
-        tbOFS.setEnabled(true);
+      //  tbIFS.setEnabled(true);
+      //  tbOFS.setEnabled(true);
         tbfileprefix.setEnabled(true);
         tbfilesuffix.setEnabled(true);
         tbkey.setEnabled(true);
@@ -252,7 +258,7 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
         tbsndisa.setEnabled(false);
         tbsndgs.setEnabled(false);
         tbsndq.setEnabled(false);
-        tbmap.setEnabled(false);
+        ddmap.setEnabled(false);
         dddoc.setEnabled(false);
         ddoutfiletype.setEnabled(false);
         ddoutdoctype.setEnabled(false);
@@ -319,7 +325,7 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
     
     
     public void initvars(String[] arg) {
-        
+       isLoad = true; 
        clearAll();
        disableAll();
        
@@ -330,7 +336,7 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
             getCustEDI(arg[0], arg[1], arg[2], arg[3]);
         }
         
-       
+       isLoad = false; 
     }
     
     public void lookUpFrame() {
@@ -405,12 +411,12 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
         jLabel9 = new javax.swing.JLabel();
         jLabel16 = new javax.swing.JLabel();
         tbsndq = new javax.swing.JTextField();
-        tbmap = new javax.swing.JTextField();
         btnew = new javax.swing.JButton();
         dddoc = new javax.swing.JComboBox<>();
         tbrcvisa = new javax.swing.JTextField();
         btlookup = new javax.swing.JButton();
         cbenvelopeall = new javax.swing.JCheckBox();
+        ddmap = new javax.swing.JComboBox<>();
         jPanel3 = new javax.swing.JPanel();
         jLabel11 = new javax.swing.JLabel();
         tbfilepath = new javax.swing.JTextField();
@@ -518,6 +524,12 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
 
         cbenvelopeall.setText("Multi-Envelope");
 
+        ddmap.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ddmapActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -545,7 +557,6 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addGap(2, 2, 2)
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(tbmap, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(tbrcvgs, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(tbsndisa, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addComponent(tbrcvq, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -565,7 +576,10 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(cbenvelopeall)
-                            .addComponent(tbsndq, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(tbsndq, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(ddmap, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(17, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -595,9 +609,9 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
                     .addComponent(jLabel6)
                     .addComponent(tbrcvq, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tbmap, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel9))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel9)
+                    .addComponent(ddmap, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel13)
@@ -892,14 +906,6 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
                     tbkey.requestFocus();
                     return;
                 }
-                if (tbmap.getText().isEmpty()) {
-                    proceed = false;
-                    bsmf.MainFrame.show(getMessageTag(1024));
-                    tbmap.requestFocus();
-                    return;
-                }
-               
-               
                 
                 if ( cbfa.isSelected() ) {
                    fa = "1";    
@@ -934,7 +940,7 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
                                 + "'" + tbsndisa.getText() + "'" + ","
                                 + "'" + tbsndq.getText() + "'" + ","
                                 + "'" + tbsndgs.getText() + "'" + ","
-                                + "'" + tbmap.getText() + "'" + ","
+                                + "'" + ddmap.getSelectedItem().toString() + "'" + ","
                                 + "'" + tbelement.getText() + "'" + ","
                                 + "'" + tbsegment.getText() + "'" + ","
                                 + "'" + tbsub.getText() + "'" + ","
@@ -997,16 +1003,11 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
                     return;
                 }
                
-                if (tbmap.getText().isEmpty() && ! dddoc.getSelectedItem().toString().equals("997")) {
+              
+                if (! BlueSeerUtils.isClassFile(ddmap.getSelectedItem().toString()) && ! dddoc.getSelectedItem().toString().equals("997")) {
                     proceed = false;
-                    bsmf.MainFrame.show(getMessageTag(1024));
-                    tbmap.requestFocus();
-                    return;
-                }
-                if (! BlueSeerUtils.isClassFile(tbmap.getText()) && ! dddoc.getSelectedItem().toString().equals("997")) {
-                    proceed = false;
-                    bsmf.MainFrame.show(getMessageTag(1145,tbmap.getText()));
-                    tbmap.requestFocus();
+                    bsmf.MainFrame.show(getMessageTag(1145,ddmap.getSelectedItem().toString()));
+                    ddmap.requestFocus();
                     return;
                 }
                 
@@ -1026,7 +1027,7 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
                     st.executeUpdate("update edi_mstr set edi_sndisa = " + "'" + tbsndisa.getText() + "'" + ","
                             + "edi_sndq = " + "'" + tbsndq.getText() + "'" + ","
                             + "edi_sndgs = " + "'" + tbsndgs.getText() + "'" + ","
-                            + "edi_map = " + "'" + tbmap.getText() + "'" + ","
+                            + "edi_map = " + "'" + ddmap.getSelectedItem().toString() + "'" + ","
                             + "edi_eledelim = " + "'" + tbelement.getText() + "'" + ","
                             + "edi_segdelim = " + "'" + tbsegment.getText() + "'" + ","
                             + "edi_subdelim = " + "'" + tbsub.getText() + "'" + ","
@@ -1209,6 +1210,16 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
         lookUpFrame();
     }//GEN-LAST:event_btlookupActionPerformed
 
+    private void ddmapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddmapActionPerformed
+        if (! isLoad) {
+            ediData.map_mstr x = getMapMstr(new String[]{ddmap.getSelectedItem().toString()});
+            ddoutdoctype.setSelectedItem(x.map_outdoctype());
+            ddoutfiletype.setSelectedItem(x.map_outfiletype());
+            tbIFS.setText(x.map_ifs());
+            tbOFS.setText(x.map_ofs());
+        }
+    }//GEN-LAST:event_ddmapActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
@@ -1222,6 +1233,7 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
     private javax.swing.JCheckBox cbenvelopeall;
     private javax.swing.JCheckBox cbfa;
     private javax.swing.JComboBox<String> dddoc;
+    private javax.swing.JComboBox<String> ddmap;
     private javax.swing.JComboBox<String> ddoutdoctype;
     private javax.swing.JComboBox<String> ddoutfiletype;
     private javax.swing.JLabel jLabel1;
@@ -1260,7 +1272,6 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
     private javax.swing.JTextField tbfileprefix;
     private javax.swing.JTextField tbfilesuffix;
     private javax.swing.JTextField tbkey;
-    private javax.swing.JTextField tbmap;
     private javax.swing.JTextField tbrcvgs;
     private javax.swing.JTextField tbrcvisa;
     private javax.swing.JTextField tbrcvq;
