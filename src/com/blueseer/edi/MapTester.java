@@ -517,6 +517,7 @@ public class MapTester extends javax.swing.JPanel {
                 } 
             }
         }
+      
    // end of needs revamping
    
         c[0] = "SYSSENDER";
@@ -526,6 +527,7 @@ public class MapTester extends javax.swing.JPanel {
         c[2] = x.map_id();
         c[28] = x.map_infiletype();
         c[29] = x.map_outfiletype();
+        c[30] = "1";
    
         try {
                 Class cls = Class.forName(x.map_id());
@@ -534,9 +536,11 @@ public class MapTester extends javax.swing.JPanel {
                 Object oc = method.invoke(obj, doc, c);
                 String[] oString = (String[]) oc;
                 taoutput.setText(oString[0]);
+                /*
                 if (oString.length > 1) {
                     taoutput.append("\n" + oString[1]);
                 }
+                */
                 outputpanel.setVisible(true);
                 } catch (InvocationTargetException ex) {
                   taoutput.setText(ex.toString());

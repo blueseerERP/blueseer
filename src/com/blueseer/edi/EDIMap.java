@@ -251,6 +251,7 @@ public abstract class EDIMap implements EDIMapi {
            outreceiver = c[21];
            outputdoctype = c[0];
            outputfiletype = c[29];
+           setInputStructureFile(x.map_ifs());
            setOutputStructureFile(x.map_ofs());
            return;
         }
@@ -784,6 +785,7 @@ public abstract class EDIMap implements EDIMapi {
     
     
     public void readOSF(String adf)  {
+        
 	        Map<String, ArrayList<String[]>> hm = new LinkedHashMap<String, ArrayList<String[]>>();
 	        List<String[]> list = new ArrayList<String[]>();
 	        Set<String> set = new LinkedHashSet<String>();
@@ -1156,6 +1158,7 @@ public abstract class EDIMap implements EDIMapi {
  		}
          } // if FF
          
+       
         // bsmf.MainFrame.show("here..." + outputfiletype + ": " + content);
     	OMD.clear();
         HASH.clear();
