@@ -73,6 +73,7 @@ import static bsmf.MainFrame.user;
 import static com.blueseer.edi.EDI.createIMAP;
 import static com.blueseer.edi.EDI.edilog;
 import static com.blueseer.edi.EDI.getEDIType;
+import com.blueseer.edi.EDIMap.UserDefinedException;
 import static com.blueseer.edi.ediData.getMapMstr;
 import com.blueseer.edi.ediData.map_mstr;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
@@ -107,7 +108,7 @@ import javax.swing.JTabbedPane;
  *
  * @author vaughnte
  */
-public class MapTester extends javax.swing.JPanel {
+public class MapTester extends javax.swing.JPanel  {
  
      public Map<String, ArrayList<String>> map = new HashMap<String, ArrayList<String>>();
      File infile = null;
@@ -575,14 +576,14 @@ public class MapTester extends javax.swing.JPanel {
                     taoutput.append("\n" + oString[1]);
                 }
                 
-                outputpanel.setVisible(true);
-                btdetail.setEnabled(true);
+                
                 } catch (InvocationTargetException ex) {
                   sw = new StringWriter();
                   ex.printStackTrace(new PrintWriter(sw));
                   taoutput.setText(sw.toString());
                   edilog(ex);
                 } catch (ClassNotFoundException ex) {
+                    bsmf.MainFrame.show("2");
                   sw = new StringWriter();
                   ex.printStackTrace(new PrintWriter(sw));
                   taoutput.setText(sw.toString());
@@ -590,6 +591,7 @@ public class MapTester extends javax.swing.JPanel {
                 } catch (IllegalAccessException |
                          InstantiationException | NoSuchMethodException ex
                         ) {
+                    bsmf.MainFrame.show("3");
                   sw = new StringWriter();  
                   ex.printStackTrace(new PrintWriter(sw));
                   taoutput.setText(sw.toString());
@@ -599,6 +601,8 @@ public class MapTester extends javax.swing.JPanel {
                         if (sw != null) { 
                          sw.close();
                         }
+                     outputpanel.setVisible(true);
+                     btdetail.setEnabled(true);   
                     } catch (IOException ex1) {
                         edilog(ex1);
                     }

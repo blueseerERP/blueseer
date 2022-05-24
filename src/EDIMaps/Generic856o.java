@@ -46,7 +46,7 @@ import java.time.format.DateTimeFormatter;
  */
 public class Generic856o extends com.blueseer.edi.EDIMap { 
     
-    public String[] Mapdata(ArrayList doc, String[] c) throws IOException {
+    public String[] Mapdata(ArrayList doc, String[] c) throws IOException, UserDefinedException {
      com.blueseer.edi.EDI edi = new com.blueseer.edi.EDI();
      String doctype = c[1];
      String shipper = doc.get(0).toString();

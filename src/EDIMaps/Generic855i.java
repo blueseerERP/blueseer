@@ -49,7 +49,7 @@ import java.time.format.DateTimeFormatter;
  */
 public class Generic855i extends com.blueseer.edi.EDIMap {
     
-    public String[] Mapdata(ArrayList doc, String[] c) throws IOException {
+    public String[] Mapdata(ArrayList doc, String[] c) throws IOException, UserDefinedException {
    
         setControl(c); // as defined by EDI.initEDIControl() and EDIMap.setControl()
         if (isError) { return error;}  // check errors for master variables

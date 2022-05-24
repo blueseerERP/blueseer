@@ -47,7 +47,7 @@ import java.time.format.DateTimeFormatter;
  */
 public class Generic850i extends com.blueseer.edi.EDIMap {
     
-    public String[] Mapdata(ArrayList doc, String[] c) throws IOException {
+    public String[] Mapdata(ArrayList doc, String[] c) throws IOException, UserDefinedException {
    
     setControl(c);    //required...set the super class variables per the inbound array passed from the Processor (See EDIMap javadoc for defs)
     

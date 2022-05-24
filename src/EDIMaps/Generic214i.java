@@ -45,7 +45,7 @@ import java.io.IOException;
  */
 public class Generic214i extends com.blueseer.edi.EDIMap {
     
-    public String[] Mapdata(ArrayList doc, String[] c) throws IOException {
+    public String[] Mapdata(ArrayList doc, String[] c) throws IOException, UserDefinedException {
      
    
     

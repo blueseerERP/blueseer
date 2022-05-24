@@ -38,6 +38,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -216,7 +217,7 @@ public abstract class EDIMap implements EDIMapi {
 
     
     
-    public void setControl(String[] c) {
+    public void setControl(String[] c) throws UserDefinedException {
         
         resetVariables();
         
@@ -244,17 +245,42 @@ public abstract class EDIMap implements EDIMapi {
         setControlISA(c[13].split(EDI.escapeDelimiter(ed), -1));  // EDIMap.setISA
         setControlGS(c[14].split(EDI.escapeDelimiter(ed), -1));   // EDIMap.setGS
         
+       
+        
         if (c[0].equals("MapTester")) {
+           // throw new UserDefinedException("Houston...we have a problem"); 
            // c values override lookup below for map tester
+          
            ediData.map_mstr x = getMapMstr(new String[]{c[2]});
            outsender = c[0];
            outreceiver = c[21];
            outputdoctype = c[15];
            outputfiletype = c[29];
+           
+           if (outsender.isBlank()) {
+               throw new UserDefinedException("Missing outsender in c[0]"); 
+           }
+           if (outreceiver.isBlank()) {
+               throw new UserDefinedException("Missing outreceiver in c[21]"); 
+           }
+           if (outputdoctype.isBlank()) {
+               throw new UserDefinedException("Missing outputdoctype in c[15]"); 
+           }
+           if (outputfiletype.isBlank()) {
+               throw new UserDefinedException("Missing outputfiletype in c[29]"); 
+           }
+           if (x.map_ifs().isBlank()) {
+               throw new UserDefinedException("Missing IFS in map master"); 
+           }
+           if (x.map_ofs().isBlank()) {
+               throw new UserDefinedException("Missing OFS in map master"); 
+           }
+           
            setInputStructureFile(x.map_ifs());
            setOutputStructureFile(x.map_ofs());
           // bsmf.MainFrame.show(outsender + "/" + outreceiver + "/" + outputdoctype + "/" + outputfiletype + "/" + ifsfile + "/" + ofsfile);
            return;
+           
         }
         
         if (c[28].equals("X12")) {
@@ -587,7 +613,9 @@ public abstract class EDIMap implements EDIMapi {
      }
 
     public String[] packagePayLoad(String[] c) {
-     
+     // cleanup of mapped input
+     mappedInput.clear();
+      
         if (c[0].equals("MapTester")) {
            // writeOMD(c, EDData.getEDITPDefaults(c[1], "SYSSENDER", "SYSRECEIVER" ));
             writeOMD(c, null);
@@ -1438,5 +1466,12 @@ public abstract class EDIMap implements EDIMapi {
          return k;
      }
     
-     
+    public class UserDefinedException extends Exception  
+    {  
+        public UserDefinedException(String str)  
+        {  
+            // Calling constructor of parent Exception  
+            super(str);  
+        }  
+    }   
 }

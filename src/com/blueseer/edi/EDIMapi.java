@@ -34,9 +34,9 @@ import java.util.ArrayList;
  */
 public interface EDIMapi {
  
-    public String[] Mapdata(ArrayList doc, String[] c) throws IOException;
+    public String[] Mapdata(ArrayList doc, String[] c) throws IOException, EDIMap.UserDefinedException;
         
-    public void setControl(String[] c);
+    public void setControl(String[] c) throws EDIMap.UserDefinedException;
    
     public String[] packagePayLoad(String[] c);
 }

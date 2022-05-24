@@ -42,7 +42,7 @@ import java.io.IOException;
  */
 public class Generic204i extends com.blueseer.edi.EDIMap {
     
-    public String[] Mapdata(ArrayList doc, String[] c) throws IOException {
+    public String[] Mapdata(ArrayList doc, String[] c) throws IOException, UserDefinedException {
      
     
      setControl(c); // as defined by EDI.initEDIControl() and EDIMap.setControl()

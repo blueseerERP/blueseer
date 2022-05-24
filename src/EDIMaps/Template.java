@@ -38,13 +38,11 @@ import java.time.format.DateTimeFormatter;
  */
 public class Template extends com.blueseer.edi.EDIMap { 
     
-    public String[] Mapdata(ArrayList doc, String[] c) throws IOException  {
+    public String[] Mapdata(ArrayList doc, String[] c) throws IOException, UserDefinedException  {
         
     /* SECTION 1*/
     setControl(c);    //required...set the super class variables per the inbound array passed from the Processor (See EDIMap javadoc for defs)
-    
-    if (isError) { return error;}  //required...check errors for master variables
-    
+        
     mappedInput = mapInput(c, doc, ISF); //required...sets the source data structure for all subsequent map functions
     
     // setReference(getInput("BEG",3)); //optional...must be ran after mappedInput
@@ -62,8 +60,6 @@ public class Template extends com.blueseer.edi.EDIMap {
     // end mapping
       
     /* SECTION 3 */
-    mappedInput.clear();
-    
     return packagePayLoad(c); //required...sets output payload
 }
 

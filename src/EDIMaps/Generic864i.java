@@ -41,7 +41,7 @@ import static com.blueseer.utl.EDData.writeEDILog;
  */
 public class Generic864i extends com.blueseer.edi.EDIMap {
     
-    public String[] Mapdata(ArrayList doc, String[] c) {
+    public String[] Mapdata(ArrayList doc, String[] c) throws UserDefinedException {
    
     setControl(c); // as defined by EDI.initEDIControl() and EDIMap.setControl()
     setControlISA(c[13].toString().split(EDI.escapeDelimiter(ed), -1));  // EDIMap.setISA
