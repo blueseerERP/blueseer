@@ -619,7 +619,6 @@ public class MapTester extends javax.swing.JPanel  {
                   taoutput.setText(sw.toString());
                   edilog(ex);
                 } catch (ClassNotFoundException ex) {
-                    bsmf.MainFrame.show("2");
                   sw = new StringWriter();
                   ex.printStackTrace(new PrintWriter(sw));
                   taoutput.setText(sw.toString());
@@ -627,7 +626,6 @@ public class MapTester extends javax.swing.JPanel  {
                 } catch (IllegalAccessException |
                          InstantiationException | NoSuchMethodException ex
                         ) {
-                    bsmf.MainFrame.show("3");
                   sw = new StringWriter();  
                   ex.printStackTrace(new PrintWriter(sw));
                   taoutput.setText(sw.toString());
