@@ -89,10 +89,14 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.Connection;
 import java.text.DecimalFormatSymbols;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import javax.swing.BorderFactory;
@@ -165,7 +169,29 @@ public class MapTester extends javax.swing.JPanel  {
     }
     
    
-
+      public class MyClassLoader extends ClassLoader {
+    
+        private String classFileLocation;
+    
+        public MyClassLoader(String classFileLocation) {
+            this.classFileLocation = classFileLocation;
+        }
+    
+        @Override
+        protected Class<?> findClass(String name) throws ClassNotFoundException {
+            byte[] classBytes = loadClassBytesFromDisk(classFileLocation);
+            return defineClass(name, classBytes, 0, classBytes.length);
+        }
+    
+        private byte []  loadClassBytesFromDisk(String classFileLocation) {
+            try {
+                return Files.readAllBytes(Paths.get(classFileLocation));
+            }
+            catch (IOException e) {
+                throw new RuntimeException("Unable to read file from disk");
+            }
+        }
+    }
     
     
     
@@ -177,7 +203,7 @@ public class MapTester extends javax.swing.JPanel  {
         setLanguageTags(this);
     }
 
-     public void getdetail(String rvid) {
+    public void getdetail(String rvid) {
       
          modeldetail.setNumRows(0);
          double total = 0;
@@ -562,10 +588,20 @@ public class MapTester extends javax.swing.JPanel  {
         c[29] = x.map_outfiletype();
         c[30] = "1";
         StringWriter sw = null;
-
+        URLClassLoader cl = null;
         try {
-           
-                Class cls = Class.forName(x.map_id());
+                // hot reloadable class capability...new classloader created and closed in finally block
+                List<File> jars = Arrays.asList(new File("edi/maps").listFiles());
+                URL[] urls = new URL[jars.size()];
+                for (int i = 0; i < jars.size(); i++) {
+                try {
+                    urls[i] = jars.get(i).toURI().toURL();
+                } catch (Exception e) {
+                    edilog(e);
+                }
+                }
+                cl = new URLClassLoader(urls);
+                Class<?> cls = Class.forName(x.map_id(),true,cl);
                 Object obj = cls.newInstance();
                 Method method = cls.getDeclaredMethod("Mapdata", ArrayList.class, String[].class);
                 Object oc = method.invoke(obj, doc, c);
@@ -597,7 +633,16 @@ public class MapTester extends javax.swing.JPanel  {
                   taoutput.setText(sw.toString());
                   edilog(ex);
                 } finally {
-                     try {
+                    
+                    try {
+                    if (cl != null) {    
+                        cl.close();
+                    }
+                    } catch (IOException ex) {
+                    edilog(ex);
+                    }
+                    
+                    try {
                         if (sw != null) { 
                          sw.close();
                         }
