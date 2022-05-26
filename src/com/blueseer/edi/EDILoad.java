@@ -31,7 +31,6 @@ package com.blueseer.edi;
  */
 import static bsmf.MainFrame.tags;
 import static com.blueseer.edi.EDI.packageEnvelopes;
-import com.blueseer.utl.BlueSeerUtils;
 import com.blueseer.utl.EDData;
 import java.io.*;
 import java.nio.file.FileSystems;
