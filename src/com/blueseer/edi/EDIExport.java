@@ -27,48 +27,17 @@ SOFTWARE.
 package com.blueseer.edi;
 
 import com.blueseer.utl.*;
-import bsmf.MainFrame;
 import static bsmf.MainFrame.tags;
-import static com.blueseer.ctr.cusData.addCustMstrMass;
 import static com.blueseer.edi.EDI.edilog;
 import static com.blueseer.edi.EDI.packageEnvelopes;
-import com.blueseer.inv.invData;
-import static com.blueseer.inv.invData.addItemMasterMass;
-import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
-import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
-import static com.blueseer.utl.OVData.createTestDataPO;
-import static com.blueseer.utl.OVData.createTestDataSO;
-import static com.blueseer.utl.OVData.createTestDataTC;
 import java.awt.Component;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JFileChooser;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -76,9 +45,6 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JViewport;
 import javax.swing.SwingWorker;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.net.ftp.FTP;
-import org.apache.commons.net.ftp.FTPClient;
 
 /**
  *
