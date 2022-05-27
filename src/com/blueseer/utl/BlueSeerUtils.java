@@ -29,6 +29,7 @@ import static bsmf.MainFrame.bslog;
 import static bsmf.MainFrame.defaultDecimalSeparator;
 import static bsmf.MainFrame.tags;
 import com.blueseer.adm.admData;
+import static com.blueseer.edi.EDI.edilog;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -42,7 +43,10 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
+import java.io.IOException;
 import java.io.StringWriter;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.text.DateFormat;
@@ -54,9 +58,11 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Currency;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
@@ -819,6 +825,38 @@ public class BlueSeerUtils {
         //my class isn't there!
        }
     }
+    
+    public static boolean isEDIClassFile(String myfile) {
+         // lets check and see if class exists in package
+       URLClassLoader cl = null;
+       try {
+           List<File> jars = Arrays.asList(new File("edi/maps").listFiles());
+                URL[] urls = new URL[jars.size()];
+                for (int i = 0; i < jars.size(); i++) {
+                try {
+                    urls[i] = jars.get(i).toURI().toURL();
+                } catch (Exception e) {
+                    edilog(e);
+                }
+                }
+               cl = new URLClassLoader(urls);
+              Class.forName(myfile,true,cl);
+              return true;
+           
+       } catch( ClassNotFoundException e ) {
+           return false;
+        //my class isn't there!
+       } finally {
+           if (cl != null) {
+               try {
+                   cl.close();
+               } catch (IOException ex) {
+                   edilog(ex);
+               }
+           }
+       }
+    }
+    
     
     public static boolean isFile(String dir, String file) {
         Path mypath = FileSystems.getDefault().getPath(dir + "/" + file);

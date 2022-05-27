@@ -343,7 +343,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
             return false;
         }
        
-         if (! BlueSeerUtils.isClassFile(tbkey.getText())) {
+         if (! BlueSeerUtils.isEDIClassFile(tbkey.getText())) {
                     bsmf.MainFrame.show(getMessageTag(1145,tbkey.getText()));
                     tbkey.requestFocus();
                     return false;
@@ -463,6 +463,8 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         tbversion.setText(x.map_version());
         ddofs.setSelectedItem(x.map_ofs());
         ddifs.setSelectedItem(x.map_ifs());
+        ddindoctype.setSelectedItem(x.map_indoctype());
+        ddinfiletype.setSelectedItem(x.map_infiletype());
         ddoutdoctype.setSelectedItem(x.map_outdoctype());
         ddoutfiletype.setSelectedItem(x.map_outfiletype());
         setAction(x.m()); 

@@ -52,6 +52,8 @@ import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import static java.nio.file.Files.copy;
@@ -1459,8 +1461,20 @@ public class EDI {
             messages.add(new String[]{"info","Using Map: " + map + " for docID: " + c[6]});
             
                // at this point I should have a doc set (ST to SE) and a map ...now call map to operate on doc 
+                URLClassLoader cl = null;
                 try {
-                Class cls = Class.forName(map);
+                    List<File> jars = Arrays.asList(new File("edi/maps").listFiles());
+                    URL[] urls = new URL[jars.size()];
+                    for (int i = 0; i < jars.size(); i++) {
+                    try {
+                        urls[i] = jars.get(i).toURI().toURL();
+                    } catch (Exception e) {
+                        edilog(e);
+                    }
+                    }
+                cl = new URLClassLoader(urls);
+                
+                    Class cls = Class.forName(map,true,cl);  
                 Object obj = cls.newInstance();
                 Method method = cls.getDeclaredMethod("Mapdata", ArrayList.class, String[].class);
                 Object oc = method.invoke(obj, doc, c);
@@ -1485,6 +1499,14 @@ public class EDI {
                     messages.add(new String[]{"error", "IllegalAccess|Instantiation|NoSuchMethod " + map + "/" + c[0] + " / " + c[1]});        
                    }
                     edilog(ex);
+                } finally {
+                        if (cl != null) {
+                           try {
+                               cl.close();
+                           } catch (IOException ex) {
+                               edilog(ex);
+                           }
+                        }
                 }
 
            }
@@ -1580,8 +1602,20 @@ public class EDI {
                } else {
                    
                    // at this point I should have a doc set (ST to SE) and a map ...now call map to operate on doc 
+                URLClassLoader cl = null;
+                try {
+                    List<File> jars = Arrays.asList(new File("edi/maps").listFiles());
+                    URL[] urls = new URL[jars.size()];
+                    for (int i = 0; i < jars.size(); i++) {
                     try {
-                    Class cls = Class.forName(map);
+                        urls[i] = jars.get(i).toURI().toURL();
+                    } catch (Exception e) {
+                        edilog(e);
+                    }
+                    }
+                cl = new URLClassLoader(urls);
+                
+                    Class cls = Class.forName(map,true,cl);  
                     Object obj = cls.newInstance();
                     Method method = cls.getDeclaredMethod("Mapdata", ArrayList.class, String[].class);
                     Object oc = method.invoke(obj, doc, c);
@@ -1605,6 +1639,14 @@ public class EDI {
                         EDData.writeEDILog(c, "error", "IllegalAccess|Instantiation|NoSuchMethod " + map + "/" + c[0] + " / " + c[1]);
                         }
                         edilog(ex);
+                    } finally {
+                        if (cl != null) {
+                           try {
+                               cl.close();
+                           } catch (IOException ex) {
+                               edilog(ex);
+                           }
+                        }
                     }
                    
                }
