@@ -1004,7 +1004,7 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
                 }
                
               
-                if (! BlueSeerUtils.isClassFile(ddmap.getSelectedItem().toString()) && ! dddoc.getSelectedItem().toString().equals("997")) {
+                if (! BlueSeerUtils.isEDIClassFile(ddmap.getSelectedItem().toString()) && ! dddoc.getSelectedItem().toString().equals("997")) {
                     proceed = false;
                     bsmf.MainFrame.show(getMessageTag(1145,ddmap.getSelectedItem().toString()));
                     ddmap.requestFocus();
