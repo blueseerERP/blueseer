@@ -53,8 +53,25 @@ public class Template extends com.blueseer.edi.EDIMap {
     
     // begin mapping  
     
-    
-    
+                // hint assignment
+                /*
+                mapSegment("BIG", "e01", "00");
+                mapSegment("BIG", "e02", "123456");
+                mapSegment("BIG", "e03", getInput("BEG",5));
+                mapSegment("BIG", "e04", getInput("BEG",3));
+                commitSegment("BIG");
+                */
+                
+                // hint looping
+                /*
+                int po1count = getLoopCount("PO1");
+                for (int i = 1; i <= po1count; i++) {
+                        mapSegment("IT1", "e01", "00");
+                        mapSegment("IT1", "e06", "BP");
+                        mapSegment("IT1", "e07", getInput("PO1", 7, i));
+                        commitSegment("IT1");
+                }
+                */
     
      
     // end mapping
