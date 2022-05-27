@@ -780,8 +780,8 @@ public abstract class EDIMap implements EDIMapi {
         c[38] = m[1];
     }
     
-    public static void mapSegment(String segment, String x, String y) {
-    	 String[] z = new String[] {x,y};
+    public static void mapSegment(String segment, String element, String value) {
+    	 String[] z = new String[] {element,value};
     	 // get old arraylist and add to it
     	 ArrayList<String[]> old = new ArrayList<String[]>();
     	 if (HASH.get(segment) != null) {
@@ -813,12 +813,12 @@ public abstract class EDIMap implements EDIMapi {
          HASH.clear();
      }
         
-    public void readOSF(String adf)  {
+    public void readOSF(String osf)  {
         
 	        Map<String, ArrayList<String[]>> hm = new LinkedHashMap<String, ArrayList<String[]>>();
 	        List<String[]> list = new ArrayList<String[]>();
 	        Set<String> set = new LinkedHashSet<String>();
-	        File cf = new File(EDData.getEDIStructureDir() + "/" + adf);
+	        File cf = new File(EDData.getEDIStructureDir() + "/" + osf);
 	    	BufferedReader reader; 
         try {
             reader = new BufferedReader(new FileReader(cf));
@@ -850,16 +850,16 @@ public abstract class EDIMap implements EDIMapi {
 		OSF = hm;
                 } catch (FileNotFoundException ex) {
              edilog(ex);
-            setError("outbound structure file not found: " + EDData.getEDIStructureDir() + "/" + adf);
+            setError("outbound structure file not found: " + EDData.getEDIStructureDir() + "/" + osf);
         } catch (IOException ex) {
              edilog(ex);
             setError("outbound structure file IOException");
         }
 }
 
-    public static void readISF(String ifile) {
+    public static void readISF(String isf) {
         ArrayList<String[]> list = new ArrayList<String[]>();
-        File cf = new File(EDData.getEDIStructureDir() + "/" + ifile);
+        File cf = new File(EDData.getEDIStructureDir() + "/" + isf);
     	BufferedReader reader; 
         try {
             reader = new BufferedReader(new FileReader(cf));
@@ -909,13 +909,13 @@ public abstract class EDIMap implements EDIMapi {
         }
 	}
      
-    public static Map<String, HashMap<String, String>> readIMD(String adf, ArrayList<String> doc) throws IOException {
+    public static Map<String, HashMap<String, String>> readIMD(String isf, ArrayList<String> doc) throws IOException {
 	        Map<String, HashMap<String, String>> hm = new LinkedHashMap<String, HashMap<String, String>>();
 	        HashMap<String, String> data = new LinkedHashMap<String, String>();
 	        
                 List<String[]> list = new ArrayList<String[]>();
 	        Set<String> set = new LinkedHashSet<String>();
-	        File cf = new File(adf);
+	        File cf = new File(isf);
 	    	BufferedReader reader =  new BufferedReader(new FileReader(cf)); 
 			String line;
 			while ((line = reader.readLine()) != null) {
