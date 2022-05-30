@@ -36,6 +36,7 @@ import static com.blueseer.adm.admData.updateSiteMstr;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.checkLength;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -55,6 +56,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -320,105 +322,117 @@ public class SiteMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
     
     public boolean validateInput(dbaction x) {
-        boolean b = true;
         
-                if (tbkey.getText().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1024));
-                    tbkey.requestFocus();
-                    return b;
-                }
+        Map<String,Integer> f = OVData.getTableInfo("site_mstr");
+        int fc;
+
+        fc = checkLength(f,"site_site");
+        if (tbkey.getText().length() > fc || tbkey.getText().isEmpty()) {
+            bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+            tbkey.requestFocus();
+            return false;
+        }  
         
-                if (tbdesc.getText().isEmpty() && ! x.toString().equals("delete")) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1024));
-                    tbdesc.requestFocus();
-                    return b;
-                }
-                if (tblogo.getText().isEmpty() && ! x.toString().equals("delete")) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1024));
-                    tblogo.requestFocus();
-                    return b;
-                }
-                if (! tblogo.getText().isEmpty() && ! x.toString().equals("delete") && ! ifImageExists(tblogo.getText())) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1145, tblogo.getText()));
-                    tblogo.requestFocus();
-                    return b;
-                }
-                if (tb_iv_generic.getText().isEmpty() && ! x.toString().equals("delete")) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1024));
-                    tb_iv_generic.requestFocus();
-                    return b;
-                }
-                if (! tb_iv_generic.getText().isEmpty() && ! x.toString().equals("delete") && ! ifFileExists(tb_iv_generic.getText())) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1145, tb_iv_generic.getText()));
-                    tb_iv_generic.requestFocus();
-                    return b;
-                }
-                if (tb_sh_generic.getText().isEmpty() && ! x.toString().equals("delete")) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1024));
-                    tb_sh_generic.requestFocus();
-                    return b;
-                }
-                if (! tb_sh_generic.getText().isEmpty() && ! x.toString().equals("delete") && ! ifFileExists(tb_sh_generic.getText())) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1145, tb_sh_generic.getText()));
-                    tb_sh_generic.requestFocus();
-                    return b;
-                }
+        fc = checkLength(f,"site_desc");
+        if (tbdesc.getText().length() > fc || tbdesc.getText().isEmpty()) {
+            bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+            tbdesc.requestFocus();
+            return false;
+        } 
+        
+        fc = checkLength(f,"site_line1");
+        if (tbline1.getText().length() > fc) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tbline1.requestFocus();
+            return false;
+        }
+        fc = checkLength(f,"site_logo");
+        if (tblogo.getText().length() > fc || tblogo.getText().isEmpty()) {
+            bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+            tblogo.requestFocus();
+            return false;
+        }
+        
+        if (! tblogo.getText().isEmpty() && ! x.toString().equals("delete") && ! ifImageExists(tblogo.getText())) {
+            bsmf.MainFrame.show(getMessageTag(1145, tblogo.getText()));
+            tblogo.requestFocus();
+            return false;
+        }
+        
+        fc = checkLength(f,"site_iv_jasper");
+        if (tb_iv_generic.getText().length() > fc || tb_iv_generic.getText().isEmpty()) {
+            bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+            tb_iv_generic.requestFocus();
+            return false;
+        }
+        
+        if (! tb_iv_generic.getText().isEmpty() && ! x.toString().equals("delete") && ! ifFileExists(tb_iv_generic.getText())) {
+            bsmf.MainFrame.show(getMessageTag(1145, tb_iv_generic.getText()));
+            tb_iv_generic.requestFocus();
+            return false;
+        }
+        
+        fc = checkLength(f,"site_sh_jasper");
+        if (tb_sh_generic.getText().length() > fc || tb_sh_generic.getText().isEmpty()) {
+            bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+            tb_sh_generic.requestFocus();
+            return false;
+        }
+              
+        if (! tb_sh_generic.getText().isEmpty() && ! x.toString().equals("delete") && ! ifFileExists(tb_sh_generic.getText())) {
+            bsmf.MainFrame.show(getMessageTag(1145, tb_sh_generic.getText()));
+            tb_sh_generic.requestFocus();
+            return false;
+        }
+        
+        fc = checkLength(f,"site_po_jasper");
+        if (tb_po_generic.getText().length() > fc || tb_po_generic.getText().isEmpty()) {
+            bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+            tb_po_generic.requestFocus();
+            return false;
+        }
+             
+        if (! tb_po_generic.getText().isEmpty() && ! x.toString().equals("delete") && ! ifFileExists(tb_po_generic.getText())) {
+            bsmf.MainFrame.show(getMessageTag(1145, tb_po_generic.getText()));
+            tb_po_generic.requestFocus();
+            return false;
+        }
+        
+        fc = checkLength(f,"site_pos_jasper");
+        if (tb_pos_generic.getText().length() > fc || tb_pos_generic.getText().isEmpty()) {
+            bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+            tb_pos_generic.requestFocus();
+            return false;
+        }
+          
+        if (! tb_pos_generic.getText().isEmpty() && ! x.toString().equals("delete") && ! ifFileExists(tb_pos_generic.getText())) {
+            bsmf.MainFrame.show(getMessageTag(1145, tb_pos_generic.getText()));
+            tb_pos_generic.requestFocus();
+            return false;
+        }
+        
+        fc = checkLength(f,"site_or_jasper");
+        if (tb_or_generic.getText().length() > fc || tb_or_generic.getText().isEmpty()) {
+            bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+            tb_or_generic.requestFocus();
+            return false;
+        }
+               
+        if (! tb_or_generic.getText().isEmpty() && ! x.toString().equals("delete") && ! ifFileExists(tb_or_generic.getText())) {
+            bsmf.MainFrame.show(getMessageTag(1145, tb_or_generic.getText()));
+            tb_or_generic.requestFocus();
+            return false;
+        }
                 
-                if (tb_po_generic.getText().isEmpty() && ! x.toString().equals("delete")) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1024));
-                    tb_po_generic.requestFocus();
-                    return b;
-                }
-                if (! tb_po_generic.getText().isEmpty() && ! x.toString().equals("delete") && ! ifFileExists(tb_po_generic.getText())) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1145, tb_po_generic.getText()));
-                    tb_po_generic.requestFocus();
-                    return b;
-                }
-                if (tb_pos_generic.getText().isEmpty() && ! x.toString().equals("delete")) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1024));
-                    tb_pos_generic.requestFocus();
-                    return b;
-                }
-                if (! tb_pos_generic.getText().isEmpty() && ! x.toString().equals("delete") && ! ifFileExists(tb_pos_generic.getText())) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1145, tb_pos_generic.getText()));
-                    tb_pos_generic.requestFocus();
-                    return b;
-                }
-                if (tb_or_generic.getText().isEmpty() && ! x.toString().equals("delete")) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1024));
-                    tb_or_generic.requestFocus();
-                    return b;
-                }
-                if (! tb_or_generic.getText().isEmpty() && ! x.toString().equals("delete") && ! ifFileExists(tb_or_generic.getText())) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1145, tb_or_generic.getText()));
-                    tb_or_generic.requestFocus();
-                    return b;
-                }
                 
-                
-                if (tbkey.getText().equals(OVData.getDefaultSite()) && x.toString().equals("delete") ) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1171));
-                    tbkey.requestFocus();
-                    return b;
-                }
+        if (tbkey.getText().equals(OVData.getDefaultSite()) && x.toString().equals("delete") ) {
+            bsmf.MainFrame.show(getMessageTag(1171));
+            tbkey.requestFocus();
+            return false;
+        }
                 
                
-        return b;
+        return true;
     }
     
     public void initvars(String[] arg) {
