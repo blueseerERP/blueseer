@@ -37,7 +37,6 @@ import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
-import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
 import static com.blueseer.utl.BlueSeerUtils.luTable;
@@ -48,13 +47,8 @@ import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.OVData;
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -66,13 +60,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DateFormat;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Locale;
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -83,7 +73,6 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
 
 /**
  *
@@ -214,16 +203,15 @@ public class InventoryMaint extends javax.swing.JPanel {
         
         ddtype.requestFocus();
         
-        ArrayList<String> wh = new ArrayList();
+        ArrayList<String> wh = OVData.getWareHouseList(); 
         ddwh.removeAllItems();
-        wh = OVData.getWareHouseList(); 
         for (String code : wh) {
             ddwh.addItem(code);
         }
         ddwh.insertItemAt("", 0);
         
        
-         ArrayList<String> mylist = new ArrayList();
+         ArrayList<String> mylist;
         ddloc.removeAllItems();
         if (ddwh.getSelectedItem() != null) {        
          mylist = OVData.getLocationListByWarehouse(ddwh.getSelectedItem().toString());
@@ -235,23 +223,20 @@ public class InventoryMaint extends javax.swing.JPanel {
         
         
         
-        ArrayList<String> sites = new ArrayList();
+        ArrayList<String> sites = OVData.getSiteList();
         ddsite.removeAllItems();
-        sites = OVData.getSiteList();
         for (String code : sites) {
             ddsite.addItem(code);
         }
         
-        ArrayList<String> accts = new ArrayList();
+        ArrayList<String> accts = fglData.getGLAcctList();;
         ddacct.removeAllItems();
-        accts = fglData.getGLAcctList();
         for (String code : accts) {
             ddacct.addItem(code);
         }
         
-        ArrayList<String> ccs = new ArrayList();
+        ArrayList<String> ccs = fglData.getGLCCList();
         ddcc.removeAllItems();
-        ccs = fglData.getGLCCList();
         for (String code : ccs) {
             ddcc.addItem(code);
         }
