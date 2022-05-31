@@ -63,6 +63,7 @@ import static com.blueseer.hrm.hrmData.updateEmployeeMstr;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.checkLength;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
@@ -86,6 +87,7 @@ import java.sql.Connection;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -513,53 +515,57 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeerT  {
     }
         
     public boolean validateInput(dbaction x) {
-        boolean b = true;
-                if (ddsite.getSelectedItem() == null || ddsite.getSelectedItem().toString().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1026));
-                    ddsite.requestFocus();
-                    return b;
-                }
+        
+         Map<String,Integer> f = OVData.getTableInfo("emp_mstr");
+        int fc;
+
+        fc = checkLength(f,"emp_nbr");
+        if (tbkey.getText().length() > fc || tbkey.getText().isEmpty()) {
+            bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+            tbkey.requestFocus();
+            return false;
+        }  
+
+        
+        if (ddsite.getSelectedItem() == null || ddsite.getSelectedItem().toString().isEmpty()) {
+            bsmf.MainFrame.show(getMessageTag(1026));
+            ddsite.requestFocus();
+            return false;
+        }
                
-                if (dddept.getSelectedItem() == null || dddept.getSelectedItem().toString().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1026));
-                    dddept.requestFocus();
-                    return b;
-                }
+        if (dddept.getSelectedItem() == null || dddept.getSelectedItem().toString().isEmpty()) {
+            bsmf.MainFrame.show(getMessageTag(1026));
+            dddept.requestFocus();
+            return false;
+        }
                 
-                if (tbkey.getText().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1024));
-                    tbkey.requestFocus();
-                    return b;
-                }
-                
-                if (lastname.getText().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1024));
-                    lastname.requestFocus();
-                    return b;
-                }
-                
-                if (firstname.getText().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1024));
-                    firstname.requestFocus();
-                    return b;
-                }
-                
-                if ( tbprofile.getText().isEmpty() || ! OVData.isValidProfile(tbprofile.getText())) {
-                          b = false;
-                          bsmf.MainFrame.show(getMessageTag(1026));
-                          tbprofile.requestFocus();
-                          return b;
-                      }
-                
-                
+        fc = checkLength(f,"emp_lname");
+        if (lastname.getText().length() > fc || lastname.getText().isEmpty()) {
+            bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+            lastname.requestFocus();
+            return false;
+        }   
+        
+        fc = checkLength(f,"emp_fname");
+        if (firstname.getText().length() > fc || firstname.getText().isEmpty()) {
+            bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+            firstname.requestFocus();
+            return false;
+        }
                 
                
-        return b;
+             
+                
+        if ( tbprofile.getText().isEmpty() || ! OVData.isValidProfile(tbprofile.getText())) {
+                  bsmf.MainFrame.show(getMessageTag(1026));
+                  tbprofile.requestFocus();
+                  return false;
+        }
+                
+                
+                
+               
+        return true;
     }
     
     public void initvars(String[] arg) {
