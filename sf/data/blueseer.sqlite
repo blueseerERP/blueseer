@@ -2564,9 +2564,9 @@ CREATE TABLE "wc_mstr" (
   "wc_site" varchar(10) COLLATE NOCASE DEFAULT '',
   "wc_cc" varchar(10) COLLATE NOCASE DEFAULT '',
   "wc_run_rate" decimal(5,2) COLLATE NOCASE DEFAULT '',
-  "wc_run_crew" decimal(5,2) COLLATE NOCASE DEFAULT '',
+  "wc_run_crew" decimal(5,3) COLLATE NOCASE DEFAULT '',
   "wc_setup_rate" decimal(5,2) COLLATE NOCASE DEFAULT '',
-  "wc_setup" decimal(5,2) COLLATE NOCASE DEFAULT '',
+  "wc_setup" decimal(5,3) COLLATE NOCASE DEFAULT '',
   "wc_bdn_rate" decimal(5,2) COLLATE NOCASE DEFAULT '',
   "wc_remarks" varchar(500) COLLATE NOCASE DEFAULT ''
 );

@@ -2064,9 +2064,9 @@ CREATE TABLE IF NOT EXISTS `wc_mstr` (
   `wc_site` varchar(10)  NOT NULL DEFAULT '',
   `wc_cc` varchar(10)  NOT NULL DEFAULT '',
   `wc_run_rate` decimal(14,2)  NOT NULL DEFAULT '0',
-  `wc_run_crew` decimal(14,2)  NOT NULL DEFAULT '0',
+  `wc_run_crew` decimal(14,3)  NOT NULL DEFAULT '0',
   `wc_setup_rate` decimal(14,2)  NOT NULL DEFAULT '0',
-  `wc_setup` decimal(14,2)  NOT NULL DEFAULT '0',
+  `wc_setup` decimal(14,3)  NOT NULL DEFAULT '0',
   `wc_bdn_rate` decimal(14,2)  NOT NULL DEFAULT '0',
   `wc_remarks` varchar(500)  NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
