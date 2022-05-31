@@ -843,7 +843,7 @@ public class WorkCenterMaint extends javax.swing.JPanel implements IBlueSeerT {
     }//GEN-LAST:event_tbbdnrateFocusLost
 
     private void tbruncrewsizeFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbruncrewsizeFocusLost
-        String x = BlueSeerUtils.bsformat("", tbruncrewsize.getText(), "3"); 
+        String x = BlueSeerUtils.bsformat("", tbruncrewsize.getText(), "3"); // updated to 3 decimal places 20220531 
         if (x.equals("error")) {
             tbruncrewsize.setText("");
             tbruncrewsize.setBackground(Color.yellow);
@@ -859,7 +859,7 @@ public class WorkCenterMaint extends javax.swing.JPanel implements IBlueSeerT {
     }//GEN-LAST:event_tbruncrewsizeFocusLost
 
     private void tbsetupcrewsizeFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbsetupcrewsizeFocusLost
-        String x = BlueSeerUtils.bsformat("", tbsetupcrewsize.getText(), "3"); 
+        String x = BlueSeerUtils.bsformat("", tbsetupcrewsize.getText(), "3"); // updated to 3 decimal places 20220531
         if (x.equals("error")) {
             tbsetupcrewsize.setText("");
             tbsetupcrewsize.setBackground(Color.yellow);

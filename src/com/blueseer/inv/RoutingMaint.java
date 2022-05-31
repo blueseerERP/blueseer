@@ -915,7 +915,7 @@ public class RoutingMaint extends javax.swing.JPanel implements IBlueSeerT {
     }//GEN-LAST:event_btnewActionPerformed
 
     private void tbsetuphoursFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbsetuphoursFocusLost
-          String x = BlueSeerUtils.bsformat("", tbsetuphours.getText(), "2");
+          String x = BlueSeerUtils.bsformat("", tbsetuphours.getText(), "5"); // updated to 5 decimal places 20220531
         if (x.equals("error")) {
             tbsetuphours.setText("");
             tbsetuphours.setBackground(Color.yellow);
