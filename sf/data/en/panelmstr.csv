@@ -49,6 +49,7 @@ com.blueseer.edi.EDIExport,,1
 com.blueseer.edi.MapMaint,,1
 com.blueseer.edi.StructMaint,,1
 com.blueseer.edi.MapTester,,1
+com.blueseer.edi.APIMaint,,1
 com.blueseer.eng.ECNBrowse,,1
 com.blueseer.eng.ECNMaint,,1
 com.blueseer.eng.OVDevBrowse,,1

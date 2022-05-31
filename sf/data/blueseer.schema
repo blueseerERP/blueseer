@@ -58,7 +58,8 @@ CREATE TABLE IF NOT EXISTS `api_det` (
   `apid_path` varchar(100)  NOT NULL DEFAULT '',
   `apid_key` varchar(100)  NOT NULL DEFAULT '',
   `apid_value` varchar(100)  NOT NULL DEFAULT '',
-  `apid_destination` varchar(100)  NOT NULL DEFAULT ''
+  `apid_destination` varchar(100)  NOT NULL DEFAULT '',
+  `apid_enabled` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `map_mstr` (
   `map_id` varchar(80)  NOT NULL DEFAULT '',
@@ -525,6 +526,18 @@ CREATE TABLE IF NOT EXISTS `edi_file` (
   `edf_filetype` varchar(15) NOT NULL  DEFAULT '',
   `edf_doctype` varchar(15) NOT NULL  DEFAULT '',
   `edf_status` varchar(15) NOT NULL  DEFAULT '')
+ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `api_log` (
+  `apil_logid` int(12) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  `apil_comkey` int(12) NOT NULL DEFAULT '0',
+  `apil_idxnbr` varchar(9) NOT NULL  DEFAULT '',
+  `apil_id` varchar(30) NOT NULL  DEFAULT '',
+  `apil_method` varchar(50) NOT NULL  DEFAULT '',
+  `apil_status` varchar(10) NOT NULL  DEFAULT '',
+  `apil_error` varchar(200) NOT NULL  DEFAULT '',
+  `apil_ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `apil_file` varchar(100) NOT NULL  DEFAULT '',
+  `apil_mdn` varchar(100) NOT NULL  DEFAULT '')
 ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `edi_log` (
   `elg_id` int(12) NOT NULL PRIMARY KEY AUTO_INCREMENT,
