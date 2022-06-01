@@ -47,6 +47,7 @@ import static com.blueseer.edi.ediData.deleteAPIMstr;
 import static com.blueseer.edi.ediData.getAPIDet;
 import static com.blueseer.edi.ediData.getAPIMstr;
 import static com.blueseer.edi.ediData.getAPISequences;
+import static com.blueseer.edi.ediData.isAPIMethodUnique;
 import static com.blueseer.edi.ediData.updateAPITransaction;
 import static com.blueseer.eng.engData.addTaskTransaction;
 import static com.blueseer.eng.engData.deleteTaskMstr;
@@ -647,6 +648,12 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
             }
         });
 
+        tbmethod.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbmethodFocusLost(evt);
+            }
+        });
+
         btaddmethod.setText("Add");
         btaddmethod.setName("btadd"); // NOI18N
         btaddmethod.addActionListener(new java.awt.event.ActionListener() {
@@ -958,6 +965,20 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
     }//GEN-LAST:event_btnewActionPerformed
 
     private void btaddmethodActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddmethodActionPerformed
+            
+        if (! isAPIMethodUnique(tbkey.getText(), tbmethod.getText())) {
+           bsmf.MainFrame.show("Method name must be unique for this API...already committed to DB");
+           tbmethod.requestFocus();
+           return;
+        }
+        for (int j = 0; j < tabledetail.getRowCount(); j++) {
+             if (tabledetail.getValueAt(j, 0).toString().toLowerCase().equals(tbmethod.getText().toLowerCase())) {
+                 bsmf.MainFrame.show("Method name must be unique for this API...already in table");
+                 tbmethod.requestFocus();
+                 return;
+             }
+        }
+        
             detailmodel.addRow(new Object[]{tbmethod.getText(), 
             ddverb.getSelectedItem().toString(),
             ddtype.getSelectedItem().toString(),
@@ -1006,6 +1027,13 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
     private void btlookupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btlookupActionPerformed
         lookUpFrame();
     }//GEN-LAST:event_btlookupActionPerformed
+
+    private void tbmethodFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbmethodFocusLost
+       if (! isAPIMethodUnique(tbkey.getText(), tbmethod.getText())) {
+           bsmf.MainFrame.show("Method name must be unique for this API");
+           tbmethod.requestFocus();
+       }
+    }//GEN-LAST:event_tbmethodFocusLost
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

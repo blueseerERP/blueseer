@@ -260,6 +260,9 @@
               </Events>
             </Component>
             <Component class="javax.swing.JTextField" name="tbmethod">
+              <Events>
+                <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="tbmethodFocusLost"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="btaddmethod">
               <Properties>

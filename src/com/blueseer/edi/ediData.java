@@ -931,6 +931,23 @@ public class ediData {
         
     }
     
+    public static boolean isAPIMethodUnique(String api, String method) {
+        boolean x = false;
+         String sql = "select * from api_det where apid_id = ? and apid_method = ? ;";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, api);
+        ps.setString(2, method);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                x = true;
+                } 
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s); 
+        }
+        return x;
+    }
     
     public record edi_xref(String[] m, String exr_tpid, String exr_tpaddr, String exr_ovaddr,
         String exr_gsid, String exr_type ) {
