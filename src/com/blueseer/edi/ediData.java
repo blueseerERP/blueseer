@@ -846,7 +846,7 @@ public class ediData {
         return r;
     }
      
-    public static ArrayList<String> getAPISequences(String nbr) {
+    public static ArrayList<String> getAPIMethodsList(String nbr) {
         ArrayList<String> lines = new ArrayList<String>();
         try{
         Class.forName(driver).newInstance();
@@ -855,10 +855,10 @@ public class ediData {
             Statement st = con.createStatement();
             ResultSet res = null;
 
-           res = st.executeQuery("SELECT apid_seq from api_det " +
+           res = st.executeQuery("SELECT apid_method from api_det " +
                    " where apid_id = " + "'" + nbr + "'" + ";");
                         while (res.next()) {
-                          lines.add(res.getString("apid_seq"));
+                          lines.add(res.getString("apid_method"));
                         }
        }
         catch (SQLException s){
