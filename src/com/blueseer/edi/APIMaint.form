@@ -116,24 +116,33 @@
                           <Component id="jScrollPane1" alignment="0" max="32767" attributes="0"/>
                           <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" attributes="0">
+                                  <Group type="102" alignment="0" attributes="0">
                                       <Component id="ddverb" min="-2" pref="89" max="-2" attributes="0"/>
                                       <EmptySpace min="-2" pref="53" max="-2" attributes="0"/>
                                       <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="tbsequence" min="-2" pref="45" max="-2" attributes="0"/>
-                                      <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                          <Component id="tbdestdir" alignment="0" pref="223" max="32767" attributes="0"/>
+                                          <Component id="tbsourcedir" alignment="0" max="32767" attributes="0"/>
+                                          <Component id="tbkvpair" alignment="0" max="32767" attributes="0"/>
+                                      </Group>
+                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                      <Component id="jLabel15" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="102" attributes="0">
                                       <Component id="cbenabled" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
-                                      <Component id="btaddtask" min="-2" max="-2" attributes="0"/>
+                                      <Component id="btaddmethod" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="btdeletetask" min="-2" max="-2" attributes="0"/>
+                                      <Component id="btdeletemethod" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
-                                      <Component id="tbdestdir" alignment="0" pref="223" max="32767" attributes="0"/>
-                                      <Component id="tbsourcedir" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="tbkvpair" alignment="0" max="32767" attributes="0"/>
-                                  </Group>
+                                  <Component id="ddtype" min="-2" pref="93" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
@@ -154,8 +163,8 @@
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="ddverb" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="cbenabled" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="btaddtask" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="btdeletetask" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btaddmethod" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btdeletemethod" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="tbsequence" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -164,6 +173,8 @@
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="tbkvpair" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel12" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="ddtype" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel15" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
@@ -217,7 +228,7 @@
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
               <SubComponents>
-                <Component class="javax.swing.JTable" name="tabletasks">
+                <Component class="javax.swing.JTable" name="tabledetail">
                   <Properties>
                     <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                       <Table columnCount="4" rowCount="4">
@@ -239,24 +250,24 @@
                 <Property name="name" type="java.lang.String" value="cbenabled" noResource="true"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JButton" name="btdeletetask">
+            <Component class="javax.swing.JButton" name="btdeletemethod">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Delete"/>
                 <Property name="name" type="java.lang.String" value="btdelete" noResource="true"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btdeletetaskActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btdeletemethodActionPerformed"/>
               </Events>
             </Component>
             <Component class="javax.swing.JTextField" name="tbmethod">
             </Component>
-            <Component class="javax.swing.JButton" name="btaddtask">
+            <Component class="javax.swing.JButton" name="btaddmethod">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Add"/>
                 <Property name="name" type="java.lang.String" value="btadd" noResource="true"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btaddtaskActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btaddmethodActionPerformed"/>
               </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel4">
@@ -284,6 +295,25 @@
             <Component class="javax.swing.JLabel" name="jLabel14">
               <Properties>
                 <Property name="text" type="java.lang.String" value="DestDir"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="ddtype">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="3">
+                    <StringItem index="0" value="json"/>
+                    <StringItem index="1" value="xml"/>
+                    <StringItem index="2" value="text"/>
+                  </StringArray>
+                </Property>
+              </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+              </AuxValues>
+            </Component>
+            <Component class="javax.swing.JLabel" name="jLabel15">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Type"/>
               </Properties>
             </Component>
           </SubComponents>

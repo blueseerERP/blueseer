@@ -40,6 +40,14 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.edi.ediData.addAPITransaction;
+import com.blueseer.edi.ediData.api_det;
+import com.blueseer.edi.ediData.api_mstr;
+import static com.blueseer.edi.ediData.deleteAPIMstr;
+import static com.blueseer.edi.ediData.getAPIDet;
+import static com.blueseer.edi.ediData.getAPIMstr;
+import static com.blueseer.edi.ediData.getAPISequences;
+import static com.blueseer.edi.ediData.updateAPITransaction;
 import static com.blueseer.eng.engData.addTaskTransaction;
 import static com.blueseer.eng.engData.deleteTaskMstr;
 import static com.blueseer.eng.engData.getTaskDet;
@@ -100,12 +108,18 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                 boolean isLoad = false;
     
     // global datatablemodel declarations   
-     javax.swing.table.DefaultTableModel taskmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+     javax.swing.table.DefaultTableModel detailmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
-                getGlobalColumnTag("owner"), 
-                getGlobalColumnTag("description"),                 
-                getGlobalColumnTag("enabled"),
-                getGlobalColumnTag("sequence") 
+                getGlobalColumnTag("method"), 
+                getGlobalColumnTag("verb"),                 
+                getGlobalColumnTag("type"),
+                getGlobalColumnTag("sequence"),
+                getGlobalColumnTag("path"),
+                getGlobalColumnTag("value"),
+                getGlobalColumnTag("source"),
+                getGlobalColumnTag("destination"),
+                getGlobalColumnTag("enabled")
+                
             });
     
   
@@ -293,14 +307,22 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
     public void setComponentDefaultValues() {
        isLoad = true;
         tbkey.setText("");
-        taskmodel.setRowCount(0);
-           tabletasks.setModel(taskmodel);
+        detailmodel.setRowCount(0);
+           tabledetail.setModel(detailmodel);
            
           
            tbkey.setText("");
            tbdesc.setText("");
+           tburl.setText("");
+           tbport.setText("");
+           tbuser.setText("");
+           tbpass.setText("");
+           tbpath.setText("");
            tbsequence.setText("");
            tbmethod.setText("");
+           tbkvpair.setText("");
+           tbsourcedir.setText("");
+           tbdestdir.setText("");
            cbenabled.setSelected(false);
            
         
@@ -374,7 +396,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
     
     public String[] addRecord(String[] x) {
-    String[] m = addTaskTransaction(createDetRecord(), createRecord());
+    String[] m = addAPITransaction(createDetRecord(), createRecord());
          return m;
      }
      
@@ -385,11 +407,11 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         ArrayList<String> lines = new ArrayList<String>();
         ArrayList<String> badlines = new ArrayList<String>();
         boolean goodLine = false;
-        lines = getTaskSequences(tbkey.getText());
+        lines = getAPISequences(tbkey.getText());
        for (String line : lines) {
           goodLine = false;
-          for (int j = 0; j < tabletasks.getRowCount(); j++) {
-             if (tabletasks.getValueAt(j, 3).toString().equals(line)) {
+          for (int j = 0; j < tabledetail.getRowCount(); j++) {
+             if (tabledetail.getValueAt(j, 3).toString().equals(line)) {
                  goodLine = true;
              }
           }
@@ -397,7 +419,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
               badlines.add(line);
           }
         }
-        m = updateTaskTransaction(tbkey.getText(), badlines, createDetRecord(), createRecord());
+        m = updateAPITransaction(tbkey.getText(), badlines, createDetRecord(), createRecord());
      return m;
      }
      
@@ -405,7 +427,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
      String[] m = new String[2];
         boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
         if (proceed) {
-         m = deleteTaskMstr(createRecord()); 
+         m = deleteAPIMstr(createRecord()); 
          initvars(null);
         } else {
            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
@@ -415,41 +437,61 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
       
     public String[] getRecord(String[] key) {
        
-        task_mstr x = getTaskMstr(key); 
-        tbkey.setText(x.task_id());
-        tbdesc.setText(x.task_desc());
-       
+        api_mstr x = getAPIMstr(key); 
+        tbkey.setText(x.api_id());
+        tbdesc.setText(x.api_desc());
+        tburl.setText(x.api_url());
+        tbport.setText(x.api_port());
+        tbpath.setText(x.api_path());
+        tbuser.setText(x.api_user());
+        tbpass.setText(bsmf.MainFrame.PassWord("1", x.api_pass().toCharArray()));
+        tbapikey.setText(x.api_key());
        
         // now detail
-        taskmodel.setRowCount(0);
-        ArrayList<task_det> z = getTaskDet(key[0]);
-        for (task_det d : z) {
-            taskmodel.addRow(new Object[]{d.taskd_owner(), d.taskd_desc(), d.taskd_enabled(),
-                 d.taskd_sequence()});
+        detailmodel.setRowCount(0);
+        ArrayList<api_det> z = getAPIDet(key[0]);
+        for (api_det d : z) {
+            detailmodel.addRow(new Object[]{d.apid_method(), d.apid_verb(), d.apid_type(),
+                 d.apid_seq(), d.apid_path(), d.apid_value(), d.apid_source(), d.apid_destination(), d.apid_enabled()});
         }
-       // getTasks(ddtask.getSelectedItem().toString());
+      
         setAction(x.m());
         return x.m();
        
     }
     
-     public task_mstr createRecord() { 
-        task_mstr x = new task_mstr(null, 
+     public api_mstr createRecord() { 
+         String passwd = bsmf.MainFrame.PassWord("0", tbpass.getPassword());
+        api_mstr x = new api_mstr(null, 
                 tbkey.getText(),
-                tbdesc.getText()
+                tbdesc.getText(),
+                "", // version
+                tburl.getText(),
+                tbport.getText(),
+                tbpath.getText(),
+                tbuser.getText(),
+                passwd,
+                tbapikey.getText(),
+                "" // protocol
                 );
         return x;
     }
     
-    public ArrayList<task_det> createDetRecord() {
-        ArrayList<task_det> list = new ArrayList<task_det>();
-         for (int j = 0; j < tabletasks.getRowCount(); j++) {
-             task_det x = new task_det(null, 
+    public ArrayList<api_det> createDetRecord() {
+        ArrayList<api_det> list = new ArrayList<api_det>();
+         for (int j = 0; j < tabledetail.getRowCount(); j++) {
+             api_det x = new api_det(null, 
                 tbkey.getText(),
-                tabletasks.getValueAt(j, 0).toString(),
-                tabletasks.getValueAt(j, 1).toString(),
-                tabletasks.getValueAt(j, 2).toString(),
-                tabletasks.getValueAt(j, 3).toString()
+                tabledetail.getValueAt(j, 0).toString(),
+                tabledetail.getValueAt(j, 3).toString(),
+                tabledetail.getValueAt(j, 1).toString(),
+                tabledetail.getValueAt(j, 2).toString(),
+                tabledetail.getValueAt(j, 4).toString(),
+                "", // key not used
+                tabledetail.getValueAt(j, 5).toString(),
+                tabledetail.getValueAt(j, 6).toString(),
+                tabledetail.getValueAt(j, 7).toString(),
+                tabledetail.getValueAt(j, 8).toString()
                 );
         list.add(x);
          }
@@ -462,9 +504,9 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         lual = new ActionListener() {
         public void actionPerformed(ActionEvent event) {
         if (lurb1.isSelected()) {  
-         luModel = DTData.getTaskBrowseUtil(luinput.getText(),0, "task_id");
+         luModel = DTData.getAPIBrowseUtil(luinput.getText(),0, "api_id"); 
         } else {
-         luModel = DTData.getTaskBrowseUtil(luinput.getText(),0, "task_desc");   
+         luModel = DTData.getAPIBrowseUtil(luinput.getText(),0, "api_desc");   
         }
         luTable.setModel(luModel);
         luTable.getColumnModel().getColumn(0).setMaxWidth(50);
@@ -517,12 +559,12 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         ddverb = new javax.swing.JComboBox<>();
         jLabel3 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tabletasks = new javax.swing.JTable();
+        tabledetail = new javax.swing.JTable();
         tbsequence = new javax.swing.JTextField();
         cbenabled = new javax.swing.JCheckBox();
-        btdeletetask = new javax.swing.JButton();
+        btdeletemethod = new javax.swing.JButton();
         tbmethod = new javax.swing.JTextField();
-        btaddtask = new javax.swing.JButton();
+        btaddmethod = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
         tbkvpair = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
@@ -530,6 +572,8 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbdestdir = new javax.swing.JTextField();
         jLabel13 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
+        ddtype = new javax.swing.JComboBox<>();
+        jLabel15 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         btnew = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
@@ -579,7 +623,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel3.setText("Method");
         jLabel3.setName("lblaction"); // NOI18N
 
-        tabletasks.setModel(new javax.swing.table.DefaultTableModel(
+        tabledetail.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -590,24 +634,24 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(tabletasks);
+        jScrollPane1.setViewportView(tabledetail);
 
         cbenabled.setText("Enabled?");
         cbenabled.setName("cbenabled"); // NOI18N
 
-        btdeletetask.setText("Delete");
-        btdeletetask.setName("btdelete"); // NOI18N
-        btdeletetask.addActionListener(new java.awt.event.ActionListener() {
+        btdeletemethod.setText("Delete");
+        btdeletemethod.setName("btdelete"); // NOI18N
+        btdeletemethod.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btdeletetaskActionPerformed(evt);
+                btdeletemethodActionPerformed(evt);
             }
         });
 
-        btaddtask.setText("Add");
-        btaddtask.setName("btadd"); // NOI18N
-        btaddtask.addActionListener(new java.awt.event.ActionListener() {
+        btaddmethod.setText("Add");
+        btaddmethod.setName("btadd"); // NOI18N
+        btaddmethod.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btaddtaskActionPerformed(evt);
+                btaddmethodActionPerformed(evt);
             }
         });
 
@@ -619,6 +663,10 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel13.setText("SourceDir");
 
         jLabel14.setText("DestDir");
+
+        ddtype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "json", "xml", "text" }));
+
+        jLabel15.setText("Type");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -643,17 +691,23 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                                 .addGap(53, 53, 53)
                                 .addComponent(jLabel2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(tbsequence, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(34, 34, 34)
+                                .addComponent(tbsequence, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(tbdestdir, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 223, Short.MAX_VALUE)
+                                    .addComponent(tbsourcedir, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(tbkvpair, javax.swing.GroupLayout.Alignment.LEADING))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabel15)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(cbenabled)
                                 .addGap(27, 27, 27)
-                                .addComponent(btaddtask)
+                                .addComponent(btaddmethod)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btdeletetask))
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(tbdestdir, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 223, Short.MAX_VALUE)
-                                .addComponent(tbsourcedir, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(tbkvpair, javax.swing.GroupLayout.Alignment.LEADING)))
+                                .addComponent(btdeletemethod))
+                            .addComponent(ddtype, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -668,15 +722,17 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ddverb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cbenabled)
-                    .addComponent(btaddtask)
-                    .addComponent(btdeletetask)
+                    .addComponent(btaddmethod)
+                    .addComponent(btdeletemethod)
                     .addComponent(tbsequence, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2)
                     .addComponent(jLabel4))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbkvpair, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel12))
+                    .addComponent(jLabel12)
+                    .addComponent(ddtype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel15))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbsourcedir, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -901,18 +957,26 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
             newAction("task");
     }//GEN-LAST:event_btnewActionPerformed
 
-    private void btaddtaskActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddtaskActionPerformed
-         taskmodel.addRow(new Object[]{ddverb.getSelectedItem().toString(), tbmethod.getText(), cbenabled.isSelected(), tbsequence.getText()});
-    }//GEN-LAST:event_btaddtaskActionPerformed
+    private void btaddmethodActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddmethodActionPerformed
+            detailmodel.addRow(new Object[]{tbmethod.getText(), 
+            ddverb.getSelectedItem().toString(),
+            ddtype.getSelectedItem().toString(),
+            tbsequence.getText(),
+            tbpath.getText(), // header path
+            tbkvpair.getText(),
+            tbsourcedir.getText(),
+            tbdestdir.getText(),
+            cbenabled.isSelected()});
+    }//GEN-LAST:event_btaddmethodActionPerformed
 
-    private void btdeletetaskActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeletetaskActionPerformed
-       int[] rows = tabletasks.getSelectedRows();
+    private void btdeletemethodActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeletemethodActionPerformed
+       int[] rows = tabledetail.getSelectedRows();
         for (int i : rows) {
             bsmf.MainFrame.show(getMessageTag(1031,String.valueOf(i)));
-            ((javax.swing.table.DefaultTableModel) tabletasks.getModel()).removeRow(i);
+            ((javax.swing.table.DefaultTableModel) tabledetail.getModel()).removeRow(i);
             
         }
-    }//GEN-LAST:event_btdeletetaskActionPerformed
+    }//GEN-LAST:event_btdeletemethodActionPerformed
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
        if (! validateInput(dbaction.add)) {
@@ -946,14 +1010,15 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
-    private javax.swing.JButton btaddtask;
+    private javax.swing.JButton btaddmethod;
     private javax.swing.JButton btclear;
     private javax.swing.JButton btdelete;
-    private javax.swing.JButton btdeletetask;
+    private javax.swing.JButton btdeletemethod;
     private javax.swing.JButton btlookup;
     private javax.swing.JButton btnew;
     private javax.swing.JButton btupdate;
     private javax.swing.JCheckBox cbenabled;
+    private javax.swing.JComboBox<String> ddtype;
     private javax.swing.JComboBox<String> ddverb;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -961,6 +1026,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -975,7 +1041,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTable tabletasks;
+    private javax.swing.JTable tabledetail;
     private javax.swing.JTextField tbapikey;
     private javax.swing.JTextField tbdesc;
     private javax.swing.JTextField tbdestdir;

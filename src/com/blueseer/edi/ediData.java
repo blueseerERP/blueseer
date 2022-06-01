@@ -413,6 +413,466 @@ public class ediData {
         return r;
     }
     
+    
+    public static String[] addAPIMaint(api_mstr x) {
+        String[] m = new String[2];
+        String sqlSelect = "select * from api_mstr where api_id = ?";
+        String sqlInsert = "insert into api_mstr (api_id, api_desc, api_version," +
+        " api_url, api_port, api_path, api_user, " +
+        " api_pass, api_key, api_protocol ) " +
+                " values (?,?,?,?,?,?,?,?,?,?); "; 
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+             PreparedStatement ps = con.prepareStatement(sqlSelect);) {
+             ps.setString(1, x.api_id);
+          try (ResultSet res = ps.executeQuery();
+               PreparedStatement psi = con.prepareStatement(sqlInsert);) {  
+            if (! res.isBeforeFirst()) {
+            psi.setString(1, x.api_id);
+            psi.setString(2, x.api_desc);
+            psi.setString(3, x.api_version);
+            psi.setString(4, x.api_url);
+            psi.setString(5, x.api_port);
+            psi.setString(6, x.api_path);
+            psi.setString(7, x.api_user);
+            psi.setString(8, x.api_pass);
+            psi.setString(9, x.api_key);
+            psi.setString(10, x.api_protocol);
+            psi.setString(3, x.api_version);
+            
+            int rows = psi.executeUpdate();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+            } else {
+            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists};    
+            }
+          }
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+
+    private static int _addAPIMstr(api_mstr x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+        int rows = 0;
+        String sqlSelect = "select * from api_mstr where api_id = ?";
+        String sqlInsert = "insert into api_mstr (api_id, api_desc, api_version," +
+        " api_url, api_port, api_path, api_user, " +
+        " api_pass, api_key, api_protocol ) " +
+                " values (?,?,?,?,?,?,?,?,?,?); "; 
+       
+          ps = con.prepareStatement(sqlSelect); 
+          ps.setString(1, x.api_id);
+          res = ps.executeQuery();
+          ps = con.prepareStatement(sqlInsert);
+            if (! res.isBeforeFirst()) {
+            ps.setString(1, x.api_id);
+            ps.setString(2, x.api_desc);
+            ps.setString(3, x.api_version);
+            ps.setString(4, x.api_url);
+            ps.setString(5, x.api_port);
+            ps.setString(6, x.api_path);
+            ps.setString(7, x.api_user);
+            ps.setString(8, x.api_pass);
+            ps.setString(9, x.api_key);
+            ps.setString(10, x.api_protocol);
+            ps.setString(3, x.api_version);
+            rows = ps.executeUpdate();
+            } 
+            return rows;
+    }
+    
+    private static int _addAPIDet(api_det x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+        int rows = 0;
+        String sqlSelect = "select * from api_det where apid_id = ? and apid_method = ?";
+        String sqlInsert = "insert into api_det (apid_id, apid_method, apid_seq,  " +
+                             " apid_verb, apid_type, apid_path, apid_key, " +
+                            " apid_value, apid_source, apid_destination, apid_enabled ) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?); "; 
+       
+          ps = con.prepareStatement(sqlSelect); 
+          ps.setString(1, x.apid_id);
+          ps.setString(2, x.apid_method);
+          res = ps.executeQuery();
+          ps = con.prepareStatement(sqlInsert);  
+            if (! res.isBeforeFirst()) {
+            ps.setString(1, x.apid_id);
+            ps.setString(2, x.apid_method);
+            ps.setString(3, x.apid_seq); 
+            ps.setString(4, x.apid_verb);
+            ps.setString(5, x.apid_type);
+            ps.setString(6, x.apid_path);
+            ps.setString(7, x.apid_key);
+            ps.setString(8, x.apid_value);
+            ps.setString(9, x.apid_source);
+            ps.setString(10, x.apid_destination);
+            ps.setString(11, x.apid_enabled);
+            rows = ps.executeUpdate();
+            } 
+            return rows;
+    }
+    
+    public static String[] addAPITransaction(ArrayList<api_det> apid, api_mstr api) {
+        String[] m = new String[2];
+        Connection bscon = null;
+        PreparedStatement ps = null;
+        ResultSet res = null;
+        try { 
+            bscon = DriverManager.getConnection(url + db, user, pass);
+            bscon.setAutoCommit(false);
+            _addAPIMstr(api, bscon, ps, res);  
+            for (api_det z : apid) {
+                _addAPIDet(z, bscon, ps, res);
+            }
+            bscon.commit();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             try {
+                 bscon.rollback();
+                 m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordError};
+             } catch (SQLException rb) {
+                 MainFrame.bslog(rb);
+             }
+        } finally {
+            if (res != null) {
+                try {
+                    res.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (bscon != null) {
+                try {
+                    bscon.setAutoCommit(true);
+                    bscon.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
+    }
+        
+    
+    public static String[] updateAPIMaint(api_mstr x) {
+        String[] m = new String[2];
+        String sql = "update api_mstr set api_desc = ?, api_version = ?, api_url = ?, api_port = ?, " +
+                " api_path = ?, api_user = ?, api_pass = ?, api_key = ?, api_protocol = ?  " +
+                "  where api_id = ? ";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, x.api_desc);
+        ps.setString(2, x.api_version);
+        ps.setString(3, x.api_url);
+        ps.setString(4, x.api_port);
+        ps.setString(5, x.api_path);
+        ps.setString(6, x.api_user);
+        ps.setString(7, x.api_pass);
+        ps.setString(8, x.api_key);
+        ps.setString(9, x.api_protocol);
+        ps.setString(10, x.api_id);
+        int rows = ps.executeUpdate();
+        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+    
+    private static int _updateAPIMstr(api_mstr x, Connection con, PreparedStatement ps) throws SQLException {
+        int rows = 0;
+        String sql = "update api_mstr set api_desc = ?, api_version = ?, api_url = ?, api_port = ?, " +
+                " api_path = ?, api_user = ?, api_pass = ?, api_key = ?, api_protocol = ?  " +
+                "  where api_id = ? ";
+	ps = con.prepareStatement(sql) ;
+        ps.setString(1, x.api_desc);
+        ps.setString(2, x.api_version);
+        ps.setString(3, x.api_url);
+        ps.setString(4, x.api_port);
+        ps.setString(5, x.api_path);
+        ps.setString(6, x.api_user);
+        ps.setString(7, x.api_pass);
+        ps.setString(8, x.api_key);
+        ps.setString(9, x.api_protocol);
+        ps.setString(10, x.api_id);
+            rows = ps.executeUpdate();
+        return rows;
+    }
+    
+    private static int _updateAPIdet(api_det x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+        int rows = 0;
+        String sqlSelect = "select * from api_det where apid_id = ? and apid_method = ?";
+        String sqlUpdate = "update api_det set apid_seq = ?, " +
+                           " apid_verb = ?, apid_type = ?, apid_path = ?,  " +
+                           " apid_key = ?, apid_value = ?, apid_source, apid_destination = ?, apid_enabled = ? " +
+                 " where apid_id = ? and apid_method = ? ; ";
+        String sqlInsert = "insert into api_det (apid_id, apid_method, apid_seq,  " +
+                             " apid_verb, apid_type, apid_path, apid_key, " +
+                            " apid_value, apid_source, apid_destination, apid_enabled ) ";
+        ps = con.prepareStatement(sqlSelect); 
+        ps.setString(1, x.apid_id);
+        ps.setString(2, x.apid_method);
+        res = ps.executeQuery();
+        if (! res.isBeforeFirst()) {  // insert
+	 ps = con.prepareStatement(sqlInsert) ;
+            ps.setString(1, x.apid_id);
+            ps.setString(2, x.apid_method);
+            ps.setString(3, x.apid_seq);
+            ps.setString(4, x.apid_verb);
+            ps.setString(5, x.apid_type);
+            ps.setString(6, x.apid_path);
+            ps.setString(7, x.apid_key);
+            ps.setString(8, x.apid_value);
+            ps.setString(9, x.apid_source);
+            ps.setString(10, x.apid_destination);
+            ps.setString(11, x.apid_enabled); 
+            // ps.setString(9, x.ecnt_notes);  another mechanism updates the Notes field
+            rows = ps.executeUpdate();
+        } else {    // update
+         ps = con.prepareStatement(sqlUpdate) ;
+            ps.setString(1, x.apid_seq);
+            ps.setString(2, x.apid_verb);
+            ps.setString(3, x.apid_type);
+            ps.setString(4, x.apid_path);
+            ps.setString(5, x.apid_key);
+            ps.setString(6, x.apid_value);
+            ps.setString(7, x.apid_source);
+            ps.setString(8, x.apid_destination);
+            ps.setString(9, x.apid_enabled);  
+            ps.setString(10, x.apid_id);
+            ps.setString(11, x.apid_method);
+            // ps.setString(7, x.ecnt_notes);  another mechanism updates the Notes field
+            rows = ps.executeUpdate();
+        }
+            
+        return rows;
+    }
+        
+    public static String[] updateAPITransaction(String x, ArrayList<String> lines, ArrayList<api_det> apid, api_mstr api) {
+        String[] m = new String[2];
+        Connection bscon = null;
+        PreparedStatement ps = null;
+        ResultSet res = null;
+        try { 
+            bscon = DriverManager.getConnection(url + db, user, pass);
+            bscon.setAutoCommit(false);
+            for (String line : lines) {
+               _deleteAPILines(x, line, bscon);  // discard unwanted lines
+             }
+            for (api_det z : apid) {
+                _updateAPIdet(z, bscon, ps, res);
+            }
+             _updateAPIMstr(api, bscon, ps);  // update so_mstr
+            bscon.commit();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             try {
+                 bscon.rollback();
+                 m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordError};
+             } catch (SQLException rb) {
+                 MainFrame.bslog(rb);
+             }
+        } finally {
+            if (res != null) {
+                try {
+                    res.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (bscon != null) {
+                try {
+                    bscon.setAutoCommit(true);
+                    bscon.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
+    }
+    
+    
+    public static String[] deleteAPIMstr(api_mstr x) { 
+       String[] m = new String[2];
+        String sql = "delete from api_mstr where api_id = ?; ";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, x.api_id);
+        int rows = ps.executeUpdate();
+        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+      
+    private static void _deleteAPILines(String x, String line, Connection con) throws SQLException { 
+        PreparedStatement ps = null; 
+        String sql = "delete from api_det where apid_id = ? and apid_method = ?; ";
+        ps = con.prepareStatement(sql);
+        ps.setString(1, x);
+        ps.setString(2, line);
+        ps.executeUpdate();
+        ps.close();
+    }
+    
+    public static api_mstr getAPIMstr(String[] x) {
+        api_mstr r = null;
+        String[] m = new String[2];
+        String sql = "select * from api_mstr where api_id = ? ;";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, x[0]);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new api_mstr(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new api_mstr(m, res.getString("api_id"), 
+                            res.getString("api_desc"),
+                            res.getString("api_version"),
+                            res.getString("api_url"),
+                            res.getString("api_port"),
+                            res.getString("api_path"),
+                            res.getString("api_user"),
+                            res.getString("api_pass"),
+                            res.getString("api_key"),
+                            res.getString("api_protocol")
+                        );
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new api_mstr(m);
+        }
+        return r;
+    }
+    
+    public static ArrayList<api_det> getAPIDet(String code) {
+        api_det r = null;
+        String[] m = new String[2];
+        ArrayList<api_det> list = new ArrayList<api_det>();
+        String sql = "select * from api_det where apid_id = ? ;";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, code);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new api_det(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new api_det(m, res.getString("apid_id"), 
+                        res.getString("apid_method"), 
+                        res.getString("apid_seq"), 
+                        res.getString("apid_verb"), 
+                        res.getString("apid_type"),
+                        res.getString("apid_path"),
+                        res.getString("apid_key"),
+                        res.getString("apid_value"),
+                        res.getString("apid_source"),
+                        res.getString("apid_destination"),        
+                        res.getString("apid_enabled"));
+                        list.add(r);
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new api_det(m);
+               list.add(r);
+        }
+        return list;
+    }
+    
+    public static api_det getAPIDet(String id, String method) { 
+        api_det r = null;
+        String[] m = new String[2];
+        String sql = "select * from api_det where apid_id = ? and apid_method = ? ;";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, id);
+        ps.setString(2, method);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new api_det(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                      r = new api_det(m, res.getString("apid_id"), 
+                        res.getString("apid_method"), 
+                        res.getString("apid_seq"), 
+                        res.getString("apid_verb"), 
+                        res.getString("apid_type"),
+                        res.getString("apid_path"),
+                        res.getString("apid_key"),
+                        res.getString("apid_value"),
+                        res.getString("apid_source"),
+                        res.getString("apid_destination"),
+                        res.getString("apid_enabled"));
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new api_det(m);
+        }
+        return r;
+    }
+     
+    public static ArrayList<String> getAPISequences(String nbr) {
+        ArrayList<String> lines = new ArrayList<String>();
+        try{
+        Class.forName(driver).newInstance();
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+           res = st.executeQuery("SELECT apid_seq from api_det " +
+                   " where apid_id = " + "'" + nbr + "'" + ";");
+                        while (res.next()) {
+                          lines.add(res.getString("apid_seq"));
+                        }
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+        return lines;
+    }
+    
+    
     //misc
     
     public static ArrayList getMapMstrList() {
@@ -493,4 +953,19 @@ public class ediData {
         }
     }
     
+    public record api_mstr(String[] m, String api_id, String api_desc, String api_version,
+        String api_url, String api_port, String api_path, String api_user ,
+        String api_pass, String api_key, String api_protocol ) {
+        public api_mstr(String[] m) {
+            this(m, "", "", "", "", "", "", "", "", "", "");
+        }
+    }
+    
+    public record api_det(String[] m, String apid_id, String apid_method, String apid_seq,
+        String apid_verb, String apid_type, String apid_path, String apid_key,
+         String apid_value, String apid_source, String apid_destination, String apid_enabled ) {
+        public api_det(String[] m) {
+            this(m, "", "", "", "", "", "", "", "", "", "", "");
+        }
+    }
 }
