@@ -214,11 +214,12 @@
             <Component class="javax.swing.JComboBox" name="ddverb">
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                  <StringArray count="4">
+                  <StringArray count="5">
                     <StringItem index="0" value="GET"/>
                     <StringItem index="1" value="PUT"/>
                     <StringItem index="2" value="POST"/>
                     <StringItem index="3" value="DELETE"/>
+                    <StringItem index="4" value="NONE"/>
                   </StringArray>
                 </Property>
               </Properties>
@@ -594,7 +595,7 @@
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
           <SubComponents>
-            <Component class="javax.swing.JTextArea" name="jTextArea1">
+            <Component class="javax.swing.JTextArea" name="taoutput">
               <Properties>
                 <Property name="columns" type="int" value="20"/>
                 <Property name="rows" type="int" value="5"/>
@@ -611,6 +612,9 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Run"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btrunActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

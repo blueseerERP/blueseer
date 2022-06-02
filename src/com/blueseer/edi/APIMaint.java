@@ -34,6 +34,7 @@ import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import static bsmf.MainFrame.backgroundcolor;
 import static bsmf.MainFrame.backgroundpanel;
+import static bsmf.MainFrame.bslog;
 import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
@@ -78,12 +79,20 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -601,7 +610,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         btadd = new javax.swing.JButton();
         btdelete = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        taoutput = new javax.swing.JTextArea();
         btrun = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 102, 204));
@@ -623,7 +632,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel2.setText("Sequence");
         jLabel2.setName("lblsequence"); // NOI18N
 
-        ddverb.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "GET", "PUT", "POST", "DELETE" }));
+        ddverb.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "GET", "PUT", "POST", "DELETE", "NONE" }));
 
         jLabel3.setText("Method");
         jLabel3.setName("lblmethod"); // NOI18N
@@ -925,12 +934,17 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
             }
         });
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jTextArea1.setBorder(javax.swing.BorderFactory.createTitledBorder("Text"));
-        jScrollPane2.setViewportView(jTextArea1);
+        taoutput.setColumns(20);
+        taoutput.setRows(5);
+        taoutput.setBorder(javax.swing.BorderFactory.createTitledBorder("Text"));
+        jScrollPane2.setViewportView(taoutput);
 
         btrun.setText("Run");
+        btrun.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btrunActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -1005,6 +1019,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         
             detailmodel.addRow(new Object[]{tbmethod.getText(), 
             ddverb.getSelectedItem().toString(),
+            ddclass.getSelectedItem().toString(),
             ddtype.getSelectedItem().toString(),
             tbsequence.getText(),
             tbpath.getText(), // header path
@@ -1052,6 +1067,72 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         lookUpFrame();
     }//GEN-LAST:event_btlookupActionPerformed
 
+    private void btrunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btrunActionPerformed
+        int[] rows = tabledetail.getSelectedRows();
+        int k = 0;
+        String method = "";
+        String verb = "";
+        String value = "";
+        for (int i : rows) {
+            k++;
+            method = tabledetail.getValueAt(i, 0).toString();
+            verb = tabledetail.getValueAt(i, 1).toString();
+            value = tabledetail.getValueAt(i, 6).toString();
+            if (k > 0) {
+                break;
+            }
+        }  
+            try {
+                String urlstring = "";
+                if (! value.isBlank()) {
+                    value = "/" + value;
+                }
+                if (verb.equals("NONE")) {
+                  if (tbport.getText().isBlank()) {  
+                    urlstring = "https://" + tburl.getText() + "/" + tbpath.getText() + value; 
+                  } else {
+                    urlstring = "https://" + tburl.getText() + ":" + tbport.getText() + "/" + tbpath.getText() + "/" + value; 
+                  }
+                } else {
+                    if (tbport.getText().isBlank()) {  
+                        urlstring = "https://" + tburl.getText() + "/" + tbpath.getText() + verb.toLowerCase() ;
+                    } else {
+                        urlstring = "https://" + tburl.getText() + ":" + tbport.getText() + "/" + tbpath.getText() + verb.toLowerCase() ; 
+                    }
+                }
+                System.out.println(urlstring);
+                URL url = new URL(urlstring);
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		if (! verb.equals("NONE")) {
+                conn.setRequestMethod(verb);
+                }
+		conn.setRequestProperty("Accept", "application/json");
+
+		if (conn.getResponseCode() != 200) {
+                        taoutput.append(conn.getResponseCode() + ": " + conn.getResponseMessage());
+			throw new RuntimeException("Failed : HTTP error code : "
+					+ conn.getResponseCode());
+		}
+
+		BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
+
+		String output;
+                taoutput.removeAll();
+		while ((output = br.readLine()) != null) {
+			taoutput.append(output + "\n");
+		}
+		conn.disconnect();
+                br.close();
+                
+                } catch (MalformedURLException e) {
+		    bslog(e);
+                    bsmf.MainFrame.show("MalformedURLException");
+	        } catch (IOException ex) {
+                    bslog(ex);
+                    bsmf.MainFrame.show("IOException");
+                } 
+    }//GEN-LAST:event_btrunActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
@@ -1088,8 +1169,8 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTable tabledetail;
+    private javax.swing.JTextArea taoutput;
     private javax.swing.JTextField tbapikey;
     private javax.swing.JTextField tbdesc;
     private javax.swing.JTextField tbdestdir;

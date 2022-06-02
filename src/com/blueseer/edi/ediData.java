@@ -616,12 +616,15 @@ public class ediData {
                  " where apid_id = ? and apid_method = ? ; ";
         String sqlInsert = "insert into api_det (apid_id, apid_method, apid_seq,  " +
                              " apid_verb, apid_type, apid_path, apid_key, " +
-                            " apid_value, apid_source, apid_destination, apid_enabled ) ";
-        ps = con.prepareStatement(sqlSelect); 
+                            " apid_value, apid_source, apid_destination, apid_enabled ) " +
+                           " values (?,?,?,?,?,?,?,?,?,?,?); " ;
+        ps = con.prepareStatement(sqlSelect);
+        bsmf.MainFrame.show(x.apid_id + "/" + x.apid_method);
         ps.setString(1, x.apid_id);
         ps.setString(2, x.apid_method);
         res = ps.executeQuery();
         if (! res.isBeforeFirst()) {  // insert
+           bsmf.MainFrame.show("insert");
 	 ps = con.prepareStatement(sqlInsert) ;
             ps.setString(1, x.apid_id);
             ps.setString(2, x.apid_method);
@@ -637,6 +640,7 @@ public class ediData {
             // ps.setString(9, x.ecnt_notes);  another mechanism updates the Notes field
             rows = ps.executeUpdate();
         } else {    // update
+            bsmf.MainFrame.show("update");
          ps = con.prepareStatement(sqlUpdate) ;
             ps.setString(1, x.apid_seq);
             ps.setString(2, x.apid_verb);
