@@ -457,7 +457,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbuser.setText(x.api_user());
         tbpass.setText(bsmf.MainFrame.PassWord("1", x.api_pass().toCharArray()));
         tbapikey.setText(x.api_key());
-       
+        ddprotocol.setSelectedItem(x.api_protocol());
         // now detail
         detailmodel.setRowCount(0);
         ArrayList<api_det> z = getAPIDet(key[0]);
@@ -483,7 +483,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                 tbuser.getText(),
                 passwd,
                 tbapikey.getText(),
-                "" // protocol
+                ddprotocol.getSelectedItem().toString()
                 );
         return x;
     }
@@ -607,6 +607,8 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel10 = new javax.swing.JLabel();
         tbapikey = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
+        ddprotocol = new javax.swing.JComboBox<>();
+        jLabel17 = new javax.swing.JLabel();
         btadd = new javax.swing.JButton();
         btdelete = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -831,6 +833,10 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel11.setText("Key");
         jLabel11.setName("lblapikey"); // NOI18N
 
+        ddprotocol.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "http", "https" }));
+
+        jLabel17.setText("Protocol");
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -846,17 +852,8 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                     .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(tbpath, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel3Layout.createSequentialGroup()
-                                .addComponent(tburl, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(tbport, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel3Layout.createSequentialGroup()
                                 .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -866,7 +863,21 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btclear)
                                 .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(tbdesc, javax.swing.GroupLayout.Alignment.LEADING))
+                            .addComponent(tbdesc, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel3Layout.createSequentialGroup()
+                                        .addComponent(tburl, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jLabel1))
+                                    .addGroup(jPanel3Layout.createSequentialGroup()
+                                        .addComponent(tbpath, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jLabel17)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(tbport)
+                                    .addComponent(ddprotocol, 0, 100, Short.MAX_VALUE))))
                         .addGap(38, 38, 38))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -904,7 +915,9 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbpath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel9))
+                    .addComponent(jLabel9)
+                    .addComponent(ddprotocol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel17))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbuser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1069,6 +1082,13 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
 
     private void btrunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btrunActionPerformed
         int[] rows = tabledetail.getSelectedRows();
+       // taoutput.removeAll();
+        taoutput.setText("");
+        if (rows.length == 0) {
+            bsmf.MainFrame.show("no method selected in detail table");
+            return;
+        }
+        
         int k = 0;
         String method = "";
         String verb = "";
@@ -1084,21 +1104,20 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         }  
             try {
                 String urlstring = "";
+                String port = "";
                 if (! value.isBlank()) {
                     value = "/" + value;
                 }
-                if (verb.equals("NONE")) {
-                  if (tbport.getText().isBlank()) {  
-                    urlstring = "https://" + tburl.getText() + "/" + tbpath.getText() + value; 
-                  } else {
-                    urlstring = "https://" + tburl.getText() + ":" + tbport.getText() + "/" + tbpath.getText() + "/" + value; 
-                  }
+                if (tbport.getText().isBlank()) {  
+                   port = ""; 
                 } else {
-                    if (tbport.getText().isBlank()) {  
-                        urlstring = "https://" + tburl.getText() + "/" + tbpath.getText() + verb.toLowerCase() ;
-                    } else {
-                        urlstring = "https://" + tburl.getText() + ":" + tbport.getText() + "/" + tbpath.getText() + verb.toLowerCase() ; 
-                    }
+                   port = ":" + tbport.getText();
+                }
+                
+                if (verb.equals("NONE")) {
+                    urlstring = ddprotocol.getSelectedItem().toString() + "://" + tburl.getText() + port + "/" + tbpath.getText() + value;
+                } else {
+                    urlstring = ddprotocol.getSelectedItem().toString() + "://" + tburl.getText() + port + "/" + tbpath.getText() + verb.toLowerCase() ;
                 }
                 System.out.println(urlstring);
                 URL url = new URL(urlstring);
@@ -1108,20 +1127,24 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                 }
 		conn.setRequestProperty("Accept", "application/json");
 
+                BufferedReader br = null;
 		if (conn.getResponseCode() != 200) {
                         taoutput.append(conn.getResponseCode() + ": " + conn.getResponseMessage());
-			throw new RuntimeException("Failed : HTTP error code : "
-					+ conn.getResponseCode());
-		}
+			//throw new RuntimeException("Failed : HTTP error code : "
+			//		+ conn.getResponseCode());
+		} else {
+                    br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
+                }
 
-		BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
+		
 
 		String output;
-                taoutput.removeAll();
-		while ((output = br.readLine()) != null) {
-			taoutput.append(output + "\n");
-		}
-		conn.disconnect();
+                if (br != null) {
+                    while ((output = br.readLine()) != null) {
+                            taoutput.append(output + "\n");
+                    }
+                }
+                conn.disconnect();
                 br.close();
                 
                 } catch (MalformedURLException e) {
@@ -1146,6 +1169,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JButton btupdate;
     private javax.swing.JCheckBox cbenabled;
     private javax.swing.JComboBox<String> ddclass;
+    private javax.swing.JComboBox<String> ddprotocol;
     private javax.swing.JComboBox<String> ddtype;
     private javax.swing.JComboBox<String> ddverb;
     private javax.swing.JLabel jLabel1;
@@ -1156,6 +1180,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;

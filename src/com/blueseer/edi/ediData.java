@@ -619,12 +619,10 @@ public class ediData {
                             " apid_value, apid_source, apid_destination, apid_enabled ) " +
                            " values (?,?,?,?,?,?,?,?,?,?,?); " ;
         ps = con.prepareStatement(sqlSelect);
-        bsmf.MainFrame.show(x.apid_id + "/" + x.apid_method);
         ps.setString(1, x.apid_id);
         ps.setString(2, x.apid_method);
         res = ps.executeQuery();
         if (! res.isBeforeFirst()) {  // insert
-           bsmf.MainFrame.show("insert");
 	 ps = con.prepareStatement(sqlInsert) ;
             ps.setString(1, x.apid_id);
             ps.setString(2, x.apid_method);
