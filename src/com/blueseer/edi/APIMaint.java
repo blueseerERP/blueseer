@@ -80,11 +80,16 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -335,7 +340,8 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
            tbsourcedir.setText("");
            tbdestdir.setText("");
            cbenabled.setSelected(false);
-           
+           taoutput.setText("");
+           lblurl.setText("");
         
        isLoad = false;
     }
@@ -614,6 +620,8 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         jScrollPane2 = new javax.swing.JScrollPane();
         taoutput = new javax.swing.JTextArea();
         btrun = new javax.swing.JButton();
+        cbfile = new javax.swing.JCheckBox();
+        lblurl = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -959,17 +967,20 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
             }
         });
 
+        cbfile.setText("File");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(lblurl, javax.swing.GroupLayout.PREFERRED_SIZE, 342, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btdelete)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btupdate)
@@ -978,7 +989,10 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 335, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btrun, javax.swing.GroupLayout.Alignment.TRAILING))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(cbfile)
+                        .addGap(18, 18, 18)
+                        .addComponent(btrun)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -996,7 +1010,9 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                     .addComponent(btupdate)
                     .addComponent(btadd)
                     .addComponent(btdelete)
-                    .addComponent(btrun))
+                    .addComponent(btrun)
+                    .addComponent(cbfile)
+                    .addComponent(lblurl, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -1084,6 +1100,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         int[] rows = tabledetail.getSelectedRows();
        // taoutput.removeAll();
         taoutput.setText("");
+        lblurl.setText("");
         if (rows.length == 0) {
             bsmf.MainFrame.show("no method selected in detail table");
             return;
@@ -1119,7 +1136,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                 } else {
                     urlstring = ddprotocol.getSelectedItem().toString() + "://" + tburl.getText() + port + "/" + tbpath.getText() + verb.toLowerCase() ;
                 }
-                System.out.println(urlstring);
+                lblurl.setText(urlstring);
                 URL url = new URL(urlstring);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		if (! verb.equals("NONE")) {
@@ -1136,13 +1153,25 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                     br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
                 }
 
-		
-
+		int filenumber;
+                Path path;
+                BufferedWriter outputfile = null;
+                if (cbfile.isSelected()) {
+                    filenumber = OVData.getNextNbr("ediout");
+                    path = FileSystems.getDefault().getPath("edi/api/in" + "/" + "api." + tbkey.getText() + "." + String.valueOf(filenumber) + ".txt"); 
+                    outputfile = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path.toFile())));
+                }
 		String output;
                 if (br != null) {
                     while ((output = br.readLine()) != null) {
                             taoutput.append(output + "\n");
+                            if (cbfile.isSelected() && outputfile != null) {
+                             outputfile.write(output);
+                            }
                     }
+                }
+                if (outputfile != null) {
+                    outputfile.close(); 
                 }
                 conn.disconnect();
                 br.close();
@@ -1168,6 +1197,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JButton btrun;
     private javax.swing.JButton btupdate;
     private javax.swing.JCheckBox cbenabled;
+    private javax.swing.JCheckBox cbfile;
     private javax.swing.JComboBox<String> ddclass;
     private javax.swing.JComboBox<String> ddprotocol;
     private javax.swing.JComboBox<String> ddtype;
@@ -1194,6 +1224,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JLabel lblurl;
     private javax.swing.JTable tabledetail;
     private javax.swing.JTextArea taoutput;
     private javax.swing.JTextField tbapikey;
