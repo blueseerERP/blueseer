@@ -419,8 +419,8 @@ public class ediData {
         String sqlSelect = "select * from api_mstr where api_id = ?";
         String sqlInsert = "insert into api_mstr (api_id, api_desc, api_version," +
         " api_url, api_port, api_path, api_user, " +
-        " api_pass, api_key, api_protocol ) " +
-                " values (?,?,?,?,?,?,?,?,?,?); "; 
+        " api_pass, api_key, api_protocol, api_path ) " +
+                " values (?,?,?,?,?,?,?,?,?,?,?); "; 
         try (Connection con = DriverManager.getConnection(url + db, user, pass);
              PreparedStatement ps = con.prepareStatement(sqlSelect);) {
              ps.setString(1, x.api_id);
@@ -437,7 +437,7 @@ public class ediData {
             psi.setString(8, x.api_pass);
             psi.setString(9, x.api_key);
             psi.setString(10, x.api_protocol);
-            psi.setString(3, x.api_version);
+            psi.setString(11, x.api_class);
             
             int rows = psi.executeUpdate();
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
@@ -457,8 +457,8 @@ public class ediData {
         String sqlSelect = "select * from api_mstr where api_id = ?";
         String sqlInsert = "insert into api_mstr (api_id, api_desc, api_version," +
         " api_url, api_port, api_path, api_user, " +
-        " api_pass, api_key, api_protocol ) " +
-                " values (?,?,?,?,?,?,?,?,?,?); "; 
+        " api_pass, api_key, api_protocol, api_class ) " +
+                " values (?,?,?,?,?,?,?,?,?,?,?); "; 
        
           ps = con.prepareStatement(sqlSelect); 
           ps.setString(1, x.api_id);
@@ -475,7 +475,7 @@ public class ediData {
             ps.setString(8, x.api_pass);
             ps.setString(9, x.api_key);
             ps.setString(10, x.api_protocol);
-            ps.setString(3, x.api_version);
+            ps.setString(11, x.api_class);
             rows = ps.executeUpdate();
             } 
             return rows;
@@ -564,7 +564,7 @@ public class ediData {
     public static String[] updateAPIMaint(api_mstr x) {
         String[] m = new String[2];
         String sql = "update api_mstr set api_desc = ?, api_version = ?, api_url = ?, api_port = ?, " +
-                " api_path = ?, api_user = ?, api_pass = ?, api_key = ?, api_protocol = ?  " +
+                " api_path = ?, api_user = ?, api_pass = ?, api_key = ?, api_protocol = ?, api_class = ?  " +
                 "  where api_id = ? ";
         try (Connection con = DriverManager.getConnection(url + db, user, pass);
 	PreparedStatement ps = con.prepareStatement(sql)) {
@@ -577,7 +577,8 @@ public class ediData {
         ps.setString(7, x.api_pass);
         ps.setString(8, x.api_key);
         ps.setString(9, x.api_protocol);
-        ps.setString(10, x.api_id);
+        ps.setString(10, x.api_class);
+        ps.setString(11, x.api_id);
         int rows = ps.executeUpdate();
         m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
         } catch (SQLException s) {
@@ -590,7 +591,7 @@ public class ediData {
     private static int _updateAPIMstr(api_mstr x, Connection con, PreparedStatement ps) throws SQLException {
         int rows = 0;
         String sql = "update api_mstr set api_desc = ?, api_version = ?, api_url = ?, api_port = ?, " +
-                " api_path = ?, api_user = ?, api_pass = ?, api_key = ?, api_protocol = ?  " +
+                " api_path = ?, api_user = ?, api_pass = ?, api_key = ?, api_protocol = ?, api_class = ?  " +
                 "  where api_id = ? ";
 	ps = con.prepareStatement(sql) ;
         ps.setString(1, x.api_desc);
@@ -602,7 +603,8 @@ public class ediData {
         ps.setString(7, x.api_pass);
         ps.setString(8, x.api_key);
         ps.setString(9, x.api_protocol);
-        ps.setString(10, x.api_id);
+        ps.setString(10, x.api_class);
+        ps.setString(11, x.api_id);
             rows = ps.executeUpdate();
         return rows;
     }
@@ -612,7 +614,7 @@ public class ediData {
         String sqlSelect = "select * from api_det where apid_id = ? and apid_method = ?";
         String sqlUpdate = "update api_det set apid_seq = ?, " +
                            " apid_verb = ?, apid_type = ?, apid_path = ?,  " +
-                           " apid_key = ?, apid_value = ?, apid_source, apid_destination = ?, apid_enabled = ? " +
+                           " apid_key = ?, apid_value = ?, apid_source = ?, apid_destination = ?, apid_enabled = ? " +
                  " where apid_id = ? and apid_method = ? ; ";
         String sqlInsert = "insert into api_det (apid_id, apid_method, apid_seq,  " +
                              " apid_verb, apid_type, apid_path, apid_key, " +
@@ -638,7 +640,7 @@ public class ediData {
             // ps.setString(9, x.ecnt_notes);  another mechanism updates the Notes field
             rows = ps.executeUpdate();
         } else {    // update
-            bsmf.MainFrame.show("update");
+         
          ps = con.prepareStatement(sqlUpdate) ;
             ps.setString(1, x.apid_seq);
             ps.setString(2, x.apid_verb);
@@ -759,7 +761,8 @@ public class ediData {
                             res.getString("api_user"),
                             res.getString("api_pass"),
                             res.getString("api_key"),
-                            res.getString("api_protocol")
+                            res.getString("api_protocol"),
+                            res.getString("api_class")
                         );
                     }
                 }
@@ -974,9 +977,9 @@ public class ediData {
     
     public record api_mstr(String[] m, String api_id, String api_desc, String api_version,
         String api_url, String api_port, String api_path, String api_user ,
-        String api_pass, String api_key, String api_protocol ) {
+        String api_pass, String api_key, String api_protocol, String api_class ) {
         public api_mstr(String[] m) {
-            this(m, "", "", "", "", "", "", "", "", "", "");
+            this(m, "", "", "", "", "", "", "", "", "", "", "");
         }
     }
     

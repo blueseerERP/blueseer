@@ -46,7 +46,8 @@ CREATE TABLE IF NOT EXISTS `api_mstr` (
   `api_user` varchar(50)  NOT NULL DEFAULT '',
   `api_pass` varchar(80)  NOT NULL DEFAULT '',
   `api_key` varchar(120)  NOT NULL DEFAULT '',
-  `api_protocol` varchar(30)  NOT NULL DEFAULT ''
+  `api_protocol` varchar(30)  NOT NULL DEFAULT '',
+  `api_class` varchar(30)  NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `api_det` (
   `apid_id` varchar(30)  NOT NULL DEFAULT '',

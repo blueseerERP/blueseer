@@ -64,3 +64,5 @@ insert into task_det (taskd_id, taskd_owner, taskd_desc, taskd_sequence) values 
 .import mockmstr.csv mock_mstr
 .import structmstr.csv map_struct
 .import mapmstr.csv map_mstr
+.import apimstr.csv api_mstr
+.import apidet.csv api_det
