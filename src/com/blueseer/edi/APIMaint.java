@@ -81,14 +81,18 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.FileSystems;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -559,7 +563,95 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
 
     
-    
+    public void postAS2( URL url, String verb) {
+        File textFile = new File(tbsourcedir.getText());
+        String boundary = Long.toHexString(System.currentTimeMillis()); // Just generate some unique random value.
+        String CRLF = "\r\n"; // Line separator required by multipart/form-data.
+        try {
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setDoOutput(true);
+        conn.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
+        conn.setRequestProperty("User-Agent", "RPT-HTTPClient/0.3-3I (Windows Server 2016)"); 
+        conn.setRequestProperty("AS2-To", "045426558002"); 
+        conn.setRequestProperty("AS2-From", "01089986319"); 
+        conn.setRequestProperty("AS2-Version", "1.2"); 
+        conn.setRequestProperty("Subject", "as2");
+        
+        conn.setRequestProperty("Accept-Encoding", "deflate, gzip, x-gzip, compress, x-compress");
+        conn.setRequestProperty("Disposition-Notification-Options", "signed-receipt-protocol=optional, pkcs7-signature; signed-receipt-micalg=optional, sha1");
+        //conn.setRequestProperty("Disposition-Notification-To", "http://wmediprod.jm.com:80/invoke/wm.EDIINT/receive");
+        conn.setRequestProperty("Disposition-Notification-To", "http://64.132.141.72:4080/exchange/01089986319");
+        
+        conn.setRequestProperty("Message-ID", "<CLEO-20220603_134956100-28W45M@01089986319_045426558002.TEST-AZEDICOMM-S>");
+        conn.setRequestProperty("Recipient-Address", "http://ngceditest.natgyp.com:4080/exchange/01089986319");
+        conn.setRequestProperty("EDIINT-Features", "CEM, multiple-attachments, AS2-Reliability");
+
+        
+        conn.setRequestMethod("POST");
+       // conn.setRequestProperty("Accept", "application/json");
+
+       try (
+        OutputStream output = conn.getOutputStream();
+        PrintWriter writer = new PrintWriter(new OutputStreamWriter(output, "UTF8"), true);
+        ) {
+            // Send normal param.
+           /*
+            writer.append("--" + boundary).append(CRLF);
+            writer.append("Content-Disposition: form-data; name=\"param\"").append(CRLF);
+            writer.append("Content-Type: text/plain; charset=" + charset).append(CRLF);
+            writer.append(CRLF).append(param).append(CRLF).flush();
+            */
+            // Send text file.
+            writer.append("--" + boundary).append(CRLF);
+            writer.append("Content-Disposition: form-data; name=\"textFile\"; filename=\"" + textFile.getName() + "\"").append(CRLF);
+            writer.append("Content-Type: text/plain; charset=" + "UTF8").append(CRLF); // Text file itself must be saved in this charset!
+            writer.append(CRLF).flush();
+            Files.copy(textFile.toPath(), output);
+            output.flush(); // Important before continuing with writer!
+            writer.append(CRLF).flush(); // CRLF is important! It indicates end of boundary.
+
+            // Send binary file.
+            /*
+            writer.append("--" + boundary).append(CRLF);
+            writer.append("Content-Disposition: form-data; name=\"binaryFile\"; filename=\"" + binaryFile.getName() + "\"").append(CRLF);
+            writer.append("Content-Type: " + URLConnection.guessContentTypeFromName(binaryFile.getName())).append(CRLF);
+            writer.append("Content-Transfer-Encoding: binary").append(CRLF);
+            writer.append(CRLF).flush();
+            Files.copy(binaryFile.toPath(), output);
+            output.flush(); // Important before continuing with writer!
+            writer.append(CRLF).flush(); // CRLF is important! It indicates end of boundary.
+            */
+            // End of multipart/form-data.
+            writer.append("--" + boundary + "--").append(CRLF).flush();
+        }
+       
+       
+        BufferedReader br = null;
+        if (conn.getResponseCode() != 200) {
+                taoutput.append(conn.getResponseCode() + ": " + conn.getResponseMessage());
+                //throw new RuntimeException("Failed : HTTP error code : "
+                //		+ conn.getResponseCode());
+        } else {
+            br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
+        }
+         String output;
+         if (br != null) {
+            while ((output = br.readLine()) != null) {
+                    taoutput.append(output + "\n");
+            }
+            br.close();
+        }
+        
+       
+        conn.disconnect();
+        } catch (MalformedURLException e) {
+            bslog(e);
+            bsmf.MainFrame.show("MalformedURLException");
+        } catch (IOException ex) {
+            bslog(ex);
+            bsmf.MainFrame.show("IOException");
+        } 
+    }
     
     
     /**
@@ -1151,6 +1243,12 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                 }
                 lblurl.setText(urlstring);
                 URL url = new URL(urlstring);
+                
+                if (ddclass.equals("AS2")) {
+                    postAS2(url, verb);
+                    return;
+                }
+                
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		if (! verb.equals("NONE")) {
                 conn.setRequestMethod(verb);
