@@ -658,6 +658,11 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tabledetail.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tabledetailMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tabledetail);
 
         cbenabled.setText("Enabled?");
@@ -975,17 +980,17 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(lblurl, javax.swing.GroupLayout.PREFERRED_SIZE, 342, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btdelete)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btupdate)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btadd)))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lblurl, javax.swing.GroupLayout.PREFERRED_SIZE, 554, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addComponent(btdelete)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(btupdate)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(btadd))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 335, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -998,11 +1003,12 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
+                .addComponent(lblurl, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1011,8 +1017,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                     .addComponent(btadd)
                     .addComponent(btdelete)
                     .addComponent(btrun)
-                    .addComponent(cbfile)
-                    .addComponent(lblurl, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cbfile))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -1169,12 +1174,13 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                              outputfile.write(output);
                             }
                     }
+                    br.close();
                 }
                 if (outputfile != null) {
                     outputfile.close(); 
                 }
                 conn.disconnect();
-                br.close();
+                
                 
                 } catch (MalformedURLException e) {
 		    bslog(e);
@@ -1184,6 +1190,24 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                     bsmf.MainFrame.show("IOException");
                 } 
     }//GEN-LAST:event_btrunActionPerformed
+
+    private void tabledetailMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabledetailMouseClicked
+        int row = tabledetail.rowAtPoint(evt.getPoint());
+        int col = tabledetail.columnAtPoint(evt.getPoint());
+       // method, verb, class, type, sequence, path, value, source, destination, enabled
+        isLoad = true;  
+        ddverb.setSelectedItem(tabledetail.getValueAt(row, 1).toString());
+        tbmethod.setText(tabledetail.getValueAt(row, 0).toString());
+        ddclass.setSelectedItem(tabledetail.getValueAt(row, 2).toString());
+        ddtype.setSelectedItem(tabledetail.getValueAt(row, 3).toString());
+        tbsequence.setText(tabledetail.getValueAt(row, 4).toString());
+        tbpath.setText(tabledetail.getValueAt(row, 5).toString());
+        tbkvpair.setText(tabledetail.getValueAt(row, 6).toString());
+        tbsourcedir.setText(tabledetail.getValueAt(row, 7).toString());
+        tbdestdir.setText(tabledetail.getValueAt(row, 8).toString());
+        cbenabled.setSelected(bsmf.MainFrame.ConvertStringToBool(tabledetail.getValueAt(row, 4).toString()));
+        isLoad = false;
+    }//GEN-LAST:event_tabledetailMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
