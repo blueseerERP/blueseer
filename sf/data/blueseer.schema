@@ -450,7 +450,9 @@ CREATE TABLE IF NOT EXISTS `edi_ctrl` (
   `edic_archyesno` tinyint(1) NOT NULL  DEFAULT '0',
   `edic_delete` tinyint(1) NOT NULL  DEFAULT '0',
   `edic_tpid` varchar(15) NOT NULL  DEFAULT '',
-  `edic_gsid` varchar(15) NOT NULL  DEFAULT ''
+  `edic_gsid` varchar(15) NOT NULL  DEFAULT '',
+  `edic_as2id` varchar(50) NOT NULL  DEFAULT '',
+  `edic_as2url` varchar(100) NOT NULL  DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `edi_doc` (
   `edd_id` varchar(30) NOT NULL  DEFAULT '',
