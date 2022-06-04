@@ -572,8 +572,8 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         conn.setDoOutput(true);
         conn.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
         conn.setRequestProperty("User-Agent", "RPT-HTTPClient/0.3-3I (Windows Server 2016)"); 
-        conn.setRequestProperty("AS2-To", "045426558002"); 
-        conn.setRequestProperty("AS2-From", "01089986319"); 
+        conn.setRequestProperty("AS2-To", "01089986319");
+        conn.setRequestProperty("AS2-From", "045426558002"); 
         conn.setRequestProperty("AS2-Version", "1.2"); 
         conn.setRequestProperty("Subject", "as2");
         
@@ -1244,7 +1244,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                 lblurl.setText(urlstring);
                 URL url = new URL(urlstring);
                 
-                if (ddclass.equals("AS2")) {
+                if (ddclass.getSelectedItem().toString().equals("AS2")) {
                     postAS2(url, verb);
                     return;
                 }
