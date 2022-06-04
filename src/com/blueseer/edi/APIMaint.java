@@ -99,6 +99,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -565,7 +567,9 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
     
     public void postAS2( URL url, String verb) {
         File textFile = new File(tbsourcedir.getText());
+        String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS"));
         String boundary = Long.toHexString(System.currentTimeMillis()); // Just generate some unique random value.
+        String messageid = "<BLUESEER-" + now + "-" + boundary + "@Blueseer Software>";
         String CRLF = "\r\n"; // Line separator required by multipart/form-data.
         try {
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -582,7 +586,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         //conn.setRequestProperty("Disposition-Notification-To", "http://wmediprod.jm.com:80/invoke/wm.EDIINT/receive");
         conn.setRequestProperty("Disposition-Notification-To", "http://64.132.141.72:4080/exchange/01089986319");
         
-        conn.setRequestProperty("Message-ID", "<CLEO-20220603_134956100-28W45M@01089986319_045426558002.TEST-AZEDICOMM-S>");
+        conn.setRequestProperty("Message-ID", messageid);
         conn.setRequestProperty("Recipient-Address", "http://ngceditest.natgyp.com:4080/exchange/01089986319");
         conn.setRequestProperty("EDIINT-Features", "CEM, multiple-attachments, AS2-Reliability");
 
