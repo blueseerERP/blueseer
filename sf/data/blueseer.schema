@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS `api_mstr` (
 CREATE TABLE IF NOT EXISTS `api_det` (
   `apid_id` varchar(30)  NOT NULL DEFAULT '',
   `apid_method` varchar(50)  NOT NULL DEFAULT '',
-  `apid_seq` int(3)  NOT NULL DEFAULT '',
+  `apid_seq` int(3)  NOT NULL DEFAULT '0',
   `apid_verb` varchar(50)  NOT NULL DEFAULT '',
   `apid_type` varchar(50)  NOT NULL DEFAULT '',
   `apid_path` varchar(100)  NOT NULL DEFAULT '',
