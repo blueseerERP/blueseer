@@ -36,6 +36,7 @@ import static bsmf.MainFrame.user;
 import com.blueseer.inv.invData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.checkLength;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
@@ -61,6 +62,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.BorderFactory;
@@ -327,29 +329,52 @@ public class VendXrefMaint extends javax.swing.JPanel implements IBlueSeer {
     }
     
     public boolean validateInput(String x) {
-        boolean b = true;
-                if (ddvend.getSelectedItem() == null || ddvend.getSelectedItem().toString().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1026));
-                    ddvend.requestFocus();
-                    return b;
-                }
+        Map<String,Integer> f = OVData.getTableInfo("vdp_mstr");
+        int fc;
+        
+        if (ddvend.getSelectedItem() == null || ddvend.getSelectedItem().toString().isEmpty()) {
+            bsmf.MainFrame.show(getMessageTag(1024));
+            ddvend.requestFocus();
+            return false;
+        }
+
+        if (ddpart.getSelectedItem() == null || ddpart.getSelectedItem().toString().isEmpty()) {
+            bsmf.MainFrame.show(getMessageTag(1024));
+            ddpart.requestFocus();
+            return false;
+        }
+
+        fc = checkLength(f,"vdp_vitem");
+        if (tbkey.getText().length() > fc || tbkey.getText().isEmpty()) {
+        bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+        tbkey.requestFocus();
+        return false;
+        } 
+
+
+        fc = checkLength(f,"vdp_sku");
+        if (skunbr.getText().length() > fc) {
+        bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+        skunbr.requestFocus();
+        return false;
+        } 
+
+        fc = checkLength(f,"vdp_upc");
+        if (upcnbr.getText().length() > fc) {
+        bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+        upcnbr.requestFocus();
+        return false;
+        } 
+
+        fc = checkLength(f,"vdp_misc");
+        if (misc.getText().length() > fc) {
+        bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+        misc.requestFocus();
+        return false;
+        } 
                
-                if (ddpart.getSelectedItem() == null || ddpart.getSelectedItem().toString().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1026));
-                    ddpart.requestFocus();
-                    return b;
-                }
-                
-                if (tbkey.getText().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1024));
-                    tbkey.requestFocus();
-                    return b;
-                }
                
-        return b;
+        return true;
     }
     
     public void initvars(String[] arg) {
