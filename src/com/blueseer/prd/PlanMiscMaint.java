@@ -34,6 +34,7 @@ import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.inv.invData;
+import static com.blueseer.utl.BlueSeerUtils.checkLength;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.OVData;
 import java.awt.Component;
@@ -45,6 +46,7 @@ import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.BorderFactory;
@@ -290,7 +292,15 @@ Connection con = DriverManager.getConnection(url + db, user, pass);
                     tbqty.requestFocus();
                    return;
                 }
-                
+               
+                Map<String,Integer> f = OVData.getTableInfo("plan_mstr");
+                int fc;
+                fc = checkLength(f,"plan_rmks");
+                if (tbrmks.getText().length() > fc) {
+                bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+                tbrmks.requestFocus();
+                return;
+                } 
                 
                 
                 int nbr = OVData.getNextNbr("plan");

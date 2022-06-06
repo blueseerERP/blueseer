@@ -30,6 +30,7 @@ import com.blueseer.inv.invData;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.checkLength;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -51,6 +52,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -440,7 +442,7 @@ public class ProdEntryMaint extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btsubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btsubmitActionPerformed
-        boolean canproceed = true;
+        
         String prodline = "";
         String expire = "";
         String loc = OVData.getLocationByItem(tbpart.getText());
@@ -451,26 +453,40 @@ public class ProdEntryMaint extends javax.swing.JPanel {
         
         if (! BlueSeerUtils.isParsableToDouble(tbqty.getText()) ) {
             bsmf.MainFrame.show(getMessageTag(1028));
-            canproceed = false;            
+            return;            
         }
         
          if (dcdate.getDate() == null || ! BlueSeerUtils.isValidDateStr(BlueSeerUtils.mysqlDateFormat.format(dcdate.getDate())) ) {
             bsmf.MainFrame.show(getMessageTag(1123));
-            canproceed = false;            
+            return;            
         }
         if (dcexpire.getDate() != null && BlueSeerUtils.isValidDateStr(BlueSeerUtils.mysqlDateFormat.format(dcexpire.getDate())) ) {
             expire = dfdate.format(dcexpire.getDate());
         } 
          
          if ( OVData.isGLPeriodClosed(dfdate.format(dcdate.getDate()))) {
-                    canproceed = false;
                     bsmf.MainFrame.show(getMessageTag(1035));
                     return;
                 }
-         
+        
+        Map<String,Integer> f = OVData.getTableInfo("tran_mstr");
+        int fc;
+        fc = checkLength(f,"tr_serial");
+        if (tbserialno.getText().length() > fc) {
+        bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+        tbserialno.requestFocus();
+        return;
+        } 
+        
+        fc = checkLength(f,"tr_ref");
+        if (tbreference.getText().length() > fc) {
+        bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+        tbreference.requestFocus();
+        return;
+        } 
          
        
-        if (canproceed) {
+     
             transmodel.addRow(new Object[]{tbpart.getText(), 
                 "ISS-WIP", 
                 ddop.getSelectedItem(), 
@@ -492,7 +508,7 @@ public class ProdEntryMaint extends javax.swing.JPanel {
                 wh,
                 ddbom.getSelectedItem().toString()
                 });
-        }
+        
         // now let's load transaction
         if (! OVData.loadTranHistByTable(transtable)) {
             bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));

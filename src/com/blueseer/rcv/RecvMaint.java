@@ -46,6 +46,7 @@ import com.blueseer.rcv.rcvData.recv_mstr;
 import static com.blueseer.rcv.rcvData.updateReceiverTransaction;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.checkLength;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
@@ -84,6 +85,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Connection;
 import java.text.ParseException;
+import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -636,53 +638,70 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
            
     public boolean validateInput(dbaction x) {
-        boolean b = true;
-                if (ddvend.getSelectedItem() == null || ddvend.getSelectedItem().toString().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1024));
-                    ddvend.requestFocus();
-                    return b;
-                }
+       Map<String,Integer> f = OVData.getTableInfo("recv_mstr");
+        int fc;
+        
+        if (ddvend.getSelectedItem() == null || ddvend.getSelectedItem().toString().isEmpty()) {
+            bsmf.MainFrame.show(getMessageTag(1024));
+            ddvend.requestFocus();
+            return false;
+        }
+        
+        fc = checkLength(f,"rv_packingslip");
+        if (tbpackingslip.getText().length() > fc || tbpackingslip.getText().isEmpty()) {
+        bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+        tbpackingslip.requestFocus();
+        return false;
+        } 
+        
+        f = OVData.getTableInfo("recv_det");
+        
+        fc = checkLength(f,"rvd_lot");
+        if (tblot.getText().length() > fc) {
+        bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+        tblot.requestFocus();
+        return false;
+        } 
+        
+        fc = checkLength(f,"rvd_serial");
+        if (tbserial.getText().length() > fc) {
+        bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+        tbserial.requestFocus();
+        return false;
+        } 
+        
+        
+        
                 if (! x.name().equals("update")) {  // if adjusting fields in the table....this validation is not necessary as they cannot change the PO
                     if (ddpo.getSelectedItem() == null || ddpo.getSelectedItem().toString().isEmpty()) {
-                        b = false;
                         bsmf.MainFrame.show(getMessageTag(1026));
                         ddpo.requestFocus();
-                        return b;
+                        return false;
                     }
                 }
-                
-                if (tbpackingslip.getText().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1024));
-                    tbpackingslip.requestFocus();
-                    return b;
-                }
+              
                 
                 if (! x.name().equals("addItem")) {
                     if (rvdet.getRowCount() <= 0) {
-                        b = false;
                         bsmf.MainFrame.show(getMessageTag(1089));
-                        return b;
+                        return false;
                     }
                 }
                 
                 if (x.name().equals("addItem")) {
                     if (tbqty.getText().isEmpty()) {
-                        b = false;
                         bsmf.MainFrame.show(getMessageTag(1024));
                         tbqty.requestFocus();
-                        return b;
+                        return false;
                     }
                 }
                
                 
                 if ( OVData.isGLPeriodClosed(dfdate.format(dcdate.getDate()))) {
-                    b = false;
                     bsmf.MainFrame.show(getMessageTag(1035));
-                    return b;
+                    return false;
                 }
-        return b;
+        return true;
     }
     
     public void lookUpFrame() {
