@@ -405,10 +405,13 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
     
     public void initvars(String[] arg) {
        
+       
        setPanelComponentState(this, false); 
        setComponentDefaultValues();
         btnew.setEnabled(true);
         btlookup.setEnabled(true);
+       
+        bsmf.MainFrame.show("This functionality is a work-in-progress and not intended for production");
         
         if (arg != null && arg.length > 0) {
             executeTask(dbaction.get,arg);
@@ -571,7 +574,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         File textFile = new File(tbsourcedir.getText());
         String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS"));
         String boundary = Long.toHexString(System.currentTimeMillis()); // Just generate some unique random value.
-        String messageid = "<BLUESEER-" + now + "-" + boundary + "@Blueseer Software>";
+        String messageid = "<BLUESEER-" + now + "." + boundary + "@Blueseer Software>";
         String CRLF = "\r\n"; // Line separator required by multipart/form-data.
         try {
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();

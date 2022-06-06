@@ -36,6 +36,7 @@ import com.blueseer.ctr.cusData;
 import com.blueseer.fgl.fglData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.checkLength;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
@@ -70,6 +71,7 @@ import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -437,35 +439,115 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
      
     public boolean validateInput(dbaction x) {
-        boolean b = true;
-                if (OVData.isValidVendor(tbkey.getText()) &&  x.equals("addRecord")) {
-                  b = false;
-                  BlueSeerUtils.message(new String[] {"1", "vendor code already in use"});
-                  return b;
-                } 
-         
-                if (tbkey.getText().isEmpty()) {
-                    b = false;
-                    BlueSeerUtils.message(new String[] {"1", "must enter a vendor code"});
-                    tbkey.requestFocus();
-                    return b;
-                }
-                
-                if (ddaccount.getSelectedItem().toString().isEmpty() || ! OVData.isValidGLAcct(ddaccount.getSelectedItem().toString())) {
-                    b = false;
-                    BlueSeerUtils.message(new String[] {"1", "must assign a valid AP account"});
-                    return b;
-                }
-                if (ddcc.getSelectedItem().toString().isEmpty() || ! OVData.isValidGLcc(ddcc.getSelectedItem().toString())) {
-                    b = false;
-                   BlueSeerUtils.message(new String[] {"1", "must assign a valid cost center"});
-                    return b;
-                }       
+       Map<String,Integer> f = OVData.getTableInfo("vd_mstr");
+        int fc;
+
+        fc = checkLength(f,"vd_addr");
+        if (tbkey.getText().length() > fc || tbkey.getText().isEmpty()) {
+            bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+            tbkey.requestFocus();
+            return false;
+        }  
         
-               
+         fc = checkLength(f,"vd_name");
+        if (tbname.getText().length() > fc || tbname.getText().isEmpty()) {
+            bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+            tbname.requestFocus();
+            return false;
+        } 
+        
+        fc = checkLength(f,"vd_line1");
+        if (tbline1.getText().length() > fc) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tbline1.requestFocus();
+            return false;
+        }
+        
+        fc = checkLength(f,"vd_line2");
+        if (tbline2.getText().length() > fc) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tbline2.requestFocus();
+            return false;
+        }
+        
+        fc = checkLength(f,"vd_line3");
+        if (tbline3.getText().length() > fc) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tbline3.requestFocus();
+            return false;
+        }
+        
+        fc = checkLength(f,"vd_city");
+        if (tbcity.getText().length() > fc) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tbcity.requestFocus();
+            return false;
+        }
+        
+        fc = checkLength(f,"vd_zip");
+        if (tbzip.getText().length() > fc) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tbzip.requestFocus();
+            return false;
+        }
+        
+        fc = checkLength(f,"vd_phone");
+        if (tbphone.getText().length() > fc) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tbphone.requestFocus();
+            return false;
+        }
+        
+        fc = checkLength(f,"vd_email");
+        if (tbemail.getText().length() > fc) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tbemail.requestFocus();
+            return false;
+        }
+        
+        fc = checkLength(f,"vd_group");
+        if (tbgroup.getText().length() > fc) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tbgroup.requestFocus();
+            return false;
+        }
+        
+        fc = checkLength(f,"vd_market");
+        if (tbmarket.getText().length() > fc) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tbmarket.requestFocus();
+            return false;
+        }
+        
+        fc = checkLength(f,"vd_buyer");
+        if (tbsalesrep.getText().length() > fc) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tbsalesrep.requestFocus();
+            return false;
+        }
+        
+        fc = checkLength(f,"vd_remarks");
+        if (tbremarks.getText().length() > fc) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tbremarks.requestFocus();
+            return false;
+        }
+        
+
+        if ( ! OVData.isValidGLAcct(ddaccount.getSelectedItem().toString())) {
+          bsmf.MainFrame.show(getMessageTag(1052));
+          ddaccount.requestFocus();
+          return false;
+        }
+
+        if ( ! OVData.isValidGLcc(ddcc.getSelectedItem().toString())) {
+          bsmf.MainFrame.show(getMessageTag(1048));
+          ddcc.requestFocus();
+          return false;  
+        }
                 
                
-        return b;
+        return true;
     }
     
     public void initvars(String[] arg) {
