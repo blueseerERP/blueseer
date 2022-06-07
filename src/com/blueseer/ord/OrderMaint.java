@@ -411,6 +411,184 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         
         isLoad = true;
         
+        ArrayList<String[]> initDataSets = ordData.getSalesOrderInit();
+                
+        jTabbedPane1.removeAll();
+        jTabbedPane1.add("Main", jPanelMain);
+        jTabbedPane1.add("Lines", jPanelLines);
+        jTabbedPane1.add("Schedule", jPanelSched);
+        
+        jTabbedPane1.setEnabledAt(1, false);
+        jTabbedPane1.setEnabledAt(2, false);
+        
+        tbkey.setText("");
+        tbkey.setEditable(true);
+        tbkey.setForeground(Color.black);
+        
+       
+        cbisallocated.setText("Allocation?");
+        
+        
+        ArrayList<String> mylist = new ArrayList<String>();
+         jPanelSched.setVisible(false);
+        java.util.Date now = new java.util.Date();
+       
+        lblstatus.setText("");
+        lblstatus.setForeground(Color.black);
+       
+        cbissourced.setSelected(false);
+        cbisallocated.setSelected(false);
+        cbconfirm.setSelected(false);
+        
+        listprice.setText("0");
+        netprice.setText("0");
+        qtyshipped.setText("0");
+        discount.setText("0");
+        ponbr.setText("");
+        lblcustname.setText("");
+        lblshiptoaddr.setText("");
+        lblcurr.setText("");
+        ddsactype.setSelectedIndex(0);
+        tbsacdesc.setText("");
+        tbsacamt.setText("");
+        duedate.setDate(now);
+        orddate.setDate(now);
+        
+        
+        myorddetmodel.setRowCount(0);
+        myorddetmodel.addTableModelListener(ml);
+        orddet.setModel(myorddetmodel);
+        
+        //hide columns
+        orddet.getColumnModel().getColumn(2).setMaxWidth(0);
+        orddet.getColumnModel().getColumn(2).setMinWidth(0);
+        orddet.getColumnModel().getColumn(3).setMaxWidth(0);
+        orddet.getColumnModel().getColumn(3).setMinWidth(0);
+        orddet.getColumnModel().getColumn(4).setMaxWidth(0);
+        orddet.getColumnModel().getColumn(4).setMinWidth(0);
+        
+        
+        sacmodel.setRowCount(0);
+        sactable.setModel(sacmodel);
+        modelsched.setRowCount(0);
+        tablesched.setModel(modelsched);
+        
+        tbhdrwh.setText("");
+        lblIsSourced.setIcon(null);
+        remarks.setText("");
+        tbtotqty.setText("");
+        tbtotdollars.setText("");
+        tbtottax.setText("");
+        totlines.setText("");
+        custnumber.setText("");
+        
+        ddpart.setForeground(Color.black);
+        custnumber.setForeground(Color.black);
+        custnumber.setEditable(false);
+        tbdesc.setForeground(Color.black);
+        tbdesc.setEditable(false);
+        
+        String defaultsite = null;
+        
+        ddsite.removeAllItems();
+        ddwh.removeAllItems();
+        ddloc.removeAllItems();
+        ddcurr.removeAllItems();
+        dduom.removeAllItems();
+        ddtax.removeAllItems();
+        ddcust.removeAllItems();
+        ddship.removeAllItems();
+        ddshipvia.removeAllItems();
+        ddstatus.removeAllItems();
+        ddstate.removeAllItems();
+        ddpart.removeAllItems();
+        
+        
+        for (String[] s : initDataSets) {
+            if (s[0].equals("currency")) {
+              basecurr = s[1];  
+            }
+            if (s[0].equals("allocate")) {
+              autoallocate = bsmf.MainFrame.ConvertStringToBool(s[1]);  
+            }
+            if (s[0].equals("custitemonly")) {
+              custitemonly = bsmf.MainFrame.ConvertStringToBool(s[1]);  
+            }
+            if (s[0].equals("sites")) {
+              ddsite.addItem(s[1]); 
+            }
+            if (s[0].equals("site")) {
+              defaultsite = s[1]; 
+            }
+            if (s[0].equals("warehouses")) {
+              ddwh.addItem(s[1]); 
+            }
+            if (s[0].equals("locations")) {
+              ddloc.addItem(s[1]); 
+            }
+            if (s[0].equals("currencies")) {
+              ddcurr.addItem(s[1]); 
+            }
+            if (s[0].equals("uoms")) {
+              dduom.addItem(s[1]); 
+            }
+            if (s[0].equals("taxecodes")) {
+              ddtax.addItem(s[1]); 
+            }
+            if (s[0].equals("customers")) {
+              ddcust.addItem(s[1]); 
+            }
+            if (s[0].equals("carriers")) {
+              ddshipvia.addItem(s[1]); 
+            }
+            if (s[0].equals("statuses")) {
+              ddstatus.addItem(s[1]); 
+            }
+            if (s[0].equals("states")) {
+              ddstate.addItem(s[1]); 
+            }
+            if (s[0].equals("items")) {
+              ddpart.addItem(s[1]); 
+            }
+            
+        }
+        
+        cbisallocated.setSelected(autoallocate);
+        ddsite.setSelectedItem(defaultsite);
+        ddwh.insertItemAt("", 0);
+        ddwh.setSelectedIndex(0);
+        ddloc.insertItemAt("", 0);
+        ddloc.setSelectedIndex(0);
+        ddcurr.insertItemAt("", 0);
+        ddcurr.setSelectedIndex(0);
+        dduom.insertItemAt("", 0);
+        dduom.setSelectedIndex(0);
+        ddtax.insertItemAt("", 0);
+        ddtax.setSelectedIndex(0);
+        ddcust.insertItemAt("", 0);
+        ddcust.setSelectedIndex(0);
+        ddshipvia.insertItemAt("", 0);
+        ddshipvia.setSelectedIndex(0);
+        if (ddstate.getItemCount() > 0) {
+           ddstate.setSelectedIndex(0); 
+        }
+        ddstatus.setSelectedItem(getGlobalProgTag("open"));
+        
+       
+        
+        
+        lbqtyavailable.setBackground(Color.gray);
+        lbqtyavailable.setText("");
+        
+        isLoad = false;
+        
+        
+    }
+    
+    public void setComponentDefaultValues_backup() {
+        
+        isLoad = true;
+        
         basecurr = OVData.getDefaultCurrency();
         
         jTabbedPane1.removeAll();
@@ -594,6 +772,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         
         
     }
+    
     
     public void newAction(String x) {
        setPanelComponentState(this, true);
