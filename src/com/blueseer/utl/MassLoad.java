@@ -37,6 +37,7 @@ import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.OVData.createTestDataPO;
 import static com.blueseer.utl.OVData.createTestDataSO;
 import static com.blueseer.utl.OVData.createTestDataTC;
+import com.blueseer.vdr.venData;
 import java.awt.Component;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -1633,7 +1634,7 @@ public class MassLoad extends javax.swing.JPanel {
             }
             fsr.close();
              if (proceed) {
-                   if(! OVData.addVendMstr(list))
+                   if(! venData.addVendMstrMass(list))
                        m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151,String.valueOf(i))};
                    } else {
                   m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 

@@ -57,7 +57,7 @@ public class venData {
         ResultSet res = null;
         try { 
             con = DriverManager.getConnection(url + db, user, pass);
-            int rows = _addVendMstr(x, con, ps, res);  
+            int rows = _addVendMstr(x, con, ps, res, false);  
             if (rows > 0) {
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
             } else {
@@ -92,7 +92,59 @@ public class venData {
     return m;
     }
     
-     private static int _addVendMstr(vd_mstr x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+   
+    public static boolean addVendMstrMass(ArrayList<String> list) {
+        boolean r = false;
+        String[] ld = null;
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet res = null;
+        try { 
+            con = DriverManager.getConnection(url + db, user, pass);
+               for (String rec : list) {
+                ld = rec.split(":", -1);
+                vd_mstr x = new vd_mstr(null, 
+                ld[0], ld[1], ld[2], ld[3], ld[4],
+                    ld[5], ld[6], ld[7], ld[8], ld[9],
+                    BlueSeerUtils.setDateFormat(new java.util.Date()), BlueSeerUtils.setDateFormat(new java.util.Date()), 
+                    bsmf.MainFrame.userid, ld[10], ld[11], ld[12], ld[13], 
+                    ld[14], ld[15], ld[16], ld[17], 
+                    ld[18], ld[19], ld[20], 
+                    ld[21], ld[22], ld[23], ld[24], ld[25], 
+                    ld[26], ld[27]
+                );
+                _addVendMstr(x, con, ps, res, true);
+            }
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+        } finally {
+            if (res != null) {
+                try {
+                    res.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return r;
+    }
+    
+    
+    private static int _addVendMstr(vd_mstr x, Connection con, PreparedStatement ps, ResultSet res, boolean addupdate) throws SQLException {
         int rows = 0;
         String sqlSelect = "select * from vd_mstr where vd_addr = ?";
         String sqlInsert = "insert into vd_mstr (vd_addr, vd_name, vd_line1, vd_line2, "
@@ -103,10 +155,21 @@ public class venData {
                         + "vd_disc_code, vd_tax_code,  "
                         + "vd_ap_acct, vd_ap_cc, vd_bank, vd_curr, vd_remarks, vd_phone, vd_email, vd_is850export ) "
                         + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
+        String sqlUpdate = "update vd_mstr set " 
+                + " vd_name = ?, vd_line1 = ?, vd_line2 = ?, "
+                + "vd_line3 = ?, vd_city = ?, vd_state = ?, vd_zip = ?, "
+                + "vd_country = ?, vd_dateadd = ?, vd_datemod = ?, vd_usermod = ?, "
+                + "vd_group = ?, vd_market = ?, vd_buyer = ?,  "
+                + "vd_shipvia = ?, vd_terms = ?, vd_freight_type = ?, vd_price_code = ?, "
+                + "vd_disc_code = ?, vd_tax_code = ?, vd_misc = ?, "
+                + "vd_ap_acct = ?, vd_ap_cc = ?, vd_bank = ?, vd_curr = ?, " 
+                + "vd_remarks = ?, vd_phone = ?, vd_email = ?, vd_is850export = ? "
+                + " where vd_addr = ? ; ";
           ps = con.prepareStatement(sqlSelect);
           ps.setString(1, x.vd_addr);
           res = ps.executeQuery();
           ps = con.prepareStatement(sqlInsert);  
+          PreparedStatement psu = con.prepareStatement(sqlUpdate);
             if (! res.isBeforeFirst()) {
             ps.setString(1, x.vd_addr);
             ps.setString(2, x.vd_name);
@@ -138,11 +201,46 @@ public class venData {
             ps.setString(28,x.vd_email);
             ps.setString(29,x.vd_is850export);
             rows = ps.executeUpdate();
-            } 
+            } else {
+                if (addupdate) {
+               psu.setString(30, x.vd_addr);
+                psu.setString(1, x.vd_name);
+                psu.setString(2, x.vd_line1);
+                psu.setString(3, x.vd_line2);
+                psu.setString(4, x.vd_line3);
+                psu.setString(5, x.vd_city);
+                psu.setString(6, x.vd_state);
+                psu.setString(7, x.vd_zip);
+                psu.setString(8, x.vd_country);
+                psu.setString(9, x.vd_dateadd);
+                psu.setString(10, x.vd_datemod);
+                psu.setString(11, x.vd_usermod);
+                psu.setString(12, x.vd_group);
+                psu.setString(13, x.vd_market);
+                psu.setString(14, x.vd_buyer);
+                psu.setString(15, x.vd_shipvia);
+                psu.setString(16, x.vd_terms);
+                psu.setString(17, x.vd_freight_type);
+                psu.setString(18, x.vd_price_code);
+                psu.setString(19,x.vd_disc_code);
+                psu.setString(20,x.vd_tax_code);
+                psu.setString(21,x.vd_misc);
+                psu.setString(22,x.vd_ap_acct);
+                psu.setString(23,x.vd_ap_cc);
+                psu.setString(24,x.vd_bank);
+                psu.setString(25,x.vd_curr);
+                psu.setString(26,x.vd_remarks);
+                psu.setString(27,x.vd_phone);
+                psu.setString(28,x.vd_email);
+                psu.setString(29,x.vd_is850export);
+                rows = psu.executeUpdate();  
+                psu.close();
+              }
+            }
             return rows;
     }
      
-     public static String[] updateVendMstr(vd_mstr x) {
+    public static String[] updateVendMstr(vd_mstr x) {
         String[] m = new String[2];
         if (x == null) {
             return new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordError};
