@@ -1890,8 +1890,8 @@ public class OVData {
 
     }
 
-    public static ArrayList getScacCarrierOnly() {
-        ArrayList myarray = new ArrayList();
+    public static ArrayList<String> getScacCarrierOnly() {
+        ArrayList<String> myarray = new ArrayList<String>();
         try {
             Class.forName(bsmf.MainFrame.driver).newInstance();
             Connection con = DriverManager.getConnection(url + db, user, pass);

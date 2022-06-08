@@ -281,10 +281,7 @@ public class CarrierMaint extends javax.swing.JPanel implements IBlueSeerT {
         carrierlist.setModel(mymodel);
         ddcarrier.removeAllItems();
         
-        ArrayList<String> mylist = OVData.getScacCarrierOnly();
-        for (int i = 0; i < mylist.size(); i++) {
-            ddcarrier.addItem(mylist.get(i));
-        }
+        OVData.getScacCarrierOnly().stream().forEach((s) -> ddcarrier.addItem(s)); 
         
        isLoad = false;
     }
