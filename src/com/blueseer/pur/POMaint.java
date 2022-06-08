@@ -690,8 +690,30 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
     
     
     public boolean validateInput(dbaction x) {
-        boolean proceed = true;
-            
+       
+        Map<String,Integer> f = OVData.getTableInfo("po_mstr");
+        int fc;        
+        fc = checkLength(f,"po_nbr");
+        if (tbkey.getText().length() > fc || tbkey.getText().isEmpty()) {
+        bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+        tbkey.requestFocus();
+        return false;
+        } 
+                
+        fc = checkLength(f,"po_rmks");
+        if (remarks.getText().length() > fc) {
+        bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+        remarks.requestFocus();
+        return false;
+        } 
+        
+        fc = checkLength(f,"po_buyer");
+        if (tbbuyer.getText().length() > fc) {
+        bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+        tbbuyer.requestFocus();
+        return false;
+        } 
+        
             
          if (ddstatus.getSelectedItem().toString().isEmpty()) {
                     status = getGlobalProgTag("open");
@@ -706,14 +728,12 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
                 
                 if ( ddvend.getSelectedItem() == null || ddvend.getSelectedItem().toString().isEmpty() ) {
                    bsmf.MainFrame.show(getMessageTag(1024));
-                   proceed = false;
                     ddvend.requestFocus();
                     return false;
                 }
                
                 if ( duedate.getDate() == null) {
                    bsmf.MainFrame.show(getMessageTag(1024));
-                   proceed = false;
                     duedate.requestFocus();
                     return false;
                 }
@@ -727,13 +747,11 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
                         terms.isEmpty() || acct.isEmpty() || cc.isEmpty() || curr.isEmpty()
                          ) {
                         bsmf.MainFrame.show(getMessageTag(1090));
-                        proceed = false;
                         return false;
                     }   
                 
                 if (orddet.getRowCount() == 0) {
                     bsmf.MainFrame.show(getMessageTag(1089));
-                    proceed = false;
                     return false;
                 }
                 
@@ -742,13 +760,12 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
             if (! curr.toUpperCase().equals(basecurr.toUpperCase())) {
             if (OVData.getExchangeRate(basecurr, curr).isEmpty()) {
                 bsmf.MainFrame.show(getMessageTag(1091, curr + "/" + basecurr));
-                proceed = false;
                 return false;
             }
             }
                 
                     
-        return proceed;
+        return true;
     }
     
     public void lookUpFrame() {
