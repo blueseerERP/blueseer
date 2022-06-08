@@ -35,6 +35,7 @@ import static com.blueseer.inv.invData.updateWareHouseMstr;
 import com.blueseer.inv.invData.wh_mstr;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.checkLength;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -54,6 +55,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -331,34 +333,30 @@ public class WareHouseMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
     
     public boolean validateInput(dbaction x) {
-        boolean b = true;
-                if (ddsite.getSelectedItem() == null || ddsite.getSelectedItem().toString().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1026));
-                    ddsite.requestFocus();
-                    return b;
-                }
-               
+       
+        Map<String,Integer> f = OVData.getTableInfo("wh_mstr");
+        int fc;        
+        fc = checkLength(f,"wh_id");
+        if (tbkey.getText().length() > fc || tbkey.getText().isEmpty()) {
+        bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+        tbkey.requestFocus();
+        return false;
+        } 
                 
-                
-                if (tbkey.getText().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1024));
-                    tbkey.requestFocus();
-                    return b;
-                }
-                
-                if (tbname.getText().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1024));
-                    tbname.requestFocus();
-                    return b;
-                }
-                
-                
-                
-               
-        return b;
+        fc = checkLength(f,"wh_name");
+        if (tbname.getText().length() > fc) {
+        bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+        tbname.requestFocus();
+        return false;
+        } 
+        
+        if (ddsite.getSelectedItem() == null || ddsite.getSelectedItem().toString().isEmpty()) {
+            bsmf.MainFrame.show(getMessageTag(1026));
+            ddsite.requestFocus();
+            return false;
+        }
+                        
+        return true;
     }
     
     public void initvars(String[] arg) {

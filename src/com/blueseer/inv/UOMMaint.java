@@ -35,6 +35,7 @@ import com.blueseer.inv.invData.uom_mstr;
 import static com.blueseer.inv.invData.updateUOMMstr;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.checkLength;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -59,6 +60,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -299,17 +301,22 @@ public class UOMMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
     
     public boolean validateInput(dbaction x) {
-        if (tbkey.getText().isEmpty()) {
-            bsmf.MainFrame.show(getMessageTag(1024));
-            tbkey.requestFocus();
-            return false;
-        }
-
-        if (tbdesc.getText().isEmpty()) {
-            bsmf.MainFrame.show(getMessageTag(1024));
-            tbdesc.requestFocus();
-            return false;
-        }
+        Map<String,Integer> f = OVData.getTableInfo("uom_mstr");
+        int fc;        
+        fc = checkLength(f,"uom_id");
+        if (tbkey.getText().length() > fc || tbkey.getText().isEmpty()) {
+        bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+        tbkey.requestFocus();
+        return false;
+        } 
+                
+        fc = checkLength(f,"uom_desc");
+        if (tbdesc.getText().length() > fc) {
+        bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+        tbdesc.requestFocus();
+        return false;
+        } 
+        
         return true;
     }
     
