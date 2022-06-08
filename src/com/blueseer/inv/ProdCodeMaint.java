@@ -41,6 +41,7 @@ import com.blueseer.inv.invData.pl_mstr;
 import static com.blueseer.inv.invData.updatePLMstr;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.checkLength;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -66,6 +67,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -339,184 +341,157 @@ public class ProdCodeMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
     
     public boolean validateInput(dbaction x) {
-        boolean b = true;
+      Map<String,Integer> f = OVData.getTableInfo("pl_mstr");
+        int fc;
+
+        fc = checkLength(f,"pl_line");
+        if (tbkey.getText().length() > fc || tbkey.getText().isEmpty()) {
+            bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+            tbkey.requestFocus();
+            return false;
+        }  
         
-                        
-        
-                if (tbkey.getText().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1024));
-                    tbkey.requestFocus();
-                    return b;
-                }
-                
-                if (tbdesc.getText().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1024));
-                    tbdesc.requestFocus();
-                    return b;
-                }
+        fc = checkLength(f,"pl_desc");
+        if (tbdesc.getText().length() > fc) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tbdesc.requestFocus();
+            return false;
+        } 
                 
                 if (! OVData.isValidGLAcct(tbinvacct.getText().toString())) {
-                   b = false;
                    bsmf.MainFrame.show(getMessageTag(1052));
                    tbinvacct.requestFocus();
-                   return b;
+                   return false;
                 }
          if (! OVData.isValidGLAcct(tbinvdescrepancyacct.getText().toString())) {
-                   b = false;
                    bsmf.MainFrame.show(getMessageTag(1052));
                    tbinvdescrepancyacct.requestFocus();
-                   return b;
+                   return false;
                 }
          if (! OVData.isValidGLAcct(tbwipacct.getText().toString())) {
-                   b = false;
                    bsmf.MainFrame.show(getMessageTag(1052));
                    tbwipacct.requestFocus();
-                   return b;
+                   return false;
                 }
          if (! OVData.isValidGLAcct(tbwipvaracct.getText().toString())) {
-                   b = false;
                    bsmf.MainFrame.show(getMessageTag(1052));
                    tbwipvaracct.requestFocus();
-                   return b;
+                   return false;
                 }
          if (! OVData.isValidGLAcct(tbscrapacct.getText().toString())) {
-                   b = false;
                    bsmf.MainFrame.show(getMessageTag(1052));
                    tbscrapacct.requestFocus();
-                   return b;
+                   return false;
                 }
          if (! OVData.isValidGLAcct(tbinvchangeacct.getText().toString())) {
-                   b = false;
                    bsmf.MainFrame.show(getMessageTag(1052));
                    tbinvchangeacct.requestFocus();
-                   return b;
+                   return false;
                 }
          if (! OVData.isValidGLAcct(tbsalesacct.getText().toString())) {
-                   b = false;
                    bsmf.MainFrame.show(getMessageTag(1052));
                    tbsalesacct.requestFocus();
-                   return b;
+                   return false;
                 }
          if (! OVData.isValidGLAcct(tbsalesdiscacct.getText().toString())) {
-                   b = false;
                    bsmf.MainFrame.show(getMessageTag(1052));
                    tbsalesdiscacct.requestFocus();
-                   return b;
+                   return false;
                 }
          if (! OVData.isValidGLAcct(tbcogsmtlacct.getText().toString())) {
-                   b = false;
                    bsmf.MainFrame.show(getMessageTag(1052));
                    tbcogsmtlacct.requestFocus();
-                   return b;
+                   return false;
                 }
          if (! OVData.isValidGLAcct(tbcogslbracct.getText().toString())) {
-                   b = false;
                    bsmf.MainFrame.show(getMessageTag(1052));
                    tbcogslbracct.requestFocus();
-                   return b;
+                   return false;
                 }
          if (! OVData.isValidGLAcct(tbcogsbdnacct.getText().toString())) {
-                   b = false;
                    bsmf.MainFrame.show(getMessageTag(1052));
                    tbcogsbdnacct.requestFocus();
-                   return b;
+                   return false;
                 }
          if (! OVData.isValidGLAcct(tbcogsovhacct.getText().toString())) {
-                   b = false;
                    bsmf.MainFrame.show(getMessageTag(1052));
                    tbcogsovhacct.requestFocus();
-                   return b;
+                   return false;
                 }
          if (! OVData.isValidGLAcct(tbcogsoutacct.getText().toString())) {
-                   b = false;
                    bsmf.MainFrame.show(getMessageTag(1052));
                    tbcogsoutacct.requestFocus();
-                   return b;
+                   return false;
                 }
          if (! OVData.isValidGLAcct(tbpurchacct.getText().toString())) {
-                   b = false;
                    bsmf.MainFrame.show(getMessageTag(1052));
                    tbpurchacct.requestFocus();
-                   return b;
+                   return false;
                 }
          if (! OVData.isValidGLAcct(tbporcptacct.getText().toString())) {
-                   b = false;
                    bsmf.MainFrame.show(getMessageTag(1052));
                    tbporcptacct.requestFocus();
-                   return b;
+                   return false;
                 }
          if (! OVData.isValidGLAcct(tbpoovhacct.getText().toString())) {
-                   b = false;
                    bsmf.MainFrame.show(getMessageTag(1052));
                    tbpoovhacct.requestFocus();
-                   return b;
+                   return false;
                 }
          if (! OVData.isValidGLAcct(tbpopricevaracct.getText().toString())) {
-                   b = false;
                    bsmf.MainFrame.show(getMessageTag(1052));
                    tbpopricevaracct.requestFocus();
-                   return b;
+                   return false;
                 }
          if (! OVData.isValidGLAcct(tbapusageacct.getText().toString())) {
-                   b = false;
                    bsmf.MainFrame.show(getMessageTag(1052));
                    tbapusageacct.requestFocus();
-                   return b;
+                   return false;
                 }
          if (! OVData.isValidGLAcct(tbapratevaracct.getText().toString())) {
-                   b = false;
                    bsmf.MainFrame.show(getMessageTag(1052));
                    tbapratevaracct.requestFocus();
-                   return b;
+                   return false;
                 }
          if (! OVData.isValidGLAcct(tbjobstockacct.getText().toString())) {
-                   b = false;
                    bsmf.MainFrame.show(getMessageTag(1052));
                    tbjobstockacct.requestFocus();
-                   return b;
+                   return false;
                 }
          if (! OVData.isValidGLAcct(tbmtlusagevaracct.getText().toString())) {
-                   b = false;
                    bsmf.MainFrame.show(getMessageTag(1052));
                    tbmtlusagevaracct.requestFocus();
-                   return b;
+                   return false;
                 }
          if (! OVData.isValidGLAcct(tbmtlratevaracct.getText().toString())) {
-                   b = false;
                    bsmf.MainFrame.show(getMessageTag(1052));
                    tbmtlratevaracct.requestFocus();
-                   return b;
+                   return false;
                 }
          if (! OVData.isValidGLAcct(tbmixedvaracct.getText().toString())) {
-                   b = false;
                    bsmf.MainFrame.show(getMessageTag(1052));
                    tbmixedvaracct.requestFocus();
-                   return b;
+                   return false;
                 }
          if (! OVData.isValidGLAcct(tbcopacct.getText().toString())) {
-                   b = false;
                    bsmf.MainFrame.show(getMessageTag(1052));
                    tbcopacct.requestFocus();
-                   return b;
+                   return false;
                 }
          if (! OVData.isValidGLAcct(tboutusgvaracct.getText().toString())) {
-                   b = false;
                    bsmf.MainFrame.show(getMessageTag(1052));
                    tboutusgvaracct.requestFocus();
-                   return b;
+                   return false;
                 }
          if (! OVData.isValidGLAcct(tboutratevaracct.getText().toString())) {
-                   b = false;
                    bsmf.MainFrame.show(getMessageTag(1052));
                    tboutratevaracct.requestFocus();
-                   return b;
+                   return false;
                 }
                 
                 
                
-        return b;
+        return true;
     }
     
     public void initvars(String[] arg) {
