@@ -1416,9 +1416,9 @@ public class MassLoad extends javax.swing.JPanel {
      // cust price list stuff
     public ArrayList<String> defineVendPriceList() {
         ArrayList<String> list = new ArrayList<String>();
-        list.add("vpr_cust,s,10,mandatory,validated");
+        list.add("vpr_vend,s,30,mandatory,validated");
         list.add("vpr_item,s,36,mandatory,validated");
-        list.add("vpr_desc,s,50,optional,unvalidated");
+        list.add("vpr_desc,s,30,optional,unvalidated");
         list.add("vpr_type,s,20,mandatory,validated");
         list.add("vpr_price,d,12,optional,unvalidated");
         list.add("vpr_volqty,d,12,optional,unvalidated");

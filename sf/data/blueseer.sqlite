@@ -2552,10 +2552,10 @@ CREATE TABLE "vpr_mstr" (
   "vpr_type" varchar(20) COLLATE NOCASE DEFAULT '',
   "vpr_volume" varchar(500) COLLATE NOCASE DEFAULT '',
   "vpr_volprice" varchar(500) COLLATE NOCASE DEFAULT '',
-  "vpr_price" decimal(9,5) COLLATE NOCASE DEFAULT '',
+  "vpr_price" decimal(14,5) COLLATE NOCASE DEFAULT '',
   "vpr_userid" varchar(10) COLLATE NOCASE DEFAULT '',
   "vpr_mod_date" date COLLATE NOCASE DEFAULT '',
-  "vpr_disc" decimal(9,5) COLLATE NOCASE DEFAULT '',
+  "vpr_disc" decimal(14,5) COLLATE NOCASE DEFAULT '',
   "vpr_uom" varchar(3) COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
