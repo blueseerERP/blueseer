@@ -1013,6 +1013,119 @@ public class purData {
     
     
     // miscellaneous SQL queries
+    public static ArrayList<String[]> getPurchaseOrderInit() {
+        String defaultsite = "";
+        ArrayList<String[]> lines = new ArrayList<String[]>();
+        try{
+        Class.forName(driver).newInstance();
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try{
+        // allocate, custitemonly, site, currency, sites, currencies, uoms, 
+        // states, warehouses, locations, customers, taxcodes, carriers, statuses    
+            res = st.executeQuery("select site_site from site_mstr;");
+            while (res.next()) {
+                String[] s = new String[2];
+               s[0] = "sites";
+               s[1] = res.getString("site_site");
+               lines.add(s);
+            }
+            
+            res = st.executeQuery("select ov_site, ov_currency from ov_mstr;" );
+            while (res.next()) {
+               String[] s = new String[2];
+               s[0] = "currency";
+               s[1] = res.getString("ov_currency");
+               lines.add(s);
+               s = new String[2];
+               s[0] = "site";
+               s[1] = res.getString("ov_site");
+               lines.add(s);
+               defaultsite = s[1];
+            }
+            
+            res = st.executeQuery("select cur_id from cur_mstr ;");
+            while (res.next()) {
+                String[] s = new String[2];
+               s[0] = "currencies";
+               s[1] = res.getString("cur_id");
+               lines.add(s);
+            }
+            
+            res = st.executeQuery("select uom_id from uom_mstr order by uom_id;");
+            while (res.next()) {
+                String[] s = new String[2];
+               s[0] = "uoms";
+               s[1] = res.getString("uom_id");
+               lines.add(s);
+            }
+            
+            res = st.executeQuery("select vd_addr from vd_mstr order by vd_addr ;");
+            while (res.next()) {
+                String[] s = new String[2];
+               s[0] = "vendors";
+               s[1] = res.getString("vd_addr");
+               lines.add(s);
+            }
+            
+            res = st.executeQuery("select code_key from code_mstr where code_code = 'state' order by code_key ;");
+            while (res.next()) {
+                String[] s = new String[2];
+               s[0] = "states";
+               s[1] = res.getString("code_key");
+               lines.add(s);
+            }
+            
+            res = st.executeQuery("select car_code from car_mstr where car_type = 'carrier' order by car_code;");
+            while (res.next()) {
+                String[] s = new String[2];
+               s[0] = "carriers";
+               s[1] = res.getString("car_code");
+               lines.add(s);
+            }
+            
+            res = st.executeQuery("select code_key from code_mstr where code_code = 'orderstatus' order by code_key ;");
+            while (res.next()) {
+                String[] s = new String[2];
+               s[0] = "statuses";
+               s[1] = res.getString("code_key");
+               lines.add(s);
+            }
+            
+            res = st.executeQuery("select it_item from item_mstr where it_site = " + "'" + defaultsite + "'" + " order by it_item ;");
+            while (res.next()) {
+                String[] s = new String[2];
+               s[0] = "items";
+               s[1] = res.getString("it_item");
+               lines.add(s);
+            }
+            
+            
+            
+            res = st.executeQuery("select poc_venditem from po_ctrl;");
+            while (res.next()) {
+                String[] s = new String[2];
+               s[0] = "venditemonly";
+               s[1] = res.getString("poc_venditem");
+               lines.add(s);
+            }
+            
+        }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+        return lines;
+    }
+        
     public static String getPOVendor(String po) {
          String x = "";
           try{

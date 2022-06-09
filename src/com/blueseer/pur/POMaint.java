@@ -343,6 +343,8 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
         
         isLoad = true;
         
+        ArrayList<String[]> initDataSets = purData.getPurchaseOrderInit();
+        
         jTabbedPane1.removeAll();
         jTabbedPane1.add("Main", panelMain);
         jTabbedPane1.add("Lines", panelDetail);
@@ -394,73 +396,76 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
         cbblanket.setSelected(true);
         cbconfirm.setSelected(false);
         
-        
-        ddsite.removeAllItems();
-        ArrayList<String> mylist = OVData.getSiteList();
-        for (String code : mylist) {
-            ddsite.addItem(code);
-        }
-        ddsite.setSelectedItem(OVData.getDefaultSite());
-        
-        ddshipvia.removeAllItems();
-        mylist = OVData.getScacCarrierOnly();   
-        for (int i = 0; i < mylist.size(); i++) {
-            ddshipvia.addItem(mylist.get(i));
-        }
-        ddshipvia.insertItemAt("", 0);
-        ddshipvia.setSelectedIndex(0);
-        
-        
-        ddcurr.removeAllItems();
-         ddcurr.insertItemAt("", 0);
-         ddcurr.setSelectedIndex(0);
-        mylist = fglData.getCurrlist();
-        for (String code : mylist) {
-            ddcurr.addItem(code);
-        }
-        ddcurr.setSelectedItem(OVData.getDefaultCurrency());
-        
-         venditemonly = OVData.isVendItemOnly();
-        if (! venditemonly) {
-            ddpart.removeAllItems();
-            ArrayList<String> items = invData.getItemMasterAlllist();
-            for (String item : items) {
-            ddpart.addItem(item);
-            }  
-        }
-        
-        
-        
-        dduom.removeAllItems();
-        mylist = OVData.getUOMList();
-        for (String code : mylist) {
-            dduom.addItem(code);
-        }
-        
-         ddpart.setForeground(Color.black);
+        ddpart.setForeground(Color.black);
         vendnumber.setForeground(Color.black);
         vendnumber.setEditable(false);
         
-        
+        ddsite.removeAllItems();
+        ddshipvia.removeAllItems();
+        ddcurr.removeAllItems();
+        dduom.removeAllItems();
         ddvend.removeAllItems();
-          ArrayList myvends = venData.getVendMstrList();
-          for (int i = 0; i < myvends.size(); i++) {
-            ddvend.addItem(myvends.get(i));
-          }
-          ddvend.insertItemAt("", 0);
-          ddvend.setSelectedIndex(0);
+        ddstatus.removeAllItems();
+        
+        String defaultsite = null;
+        
+        
+        for (String[] s : initDataSets) {
+            if (s[0].equals("currency")) {
+              basecurr = s[1];  
+            }
           
-          ddstatus.removeAllItems();
-        mylist = OVData.getCodeMstr("orderstatus");
-        for (int i = 0; i < mylist.size(); i++) {
-            ddstatus.addItem(mylist.get(i));
+            if (s[0].equals("venditemonly")) {
+              venditemonly = bsmf.MainFrame.ConvertStringToBool(s[1]);  
+            }
+            if (s[0].equals("sites")) {
+              ddsite.addItem(s[1]); 
+            }
+            if (s[0].equals("site")) {
+              defaultsite = s[1]; 
+            }
+            if (s[0].equals("currencies")) {
+              ddcurr.addItem(s[1]); 
+            }
+            if (s[0].equals("uoms")) {
+              dduom.addItem(s[1]); 
+            }
+            if (s[0].equals("vendors")) {
+              ddvend.addItem(s[1]); 
+            }
+            if (s[0].equals("carriers")) {
+              ddshipvia.addItem(s[1]); 
+            }
+            if (s[0].equals("statuses")) {
+              ddstatus.addItem(s[1]); 
+            }
+            if (s[0].equals("states")) {
+              ddshipstate.addItem(s[1]); 
+            }
+            if (s[0].equals("items")) {
+              ddpart.addItem(s[1]); 
+            }
+            
+        }
+        
+        ddsite.setSelectedItem(defaultsite);
+        ddcurr.insertItemAt("", 0);
+        ddcurr.setSelectedIndex(0);
+        dduom.insertItemAt("", 0);
+        dduom.setSelectedIndex(0);
+        ddvend.insertItemAt("", 0);
+        ddvend.setSelectedIndex(0);
+        ddshipvia.insertItemAt("", 0);
+        ddshipvia.setSelectedIndex(0);
+        ddtype.setSelectedIndex(0); // set outside isLoad for initial assignment of ship to address
+        ddedistatus.setSelectedIndex(0);
+        if (ddshipstate.getItemCount() > 0) {
+           ddshipstate.setSelectedIndex(0); 
         }
         ddstatus.setSelectedItem(getGlobalProgTag("open"));
-         
-        ddedistatus.setSelectedIndex(0);
-          
+        
         isLoad = false;
-        ddtype.setSelectedIndex(0); // set outside isLoad for initial assignment of ship to address
+        
         
         
     }
