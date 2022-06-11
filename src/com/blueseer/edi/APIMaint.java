@@ -67,6 +67,8 @@ import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -76,12 +78,33 @@ import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.PrivateKey;
+import java.security.Security;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateEncodingException;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Base64;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeBodyPart;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -93,6 +116,26 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JViewport;
 import javax.swing.SwingWorker;
+import org.bouncycastle.cert.jcajce.JcaCertStore;
+import org.bouncycastle.cms.CMSAlgorithm;
+import org.bouncycastle.cms.CMSEnvelopedData;
+import org.bouncycastle.cms.CMSEnvelopedDataGenerator;
+import org.bouncycastle.cms.CMSException;
+import org.bouncycastle.cms.CMSProcessableByteArray;
+import org.bouncycastle.cms.CMSSignedData;
+import org.bouncycastle.cms.CMSSignedDataGenerator;
+import org.bouncycastle.cms.CMSTypedData;
+import org.bouncycastle.cms.jcajce.JcaSignerInfoGeneratorBuilder;
+import org.bouncycastle.cms.jcajce.JceCMSContentEncryptorBuilder;
+import org.bouncycastle.cms.jcajce.JceKeyTransRecipientInfoGenerator;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.mail.smime.SMIMEEnvelopedGenerator;
+import org.bouncycastle.mail.smime.SMIMEException;
+import org.bouncycastle.operator.ContentSigner;
+import org.bouncycastle.operator.OutputEncryptor;
+import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
+import org.bouncycastle.operator.jcajce.JcaDigestCalculatorProviderBuilder;
+import org.bouncycastle.util.Store;
 
 /**
  *
@@ -104,7 +147,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
 
     // global variable declarations
                 boolean isLoad = false;
-    
+                public static Store certs = null;
     // global datatablemodel declarations   
      javax.swing.table.DefaultTableModel detailmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
@@ -124,6 +167,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
     public APIMaint() {
         initComponents();
         setLanguageTags(this);
+        bsmf.MainFrame.show("this is a work-in-progress...not for production");
     }
 
     // interface functions implemented
@@ -386,7 +430,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         btnew.setEnabled(true);
         btlookup.setEnabled(true);
        
-        bsmf.MainFrame.show("This functionality is a work-in-progress and not intended for production");
+     //   bsmf.MainFrame.show("This functionality is a work-in-progress and not intended for production");
         
         if (arg != null && arg.length > 0) {
             executeTask(dbaction.get,arg);
@@ -554,23 +598,24 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         try {
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setDoOutput(true);
-        conn.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
+       
+        
         conn.setRequestProperty("User-Agent", "RPT-HTTPClient/0.3-3I (Windows Server 2016)"); 
         conn.setRequestProperty("AS2-To", as2To);
         conn.setRequestProperty("AS2-From", as2From); 
         conn.setRequestProperty("AS2-Version", "1.2"); 
         conn.setRequestProperty("Subject", "as2");
-        
         conn.setRequestProperty("Accept-Encoding", "deflate, gzip, x-gzip, compress, x-compress");
         conn.setRequestProperty("Disposition-Notification-Options", "signed-receipt-protocol=optional, pkcs7-signature; signed-receipt-micalg=optional, sha1");
         conn.setRequestProperty("Disposition-Notification-To", internalURL);
-        
         conn.setRequestProperty("Message-ID", messageid);
         conn.setRequestProperty("Recipient-Address", url.toString());
         conn.setRequestProperty("EDIINT-Features", "CEM, multiple-attachments, AS2-Reliability");
-
+        conn.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);   
+      
         
         conn.setRequestMethod("POST");
+        
        // conn.setRequestProperty("Accept", "application/json");
 
        try (
@@ -585,12 +630,33 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
             writer.append(CRLF).append(param).append(CRLF).flush();
             */
             // Send text file.
+            
+            /*
+            writer.append(s).append("CRLF").flush();
+            */
+            
+            
+            
+            // this is the boundary of file including tags
+            /*
             writer.append("--" + boundary).append(CRLF);
             writer.append("Content-Disposition: form-data; name=\"textFile\"; filename=\"" + textFile.getName() + "\"").append(CRLF);
             writer.append("Content-Type: text/plain; charset=" + "UTF8").append(CRLF); // Text file itself must be saved in this charset!
             writer.append(CRLF).flush();
             Files.copy(textFile.toPath(), output);
             output.flush(); // Important before continuing with writer!
+            */
+            
+                   
+            StringBuilder tags = new StringBuilder();
+            tags.append("--" + boundary + CRLF);
+            tags.append("Content-Disposition: form-data; name=\"textFile\"; filename=\"" + textFile.getName() + "\"" + CRLF);
+            tags.append("Content-Type: text/plain; charset=UTF8" + CRLF);
+            tags.append(CRLF);
+            String filecontent = tags + Files.readString(Paths.get(tbsourcedir.getText()));
+            writer.append(filecontent).flush();
+            
+              
             writer.append(CRLF).flush(); // CRLF is important! It indicates end of boundary.
 
             // Send binary file.
@@ -610,17 +676,19 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
        
        
         BufferedReader br = null;
+        
         if (conn.getResponseCode() != 200) {
                 taoutput.append(conn.getResponseCode() + ": " + conn.getResponseMessage());
                 //throw new RuntimeException("Failed : HTTP error code : "
                 //		+ conn.getResponseCode());
         } else {
             br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
+            taoutput.append("SUCCESS: " + conn.getResponseCode() + ": " + conn.getResponseMessage());
         }
-         String output;
+         String outputstr;
          if (br != null) {
-            while ((output = br.readLine()) != null) {
-                    taoutput.append(output + "\n");
+            while ((outputstr = br.readLine()) != null) {
+                    taoutput.append(outputstr + "\n");
             }
             br.close();
         }
@@ -636,6 +704,410 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         } 
     }
     
+    public void postAS2Enc( URL url, String verb, String as2From, String as2To, String internalURL) throws FileNotFoundException, IOException, NoSuchAlgorithmException, CertificateException, KeyStoreException, UnrecoverableKeyException, NoSuchProviderException, CertificateEncodingException, CMSException, SMIMEException, MessagingException {
+        
+        
+        Security.addProvider(new BouncyCastleProvider());
+        CertificateFactory certFactory = CertificateFactory
+          .getInstance("X.509", "BC");
+
+        X509Certificate certificate = (X509Certificate) certFactory
+          .generateCertificate(new FileInputStream("c:\\junk\\terry.cer"));
+
+        char[] keystorePassword = "terry".toCharArray();
+        char[] keyPassword = "terry".toCharArray();
+
+        KeyStore keystore = KeyStore.getInstance("PKCS12");
+        keystore.load(new FileInputStream("c:\\junk\\terryp12.p12"), keystorePassword);
+        PrivateKey key = (PrivateKey) keystore.getKey("terry", keyPassword);
+        
+        File textFile = new File(tbsourcedir.getText());
+        StringBuilder s = new StringBuilder();
+        String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS"));
+        String boundary = Long.toHexString(System.currentTimeMillis()); // Just generate some unique random value.
+        String messageid = "<BLUESEER-" + now + "." + boundary + "@Blueseer Software>";
+        String CRLF = "\r\n"; // Line separator required by multipart/form-data.
+        try {
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setDoOutput(true);
+       // "application/pkcs7-mime; smime-type=enveloped-data; name=smime.p7m"
+        // this is header stuff
+        /*
+            s.append("Content-Type: multipart/form-data; boundary=").append(boundary).append(CRLF);
+           */
+            s.append("--").append(boundary).append(CRLF);
+            
+            
+            StringBuilder stags = new StringBuilder();
+            StringBuilder etags = new StringBuilder();
+            stags.append("Content-Disposition: form-data; name=\"textFile\"; filename=\"" + textFile.getName() + "\"" + CRLF);
+            stags.append("Content-Type: text/plain; charset=UTF8" + CRLF);
+            stags.append(CRLF);
+            etags.append("--").append(boundary).append("--").append(CRLF); // End of multipart/form-data.
+            
+           
+            String filecontent = stags.toString() + Files.readString(Paths.get(tbsourcedir.getText()));
+           
+            byte[] stringToEncrypt = filecontent.getBytes();
+            byte[] encryptedData = encryptData(stringToEncrypt, certificate);
+            MimeBodyPart xx = encryptDataSMIME(stringToEncrypt, certificate);
+            
+        
+            
+        
+        conn.setRequestProperty("User-Agent", "RPT-HTTPClient/0.3-3I (Windows Server 2016)"); 
+        conn.setRequestProperty("AS2-To", as2To);
+        conn.setRequestProperty("AS2-From", as2From); 
+        conn.setRequestProperty("AS2-Version", "1.2"); 
+        conn.setRequestProperty("Mime-Version", "1.0");
+        conn.setRequestProperty("Subject", "as2");
+        conn.setRequestProperty("Accept-Encoding", "deflate, gzip, x-gzip, compress, x-compress");
+        conn.setRequestProperty("Disposition-Notification-Options", "signed-receipt-protocol=optional, pkcs7-signature; signed-receipt-micalg=optional, sha1");
+        conn.setRequestProperty("Disposition-Notification-To", internalURL);
+        conn.setRequestProperty("Message-ID", messageid);
+        conn.setRequestProperty("Recipient-Address", url.toString());
+        conn.setRequestProperty("EDIINT-Features", "CEM, multiple-attachments, AS2-Reliability");
+        conn.setRequestProperty("Content-Type", "application/pkcs7-mime; smime-type=enveloped-data; name=smime.p7m"); 
+        conn.setRequestProperty("Content-Disposition", "attachment; filename=smime.p7m");
+        conn.setRequestProperty("Content-Transfer-Encoding", "base64");
+        conn.setRequestProperty("Content-Length", String.valueOf(encryptedData.length));
+        
+        
+        conn.setRequestMethod("POST");
+        
+       // conn.setRequestProperty("Accept", "application/json");
+
+       try (
+        OutputStream output = conn.getOutputStream();
+        PrintWriter writer = new PrintWriter(new OutputStreamWriter(output), true);
+        ) {
+         /*
+            writer.append(s).append("CRLF").flush();
+            */
+        
+            // Send normal param.
+           /*
+            writer.append("--" + boundary).append(CRLF);
+            writer.append("Content-Disposition: form-data; name=\"param\"").append(CRLF);
+            writer.append("Content-Type: text/plain; charset=" + charset).append(CRLF);
+            writer.append(CRLF).append(param).append(CRLF).flush();
+            */
+            // Send text file.
+            
+           
+            
+            
+            
+            // this is the boundary of file including tags
+            /*
+            writer.append("--" + boundary).append(CRLF);
+            writer.append("Content-Disposition: form-data; name=\"textFile\"; filename=\"" + textFile.getName() + "\"").append(CRLF);
+            writer.append("Content-Type: text/plain; charset=" + "UTF8").append(CRLF); // Text file itself must be saved in this charset!
+            writer.append(CRLF).flush();
+            Files.copy(textFile.toPath(), output);
+            output.flush(); // Important before continuing with writer!
+            */
+            
+               
+            
+            writer.append(s).flush();
+            writer.append(Base64.getEncoder().encodeToString(encryptedData)).flush();
+            writer.append(CRLF).flush();
+            writer.append(etags);
+            writer.append(CRLF).flush();
+            
+              
+           // writer.append(CRLF).flush(); // CRLF is important! It indicates end of boundary.
+
+            // Send binary file.
+            /*
+            writer.append("--" + boundary).append(CRLF);
+            writer.append("Content-Disposition: form-data; name=\"binaryFile\"; filename=\"" + binaryFile.getName() + "\"").append(CRLF);
+            writer.append("Content-Type: " + URLConnection.guessContentTypeFromName(binaryFile.getName())).append(CRLF);
+            writer.append("Content-Transfer-Encoding: binary").append(CRLF);
+            writer.append(CRLF).flush();
+            Files.copy(binaryFile.toPath(), output);
+            output.flush(); // Important before continuing with writer!
+            writer.append(CRLF).flush(); // CRLF is important! It indicates end of boundary.
+            */
+            // End of multipart/form-data.
+           // writer.append("--" + boundary + "--").append(CRLF).flush();
+        }
+       
+       //debug
+       /*
+       Map<String, List<String>> hdrs = conn.getHeaderFields();
+       Set<String> hdrKeys = hdrs.keySet();
+       for (String k : hdrKeys)
+       System.out.println("Key: " + k + "  Value: " + hdrs.get(k));
+       System.out.println(filecontent);
+       */
+       
+       // Now read response
+        BufferedReader br = null;
+        
+        if (conn.getResponseCode() != 200) {
+                taoutput.append(conn.getResponseCode() + ": " + conn.getResponseMessage());
+                //throw new RuntimeException("Failed : HTTP error code : "
+                //		+ conn.getResponseCode());
+        } else {
+            br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
+            taoutput.append("SUCCESS: " + conn.getResponseCode() + ": " + conn.getResponseMessage());
+        }
+         String outputstr;
+         if (br != null) {
+            while ((outputstr = br.readLine()) != null) {
+                    taoutput.append(outputstr + "\n");
+            }
+            br.close();
+        }
+        
+       
+        conn.disconnect();
+        } catch (MalformedURLException e) {
+            bslog(e);
+            bsmf.MainFrame.show("MalformedURLException");
+        } catch (IOException ex) {
+            bslog(ex);
+            bsmf.MainFrame.show("IOException");
+        } 
+    }
+    
+    public void postAS2Sign( URL url, String verb, String as2From, String as2To, String internalURL) throws FileNotFoundException, IOException, NoSuchAlgorithmException, CertificateException, KeyStoreException, UnrecoverableKeyException, NoSuchProviderException, CertificateEncodingException, CMSException, SMIMEException, MessagingException {
+        
+        
+        Security.addProvider(new BouncyCastleProvider());
+        CertificateFactory certFactory = CertificateFactory
+          .getInstance("X.509", "BC");
+
+        X509Certificate certificate = (X509Certificate) certFactory
+          .generateCertificate(new FileInputStream("c:\\junk\\terrycer.cer"));
+
+        char[] keystorePassword = "terry".toCharArray();
+        char[] keyPassword = "terry".toCharArray();
+
+        KeyStore keystore = KeyStore.getInstance("PKCS12");
+        keystore.load(new FileInputStream("c:\\junk\\terryp12.p12"), keystorePassword);
+        PrivateKey key = (PrivateKey) keystore.getKey("terry", keyPassword);
+        
+        File textFile = new File(tbsourcedir.getText());
+        String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS"));
+        String boundary = Long.toHexString(System.currentTimeMillis()); // Just generate some unique random value.
+        String messageid = "<BLUESEER-" + now + "." + boundary + "@Blueseer Software>";
+        String CRLF = "\r\n"; // Line separator required by multipart/form-data.
+        try {
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setDoOutput(true);
+       // "application/pkcs7-mime; smime-type=enveloped-data; name=smime.p7m"
+        // this is header stuff
+        /*
+            s.append("Content-Type: multipart/form-data; boundary=").append(boundary).append(CRLF);
+           */
+           
+            String filecontent = Files.readString(Paths.get(tbsourcedir.getText()));
+           
+            byte[] stringToEncrypt = filecontent.getBytes();
+            byte[] encryptedData = encryptData(stringToEncrypt, certificate);
+            MimeBodyPart xx = encryptDataSMIME(stringToEncrypt, certificate);
+            
+        
+            
+        
+        conn.setRequestProperty("User-Agent", "RPT-HTTPClient/0.3-3I (Windows Server 2016)"); 
+        conn.setRequestProperty("AS2-To", as2To);
+        conn.setRequestProperty("AS2-From", as2From); 
+        conn.setRequestProperty("AS2-Version", "1.2"); 
+        conn.setRequestProperty("Mime-Version", "1.0");
+        conn.setRequestProperty("Subject", "as2");
+        conn.setRequestProperty("Accept-Encoding", "deflate, gzip, x-gzip, compress, x-compress");
+        conn.setRequestProperty("Disposition-Notification-Options", "signed-receipt-protocol=optional, pkcs7-signature; signed-receipt-micalg=optional, sha1");
+        conn.setRequestProperty("Disposition-Notification-To", internalURL);
+        conn.setRequestProperty("Message-ID", messageid);
+        conn.setRequestProperty("Recipient-Address", url.toString());
+        conn.setRequestProperty("EDIINT-Features", "CEM, multiple-attachments, AS2-Reliability");
+        conn.setRequestProperty("Content-Type", "multipart/signed;  boundary=\"--" + boundary + "\";  protocol=\"application/pkcs7-signature\"; micalg=sha1"); 
+        conn.setRequestProperty("Content-Disposition", "attachment; filename=smime.p7m");
+        conn.setRequestProperty("Content-Length", String.valueOf(encryptedData.length));
+        
+        
+        conn.setRequestMethod("POST");
+        
+       // conn.setRequestProperty("Accept", "application/json");
+
+       try (
+        OutputStream output = conn.getOutputStream();
+        PrintWriter writer = new PrintWriter(new OutputStreamWriter(output, "UTF8"), true);
+        ) {
+         /*
+            writer.append(s).append("CRLF").flush();
+            */
+        
+            // Send normal param.
+           /*
+            writer.append("--" + boundary).append(CRLF);
+            writer.append("Content-Disposition: form-data; name=\"param\"").append(CRLF);
+            writer.append("Content-Type: text/plain; charset=" + charset).append(CRLF);
+            writer.append(CRLF).append(param).append(CRLF).flush();
+            */
+            // Send text file.
+            
+           
+            
+            
+            
+            // this is the boundary of file including tags
+            /*
+            writer.append("--" + boundary).append(CRLF);
+            writer.append("Content-Disposition: form-data; name=\"textFile\"; filename=\"" + textFile.getName() + "\"").append(CRLF);
+            writer.append("Content-Type: text/plain; charset=" + "UTF8").append(CRLF); // Text file itself must be saved in this charset!
+            writer.append(CRLF).flush();
+            Files.copy(textFile.toPath(), output);
+            output.flush(); // Important before continuing with writer!
+            */
+            
+            
+           // writer.append(Base64.getEncoder().encodeToString(encryptedData)).flush();
+            writer.append("----").append(boundary).append(CRLF);
+            writer.append("Content-Type: application/edi-x12; file=test.txt" + CRLF);
+            writer.append("Content-Disposition: attachment; filename=" + textFile.getName() + CRLF);
+            writer.append(filecontent).flush();
+            writer.append(CRLF).flush();
+            
+            writer.append("----").append(boundary).append(CRLF);
+            writer.append("Content-Type: application/pkcs7-signature;name=smime.p7s").append(CRLF); // Text file itself must be saved in this charset!
+            writer.append("Content-Disposition: attachment;filename=smime.p7s").append(CRLF);
+            writer.append("Content-Transfer-Encoding: base64").append(CRLF);
+            writer.append(CRLF).flush();
+            
+            
+            byte[] mimeBytes = filecontent.getBytes("utf-8");
+            byte[] signedBytes = signData(filecontent.getBytes(),certificate,key);
+            String mimeEncodedString = Base64.getMimeEncoder().encodeToString(signedBytes);
+            writer.append(mimeEncodedString).flush();
+            /*
+            writer.append(Base64.getEncoder().encodeToString(signData(filecontent.getBytes(),certificate,key))).flush();
+            */
+            writer.append(CRLF).flush();
+            writer.append("----").append(boundary).append("--").append(CRLF).flush(); 
+            writer.append(null);
+            writer.close();
+            
+        }   catch (Exception ex) {
+                Logger.getLogger(APIMaint.class.getName()).log(Level.SEVERE, null, ex);
+            }
+       
+       //debug
+       /*
+       Map<String, List<String>> hdrs = conn.getHeaderFields();
+       Set<String> hdrKeys = hdrs.keySet();
+       for (String k : hdrKeys)
+       System.out.println("Key: " + k + "  Value: " + hdrs.get(k));
+       System.out.println(filecontent);
+       */
+       
+       // Now read response
+        BufferedReader br = null;
+        
+        if (conn.getResponseCode() != 200) {
+                taoutput.append(conn.getResponseCode() + ": " + conn.getResponseMessage());
+                //throw new RuntimeException("Failed : HTTP error code : "
+                //		+ conn.getResponseCode());
+        } else {
+            br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
+            taoutput.append("SUCCESS: " + conn.getResponseCode() + ": " + conn.getResponseMessage());
+        }
+         String outputstr;
+         if (br != null) {
+            while ((outputstr = br.readLine()) != null) {
+                    taoutput.append(outputstr + "\n");
+            }
+            br.close();
+        }
+        
+       
+        conn.disconnect();
+        } catch (MalformedURLException e) {
+            bslog(e);
+            bsmf.MainFrame.show("MalformedURLException");
+        } catch (IOException ex) {
+            bslog(ex);
+            bsmf.MainFrame.show("IOException");
+        } 
+    }
+    
+    
+    public static byte[] encryptData(byte[] data,
+      X509Certificate encryptionCertificate)
+      throws CertificateEncodingException, CMSException, IOException {
+
+        byte[] encryptedData = null;
+        if (null != data && null != encryptionCertificate) {
+            CMSEnvelopedDataGenerator cmsEnvelopedDataGenerator
+              = new CMSEnvelopedDataGenerator();
+
+            JceKeyTransRecipientInfoGenerator jceKey 
+              = new JceKeyTransRecipientInfoGenerator(encryptionCertificate);
+            cmsEnvelopedDataGenerator.addRecipientInfoGenerator(jceKey);
+            CMSTypedData msg = new CMSProcessableByteArray(data);
+            OutputEncryptor encryptor
+              = new JceCMSContentEncryptorBuilder(CMSAlgorithm.AES128_CBC)
+              .setProvider("BC").build();
+           // MimeBodyPart msg = new MimeBodyPart();
+            CMSEnvelopedData cmsEnvelopedData = cmsEnvelopedDataGenerator
+              .generate(msg,encryptor);
+            encryptedData = cmsEnvelopedData.getEncoded();
+        }
+			    return encryptedData;
+	
+}
+
+    public static MimeBodyPart encryptDataSMIME(byte[] data,
+      X509Certificate encryptionCertificate)
+      throws CertificateEncodingException, CMSException, IOException, SMIMEException, MessagingException {
+        MimeBodyPart envPart = null;
+       
+        if (null != data && null != encryptionCertificate) {
+            SMIMEEnvelopedGenerator gen = new SMIMEEnvelopedGenerator();
+            JceKeyTransRecipientInfoGenerator jceKey = new JceKeyTransRecipientInfoGenerator(encryptionCertificate);
+            gen.addRecipientInfoGenerator(jceKey); 
+            OutputEncryptor encryptor
+              = new JceCMSContentEncryptorBuilder(CMSAlgorithm.AES128_CBC)
+              .setProvider("BC").build();
+           // MimeBodyPart msg = new MimeBodyPart();
+           MimeBodyPart dataPart = new MimeBodyPart();
+           dataPart.setText(new String(data));
+           envPart = gen.generate(dataPart, encryptor);
+        }
+    return envPart;
+	
+}
+
+    
+    
+    public static byte[] signData(
+			  byte[] data, 
+			  X509Certificate signingCertificate,
+			  PrivateKey signingKey) throws Exception {
+			 
+			    byte[] signedMessage = null;
+			    List<X509Certificate> certList = new ArrayList<X509Certificate>();
+			    CMSTypedData cmsData= new CMSProcessableByteArray(data);
+			    certList.add(signingCertificate);
+			    certs = new JcaCertStore(certList);
+
+			    CMSSignedDataGenerator cmsGenerator = new CMSSignedDataGenerator();
+			    ContentSigner contentSigner 
+			      = new JcaContentSignerBuilder("SHA1withRSA").build(signingKey);
+			    cmsGenerator.addSignerInfoGenerator(new JcaSignerInfoGeneratorBuilder(
+			      new JcaDigestCalculatorProviderBuilder().setProvider("BC")
+			      .build()).build(contentSigner, signingCertificate));
+			    cmsGenerator.addCertificates(certs);
+			    
+			    CMSSignedData cms = cmsGenerator.generate(cmsData, true);
+			    signedMessage = cms.getEncoded();
+			    return signedMessage;
+	}
+	
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -700,6 +1172,8 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         cbfile = new javax.swing.JCheckBox();
         lblurl = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
+        cboutputencryption = new javax.swing.JCheckBox();
+        cboutputsign = new javax.swing.JCheckBox();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -1054,15 +1528,29 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
 
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("AS2 Details"));
 
+        cboutputencryption.setText("Output Encryption");
+
+        cboutputsign.setText("Output Sign");
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 318, Short.MAX_VALUE)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGap(19, 19, 19)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cboutputsign)
+                    .addComponent(cboutputencryption))
+                .addContainerGap(218, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 178, Short.MAX_VALUE)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(cboutputencryption)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(cboutputsign)
+                .addContainerGap(122, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -1250,7 +1738,13 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                 URL url = new URL(urlstring);
                 
                 if (ddclass.getSelectedItem().toString().equals("AS2")) {
-                    postAS2(url, verb, getAS2id(), tbuser.getText(), getAS2url());
+                    if (cboutputencryption.isSelected()) {
+                     postAS2Enc(url, verb, getAS2id(), tbuser.getText(), getAS2url());
+                    } else if (cboutputsign.isSelected()) {
+                     postAS2Sign(url, verb, getAS2id(), tbuser.getText(), getAS2url());
+                    } else {
+                     postAS2(url, verb, getAS2id(), tbuser.getText(), getAS2url());   
+                    }
                     return;
                 }
                 
@@ -1299,7 +1793,23 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
 	        } catch (IOException ex) {
                     bslog(ex);
                     bsmf.MainFrame.show("IOException");
-                } 
+                } catch (NoSuchAlgorithmException ex) {
+                        Logger.getLogger(APIMaint.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (CertificateException ex) {
+                        Logger.getLogger(APIMaint.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (KeyStoreException ex) {
+                        Logger.getLogger(APIMaint.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (UnrecoverableKeyException ex) {
+                        Logger.getLogger(APIMaint.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (NoSuchProviderException ex) {
+                        Logger.getLogger(APIMaint.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (CMSException ex) {
+                        Logger.getLogger(APIMaint.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (SMIMEException ex) {
+                        Logger.getLogger(APIMaint.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (MessagingException ex) {
+                        Logger.getLogger(APIMaint.class.getName()).log(Level.SEVERE, null, ex);
+                    } 
     }//GEN-LAST:event_btrunActionPerformed
 
     private void tabledetailMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabledetailMouseClicked
@@ -1332,6 +1842,8 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JButton btupdate;
     private javax.swing.JCheckBox cbenabled;
     private javax.swing.JCheckBox cbfile;
+    private javax.swing.JCheckBox cboutputencryption;
+    private javax.swing.JCheckBox cboutputsign;
     private javax.swing.JComboBox<String> ddclass;
     private javax.swing.JComboBox<String> ddprotocol;
     private javax.swing.JComboBox<String> ddtype;

@@ -184,6 +184,8 @@ public class EDIControl extends javax.swing.JPanel {
                     cbdelete.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("edic_delete")));
                     tbtpid.setText(res.getString("edic_tpid"));
                     tbgsid.setText(res.getString("edic_gsid"));
+                    tbas2id.setText(res.getString("edic_as2id"));
+                    tbas2url.setText(res.getString("edic_as2url"));
                 }
                
                 if (i == 0)
@@ -576,7 +578,9 @@ public class EDIControl extends javax.swing.JPanel {
                             + "'" + BlueSeerUtils.boolToInt(cbarchive.isSelected()) + "'" + ","      
                             + "'" + BlueSeerUtils.boolToInt(cbdelete.isSelected()) + "'"  + ","  
                             + "'" + tbtpid.getText() + "'" + ","
-                            + "'" + tbgsid.getText() + "'"        
+                            + "'" + tbgsid.getText() + "'" + ","  
+                            + "'" + tbas2id.getText() + "'" + ","
+                            + "'" + tbas2url.getText() + "'"         
                             + ") ;");              
                           bsmf.MainFrame.show(getMessageTag(1007));
                 } else {
@@ -592,7 +596,9 @@ public class EDIControl extends javax.swing.JPanel {
                             + "edic_archyesno = " + "'" + BlueSeerUtils.boolToInt(cbarchive.isSelected()) + "'" + "," 
                             + "edic_outftp = " + "'" + tboutscript.getText() + "'" + "," 
                             + "edic_tpid = " + "'" + tbtpid.getText() + "'" + ","
-                            + "edic_gsid = " + "'" + tbgsid.getText() + "'"        
+                            + "edic_gsid = " + "'" + tbgsid.getText() + "'" + ","
+                            + "edic_as2id = " + "'" + tbas2id.getText() + "'" + ","
+                            + "edic_as2url = " + "'" + tbas2url.getText() + "'"
                             + ";");   
                     bsmf.MainFrame.show(getMessageTag(1008));
                 }
