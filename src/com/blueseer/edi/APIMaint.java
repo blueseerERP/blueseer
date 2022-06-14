@@ -79,6 +79,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -90,6 +91,7 @@ import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.Security;
 import java.security.UnrecoverableKeyException;
+import java.security.cert.Certificate;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
@@ -97,14 +99,17 @@ import java.security.cert.X509Certificate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Base64;
+import org.bouncycastle.util.encoders.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.mail.MessagingException;
+import javax.mail.Multipart;
 import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -125,12 +130,15 @@ import org.bouncycastle.cms.CMSProcessableByteArray;
 import org.bouncycastle.cms.CMSSignedData;
 import org.bouncycastle.cms.CMSSignedDataGenerator;
 import org.bouncycastle.cms.CMSTypedData;
+import org.bouncycastle.cms.SignerInfoGenerator;
 import org.bouncycastle.cms.jcajce.JcaSignerInfoGeneratorBuilder;
+import org.bouncycastle.cms.jcajce.JcaSimpleSignerInfoGeneratorBuilder;
 import org.bouncycastle.cms.jcajce.JceCMSContentEncryptorBuilder;
 import org.bouncycastle.cms.jcajce.JceKeyTransRecipientInfoGenerator;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.mail.smime.SMIMEEnvelopedGenerator;
 import org.bouncycastle.mail.smime.SMIMEException;
+import org.bouncycastle.mail.smime.SMIMESignedGenerator;
 import org.bouncycastle.operator.ContentSigner;
 import org.bouncycastle.operator.OutputEncryptor;
 import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
@@ -811,7 +819,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                
             
             writer.append(s).flush();
-            writer.append(Base64.getEncoder().encodeToString(encryptedData)).flush();
+            writer.append(new String(Base64.encode(encryptedData))).flush();
             writer.append(CRLF).flush();
             writer.append(etags);
             writer.append(CRLF).flush();
@@ -925,8 +933,9 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         conn.setRequestProperty("Message-ID", messageid);
         conn.setRequestProperty("Recipient-Address", url.toString());
         conn.setRequestProperty("EDIINT-Features", "CEM, multiple-attachments, AS2-Reliability");
-        conn.setRequestProperty("Content-Type", "multipart/signed;  boundary=\"--" + boundary + "\";  protocol=\"application/pkcs7-signature\"; micalg=sha1"); 
-        conn.setRequestProperty("Content-Disposition", "attachment; filename=smime.p7m");
+       // conn.setRequestProperty("Content-Type", "multipart/signed;  boundary=\"--" + boundary + "\";  protocol=\"application/pkcs7-signature\"; micalg=sha1"); 
+       conn.setRequestProperty("Content-Type", "multipart/signed;");  
+       conn.setRequestProperty("Content-Disposition", "attachment; filename=smime.p7m");
         conn.setRequestProperty("Content-Length", String.valueOf(encryptedData.length));
         
         
@@ -936,7 +945,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
 
        try (
         OutputStream output = conn.getOutputStream();
-        PrintWriter writer = new PrintWriter(new OutputStreamWriter(output, "UTF8"), true);
+        PrintWriter writer = new PrintWriter(new OutputStreamWriter(output, StandardCharsets.UTF_8), true);
         ) {
          /*
             writer.append(s).append("CRLF").flush();
@@ -964,9 +973,23 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
             Files.copy(textFile.toPath(), output);
             output.flush(); // Important before continuing with writer!
             */
-            
-            
+           Multipart multipart = new MimeMultipart( "mixed" );
+           MimeBodyPart parent = new MimeBodyPart();
+           parent.setHeader("Content-Type", "multipart/signed; protocol=application/pkcs7-signature; micalg=sha1");
+           parent.setHeader("Content-Disposition", "attachment; filename=smime.p7m");
+           /*
+           MimeBodyPart body = new MimeBodyPart();
+            body.setHeader("Content-Type", "application/edi-x12; file=test.txt");
+            body.setHeader("Content-Disposition", "attachment; filename=" + textFile.getName());
+            body.setContent(filecontent, "text/html; charset=utf-8");
+            multipart.addBodyPart(body);
+           */
+           // body.writeTo(output);
+           // output.flush();
            // writer.append(Base64.getEncoder().encodeToString(encryptedData)).flush();
+           /*
+           writer.append(CRLF).flush();
+           writer.append(CRLF).flush();
             writer.append("----").append(boundary).append(CRLF);
             writer.append("Content-Type: application/edi-x12; file=test.txt" + CRLF);
             writer.append("Content-Disposition: attachment; filename=" + textFile.getName() + CRLF);
@@ -974,22 +997,29 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
             writer.append(CRLF).flush();
             
             writer.append("----").append(boundary).append(CRLF);
+            
             writer.append("Content-Type: application/pkcs7-signature;name=smime.p7s").append(CRLF); // Text file itself must be saved in this charset!
             writer.append("Content-Disposition: attachment;filename=smime.p7s").append(CRLF);
             writer.append("Content-Transfer-Encoding: base64").append(CRLF);
             writer.append(CRLF).flush();
-            
-            
-            byte[] mimeBytes = filecontent.getBytes("utf-8");
-            byte[] signedBytes = signData(filecontent.getBytes(),certificate,key);
-            String mimeEncodedString = Base64.getMimeEncoder().encodeToString(signedBytes);
+            */
+            MimeBodyPart mbp = signDataSimple(filecontent.getBytes(StandardCharsets.UTF_8),certificate,key);
+            multipart.addBodyPart(mbp);
+            parent.setContent(multipart);
+            parent.writeTo(output);
+            output.flush();
+            /*
+            byte[] mimeBytes = filecontent.getBytes(StandardCharsets.UTF_8);
+            byte[] signedBytes = signDataPkcs7(filecontent.getBytes(StandardCharsets.UTF_8),certificate,key);
+            String mimeEncodedString = new String(Base64.encode(signedBytes));
             writer.append(mimeEncodedString).flush();
+            */
             /*
             writer.append(Base64.getEncoder().encodeToString(signData(filecontent.getBytes(),certificate,key))).flush();
             */
-            writer.append(CRLF).flush();
-            writer.append("----").append(boundary).append("--").append(CRLF).flush(); 
-            writer.append(null);
+          //  writer.append(CRLF).flush();
+          //  writer.append("----").append(boundary).append("--").append(CRLF).flush(); 
+           // writer.append(null);
             writer.close();
             
         }   catch (Exception ex) {
@@ -1096,10 +1126,9 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
 			    certs = new JcaCertStore(certList);
 
 			    CMSSignedDataGenerator cmsGenerator = new CMSSignedDataGenerator();
-			    ContentSigner contentSigner 
-			      = new JcaContentSignerBuilder("SHA1withRSA").build(signingKey);
+			    ContentSigner contentSigner = new JcaContentSignerBuilder("SHA256WithRSA").build(signingKey);
 			    cmsGenerator.addSignerInfoGenerator(new JcaSignerInfoGeneratorBuilder(
-			      new JcaDigestCalculatorProviderBuilder().setProvider("BC")
+			      new JcaDigestCalculatorProviderBuilder().setProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider())
 			      .build()).build(contentSigner, signingCertificate));
 			    cmsGenerator.addCertificates(certs);
 			    
@@ -1107,7 +1136,103 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
 			    signedMessage = cms.getEncoded();
 			    return signedMessage;
 	}
-	
+
+     public static byte[] signDataPkcs7(
+			  byte[] data, 
+			  X509Certificate signingCertificate,
+			  PrivateKey signingKey) throws Exception {
+			 
+			    byte[] signedMessage = null;
+			    List<X509Certificate> certList = new ArrayList<X509Certificate>();
+			    CMSTypedData cmsData= new CMSProcessableByteArray(data);
+			    certList.add(signingCertificate);
+			    certs = new JcaCertStore(certList);
+
+			    CMSSignedDataGenerator cmsGenerator = new CMSSignedDataGenerator();
+			    ContentSigner signer = new JcaContentSignerBuilder("SHA256withRSA").setProvider("BC").
+                build(signingKey);
+                       
+                cmsGenerator.addSignerInfoGenerator(new JcaSignerInfoGeneratorBuilder(new JcaDigestCalculatorProviderBuilder().setProvider("BC").
+                build()).build(signer, (X509Certificate) signingCertificate));            
+                            /*
+			    cmsGenerator.addSignerInfoGenerator(new JcaSignerInfoGeneratorBuilder(
+			      new JcaDigestCalculatorProviderBuilder().setProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider())
+			      .build()).build(contentSigner, signingCertificate));
+			    */
+                            cmsGenerator.addCertificates(certs);
+			    
+			    CMSSignedData cms = cmsGenerator.generate(cmsData, true);
+			    signedMessage = cms.getEncoded();
+			    return signedMessage;
+	}
+
+    
+    public static MimeBodyPart signDataSimple(
+          byte[] data, 
+          X509Certificate signingCertificate,
+          PrivateKey signingKey) throws Exception {
+            byte[] signedMessage = null;
+            List<X509Certificate> certList = new ArrayList<X509Certificate>();
+            CMSTypedData cmsData= new CMSProcessableByteArray(data);
+            certList.add(signingCertificate);
+            certs = new JcaCertStore(certList);
+
+            SMIMESignedGenerator sGen = new SMIMESignedGenerator(false ? SMIMESignedGenerator.RFC3851_MICALGS : SMIMESignedGenerator.RFC5751_MICALGS);
+            JcaSimpleSignerInfoGeneratorBuilder jSig = new JcaSimpleSignerInfoGeneratorBuilder().setProvider("BC");
+             SignerInfoGenerator sig = jSig.build("SHA256withRSA", signingKey, signingCertificate);
+            sGen.addSignerInfoGenerator(sig);
+            sGen.addCertificates(certs);
+            MimeBodyPart dataPart = new MimeBodyPart();
+            dataPart.setText(new String(data));
+            MimeMultipart signedData = sGen.generate(dataPart);
+            
+            MimeBodyPart tmpBody = new MimeBodyPart();
+            tmpBody.setContent(signedData);
+        // Content-type header is required, unit tests fail badly on async MDNs if not set.
+            tmpBody.setHeader("Content-Type", signedData.getContentType());
+            
+           
+            return tmpBody;
+	}
+
+    
+    
+     CMSSignedDataGenerator setUpProvider(final KeyStore keystore, String KEY_ALIAS_IN_KEYSTORE, String KEYSTORE_PASSWORD) throws Exception {
+
+        Security.addProvider(new BouncyCastleProvider());
+
+        Certificate[] certchain = (Certificate[]) keystore.getCertificateChain(KEY_ALIAS_IN_KEYSTORE);
+
+        final List<Certificate> certlist = new ArrayList<Certificate>();
+
+        for (int i = 0, length = certchain == null ? 0 : certchain.length; i < length; i++) {
+            certlist.add(certchain[i]);
+        }
+
+        Store certstore = new JcaCertStore(certlist);
+
+        Certificate cert = keystore.getCertificate(KEY_ALIAS_IN_KEYSTORE);
+
+        ContentSigner signer = new JcaContentSignerBuilder("SHA1withRSA").setProvider("BC").
+                build((PrivateKey) (keystore.getKey(KEY_ALIAS_IN_KEYSTORE, KEYSTORE_PASSWORD.toCharArray())));
+
+        CMSSignedDataGenerator generator = new CMSSignedDataGenerator();
+
+        generator.addSignerInfoGenerator(new JcaSignerInfoGeneratorBuilder(new JcaDigestCalculatorProviderBuilder().setProvider("BC").
+                build()).build(signer, (X509Certificate) cert));
+
+        generator.addCertificates(certstore);
+
+        return generator;
+    }
+
+     byte[] signPkcs7(final byte[] content, final CMSSignedDataGenerator generator) throws Exception {
+
+        CMSTypedData cmsdata = new CMSProcessableByteArray(content);
+        CMSSignedData signeddata = generator.generate(cmsdata, true);
+        return signeddata.getEncoded();
+    }
+    
     
     /**
      * This method is called from within the constructor to initialize the form.
