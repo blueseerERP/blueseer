@@ -46,7 +46,7 @@
      plan_order,
      plan_type,
      plan_line,
-     plan_cell, it_item, it_desc, it_wf, wf_op, wf_desc, wf_cell, 
+     plan_cell, it_item, it_rev, it_desc, it_wf, wf_op, wf_desc, wf_cell, 
      case when wf_run_hours = 0 then '0' when wf_run_hours = '' then '0' when wf_run_hours is null then '0' else (1 / wf_run_hours) end as runrate,
      case when plan_type = 'DEMD' then so_po else 'N/A' end as custpo,
      case when plan_type = 'DEMD' then so_cust else 'N/A' end as custcode,
@@ -113,6 +113,7 @@ order by wf_op;]]>
 	<field name="custitem" class="java.lang.String"/>
 	<field name="plan_type" class="java.lang.String"/>
 	<field name="it_desc" class="java.lang.String"/>
+	<field name="it_rev" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -329,6 +330,17 @@ order by wf_op;]]>
 					<font size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{it_desc}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="462" y="6" width="58" height="14" uuid="58a889ce-f7d6-466c-8d53-c71764099472"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{jasper.jobticket.lblrev}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="530" y="6" width="70" height="14" uuid="37b4c8e0-f85c-4bcb-b2fc-ab61944b63e2"/>
+				<textFieldExpression><![CDATA[$F{it_rev}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>

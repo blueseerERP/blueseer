@@ -934,7 +934,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         conn.setRequestProperty("Recipient-Address", url.toString());
         conn.setRequestProperty("EDIINT-Features", "CEM, multiple-attachments, AS2-Reliability");
        // conn.setRequestProperty("Content-Type", "multipart/signed;  boundary=\"--" + boundary + "\";  protocol=\"application/pkcs7-signature\"; micalg=sha1"); 
-       conn.setRequestProperty("Content-Type", "multipart/signed;");  
+       conn.setRequestProperty("Content-Type", "multipart/signed; protocol=application/pkcs7-signature; micalg=sha1");  
        conn.setRequestProperty("Content-Disposition", "attachment; filename=smime.p7m");
         conn.setRequestProperty("Content-Length", String.valueOf(encryptedData.length));
         
