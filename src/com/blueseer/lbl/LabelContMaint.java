@@ -288,13 +288,16 @@ String shipcountry = "";
         
         btprint.setEnabled(true);
         
-        ddprinter.removeAllItems();
+       
         
         ArrayList mylist = OVData.getPrinterList();
         for (int i = 0; i < mylist.size(); i++) {
             ddprinter.addItem(mylist.get(i));
         }
       
+        ddprinter.removeAllItems();
+        OVData.getPrinterList().stream().forEach((s) -> ddprinter.addItem(s));
+       
         
         getSiteAddress(OVData.getDefaultSite());
         
