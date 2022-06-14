@@ -105,6 +105,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.activation.DataSource;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.internet.MimeBodyPart;
@@ -121,6 +122,20 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JViewport;
 import javax.swing.SwingWorker;
+import org.apache.commons.io.Charsets;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.FormBodyPart;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.StringBody;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
+
+
 import org.bouncycastle.cert.jcajce.JcaCertStore;
 import org.bouncycastle.cms.CMSAlgorithm;
 import org.bouncycastle.cms.CMSEnvelopedData;
@@ -596,7 +611,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         
     }
 
-    
+   
     public void postAS2( URL url, String verb, String as2From, String as2To, String internalURL) {
         File textFile = new File(tbsourcedir.getText());
         String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS"));
@@ -904,7 +919,10 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         String messageid = "<BLUESEER-" + now + "." + boundary + "@Blueseer Software>";
         String CRLF = "\r\n"; // Line separator required by multipart/form-data.
         try {
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        CloseableHttpClient client = HttpClients.createDefault();
+        HttpPost httpPost = new HttpPost(url.toString());    
+            
+       HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setDoOutput(true);
        // "application/pkcs7-mime; smime-type=enveloped-data; name=smime.p7m"
         // this is header stuff
@@ -916,10 +934,8 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
            
             byte[] stringToEncrypt = filecontent.getBytes();
             byte[] encryptedData = encryptData(stringToEncrypt, certificate);
-            MimeBodyPart xx = encryptDataSMIME(stringToEncrypt, certificate);
-            
-        
-            
+                   
+           
         
         conn.setRequestProperty("User-Agent", "RPT-HTTPClient/0.3-3I (Windows Server 2016)"); 
         conn.setRequestProperty("AS2-To", as2To);
@@ -933,10 +949,11 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         conn.setRequestProperty("Message-ID", messageid);
         conn.setRequestProperty("Recipient-Address", url.toString());
         conn.setRequestProperty("EDIINT-Features", "CEM, multiple-attachments, AS2-Reliability");
-       // conn.setRequestProperty("Content-Type", "multipart/signed;  boundary=\"--" + boundary + "\";  protocol=\"application/pkcs7-signature\"; micalg=sha1"); 
-       conn.setRequestProperty("Content-Type", "multipart/signed; protocol=application/pkcs7-signature; micalg=sha1");  
-       conn.setRequestProperty("Content-Disposition", "attachment; filename=smime.p7m");
-        conn.setRequestProperty("Content-Length", String.valueOf(encryptedData.length));
+      //  conn.setRequestProperty("Content-Type", "multipart/signed; protocol=\"application/pkcs7-signature\"; micalg=sha1"); 
+      //  conn.setRequestProperty("Content-Disposition", "attachment; filename=smime.p7m");
+        conn.setRequestProperty("Content-Type", null); 
+      //  conn.setRequestProperty("Content-Disposition", "attachment; filename=smime.p7m");
+       // conn.setRequestProperty("Content-Length", String.valueOf(encryptedData.length));
         
         
         conn.setRequestMethod("POST");
@@ -973,11 +990,13 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
             Files.copy(textFile.toPath(), output);
             output.flush(); // Important before continuing with writer!
             */
-           Multipart multipart = new MimeMultipart( "mixed" );
+            /*
+           Multipart multipart = new MyMimeMultiPart("mixed", boundary);
            MimeBodyPart parent = new MimeBodyPart();
            parent.setHeader("Content-Type", "multipart/signed; protocol=application/pkcs7-signature; micalg=sha1");
            parent.setHeader("Content-Disposition", "attachment; filename=smime.p7m");
-           /*
+           */
+            /*
            MimeBodyPart body = new MimeBodyPart();
             body.setHeader("Content-Type", "application/edi-x12; file=test.txt");
             body.setHeader("Content-Disposition", "attachment; filename=" + textFile.getName());
@@ -1003,10 +1022,12 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
             writer.append("Content-Transfer-Encoding: base64").append(CRLF);
             writer.append(CRLF).flush();
             */
+          
             MimeBodyPart mbp = signDataSimple(filecontent.getBytes(StandardCharsets.UTF_8),certificate,key);
-            multipart.addBodyPart(mbp);
-            parent.setContent(multipart);
-            parent.writeTo(output);
+            mbp.writeTo(output);
+           // multipart.addBodyPart(mbp);
+           // parent.setContent(multipart);
+          //  parent.writeTo(output);
             output.flush();
             /*
             byte[] mimeBytes = filecontent.getBytes(StandardCharsets.UTF_8);
@@ -1018,7 +1039,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
             writer.append(Base64.getEncoder().encodeToString(signData(filecontent.getBytes(),certificate,key))).flush();
             */
           //  writer.append(CRLF).flush();
-          //  writer.append("----").append(boundary).append("--").append(CRLF).flush(); 
+         //   writer.append("----").append(boundary).append("--").append(CRLF).flush(); 
            // writer.append(null);
             writer.close();
             
@@ -1056,6 +1077,126 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         
        
         conn.disconnect();
+        } catch (MalformedURLException e) {
+            bslog(e);
+            bsmf.MainFrame.show("MalformedURLException");
+        } catch (IOException ex) {
+            bslog(ex);
+            bsmf.MainFrame.show("IOException");
+        } 
+    }
+    
+    public void postAS2SignNew( URL url, String verb, String as2From, String as2To, String internalURL) throws FileNotFoundException, IOException, NoSuchAlgorithmException, CertificateException, KeyStoreException, UnrecoverableKeyException, NoSuchProviderException, CertificateEncodingException, CMSException, SMIMEException, MessagingException, Exception {
+        
+        
+        Security.addProvider(new BouncyCastleProvider());
+        CertificateFactory certFactory = CertificateFactory
+          .getInstance("X.509", "BC");
+
+        X509Certificate certificate = (X509Certificate) certFactory
+          .generateCertificate(new FileInputStream("c:\\junk\\terrycer.cer"));
+
+        char[] keystorePassword = "terry".toCharArray();
+        char[] keyPassword = "terry".toCharArray();
+
+        KeyStore keystore = KeyStore.getInstance("PKCS12");
+        keystore.load(new FileInputStream("c:\\junk\\terryp12.p12"), keystorePassword);
+        PrivateKey key = (PrivateKey) keystore.getKey("terry", keyPassword);
+        
+        File textFile = new File(tbsourcedir.getText());
+        String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS"));
+        String boundary = Long.toHexString(System.currentTimeMillis()); // Just generate some unique random value.
+        String messageid = "<BLUESEER-" + now + "." + boundary + "@Blueseer Software>";
+        String CRLF = "\r\n"; // Line separator required by multipart/form-data.
+        try {
+        CloseableHttpClient client = HttpClients.createDefault();
+        HttpPost httpPost = new HttpPost(url.toString()); 
+        
+        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+        httpPost.addHeader("User-Agent", "RPT-HTTPClient/0.3-3I (Windows Server 2016)"); 
+        httpPost.addHeader("AS2-To", as2To);
+        httpPost.addHeader("AS2-From", as2From); 
+        httpPost.addHeader("AS2-Version", "1.2"); 
+        httpPost.addHeader("Mime-Version", "1.0");
+        httpPost.addHeader("Subject", "as2");
+        httpPost.addHeader("Accept-Encoding", "deflate, gzip, x-gzip, compress, x-compress");
+        httpPost.addHeader("Disposition-Notification-Options", "signed-receipt-protocol=optional, pkcs7-signature; signed-receipt-micalg=optional, sha1");
+        httpPost.addHeader("Disposition-Notification-To", internalURL);
+        httpPost.addHeader("Message-ID", messageid);
+        httpPost.addHeader("Recipient-Address", url.toString());
+        httpPost.addHeader("EDIINT-Features", "CEM, multiple-attachments, AS2-Reliability");
+        httpPost.addHeader("Content-Type", "multipart/signed; protocol=\"application/pkcs7-signature\"; boundary=" + boundary + "; micalg=sha1");
+        httpPost.addHeader("Content-Disposition", "attachment; filename=smime.p7m");
+          
+           
+          String filecontent = Files.readString(Paths.get(tbsourcedir.getText()));
+           
+                   
+                   
+          // MimeMultipart mmp = signDataSimpleTest(filecontent.getBytes(StandardCharsets.UTF_8),certificate,key);
+          MimeBodyPart mbp = signDataSimple(filecontent.getBytes(StandardCharsets.UTF_8),certificate,key);
+          byte[] signedData = signData(filecontent.getBytes(StandardCharsets.UTF_8),certificate,key);
+          
+          /*
+          String newboundary = "";
+          String[] mb = mbp.getContentType().split(";");
+          for (String s : mb) {
+              if (s.contains("boundary=")) {
+                  String[] mbs = s.split("=", 2);
+                  newboundary = mbs[1].trim().replace("\"", "");
+              }
+          }
+          System.out.println("boundary: " + mbp.getContentType());
+          System.out.println("myboundary: " + newboundary);
+          */
+          
+        // Content-type header is required, unit tests fail badly on async MDNs if not set.
+        
+        //  builder.addBinaryBody(now, mmp.getBodyPart(0).getInputStream());  
+        //  builder.addTextBody(now, filecontent).setContentType(org.apache.http.entity.ContentType.TEXT_PLAIN);
+       // FormBodyPart filePart = new FormBodyPart("file", new StringBody(filecontent, ContentType.create("application/edi-x12", Charsets.UTF_8)));
+       // filePart.addField("Content-Disposition", "attachment; filename=\"test.txt\"");
+        
+       // builder.addPart(filePart);
+          
+          
+         // builder.addTextBody(now, new String(Base64.encode(signedData)));  
+      //  FormBodyPart signedPart = new FormBodyPart("signed", new StringBody(new String(Base64.encode(signedData)), ContentType.create("application/pkcs7-signature", Charsets.UTF_8)));
+      //  signedPart.addField("Content-Disposition", "attachment; filename=smime.p7s");
+      //  signedPart.addField("Content-Transfer-Encoding", "base64");
+       builder.addTextBody("preamble", "--" + boundary);
+       builder.addBinaryBody(now, mbp.getInputStream());
+       // builder.addPart(signedPart);
+          
+       // builder.setBoundary(boundary);
+          
+        //  String contentType = "multipart/signed; protocol=\"application/pkcs7-signature\"; boundary=" + "\"" + newboundary + "\"" + "; micalg=sha1";
+       //   httpPost.addHeader("Content-Type", contentType);
+        //  httpPost.addHeader("Content-Disposition", "attachment; filename=smime.p7m");
+          
+          HttpEntity multipart = builder.build();
+          
+          
+          
+          
+          //httpPost.removeHeaders(now);
+          
+          httpPost.setEntity(multipart);
+          CloseableHttpResponse response = client.execute(httpPost);
+          BufferedReader br = null;
+        
+        if (response.getStatusLine().getStatusCode() != 200) {
+                taoutput.append(response.getStatusLine().getStatusCode() + ": " + response.getStatusLine().getReasonPhrase());
+                //throw new RuntimeException("Failed : HTTP error code : "
+                //		+ conn.getResponseCode());
+        } else {
+            taoutput.append("SUCCESS: " + response.getStatusLine().getStatusCode() + ": " + response.getStatusLine().getReasonPhrase());
+        }
+        
+        HttpEntity entity = response.getEntity();
+        String result = EntityUtils.toString(entity); 
+        taoutput.append(result);
+       
         } catch (MalformedURLException e) {
             bslog(e);
             bsmf.MainFrame.show("MalformedURLException");
@@ -1184,7 +1325,9 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
             sGen.addCertificates(certs);
             MimeBodyPart dataPart = new MimeBodyPart();
             dataPart.setText(new String(data));
-            MimeMultipart signedData = sGen.generate(dataPart);
+            dataPart.setHeader("Content-Type", "application/edi-x12; file=test.txt");
+            dataPart.setHeader("Content-Disposition", "attachment; filename=test.txt");
+             MimeMultipart signedData = sGen.generate(dataPart);
             
             MimeBodyPart tmpBody = new MimeBodyPart();
             tmpBody.setContent(signedData);
@@ -1195,7 +1338,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
             return tmpBody;
 	}
 
-    
+     
     
      CMSSignedDataGenerator setUpProvider(final KeyStore keystore, String KEY_ALIAS_IN_KEYSTORE, String KEYSTORE_PASSWORD) throws Exception {
 
@@ -1866,7 +2009,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                     if (cboutputencryption.isSelected()) {
                      postAS2Enc(url, verb, getAS2id(), tbuser.getText(), getAS2url());
                     } else if (cboutputsign.isSelected()) {
-                     postAS2Sign(url, verb, getAS2id(), tbuser.getText(), getAS2url());
+                     postAS2SignNew(url, verb, getAS2id(), tbuser.getText(), getAS2url());
                     } else {
                      postAS2(url, verb, getAS2id(), tbuser.getText(), getAS2url());   
                     }
@@ -1933,6 +2076,8 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                     } catch (SMIMEException ex) {
                         Logger.getLogger(APIMaint.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (MessagingException ex) {
+                        Logger.getLogger(APIMaint.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (Exception ex) {
                         Logger.getLogger(APIMaint.class.getName()).log(Level.SEVERE, null, ex);
                     } 
     }//GEN-LAST:event_btrunActionPerformed
