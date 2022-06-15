@@ -78,7 +78,6 @@ import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -101,15 +100,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import org.bouncycastle.util.encoders.Base64;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.activation.DataSource;
 import javax.mail.MessagingException;
-import javax.mail.Multipart;
 import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -132,14 +126,9 @@ import org.apache.http.entity.BufferedHttpEntity;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.entity.mime.FormBodyPart;
-import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.entity.mime.content.ContentBody;
-import org.apache.http.entity.mime.content.FileBody;
-import org.apache.http.entity.mime.content.InputStreamBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
@@ -551,7 +540,9 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                 passwd,
                 tbapikey.getText(),
                 ddprotocol.getSelectedItem().toString(),
-                ddclass.getSelectedItem().toString()
+                ddclass.getSelectedItem().toString(),
+                String.valueOf(BlueSeerUtils.boolToInt(cboutputencryption.isSelected())),
+                String.valueOf(BlueSeerUtils.boolToInt(cboutputsign.isSelected()))
                 );
         return x;
     }
@@ -904,7 +895,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         } 
     }
     
-    public void postAS2Sign( URL url, String verb, String as2From, String as2To, String internalURL) throws FileNotFoundException, IOException, NoSuchAlgorithmException, CertificateException, KeyStoreException, UnrecoverableKeyException, NoSuchProviderException, CertificateEncodingException, CMSException, SMIMEException, MessagingException {
+    public void postAS2HttpURLConnection( URL url, String verb, String as2From, String as2To, String internalURL) throws FileNotFoundException, IOException, NoSuchAlgorithmException, CertificateException, KeyStoreException, UnrecoverableKeyException, NoSuchProviderException, CertificateEncodingException, CMSException, SMIMEException, MessagingException {
         
         
         Security.addProvider(new BouncyCastleProvider());
@@ -1094,7 +1085,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         } 
     }
     
-    public void postAS2SignNew( URL url, String verb, String as2From, String as2To, String internalURL) throws FileNotFoundException, IOException, NoSuchAlgorithmException, CertificateException, KeyStoreException, UnrecoverableKeyException, NoSuchProviderException, CertificateEncodingException, CMSException, SMIMEException, MessagingException, Exception {
+    public void postAS2MultipartEntityBuilder( URL url, String verb, String as2From, String as2To, String internalURL) throws FileNotFoundException, IOException, NoSuchAlgorithmException, CertificateException, KeyStoreException, UnrecoverableKeyException, NoSuchProviderException, CertificateEncodingException, CMSException, SMIMEException, MessagingException, Exception {
         
         
         Security.addProvider(new BouncyCastleProvider());
@@ -1219,7 +1210,8 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         } 
     }
     
-    public void postAS2SignTest( URL url, String verb, String as2From, String as2To, String internalURL) throws FileNotFoundException, IOException, NoSuchAlgorithmException, CertificateException, KeyStoreException, UnrecoverableKeyException, NoSuchProviderException, CertificateEncodingException, CMSException, SMIMEException, MessagingException, Exception {
+    public void postAS2Sign( URL url, String verb, String as2From, String as2To, String internalURL) throws FileNotFoundException, IOException, NoSuchAlgorithmException, CertificateException, KeyStoreException, UnrecoverableKeyException, NoSuchProviderException, CertificateEncodingException, CMSException, SMIMEException, MessagingException, Exception {
+        
         
         
         Security.addProvider(new BouncyCastleProvider());
@@ -1238,40 +1230,15 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         
         File textFile = new File(tbsourcedir.getText());
         String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS"));
-        String boundary = Long.toHexString(System.currentTimeMillis()); // Just generate some unique random value.
+        String boundary = Long.toHexString(System.currentTimeMillis()); 
         String messageid = "<BLUESEER-" + now + "." + boundary + "@Blueseer Software>";
         String CRLF = "\r\n"; // Line separator required by multipart/form-data.
         try {
         CloseableHttpClient client = HttpClients.createDefault();
-        HttpClientBuilder httpBuilder = HttpClientBuilder.create();
-        /*
-        HttpPost httpPost = new HttpPost(url.toString()); 
-        
-        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-        httpPost.addHeader("User-Agent", "RPT-HTTPClient/0.3-3I (Windows Server 2016)"); 
-        httpPost.addHeader("AS2-To", as2To);
-        httpPost.addHeader("AS2-From", as2From); 
-        httpPost.addHeader("AS2-Version", "1.2"); 
-        httpPost.addHeader("Mime-Version", "1.0");
-        httpPost.addHeader("Subject", "as2");
-        httpPost.addHeader("Accept-Encoding", "deflate, gzip, x-gzip, compress, x-compress");
-        httpPost.addHeader("Disposition-Notification-Options", "signed-receipt-protocol=optional, pkcs7-signature; signed-receipt-micalg=optional, sha1");
-        httpPost.addHeader("Disposition-Notification-To", internalURL);
-        httpPost.addHeader("Message-ID", messageid);
-        httpPost.addHeader("Recipient-Address", url.toString());
-        httpPost.addHeader("EDIINT-Features", "CEM, multiple-attachments, AS2-Reliability");
-       */
-       // httpPost.addHeader("Content-Type", "multipart/signed; protocol=\"application/pkcs7-signature\"; boundary=" + boundary + "; micalg=sha1");
-       // httpPost.addHeader("Content-Disposition", "attachment; filename=smime.p7m");
-          
            
-          String filecontent = Files.readString(Paths.get(tbsourcedir.getText()));
-           
-                   
-                   
-          // MimeMultipart mmp = signDataSimpleTest(filecontent.getBytes(StandardCharsets.UTF_8),certificate,key);
+        String filecontent = Files.readString(Paths.get(tbsourcedir.getText()));
           
-          MimeBodyPart mbp = signDataSimple(filecontent.getBytes(StandardCharsets.UTF_8),certificate,key);
+        MimeBodyPart mbp = signDataSimple(filecontent.getBytes(StandardCharsets.UTF_8),certificate,key);
           
           
           String newboundary = "";
@@ -1282,27 +1249,15 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                   newboundary = mbs[1].trim().replace("\"", "");
               }
           }
-          System.out.println("boundary: " + mbp.getContentType());
-          System.out.println("myboundary: " + newboundary);
+          //System.out.println("boundary: " + mbp.getContentType());
+          //System.out.println("myboundary: " + newboundary);
         
-       
-      //  builder.addBinaryBody(now, mbp.getInputStream()).setContentType(ContentType.create("multipart/signed"));  
-        
-     
+  
           
-       // builder.setBoundary(boundary);
-          
-       //   String contentType = "application/multipart; boundary=" + "\"" + boundary + "\"" + "";
-       //   httpPost.addHeader("Content-Type", contentType);
-         // httpPost.addHeader("Content-Disposition", "attachment; filename=smime.p7m");
-          
-         // HttpEntity multipart = builder.build();
-        //  httpPost.setEntity(multipart);
-          
-          URL urlObj = new URL(url.toString());
-          RequestBuilder rb = RequestBuilder.post();
-          rb.setUri(urlObj.toURI());
-          rb.addHeader("User-Agent", "RPT-HTTPClient/0.3-3I (Windows Server 2016)"); 
+        URL urlObj = new URL(url.toString());
+        RequestBuilder rb = RequestBuilder.post();
+        rb.setUri(urlObj.toURI());
+        rb.addHeader("User-Agent", "RPT-HTTPClient/0.3-3I (Windows Server 2016)"); 
         rb.addHeader("AS2-To", as2To);
         rb.addHeader("AS2-From", as2From); 
         rb.addHeader("AS2-Version", "1.2"); 
@@ -2148,12 +2103,9 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                 URL url = new URL(urlstring);
                 
                 if (ddclass.getSelectedItem().toString().equals("AS2")) {
-                    if (cboutputencryption.isSelected()) {
-                     postAS2Enc(url, verb, getAS2id(), tbuser.getText(), getAS2url());
-                    } else if (cboutputsign.isSelected()) {
-                     postAS2SignTest(url, verb, getAS2id(), tbuser.getText(), getAS2url());
-                    } else {
-                     postAS2(url, verb, getAS2id(), tbuser.getText(), getAS2url());   
+                    String r = apiUtils.postAS2(url, verb, getAS2id(), tbuser.getText(), tbsourcedir.getText(), getAS2url());
+                    if (r != null) {
+                     taoutput.append(r);
                     }
                     return;
                 }

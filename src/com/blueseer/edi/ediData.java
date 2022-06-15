@@ -419,8 +419,8 @@ public class ediData {
         String sqlSelect = "select * from api_mstr where api_id = ?";
         String sqlInsert = "insert into api_mstr (api_id, api_desc, api_version," +
         " api_url, api_port, api_path, api_user, " +
-        " api_pass, api_key, api_protocol, api_path ) " +
-                " values (?,?,?,?,?,?,?,?,?,?,?); "; 
+        " api_pass, api_key, api_protocol, api_class, api_encrypted, api_signed ) " +
+                " values (?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
         try (Connection con = DriverManager.getConnection(url + db, user, pass);
              PreparedStatement ps = con.prepareStatement(sqlSelect);) {
              ps.setString(1, x.api_id);
@@ -438,6 +438,8 @@ public class ediData {
             psi.setString(9, x.api_key);
             psi.setString(10, x.api_protocol);
             psi.setString(11, x.api_class);
+            ps.setString(12, x.api_encrypted);
+            ps.setString(13, x.api_signed);
             
             int rows = psi.executeUpdate();
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
@@ -457,8 +459,8 @@ public class ediData {
         String sqlSelect = "select * from api_mstr where api_id = ?";
         String sqlInsert = "insert into api_mstr (api_id, api_desc, api_version," +
         " api_url, api_port, api_path, api_user, " +
-        " api_pass, api_key, api_protocol, api_class ) " +
-                " values (?,?,?,?,?,?,?,?,?,?,?); "; 
+        " api_pass, api_key, api_protocol, api_class, api_encrypted, api_signed ) " +
+                " values (?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
        
           ps = con.prepareStatement(sqlSelect); 
           ps.setString(1, x.api_id);
@@ -476,6 +478,8 @@ public class ediData {
             ps.setString(9, x.api_key);
             ps.setString(10, x.api_protocol);
             ps.setString(11, x.api_class);
+            ps.setString(12, x.api_encrypted);
+            ps.setString(13, x.api_signed);
             rows = ps.executeUpdate();
             } 
             return rows;
@@ -564,7 +568,8 @@ public class ediData {
     public static String[] updateAPIMaint(api_mstr x) {
         String[] m = new String[2];
         String sql = "update api_mstr set api_desc = ?, api_version = ?, api_url = ?, api_port = ?, " +
-                " api_path = ?, api_user = ?, api_pass = ?, api_key = ?, api_protocol = ?, api_class = ?  " +
+                " api_path = ?, api_user = ?, api_pass = ?, api_key = ?, api_protocol = ?, api_class = ?,  " +
+                " api_encrypted = ?, api_signed = ? " +
                 "  where api_id = ? ";
         try (Connection con = DriverManager.getConnection(url + db, user, pass);
 	PreparedStatement ps = con.prepareStatement(sql)) {
@@ -578,7 +583,9 @@ public class ediData {
         ps.setString(8, x.api_key);
         ps.setString(9, x.api_protocol);
         ps.setString(10, x.api_class);
-        ps.setString(11, x.api_id);
+        ps.setString(11, x.api_encrypted);
+        ps.setString(12, x.api_signed);
+        ps.setString(13, x.api_id);
         int rows = ps.executeUpdate();
         m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
         } catch (SQLException s) {
@@ -591,7 +598,8 @@ public class ediData {
     private static int _updateAPIMstr(api_mstr x, Connection con, PreparedStatement ps) throws SQLException {
         int rows = 0;
         String sql = "update api_mstr set api_desc = ?, api_version = ?, api_url = ?, api_port = ?, " +
-                " api_path = ?, api_user = ?, api_pass = ?, api_key = ?, api_protocol = ?, api_class = ?  " +
+                " api_path = ?, api_user = ?, api_pass = ?, api_key = ?, api_protocol = ?, api_class = ?,  " +
+                " api_encrypted = ?, api_signed = ? " +
                 "  where api_id = ? ";
 	ps = con.prepareStatement(sql) ;
         ps.setString(1, x.api_desc);
@@ -604,7 +612,9 @@ public class ediData {
         ps.setString(8, x.api_key);
         ps.setString(9, x.api_protocol);
         ps.setString(10, x.api_class);
-        ps.setString(11, x.api_id);
+        ps.setString(11, x.api_encrypted);
+        ps.setString(12, x.api_signed);
+        ps.setString(13, x.api_id);
             rows = ps.executeUpdate();
         return rows;
     }
@@ -762,7 +772,9 @@ public class ediData {
                             res.getString("api_pass"),
                             res.getString("api_key"),
                             res.getString("api_protocol"),
-                            res.getString("api_class")
+                            res.getString("api_class"),
+                            res.getString("api_encrypted"),
+                            res.getString("api_signed")
                         );
                     }
                 }
@@ -954,6 +966,36 @@ public class ediData {
         return x;
     }
     
+    public static String[] getAS2Info(String id) {
+        // aracct, arcc, currency, bank, terms, carrier, onhold, site
+        String[] info = new String[]{"","","","","","","", "",""};
+        String sql = "select api_id, api_url, api_port, api_path, api_user, edic_as2id, edic_as2url, " +
+                " api_encrypted, api_signed " +
+                " from api_mstr inner join edi_ctrl where api_class = 'AS2' and api_id = ?;";
+        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, id);
+             try (ResultSet res = ps.executeQuery();) {
+               while (res.next()) {
+               info[0] = res.getString("api_id");
+               info[1] = res.getString("api_url");
+               info[2] = res.getString("api_port");
+               info[3] = res.getString("api_path");
+               info[4] = res.getString("api_user");
+               info[5] = res.getString("edic_as2id");
+               info[6] = res.getString("edic_as2url");
+               info[7] = res.getString("api_encrypted");
+               info[8] = res.getString("api_signed");                   
+               }
+            }
+        }
+        catch (SQLException s){
+            MainFrame.bslog(s);
+        }
+        return info;
+    }
+    
+    
     public record edi_xref(String[] m, String exr_tpid, String exr_tpaddr, String exr_ovaddr,
         String exr_gsid, String exr_type ) {
         public edi_xref(String[] m) {
@@ -977,9 +1019,11 @@ public class ediData {
     
     public record api_mstr(String[] m, String api_id, String api_desc, String api_version,
         String api_url, String api_port, String api_path, String api_user ,
-        String api_pass, String api_key, String api_protocol, String api_class ) {
+        String api_pass, String api_key, String api_protocol, String api_class,
+        String api_encrypted, String api_signed) {
         public api_mstr(String[] m) {
-            this(m, "", "", "", "", "", "", "", "", "", "", "");
+            this(m, "", "", "", "", "", "", "", "", "", "", 
+                    "", "", "");
         }
     }
     
