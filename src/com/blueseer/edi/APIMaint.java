@@ -2103,7 +2103,8 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                 URL url = new URL(urlstring);
                 
                 if (ddclass.getSelectedItem().toString().equals("AS2")) {
-                    String r = apiUtils.postAS2(url, verb, getAS2id(), tbuser.getText(), tbsourcedir.getText(), getAS2url());
+                  //  String as2id, String as2file, String as2From, String internalURL
+                    String r = apiUtils.postAS2(tbkey.getText(), tbsourcedir.getText(), getAS2id(), getAS2url());
                     if (r != null) {
                      taoutput.append(r);
                     }
@@ -2164,10 +2165,6 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                     } catch (UnrecoverableKeyException ex) {
                         Logger.getLogger(APIMaint.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (NoSuchProviderException ex) {
-                        Logger.getLogger(APIMaint.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (CMSException ex) {
-                        Logger.getLogger(APIMaint.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (SMIMEException ex) {
                         Logger.getLogger(APIMaint.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (MessagingException ex) {
                         Logger.getLogger(APIMaint.class.getName()).log(Level.SEVERE, null, ex);

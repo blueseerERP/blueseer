@@ -967,7 +967,7 @@ public class ediData {
     }
     
     public static String[] getAS2Info(String id) {
-        // aracct, arcc, currency, bank, terms, carrier, onhold, site
+        // api_id, api_url, api_port, api_path, api_user, edic_as2id, edic_as2url, api_encrypted, api_signed
         String[] info = new String[]{"","","","","","","", "",""};
         String sql = "select api_id, api_url, api_port, api_path, api_user, edic_as2id, edic_as2url, " +
                 " api_encrypted, api_signed " +

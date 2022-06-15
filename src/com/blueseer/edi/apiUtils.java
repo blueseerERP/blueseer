@@ -33,6 +33,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
@@ -52,6 +53,8 @@ import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeBodyPart;
 import org.apache.http.HttpEntity;
@@ -72,21 +75,26 @@ import org.bouncycastle.mail.smime.SMIMEException;
  * @author terryva
  */
 public class apiUtils {
-    public static String postAS2( URL url, String verb, String as2From, String as2To, String as2file, String internalURL) throws FileNotFoundException, IOException, NoSuchAlgorithmException, CertificateException, KeyStoreException, UnrecoverableKeyException, NoSuchProviderException, CertificateEncodingException, CMSException, SMIMEException, MessagingException, Exception {
+    public static String postAS2( String as2id, String sourceDir, String as2From, String internalURL) throws MessagingException, MalformedURLException, URISyntaxException, IOException, CertificateException, NoSuchProviderException, KeyStoreException, NoSuchAlgorithmException, UnrecoverableKeyException  {
         
         StringBuilder r = null;
         
-        Path as2filepath = FileSystems.getDefault().getPath(as2file);
-        if (! Files.exists(as2filepath)) {
-           return "source file does not exist"; 
-        }
+     //   Path as2filepath = FileSystems.getDefault().getPath(as2file);
+     //   if (! Files.exists(as2filepath)) {
+     //      return "source file does not exist"; 
+      //  }
+       
+        
+        // gather pertinent info for this AS2 ID / Partner
+        // api_id, api_url, api_port, api_path, api_user, edic_as2id, edic_as2url, api_encrypted, api_signed
+        String[] tp = ediData.getAS2Info(as2id);
+        String url = tp[1];
+        String as2To = tp[4];
         
         Security.addProvider(new BouncyCastleProvider());
-        CertificateFactory certFactory = CertificateFactory
-          .getInstance("X.509", "BC");
+        CertificateFactory certFactory = CertificateFactory.getInstance("X.509", "BC");
 
-        X509Certificate certificate = (X509Certificate) certFactory
-          .generateCertificate(new FileInputStream("c:\\junk\\terrycer.cer"));
+        X509Certificate certificate = (X509Certificate) certFactory.generateCertificate(new FileInputStream("c:\\junk\\terrycer.cer"));
 
         char[] keystorePassword = "terry".toCharArray();
         char[] keyPassword = "terry".toCharArray();
@@ -95,35 +103,61 @@ public class apiUtils {
         keystore.load(new FileInputStream("c:\\junk\\terryp12.p12"), keystorePassword);
         PrivateKey key = (PrivateKey) keystore.getKey("terry", keyPassword);
         
+        Path as2filepath = null;
+        File folder = new File(sourceDir);
+        File[] listOfFiles = folder.listFiles();
+        for (int i = 0; i < listOfFiles.length; i++) {
+            if (! listOfFiles[i].isFile()) {
+            continue;
+            }
+            
+            as2filepath = FileSystems.getDefault().getPath(sourceDir + "/" + listOfFiles[i].getName()); 
+            
        
+        
         String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS"));
         String boundary = Long.toHexString(System.currentTimeMillis()); 
         String messageid = "<BLUESEER-" + now + "." + boundary + "@Blueseer Software>";
         String CRLF = "\r\n"; // Line separator required by multipart/form-data.
-        try {
+        
+        
         CloseableHttpClient client = HttpClients.createDefault();
            
-        String filecontent = Files.readString(as2filepath);
-          
-        MimeBodyPart mbp = signDataSimple(filecontent.getBytes(StandardCharsets.UTF_8),certificate,key);
-          
-          
-          String newboundary = "";
-          String[] mb = mbp.getContentType().split(";");
-          for (String s : mb) {
-              if (s.contains("boundary=")) {
-                  String[] mbs = s.split("=", 2);
-                  newboundary = mbs[1].trim().replace("\"", "");
-              }
-          }
-          //System.out.println("boundary: " + mbp.getContentType());
-          //System.out.println("myboundary: " + newboundary);
+        String filecontent;
+        try {
+            filecontent = Files.readString(as2filepath);
+        } catch (IOException ex) {
+            bslog(ex);
+            continue;
+        }
         
+        MimeBodyPart mbp;    
+        if (filecontent != null) {    
+                try {
+                    mbp = signDataSimple(filecontent.getBytes(StandardCharsets.UTF_8),certificate,key);
+                } catch (Exception ex) {
+                    bslog(ex);
+                    continue;
+                }
+        } else {
+           bslog("file content is null in AS2Post");
+           continue; 
+        }
+          
+        String newboundary = "";
+        String[] mb = mbp.getContentType().split(";");
+        for (String s : mb) {
+            if (s.contains("boundary=")) {
+                String[] mbs = s.split("=", 2);
+                newboundary = mbs[1].trim().replace("\"", "");
+            }
+        }       
   
           
         URL urlObj = new URL(url.toString());
         RequestBuilder rb = RequestBuilder.post();
         rb.setUri(urlObj.toURI());
+        
         rb.addHeader("User-Agent", "RPT-HTTPClient/0.3-3I (Windows Server 2016)"); 
         rb.addHeader("AS2-To", as2To);
         rb.addHeader("AS2-From", as2From); 
@@ -157,15 +191,8 @@ public class apiUtils {
         HttpEntity entity = response.getEntity();
         String result = EntityUtils.toString(entity); 
         r.append(result);
-       
-        } catch (MalformedURLException e) {
-            bslog(e);
-            bsmf.MainFrame.show("MalformedURLException");
-        } catch (IOException ex) {
-            bslog(ex);
-            bsmf.MainFrame.show("IOException");
-        } 
         
+    } // for each file
         return r.toString();
     }
     
