@@ -78,7 +78,7 @@ public class apiUtils {
     
     public static X509Certificate getCert(String certfile) throws CertificateException, NoSuchProviderException, FileNotFoundException {
         X509Certificate certificate = null;
-        Path certfilepath = FileSystems.getDefault().getPath(certfile);
+        Path certfilepath = FileSystems.getDefault().getPath("edi/certs/" + certfile);
         if (! Files.exists(certfilepath)) {
              throw new RuntimeException("bad path to cert file");
         }
@@ -111,6 +111,7 @@ public class apiUtils {
         KeyStore keystore = KeyStore.getInstance("PKCS12");
         keystore.load(new FileInputStream("c:\\junk\\terryp12.p12"), keystorePassword);
         PrivateKey key = (PrivateKey) keystore.getKey("terry", keyPassword);
+        
         
         Path as2filepath = null;
         File folder = new File(sourceDir);
