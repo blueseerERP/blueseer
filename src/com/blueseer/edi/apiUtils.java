@@ -75,6 +75,19 @@ import org.bouncycastle.mail.smime.SMIMEException;
  * @author terryva
  */
 public class apiUtils {
+    
+    public static X509Certificate getCert(String certfile) throws CertificateException, NoSuchProviderException, FileNotFoundException {
+        X509Certificate certificate = null;
+        Path certfilepath = FileSystems.getDefault().getPath(certfile);
+        if (! Files.exists(certfilepath)) {
+             throw new RuntimeException("bad path to cert file");
+        }
+        Security.addProvider(new BouncyCastleProvider());
+        CertificateFactory certFactory = CertificateFactory.getInstance("X.509", "BC");
+        certificate = (X509Certificate) certFactory.generateCertificate(new FileInputStream(certfilepath.toFile()));
+        return certificate;
+    }
+    
     public static String postAS2( String as2id, String sourceDir, String as2From, String internalURL) throws MessagingException, MalformedURLException, URISyntaxException, IOException, CertificateException, NoSuchProviderException, KeyStoreException, NoSuchAlgorithmException, UnrecoverableKeyException  {
         
         StringBuilder r = null;
@@ -86,19 +99,15 @@ public class apiUtils {
        
         
         // gather pertinent info for this AS2 ID / Partner
-        // api_id, api_url, api_port, api_path, api_user, edic_as2id, edic_as2url, api_encrypted, api_signed
+        // api_id, api_url, api_port, api_path, api_user, edic_as2id, edic_as2url, api_encrypted, api_signed, api_cert
         String[] tp = ediData.getAS2Info(as2id);
         String url = tp[1];
         String as2To = tp[4];
         
-        Security.addProvider(new BouncyCastleProvider());
-        CertificateFactory certFactory = CertificateFactory.getInstance("X.509", "BC");
-
-        X509Certificate certificate = (X509Certificate) certFactory.generateCertificate(new FileInputStream("c:\\junk\\terrycer.cer"));
-
+        X509Certificate certificate = getCert(tp[9]);
+        
         char[] keystorePassword = "terry".toCharArray();
         char[] keyPassword = "terry".toCharArray();
-
         KeyStore keystore = KeyStore.getInstance("PKCS12");
         keystore.load(new FileInputStream("c:\\junk\\terryp12.p12"), keystorePassword);
         PrivateKey key = (PrivateKey) keystore.getKey("terry", keyPassword);
@@ -177,8 +186,8 @@ public class apiUtils {
           rb.setEntity(new BufferedHttpEntity(ise));
           HttpUriRequest request = rb.build();
           
-          CloseableHttpResponse response = client.execute(request);
-          BufferedReader br = null;
+        CloseableHttpResponse response = client.execute(request);
+         
         
         if (response.getStatusLine().getStatusCode() != 200) {
                 r.append(response.getStatusLine().getStatusCode() + ": " + response.getStatusLine().getReasonPhrase());

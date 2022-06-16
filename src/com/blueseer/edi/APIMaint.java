@@ -388,6 +388,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
            cbenabled.setSelected(false);
            taoutput.setText("");
            lblurl.setText("");
+           tbcert.setText("");
         
        isLoad = false;
     }
@@ -514,6 +515,9 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbapikey.setText(x.api_key());
         ddprotocol.setSelectedItem(x.api_protocol());
         ddclass.setSelectedItem(x.api_class());
+        tbcert.setText(x.api_cert());
+        cboutputsign.setSelected(BlueSeerUtils.ConvertStringToBool(String.valueOf(x.api_signed())));
+        cboutputencryption.setSelected(BlueSeerUtils.ConvertStringToBool(String.valueOf(x.api_encrypted())));
         // now detail
         detailmodel.setRowCount(0);
         ArrayList<api_det> z = getAPIDet(key[0]);
@@ -542,7 +546,8 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                 ddprotocol.getSelectedItem().toString(),
                 ddclass.getSelectedItem().toString(),
                 String.valueOf(BlueSeerUtils.boolToInt(cboutputencryption.isSelected())),
-                String.valueOf(BlueSeerUtils.boolToInt(cboutputsign.isSelected()))
+                String.valueOf(BlueSeerUtils.boolToInt(cboutputsign.isSelected())),
+                tbcert.getText()
                 );
         return x;
     }
@@ -1539,6 +1544,8 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         jPanel4 = new javax.swing.JPanel();
         cboutputencryption = new javax.swing.JCheckBox();
         cboutputsign = new javax.swing.JCheckBox();
+        tbcert = new javax.swing.JTextField();
+        jLabel18 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -1897,16 +1904,20 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
 
         cboutputsign.setText("Output Sign");
 
+        jLabel18.setText("Cert");
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGap(19, 19, 19)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(jLabel18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(cboutputsign)
-                    .addComponent(cboutputencryption))
-                .addContainerGap(218, Short.MAX_VALUE))
+                    .addComponent(cboutputencryption, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(tbcert))
+                .addContainerGap(212, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1915,7 +1926,11 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                 .addComponent(cboutputencryption)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(cboutputsign)
-                .addContainerGap(122, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbcert, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel18))
+                .addContainerGap(100, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -2218,6 +2233,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -2236,6 +2252,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JTable tabledetail;
     private javax.swing.JTextArea taoutput;
     private javax.swing.JTextField tbapikey;
+    private javax.swing.JTextField tbcert;
     private javax.swing.JTextField tbdesc;
     private javax.swing.JTextField tbdestdir;
     private javax.swing.JTextField tbkey;
