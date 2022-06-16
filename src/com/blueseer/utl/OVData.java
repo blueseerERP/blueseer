@@ -94,6 +94,7 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.view.JasperViewer;
 import java.awt.FileDialog;
 import java.awt.Frame;
+import java.awt.Image;
 import java.awt.print.PrinterJob;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
@@ -135,6 +136,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import jcifs.smb.SmbFileInputStream;
+import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.data.JRTableModelDataSource;
 
@@ -14628,6 +14630,45 @@ return mystring;
             
        
     } 
+    
+    public static void printImageJasper(String image) {
+           
+        Image photo;
+        Path imagepath = FileSystems.getDefault().getPath("images" + "/" + image);
+        ImageIcon icon = new ImageIcon(imagepath.toString());
+      //  icon = new ImageIcon(icon.getImage().getScaledInstance(600, 600, Image.SCALE_DEFAULT));
+        photo = icon.getImage();
+        Map<String, Object> param = new HashMap<String, Object>();
+        
+            try (Connection con = DriverManager.getConnection(url + db, user, pass)) {
+               
+                String jasperfile = "image_generic.jasper";
+            
+                HashMap hm = new HashMap();
+                hm.put("REPORT_TITLE", "INVOICE");
+                hm.put("myid",  image);
+                hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
+                hm.put("photo", photo);
+               
+               // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_item, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
+               // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
+                File mytemplate = new File("jasper/" + jasperfile); 
+              //  JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, hm, con );
+                
+                JasperPrint jasperPrint = JasperFillManager.fillReport(mytemplate.getPath(), hm, new JREmptyDataSource() );
+                JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/itemimage.pdf");
+                
+                JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
+                jasperViewer.setVisible(true);
+                jasperViewer.setFitPageZoomRatio();
+               
+            } catch (Exception s) {
+                MainFrame.bslog(s);
+            } 
+            
+       
+    } 
+    
     
     public static void printShipper(String shipper) {
         try{

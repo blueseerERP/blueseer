@@ -60,6 +60,7 @@ import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeerT;
+import static com.blueseer.utl.OVData.printImageJasper;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Image;
@@ -1150,6 +1151,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
         btaddimage = new javax.swing.JButton();
         btdeleteimage = new javax.swing.JButton();
         cbdefault = new javax.swing.JCheckBox();
+        btimageprint = new javax.swing.JButton();
         jTabbedPane1 = new javax.swing.JTabbedPane();
 
         setBackground(new java.awt.Color(0, 102, 204));
@@ -2134,6 +2136,13 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
             }
         });
 
+        btimageprint.setText("Print");
+        btimageprint.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btimageprintActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout ImagePanelLayout = new javax.swing.GroupLayout(ImagePanel);
         ImagePanel.setLayout(ImagePanelLayout);
         ImagePanelLayout.setHorizontalGroup(
@@ -2146,7 +2155,9 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 .addComponent(btdeleteimage)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(cbdefault)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 262, Short.MAX_VALUE)
+                .addGap(34, 34, 34)
+                .addComponent(btimageprint)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 211, Short.MAX_VALUE)
                 .addComponent(labelmessage, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
             .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -2161,7 +2172,8 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
                         .addComponent(ddimage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(btaddimage)
                         .addComponent(btdeleteimage)
-                        .addComponent(cbdefault)))
+                        .addComponent(cbdefault)
+                        .addComponent(btimageprint)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -2575,6 +2587,12 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
         getstandardcost(tbkey.getText());
     }//GEN-LAST:event_btstandardActionPerformed
 
+    private void btimageprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btimageprintActionPerformed
+        if (ddimage.getSelectedItem() != null) {
+            printImageJasper(ddimage.getSelectedItem().toString());
+        }
+    }//GEN-LAST:event_btimageprintActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel CostBOMPanel;
@@ -2586,6 +2604,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
     private javax.swing.JButton btcurrent;
     private javax.swing.JButton btdelete;
     private javax.swing.JButton btdeleteimage;
+    private javax.swing.JButton btimageprint;
     private javax.swing.JButton btlookup;
     private javax.swing.JButton btnew;
     private javax.swing.JButton btprintlabel;

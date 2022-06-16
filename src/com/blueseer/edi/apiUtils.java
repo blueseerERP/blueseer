@@ -97,6 +97,17 @@ public class apiUtils {
         return "BSPart_" + Long.toHexString(System.currentTimeMillis());
     }
     
+    public static String getPackagedBoundary(MimeBodyPart mbp) throws MessagingException {
+        String[] mb = mbp.getContentType().split(";");
+        for (String s : mb) {
+            if (s.contains("boundary=")) {
+                String[] mbs = s.split("=", 2);
+                return mbs[1].trim().replace("\"", "");
+            }
+        }
+        return null;
+    }
+    
     public static String postAS2( String as2id, String sourceDir, String as2From, String internalURL) throws MessagingException, MalformedURLException, URISyntaxException, IOException, CertificateException, NoSuchProviderException, KeyStoreException, NoSuchAlgorithmException, UnrecoverableKeyException  {
         
         StringBuilder r = null;
@@ -147,6 +158,8 @@ public class apiUtils {
         }
         
         MimeBodyPart mbp;    
+        
+        // need signed, signed+enc, enc, none ....condition logic here
         if (filecontent != null) {    
                 try {
                     mbp = signDataSimple(filecontent.getBytes(StandardCharsets.UTF_8),certificate,key);
@@ -159,14 +172,8 @@ public class apiUtils {
            continue; 
         }
           
-        String newboundary = "";
-        String[] mb = mbp.getContentType().split(";");
-        for (String s : mb) {
-            if (s.contains("boundary=")) {
-                String[] mbs = s.split("=", 2);
-                newboundary = mbs[1].trim().replace("\"", "");
-            }
-        }       
+        String newboundary = getPackagedBoundary(mbp);
+            
   
           
         URL urlObj = new URL(url.toString());
