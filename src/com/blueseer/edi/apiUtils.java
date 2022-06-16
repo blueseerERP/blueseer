@@ -88,6 +88,15 @@ public class apiUtils {
         return certificate;
     }
     
+    public static String setMessageID() {
+        String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS"));
+        return "<BLUESEER-" + now + "." + Long.toHexString(System.currentTimeMillis()) + "@Blueseer Software>";
+    }
+    
+    public static String setBoundary() {
+        return "BSPart_" + Long.toHexString(System.currentTimeMillis());
+    }
+    
     public static String postAS2( String as2id, String sourceDir, String as2From, String internalURL) throws MessagingException, MalformedURLException, URISyntaxException, IOException, CertificateException, NoSuchProviderException, KeyStoreException, NoSuchAlgorithmException, UnrecoverableKeyException  {
         
         StringBuilder r = null;
@@ -125,11 +134,7 @@ public class apiUtils {
             
        
         
-        String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS"));
-        String boundary = Long.toHexString(System.currentTimeMillis()); 
-        String messageid = "<BLUESEER-" + now + "." + boundary + "@Blueseer Software>";
-        String CRLF = "\r\n"; // Line separator required by multipart/form-data.
-        
+        String messageid = setMessageID();
         
         CloseableHttpClient client = HttpClients.createDefault();
            
