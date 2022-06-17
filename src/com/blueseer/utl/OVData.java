@@ -14691,11 +14691,12 @@ return mystring;
         PrintStream fileStream  = null;
         
         try {
+        
+        // this redirect of Std Err is necessary for icePDF warnings/crap that you are using free stuff  
+        // anyone know how to suppress these warnings...I'm all ears.
+        
         orgStream = System.out;
-        fileStream = new PrintStream(new FileOutputStream("out.txt",true));
-        // Redirecting console output to file
-        System.setOut(fileStream);
-        // Redirecting runtime exceptions to file
+        fileStream = new PrintStream(new FileOutputStream("icePDF.log",true));
         System.setErr(fileStream);
         
         Path pdfpath = FileSystems.getDefault().getPath("images" + "/" + file);
@@ -14730,7 +14731,7 @@ return mystring;
         } catch (Exception ex) {
             bslog(ex);
         } finally {
-           System.setOut(orgStream);  
+           System.setErr(orgStream);
         }
     }
     
