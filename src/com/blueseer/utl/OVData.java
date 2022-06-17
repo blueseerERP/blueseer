@@ -29,6 +29,7 @@ package com.blueseer.utl;
 
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.bslog;
 import com.blueseer.edi.EDI;
 
 import static bsmf.MainFrame.db;
@@ -105,6 +106,7 @@ import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.PrintStream;
 import java.io.RandomAccessFile;
 import static java.lang.Math.abs;
 import java.math.RoundingMode;
@@ -132,6 +134,8 @@ import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
 import javax.print.attribute.standard.Copies;
 import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
@@ -146,6 +150,9 @@ import net.sf.jasperreports.engine.type.OrientationEnum;
 
 
 import org.apache.commons.lang3.time.DateUtils;
+import org.icepdf.ri.common.ComponentKeyBinding;
+import org.icepdf.ri.common.SwingController;
+import org.icepdf.ri.common.SwingViewBuilder;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -14667,7 +14674,7 @@ return mystring;
                // JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/itemimage.pdf");
                 
                 JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
-                
+                                
                 jasperViewer.setVisible(true);
                 jasperViewer.setFitPageZoomRatio();
                
@@ -14677,7 +14684,55 @@ return mystring;
             
        
     } 
-    
+       
+    public static void showPDFusingIcePDF(String file) {
+        
+        PrintStream orgStream   = null;
+        PrintStream fileStream  = null;
+        
+        try {
+        orgStream = System.out;
+        fileStream = new PrintStream(new FileOutputStream("out.txt",true));
+        // Redirecting console output to file
+        System.setOut(fileStream);
+        // Redirecting runtime exceptions to file
+        System.setErr(fileStream);
+        
+        Path pdfpath = FileSystems.getDefault().getPath("images" + "/" + file);
+
+        // build a controller
+        SwingController controller = new SwingController();
+
+        // Build a SwingViewFactory configured with the controller
+        SwingViewBuilder factory = new SwingViewBuilder(controller);
+
+        // Use the factory to build a JPanel that is pre-configured
+        //with a complete, active Viewer UI.
+        JPanel viewerComponentPanel = factory.buildViewerPanel();
+
+        // add copy keyboard command
+        ComponentKeyBinding.install(controller, viewerComponentPanel);
+
+        // add interactive mouse link annotation support via callback
+        controller.getDocumentViewController().setAnnotationCallback(
+              new org.icepdf.ri.common.MyAnnotationCallback(
+                     controller.getDocumentViewController())); 
+
+        // Create a JFrame to display the panel in
+        JFrame window = new JFrame(""); 
+        window.getContentPane().add(viewerComponentPanel);
+        window.pack();
+        window.setVisible(true);
+
+        // Open a PDF document to view
+        controller.openDocument(pdfpath.toString());
+        
+        } catch (Exception ex) {
+            bslog(ex);
+        } finally {
+           System.setOut(orgStream);  
+        }
+    }
     
     public static void printShipper(String shipper) {
         try{

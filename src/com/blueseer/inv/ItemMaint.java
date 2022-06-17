@@ -61,6 +61,7 @@ import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeerT;
 import static com.blueseer.utl.OVData.printImageJasper;
+import static com.blueseer.utl.OVData.showPDFusingIcePDF;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Image;
@@ -2589,7 +2590,11 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
 
     private void btimageprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btimageprintActionPerformed
         if (ddimage.getSelectedItem() != null && ! ddimage.getSelectedItem().toString().isBlank()) {
-            printImageJasper(ddimage.getSelectedItem().toString());
+            if (ddimage.getSelectedItem().toString().toLowerCase().endsWith("pdf")) {
+               showPDFusingIcePDF(ddimage.getSelectedItem().toString()); 
+            } else {
+               printImageJasper(ddimage.getSelectedItem().toString());
+            }
         }
     }//GEN-LAST:event_btimageprintActionPerformed
 
