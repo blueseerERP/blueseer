@@ -2588,7 +2588,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
     }//GEN-LAST:event_btstandardActionPerformed
 
     private void btimageprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btimageprintActionPerformed
-        if (ddimage.getSelectedItem() != null) {
+        if (ddimage.getSelectedItem() != null && ! ddimage.getSelectedItem().toString().isBlank()) {
             printImageJasper(ddimage.getSelectedItem().toString());
         }
     }//GEN-LAST:event_btimageprintActionPerformed
