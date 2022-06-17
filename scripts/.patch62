@@ -12,3 +12,5 @@ patch=2
 # EDI mods to ST doc id and envelope multi packaging
 patch=3
 # more menu validations; perf improvement on order maint load; bug fix for #60
+patch=4
+# more validations; beta of enhancements #61, #62
