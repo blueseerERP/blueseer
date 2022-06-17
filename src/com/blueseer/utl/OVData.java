@@ -139,6 +139,7 @@ import jcifs.smb.SmbFileInputStream;
 import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.data.JRTableModelDataSource;
+import net.sf.jasperreports.engine.type.OrientationEnum;
 
 
 
@@ -14638,11 +14639,17 @@ return mystring;
         ImageIcon icon = new ImageIcon(imagepath.toString());
       //  icon = new ImageIcon(icon.getImage().getScaledInstance(600, 600, Image.SCALE_DEFAULT));
         photo = icon.getImage();
+      //  System.out.println(icon.getIconHeight() + "/" + icon.getIconWidth());
+        String jasperfile = "";
         Map<String, Object> param = new HashMap<String, Object>();
         
             try (Connection con = DriverManager.getConnection(url + db, user, pass)) {
                
-                String jasperfile = "image_generic.jasper";
+                if (icon.getIconWidth() >= icon.getIconHeight()) {
+                  jasperfile = "image_generic_landscape.jasper";
+                } else {
+                  jasperfile = "image_generic.jasper";   
+                }
             
                 HashMap hm = new HashMap();
                 hm.put("REPORT_TITLE", "INVOICE");
@@ -14656,9 +14663,11 @@ return mystring;
               //  JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, hm, con );
                 
                 JasperPrint jasperPrint = JasperFillManager.fillReport(mytemplate.getPath(), hm, new JREmptyDataSource() );
-                JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/itemimage.pdf");
+               
+               // JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/itemimage.pdf");
                 
                 JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
+                
                 jasperViewer.setVisible(true);
                 jasperViewer.setFitPageZoomRatio();
                
