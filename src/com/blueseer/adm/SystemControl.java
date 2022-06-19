@@ -480,7 +480,7 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
             fileOutputStream.close();
             
             if (Files.exists(patch)) {
-                bsmf.MainFrame.show("patch downloaded...restart application.");
+                bsmf.MainFrame.show("patch downloaded...exiting.....restart application");
             } else {
                 bsmf.MainFrame.show("Unable to download patch");
             }
@@ -933,6 +933,10 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
 
     private void btpatchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btpatchActionPerformed
                     try {
+                       // btupdate.setEnabled(false);
+                       // btcopy.setEnabled(false);
+                       // btpatch.setEnabled(false);
+                       // btclean.setEnabled(false);
                         getPatch();
                     } catch (IOException ex) {
                         MainFrame.bslog(ex);
