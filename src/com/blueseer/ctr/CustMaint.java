@@ -95,6 +95,9 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
     // global variable declarations
      boolean editmode = false;
      boolean isLoad = false;
+     String basecurr = "";
+   
+     
      public static cm_mstr k = null;
     
     // global datatablemodel declarations 
@@ -299,18 +302,172 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
     
     public void setComponentDefaultValues() {
         isLoad = true;
+        
+         ArrayList<String[]> initDataSets = cusData.getCustMaintInit();
+        
         jTabbedPane1.removeAll();
         jTabbedPane1.add("Main", mainPanel);
         jTabbedPane1.add("ShipTo", shiptoPanel);
         jTabbedPane1.add("Contact", contactPanel); 
         
-        clearCust();
-        clearShipTo();
-        clearContacts();
+         tbname.setText("");
+        tbline1.setText("");
+        tbline2.setText("");
+        tbline3.setText("");
+        tbcity.setText("");
+        tbzip.setText("");
+        tbpricecode.setText("");
+        tbmarket.setText("");
+        tbgroup.setText("");
+        tbdisccode.setText("");
+        tbcreditlimit.setText("0");
+        tbcontactname.setText("");
+        tbphone.setText("");
+        tbfax.setText("");
+        tbemail.setText("");
+        tbremarks.setText("");
+        tbsalesrep.setText("");
+        tbmainphone.setText("");
+        tbmainemail.setText("");
+        
+        java.util.Date now = new java.util.Date();
+        DateFormat dtf = new SimpleDateFormat("yyyy-MM-dd");
+        tbdateadded.setText(dtf.format(now));
+        tbdatemod.setText(dtf.format(now));
+        
+         cbshipto.setSelected(true);
+        cb855.setSelected(false);
+        cb856.setSelected(false);
+        cb810.setSelected(false);
+       
+       
+        
+        tbkey.setText("");
+        tbkey.setEditable(true);
+        tbkey.setForeground(Color.black);
+        
+        /* cant add shipcode until billcode has been committed */
+        btshipadd.setEnabled(false);
+        btshipedit.setEnabled(false);
         
         
         contactmodel.setRowCount(0);
         contacttable.setModel(contactmodel);
+        
+        clearShipTo();
+        clearContacts();
+       
+        ddcurr.removeAllItems();
+        ddterms.removeAllItems();
+        ddtax.removeAllItems();
+        ddaccount.removeAllItems();
+        ddcc.removeAllItems();
+        ddbank.removeAllItems();
+        ddlabel.removeAllItems();
+        ddcarrier.removeAllItems();
+        ddfreightterms.removeAllItems();
+        ddstate.removeAllItems();
+        ddcountry.removeAllItems();
+        ddshipstate.removeAllItems();
+        ddshipcountry.removeAllItems();
+        
+     
+        
+         for (String[] s : initDataSets) {
+            if (s[0].equals("currency")) {
+              basecurr = s[1];  
+            }
+          
+            if (s[0].equals("currencies")) {
+              ddcurr.addItem(s[1]); 
+            }
+            
+            if (s[0].equals("terms")) {
+              ddterms.addItem(s[1]); 
+            }
+            
+            if (s[0].equals("freight")) {
+              ddfreightterms.addItem(s[1]); 
+            }
+            
+            if (s[0].equals("accounts")) {
+              ddaccount.addItem(s[1]); 
+            }
+            
+            if (s[0].equals("depts")) {
+              ddcc.addItem(s[1]); 
+            }
+            
+            if (s[0].equals("banks")) {
+              ddbank.addItem(s[1]); 
+            }
+            
+            if (s[0].equals("labels")) {
+              ddlabel.addItem(s[1]); 
+            }
+          
+            if (s[0].equals("taxecodes")) {
+              ddtax.addItem(s[1]); 
+            }
+            
+            if (s[0].equals("carriers")) {
+              ddcarrier.addItem(s[1]); 
+            }
+            
+            if (s[0].equals("states")) {
+              ddstate.addItem(s[1]); 
+              ddshipstate.addItem(s[1]); 
+            }
+            
+            if (s[0].equals("countries")) {
+              ddcountry.addItem(s[1]);
+              ddshipcountry.addItem(s[1]);
+            }
+            
+        }
+        
+         if (ddaccount.getItemCount() > 0) {
+          ddaccount.setSelectedIndex(0);
+         }
+         if (ddcc.getItemCount() > 0) {
+          ddcc.setSelectedIndex(0);
+         }
+         if (ddlabel.getItemCount() > 0) {
+          ddlabel.setSelectedIndex(0);
+         }
+         if (ddbank.getItemCount() > 0) {
+          ddbank.setSelectedIndex(0);
+         }
+         if (ddcurr.getItemCount() > 0) {
+          ddcurr.setSelectedItem(basecurr);
+         }
+         if (ddterms.getItemCount() > 0) {
+          ddterms.setSelectedIndex(0);
+         }
+         
+         ddtax.insertItemAt("", 0);
+         ddtax.setSelectedIndex(0);
+         
+         if (ddcarrier.getItemCount() > 0) {
+          ddcarrier.setSelectedIndex(0);
+         }
+         if (ddfreightterms.getItemCount() > 0) {
+          ddfreightterms.setSelectedIndex(0);
+         }
+        
+         if (ddstate.getItemCount() > 0) {
+          ddstate.setSelectedIndex(0);
+         }
+         if (ddcountry.getItemCount() > 0) {
+          ddcountry.setSelectedItem("USA");
+         }
+         
+         if (ddshipstate.getItemCount() > 0) {
+          ddshipstate.setSelectedIndex(0);
+         }
+         if (ddshipcountry.getItemCount() > 0) {
+          ddshipcountry.setSelectedItem("USA");
+         }
         
         isLoad = false;
     }
@@ -847,7 +1004,7 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
       
     public void clearShipTo() {
-         tbshipname.setText("");
+       tbshipname.setText("");
        tbshipline1.setText("");
        tbshipline2.setText("");
        tbshipline3.setText("");
@@ -855,181 +1012,21 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
        tbshipzip.setText("");
        tbshipcode.setText("");
        
-    ddshipstate.removeAllItems();
-        ArrayList states = OVData.getCodeMstrKeyList("state");
-        ddshipstate.addItem("");
-        for (int i = 0; i < states.size(); i++) {
-            ddshipstate.addItem(states.get(i).toString());
-        }
+      
         if (ddshipstate.getItemCount() > 0) {
            ddshipstate.setSelectedIndex(0); 
         }
        
-       if (ddshipcountry.getItemCount() == 0)
-       for (int i = 0; i < OVData.countries.length; i++) {
-            ddshipcountry.addItem(OVData.countries[i]);
-        }
+       if (ddshipcountry.getItemCount() > 0) {
        ddshipcountry.setSelectedItem("USA");
+       }
        
      }
      
-    public void clearCust() {
-        
-        java.util.Date now = new java.util.Date();
-        DateFormat dtf = new SimpleDateFormat("yyyy-MM-dd");
-        tbdateadded.setText(dtf.format(now));
-        tbdatemod.setText(dtf.format(now));
-        if (ddcountry.getItemCount() > 0)
-        ddcountry.setSelectedItem("USA");
-        if (ddstate.getItemCount() > 0)
-        ddstate.setSelectedIndex(0);
-        if (ddterms.getItemCount() > 0)
-        ddterms.setSelectedIndex(0);
-        if (ddfreightterms.getItemCount() > 0)
-        ddfreightterms.setSelectedIndex(0);
-        if (ddcarrier.getItemCount() > 0)
-        ddcarrier.setSelectedIndex(0);
-        if (ddtax.getItemCount() > 0)
-        ddtax.setSelectedIndex(0);
-        
-        cbshipto.setSelected(true);
-        cb855.setSelected(false);
-        cb856.setSelected(false);
-        cb810.setSelected(false);
-       
-        tbname.setText("");
-        tbline1.setText("");
-        tbline2.setText("");
-        tbline3.setText("");
-        tbcity.setText("");
-        tbzip.setText("");
-        tbpricecode.setText("");
-        tbmarket.setText("");
-        tbgroup.setText("");
-        tbdisccode.setText("");
-        tbcreditlimit.setText("0");
-        tbcontactname.setText("");
-        tbphone.setText("");
-        tbfax.setText("");
-        tbemail.setText("");
-        tbremarks.setText("");
-        tbsalesrep.setText("");
-        tbmainphone.setText("");
-        tbmainemail.setText("");
-        
-        tbkey.setText("");
-        tbkey.setEditable(true);
-        tbkey.setForeground(Color.black);
-        
-        /* cant add shipcode until billcode has been committed */
-        btshipadd.setEnabled(false);
-        btshipedit.setEnabled(false);
-        
-        
-        contactmodel.setRowCount(0);
-        
-        ddcarrier.removeAllItems();
-        ArrayList myscac = OVData.getScacCarrierOnly();   
-        for (int i = 0; i < myscac.size(); i++) {
-            ddcarrier.addItem(myscac.get(i));
-        }
-        
-        ddfreightterms.removeAllItems();
-        ArrayList freightterms = OVData.getfreighttermslist();
-        for (int i = 0; i < freightterms.size(); i++) {
-            ddfreightterms.addItem(freightterms.get(i));
-        }
-        
-        ddterms.removeAllItems();
-        ArrayList custterms = cusData.getcusttermslist();
-        for (int i = 0; i < custterms.size(); i++) {
-            ddterms.addItem(custterms.get(i));
-        }
-        
-        ddtax.removeAllItems();
-        ArrayList<String> tax = OVData.gettaxcodelist();
-        for (int i = 0; i < tax.size(); i++) {
-            ddtax.addItem(tax.get(i));
-        }
-        ddtax.insertItemAt("", 0);
-        ddtax.setSelectedIndex(0);
-        
-        ddcurr.removeAllItems();
-        ArrayList<String> curr = fglData.getCurrlist();
-        for (int i = 0; i < curr.size(); i++) {
-            ddcurr.addItem(curr.get(i));
-        }
-        ddcurr.setSelectedItem(OVData.getDefaultCurrency());
-        
-        
-        ddbank.removeAllItems();
-        ArrayList bank = OVData.getbanklist();
-        for (int i = 0; i < bank.size(); i++) {
-            ddbank.addItem(bank.get(i));
-        }
-        ddbank.setSelectedItem(OVData.getDefaultARBank());
-        
-        ddlabel.removeAllItems();
-        ArrayList label = lblData.getLabelFileList("cont");
-        for (int i = 0; i < label.size(); i++) {
-            ddlabel.addItem(label.get(i));
-        }
-        
-        ddaccount.removeAllItems();
-        ArrayList accounts = fglData.getGLAcctList();
-        for (int i = 0; i < accounts.size(); i++) {
-            ddaccount.addItem(accounts.get(i).toString());
-        }
-        ddaccount.setSelectedItem(OVData.getDefaultARAcct());
-       
-        ddcc.removeAllItems();
-        ArrayList ccs = fglData.getGLCCList();
-        for (int i = 0; i < ccs.size(); i++) {
-            ddcc.addItem(ccs.get(i).toString());
-        }
-        
-        ddstate.removeAllItems();
-        ArrayList states = OVData.getCodeMstrKeyList("state");
-        ddstate.addItem("");
-        for (int i = 0; i < states.size(); i++) {
-            ddstate.addItem(states.get(i).toString());
-        }
-        if (ddstate.getItemCount() > 0) {
-           ddstate.setSelectedIndex(0); 
-        }
-        
-       /*
-       if (ddstate.getItemCount() == 0)
-       for (int i = 0; i < OVData.states.length; i++) {
-            ddstate.addItem(OVData.states[i]);
-        } else {
-           ddstate.setSelectedIndex(0);
-       }
-        
-        
-       if (ddcountry.getItemCount() == 0)
-       for (int i = 0; i < OVData.countries.length; i++) {
-            ddcountry.addItem(OVData.countries[i]);
-        }
-       ddcountry.setSelectedItem("USA");
-       */
-       
-       ddcountry.removeAllItems();
-        ArrayList countries = OVData.getCodeMstrKeyList("country");
-        for (int i = 0; i < countries.size(); i++) {
-            ddcountry.addItem(countries.get(i).toString());
-        }
-        if (ddcountry.getItemCount() > 0) {
-           ddcountry.setSelectedItem("USA"); 
-        }
-       
-        
-        
-        
-    }
+    
     
     public void clearContacts() {
-         tbcontactname.setText("");
+        tbcontactname.setText("");
         tbphone.setText("");
         tbfax.setText("");
         tbemail.setText("");

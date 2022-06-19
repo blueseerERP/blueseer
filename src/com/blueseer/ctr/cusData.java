@@ -28,6 +28,7 @@ package com.blueseer.ctr;
 
 import bsmf.MainFrame;
 import static bsmf.MainFrame.db;
+import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
@@ -1598,6 +1599,143 @@ public class cusData {
     
          
     // miscellaneous functions
+    
+     public static ArrayList<String[]> getCustMaintInit() {
+        String defaultsite = "";
+        ArrayList<String[]> lines = new ArrayList<String[]>();
+        try{
+        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try{
+        // allocate, custitemonly, site, currency, sites, currencies, uoms, 
+        // states, warehouses, locations, customers, taxcodes, carriers, statuses    
+            res = st.executeQuery("select site_site from site_mstr;");
+            while (res.next()) {
+                String[] s = new String[2];
+               s[0] = "sites";
+               s[1] = res.getString("site_site");
+               lines.add(s);
+            }
+            
+            res = st.executeQuery("select ov_site, ov_currency from ov_mstr;" );
+            while (res.next()) {
+               String[] s = new String[2];
+               s[0] = "currency";
+               s[1] = res.getString("ov_currency");
+               lines.add(s);
+               s = new String[2];
+               s[0] = "site";
+               s[1] = res.getString("ov_site");
+               lines.add(s);
+               defaultsite = s[1];
+            }
+            
+            
+            res = st.executeQuery("select cur_id from cur_mstr ;");
+            while (res.next()) {
+                String[] s = new String[2];
+               s[0] = "currencies";
+               s[1] = res.getString("cur_id");
+               lines.add(s);
+            }
+            
+             res = st.executeQuery("select bk_id from bk_mstr order by bk_id ;");
+            while (res.next()) {
+                String[] s = new String[2];
+               s[0] = "banks";
+               s[1] = res.getString("bk_id");
+               lines.add(s);
+            }
+            
+             res = st.executeQuery("select cut_code from cust_term order by cut_code ;");
+            while (res.next()) {
+                String[] s = new String[2];
+               s[0] = "terms";
+               s[1] = res.getString("cut_code");
+               lines.add(s);
+            }
+            
+            res = st.executeQuery("select ac_id from ac_mstr order by ac_id;");
+            while (res.next()) {
+                String[] s = new String[2];
+               s[0] = "accounts";
+               s[1] = res.getString("ac_id");
+               lines.add(s);
+            }
+            
+            res = st.executeQuery("select dept_id from dept_mstr order by dept_id ;");
+            while (res.next()) {
+                String[] s = new String[2];
+               s[0] = "depts";
+               s[1] = res.getString("dept_id");
+               lines.add(s);
+            }
+            
+            res = st.executeQuery("select tax_code from tax_mstr order by tax_code  ;");
+            while (res.next()) {
+                String[] s = new String[2];
+               s[0] = "taxcodes";
+               s[1] = res.getString("tax_code");
+               lines.add(s);
+            }
+            
+            res = st.executeQuery("select lblz_code from label_zebra where lblz_type = 'cont' order by lblz_code ;");
+            while (res.next()) {
+                String[] s = new String[2];
+               s[0] = "labels";
+               s[1] = res.getString("lblz_code");
+               lines.add(s);
+            }
+            
+            res = st.executeQuery("select code_key from code_mstr where code_code = 'country' order by code_key ;");
+            while (res.next()) {
+                String[] s = new String[2];
+               s[0] = "countries";
+               s[1] = res.getString("code_key");
+               lines.add(s);
+            }
+            
+            res = st.executeQuery("select code_key from code_mstr where code_code = 'state' order by code_key ;");
+            while (res.next()) {
+                String[] s = new String[2];
+               s[0] = "states";
+               s[1] = res.getString("code_key");
+               lines.add(s);
+            }
+            
+            res = st.executeQuery("select car_code from car_mstr where car_type = 'carrier' order by car_code;");
+            while (res.next()) {
+                String[] s = new String[2];
+               s[0] = "carriers";
+               s[1] = res.getString("car_code");
+               lines.add(s);
+            }
+            
+             res = st.executeQuery("select frt_code from frt_mstr order by frt_code;");
+            while (res.next()) {
+                String[] s = new String[2];
+               s[0] = "freight";
+               s[1] = res.getString("frt_code");
+               lines.add(s);
+            }
+            
+        }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+        return lines;
+    }
+    
+    
     public static String[] getCustInfo(String cust) {
            // get billto specific data
             // aracct, arcc, currency, bank, terms, carrier, onhold, site
