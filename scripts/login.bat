@@ -17,13 +17,9 @@ goto :eof
 
 :patchInstall
 @echo "patch trigger found..." >patchlog.txt
-if exist %PATCHDIR%\blueseer.jar (
-   if exist dist\ (
-   copy %PATCHDIR%\blueseer.jar dist\
+if exist %PATCHDIR%\dist (
+   xcopy %PATCHDIR%\dist dist /E /I /Y /Q 2>&1
    @echo "copying blueseer.jar to dist folder" >>patchlog.txt
-   ) else (
-   @echo "no dist directory exists" >>patchlog.txt
-   )
 ) 
 if exist %PATCHDIR%\.patch (
    copy %PATCHDIR%\.patch .patch 2>&1

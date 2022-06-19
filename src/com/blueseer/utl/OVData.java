@@ -14720,7 +14720,7 @@ return mystring;
                      controller.getDocumentViewController())); 
 
         // Create a JFrame to display the panel in
-        JFrame window = new JFrame(""); 
+        JFrame window = new JFrame("Viewer"); 
         window.getContentPane().add(viewerComponentPanel);
         window.pack();
         window.setVisible(true);
