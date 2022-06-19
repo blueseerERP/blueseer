@@ -14,3 +14,5 @@ patch=3
 # more menu validations; perf improvement on order maint load; bug fix for #60
 patch=4
 # more validations; beta of enhancements #61, #62
+patch=5
+# perf mods for cust master loading; mods to patch loading utility
