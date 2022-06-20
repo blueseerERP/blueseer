@@ -31,6 +31,7 @@ rm blueseer.patch.*.zip
 $patchdir = "patchV" + $version + "P" + $pc
 $patchzip = "blueseer.patch.ver." + $version + "." + ".zip"
 mkdir $patchdir
+mkdir $patchdir\dist
 cp $patchvar $patchdir\.patch
 cp $patchvar ..\.patch
 cp $patchsqlvar $patchdir\
@@ -39,7 +40,11 @@ cp patch_install.sh $patchdir\
 cp ..\sf\patches\patch_instructions.pdf $patchdir\
 cp ..\sf\jasper $patchdir\ -recurse
 cp ..\sf\zebra $patchdir\ -recurse
-cp ..\dist $patchdir\ -recurse
+# cp ..\dist $patchdir\ -recurse
+cp ..\dist\blueseer.jar $patchdir\dist\
+cp ..\dist\blueseer.jar $patchdir\dist\blueseer.jar
+cp ..\dist\icepdf-core-6.2.2.jar $patchdir\dist\icepdf-core-6.2.2.jar
+cp ..\dist\icepdf-viewer-6.2.2.jar $patchdir\dist\icepdf-viewer-6.2.2.jar
 compress-archive -force -path $patchdir -destinationpath $wip\$patchzip
 rmdir $patchdir -force -recurse
 
