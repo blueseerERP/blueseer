@@ -26,6 +26,7 @@ SOFTWARE.
 package com.blueseer.adm;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.bslog;
 import com.blueseer.utl.BlueSeerUtils;
 import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.pass;
@@ -33,6 +34,7 @@ import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.IBlueSeerc;
 import com.blueseer.utl.OVData;
@@ -61,6 +63,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -72,6 +76,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 
@@ -111,8 +116,11 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
             message[0] = "";
             message[1] = "";
             
-            
+         //   System.out.println("this type: " + this.type);
              switch(this.type) {
+                 case "run":
+                    message = getPatch();
+                    break;
                 case "update":
                     message = updateRecord(key);
                     break;
@@ -130,9 +138,10 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
        public void done() {
             try {
             String[] message = get();
-           
             BlueSeerUtils.endTask(message);
-          
+            if (this.type.equals("run")) {
+                  setAction(message);
+            }
             
             } catch (Exception e) {
                 MainFrame.bslog(e);
@@ -141,12 +150,59 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
         }
     }  
       
-      
+       BlueSeerUtils.startTask(new String[]{"","Running..."});
        Task z = new Task(x, y); 
        z.execute(); 
        
     }
    
+    public void setPanelComponentState(Object myobj, boolean b) {
+        JPanel panel = null;
+        JTabbedPane tabpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else {
+            return;
+        }
+        
+        if (panel != null) {
+        panel.setEnabled(b);
+        Component[] components = panel.getComponents();
+        
+            for (Component component : components) {
+                if (component instanceof JLabel || component instanceof JTable ) {
+                    continue;
+                }
+                if (component instanceof JPanel) {
+                    setPanelComponentState((JPanel) component, b);
+                }
+                if (component instanceof JTabbedPane) {
+                    setPanelComponentState((JTabbedPane) component, b);
+                }
+                
+                component.setEnabled(b);
+            }
+        }
+            if (tabpane != null) {
+                tabpane.setEnabled(b);
+                Component[] componentspane = tabpane.getComponents();
+                for (Component component : componentspane) {
+                    if (component instanceof JLabel || component instanceof JTable ) {
+                        continue;
+                    }
+                    if (component instanceof JPanel) {
+                        setPanelComponentState((JPanel) component, b);
+                    }
+                    component.setEnabled(b);
+                }
+            }
+    } 
+    
+   
+    
+    
     public void setComponentDefaultValues() {
        isLoad = true;
          buttonGroup1.add(rbsamba);
@@ -215,10 +271,8 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
     public void setAction(String[] x) {
         String[] m = new String[2];
         if (x[0].equals("0")) {
-            m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};  
-        } else {
-           m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
-        }
+          setPanelComponentState(this,true);
+        } 
     }
     
     public boolean validateInput(dbaction x) {
@@ -458,8 +512,9 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
 	    return destFile;
 	}
     
-    public void getPatch() throws MalformedURLException, IOException {
-        
+    public String[] getPatch() throws MalformedURLException, IOException {
+        String[] m = new String[]{"",""};
+        Path patch = null;
         String version = OVData.getVersion();
         String v = version.replace(".", "");
         String url = "https://github.com/blueseerERP/blueseer/releases/download/" +
@@ -472,7 +527,7 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
         String patchfile = "";
         if (Files.exists(patchdir) && Files.isDirectory(patchdir)) {
            patchfile = s + "/patches/patch.zip";
-           Path patch = FileSystems.getDefault().getPath(patchfile); 
+           patch = FileSystems.getDefault().getPath(patchfile); 
            ReadableByteChannel readableByteChannel = Channels.newChannel(new URL(url).openStream());
             FileOutputStream fileOutputStream = new FileOutputStream(patch.toFile());
             FileChannel fileChannel = fileOutputStream.getChannel();
@@ -480,9 +535,9 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
             fileOutputStream.close();
             
             if (Files.exists(patch)) {
-                bsmf.MainFrame.show("patch downloaded...exiting.....restart application");
+                m = new String[]{"0", "patch downloaded...please close and restart"};
             } else {
-                bsmf.MainFrame.show("Unable to download patch");
+                m = new String[]{"1", "unable to download patch"};
             }
         }	
 	
@@ -521,8 +576,11 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
         zis.close();
         
         // now leave file patch trigger for login.bat script
+        if (Files.exists(patch)) {
         Files.write(Paths.get(".update"), root.getBytes(StandardCharsets.UTF_8));
-        System.exit(0);
+        }
+        
+        return m;
     }
     
     
@@ -932,15 +990,8 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
     }//GEN-LAST:event_btcopyActionPerformed
 
     private void btpatchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btpatchActionPerformed
-                    try {
-                       // btupdate.setEnabled(false);
-                       // btcopy.setEnabled(false);
-                       // btpatch.setEnabled(false);
-                       // btclean.setEnabled(false);
-                        getPatch();
-                    } catch (IOException ex) {
-                        MainFrame.bslog(ex);
-                    }
+        setPanelComponentState(this, false);            
+        executeTask(dbaction.run, null); 
     }//GEN-LAST:event_btpatchActionPerformed
 
     private void btcleanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcleanActionPerformed
