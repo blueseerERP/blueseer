@@ -464,25 +464,33 @@ try {
                  tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
                  tablereport.getColumnModel().getColumn(6).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
                  tablereport.getColumnModel().getColumn(7).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
-                List<String[]> mylist = new ArrayList();     
-                res = st.executeQuery("SELECT * from item_mstr " +
+               // List<String[]> mylist = new ArrayList();     
+                res = st.executeQuery("SELECT it_item, it_desc, it_code, " +
+                        " it_type, it_uom, it_mtl_cost, it_sell_price, it_site,  " +
+                        " coalesce(sum(in_qoh),0) as qty " +
+                        " from item_mstr " +
+                        " left outer join in_mstr on in_item = it_item and in_site = it_site " +
                         " where it_item >= " + "'" + ddfromitem.getSelectedItem().toString()  + "'" + 
                         " AND it_item <= " + "'" + ddtoitem.getSelectedItem().toString() + "'" +
                          " AND it_code >= " + "'" + ddfromclass.getSelectedItem().toString() + "'" +
                          " AND it_code <= " + "'" + ddtoclass.getSelectedItem().toString() + "'" +
                          " AND it_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +
-                         " order by it_item;");
+                         " group by it_item order by it_item;");
                 while (res.next()) {
                     i++;
-                    mylist.add(new String[]{res.getString("it_item"),
+                    mymodel.addRow(new Object[]{
+                                BlueSeerUtils.clickflag,
+                                res.getString("it_item"),
                                 res.getString("it_desc"),
                                 res.getString("it_code"),
-                                res.getString("it_type"), 
+                                res.getString("it_type"),
                                 res.getString("it_uom"),
-                                res.getString("it_mtl_cost"),
-                                res.getString("it_sell_price"), 
-                                res.getString("it_site")});
-                }    
+                                bsParseDouble(res.getString("it_mtl_cost")),
+                                bsParseDouble(res.getString("it_sell_price")),
+                                bsParseDouble(res.getString("qty"))
+                            });
+                } 
+                /*
                 for (String[] s : mylist) {
                         mymodel.addRow(new Object[]{
                                 BlueSeerUtils.clickflag,
@@ -496,6 +504,7 @@ try {
                                 invData.getItemQOHTotal(s[0], s[7])
                             });
                 }
+                */
                 
                 labelcount.setText(String.valueOf(i));
                
