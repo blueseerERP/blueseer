@@ -464,7 +464,7 @@ try {
                  tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
                  tablereport.getColumnModel().getColumn(6).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
                  tablereport.getColumnModel().getColumn(7).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
-               // List<String[]> mylist = new ArrayList();     
+                
                 res = st.executeQuery("SELECT it_item, it_desc, it_code, " +
                         " it_type, it_uom, it_mtl_cost, it_sell_price, it_site,  " +
                         " coalesce(sum(in_qoh),0) as qty " +
@@ -490,21 +490,6 @@ try {
                                 bsParseDouble(res.getString("qty"))
                             });
                 } 
-                /*
-                for (String[] s : mylist) {
-                        mymodel.addRow(new Object[]{
-                                BlueSeerUtils.clickflag,
-                                s[0],
-                                s[1],
-                                s[2],
-                                s[3],
-                                s[4],
-                                bsParseDouble(s[5]),
-                                bsParseDouble(s[6]),
-                                invData.getItemQOHTotal(s[0], s[7])
-                            });
-                }
-                */
                 
                 labelcount.setText(String.valueOf(i));
                
