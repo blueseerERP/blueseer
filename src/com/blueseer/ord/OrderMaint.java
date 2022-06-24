@@ -1918,6 +1918,8 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
             return false;
         }
         
+        boolean isvalid = OVData.isValidItem(ddpart.getSelectedItem().toString());
+        
         // check unallocated qty
         if (! OVData.isOrderExceedQOHU() && bsParseDouble(qtyshipped.getText()) > invData.getItemQOHUnallocated(ddpart.getSelectedItem().toString(),ddsite.getSelectedItem().toString(),tbkey.getText())) {
              bsmf.MainFrame.show(getMessageTag(1092));
@@ -1925,13 +1927,13 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
              return false;
         }
         
-        if (OVData.isValidItem(ddpart.getSelectedItem().toString()) && ! OVData.isValidUOMConversion(ddpart.getSelectedItem().toString(), ddsite.getSelectedItem().toString(), dduom.getSelectedItem().toString())) {
+        if (isvalid && ! OVData.isValidUOMConversion(ddpart.getSelectedItem().toString(), ddsite.getSelectedItem().toString(), dduom.getSelectedItem().toString())) {
                 bsmf.MainFrame.show(getMessageTag(1093));
                 dduom.requestFocus();
                 return false;
                 
         }
-        if (OVData.isValidItem(ddpart.getSelectedItem().toString()) && ! OVData.isBaseUOMOfItem(ddpart.getSelectedItem().toString(), ddsite.getSelectedItem().toString(), dduom.getSelectedItem().toString()) && ! OVData.isValidCustPriceRecordExists(ddcust.getSelectedItem().toString(),ddpart.getSelectedItem().toString(),dduom.getSelectedItem().toString(),ddcurr.getSelectedItem().toString())) {
+        if (isvalid && ! OVData.isBaseUOMOfItem(ddpart.getSelectedItem().toString(), ddsite.getSelectedItem().toString(), dduom.getSelectedItem().toString()) && ! OVData.isValidCustPriceRecordExists(ddcust.getSelectedItem().toString(),ddpart.getSelectedItem().toString(),dduom.getSelectedItem().toString(),ddcurr.getSelectedItem().toString())) {
                 bsmf.MainFrame.show(getMessageTag(1094));
                 dduom.requestFocus();
                 return false;
