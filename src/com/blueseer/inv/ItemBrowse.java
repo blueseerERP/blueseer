@@ -475,7 +475,7 @@ try {
                          " AND it_code >= " + "'" + ddfromclass.getSelectedItem().toString() + "'" +
                          " AND it_code <= " + "'" + ddtoclass.getSelectedItem().toString() + "'" +
                          " AND it_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +
-                         " group by it_item order by it_item;");
+                         " group by it_item, it_desc, it_code, it_type, it_uom, it_mtl_cost, it_sell_price, it_site order by it_item;");
                 while (res.next()) {
                     i++;
                     mymodel.addRow(new Object[]{
