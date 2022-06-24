@@ -1262,13 +1262,14 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
                 }
                 
              if (k >= 0) {   
+            String[] det = invData.getItemDetail(ddpart.getSelectedItem().toString());
             discount.setText("0");
             listprice.setText("0");
             netprice.setText("0");
             qtyshipped.setText("0");
-            tbdesc.setText(invData.getItemDesc(ddpart.getSelectedItem().toString()));
+            tbdesc.setText(det[1]);
             vendnumber.setText(venData.getVendItemFromItem(ddvend.getSelectedItem().toString(),ddpart.getSelectedItem().toString()));
-            dduom.setSelectedItem(OVData.getUOMFromItemSite(ddpart.getSelectedItem().toString(), ddsite.getSelectedItem().toString()));
+            dduom.setSelectedItem(det[2]);
             ddpart.setForeground(Color.blue);
             vendnumber.setForeground(Color.blue);
             vendnumber.setEditable(false);
