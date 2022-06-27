@@ -29,6 +29,7 @@ package com.blueseer.inv;
 import bsmf.MainFrame;
 import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.defaultDecimalSeparator;
+import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.pass;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
@@ -77,6 +78,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.PreparedStatement;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -798,32 +800,23 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
       }
     
     public void getrecenttrans(String parentpart) {
-             
-       double opcost = 0;
-       double prevcost = 0;
-      
+       
         try {
-           Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-              
-
-                int i = 0;
-
-                
-                transmodel.setRowCount(0);
-               
-                            
-                // ReportPanel.TableReport.getColumn("CallID").setCellRenderer(new ButtonRenderer());
-                //          ReportPanel.TableReport.getColumn("CallID").setCellEditor(
-                    //       new ButtonEditor(new JCheckBox()));
-
-               res = st.executeQuery("SELECT tr_type, tr_eff_date, tr_id, tr_base_qty  " +
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            PreparedStatement pstmt = con.prepareStatement("SELECT tr_type, tr_eff_date, tr_id, tr_base_qty  " +
                         " FROM  tran_mstr  " +
-                        " where tr_item = " + "'" + parentpart + "'" + 
+                        " where tr_item = ? " + 
                         " order by tr_eff_date desc limit 25 ;");
-
+            pstmt.setString(1, parentpart);
+            ResultSet res = pstmt.executeQuery();
+            try {
+                int i = 0;
+               transmodel.setRowCount(0);
                 while (res.next()) {
                     i++;
                     transmodel.addRow(new Object[]{
@@ -842,9 +835,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 if (res != null) {
                     res.close();
                 }
-                if (st != null) {
-                    st.close();
-                }
+                pstmt.close();
                 con.close();
             }
         } catch (Exception e) {
@@ -853,10 +844,17 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
              
              
          }
-             
+      
+   
+    
     public void getlocqty(String parentpart) {
         try {
-          Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -990,7 +988,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
         String[] newpart = mypart.split("___");
         ArrayList<String> mylist = new ArrayList<String>();
         ArrayList<String> myops = new ArrayList<String>();
-        myops = OVData.getpsmstrlist(newpart[0]);
+      //  myops = OVData.getpsmstrlist(newpart[0]);
         mylist = OVData.getpsmstrlist(newpart[0]);
         for ( String myvalue : mylist) {
             String[] value = myvalue.toUpperCase().split(",");
