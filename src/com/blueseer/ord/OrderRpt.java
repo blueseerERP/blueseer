@@ -121,8 +121,9 @@ public class OrderRpt extends javax.swing.JPanel {
                             getGlobalColumnTag("qty"), 
                             getGlobalColumnTag("amount"), 
                             getGlobalColumnTag("currency"),
-                            getGlobalColumnTag("status"), 
-                            getGlobalColumnTag("planstatus")})
+                            getGlobalColumnTag("status")
+                            //getGlobalColumnTag("planstatus")
+                        })
              {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -701,7 +702,7 @@ try {
             ResultSet res = null;
             try {
              
-             int qty = 0;
+                double qty = 0;
                 double dol = 0;
                 double total = 0;
                 int i = 0;
@@ -710,6 +711,7 @@ try {
                 String fromcode = "";
                 String tocode = "";
                 String planstatus = "";
+                              
                 
                 if (ddfromcust.getSelectedItem() == null || ddfromcust.getSelectedItem().toString().isEmpty()) {
                     fromcust = bsmf.MainFrame.lowchar;
@@ -740,8 +742,9 @@ try {
                  DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
              
                  res = st.executeQuery("SELECT so_nbr, so_rmks, so_cust, so_curr, so_po, so_ord_date, so_due_date, so_status, " +
-                        " sum(sod_ord_qty) as totqty, sum(sod_ord_qty * sod_netprice) as totdol " +
+                        " sum(sod_ord_qty) as totqty, sum(sod_ord_qty * sod_netprice) as totdol, coalesce(sos_amt,0) as taxamt " +
                         " FROM  so_mstr left outer join sod_det on sod_nbr = so_nbr " +
+                        " left outer join sos_det on sos_nbr = so_nbr and sos_type = 'tax' and sos_amttype <> 'percent' " + 
                         " where so_ord_date >= " + "'" + dfdate.format(dcFrom.getDate())  + "'" + 
                         " AND so_ord_date <= " + "'" + dfdate.format(dcTo.getDate()) + "'" + 
                         " AND so_cust >= " + "'" + fromcust + "'" + 
@@ -753,7 +756,9 @@ try {
                   
                 
                        while (res.next()) {
-                   planstatus = schData.orderPlanStatus(res.getString("so_nbr"));
+                       
+                           
+                  // planstatus = schData.orderPlanStatus(res.getString("so_nbr"));
                     
                     if (! cbopen.isSelected() && res.getString("so_status").equals("open"))
                         continue;
@@ -764,9 +769,9 @@ try {
                     if (! cberror.isSelected() && res.getString("so_status").equals("error"))
                         continue;                       
 
-                    total = getOrderTotal(res.getString("so_nbr"));
-                    dol = dol + total;
-                    qty = qty + res.getInt("totqty");
+                   // total = getOrderTotal(res.getString("so_nbr"));
+                    dol = dol + (res.getDouble("totdol") + res.getDouble("taxamt"));
+                    qty = qty + res.getDouble("totqty");
                     i++;
                         mymodel.addRow(new Object[]{
                             BlueSeerUtils.clickflag,
@@ -777,11 +782,11 @@ try {
                                 res.getString("so_rmks"),
                                 res.getString("so_ord_date"),
                                 res.getString("so_due_date"),
-                                res.getInt("totqty"),
-                                bsParseDouble(currformatDouble(total)),
+                                res.getDouble("totqty"),
+                                bsParseDouble(currformatDouble(dol)),
                                 res.getString("so_curr"),
-                                res.getString("so_status"),
-                                planstatus
+                                res.getString("so_status") 
+                               // planstatus
                             });
                 }
                 labeldollar.setText(String.valueOf(currformatDouble(dol)));
