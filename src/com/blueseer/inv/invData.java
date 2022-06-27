@@ -2495,7 +2495,7 @@ public class invData {
     public static String getItemRouting(String item) {
     String myreturn = "";
     try{
-    Connection con = null;
+        Connection con = null;
         if (ds != null) {
           con = ds.getConnection();
         } else {
@@ -3399,7 +3399,7 @@ public class invData {
     public static ArrayList getItemRoutingOPs(String myitem) {
        ArrayList myarray = new ArrayList();
         try{
-            Connection con = null;
+        Connection con = null;
         if (ds != null) {
           con = ds.getConnection();
         } else {
@@ -3437,7 +3437,7 @@ public class invData {
     public static ArrayList getItemWFOPs(String myitem) {
        ArrayList myarray = new ArrayList();
         try{
-            Connection con = null;
+        Connection con = null;
         if (ds != null) {
           con = ds.getConnection();
         } else {
