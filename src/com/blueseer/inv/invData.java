@@ -29,6 +29,7 @@ import bsmf.MainFrame;
 import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.defaultDecimalSeparator;
 import static bsmf.MainFrame.driver;
+import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
@@ -488,7 +489,7 @@ public class invData {
         item_mstr r = null;
         String[] m = new String[2];
         String sql = "select * from item_mstr where it_item = ? ;";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());   
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, x[0]);
              try (ResultSet res = ps.executeQuery();) {
@@ -754,8 +755,8 @@ public class invData {
         bom_mstr r = null;
         String[] m = new String[2];
         String sql = "select * from bom_mstr where bom_item = ? and bom_id = ? ;";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
-	PreparedStatement ps = con.prepareStatement(sql);) {
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());   
+      	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, x[0]);
         ps.setString(2, x[1]);
              try (ResultSet res = ps.executeQuery();) {
@@ -853,7 +854,7 @@ public class invData {
         String[] m = new String[2];
         String sql = "select * from wc_mstr where wc_cell = ? ;";
         
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());   
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, x[0]);
        
@@ -974,7 +975,7 @@ public class invData {
         loc_mstr r = null;
         String[] m = new String[2];
         String sql = "select * from loc_mstr where loc_loc = ? ;";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());   
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, x[0]);
              try (ResultSet res = ps.executeQuery();) {
@@ -1076,7 +1077,7 @@ public class invData {
         } else {
             sql = "select * from wf_mstr where wf_id = ? and wf_op = ? ;";
         }
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());   
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, x[0]);
         if (x.length > 1) {
@@ -1176,7 +1177,7 @@ public class invData {
         uom_mstr r = null;
         String[] m = new String[2];
         String sql = "select * from uom_mstr where uom_id = ? ;";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());   
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, x[0]);
              try (ResultSet res = ps.executeQuery();) {
@@ -1300,7 +1301,7 @@ public class invData {
         wh_mstr r = null;
         String[] m = new String[2];
         String sql = "select * from wh_mstr where wh_id = ? ;";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());   
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, x[0]);
              try (ResultSet res = ps.executeQuery();) {
@@ -1460,7 +1461,7 @@ public class invData {
         pl_mstr r = null;
         String[] m = new String[2];
         String sql = "select * from pl_mstr where pl_line = ? ;";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());   
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, x[0]);
              try (ResultSet res = ps.executeQuery();) {
@@ -1555,7 +1556,7 @@ public class invData {
         inv_ctrl r = null;
         String[] m = new String[2];
         String sql = "select * from inv_ctrl;";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());   
 	PreparedStatement ps = con.prepareStatement(sql);) {
              try (ResultSet res = ps.executeQuery();) {
                 if (! res.isBeforeFirst()) {
@@ -1599,8 +1600,12 @@ public class invData {
         try {
 
 
-        Class.forName(driver).newInstance();
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
         Statement st = con.createStatement();
         ResultSet res = null;
         try {
@@ -1631,8 +1636,12 @@ public class invData {
     public static String getItemFromCustCItem(String cust, String custitem) {
     String mystring = "";
     try{
-       Class.forName(driver).newInstance();
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+       Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
         Statement st = con.createStatement();
         ResultSet res = null;
         try{
@@ -1670,8 +1679,12 @@ public class invData {
     String pricecode = "";
 
     try{
-        Class.forName(driver).newInstance();
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
         Statement st = con.createStatement();
         ResultSet res = null;
         try{
@@ -1722,8 +1735,12 @@ public class invData {
     String pricecode = "";
 
     try{
-    Class.forName(driver).newInstance();
-    Connection con = DriverManager.getConnection(url + db, user, pass);
+    Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
     Statement st = con.createStatement();
     ResultSet res = null;
     try{
@@ -1761,8 +1778,12 @@ public class invData {
     String disccode = "";
     int i = 0;
     try{
-    Class.forName(driver).newInstance();
-    Connection con = DriverManager.getConnection(url + db, user, pass);
+    Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
     Statement st = con.createStatement();
     ResultSet res = null;
     try{
@@ -1811,8 +1832,12 @@ public class invData {
     public static String getItemFromCustCItem2(String cust, String custitem) {
        String mystring = "";
         try{
-            Class.forName(driver).newInstance();
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -1846,8 +1871,12 @@ public class invData {
     public static String getItemFromCustUpc(String cust, String custitem) {
        String mystring = "";
         try{
-            Class.forName(driver).newInstance();
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -1884,8 +1913,12 @@ public class invData {
        String pricecode = "";
 
         try{
-            Class.forName(driver).newInstance();
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -1939,8 +1972,12 @@ public class invData {
            String pricecode = "";
 
             try{
-                Class.forName(driver).newInstance();
-                Connection con = DriverManager.getConnection(url + db, user, pass);
+                Connection con = null;
+                if (ds != null) {
+                  con = ds.getConnection();
+                } else {
+                  con = DriverManager.getConnection(url + db, user, pass);  
+                }
                 Statement st = con.createStatement();
                 ResultSet res = null;
                 try{
@@ -2031,8 +2068,12 @@ public class invData {
     public static double getItemPrice(String item) {
        double price = 0;
      try{
-        Class.forName(driver).newInstance();
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
         Statement st = con.createStatement();
             ResultSet res = null;
         try{
@@ -2063,8 +2104,12 @@ public class invData {
     public static ArrayList getItemMaintInit() {
                ArrayList myarray = new ArrayList();
              try{
-                Class.forName(driver).newInstance();
-                Connection con = DriverManager.getConnection(url + db, user, pass);
+                Connection con = null;
+                if (ds != null) {
+                  con = ds.getConnection();
+                } else {
+                  con = DriverManager.getConnection(url + db, user, pass);  
+                }
                 Statement st = con.createStatement();
                 ResultSet res = null;
                 try{
@@ -2140,8 +2185,12 @@ public class invData {
     public static ArrayList getItemImagesFile(String item) {
                ArrayList myarray = new ArrayList();
              try{
-                Class.forName(driver).newInstance();
-                Connection con = DriverManager.getConnection(url + db, user, pass);
+                Connection con = null;
+                if (ds != null) {
+                  con = ds.getConnection();
+                } else {
+                  con = DriverManager.getConnection(url + db, user, pass);  
+                }
                 Statement st = con.createStatement();
                 ResultSet res = null;
                 try{
@@ -2172,8 +2221,12 @@ public class invData {
     public static String getItemCode(String item) {
       String myitem = "";
     try{
-    Class.forName(driver).newInstance();
-    Connection con = DriverManager.getConnection(url + db, user, pass);
+    Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
     Statement st = con.createStatement();
     ResultSet res = null;
     try{
@@ -2205,7 +2258,12 @@ public class invData {
     public static String getItemExpireDate(String item) {
       String mydate = "";
     try{
-    Connection con = DriverManager.getConnection(url + db, user, pass);
+    Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
     Statement st = con.createStatement();
     ResultSet res = null;
     try{
@@ -2234,13 +2292,18 @@ public class invData {
     return mydate;  
     }
 
-     public static String getItemExpireDateCalc(String item) {
+    public static String getItemExpireDateCalc(String item) {
       String mydate = "";
       Calendar caldate = Calendar.getInstance();
       int days = 0;
          
     try{
-    Connection con = DriverManager.getConnection(url + db, user, pass);
+    Connection con = null;
+    if (ds != null) {
+      con = ds.getConnection();
+    } else {
+      con = DriverManager.getConnection(url + db, user, pass);  
+    }
     Statement st = con.createStatement();
     ResultSet res = null;
     try{
@@ -2278,7 +2341,12 @@ public class invData {
     public static int getItemExpireDays(String item) {
       int days = 0;
     try{
-    Connection con = DriverManager.getConnection(url + db, user, pass);
+    Connection con = null;
+    if (ds != null) {
+      con = ds.getConnection();
+    } else {
+      con = DriverManager.getConnection(url + db, user, pass);  
+    }
     Statement st = con.createStatement();
     ResultSet res = null;
     try{
@@ -2312,8 +2380,12 @@ public class invData {
     public static String getItemTypeByPart(String item) {
     String myitem = "";
     try{
-    Class.forName(driver).newInstance();
-    Connection con = DriverManager.getConnection(url + db, user, pass);
+    Connection con = null;
+    if (ds != null) {
+      con = ds.getConnection();
+    } else {
+      con = DriverManager.getConnection(url + db, user, pass);  
+    }
     Statement st = con.createStatement();
     ResultSet res = null;
     try{
@@ -2346,8 +2418,12 @@ public class invData {
     public static String getItemSite(String item) {
     String myreturn = "";
     try{
-    Class.forName(driver).newInstance();
-    Connection con = DriverManager.getConnection(url + db, user, pass);
+    Connection con = null;
+    if (ds != null) {
+      con = ds.getConnection();
+    } else {
+      con = DriverManager.getConnection(url + db, user, pass);  
+    }
     Statement st = con.createStatement();
     ResultSet res = null;
     try{
@@ -2380,8 +2456,12 @@ public class invData {
     public static String getItemLotSize(String item) {
     String myreturn = "";
     try{
-    Class.forName(driver).newInstance();
-    Connection con = DriverManager.getConnection(url + db, user, pass);
+    Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
     Statement st = con.createStatement();
         ResultSet res = null;
     try{
@@ -2415,8 +2495,12 @@ public class invData {
     public static String getItemRouting(String item) {
     String myreturn = "";
     try{
-    Class.forName(driver).newInstance();
-    Connection con = DriverManager.getConnection(url + db, user, pass);
+    Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
     Statement st = con.createStatement();
         ResultSet res = null;
     try{
@@ -2450,8 +2534,12 @@ public class invData {
     public static double getItemQOHTotal(String item, String site) {
        double qty = 0;
      try{
-        Class.forName(driver).newInstance();
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
         Statement st = con.createStatement();
             ResultSet res = null;
         try{
@@ -2488,8 +2576,12 @@ public class invData {
     public static double getItemQOHUnallocated(String item, String site, String currentorder) {
        double qohu = 0;
      try{
-        Class.forName(driver).newInstance();
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
         Statement st = con.createStatement();
             ResultSet res = null;
         try{
@@ -2537,8 +2629,12 @@ public class invData {
     public static double getItemQtyByWarehouse(String item, String site, String wh) {
        double cost = 0;
      try{
-        Class.forName(driver).newInstance();
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
         Statement st = con.createStatement();
             ResultSet res = null;
         try{
@@ -2576,8 +2672,12 @@ public class invData {
     public static double getItemQtyByWarehouseAndLocation(String item, String site, String wh, String loc) {
        double cost = 0;
      try{
-        Class.forName(driver).newInstance();
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
         Statement st = con.createStatement();
             ResultSet res = null;
         try{
@@ -2617,8 +2717,12 @@ public class invData {
     public static double getItemPOSDisc(String item) {
        double price = 0;
      try{
-        Class.forName(driver).newInstance();
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
         Statement st = con.createStatement();
             ResultSet res = null;
         try{
@@ -2652,8 +2756,12 @@ public class invData {
     public static double getItemCost(String item, String set, String site) {
                double cost = 0;
              try{
-                Class.forName(driver).newInstance();
-                Connection con = DriverManager.getConnection(url + db, user, pass);
+                Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
                 Statement st = con.createStatement();
                     ResultSet res = null;
                 try{
@@ -2689,8 +2797,12 @@ public class invData {
     public static double getItemCostUpToOp(String item, String set, String site, String op) {
                double cost = 0;
              try{
-                Class.forName(driver).newInstance();
-                Connection con = DriverManager.getConnection(url + db, user, pass);
+                Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
                 Statement st = con.createStatement();
                     ResultSet res = null;
                 try{
@@ -2736,8 +2848,12 @@ public class invData {
     public static ArrayList getItemCostElements(String item, String set, String site) {
                ArrayList<Double> mylist = new ArrayList<Double>();
              try{
-                Class.forName(driver).newInstance();
-                Connection con = DriverManager.getConnection(url + db, user, pass);
+                Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
                 Statement st = con.createStatement();
                     ResultSet res = null;
                 try{
@@ -2785,8 +2901,12 @@ public class invData {
                ArrayList<String[]> mylist = new ArrayList<String[]>();
                String[] myarray = new String[]{"","","","","","",""};
              try{
-                Class.forName(driver).newInstance();
-                Connection con = DriverManager.getConnection(url + db, user, pass);
+                Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
                 Statement st = con.createStatement();
                     ResultSet res = null;
                 try{
@@ -2831,8 +2951,12 @@ public class invData {
     public static ArrayList<String[]> getBOMsByItemSite(String item) {
                ArrayList<String[]> mylist = new ArrayList<String[]>();
              try{
-                Class.forName(driver).newInstance();
-                Connection con = DriverManager.getConnection(url + db, user, pass);
+                Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
                 Statement st = con.createStatement();
                     ResultSet res = null;
                 try{
@@ -2869,8 +2993,12 @@ public class invData {
     public static double getItemOperationalCost(String item, String set, String site) {
     double cost = 0; 
     try{
-    Class.forName(driver).newInstance();
-    Connection con = DriverManager.getConnection(url + db, user, pass);
+    Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
     Statement st = con.createStatement();
                     ResultSet res = null;
     try{
@@ -2909,8 +3037,12 @@ public class invData {
     public static double getItemMtlCostStd(String item, String set, String site) {
     double cost = 0;
     try{
-    Class.forName(driver).newInstance();
-    Connection con = DriverManager.getConnection(url + db, user, pass);
+    Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
     Statement st = con.createStatement();
                     ResultSet res = null;
     try{
@@ -2946,8 +3078,12 @@ public class invData {
     public static double getItemMtlCost(String item) {
     double cost = 0;
     try{
-    Class.forName(driver).newInstance();
-    Connection con = DriverManager.getConnection(url + db, user, pass);
+    Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
     Statement st = con.createStatement();
                     ResultSet res = null;
     try{
@@ -2981,8 +3117,12 @@ public class invData {
     public static double getItemOvhCostStd(String item, String set, String site) {
     double cost = 0;
     try{
-    Class.forName(driver).newInstance();
-    Connection con = DriverManager.getConnection(url + db, user, pass);
+    Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
     Statement st = con.createStatement();
                     ResultSet res = null;
     try{
@@ -3018,8 +3158,12 @@ public class invData {
     public static double getItemOvhCost(String item) {
     double cost = 0;
     try{
-    Class.forName(driver).newInstance();
-    Connection con = DriverManager.getConnection(url + db, user, pass);
+    Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
     Statement st = con.createStatement();
     ResultSet res = null;
     try{
@@ -3051,8 +3195,12 @@ public class invData {
     public static double getItemOutCostStd(String item, String set, String site) {
     double cost = 0;
     try{
-    Class.forName(driver).newInstance();
-    Connection con = DriverManager.getConnection(url + db, user, pass);
+    Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
     Statement st = con.createStatement();
                     ResultSet res = null;
     try{
@@ -3122,8 +3270,12 @@ public class invData {
     public static String getItemStatusByPart(String item) {
            String myitem = "";
          try{
-            Class.forName(driver).newInstance();
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
                     ResultSet res = null;
             try{
@@ -3156,8 +3308,12 @@ public class invData {
     public static String getItemDesc(String item) {
            String myitem = "";
          try{
-            Class.forName(driver).newInstance();
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
                     ResultSet res = null;
             try{
@@ -3193,8 +3349,12 @@ public class invData {
            int days = 0;
            Calendar caldate = Calendar.getInstance();
            try{
-            Class.forName(driver).newInstance();
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -3239,8 +3399,12 @@ public class invData {
     public static ArrayList getItemRoutingOPs(String myitem) {
        ArrayList myarray = new ArrayList();
         try{
-            Class.forName(driver).newInstance();
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
                     ResultSet res = null;
             try{
@@ -3273,8 +3437,12 @@ public class invData {
     public static ArrayList getItemWFOPs(String myitem) {
        ArrayList myarray = new ArrayList();
         try{
-            Class.forName(driver).newInstance();
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
                     ResultSet res = null;
             try{
@@ -3307,8 +3475,12 @@ public class invData {
     public static ArrayList getItemMasterSchedlist() {
        ArrayList myarray = new ArrayList();
         try{
-            Class.forName(driver).newInstance();
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+           Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
                     ResultSet res = null;
             try{
@@ -3341,8 +3513,12 @@ public class invData {
     public static ArrayList getItemMasterMCodelist() {
        ArrayList myarray = new ArrayList();
         try{
-            Class.forName(driver).newInstance();
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
                     ResultSet res = null;
             try{
@@ -3376,8 +3552,12 @@ public class invData {
     public static ArrayList getItemMasterACodelist() {
        ArrayList myarray = new ArrayList();
         try{
-            Class.forName(driver).newInstance();
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+           Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
                     ResultSet res = null;
             try{
@@ -3410,8 +3590,12 @@ public class invData {
     public static ArrayList getItemMasterACodeForCashTran() {
        ArrayList myarray = new ArrayList();
         try{
-            Class.forName(driver).newInstance();
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
                     ResultSet res = null;
             try{
@@ -3447,8 +3631,12 @@ public class invData {
     public static ArrayList getItemMasterRawlist() {
        ArrayList myarray = new ArrayList();
         try{
-           Class.forName(driver).newInstance();
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+           Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
                     ResultSet res = null;
             try{
@@ -3482,8 +3670,12 @@ public class invData {
     public static ArrayList getItemsByType(String type) {
        ArrayList myarray = new ArrayList();
         try{
-           Class.forName(driver).newInstance();
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+           Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
                     ResultSet res = null;
             try{
@@ -3519,8 +3711,12 @@ public class invData {
     public static ArrayList<String[]> getItemsAndPriceByType(String type) {
        ArrayList<String[]> myarray = new ArrayList<String[]>();
         try{
-           Class.forName(driver).newInstance();
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+           Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
                     ResultSet res = null;
             try{
@@ -3567,8 +3763,12 @@ public class invData {
     public static ArrayList getItemMasterAlllist() {
        ArrayList myarray = new ArrayList();
         try{
-           Class.forName(driver).newInstance();
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+           Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
                     ResultSet res = null;
             try{
@@ -3602,8 +3802,12 @@ public class invData {
     public static ArrayList getItemMasterListBySite(String site) {
        ArrayList myarray = new ArrayList();
         try{
-           Class.forName(driver).newInstance();
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+           Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
                     ResultSet res = null;
             try{
@@ -3639,8 +3843,12 @@ public class invData {
     public static ArrayList getItemRange(String site, String fromitem, String toitem) {
        ArrayList myarray = new ArrayList();
         try{
-           Class.forName(driver).newInstance();
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+           Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
                     ResultSet res = null;
             try{
@@ -3677,8 +3885,12 @@ public class invData {
     public static ArrayList getItemRangeByClass(String site, String fromitem, String toitem, String classcode) {
        ArrayList myarray = new ArrayList();
         try{
-           Class.forName(driver).newInstance();
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
                     ResultSet res = null;
             try{
@@ -3713,10 +3925,14 @@ public class invData {
     }
 
     public static double getItemLbrCost(String item, String op, String site, String set) {
-             double labor = 0;
-              try{
-            Class.forName(driver).newInstance();
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+      double labor = 0;
+      try{
+            Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
                     ResultSet res = null;
             try{
@@ -3753,10 +3969,14 @@ public class invData {
          }
 
     public static double getItemBdnCost(String item, String op, String site, String set) {
-         double burden = 0;
-           try{
-        Class.forName(driver).newInstance();
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        double burden = 0;
+        try{
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
         Statement st = con.createStatement();
                     ResultSet res = null;
         try{
@@ -3795,7 +4015,12 @@ public class invData {
       double qty = 0;
      try{
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
