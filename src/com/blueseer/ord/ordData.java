@@ -1515,8 +1515,12 @@ public class ordData {
         String defaultsite = "";
         ArrayList<String[]> lines = new ArrayList<String[]>();
         try{
-        Class.forName(driver).newInstance();
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
         Statement st = con.createStatement();
         ResultSet res = null;
         try{
@@ -1657,8 +1661,12 @@ public class ordData {
     public static String[] getSOMstrHeaderEDI(String order) {
         String[] x = new String[12];
         try{
-        Class.forName(driver).newInstance();
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
         Statement st = con.createStatement();
         ResultSet res = null;
         try{
@@ -1698,8 +1706,12 @@ public class ordData {
     public static ArrayList<String[]> getSOMstrdetailsEDI(String order) {
         ArrayList<String[]> lines = new ArrayList<String[]>();
         try{
-        Class.forName(driver).newInstance();
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
         Statement st = con.createStatement();
         ResultSet res = null;
         try{
@@ -1743,7 +1755,12 @@ public class ordData {
          String billto = "";
           try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
         Statement st = con.createStatement();
         ResultSet res = null;
         try{
@@ -1784,11 +1801,16 @@ public class ordData {
     public static Double getOrderItemAllocatedQty(String item, String site) {
        Double qty = 0.00;
      try{
-        Class.forName(driver).newInstance();
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
+        Statement st = con.createStatement();
+        ResultSet res = null;
         try{
-            Statement st = con.createStatement();
-            ResultSet res = null;
+            
 
            res = st.executeQuery("SELECT  sum(case when sod_all_qty = '' then 0 else (sod_all_qty - sod_shipped_qty) end) as allqty  " +
                                     " FROM  sod_det inner join so_mstr on so_nbr = sod_nbr  " +
@@ -1804,8 +1826,11 @@ public class ordData {
        }
         catch (SQLException s){
              MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
         }
-        con.close();
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -1817,11 +1842,16 @@ public class ordData {
     public static double getOrderTotalTax(String nbr) {
        double tax = 0;
      try{
-        Class.forName(driver).newInstance();
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
+        Statement st = con.createStatement();
+        ResultSet res = null;
         try{
-            Statement st = con.createStatement();
-            ResultSet res = null;
+            
             double ordertotal = 0;
             
             res = st.executeQuery("SELECT  sum(sod_netprice * sod_ord_qty) as mytotal  " +
@@ -1852,8 +1882,15 @@ public class ordData {
        }
         catch (SQLException s){
              MainFrame.bslog(s);
-        }
-        con.close();
+        } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+                }
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -1874,10 +1911,10 @@ public class ordData {
         } else {
           con = DriverManager.getConnection(url + db, user, pass);  
         }
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        
         try{
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            
             res = st.executeQuery("SELECT  sum(sod_netprice * sod_ord_qty) as mytotal  " +
                                     " FROM  sod_det  " +
                                     " where sod_nbr = " + "'" + nbr + "'" +       
@@ -1923,8 +1960,15 @@ public class ordData {
        }
         catch (SQLException s){
              MainFrame.bslog(s);
+        } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
         }
-        con.close();
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -1937,7 +1981,12 @@ public class ordData {
     public static String getOrderItem(String order, String line) {
         String item = "";
         try{
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
         Statement st = con.createStatement();
         ResultSet res = null;
             try{
@@ -1964,11 +2013,15 @@ public class ordData {
     public static ArrayList<String> getOrderLines(String order) {
         ArrayList<String> lines = new ArrayList<String>();
         try{
-        Class.forName(driver).newInstance();
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
+        Statement st = con.createStatement();
+        ResultSet res = null;
         try{
-            Statement st = con.createStatement();
-            ResultSet res = null;
 
            res = st.executeQuery("SELECT sod_line from sod_det " +
                    " where sod_nbr = " + "'" + order + "'" + ";");
@@ -1978,8 +2031,11 @@ public class ordData {
        }
         catch (SQLException s){
              MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
         }
-        con.close();
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -1990,11 +2046,16 @@ public class ordData {
     public static ArrayList<String> getServiceOrderLines(String order) {
         ArrayList<String> lines = new ArrayList<String>();
         try{
-        Class.forName(driver).newInstance();
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
+        Statement st = con.createStatement();
+        ResultSet res = null;
         try{
-            Statement st = con.createStatement();
-            ResultSet res = null;
+           
 
            res = st.executeQuery("SELECT svd_line from svd_det " +
                    " where svd_nbr = " + "'" + order + "'" + ";");
@@ -2004,8 +2065,11 @@ public class ordData {
        }
         catch (SQLException s){
              MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
         }
-        con.close();
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -2016,7 +2080,12 @@ public class ordData {
     public static String getOrderCurrency(String order) {
         String curr = "";
         try{
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
         Statement st = con.createStatement();
         ResultSet res = null;
             try{
@@ -2043,10 +2112,14 @@ public class ordData {
    ArrayList mylist = new ArrayList() ;
 
     try{
-
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
+        Statement st = con.createStatement();
+        ResultSet res = null;
             try {
 
             res = st.executeQuery("select so_nbr from so_mstr where so_status = " + "'" + getGlobalProgTag("open") + "'" + " or so_status = " + "'" + getGlobalProgTag("commit") + "'" + " or so_status = " + "'" + getGlobalProgTag("backorder") + "'" + " ;");
