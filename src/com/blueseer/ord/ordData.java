@@ -30,6 +30,7 @@ import bsmf.MainFrame;
 import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.defaultDecimalSeparator;
 import static bsmf.MainFrame.driver;
+import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
@@ -1867,8 +1868,12 @@ public class ordData {
        double charge = 0;
        double ordertotal = 0;
      try{
-        Class.forName(driver).newInstance();
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
         try{
             Statement st = con.createStatement();
             ResultSet res = null;
