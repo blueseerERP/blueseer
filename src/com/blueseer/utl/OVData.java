@@ -2008,7 +2008,12 @@ public class OVData {
         ArrayList myarray = new ArrayList();
         try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2042,7 +2047,12 @@ public class OVData {
         ArrayList myarray = new ArrayList();
         try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2079,7 +2089,12 @@ public class OVData {
         ArrayList<String[]> myarray = new ArrayList<String[]>();
         try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2119,7 +2134,12 @@ public class OVData {
         ArrayList<String[]> myarray = new ArrayList<String[]>();
         try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2160,7 +2180,12 @@ public class OVData {
 
         try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2201,7 +2226,12 @@ public class OVData {
 
         try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2240,7 +2270,12 @@ public class OVData {
 
         try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2280,7 +2315,12 @@ public class OVData {
 
         try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2326,7 +2366,12 @@ public class OVData {
 
         try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2372,7 +2417,12 @@ public class OVData {
 
         try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2418,7 +2468,12 @@ public class OVData {
 
         try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {

@@ -3552,7 +3552,7 @@ public class invData {
     public static ArrayList getItemMasterACodelist() {
        ArrayList myarray = new ArrayList();
         try{
-           Connection con = null;
+        Connection con = null;
         if (ds != null) {
           con = ds.getConnection();
         } else {

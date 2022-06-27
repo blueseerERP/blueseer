@@ -612,7 +612,7 @@ public class ordData {
         so_mstr r = null;
         String[] m = new String[2];
         String sql = "select * from so_mstr where so_nbr = ? ;";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, x[0]);
              try (ResultSet res = ps.executeQuery();) {
@@ -669,7 +669,7 @@ public class ordData {
         sod_det r = null;
         String[] m = new String[2];
         String sql = "select * from sod_det where sod_nbr = ? ;";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, x[0]);
              try (ResultSet res = ps.executeQuery();) {
@@ -721,7 +721,7 @@ public class ordData {
         sos_det r = null;
         String[] m = new String[2];
         String sql = "select * from sos_det where sos_nbr = ? ;";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, x[0]);
              try (ResultSet res = ps.executeQuery();) {
@@ -766,7 +766,7 @@ public class ordData {
         so_tax r = null;
         String[] m = new String[2];
         String sql = "select * from so_tax where sot_nbr = ? ;";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, x[0]);
              try (ResultSet res = ps.executeQuery();) {
@@ -817,7 +817,7 @@ public class ordData {
         sod_tax r = null;
         String[] m = new String[2];
         String sql = "select * from sod_tax where sodt_nbr = ? ;";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, x[0]);
              try (ResultSet res = ps.executeQuery();) {
@@ -1478,7 +1478,7 @@ public class ordData {
         order_ctrl r = null;
         String[] m = new String[2];
         String sql = "select * from order_ctrl;";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
 	PreparedStatement ps = con.prepareStatement(sql);) {
              try (ResultSet res = ps.executeQuery();) {
                 if (! res.isBeforeFirst()) {
