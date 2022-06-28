@@ -64,7 +64,11 @@ public class invData {
         String[] ld = null;
         Connection con = null;
         try { 
-            con = DriverManager.getConnection(url + db, user, pass);
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
     
             for (String rec : list) {
                 ld = rec.split(":", -1);
