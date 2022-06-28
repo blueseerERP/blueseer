@@ -28,6 +28,7 @@ import bsmf.MainFrame;
 import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.dbtype;
 import static bsmf.MainFrame.defaultDecimalSeparator;
+import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
@@ -172,7 +173,11 @@ public class shpData {
         PreparedStatement ps = null;
         ResultSet res = null;
         try { 
-            bscon = DriverManager.getConnection(url + db, user, pass);
+            if (ds != null) {
+              bscon = ds.getConnection();
+            } else {
+              bscon = DriverManager.getConnection(url + db, user, pass);  
+            }
             bscon.setAutoCommit(false);
             _addShipMstr(sh, bscon, ps, res);  
             for (ship_det z : shd) {
@@ -222,7 +227,12 @@ public class shpData {
         PreparedStatement ps = null;
         ResultSet res = null;
         try { 
-            bscon = DriverManager.getConnection(url + db, user, pass);
+           
+            if (ds != null) {
+              bscon = ds.getConnection();
+            } else {
+              bscon = DriverManager.getConnection(url + db, user, pass);  
+            }
             bscon.setAutoCommit(false);
             
             AREntry("I", shipper, effdate, bscon);  
@@ -367,7 +377,11 @@ public class shpData {
         PreparedStatement ps = null;
         ResultSet res = null;
         try { 
-            bscon = DriverManager.getConnection(url + db, user, pass);
+            if (ds != null) {
+              bscon = ds.getConnection();
+            } else {
+              bscon = DriverManager.getConnection(url + db, user, pass);  
+            }
             bscon.setAutoCommit(false);
             for (String line : lines) {
                _deleteShipperLines(x, line, bscon);  // discard unwanted lines
@@ -549,7 +563,7 @@ public class shpData {
         String sqlInsert = "insert into ship_ctrl (shc_confirm, shc_custitemonly) "
                         + " values (?,?); "; 
         String sqlUpdate = "update ship_ctrl set shc_confirm = ?, shc_custitemonly = ? ; ";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
              PreparedStatement ps = con.prepareStatement(sqlSelect);) {
           try (ResultSet res = ps.executeQuery();
                PreparedStatement psi = con.prepareStatement(sqlInsert);
@@ -580,7 +594,7 @@ public class shpData {
         ship_ctrl r = null;
         String[] m = new String[2];
         String sql = "select * from ship_ctrl;";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
              try (ResultSet res = ps.executeQuery();) {
                 if (! res.isBeforeFirst()) {
@@ -1122,7 +1136,12 @@ public class shpData {
         double amt = 0.00;
         try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -1156,7 +1175,12 @@ public class shpData {
 
         try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -1197,7 +1221,12 @@ public class shpData {
          String billto = "";
           try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         Statement st = con.createStatement();
         ResultSet res = null;
         try{
@@ -1239,7 +1268,12 @@ public class shpData {
           String[] H = new String[13];
     try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         Statement st = con.createStatement();
         ResultSet res = null;
         try{
@@ -1294,7 +1328,12 @@ public class shpData {
 
     try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         Statement st = con.createStatement();
         ResultSet res = null;
         try{
@@ -1350,7 +1389,12 @@ public class shpData {
           ArrayList mylist = new ArrayList();  
     try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         Statement st = con.createStatement();
         ResultSet res = null;
         try{
@@ -1396,7 +1440,12 @@ public class shpData {
        Double totamt = 0.00;
        try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         Statement st = con.createStatement();
         ResultSet res = null;
         try{
@@ -1482,7 +1531,12 @@ public class shpData {
        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd"); 
        try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         Statement st = con.createStatement();
         
         try{
@@ -1516,7 +1570,12 @@ public class shpData {
       // table field order:  "Line", "Part", "CustPart", "SO", "PO", "Qty", "UOM", "ListPrice", "Discount", "NetPrice", "QtyShip", "Status", "WH", "LOC", "Desc", "Taxamt"
         try {
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         Statement st = con.createStatement();
         ResultSet res = null;
         try {
@@ -1571,7 +1630,12 @@ public class shpData {
 
       try {
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         Statement st = con.createStatement();
         ResultSet res = null;
         try {
@@ -1700,7 +1764,12 @@ public class shpData {
        try {
 
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         Statement st = con.createStatement();
         ResultSet res = null;
         try {
@@ -1902,7 +1971,12 @@ public class shpData {
        try {
 
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         Statement st = con.createStatement();
         ResultSet res = null;
         try {

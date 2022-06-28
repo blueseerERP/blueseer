@@ -29,6 +29,7 @@ import com.blueseer.far.*;
 import bsmf.MainFrame;
 import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.defaultDecimalSeparator;
+import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags; 
 import static bsmf.MainFrame.url;
@@ -531,7 +532,12 @@ public class ShipperMaintSerial extends javax.swing.JPanel implements IBlueSeer 
        String[] m = new String[2];
         
        try {
-            Connection con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -713,7 +719,12 @@ public class ShipperMaintSerial extends javax.swing.JPanel implements IBlueSeer 
       
     public void setstatus(javax.swing.JTable mytable) {
             try {
-            Connection con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
              
@@ -813,7 +824,12 @@ public class ShipperMaintSerial extends javax.swing.JPanel implements IBlueSeer 
         
     public void getItemInfo(String item) {
         try {
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {

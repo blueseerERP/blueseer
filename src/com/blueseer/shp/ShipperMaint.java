@@ -29,6 +29,7 @@ import bsmf.MainFrame;
 import static bsmf.MainFrame.bslog;
 import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.defaultDecimalSeparator;
+import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.pass;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.tags;
@@ -599,7 +600,12 @@ public class ShipperMaint extends javax.swing.JPanel {
         initvars(null);
         try {
      
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;int i = 0;
             int d = 0;
@@ -720,7 +726,12 @@ public class ShipperMaint extends javax.swing.JPanel {
     
     public void getOrderInfoByPO(String cust, String po, String item) {
         try {
-             Connection con = DriverManager.getConnection(url + db, user, pass);
+             Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -790,7 +801,12 @@ public class ShipperMaint extends javax.swing.JPanel {
     
     public void setLabelByShipTo(String shipto) {
         try {
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;int i = 0;
             try {
@@ -822,7 +838,12 @@ public class ShipperMaint extends javax.swing.JPanel {
     public void setCustShipCodes(String nbr) {
         try {
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             int i = 0;
@@ -859,7 +880,12 @@ public class ShipperMaint extends javax.swing.JPanel {
         
         try {
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             int i = 0;
@@ -915,7 +941,12 @@ public class ShipperMaint extends javax.swing.JPanel {
         
     public void setDetail(String nbr, String line) {
          try {
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -980,7 +1011,12 @@ public class ShipperMaint extends javax.swing.JPanel {
     public void setShipperByOrder(String myorder) {
          disableradiobuttons();
         try {
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;int i = 0;
             try {
@@ -1107,7 +1143,12 @@ public class ShipperMaint extends javax.swing.JPanel {
 
     public void setSOstatus(javax.swing.JTable mytable) {
     try {  
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             int i = 0;
@@ -2331,7 +2372,12 @@ public class ShipperMaint extends javax.swing.JPanel {
     private void bteditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bteditActionPerformed
         try {
              DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
