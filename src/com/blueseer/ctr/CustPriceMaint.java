@@ -40,6 +40,7 @@ import javax.swing.DefaultListModel;
 import bsmf.MainFrame; 
 import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.defaultDecimalSeparator;
+import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
@@ -125,8 +126,12 @@ public class CustPriceMaint extends javax.swing.JPanel {
     public void getCustPriceRecord(String cust, String part, String type, String uom, String curr) {
         initvars(null);
         try {
-
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -278,7 +283,12 @@ public class CustPriceMaint extends javax.swing.JPanel {
         
         try {
 
-           Connection con = DriverManager.getConnection(url + db, user, pass);
+           Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -351,7 +361,12 @@ public class CustPriceMaint extends javax.swing.JPanel {
         String pricecode = "";
         try {
 
-           Connection con = DriverManager.getConnection(url + db, user, pass);
+           Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -754,7 +769,12 @@ public class CustPriceMaint extends javax.swing.JPanel {
     private void btAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAddActionPerformed
         try {
 
-           Connection con = DriverManager.getConnection(url + db, user, pass);
+           Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -853,7 +873,12 @@ public class CustPriceMaint extends javax.swing.JPanel {
             String[] z = pricelist.getSelectedValue().toString().split(":");
         try {
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             try {
               
@@ -892,7 +917,12 @@ public class CustPriceMaint extends javax.swing.JPanel {
     private void btadddiscActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btadddiscActionPerformed
         try {
 
-           Connection con = DriverManager.getConnection(url + db, user, pass);
+           Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -961,7 +991,12 @@ public class CustPriceMaint extends javax.swing.JPanel {
         if (proceed) {
         try {
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             try {
               
@@ -990,7 +1025,12 @@ public class CustPriceMaint extends javax.swing.JPanel {
     private void btupdatediscActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdatediscActionPerformed
         try {
 
-           Connection con = DriverManager.getConnection(url + db, user, pass);
+           Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -1026,7 +1066,12 @@ public class CustPriceMaint extends javax.swing.JPanel {
     private void disclistMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_disclistMouseClicked
         if (! disclist.isSelectionEmpty())
         try {
-           Connection con = DriverManager.getConnection(url + db, user, pass);
+           Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -1058,7 +1103,12 @@ public class CustPriceMaint extends javax.swing.JPanel {
 
     private void btUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btUpdateActionPerformed
         try {
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -1098,7 +1148,12 @@ public class CustPriceMaint extends javax.swing.JPanel {
     private void pricelistMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pricelistMouseClicked
         if (! pricelist.isSelectionEmpty())
         try {
-           Connection con = DriverManager.getConnection(url + db, user, pass);
+           Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {

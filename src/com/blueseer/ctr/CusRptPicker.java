@@ -26,6 +26,7 @@ SOFTWARE.
 package com.blueseer.ctr;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.db;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import java.awt.Color;
@@ -37,7 +38,7 @@ import java.sql.Statement;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import static bsmf.MainFrame.db;
+import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
@@ -370,7 +371,12 @@ public class CusRptPicker extends javax.swing.JPanel {
                 }; 
             
       try{
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{   
@@ -465,7 +471,12 @@ public class CusRptPicker extends javax.swing.JPanel {
                 }; 
             
       try{
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{   
@@ -559,7 +570,12 @@ public class CusRptPicker extends javax.swing.JPanel {
                 }; 
             
       try{
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{   
@@ -658,7 +674,12 @@ public class CusRptPicker extends javax.swing.JPanel {
                 }; 
             
       try{
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{   
@@ -767,7 +788,12 @@ public class CusRptPicker extends javax.swing.JPanel {
                 }; 
             
       try{
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{   
@@ -865,7 +891,12 @@ public class CusRptPicker extends javax.swing.JPanel {
                 }; 
             
       try{
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{   

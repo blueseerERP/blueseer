@@ -29,6 +29,7 @@ package com.blueseer.ctr;
 import bsmf.MainFrame;
 import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.driver;
+import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
@@ -60,7 +61,11 @@ public class cusData {
         PreparedStatement ps = null;
         ResultSet res = null;
         try { 
-            con = DriverManager.getConnection(url + db, user, pass);
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             int rows = _addCustMstr(x, con, ps, res, false);  // add cms_det
             if (rows > 0) {
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
@@ -103,7 +108,11 @@ public class cusData {
         PreparedStatement ps = null;
         ResultSet res = null;
         try { 
-            con = DriverManager.getConnection(url + db, user, pass);
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             con.setAutoCommit(false);
             _addCustMstr(cm, con, ps, res, false);  // add cm_mstr
             _deleteCMCDetAll(cm.cm_code, con, ps, res);    // delete cmc_det
@@ -164,7 +173,11 @@ public class cusData {
         PreparedStatement ps = null;
         ResultSet res = null;
         try { 
-            con = DriverManager.getConnection(url + db, user, pass);
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
    
             for (String rec : list) {
                 ld = rec.split(":", -1);
@@ -339,7 +352,11 @@ public class cusData {
         PreparedStatement ps = null;
         ResultSet res = null;
         try { 
-            con = DriverManager.getConnection(url + db, user, pass);
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             int rows = _updateCustMstr(x, con, ps, res);  // add cms_det
             if (rows > 0) {
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
@@ -439,7 +456,11 @@ public class cusData {
         PreparedStatement ps = null;
         ResultSet res = null;
         try { 
-            con = DriverManager.getConnection(url + db, user, pass);
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             _deleteCustMstr(x, con, ps, res);  // add cms_det
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
         } catch (SQLException s) {
@@ -492,7 +513,7 @@ public class cusData {
         cm_mstr r = null;
         String[] m = new String[2];
         String sql = "select * from cm_mstr where cm_code = ? ;";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, x[0]);
              try (ResultSet res = ps.executeQuery();) {
@@ -529,7 +550,7 @@ public class cusData {
         String sqlInsert = "insert into cust_term (cut_code, cut_desc, cut_days, cut_discdays, cut_discpercent, " +
                 " cut_mfi, cut_mfimonth, cut_mfiday )  " +
                 " values (?,?,?,?,?,?,?,?); "; 
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
              PreparedStatement ps = con.prepareStatement(sqlSelect);) {
              ps.setString(1, x.cut_code);
           try (ResultSet res = ps.executeQuery();
@@ -560,7 +581,7 @@ public class cusData {
         String[] m = new String[2];
         String sql = "update cust_term set cut_desc = ?, cut_days = ?, cut_discdays = ?, " +
                 " cut_discpercent = ?, cut_mfi = ?, cut_mfimonth = ?, cut_mfiday = ? where cut_code = ? ";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
 	PreparedStatement ps = con.prepareStatement(sql)) {
         ps.setString(1, x.cut_desc);
         ps.setString(2, x.cut_days);
@@ -582,7 +603,7 @@ public class cusData {
     public static String[] deleteTermsMstr(cust_term x) { 
        String[] m = new String[2];
         String sql = "delete from cust_term where cut_code = ?; ";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
 	PreparedStatement ps = con.prepareStatement(sql)) {
         ps.setString(1, x.cut_code);
         int rows = ps.executeUpdate();
@@ -598,7 +619,7 @@ public class cusData {
         cust_term r = null;
         String[] m = new String[2];
         String sql = "select * from cust_term where cut_code = ? ;";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, x[0]);
              try (ResultSet res = ps.executeQuery();) {
@@ -634,7 +655,7 @@ public class cusData {
         String sqlSelect = "select * from car_mstr where car_code = ?";
         String sqlInsert = "insert into car_mstr (car_code, car_desc, car_scac, car_acct, car_phone, car_type, car_contact)  " +
                 " values (?,?,?,?,?,?,?); "; 
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
              PreparedStatement ps = con.prepareStatement(sqlSelect);) {
              ps.setString(1, x.car_code);
           try (ResultSet res = ps.executeQuery();
@@ -665,7 +686,7 @@ public class cusData {
         String sqlUpdate = "update car_mstr set car_desc = ?, car_scac = ?, "
                 + " car_acct = ?, car_phone = ?, car_type = ?, car_contact = ?  " +
                 " where car_code = ? ; "; 
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
              PreparedStatement psu = con.prepareStatement(sqlUpdate);) {
             psu.setString(7, x.car_code);
             psu.setString(1, x.car_desc);
@@ -686,7 +707,7 @@ public class cusData {
     public static String[] deleteCarrierMstr(car_mstr x) { 
        String[] m = new String[2];
         String sql = "delete from car_mstr where car_code = ?; ";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
 	PreparedStatement ps = con.prepareStatement(sql)) {
         ps.setString(1, x.car_code);
         ps.executeUpdate();
@@ -709,7 +730,7 @@ public class cusData {
         String sqlDelete = "delete from car_det where card_code = ?";
         String sqlInsert = "insert into car_det (card_code, card_carrier)  " +
                 " values (?,?); "; 
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
              PreparedStatement ps = con.prepareStatement(sqlDelete);) {
              ps.setString(1, x);
              ps.executeUpdate();
@@ -732,7 +753,7 @@ public class cusData {
         car_mstr r = null;
         String[] m = new String[2];
         String sql = "select * from car_mstr where car_code = ? ;";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, x[0]);
              try (ResultSet res = ps.executeQuery();) {
@@ -770,7 +791,7 @@ public class cusData {
         String sqlInsert = "insert into cm_ctrl (cmc_autocust) "
                         + " values (?); "; 
         String sqlUpdate = "update cm_ctrl set cmc_autocust = ?; ";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
              PreparedStatement ps = con.prepareStatement(sqlSelect);) {
           try (ResultSet res = ps.executeQuery();
                PreparedStatement psi = con.prepareStatement(sqlInsert);
@@ -799,7 +820,7 @@ public class cusData {
         cm_ctrl r = null;
         String[] m = new String[2];
         String sql = "select * from cm_ctrl;";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
 	PreparedStatement ps = con.prepareStatement(sql);) {
              try (ResultSet res = ps.executeQuery();) {
                 if (! res.isBeforeFirst()) {
@@ -834,7 +855,11 @@ public class cusData {
         PreparedStatement ps = null;
         ResultSet res = null;
         try { 
-            con = DriverManager.getConnection(url + db, user, pass);
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             _addCMSDet(x, con, ps, res, false);  // add cms_det
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
         } catch (SQLException s) {
@@ -921,7 +946,11 @@ public class cusData {
         PreparedStatement ps = null;
         ResultSet res = null;
         try { 
-            con = DriverManager.getConnection(url + db, user, pass);
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             _updateCMSDet(x, con, ps, res);  // add cms_det
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
         } catch (SQLException s) {
@@ -986,7 +1015,11 @@ public class cusData {
         PreparedStatement ps = null;
         ResultSet res = null;
         try { 
-            con = DriverManager.getConnection(url + db, user, pass);
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             _deleteCMSDet(x.cms_code, x.cms_shipto, con, ps, res);  // add cms_det
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
         } catch (SQLException s) {
@@ -1031,7 +1064,7 @@ public class cusData {
         cms_det r = null;
         String[] m = new String[2];
         String sql = "select * from cms_det where cms_shipto = ? and cms_code = ? ;";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, shipto);
         ps.setString(2, code);
@@ -1062,7 +1095,7 @@ public class cusData {
         String[] m = new String[2];
         ArrayList<cms_det> list = new ArrayList<cms_det>();
         String sql = "select * from cms_det where cms_code = ? ;";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, code);
              try (ResultSet res = ps.executeQuery();) {
@@ -1100,7 +1133,11 @@ public class cusData {
         PreparedStatement ps = null;
         ResultSet res = null;
         try { 
-            con = DriverManager.getConnection(url + db, user, pass);
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             _addCMCDet(x, con, ps, res);  // add cms_det
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
         } catch (SQLException s) {
@@ -1157,7 +1194,11 @@ public class cusData {
         PreparedStatement ps = null;
         ResultSet res = null;
         try { 
-            con = DriverManager.getConnection(url + db, user, pass);
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             _updateCMCDet(x, con, ps, res);  // add cms_det 
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
         } catch (SQLException s) {
@@ -1216,7 +1257,11 @@ public class cusData {
         PreparedStatement ps = null;
         ResultSet res = null;
         try { 
-            con = DriverManager.getConnection(url + db, user, pass);
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             _deleteCMCDet(x.cmc_id, x.cmc_code, con, ps, res);  // add cms_det
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
         } catch (SQLException s) {
@@ -1272,7 +1317,7 @@ public class cusData {
         cmc_det r = null;
         String[] m = new String[2];
         String sql = "select * from cmc_det where cmc_id = ? and cmc_code = ? ;";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, id);
         ps.setString(2, code);
@@ -1304,7 +1349,7 @@ public class cusData {
         String[] m = new String[2];
         ArrayList<cmc_det> list = new ArrayList<cmc_det>();
         String sql = "select * from cmc_det where cmc_code = ? ;";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, code);
              try (ResultSet res = ps.executeQuery();) {
@@ -1337,7 +1382,7 @@ public class cusData {
         String sqlInsert = "insert into cup_mstr (cup_cust, cup_item, cup_citem, cup_citem2, " +
          "cup_upc, cup_userid, cup_ts, cup_misc, cup_sku) " 
                         + " values (?,?,?,?,?,?,?,?,?); "; 
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
              PreparedStatement ps = con.prepareStatement(sqlSelect);) {
              ps.setString(1, x.cup_citem);
              ps.setString(2, x.cup_cust);
@@ -1378,7 +1423,7 @@ public class cusData {
         String sqlUpdate = "update cup_mstr set cup_item = ?, cup_citem2 = ?, cup_upc = ?, " +
                 " cup_userid = ?, cup_ts = ?, cup_misc = ?, cup_sku = ?  " +   
                           " where cup_citem = ? and cup_cust = ? ; ";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
              PreparedStatement ps = con.prepareStatement(sqlSelect);) {
              ps.setString(1, x.cup_citem);
              ps.setString(2, x.cup_cust);
@@ -1426,7 +1471,7 @@ public class cusData {
         String sql = "update cup_mstr set cup_item = ?, cup_citem2 = ?, cup_upc = ?, " +
                 " cup_userid = ?, cup_ts = ?, cup_misc = ?, cup_sku = ?  " +   
                           " where cup_citem = ? and cup_cust = ? ; ";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
 	PreparedStatement ps = con.prepareStatement(sql)) {
         ps.setString(1, x.cup_item);
         ps.setString(2, x.cup_citem2);
@@ -1449,7 +1494,7 @@ public class cusData {
     public static String[] deleteCupMstr(cup_mstr x) { 
        String[] m = new String[2];
         String sql = "delete from cup_mstr where cup_citem = ? and cup_cust = ?; ";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
 	PreparedStatement ps = con.prepareStatement(sql)) {
         ps.setString(1, x.cup_citem);
         ps.setString(2, x.cup_cust);
@@ -1471,7 +1516,7 @@ public class cusData {
          } else {
             sql = "select * from cup_mstr where cup_citem = ? limit 1 ;";  
          }
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, x[0]);
         if (x.length >= 2 && ! x[1].isEmpty()) {
@@ -1510,7 +1555,7 @@ public class cusData {
         String sqlSelect = "SELECT * FROM  frt_mstr where frt_code = ?";
         String sqlInsert = "insert into frt_mstr (frt_code, frt_desc, frt_apply ) "
                         + " values (?,?,?); "; 
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
              PreparedStatement ps = con.prepareStatement(sqlSelect);) {
              ps.setString(1, x.frt_code);
           try (ResultSet res = ps.executeQuery();
@@ -1539,7 +1584,7 @@ public class cusData {
         String[] m = new String[2];
         String sql = "update frt_mstr set frt_desc = ?, frt_apply = ? " +   
                           " where frt_code = ? ; ";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
 	PreparedStatement ps = con.prepareStatement(sql)) {
         ps.setString(1, x.frt_desc);
         ps.setString(2, x.frt_apply);
@@ -1557,7 +1602,7 @@ public class cusData {
         frt_mstr r = null;
         String[] m = new String[2];
         String sql = "select * from frt_mstr where frt_code = ? ;";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, x[0]);
              try (ResultSet res = ps.executeQuery();) {
@@ -1585,7 +1630,7 @@ public class cusData {
     public static String[] deleteFreightMstr(frt_mstr x) { 
        String[] m = new String[2];
         String sql = "delete from frt_mstr where frt_code = ?; ";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
 	PreparedStatement ps = con.prepareStatement(sql)) {
         ps.setString(1, x.frt_code);
         int rows = ps.executeUpdate();
@@ -1604,7 +1649,12 @@ public class cusData {
         String defaultsite = "";
         ArrayList<String[]> lines = new ArrayList<String[]>();
         try{
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+        if (ds != null) {
+        con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
         Statement st = con.createStatement();
         ResultSet res = null;
         try{
@@ -1741,7 +1791,7 @@ public class cusData {
             // aracct, arcc, currency, bank, terms, carrier, onhold, site
         String[] custinfo = new String[]{"","","","","","","", ""};
         String sql = "select cm_ar_acct, cm_ar_cc, cm_curr, cm_bank, cm_terms, cm_carrier, cm_onhold, cm_site from cm_mstr where cm_code = ?;";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, cust);
              try (ResultSet res = ps.executeQuery();) {
@@ -1768,7 +1818,7 @@ public class cusData {
             // aracct, arcc, currency, bank, terms, carrier, onhold, site
         String[] custinfo = new String[]{"","","","","","","",""};
         String sql = "select cm_name, cm_line1, cm_line2, cm_line3, cm_city, cm_state, cm_zip, cm_country, cm_email from cm_mstr where cm_code = ?;";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, cust);
              try (ResultSet res = ps.executeQuery();) {
@@ -1795,7 +1845,7 @@ public class cusData {
             // aracct, arcc, currency, bank, terms, carrier, onhold, site
         String[] custinfo = new String[]{"","","","","","","","",""};
         String sql = "select cms_shipto, cms_name, cms_line1, cms_line2, cms_line3, cms_city, cms_state, cms_zip, cms_country, cms_plantcode from cms_det where cms_code = ? and cms_shipto = ?;";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, cust);
         ps.setString(2, ship);
@@ -1824,7 +1874,12 @@ public class cusData {
            String myitem = "";
          try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+        if (ds != null) {
+        con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -1857,7 +1912,12 @@ public class cusData {
            String myitem = "";
          try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+        if (ds != null) {
+        con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -1890,7 +1950,12 @@ public class cusData {
            String myitem = null;
          try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+        if (ds != null) {
+        con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -1923,7 +1988,12 @@ public class cusData {
            String myitem = null;
          try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+        if (ds != null) {
+        con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -1956,7 +2026,12 @@ public class cusData {
         String x = "";
         try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+        if (ds != null) {
+        con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -1988,7 +2063,12 @@ public class cusData {
         String x = "";
         try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+        if (ds != null) {
+        con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -2022,7 +2102,12 @@ public class cusData {
        ArrayList myarray = new ArrayList();
         try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+        if (ds != null) {
+        con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -2057,7 +2142,12 @@ public class cusData {
         ArrayList myarray = new ArrayList();
         try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+        if (ds != null) {
+        con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2092,7 +2182,12 @@ public class cusData {
         ArrayList myarray = new ArrayList();
         try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+        if (ds != null) {
+        con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2124,7 +2219,12 @@ public class cusData {
         ArrayList myarray = new ArrayList();
         try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+           Connection con = null;
+        if (ds != null) {
+        con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2157,7 +2257,12 @@ public class cusData {
         String mystring = "";
         try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+        if (ds != null) {
+        con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2189,7 +2294,12 @@ public class cusData {
         ArrayList myarray = new ArrayList();
         try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+        if (ds != null) {
+        con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2223,7 +2333,12 @@ public class cusData {
    String mystring = "";
     try{
         
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+        if (ds != null) {
+        con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2258,7 +2373,12 @@ public class cusData {
     String mystring = "";
     try{
         
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+        if (ds != null) {
+        con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2293,7 +2413,12 @@ public class cusData {
     String mystring = "";
     try{
         
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+        if (ds != null) {
+        con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2328,7 +2453,12 @@ public class cusData {
            String myitem = "";
          try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+        if (ds != null) {
+        con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2361,7 +2491,12 @@ public class cusData {
     String myitem = "";
     try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+        if (ds != null) {
+        con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
         Statement st = con.createStatement();
         ResultSet res = null;
         try  {
@@ -2394,7 +2529,12 @@ public class cusData {
     String myitem = "";
     try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+        if (ds != null) {
+        con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
         Statement st = con.createStatement();
         ResultSet res = null;
         try  {
@@ -2429,7 +2569,12 @@ public class cusData {
         String myitem = "";
         try{
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+        if (ds != null) {
+        con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2462,7 +2607,12 @@ public class cusData {
         String myitem = "";
         try{
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+        if (ds != null) {
+        con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2494,7 +2644,12 @@ public class cusData {
            String myitem = "";
          try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+        if (ds != null) {
+        con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2527,7 +2682,12 @@ public class cusData {
            String myitem = "";
          try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+        if (ds != null) {
+        con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {

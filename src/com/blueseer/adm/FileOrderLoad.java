@@ -27,6 +27,7 @@ package com.blueseer.adm;
 
 import bsmf.MainFrame;
 import static bsmf.MainFrame.db;
+import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
@@ -77,7 +78,12 @@ public class FileOrderLoad extends javax.swing.JPanel {
     public void reinitddcustcode() {
         try {
             ddcustcode.removeAllItems();
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
