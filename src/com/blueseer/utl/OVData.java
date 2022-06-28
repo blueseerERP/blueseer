@@ -2568,7 +2568,7 @@ public class OVData {
                             + " group by myweek) as 'c' ;");
                 } else {
                     res = st.executeQuery("select week(tr_eff_date) as 'myweek', date_add(tr_eff_date, interval (8 - dayofweek(tr_eff_date)) % 7 day) as 'sun' from tran_mstr where tr_eff_date >= "
-                            + "'" + mydate + "'" + " group by week(tr_eff_date) ;");
+                            + "'" + mydate + "'" + " group by week(tr_eff_date), tr_eff_date ;");
                 }
                 while (res.next()) {
                     myarray.add(res.getString("myweek") + " = " + res.getString("sun"));
@@ -2607,7 +2607,7 @@ public class OVData {
 
                 } else {
                     res = st.executeQuery("select week(tr_eff_date) as 'myweek', date_add(tr_eff_date, interval (8 - dayofweek(tr_eff_date)) % 7 day) as 'sun' from tran_mstr where tr_eff_date >= "
-                            + "'" + mydate + "'" + " group by week(tr_eff_date) ;");
+                            + "'" + mydate + "'" + " group by week(tr_eff_date), tr_eff_date ;");
                 }
                 while (res.next()) {
                     myarray.add(res.getString("myweek") + " = " + res.getString("sun"));

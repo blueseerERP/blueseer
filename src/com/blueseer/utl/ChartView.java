@@ -28,6 +28,7 @@ package com.blueseer.utl;
 
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.db;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -60,8 +61,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import static javax.swing.text.StyleConstants.Orientation;
-import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.driver;
+import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
@@ -243,7 +244,12 @@ public class ChartView extends javax.swing.JPanel {
     public void piechart_expensebyaccount() {
          try {
          cleanUpOldChartFile();
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -298,7 +304,12 @@ public class ChartView extends javax.swing.JPanel {
     public void piechart_incomebyaccountcc() {
          try {
          cleanUpOldChartFile();
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -353,7 +364,12 @@ public class ChartView extends javax.swing.JPanel {
     public void piechart_profitandloss() {
          try {
          cleanUpOldChartFile();
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -414,7 +430,12 @@ public class ChartView extends javax.swing.JPanel {
     public void ShipPerWeekDollarsChart() {
         try {
                 cleanUpOldChartFile();
-                Connection con = DriverManager.getConnection(url + db, user, pass);
+                Connection con = null;
+                if (ds != null) {
+                  con = ds.getConnection();
+                } else {
+                  con = DriverManager.getConnection(url + db, user, pass);  
+                }
                 Statement st = con.createStatement();
                 ResultSet res = null;
                 int qty = 0;
@@ -437,7 +458,7 @@ public class ChartView extends javax.swing.JPanel {
                     } else {
                     res = st.executeQuery(" select c.myweek as 'myweek', sum(shd_qty * shd_netprice) as 'sum' from ( select boo.mydate, week(mydate) as 'myweek' " +
                         " from (select date_add( " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
-                        ", interval mock_nbr day) as 'mydate' " +" from mock_mstr where mock_nbr <= " + "'" + days + "'" + " ) as boo group by myweek) as c " +
+                        ", interval mock_nbr day) as 'mydate' " +" from mock_mstr where mock_nbr <= " + "'" + days + "'" + " ) as boo group by myweek, boo.mydate) as c " +
                         " left outer join ship_det on week(shd_date) = c.myweek " +
                         " and shd_date >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
                         " and shd_date <= " + "'" + dfdate.format(dcTo.getDate()) + "'" +
@@ -515,7 +536,12 @@ public class ChartView extends javax.swing.JPanel {
     public void ShipPerWeekUnitsChart() {
         try {
                 cleanUpOldChartFile();
-                Connection con = DriverManager.getConnection(url + db, user, pass);
+                Connection con = null;
+                if (ds != null) {
+                  con = ds.getConnection();
+                } else {
+                  con = DriverManager.getConnection(url + db, user, pass);  
+                }
                 Statement st = con.createStatement();
                 ResultSet res = null;
                 int qty = 0;
@@ -537,7 +563,7 @@ public class ChartView extends javax.swing.JPanel {
                     } else {
                      res = st.executeQuery(" select c.myweek as 'myweek', sum(shd_qty) as 'sum' from ( select boo.mydate, week(mydate) as 'myweek' " +
                         " from (select date_add( " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
-                        ", interval mock_nbr day) as 'mydate' " +" from mock_mstr where mock_nbr <= " + "'" + days + "'" + " ) as boo group by myweek) as c " +
+                        ", interval mock_nbr day) as 'mydate' " +" from mock_mstr where mock_nbr <= " + "'" + days + "'" + " ) as boo group by myweek, boo.mydate) as c " +
                          " left outer join ship_det on week(shd_date) = c.myweek " +
                          " and shd_date >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
                          " and shd_date <= " + "'" + dfdate.format(dcTo.getDate()) + "'" +
@@ -592,7 +618,12 @@ public class ChartView extends javax.swing.JPanel {
     public void ProdByWeekFGUnits() {
     try {
            cleanUpOldChartFile();
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
                 ResultSet res = null;
             int qty = 0;
@@ -614,7 +645,7 @@ public class ChartView extends javax.swing.JPanel {
                   res = st.executeQuery(" select c.d as 't', sum(tr_qty) as 'sum' from ( select boo.mydate, week(mydate) as 'd' " +
                     " from (select date_add( " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
                     ", interval mock_nbr day) as 'mydate' " +
-                    " from mock_mstr where mock_nbr <= " + "'" + days + "'" + " ) as boo group by d) as c " +
+                    " from mock_mstr where mock_nbr <= " + "'" + days + "'" + " ) as boo group by d, boo.mydate) as c " +
                     " left outer join tran_mstr on week(tr_eff_date) = c.d and tr_type = 'RCT-FG' " +
                     " and tr_eff_date >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
                     " and tr_eff_date <= " + "'" + dfdate.format(dcTo.getDate()) + "'" +        
@@ -668,7 +699,12 @@ public class ChartView extends javax.swing.JPanel {
     try {
 
             cleanUpOldChartFile();
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
                 ResultSet res = null;
             int qty = 0;
@@ -694,7 +730,7 @@ public class ChartView extends javax.swing.JPanel {
                  res = st.executeQuery(" select c.d as 't', sum(tr_qty * itr_total) as 'sum' from ( select boo.mydate, week(mydate) as 'd' " +
                     " from (select date_add( " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
                     ", interval mock_nbr day) as 'mydate' " + 
-                    " from mock_mstr where mock_nbr <= " + "'" + days + "'" + " ) as boo group by d) as c " +
+                    " from mock_mstr where mock_nbr <= " + "'" + days + "'" + " ) as boo group by d, boo.mydate) as c " +
                                      " left outer join tran_mstr on week(tr_eff_date) = c.d and tr_type = 'RCT-FG' " +
                                      " and tr_eff_date >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
                                      " and tr_eff_date <= " + "'" + dfdate.format(dcTo.getDate()) + "'" +
@@ -748,7 +784,12 @@ public class ChartView extends javax.swing.JPanel {
     try {
 
            cleanUpOldChartFile();
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
                 ResultSet res = null;
             int qty = 0;
@@ -774,7 +815,7 @@ public class ChartView extends javax.swing.JPanel {
                 } else {
                     res = st.executeQuery(" select c.d as 't', sum(sod_ord_qty) as 'sum' from ( select boo.mydate, week(mydate) as 'd' " +
                     " from (select date_add( " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
-                    ", interval mock_nbr day) as 'mydate' " +" from mock_mstr where mock_nbr <= " + "'" + days + "'" + " ) as boo group by d) as c " +
+                    ", interval mock_nbr day) as 'mydate' " +" from mock_mstr where mock_nbr <= " + "'" + days + "'" + " ) as boo group by d, boo.mydate) as c " +
                                      " left outer join sod_det on week(sod_due_date) = c.d  " +
                                      " and sod_due_date >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
                                      " and sod_due_date <= " + "'" + dfdate.format(dcTo.getDate()) + "'" +
@@ -824,7 +865,12 @@ public class ChartView extends javax.swing.JPanel {
     try {
 
           cleanUpOldChartFile();
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
                 ResultSet res = null;
             int qty = 0;
@@ -847,7 +893,7 @@ public class ChartView extends javax.swing.JPanel {
                 } else {
                 res = st.executeQuery(" select c.d as 't', sum(sod_ord_qty * sod_netprice) as 'sum' from ( select boo.mydate, week(mydate) as 'd' " +
                     " from (select date_add( " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
-                    ", interval mock_nbr day) as 'mydate' " +" from mock_mstr where mock_nbr <= " + "'" + days + "'" + " ) as boo group by d) as c " +
+                    ", interval mock_nbr day) as 'mydate' " +" from mock_mstr where mock_nbr <= " + "'" + days + "'" + " ) as boo group by d, boo.mydate) as c " +
                      " left outer join sod_det on week(sod_due_date) = c.d  " +
                      " and sod_due_date >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
                      " and sod_due_date <= " + "'" + dfdate.format(dcTo.getDate()) + "'" +
@@ -897,7 +943,12 @@ public class ChartView extends javax.swing.JPanel {
     public void pcOpenOrdersByCust() {
      try {
      cleanUpOldChartFile();
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
         Statement st = con.createStatement();
             ResultSet res = null;
 
@@ -956,7 +1007,12 @@ public class ChartView extends javax.swing.JPanel {
 
      try {
      cleanUpOldChartFile();
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
         Statement st = con.createStatement();
             ResultSet res = null;
 
@@ -1016,7 +1072,12 @@ public class ChartView extends javax.swing.JPanel {
 
 
       cleanUpOldChartFile();
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
         Statement st = con.createStatement();
             ResultSet res = null;
 
@@ -1076,7 +1137,12 @@ public class ChartView extends javax.swing.JPanel {
     public void ClockChartByDept() {
     try {
         cleanUpOldChartFile();
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
                 ResultSet res = null;
 
@@ -1134,7 +1200,12 @@ public class ChartView extends javax.swing.JPanel {
     public void ClockChartByCode() {
     try {
         cleanUpOldChartFile();
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
                 ResultSet res = null;
 
@@ -1189,7 +1260,12 @@ public class ChartView extends javax.swing.JPanel {
     public void ClockChartByEmp() {
     try { 
         cleanUpOldChartFile();
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
                 ResultSet res = null;
 
@@ -1244,7 +1320,12 @@ public class ChartView extends javax.swing.JPanel {
     public void HoursPerWeek() {
     try {
         cleanUpOldChartFile();
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
                 ResultSet res = null;
             int qty = 0;
@@ -1267,7 +1348,7 @@ public class ChartView extends javax.swing.JPanel {
                 } else {
                    res = st.executeQuery(" select c.d as 't', sum(tothrs) as 'sum' from ( select boo.mydate, week(mydate) as 'd' " +
                     " from (select date_add( " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
-                    ", interval mock_nbr day) as 'mydate' " +" from mock_mstr where mock_nbr <= " + "'" + days + "'" + " ) as boo group by d) as c " +
+                    ", interval mock_nbr day) as 'mydate' " +" from mock_mstr where mock_nbr <= " + "'" + days + "'" + " ) as boo group by d, boo.mydate) as c " +
                                      " left outer join time_clock on week(indate) = c.d  " +
                                      " and indate >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
                                      " and indate <= " + "'" + dfdate.format(dcTo.getDate()) + "'" +
@@ -1320,7 +1401,12 @@ public class ChartView extends javax.swing.JPanel {
     public void ReqDollarsByAcct() {
       try {
       cleanUpOldChartFile();
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
         Statement st = con.createStatement();
             ResultSet res = null;
 
@@ -1379,7 +1465,12 @@ public class ChartView extends javax.swing.JPanel {
       try {
     cleanUpOldChartFile();
         Class.forName(driver).newInstance();
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
         Statement st = con.createStatement();
             ResultSet res = null;
 
@@ -1438,7 +1529,12 @@ public class ChartView extends javax.swing.JPanel {
       try {
         cleanUpOldChartFile();
         Class.forName(driver).newInstance();
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
         Statement st = con.createStatement();
             ResultSet res = null;
         try {
@@ -1496,7 +1592,12 @@ public class ChartView extends javax.swing.JPanel {
     public void ScrapPerWeek() {
     try { 
             cleanUpOldChartFile();
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
                 ResultSet res = null;
             int qty = 0;
@@ -1516,7 +1617,7 @@ public class ChartView extends javax.swing.JPanel {
                  } else {
                 res = st.executeQuery(" select c.d as 't', sum(tr_qty * tr_cost) as 'sum' from ( select boo.mydate, week(mydate) as 'd' " +
                     " from (select date_add( " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
-                    ", interval mock_nbr day) as 'mydate' " +" from mock_mstr where mock_nbr <= " + "'" + days + "'" + " ) as boo group by d) as c " +
+                    ", interval mock_nbr day) as 'mydate' " +" from mock_mstr where mock_nbr <= " + "'" + days + "'" + " ) as boo group by d, boo.mydate) as c " +
                                      " left outer join tran_mstr on week(tr_eff_date) = c.d and tr_type = 'ISS-SCRAP' " +
                                      //" where mock_nbr <= 10 " +
                                      " group by c.d;");
@@ -1564,7 +1665,12 @@ public class ChartView extends javax.swing.JPanel {
     public void CodesAccumQty() {
     try {
             cleanUpOldChartFile();
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
                 ResultSet res = null;
 
@@ -1622,7 +1728,12 @@ public class ChartView extends javax.swing.JPanel {
     try {
 
             cleanUpOldChartFile();
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
                 ResultSet res = null;
 
@@ -1681,7 +1792,12 @@ public class ChartView extends javax.swing.JPanel {
     try {
 
             cleanUpOldChartFile();
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
                 ResultSet res = null;
 
@@ -1738,7 +1854,12 @@ public class ChartView extends javax.swing.JPanel {
     try {
 
             cleanUpOldChartFile();
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
                 ResultSet res = null;
             int qty = 0;
@@ -1797,7 +1918,12 @@ public class ChartView extends javax.swing.JPanel {
     try {
 
             cleanUpOldChartFile();
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
                 ResultSet res = null;
             int qty = 0;
@@ -1856,7 +1982,12 @@ public class ChartView extends javax.swing.JPanel {
     try {
 
             cleanUpOldChartFile();
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
                 ResultSet res = null;
             int qty = 0;
@@ -1915,7 +2046,12 @@ public class ChartView extends javax.swing.JPanel {
     try {
 
           cleanUpOldChartFile();
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
                 ResultSet res = null;
             try {
