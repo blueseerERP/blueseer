@@ -29,6 +29,7 @@ import bsmf.MainFrame;
 import static bsmf.MainFrame.bslog;
 import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.defaultDecimalSeparator;
+import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.pass;
 import com.blueseer.utl.BlueSeerUtils;
 import com.blueseer.utl.OVData;
@@ -988,7 +989,12 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         if (proceed) {
         try {
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             try {
                         st.executeUpdate("delete from sod_det where sod_nbr = " + "'" + tbkey.getText() + "'" + ";");   
@@ -1503,7 +1509,12 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
             
         try {
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -1615,7 +1626,12 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         modelsched.setNumRows(0);
         
         try {
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -1651,7 +1667,12 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
      
     public void getItemInfo(String part) {
         try {
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -3372,7 +3393,12 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
               enableShipAddress();
               } else {
                     try {
-                        Connection con = DriverManager.getConnection(url + db, user, pass);
+                        Connection con = null;
+                        if (ds != null) {
+                          con = ds.getConnection();
+                        } else {
+                          con = DriverManager.getConnection(url + db, user, pass);  
+                        }
                         Statement st = con.createStatement();
                         ResultSet res = null;
                         try {

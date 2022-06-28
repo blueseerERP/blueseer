@@ -69,7 +69,12 @@ public class ordData {
         PreparedStatement ps = null;
         ResultSet res = null;
         try { 
-            con = DriverManager.getConnection(url + db, user, pass);
+            
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             int rows = _addOrderMstr(x, con, ps, res);  
             if (rows > 0) {
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
@@ -151,7 +156,11 @@ public class ordData {
         PreparedStatement ps = null;
         ResultSet res = null;
         try { 
-            bscon = DriverManager.getConnection(url + db, user, pass);
+            if (ds != null) {
+              bscon = ds.getConnection();
+            } else {
+              bscon = DriverManager.getConnection(url + db, user, pass);  
+            }
             bscon.setAutoCommit(false);
             _addOrderMstr(so, bscon, ps, res);  
             for (sod_det z : sod) {
@@ -218,7 +227,11 @@ public class ordData {
         PreparedStatement ps = null;
         ResultSet res = null;
         try { 
-            con = DriverManager.getConnection(url + db, user, pass);
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             int rows = _updateOrderMstr(x, con, ps);  // add cms_det
             if (rows > 0) {
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
@@ -366,7 +379,11 @@ public class ordData {
         PreparedStatement ps = null;
         ResultSet res = null;
         try { 
-            bscon = DriverManager.getConnection(url + db, user, pass);
+            if (ds != null) {
+              bscon = ds.getConnection();
+            } else {
+              bscon = DriverManager.getConnection(url + db, user, pass);  
+            }
             bscon.setAutoCommit(false);
             for (String line : lines) {
                _deleteOrderLines(x, line, bscon, ps);  // discard unwanted lines
@@ -435,7 +452,11 @@ public class ordData {
         }
         Connection con = null;
         try { 
-            con = DriverManager.getConnection(url + db, user, pass);
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             _deleteOrderMstr(x, con);  // add cms_det
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
         } catch (SQLException s) {
@@ -462,7 +483,11 @@ public class ordData {
         PreparedStatement ps = null;
         ResultSet res = null;
         try { 
-            con = DriverManager.getConnection(url + db, user, pass);
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
              for (String line : lines) {
                _deleteOrderLines(x, line, con, ps);  // add cms_det
              }
@@ -566,7 +591,11 @@ public class ordData {
         PreparedStatement ps = null;
         ResultSet res = null;
         try { 
-            bscon = DriverManager.getConnection(url + db, user, pass);
+            if (ds != null) {
+              bscon = ds.getConnection();
+            } else {
+              bscon = DriverManager.getConnection(url + db, user, pass);  
+            }
             
             // order master
             so_mstr so = _getOrderMstr(x, bscon, ps, res);
@@ -974,7 +1003,11 @@ public class ordData {
         PreparedStatement ps = null;
         ResultSet res = null;
         try { 
-            con = DriverManager.getConnection(url + db, user, pass);
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             int rows = _addServiceOrderMstr(x, con, ps, res);  
             if (rows > 0) {
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
@@ -1121,7 +1154,11 @@ public class ordData {
         PreparedStatement ps = null;
         ResultSet res = null;
         try { 
-            con = DriverManager.getConnection(url + db, user, pass);
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             int rows = _updateServiceOrderMstr(x, con, ps);  // add cms_det
             if (rows > 0) {
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
@@ -1230,7 +1267,11 @@ public class ordData {
         PreparedStatement ps = null;
         ResultSet res = null;
         try { 
-            bscon = DriverManager.getConnection(url + db, user, pass);
+            if (ds != null) {
+              bscon = ds.getConnection();
+            } else {
+              bscon = DriverManager.getConnection(url + db, user, pass);  
+            }
             bscon.setAutoCommit(false);
             for (String line : lines) {
                _deleteServiceOrderLines(x, line, bscon, ps);  // discard unwanted lines
@@ -1288,7 +1329,11 @@ public class ordData {
         PreparedStatement ps = null;
         ResultSet res = null;
         try { 
-            con = DriverManager.getConnection(url + db, user, pass);
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             int rows = _addPOSMstr(x, con, ps, res);  
             if (rows > 0) {
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
@@ -1359,7 +1404,11 @@ public class ordData {
         PreparedStatement ps = null;
         ResultSet res = null;
         try { 
-            bscon = DriverManager.getConnection(url + db, user, pass);
+            if (ds != null) {
+              bscon = ds.getConnection();
+            } else {
+              bscon = DriverManager.getConnection(url + db, user, pass);  
+            }
             bscon.setAutoCommit(false);
             _addPOSMstr(pos, bscon, ps, res);  
             for (pos_det z : posd) {
@@ -1437,7 +1486,7 @@ public class ordData {
                         + " values (?,?,?,?,?,?,?); "; 
         String sqlUpdate = "update order_ctrl set orc_autosource = ?, orc_autoinvoice = ?, orc_autoallocate = ?, orc_custitem = ?, " +
                             " orc_srvm_type = ?, orc_srvm_item_default = ?, orc_exceedqohu = ? ";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
              PreparedStatement ps = con.prepareStatement(sqlSelect);) {
           try (ResultSet res = ps.executeQuery();
                PreparedStatement psi = con.prepareStatement(sqlInsert);
