@@ -38,6 +38,7 @@ import java.util.Calendar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import static bsmf.MainFrame.driver;
+import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.mydialog;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
@@ -164,7 +165,12 @@ public class GLCalMaint extends javax.swing.JPanel {
     
     public void getcal(String year, String per) {
          try {
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -391,7 +397,12 @@ public class GLCalMaint extends javax.swing.JPanel {
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
         try {
             DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -449,7 +460,12 @@ public class GLCalMaint extends javax.swing.JPanel {
     private void bteditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bteditActionPerformed
         try {
             DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {

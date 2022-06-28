@@ -62,6 +62,7 @@ import javax.swing.JTable;
 import javax.swing.UIManager;
 import javax.swing.table.TableCellRenderer;
 import static bsmf.MainFrame.driver;
+import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.mydialog;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
@@ -273,7 +274,12 @@ public class PayRollMaint extends javax.swing.JPanel {
           try {
         java.util.Date now = new java.util.Date();
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-           Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -422,7 +428,12 @@ public class PayRollMaint extends javax.swing.JPanel {
      public void updateClockRecords(String empnbr, String fromdate, String todate, String checknbr) {
           try {
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -460,7 +471,12 @@ public class PayRollMaint extends javax.swing.JPanel {
         
         try {
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -533,7 +549,12 @@ public class PayRollMaint extends javax.swing.JPanel {
         
         try {
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -626,7 +647,12 @@ public class PayRollMaint extends javax.swing.JPanel {
         
         try {
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -691,7 +717,12 @@ public class PayRollMaint extends javax.swing.JPanel {
     public boolean getPaymentBatch(String batch) {
         boolean myreturn = true;
          try{
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -755,7 +786,12 @@ public class PayRollMaint extends javax.swing.JPanel {
      public boolean processNACHAFile(String batch) throws MalformedURLException, SmbException, IOException {
         boolean myreturn = true;
          try{
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -1607,7 +1643,12 @@ public class PayRollMaint extends javax.swing.JPanel {
          
          mymodel.setRowCount(0);
          try{
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             Statement st2 = con.createStatement();

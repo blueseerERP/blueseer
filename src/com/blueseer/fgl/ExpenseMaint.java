@@ -29,6 +29,7 @@ import bsmf.MainFrame;
 import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.defaultDecimalSeparator;
 import static bsmf.MainFrame.dfdate;
+import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
@@ -509,7 +510,12 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeerT {
        
         try {
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -659,7 +665,12 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeerT {
         
         try {
      
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;int i = 0;
             int d = 0;
@@ -1130,7 +1141,12 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeerT {
         try {
             
         
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -1232,7 +1248,12 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeerT {
     private void ddprofileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddprofileActionPerformed
          if (ddprofile.getSelectedItem() != null && ! ddprofile.getSelectedItem().toString().isEmpty() && ! isLoad )
         try {
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             String values = "";

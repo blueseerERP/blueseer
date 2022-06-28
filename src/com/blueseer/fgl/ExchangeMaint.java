@@ -29,6 +29,7 @@ package com.blueseer.fgl;
 import bsmf.MainFrame;
 import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.defaultDecimalSeparator;
+import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.pass;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.reinitpanels;
@@ -78,7 +79,12 @@ public class ExchangeMaint extends javax.swing.JPanel {
         
         try {
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -334,7 +340,12 @@ public class ExchangeMaint extends javax.swing.JPanel {
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
        try {
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+           Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -394,7 +405,12 @@ public class ExchangeMaint extends javax.swing.JPanel {
        try {
             boolean proceed = true;
             int i = 0;
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -449,7 +465,12 @@ public class ExchangeMaint extends javax.swing.JPanel {
     private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
           try {
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             try {
                 

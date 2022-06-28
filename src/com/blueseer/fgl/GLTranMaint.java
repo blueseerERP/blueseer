@@ -46,6 +46,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import static bsmf.MainFrame.defaultDecimalSeparator;
 import static bsmf.MainFrame.driver;
+import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.mydialog;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
@@ -272,7 +273,12 @@ public class GLTranMaint extends javax.swing.JPanel {
     
     public void getGLTran(String refid) {
         try {
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -917,7 +923,12 @@ public class GLTranMaint extends javax.swing.JPanel {
         try {
             
             DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -1061,7 +1072,12 @@ public class GLTranMaint extends javax.swing.JPanel {
         if (proceed) {
         try {
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             try {
               
@@ -1177,7 +1193,12 @@ public class GLTranMaint extends javax.swing.JPanel {
         try {
             
         
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -1207,7 +1228,12 @@ public class GLTranMaint extends javax.swing.JPanel {
         try {
             
         
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {

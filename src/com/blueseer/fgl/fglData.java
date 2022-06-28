@@ -29,6 +29,7 @@ import bsmf.MainFrame;
 import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.dbtype;
 import static bsmf.MainFrame.defaultDecimalSeparator;
+import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
@@ -68,7 +69,7 @@ public class fglData {
         String sqlSelect = "select * from ac_mstr where ac_id = ?";
         String sqlInsert = "insert into ac_mstr (ac_id, ac_desc, ac_type, ac_cur, ac_display)  " +
                 " values (?,?,?,?,?); "; 
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
              PreparedStatement ps = con.prepareStatement(sqlSelect);) {
              ps.setString(1, x.id);
           try (ResultSet res = ps.executeQuery();
@@ -97,7 +98,7 @@ public class fglData {
         String[] m = new String[2];
         String sql = "update ac_mstr set ac_desc = ?, ac_type = ?, ac_cur = ?, " +
                 " ac_display = ? where ac_id = ? ";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql)) {
         ps.setString(1, x.desc);
         ps.setString(2, x.type);
@@ -116,7 +117,7 @@ public class fglData {
     public static String[] deleteAcctMstr(AcctMstr x) { 
        String[] m = new String[2];
         String sql = "delete from ac_mstr where ac_id = ?; ";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql)) {
         ps.setString(1, x.id);
         int rows = ps.executeUpdate();
@@ -132,7 +133,7 @@ public class fglData {
         AcctMstr r = null;
         String[] m = new String[2];
         String sql = "select * from ac_mstr where ac_id = ? ;";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, x[0]);
              try (ResultSet res = ps.executeQuery();) {
@@ -165,7 +166,7 @@ public class fglData {
         String sqlInsert = "insert into bk_mstr (bk_id, bk_site, bk_desc, bk_acct, bk_cur, " +
                 " bk_active, bk_route, bk_assignedID)  " +
                 " values (?,?,?,?,?,?,?,?); "; 
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
              PreparedStatement ps = con.prepareStatement(sqlSelect);) {
              ps.setString(1, x.id);
           try (ResultSet res = ps.executeQuery();
@@ -196,7 +197,7 @@ public class fglData {
       String[] m = new String[2];
         String sql = "update bk_mstr set bk_site = ?, bk_desc = ?, bk_acct = ?, bk_cur = ?, " +
                 " bk_active = ?, bk_route = ?, bk_assignedID = ? where bk_id = ? ";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, x.site);
             ps.setString(2, x.desc);
@@ -218,7 +219,7 @@ public class fglData {
     public static String[] deleteBankMstr(BankMstr x) {
      String[] m = new String[2];
         String sql = "delete from bk_mstr where bk_id = ?; ";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql)) {
         ps.setString(1, x.id);
         int rows = ps.executeUpdate();
@@ -234,7 +235,7 @@ public class fglData {
         BankMstr r = null;
         String[] m = new String[2];
         String sql = "select * from bk_mstr where bk_id = ? ;";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, x[0]);
              try (ResultSet res = ps.executeQuery();) {
@@ -269,7 +270,7 @@ public class fglData {
         String sqlSelect = "select * from cur_mstr where cur_id = ?";
         String sqlInsert = "insert into cur_mstr (cur_id, cur_desc)  " +
                 " values (?,?); "; 
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
              PreparedStatement ps = con.prepareStatement(sqlSelect);) {
              ps.setString(1, x.id);
           try (ResultSet res = ps.executeQuery();
@@ -294,7 +295,7 @@ public class fglData {
         String[] m = new String[2];
         String sql = "update cur_mstr set cur_desc = ? " +
                 " where cur_id = ? ";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql)) {
         ps.setString(1, x.desc);
         ps.setString(2, x.id);
@@ -310,7 +311,7 @@ public class fglData {
     public static String[] deleteCurrMstr(CurrMstr x) { 
        String[] m = new String[2];
         String sql = "delete from cur_mstr where cur_id = ?; ";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql)) {
         ps.setString(1, x.id);
         int rows = ps.executeUpdate();
@@ -326,7 +327,7 @@ public class fglData {
         CurrMstr r = null;
         String[] m = new String[2];
         String sql = "select * from cur_mstr where cur_id = ? ;";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, x[0]);
              try (ResultSet res = ps.executeQuery();) {
@@ -358,7 +359,7 @@ public class fglData {
                 + " dept_bdn_acct, dept_lbr_usg_acct, dept_lbr_rate_acct, dept_bdn_usg_acct, dept_bdn_rate_acct  )  " +
                 " values (?,?,?,?,?,?,?,?,?); "; 
       
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
              PreparedStatement ps = con.prepareStatement(sqlSelect);) {
              ps.setString(1, x.dept_id);
           try (ResultSet res = ps.executeQuery();
@@ -391,7 +392,7 @@ public class fglData {
         String sql = "update dept_mstr set dept_desc = ?, dept_cop_acct = ?, dept_lbr_acct = ?, "
                 + " dept_bdn_acct = ?, dept_lbr_usg_acct= ?, dept_lbr_rate_acct = ?, dept_bdn_usg_acct = ?, dept_bdn_rate_acct = ? " +
                 " where dept_id = ? ";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql)) {
         ps.setString(1, x.dept_desc);
         ps.setString(2, x.dept_cop_acct);
@@ -414,7 +415,7 @@ public class fglData {
     public static String[] deleteDeptMstr(dept_mstr x) { 
        String[] m = new String[2];
         String sql = "delete from dept_mstr where dept_id = ?; ";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql)) {
         ps.setString(1, x.dept_id);
         int rows = ps.executeUpdate();
@@ -430,7 +431,7 @@ public class fglData {
         dept_mstr r = null;
         String[] m = new String[2];
         String sql = "select * from dept_mstr where dept_id = ? ;";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, x[0]);
              try (ResultSet res = ps.executeQuery();) {
@@ -472,7 +473,7 @@ public class fglData {
                         + " values (?,?,?,?,?,?,?); "; 
         String sqlUpdate = "update gl_ctrl set gl_bs_from = ?, gl_bs_to = ?, gl_is_from = ?, " +
         "gl_is_to = ?, gl_earnings = ?, gl_foreignreal = ?, gl_autopost = ? ";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
              PreparedStatement ps = con.prepareStatement(sqlSelect);) {
           try (ResultSet res = ps.executeQuery();
                PreparedStatement psi = con.prepareStatement(sqlInsert);
@@ -513,7 +514,7 @@ public class fglData {
         gl_ctrl r = null;
         String[] m = new String[2];
         String sql = "select * from gl_ctrl;";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
              try (ResultSet res = ps.executeQuery();) {
                 if (! res.isBeforeFirst()) {
@@ -554,7 +555,7 @@ public class fglData {
         String sqlUpdate = "update pay_ctrl set payc_bank = ?, payc_labor_acct = ?, payc_labor_cc = ?, " +
         " payc_salaried_acct = ?,  payc_salaried_cc = ?,  payc_payrolltax_acct = ?,  payc_payrolltax_cc = ?, " +
         "payc_withhold_acct = ? ; ";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
              PreparedStatement ps = con.prepareStatement(sqlSelect);) {
           try (ResultSet res = ps.executeQuery();
                PreparedStatement psi = con.prepareStatement(sqlInsert);
@@ -597,7 +598,7 @@ public class fglData {
         pay_ctrl r = null;
         String[] m = new String[2];
         String sql = "select * from pay_ctrl;";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
              try (ResultSet res = ps.executeQuery();) {
                 if (! res.isBeforeFirst()) {
@@ -675,7 +676,12 @@ public class fglData {
        if ( amt != 0 ) {   
        try {
              
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             String sqlInsert = "insert into gl_tran "
                             + "( glt_acct, glt_cc, glt_effdate, glt_amt, glt_base_amt, glt_curr, glt_base_curr, glt_ref, glt_site, glt_type, glt_desc ) " +
                               " values (?,?,?,?,?,?,?,?,?,?,?) ";   
@@ -794,7 +800,12 @@ public class fglData {
                 boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
         try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             try{
                 Statement st = con.createStatement();
                 Statement st2 = con.createStatement();
@@ -930,7 +941,12 @@ public class fglData {
                 boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
         try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -1078,7 +1094,12 @@ public class fglData {
                 boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
         try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -1208,7 +1229,12 @@ public class fglData {
                 boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
         try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -1378,7 +1404,12 @@ public class fglData {
                 boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
         try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -1461,7 +1492,12 @@ public class fglData {
                 boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
         try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             try{
                 Statement st = con.createStatement();
                 Statement st2 = con.createStatement();
@@ -1795,7 +1831,12 @@ public class fglData {
               boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
         try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             Statement st2 = con.createStatement();
             ResultSet res = null;
@@ -2233,7 +2274,12 @@ public class fglData {
               boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
         try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             try{
                 Statement st = con.createStatement();
                 Statement st2 = con.createStatement();
@@ -2561,12 +2607,18 @@ public class fglData {
         return myerror;
         
          }
-         
+     
+    
     public static ArrayList getCurrlist() {
         ArrayList myarray = new ArrayList();
         try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2599,7 +2651,12 @@ public class fglData {
         ArrayList myarray = new ArrayList();
         try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2633,7 +2690,12 @@ public class fglData {
        ArrayList myarray = new ArrayList();
         try{
            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2664,7 +2726,12 @@ public class fglData {
        ArrayList myarray = new ArrayList();
         try{
            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2695,7 +2762,12 @@ public class fglData {
    ArrayList myarray = new ArrayList();
     try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2726,7 +2798,12 @@ public class fglData {
    ArrayList myarray = new ArrayList();
     try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2758,7 +2835,12 @@ public class fglData {
    ArrayList myarray = new ArrayList();
     try{
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2790,7 +2872,12 @@ public class fglData {
    ArrayList myarray = new ArrayList();
     try{
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2823,7 +2910,12 @@ public class fglData {
 
     try{
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2863,7 +2955,12 @@ public class fglData {
   String myreturn = "";
     try{
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2894,7 +2991,12 @@ public class fglData {
   String myreturn = "";
     try{
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2925,7 +3027,12 @@ public class fglData {
   ArrayList myarray = new ArrayList();
     try{
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2963,7 +3070,12 @@ public class fglData {
 
     try{
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -3008,7 +3120,12 @@ public class fglData {
   ArrayList myarray = new ArrayList();
     try{
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -3049,7 +3166,12 @@ public class fglData {
   ArrayList myarray = new ArrayList();
     try{
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -3087,7 +3209,12 @@ public class fglData {
       ArrayList myarray = new ArrayList();
         try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -3124,7 +3251,12 @@ public class fglData {
       String account = "";
         try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -3158,7 +3290,12 @@ public class fglData {
       String account = "";
         try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -3192,7 +3329,12 @@ public class fglData {
       String account = "";
         try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -3226,7 +3368,12 @@ public class fglData {
       String account = "";
         try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -3258,7 +3405,12 @@ public class fglData {
        double amt = 0.00;
         try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -3299,7 +3451,12 @@ public class fglData {
    double amt = 0.00;
     try{
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -3346,7 +3503,12 @@ public class fglData {
 
     try{
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -3419,7 +3581,12 @@ public class fglData {
    double amt = 0.00;
     try{
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -3459,7 +3626,12 @@ public class fglData {
          DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
          try {
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -3491,7 +3663,12 @@ public class fglData {
          DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
          try {
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -3523,7 +3700,12 @@ public class fglData {
 
     try{
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -3554,7 +3736,12 @@ public class fglData {
 
     try{
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -3584,7 +3771,12 @@ public class fglData {
 
     try{
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -3615,7 +3807,12 @@ public class fglData {
 
     try{
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -3646,7 +3843,12 @@ public class fglData {
 
     try{
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -3678,7 +3880,12 @@ public class fglData {
 
            try{
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -3715,7 +3922,12 @@ public class fglData {
 
            try{
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -3759,7 +3971,12 @@ public class fglData {
 
 
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -3888,7 +4105,12 @@ public class fglData {
 
 
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -4020,7 +4242,12 @@ public class fglData {
 
 
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -4125,7 +4352,12 @@ public class fglData {
 
 
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -4245,7 +4477,12 @@ public class fglData {
        String[] myarray = new String[5];
     try {
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -4316,7 +4553,12 @@ return myarray;
 
     try {
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -4391,7 +4633,12 @@ return myarray;
            try {
              DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -4475,7 +4722,12 @@ return myarray;
 
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             Statement st2 = con.createStatement();
             Statement st3 = con.createStatement();
@@ -4578,7 +4830,12 @@ return myarray;
     public static void glCopyTranToHist(ArrayList<Integer> trans) {
        try {
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
