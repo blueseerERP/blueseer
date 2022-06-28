@@ -28,6 +28,7 @@ package com.blueseer.rcv;
 import bsmf.MainFrame;
 import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.driver;
+import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
@@ -118,7 +119,12 @@ public class rcvData {
         PreparedStatement ps = null;
         ResultSet res = null;
         try { 
-            bscon = DriverManager.getConnection(url + db, user, pass);
+            
+            if (ds != null) {
+              bscon = ds.getConnection();
+            } else {
+              bscon = DriverManager.getConnection(url + db, user, pass);  
+            }
             bscon.setAutoCommit(false);
             _addRecvMstr(rv, bscon, ps, res);  
             for (recv_det z : rvd) {
@@ -245,7 +251,12 @@ public class rcvData {
         PreparedStatement ps = null;
         ResultSet res = null;
         try { 
-            bscon = DriverManager.getConnection(url + db, user, pass);
+            
+            if (ds != null) {
+              bscon = ds.getConnection();
+            } else {
+              bscon = DriverManager.getConnection(url + db, user, pass);  
+            }
             bscon.setAutoCommit(false);
             for (String line : lines) {
                _deleteReceiverLines(x, line, bscon);  // discard unwanted lines
@@ -307,7 +318,12 @@ public class rcvData {
         PreparedStatement ps = null;
         ResultSet res = null;
         try { 
-            bscon = DriverManager.getConnection(url + db, user, pass);
+            
+            if (ds != null) {
+              bscon = ds.getConnection();
+            } else {
+              bscon = DriverManager.getConnection(url + db, user, pass);  
+            }
             
             recv_mstr rv = _getReceiverMstr(x, bscon, ps, res);
             ArrayList<recv_det> rvd = _getReceiverDet(x, bscon, ps, res);
@@ -399,7 +415,12 @@ public class rcvData {
     public static boolean isReceived(String x) {
            boolean r = false;
          try{
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -436,7 +457,12 @@ public class rcvData {
     public static ArrayList<String> getReceiverLines(String x) {
         ArrayList<String> lines = new ArrayList<String>();
         try{
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         Statement st = con.createStatement();
         ResultSet res = null;
         try{
