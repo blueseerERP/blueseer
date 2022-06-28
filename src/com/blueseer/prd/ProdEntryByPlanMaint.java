@@ -28,6 +28,8 @@ package com.blueseer.prd;
 
 import bsmf.MainFrame;
 import static bsmf.MainFrame.db;
+import static bsmf.MainFrame.ds;
+import static bsmf.MainFrame.pass;
 import com.blueseer.utl.OVData;
 import java.awt.Color;
 import java.awt.print.PrinterException;
@@ -46,7 +48,6 @@ import javax.print.PrintServiceLookup;
 import javax.swing.JTable;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
-import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
@@ -106,7 +107,12 @@ String sitecitystatezip = "";
         if ( service != null) {
          job.setPrintService(service);
          try {
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
            
 
                 HashMap hm = new HashMap();
@@ -455,7 +461,12 @@ String sitecitystatezip = "";
             
             // get necessary info from plan_mstr for this scan and store into mytable(mymodel)
         try{
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
