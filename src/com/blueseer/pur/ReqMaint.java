@@ -28,6 +28,7 @@ package com.blueseer.pur;
 
 import bsmf.MainFrame;
 import static bsmf.MainFrame.db;
+import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
@@ -470,7 +471,12 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
          
          String[] m = new String[2];
          try {
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -643,7 +649,12 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
         boolean proceed = bsmf.MainFrame.warn("Are you sure?");
         if (proceed) {
            try {
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
                 try {
                     st.executeUpdate("delete from req_det where reqd_id = " + "'" + x[0] + "'" + ";"); 
@@ -677,7 +688,12 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
        try {
         java.util.Date now = new java.util.Date();
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-          Connection con = DriverManager.getConnection(url + db, user, pass);
+          Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -763,7 +779,12 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
          reqtask.setRowCount(0);
         
         try {
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -909,7 +930,12 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
         
        int i = 0;
         try{
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -961,7 +987,12 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
         
        int i = 0;
         try{
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -1006,7 +1037,12 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
         
        int i = 0;
         try{
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -1077,7 +1113,12 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
                          sendEmailToRequestor(myid, String.valueOf(mypo));
           
     try {
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         Statement st = con.createStatement();
         ResultSet res = null;
         try {
@@ -1114,7 +1155,12 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
             int mypo = 0;
             int mysequence = Integer.valueOf(thissequence);
             reqtask.setRowCount(0);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null; int i = 0;
             int nextsequence = 0;
@@ -1235,7 +1281,12 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
     
     public void vendChangeEvent(String mykey) {
       try {
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -1874,7 +1925,12 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
     {
        try {
 
-           Connection con = DriverManager.getConnection(url + db, user, pass);
+           Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -1914,7 +1970,12 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
     private void btprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btprintActionPerformed
        
         try {
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             
                 HashMap hm = new HashMap();
                 hm.put("REPORT_TITLE", "SHIPPER");

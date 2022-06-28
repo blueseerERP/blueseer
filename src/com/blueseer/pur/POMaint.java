@@ -28,6 +28,7 @@ package com.blueseer.pur;
 import bsmf.MainFrame;
 import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.defaultDecimalSeparator;
+import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.pass;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
@@ -545,7 +546,12 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
         if (proceed) {
                    try {
 
-                    Connection con = DriverManager.getConnection(url + db, user, pass);
+                    Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -1216,7 +1222,12 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
     public void getparts(String part) {
         try {
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -1371,7 +1382,12 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
         ddcurr.setSelectedIndex(0);
       try {
 
-           Connection con = DriverManager.getConnection(url + db, user, pass);
+           Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {

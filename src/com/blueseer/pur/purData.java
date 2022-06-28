@@ -32,6 +32,7 @@ import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.dbtype;
 import static bsmf.MainFrame.defaultDecimalSeparator;
 import static bsmf.MainFrame.driver;
+import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
@@ -73,7 +74,11 @@ public class purData {
         PreparedStatement ps = null;
         ResultSet res = null;
         try { 
-            con = DriverManager.getConnection(url + db, user, pass);
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             int rows = _addPOMstr(x, con, ps, res);  
             if (rows > 0) {
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
@@ -149,7 +154,11 @@ public class purData {
         PreparedStatement ps = null;
         ResultSet res = null;
         try { 
-            bscon = DriverManager.getConnection(url + db, user, pass);
+            if (ds != null) {
+              bscon = ds.getConnection();
+            } else {
+              bscon = DriverManager.getConnection(url + db, user, pass);  
+            }
             bscon.setAutoCommit(false);
             _addPOMstr(po, bscon, ps, res);  
             _addPOAddr(poa, bscon, ps, res, true);
@@ -202,7 +211,11 @@ public class purData {
         PreparedStatement ps = null;
         ResultSet res = null;
         try { 
-            con = DriverManager.getConnection(url + db, user, pass);
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             int rows = _updatePOMstr(x, con, ps); 
             if (rows > 0) {
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
@@ -322,7 +335,11 @@ public class purData {
         PreparedStatement ps = null;
         ResultSet res = null;
         try { 
-            bscon = DriverManager.getConnection(url + db, user, pass);
+            if (ds != null) {
+              bscon = ds.getConnection();
+            } else {
+              bscon = DriverManager.getConnection(url + db, user, pass);  
+            }
             bscon.setAutoCommit(false);
             for (String line : lines) {
                _deletePOLines(x, line, bscon);  // discard unwanted lines
@@ -381,7 +398,11 @@ public class purData {
         }
         Connection con = null;
         try { 
-            con = DriverManager.getConnection(url + db, user, pass);
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             _deletePOMstr(x, con);  // add po_addr
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
         } catch (SQLException s) {
@@ -406,7 +427,11 @@ public class purData {
         }
         Connection con = null;
         try { 
-            con = DriverManager.getConnection(url + db, user, pass);
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
              for (String line : lines) {
                _deletePOLines(x, line, con);  // add po_addr
              }
@@ -457,7 +482,11 @@ public class purData {
         PreparedStatement ps = null;
         ResultSet res = null;
         try { 
-            bscon = DriverManager.getConnection(url + db, user, pass);
+            if (ds != null) {
+              bscon = ds.getConnection();
+            } else {
+              bscon = DriverManager.getConnection(url + db, user, pass);  
+            }
             
             // order master
             po_mstr po = _getPOMstr(x, bscon, ps, res);
@@ -503,7 +532,7 @@ public class purData {
         po_mstr r = null;
         String[] m = new String[2];
         String sql = "select * from po_mstr where po_nbr = ? ;";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, x[0]);
              try (ResultSet res = ps.executeQuery();) {
@@ -561,7 +590,7 @@ public class purData {
         pod_mstr r = null;
         String[] m = new String[2];
         String sql = "select * from pod_mstr where pod_nbr = ? ;";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, x[0]);
              try (ResultSet res = ps.executeQuery();) {
@@ -650,7 +679,7 @@ public class purData {
         String sqlInsert = "insert into po_ctrl (poc_rcpt_acct, poc_rcpt_cc, poc_venditem) "
                         + " values (?,?,?); "; 
         String sqlUpdate = "update po_ctrl set poc_rcpt_acct = ?, poc_rcpt_cc = ?, poc_venditem = ? ; ";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
              PreparedStatement ps = con.prepareStatement(sqlSelect);) {
           try (ResultSet res = ps.executeQuery();
                PreparedStatement psi = con.prepareStatement(sqlInsert);
@@ -683,7 +712,7 @@ public class purData {
         po_ctrl r = null;
         String[] m = new String[2];
         String sql = "select * from po_ctrl;";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
              try (ResultSet res = ps.executeQuery();) {
                 if (! res.isBeforeFirst()) {
@@ -717,7 +746,11 @@ public class purData {
         PreparedStatement ps = null;
         ResultSet res = null;
         try { 
-            con = DriverManager.getConnection(url + db, user, pass);
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             _addPOAddr(x, con, ps, res, false);  // add po_addr
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
         } catch (SQLException s) {
@@ -811,7 +844,11 @@ public class purData {
         PreparedStatement ps = null;
         ResultSet res = null;
         try { 
-            con = DriverManager.getConnection(url + db, user, pass);
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             _updatePOAddr(x, con, ps);  // add po_addr
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
         } catch (SQLException s) {
@@ -879,7 +916,11 @@ public class purData {
         PreparedStatement ps = null;
         ResultSet res = null;
         try { 
-            con = DriverManager.getConnection(url + db, user, pass);
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             _deletePOAddr(x.poa_code, x.poa_shipto, con, ps, res);  // add po_addr
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
         } catch (SQLException s) {
@@ -924,7 +965,7 @@ public class purData {
         po_addr r = null;
         String[] m = new String[2];
         String sql = "select * from po_addr where poa_shipto = ? and poa_code = ? ;";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, shipto);
         ps.setString(2, code);
@@ -979,7 +1020,7 @@ public class purData {
         String[] m = new String[2];
         ArrayList<po_addr> list = new ArrayList<po_addr>();
         String sql = "select * from po_addr where poa_code = ? ;";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, code);
              try (ResultSet res = ps.executeQuery();) {
@@ -1017,8 +1058,12 @@ public class purData {
         String defaultsite = "";
         ArrayList<String[]> lines = new ArrayList<String[]>();
         try{
-        Class.forName(driver).newInstance();
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
         Statement st = con.createStatement();
         ResultSet res = null;
         try{
@@ -1130,7 +1175,12 @@ public class purData {
          String x = "";
           try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
         Statement st = con.createStatement();
             ResultSet res = null;
         try{
@@ -1159,7 +1209,12 @@ public class purData {
     public static ArrayList<String> getPOLines(String order) {
         ArrayList<String> lines = new ArrayList<String>();
         try{
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
         Statement st = con.createStatement();
             ResultSet res = null;
         try{
@@ -1188,7 +1243,12 @@ public class purData {
     public static String[] getPOMstrHeaderEDI(String order) {
         String[] x = new String[10];
         try{
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
         Statement st = con.createStatement();
         ResultSet res = null;
         try{
@@ -1226,7 +1286,12 @@ public class purData {
     public static ArrayList<String[]> getPOMstrdetailsEDI(String order) {
         ArrayList<String[]> lines = new ArrayList<String[]>();
         try{
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
         Statement st = con.createStatement();
         ResultSet res = null;
         try{
@@ -1273,7 +1338,12 @@ public class purData {
 
         try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
         Statement st = con.createStatement();
         ResultSet res = null;
 
@@ -1388,7 +1458,12 @@ public class purData {
         String postat = "";
         try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
             try {
                 if (status.equals("AC") || status.equals("AD")) {
