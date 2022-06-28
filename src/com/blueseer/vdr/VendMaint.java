@@ -27,6 +27,7 @@ package com.blueseer.vdr;
 
 import bsmf.MainFrame;
 import static bsmf.MainFrame.db;
+import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.pass;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.tags;
@@ -732,7 +733,12 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeerT {
     public void addContact(String vend) {
         try {
 
-           Connection con = DriverManager.getConnection(url + db, user, pass);
+           Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -778,7 +784,12 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeerT {
     public void editContact(String vend, String z) {
         try {
 
-           Connection con = DriverManager.getConnection(url + db, user, pass);
+           Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -822,7 +833,12 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeerT {
     public void deleteContact(String vend, String z) {
         try {
 
-           Connection con = DriverManager.getConnection(url + db, user, pass);
+           Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -863,7 +879,12 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeerT {
       contactmodel.setRowCount(0);
        try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {

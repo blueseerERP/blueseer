@@ -29,6 +29,7 @@ package com.blueseer.vdr;
 import bsmf.MainFrame;
 import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.defaultDecimalSeparator;
+import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
@@ -417,7 +418,12 @@ public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeer {
      
      try {
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -484,7 +490,12 @@ public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeer {
      
      try {
             boolean proceed = true;
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             try {
                    
@@ -526,7 +537,12 @@ public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeer {
         if (proceed) {
         try {
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             try {
               
@@ -563,7 +579,12 @@ public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeer {
        
         try {
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -676,7 +697,12 @@ public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeer {
         initvars(null);
         try {
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -751,7 +777,12 @@ public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeer {
         String pricecode = "";
         try {
 
-           Connection con = DriverManager.getConnection(url + db, user, pass);
+           Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -1023,7 +1054,12 @@ public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeer {
     private void pricelistMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pricelistMouseClicked
         if (! pricelist.isSelectionEmpty())
         try {
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             String[] str = pricelist.getSelectedValue().toString().split(":", -1);
