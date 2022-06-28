@@ -181,7 +181,12 @@ public class OVData {
     public static void updatecounter(String countername, int counterid) {
         try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+                Connection con = null;
+                if (ds != null) {
+                  con = ds.getConnection();
+                } else {
+                  con = DriverManager.getConnection(url + db, user, pass);  
+                }
             Statement st = con.createStatement();
        try {
             st.executeUpdate("update counter c set c.counter_id = " + "'" + counterid + "'" + "where c.counter_name = " + "'" + countername.toString() + "';");
@@ -202,7 +207,12 @@ public class OVData {
     public static boolean isUserDefined(String myuser) {
        boolean r = false;
        try{
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             PreparedStatement ps = null;
             ResultSet res = null;
             try{
@@ -235,7 +245,12 @@ public class OVData {
     public static boolean isAcctNumberValid(String acct) {
        boolean r = false;
        try{
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             PreparedStatement ps = null;
             ResultSet res = null;
             try{
@@ -265,7 +280,12 @@ public class OVData {
     public static boolean isCostCenterValid(String cc) {
        boolean r = false;
        try{
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             PreparedStatement ps = null;
             ResultSet res = null;
             try{
@@ -297,7 +317,12 @@ public class OVData {
       
         try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -327,7 +352,12 @@ public class OVData {
        int nbr = 0;
         try{
            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -369,7 +399,12 @@ public class OVData {
          try {
 
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -429,7 +464,12 @@ public class OVData {
          boolean r = true;
            try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -496,7 +536,12 @@ public class OVData {
             String mystring = "";  // 0 = assigned; 1 = already assigned; 2 = error
          try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -543,7 +588,12 @@ public class OVData {
         String mystring = "";  // 0 = unassigned; 1 = already unassigned; 2 = error
         try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -605,7 +655,12 @@ public class OVData {
         String mystring = "";  // 0 = unassigned; 1 = already unassigned; 2 = error
         try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -660,7 +715,12 @@ public class OVData {
     public static void deleteMenuToAllUsers(String menu) {
         try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -697,7 +757,12 @@ public class OVData {
     public static void addMenuToAllUsers(String menu) {
         try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -752,7 +817,12 @@ public class OVData {
     public static void addMenu(String menu, String desc) {
         try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -793,7 +863,12 @@ public class OVData {
     public static void addItemImage(String item, String file) {
         try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -839,7 +914,12 @@ public class OVData {
     public static void addItemCostRec(String item, String site, String set, Double mtl, Double ovh, Double out, Double tot) {
         try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -896,7 +976,12 @@ public class OVData {
 
     public static void updateItemCostRec(String item, String site, String set, Double mtl, Double ovh, Double out, Double tot) {
         try {
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -931,7 +1016,12 @@ public class OVData {
 
     public static void updateItemCostRec(String item, String site, String set, Double mtl, Double lbr, Double bdn, Double ovh, Double out, Double tot) {
         try {
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -971,7 +1061,12 @@ public class OVData {
         ArrayList myarray = new ArrayList();
         try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -1005,7 +1100,12 @@ public class OVData {
     public static void disablemenu(String child) {
         try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -1036,7 +1136,12 @@ public class OVData {
     public static void enablemenu(String child) {
         try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -1109,7 +1214,12 @@ public class OVData {
 
         try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -1221,7 +1331,12 @@ public class OVData {
         ArrayList myarray = new ArrayList();
         try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -1265,7 +1380,12 @@ public class OVData {
         ArrayList myarray = new ArrayList();
         try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -1309,7 +1429,12 @@ public class OVData {
         ArrayList myarray = new ArrayList();
         try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -1348,7 +1473,12 @@ public class OVData {
         ArrayList myarray = new ArrayList();
         try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -1386,7 +1516,12 @@ public class OVData {
         ArrayList myarray = new ArrayList();
         try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -1424,7 +1559,12 @@ public class OVData {
         ArrayList myarray = new ArrayList();
         try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -1463,7 +1603,12 @@ public class OVData {
         boolean myreturn = false;
         try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -1558,7 +1703,12 @@ public class OVData {
         
         try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
                         
@@ -1651,7 +1801,12 @@ public class OVData {
         boolean myreturn = false;
         try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -1763,7 +1918,12 @@ public class OVData {
         boolean myreturn = false;
         try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -1836,7 +1996,12 @@ public class OVData {
         ArrayList myarray = new ArrayList();
         try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -1871,7 +2036,12 @@ public class OVData {
         ArrayList myarray = new ArrayList();
         try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -1904,8 +2074,12 @@ public class OVData {
     public static ArrayList<String> getScacCarrierOnly() {
         ArrayList<String> myarray = new ArrayList<String>();
         try {
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -1940,7 +2114,12 @@ public class OVData {
         ArrayList myarray = new ArrayList();
         try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -1973,7 +2152,12 @@ public class OVData {
         ArrayList myarray = new ArrayList();
         try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2522,13 +2706,18 @@ public class OVData {
         ArrayList myarray = new ArrayList();
         try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
 
                 res = st.executeQuery("select week(indate) as 'myweek', date_add(indate, interval (8 - dayofweek(indate)) % 7 day) as 'sun' from time_clock where indate >= "
-                        + "'" + mydate + "'" + " group by week(indate) ;");
+                        + "'" + mydate + "'" + " group by week(indate), indate ;");
                 while (res.next()) {
                     myarray.add(res.getString("myweek") + " = " + res.getString("sun"));
                 }
@@ -2557,7 +2746,12 @@ public class OVData {
         ArrayList myarray = new ArrayList();
         try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2598,7 +2792,12 @@ public class OVData {
         ArrayList myarray = new ArrayList();
         try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2637,7 +2836,12 @@ public class OVData {
         ArrayList myarray = new ArrayList();
         try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2647,7 +2851,7 @@ public class OVData {
                             + " where date < date( " + "'" + todate + "'" + ") ) select date, strftime('%W',date) + 1 as 'myweek' from dates ; ");
                 } else {
                     res = st.executeQuery("select week(tr_eff_date) as 'myweek', date_add(tr_eff_date, interval (8 - dayofweek(tr_eff_date)) % 7 day) as 'sun' from tran_mstr where tr_eff_date >= "
-                            + "'" + fromdate + "'" + " group by week(tr_eff_date) ;");
+                            + "'" + fromdate + "'" + " group by week(tr_eff_date), tr_eff_date ;");
                 }
                 while (res.next()) {
                     myarray.add(res.getString("myweek"));
@@ -2677,7 +2881,12 @@ public class OVData {
         ArrayList myarray = new ArrayList();
         try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2713,7 +2922,12 @@ public class OVData {
 
         try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2750,7 +2964,12 @@ public class OVData {
 
         try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2798,7 +3017,12 @@ public class OVData {
 
         try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2850,7 +3074,12 @@ public class OVData {
         ArrayList<String> myarray = new ArrayList<String>();
         try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2891,7 +3120,12 @@ public class OVData {
 
         try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             try {
 
@@ -2944,7 +3178,7 @@ public class OVData {
                         + " AND ps_child <= ? "
                         + " group by ps_child, mrp_date order by ps_child, mrp_date; ";
                     } 
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql)) {
         ps.setString(1, site);
         ps.setString(2, String.valueOf(level));
@@ -2965,7 +3199,7 @@ public class OVData {
                         + " inner join  item_mstr on sod_item = it_item and it_level = '0' where it_mrp = '1' " 
                         + " AND sod_status <> " + "'" + getGlobalProgTag("closed") + "'"
                         + " and sod_site = ? " + ";";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql)) {
         ps.setString(1, site);
         rows = ps.executeUpdate();
@@ -2980,7 +3214,7 @@ public class OVData {
         String sql = " delete from mrp_mstr where mrp_site = ? " 
                         + " AND mrp_item >= ? "
                         + " AND mrp_item <= ? ;";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql)) {
         ps.setString(1, site);
         ps.setString(2, fromitem);
@@ -2995,7 +3229,12 @@ public class OVData {
     public static void deleteNonMasterTransactionData() {
        
        try{
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
         Statement st = con.createStatement();
         try{
            st.executeUpdate(" delete from gl_hist;");
@@ -3282,6 +3521,11 @@ public class OVData {
         try {
             
             Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             if (ds != null) {
                   con = ds.getConnection();
             } else {
@@ -3333,6 +3577,11 @@ public class OVData {
         try {
             
             Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             if (ds != null) {
               con = ds.getConnection();
             } else {
@@ -3967,7 +4216,12 @@ public class OVData {
                  
        try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -4089,7 +4343,12 @@ public class OVData {
                  boolean myreturn = false;
                   try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -4169,7 +4428,12 @@ public class OVData {
                  boolean myreturn = false;
                   try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -4221,7 +4485,12 @@ public class OVData {
                  boolean myreturn = false;
                   try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -4279,7 +4548,12 @@ public class OVData {
         boolean myreturn = false;
         try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -4366,7 +4640,12 @@ public class OVData {
                  boolean myreturn = false;
                   try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -4435,7 +4714,12 @@ public class OVData {
                    boolean myreturn = false;
                   try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -4500,7 +4784,12 @@ public class OVData {
                     
                   try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement(); 
             try {
                 
@@ -4615,7 +4904,12 @@ public class OVData {
                   boolean myreturn = false;
                   try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -4693,7 +4987,12 @@ public class OVData {
                    boolean myreturn = false;
                   try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -4754,7 +5053,12 @@ public class OVData {
         boolean myreturn = false;
         try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -4840,7 +5144,12 @@ public class OVData {
                  boolean myreturn = false;
                   try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -4898,7 +5207,12 @@ public class OVData {
                  boolean myreturn = false;
                   try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -4959,7 +5273,12 @@ public class OVData {
             String curr = OVData.getDefaultCurrency();
             try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -5073,7 +5392,12 @@ public class OVData {
             ArrayList<String[]> items = invData.getItemsAndPriceByType("FG");
             try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -5205,7 +5529,12 @@ public class OVData {
         ArrayList<String> emps = hrmData.getempmstrlist(); 
         
           try {
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -5252,7 +5581,12 @@ public class OVData {
                  boolean myreturn = false;
                   try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -5316,7 +5650,12 @@ public class OVData {
                 String basecurr = curr;
 
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         Statement st = con.createStatement();
         ResultSet res = null;
         try{
@@ -5391,7 +5730,12 @@ public class OVData {
 
         boolean isReportable = false;
         
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         Statement st = con.createStatement();
         ResultSet res = null;
         try{
@@ -5562,7 +5906,12 @@ public class OVData {
 
         String expire = "";  //should be "" for components
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         Statement st = con.createStatement();
         ResultSet res = null;
         try{
@@ -5661,7 +6010,12 @@ public class OVData {
 
         boolean isReportable = false;
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         Statement st = con.createStatement();
         ResultSet res = null;
         try{
@@ -5803,7 +6157,12 @@ public class OVData {
 
         boolean isReportable = false;
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         Statement st = con.createStatement();
         ResultSet res = null;
         try{
@@ -5898,7 +6257,12 @@ public class OVData {
        ArrayList myarray = new ArrayList();
         try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -5928,7 +6292,12 @@ public class OVData {
        ArrayList myarray = new ArrayList();
         try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -5959,7 +6328,12 @@ public class OVData {
        ArrayList myarray = new ArrayList();
         try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -5990,7 +6364,12 @@ public class OVData {
        String x = "";
         try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -6021,7 +6400,12 @@ public class OVData {
        ArrayList myarray = new ArrayList();
         try{
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -6051,7 +6435,12 @@ public class OVData {
        String myreturn = "";
         try{
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -6080,7 +6469,12 @@ public class OVData {
        String myreturn = "";
         try{
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -6109,7 +6503,12 @@ public class OVData {
        ArrayList<String[]> myarray = new ArrayList<String[]>();
         try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -6143,7 +6542,12 @@ public class OVData {
        
         try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -6173,7 +6577,12 @@ public class OVData {
     public static String getJasperFuncByTitle(String group, String title) {
        String x = "";
         try{
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             PreparedStatement ps = null;
             ResultSet res = null;
             try{
@@ -6206,7 +6615,12 @@ public class OVData {
 
     try{
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -6244,7 +6658,12 @@ public class OVData {
       
         try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -6292,7 +6711,12 @@ public class OVData {
       
         try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -6346,7 +6770,12 @@ public class OVData {
        String mystring = "";
         try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -6376,7 +6805,12 @@ public class OVData {
        String mystring = "";
         try{
             
-           Connection con = DriverManager.getConnection(url + db, user, pass);
+           Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -6406,7 +6840,12 @@ public class OVData {
        String mystring = "";
         try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -6439,7 +6878,12 @@ public class OVData {
  String myreturn = "";
  try{
 
-    Connection con = DriverManager.getConnection(url + db, user, pass);
+    Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
     Statement st = con.createStatement();
     ResultSet res = null;
     try{
@@ -6468,7 +6912,12 @@ return myreturn;
  String myreturn = "";
  try{
 
-    Connection con = DriverManager.getConnection(url + db, user, pass);
+    Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
     Statement st = con.createStatement();
     ResultSet res = null;
     try{
@@ -6496,7 +6945,12 @@ return myreturn;
  String myreturn = "";
  try{
 
-    Connection con = DriverManager.getConnection(url + db, user, pass);
+    Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
     Statement st = con.createStatement();
     ResultSet res = null;
     try{
@@ -6525,7 +6979,12 @@ return myreturn;
  String myreturn = "";
  try{
 
-    Connection con = DriverManager.getConnection(url + db, user, pass);
+    Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
     Statement st = con.createStatement();
     ResultSet res = null;
     try{
@@ -6554,7 +7013,12 @@ return myreturn;
  String myreturn = "";
  try{
 
-    Connection con = DriverManager.getConnection(url + db, user, pass);
+    Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
     Statement st = con.createStatement();
     ResultSet res = null;
     try{
@@ -6583,7 +7047,12 @@ return myreturn;
     String myreturn = "";
     try{
 
-    Connection con = DriverManager.getConnection(url + db, user, pass);
+    Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
     Statement st = con.createStatement();
     ResultSet res = null;
     try{
@@ -6612,7 +7081,12 @@ return myreturn;
     String x = "";
     try{
 
-    Connection con = DriverManager.getConnection(url + db, user, pass);
+    Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
     Statement st = con.createStatement();
     ResultSet res = null;
     try{
@@ -6679,7 +7153,12 @@ return myreturn;
            String myitem = null;
          try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -6709,7 +7188,12 @@ return myreturn;
            String myitem = null;
          try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -6738,7 +7222,12 @@ return myreturn;
            String myitem = null;
          try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -6768,7 +7257,12 @@ return myreturn;
            String myitem = null;
          try{
             
-          Connection con = DriverManager.getConnection(url + db, user, pass);
+          Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -6798,7 +7292,12 @@ return myreturn;
            String myitem = null;
          try{
             
-           Connection con = DriverManager.getConnection(url + db, user, pass);
+           Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -6828,7 +7327,12 @@ return myreturn;
            String myitem = null;
          try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -6858,7 +7362,12 @@ return myreturn;
            String myitem = null;
          try{
             
-           Connection con = DriverManager.getConnection(url + db, user, pass);
+           Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -6888,7 +7397,12 @@ return myreturn;
            String myitem = null;
          try{
             
-           Connection con = DriverManager.getConnection(url + db, user, pass);
+           Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -6918,7 +7432,12 @@ return myreturn;
            String myitem = null;
          try{
             
-           Connection con = DriverManager.getConnection(url + db, user, pass);
+           Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -6948,7 +7467,12 @@ return myreturn;
            String myitem = null;
          try{
             
-           Connection con = DriverManager.getConnection(url + db, user, pass);
+           Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -6978,7 +7502,12 @@ return myreturn;
            String myitem = null;
          try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -7008,7 +7537,12 @@ return myreturn;
            String myitem = null;
          try{
             
-           Connection con = DriverManager.getConnection(url + db, user, pass);
+           Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -7038,7 +7572,12 @@ return myreturn;
            String myitem = null;
          try{
             
-          Connection con = DriverManager.getConnection(url + db, user, pass);
+          Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -7068,7 +7607,12 @@ return myreturn;
            String myitem = null;
          try{
             
-           Connection con = DriverManager.getConnection(url + db, user, pass);
+           Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -7098,7 +7642,12 @@ return myreturn;
            String myitem = null;
          try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -7128,7 +7677,12 @@ return myreturn;
            String myitem = null;
          try{
             
-          Connection con = DriverManager.getConnection(url + db, user, pass);
+          Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -7157,7 +7711,12 @@ return myreturn;
            String myitem = null;
          try{
             
-          Connection con = DriverManager.getConnection(url + db, user, pass);
+          Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -7187,7 +7746,12 @@ return myreturn;
        String myitem = "";
      try{
 
-       Connection con = DriverManager.getConnection(url + db, user, pass);
+       Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -7217,7 +7781,12 @@ return myreturn;
        String myitem = "";
      try{
 
-       Connection con = DriverManager.getConnection(url + db, user, pass);
+       Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -7247,7 +7816,12 @@ return myreturn;
        String myitem = "";
      try{
 
-      Connection con = DriverManager.getConnection(url + db, user, pass);
+      Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -7277,7 +7851,12 @@ return myreturn;
        String myitem = "";
      try{
 
-       Connection con = DriverManager.getConnection(url + db, user, pass);
+       Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -7307,7 +7886,12 @@ return myreturn;
        String myitem = "";
      try{
 
-      Connection con = DriverManager.getConnection(url + db, user, pass);
+      Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -7337,7 +7921,12 @@ return myreturn;
        String myitem = null;
      try{
 
-      Connection con = DriverManager.getConnection(url + db, user, pass);
+      Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -7367,7 +7956,12 @@ return myreturn;
            String myimage = "";
          try{
             
-          Connection con = DriverManager.getConnection(url + db, user, pass);
+          Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -7396,7 +7990,12 @@ return myreturn;
        String myitem = "";
      try{
 
-       Connection con = DriverManager.getConnection(url + db, user, pass);
+       Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -7426,7 +8025,12 @@ return myreturn;
        String myitem = "";
      try{
 
-       Connection con = DriverManager.getConnection(url + db, user, pass);
+       Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -7456,7 +8060,12 @@ return myreturn;
        String myitem = "";
      try{
 
-       Connection con = DriverManager.getConnection(url + db, user, pass);
+       Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -7486,7 +8095,12 @@ return myreturn;
        String myitem = "";
      try{
 
-      Connection con = DriverManager.getConnection(url + db, user, pass);
+      Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -7516,7 +8130,12 @@ return myreturn;
        String myitem = "";
      try{
 
-       Connection con = DriverManager.getConnection(url + db, user, pass);
+       Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -7550,7 +8169,12 @@ return myreturn;
       String account = "";
         try{
             
-           Connection con = DriverManager.getConnection(url + db, user, pass);
+           Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -7584,7 +8208,12 @@ return myreturn;
       String account = "";
         try{
             
-           Connection con = DriverManager.getConnection(url + db, user, pass);
+           Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -7616,7 +8245,12 @@ return myreturn;
 
         try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -7673,7 +8307,12 @@ return myreturn;
 
         try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -7723,7 +8362,12 @@ return myreturn;
            String myitem = null;
          try{
             
-           Connection con = DriverManager.getConnection(url + db, user, pass);
+           Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -7754,7 +8398,12 @@ return myreturn;
            String myitem = null;
          try{
             
-           Connection con = DriverManager.getConnection(url + db, user, pass);
+           Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -7785,7 +8434,12 @@ return myreturn;
            String myitem = null;
          try{
             
-           Connection con = DriverManager.getConnection(url + db, user, pass);
+           Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -7816,7 +8470,12 @@ return myreturn;
    String myitem = "";
  try{
 
-  Connection con = DriverManager.getConnection(url + db, user, pass);
+  Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -7848,7 +8507,12 @@ return myitem;
    double outvalue = invalue;
  try{
 
-   Connection con = DriverManager.getConnection(url + db, user, pass);
+   Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -7882,7 +8546,12 @@ return outvalue;
        String myitem = null;
      try{
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -7912,7 +8581,12 @@ return outvalue;
        String myitem = null;
      try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         Statement st = con.createStatement();
         ResultSet res = null;
         try{
@@ -7946,7 +8620,12 @@ return outvalue;
        boolean isBase = false;
      try{
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -7980,7 +8659,12 @@ return outvalue;
        String baseuom = "";
      try{
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -8033,7 +8717,12 @@ return outvalue;
            String baseuom = "";
          try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -8087,7 +8776,12 @@ return outvalue;
            String myitem = null;
          try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -8117,7 +8811,12 @@ return outvalue;
            String[] myarray = new String[9];
          try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -8159,7 +8858,12 @@ return outvalue;
            String[] myarray = new String[7];
          try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -8200,6 +8904,11 @@ return outvalue;
          try{
             
         Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         if (ds != null) {
           con = ds.getConnection();
         } else {
@@ -8254,7 +8963,12 @@ return outvalue;
            ArrayList myarray = new ArrayList();
          try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -8284,7 +8998,12 @@ return outvalue;
            ArrayList myarray = new ArrayList();
          try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -8315,7 +9034,12 @@ return outvalue;
            ArrayList myarray = new ArrayList();
          try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -8346,7 +9070,12 @@ return outvalue;
            ArrayList myarray = new ArrayList();
          try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -8377,7 +9106,12 @@ return outvalue;
            Double percent = 0.00;
          try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -8407,7 +9141,12 @@ return outvalue;
       String myloc = "";
      try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -8437,7 +9176,12 @@ return outvalue;
       String[] myloc = new String[2];
      try{
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -8480,7 +9224,12 @@ return outvalue;
       Double qty = 0.00;
      try{
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -8511,7 +9260,12 @@ return outvalue;
       String myuom = "";
      try{
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -8541,7 +9295,12 @@ return outvalue;
       String myloc = "";
      try{
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -8571,7 +9330,12 @@ return outvalue;
        ArrayList myarray = new ArrayList();
      try{
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -8602,7 +9366,12 @@ return outvalue;
        ArrayList myarray = new ArrayList();
      try{
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -8635,7 +9404,12 @@ return outvalue;
            ArrayList myarray = new ArrayList();
          try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -8668,7 +9442,12 @@ return outvalue;
              String[] mystring = new String[9];
         try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -8707,7 +9486,12 @@ return outvalue;
            ArrayList myarray = new ArrayList();
          try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -8737,7 +9521,12 @@ return outvalue;
        String myitem = "";
      try{
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -8767,7 +9556,12 @@ return outvalue;
    String myitem = "";
  try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -8797,7 +9591,12 @@ return myitem;
         String bank = "";
          try{
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -8826,7 +9625,12 @@ catch (Exception e){
    int mycount = 0;
  try{
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -8856,7 +9660,12 @@ return mycount;
         String[] address = new String[9];
          try{
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -8893,7 +9702,12 @@ return mycount;
         String[] address = new String[9];
          try{
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -8933,7 +9747,12 @@ return mycount;
         String[] address = new String[9];
          try{
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -8973,7 +9792,12 @@ return mycount;
        String[] address = new String[9];
          try{
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -9012,7 +9836,12 @@ return mycount;
        String myitem = "";
      try{
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -9049,7 +9878,12 @@ return mycount;
        
         try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -9088,7 +9922,12 @@ return mycount;
        boolean isGood = false;
         try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -9125,7 +9964,12 @@ return mycount;
    boolean venditemonly = false;
     try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         Statement st = con.createStatement();
         ResultSet res = null;
         try{
@@ -9156,7 +10000,12 @@ return mycount;
    boolean custitemonly = false;
     try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         Statement st = con.createStatement();
         ResultSet res = null;
         try{
@@ -9186,7 +10035,12 @@ return mycount;
    boolean srvmtype = false;
     try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         Statement st = con.createStatement();
         ResultSet res = null;
         try{
@@ -9217,7 +10071,12 @@ return mycount;
    boolean srvmtype = false;
     try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         Statement st = con.createStatement();
         ResultSet res = null;
         try{
@@ -9247,7 +10106,12 @@ return mycount;
    boolean custitemonly = false;
     try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         Statement st = con.createStatement();
         ResultSet res = null;
         try{
@@ -9278,7 +10142,12 @@ return mycount;
 boolean autosource = false;
 try{
 
-    Connection con = DriverManager.getConnection(url + db, user, pass);
+    Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
     Statement st = con.createStatement();
     ResultSet res = null;
     try{
@@ -9310,7 +10179,12 @@ return autosource;
        boolean autoitem = false;
         try{
            
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         Statement st = con.createStatement();
         ResultSet res = null;
         try{
@@ -9341,7 +10215,12 @@ return autosource;
        boolean autoinvoice = false;
         try{
            
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         Statement st = con.createStatement();
         ResultSet res = null;
         try{
@@ -9371,7 +10250,12 @@ return autosource;
        boolean autoallocate = false;
         try{
            
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         Statement st = con.createStatement();
         ResultSet res = null;
         try{
@@ -9402,7 +10286,12 @@ return autosource;
        boolean exceedqohu = false;
         try{
            
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         Statement st = con.createStatement();
         ResultSet res = null;
         try{
@@ -9433,7 +10322,12 @@ return autosource;
        boolean autocust = false;
         try{
            
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         Statement st = con.createStatement();
         ResultSet res = null;
         try{
@@ -9463,7 +10357,12 @@ return autosource;
        boolean autovend = false;
         try{
            
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         Statement st = con.createStatement();
         ResultSet res = null;
         try{
@@ -9493,7 +10392,12 @@ return autosource;
              
        boolean autopost = false;
         try{
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         Statement st = con.createStatement();
         ResultSet res = null;
         try{
@@ -9524,7 +10428,12 @@ return autosource;
        boolean autovoucher = false;
         try{
            
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         Statement st = con.createStatement();
         ResultSet res = null;
         try{
@@ -9590,7 +10499,12 @@ return autosource;
        boolean isgood = false;
         try{
            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -9622,7 +10536,12 @@ return autosource;
        boolean isgood = false;
         try{
            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -9654,7 +10573,12 @@ return autosource;
    boolean isgood = false;
     try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -9685,7 +10609,12 @@ return autosource;
    boolean isgood = false;
     try{
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -9716,7 +10645,12 @@ return autosource;
    boolean isgood = false;
     try{
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -9749,7 +10683,12 @@ return autosource;
    boolean isgood = false;
     try{
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -9780,7 +10719,12 @@ return autosource;
    boolean isgood = false;
     try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         Statement st = con.createStatement();
         ResultSet res = null;
         try{
@@ -9811,7 +10755,12 @@ return autosource;
    boolean isgood = false;
     try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         Statement st = con.createStatement();
         ResultSet res = null;
         try{
@@ -9842,7 +10791,12 @@ return autosource;
    boolean isgood = false;
     try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         Statement st = con.createStatement();
         ResultSet res = null;
         try{
@@ -9873,7 +10827,12 @@ return autosource;
    boolean isgood = false;
     try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         Statement st = con.createStatement();
         ResultSet res = null;
         try{
@@ -9941,7 +10900,12 @@ return autosource;
        boolean isGood = false;
         try{
             
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         Statement st = con.createStatement();
         ResultSet res = null;
         try{
@@ -9975,7 +10939,12 @@ return autosource;
 boolean isgood = false;
 try{
 
-    Connection con = DriverManager.getConnection(url + db, user, pass);
+    Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         Statement st = con.createStatement();
         ResultSet res = null;
         try{
@@ -10005,7 +10974,12 @@ return isgood;
     ArrayList myarray = new ArrayList();
     try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         Statement st = con.createStatement();
         ResultSet res = null;
         try{
@@ -10101,7 +11075,12 @@ return myarray;
        int myreturn = -1;
     try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         Statement st = con.createStatement();
         ResultSet res = null;
         try{
@@ -10131,7 +11110,12 @@ return myarray;
        int myreturn = -1;
     try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         Statement st = con.createStatement();
         ResultSet res = null;
         try{
@@ -10167,7 +11151,12 @@ return myarray;
 
          try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         Statement st = con.createStatement();
         ResultSet res = null;
         try{
@@ -10704,7 +11693,12 @@ return myarray;
          String billto = "";
           try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         Statement st = con.createStatement();
             ResultSet res = null;
         try{
@@ -10741,7 +11735,12 @@ return myarray;
          ArrayList<String> wh = new ArrayList<String>();
           try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         Statement st = con.createStatement();
             ResultSet res = null;
         try{
@@ -10772,7 +11771,12 @@ return myarray;
         String carrier = "";
           try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         Statement st = con.createStatement();
             ResultSet res = null;
         try{
@@ -10804,7 +11808,12 @@ return myarray;
         String fo = "";
           try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         Statement st = con.createStatement();
             ResultSet res = null;
         try{
@@ -10835,7 +11844,12 @@ return myarray;
          ArrayList<String> carriers = new ArrayList<String>();
           try{
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -10880,7 +11894,12 @@ return myarray;
           String header[] = new String[12];
     try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         Statement st = con.createStatement();
         ResultSet res = null;
         try {
@@ -10927,7 +11946,12 @@ return myarray;
           ArrayList<String[]> detail = new ArrayList<String[]>();
     try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         Statement st = con.createStatement();
         ResultSet res = null;
         try {
@@ -10988,7 +12012,12 @@ return myarray;
           String header[] = new String[7];
     try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         Statement st = con.createStatement();
         ResultSet res = null;
         try {
@@ -11030,7 +12059,12 @@ return myarray;
       ArrayList<String[]> detail = new ArrayList<String[]>();
 try{
 
-    Connection con = DriverManager.getConnection(url + db, user, pass);
+    Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
     Statement st = con.createStatement();
     ResultSet res = null;
     try {
@@ -11081,7 +12115,12 @@ return detail;
       String mystring = "";
 try{
 
-    Connection con = DriverManager.getConnection(url + db, user, pass);
+    Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
     Statement st = con.createStatement();
         ResultSet res = null;
     try{
@@ -11132,7 +12171,12 @@ return mystring;
           boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
     try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         Statement st = con.createStatement();
             Statement st2 = con.createStatement();
             Statement st3 = con.createStatement();
@@ -11348,7 +12392,12 @@ return mystring;
           boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
     try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         Statement st = con.createStatement();
             Statement st2 = con.createStatement();
             Statement st3 = con.createStatement();
@@ -11502,7 +12551,12 @@ return mystring;
           boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
     try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         Statement st = con.createStatement();
             Statement st2 = con.createStatement();
             Statement st3 = con.createStatement();
@@ -11682,7 +12736,12 @@ return mystring;
 
         try {
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         Statement st = con.createStatement();
         try {
             
@@ -11725,7 +12784,12 @@ return mystring;
     boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
     try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         Statement st = con.createStatement();
             Statement st2 = con.createStatement();
             ResultSet res = null;
@@ -11932,7 +12996,12 @@ return mystring;
         boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
         try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
                 Statement st2 = con.createStatement();
                 ResultSet res = null;
@@ -12096,7 +13165,12 @@ return mystring;
           // try block for updating tran_mstr
        try {
              
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             try {
                 
@@ -12425,7 +13499,12 @@ return mystring;
         boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
         try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             try{
                 
@@ -12501,7 +13580,12 @@ return mystring;
        boolean myreturn = false;
         try{
            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -12530,7 +13614,12 @@ return mystring;
    boolean myreturn = false;
     try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -12560,7 +13649,12 @@ return mystring;
    boolean myreturn = false;
     try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -12589,7 +13683,12 @@ return mystring;
    boolean myreturn = false;
     try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -12620,7 +13719,12 @@ return mystring;
    boolean myreturn = false;
     try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -12649,7 +13753,12 @@ return mystring;
    boolean myreturn = false;
     try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -12678,7 +13787,12 @@ return mystring;
    boolean myreturn = false;
     try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -12707,7 +13821,12 @@ return mystring;
    boolean myreturn = false;
     try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -12742,7 +13861,12 @@ return mystring;
      boolean isclosed = false;
     try{
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -12789,7 +13913,12 @@ return mystring;
            
            try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -13029,7 +14158,12 @@ return mystring;
            try {
 
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -13264,7 +14398,12 @@ return mystring;
            try {
 
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -13438,7 +14577,12 @@ return mystring;
            try {
 
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -13559,7 +14703,12 @@ return mystring;
               try {
 
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -13621,8 +14770,12 @@ return mystring;
          boolean myreturn = false;
          try {
 
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -13652,7 +14805,12 @@ return mystring;
         
     public static void sourceOrder(String order) {
            try {
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -13714,7 +14872,12 @@ return mystring;
            try {
 
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -13783,7 +14946,12 @@ return mystring;
            try {
 
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -13849,7 +15017,12 @@ return mystring;
        try {
 
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         Statement st = con.createStatement();
         ResultSet res = null;
         try {
@@ -13912,7 +15085,12 @@ return mystring;
        try {
 
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         Statement st = con.createStatement();
         ResultSet res = null;
         try {
@@ -13979,7 +15157,12 @@ return mystring;
       ArrayList<String[]> sac = new ArrayList<String[]>();
       try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         Statement st = con.createStatement();
         ResultSet res = null;
         try{
@@ -14026,7 +15209,12 @@ return mystring;
        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd"); 
        try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         Statement st = con.createStatement();
         
         try{
@@ -14168,7 +15356,12 @@ return mystring;
 
         try{
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         Statement st = con.createStatement();
         ResultSet res = null;
         try{
@@ -14240,7 +15433,12 @@ return mystring;
            ArrayList<String> mylist = new ArrayList<String>();  
          try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -14267,7 +15465,12 @@ return mystring;
           String myreturn[] = new String[]{"","",""};
          try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -14298,7 +15501,12 @@ return mystring;
           boolean myreturn = false;
          try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -14370,7 +15578,12 @@ return mystring;
          try{
             Path outpath = FileSystems.getDefault().getPath("temp" + "/" + filename);
             BufferedWriter output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outpath.toFile())));
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -14401,7 +15614,12 @@ return mystring;
     public static Map<String,Integer> getTableInfo(String tablename) {
          Map<String,Integer> hm = new HashMap<String,Integer>();
          try{
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -14466,7 +15684,12 @@ return mystring;
         
         try{
              
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -14547,7 +15770,12 @@ return mystring;
     public static void printInvoiceByOrder(String order) {
         try{
              
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -14708,7 +15936,12 @@ return mystring;
     public static void printReceipt(String shipper) {
         try{
              
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -14908,7 +16141,12 @@ return mystring;
     public static void printShipper(String shipper) {
         try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -14977,7 +16215,12 @@ return mystring;
     public static void printShipperByOrder(String order) {
         try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
                 ResultSet res = null;
             try{
@@ -15061,7 +16304,12 @@ return mystring;
     public static void printPurchaseOrder(String po) {
         try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
                 ResultSet res = null;
             try{
@@ -15131,7 +16379,12 @@ return mystring;
     public static void printCustomerOrder(String order) {
         try{
              
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
                 ResultSet res = null;
             try {
@@ -15209,7 +16462,12 @@ return mystring;
     public static void printServiceOrder(String order) {
         try{
              
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
                 ResultSet res = null;
             try {
@@ -15441,7 +16699,12 @@ MainFrame.bslog(e);
     
     public static void printQPR(String id) throws SQLException, JRException {
        
-                Connection con = DriverManager.getConnection(url + db, user, pass);
+                Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
                 String imagepath = "";
                 String logo = "";
                 logo = OVData.getSiteLogo(OVData.getDefaultSite());
@@ -15487,7 +16750,12 @@ MainFrame.bslog(e);
          }
          try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -15517,7 +16785,12 @@ MainFrame.bslog(e);
         String[] x = new String[]{"0",""};
         try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -15647,7 +16920,12 @@ MainFrame.bslog(e);
                     
          try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
@@ -15781,7 +17059,12 @@ MainFrame.bslog(e);
       try {
 
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -16119,7 +17402,12 @@ MainFrame.bslog(e);
        try {
 
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
 
         try {
             Statement st = con.createStatement();
@@ -16233,7 +17521,12 @@ MainFrame.bslog(e);
       String po = "";
       try {
 
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
 
         try {
             Statement st = con.createStatement();
@@ -16310,7 +17603,12 @@ MainFrame.bslog(e);
    boolean myreturn = false;
     try{
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -16344,7 +17642,12 @@ MainFrame.bslog(e);
    boolean myreturn = false;
     try{
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -16377,7 +17680,12 @@ MainFrame.bslog(e);
    boolean myreturn = false;
     try{
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -16410,7 +17718,12 @@ MainFrame.bslog(e);
    boolean myreturn = false;
     try{
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -16446,7 +17759,12 @@ MainFrame.bslog(e);
       boolean myreturn = false;
 
       try {
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -16497,7 +17815,12 @@ MainFrame.bslog(e);
 
       try {
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -16577,7 +17900,12 @@ MainFrame.bslog(e);
 
       try {
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -16669,7 +17997,12 @@ MainFrame.bslog(e);
     public static String CreateShipTo(String billtocode, String name, String line1, String line2, String line3, String city, String state, String zip, String country, String shipto) {
           String shiptocode = "";
           try {
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -16718,7 +18051,12 @@ MainFrame.bslog(e);
      
     public static void updateOrderStatusError(String nbr) {
             try{
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             try {
                            st.executeUpdate(
@@ -16738,7 +18076,12 @@ MainFrame.bslog(e);
       
     public static void updateOrderSourceFlag(String nbr) {
             try{
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             try {
                            st.executeUpdate(
@@ -16758,7 +18101,12 @@ MainFrame.bslog(e);
       
     public static void updateFreightOrderQuoteFlag(String nbr) {
             try{
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             try {
                            st.executeUpdate(
@@ -16778,7 +18126,12 @@ MainFrame.bslog(e);
         
     public static void updateFreightOrderTenderFlag(String nbr) {
             try{
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             try {
                            st.executeUpdate(
@@ -16798,7 +18151,12 @@ MainFrame.bslog(e);
         
     public static void updateFreightOrderReasonCode(String nbr, String reasoncode) {
             try{
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             try {
                            st.executeUpdate(
@@ -16818,7 +18176,12 @@ MainFrame.bslog(e);
        
     public static void updateFreightOrderStatus(String nbr, String status) {
         try{
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             try {
                        st.executeUpdate(
@@ -16866,7 +18229,12 @@ MainFrame.bslog(e);
 
      try{
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             Statement st2 = con.createStatement();
@@ -16971,7 +18339,12 @@ MainFrame.bslog(e);
 
      try{
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             Statement st2 = con.createStatement();
@@ -17158,7 +18531,12 @@ MainFrame.bslog(e);
     ArrayList<Date> dates = OVData.getForecastDates(String.valueOf(cal.get(Calendar.YEAR)));
      try{
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             Statement st2 = con.createStatement();
@@ -17263,8 +18641,12 @@ MainFrame.bslog(e);
         SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yy");
         try {
 
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -17319,7 +18701,12 @@ MainFrame.bslog(e);
          
         try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -17375,7 +18762,12 @@ MainFrame.bslog(e);
 
     try{
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -17403,7 +18795,12 @@ return mylist;
 
     try{
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -17432,7 +18829,12 @@ return mylist;
 
     try{
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -17461,7 +18863,12 @@ return mylist;
          DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -17489,7 +18896,12 @@ return mylist;
          boolean myreturn = false;
          try {
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -17578,7 +18990,12 @@ return mylist;
         String myreturn = "";
         try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -17636,7 +19053,12 @@ return mylist;
         boolean myreturn = false;
         try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -17722,7 +19144,12 @@ return mylist;
          
         try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
