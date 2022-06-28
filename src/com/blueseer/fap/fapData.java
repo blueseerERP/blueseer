@@ -28,6 +28,7 @@ package com.blueseer.fap;
 import bsmf.MainFrame;
 import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.defaultDecimalSeparator;
+import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
@@ -67,7 +68,11 @@ public class fapData {
         java.util.Date now = new java.util.Date();
         
         try { 
-            bscon = DriverManager.getConnection(url + db, user, pass);
+            if (ds != null) {
+              bscon = ds.getConnection();
+            } else {
+              bscon = DriverManager.getConnection(url + db, user, pass);  
+            }
             bscon.setAutoCommit(false);
             // lets loop through the JTable with the vouchers to pay
             for (int i = 0 ; i < mytable.getRowCount(); i++) {
@@ -166,7 +171,11 @@ public class fapData {
         ResultSet res = null;
         java.util.Date now = new java.util.Date();
         try { 
-            bscon = DriverManager.getConnection(url + db, user, pass);
+            if (ds != null) {
+              bscon = ds.getConnection();
+            } else {
+              bscon = DriverManager.getConnection(url + db, user, pass);  
+            }
             bscon.setAutoCommit(false);
              _addAPMstr(ap, bscon, ps, res);  
             for (vod_mstr z : vod) {
@@ -277,7 +286,11 @@ public class fapData {
         ResultSet res = null;
         java.util.Date now = new java.util.Date();
         try { 
-            bscon = DriverManager.getConnection(url + db, user, pass);
+            if (ds != null) {
+              bscon = ds.getConnection();
+            } else {
+              bscon = DriverManager.getConnection(url + db, user, pass);  
+            }
             bscon.setAutoCommit(false);
              _addAPMstr(ap, bscon, ps, res);  
             for (vod_mstr z : vod) {
@@ -335,7 +348,11 @@ public class fapData {
         java.util.Date now = new java.util.Date();
         String[] vendinfo = venData.getVendInfo(vend);
         try { 
-            bscon = DriverManager.getConnection(url + db, user, pass);
+            if (ds != null) {
+              bscon = ds.getConnection();
+            } else {
+              bscon = DriverManager.getConnection(url + db, user, pass);  
+            }
             bscon.setAutoCommit(false);
             // lets loop through the JTable with the vouchers to pay
            
@@ -567,7 +584,12 @@ public class fapData {
        boolean myreturn = false;
 
         try {
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -720,7 +742,7 @@ public class fapData {
         String sqlInsert = "insert into ap_ctrl (apc_bank, apc_assetacct, apc_autovoucher, apc_apacct ) "
                         + " values (?,?,?,?); "; 
         String sqlUpdate = "update ap_ctrl set apc_bank = ?, apc_assetacct = ?, apc_autovoucher = ?, apc_apacct = ?; ";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
              PreparedStatement ps = con.prepareStatement(sqlSelect);) {
           try (ResultSet res = ps.executeQuery();
                PreparedStatement psi = con.prepareStatement(sqlInsert);
@@ -755,7 +777,7 @@ public class fapData {
         ap_ctrl r = null;
         String[] m = new String[2];
         String sql = "select * from ap_ctrl;";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
              try (ResultSet res = ps.executeQuery();) {
                 if (! res.isBeforeFirst()) {

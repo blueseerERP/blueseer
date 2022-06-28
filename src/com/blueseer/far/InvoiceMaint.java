@@ -27,8 +27,13 @@ package com.blueseer.far;
 
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.db;
+import static bsmf.MainFrame.ds;
+import static bsmf.MainFrame.pass;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.tags;
+import static bsmf.MainFrame.url;
+import static bsmf.MainFrame.user;
 import com.blueseer.fgl.fglData;
 import com.blueseer.shp.shpData;
 import com.blueseer.utl.BlueSeerUtils;
@@ -450,7 +455,12 @@ public class InvoiceMaint extends javax.swing.JPanel {
             int i = 0;
             int d = 0;
             
-            Connection con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             try {
                proceed = validateInput("updateRecord");
@@ -527,8 +537,12 @@ public class InvoiceMaint extends javax.swing.JPanel {
         if (proceed) {
         try {
 
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            Connection con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             int i = 0;
@@ -632,7 +646,12 @@ public class InvoiceMaint extends javax.swing.JPanel {
     public String[] getRecord(String[] x) {
        String[] m = new String[2];
         try {
-            Connection con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -818,7 +837,12 @@ public class InvoiceMaint extends javax.swing.JPanel {
     public void setLabelByShipTo(String shipto) {
         try {
             
-            Connection con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
                 ResultSet res = null;
             int i = 0;

@@ -27,6 +27,7 @@ package com.blueseer.far;
 
 import bsmf.MainFrame;
 import static bsmf.MainFrame.db;
+import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
@@ -55,7 +56,11 @@ public class farData {
         PreparedStatement ps = null;
         ResultSet res = null;
         try { 
-            con = DriverManager.getConnection(url + db, user, pass);
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             int rows = _addArMstr(x, con, ps, res);  
             if (rows > 0) {
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
@@ -165,7 +170,11 @@ public class farData {
         PreparedStatement ps = null;
         ResultSet res = null;
         try { 
-            bscon = DriverManager.getConnection(url + db, user, pass);
+            if (ds != null) {
+              bscon = ds.getConnection();
+            } else {
+              bscon = DriverManager.getConnection(url + db, user, pass);  
+            }
             bscon.setAutoCommit(false);
             _addArMstr(ar, bscon, ps, res);  
             for (ard_mstr z : ard) {
@@ -217,7 +226,12 @@ public class farData {
         PreparedStatement ps = null;
         ResultSet res = null;
         try { 
-            bscon = DriverManager.getConnection(url + db, user, pass);
+            
+            if (ds != null) {
+              bscon = ds.getConnection();
+            } else {
+              bscon = DriverManager.getConnection(url + db, user, pass);  
+            }
             
             // order master
             ar_mstr ar = _getARMstr(x, bscon, ps, res); 
@@ -261,7 +275,7 @@ public class farData {
         ar_mstr r = null;
         String[] m = new String[2];
         String sql = "select * from ar_mstr where ar_nbr = ? ;";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, x[0]);
              try (ResultSet res = ps.executeQuery();) {
@@ -318,7 +332,7 @@ public class farData {
         ard_mstr r = null;
         String[] m = new String[2];
         String sql = "select * from ard_mstr where ard_id = ? ;";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, x[0]);
              try (ResultSet res = ps.executeQuery();) {
@@ -379,7 +393,7 @@ public class farData {
                 + "arc_sales_acct = ?, arc_sales_cc = ?, arc_asset_acct = ?, arc_asset_cc = ?,"
                 + "arc_fedtax_acct = ?, arc_fedtax_cc = ?, arc_statetax_acct = ?, arc_statetax_cc = ?,"
                 + "arc_localtax_acct = ?, arc_localtax_cc = ?, arc_othertax_acct = ?, arc_othertax_cc = ? ; ";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
              PreparedStatement ps = con.prepareStatement(sqlSelect);) {
           try (ResultSet res = ps.executeQuery();
                PreparedStatement psi = con.prepareStatement(sqlInsert);
@@ -436,7 +450,7 @@ public class farData {
         ar_ctrl r = null;
         String[] m = new String[2];
         String sql = "select * from ar_ctrl;";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
              try (ResultSet res = ps.executeQuery();) {
                 if (! res.isBeforeFirst()) {
@@ -481,7 +495,7 @@ public class farData {
             // art_nbr, art_desc, art_type, art_amt, art_percent
         String[] taxinfo = new String[]{"","","","",""};
         String sql = "select art_nbr, art_desc, art_type, art_amt, art_percent from art_tax where art_type = 'MATERIAL' and art_nbr = ?;";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, ref);
              try (ResultSet res = ps.executeQuery();) {
