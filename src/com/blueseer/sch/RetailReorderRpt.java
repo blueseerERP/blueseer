@@ -60,6 +60,7 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import static bsmf.MainFrame.checkperms; 
 import static bsmf.MainFrame.db;
+import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
@@ -310,7 +311,12 @@ public class RetailReorderRpt extends javax.swing.JPanel {
         Calendar caldate = Calendar.getInstance();
         caldate.add(Calendar.DATE, days);
         try {
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -683,7 +689,12 @@ public class RetailReorderRpt extends javax.swing.JPanel {
      int wk = OVData.getForecastWeek(now);
      
      try {
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {

@@ -70,6 +70,7 @@ import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.view.JasperViewer;
 import static bsmf.MainFrame.driver;
+import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.mydialog;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
@@ -563,7 +564,12 @@ public class Scheduler extends javax.swing.JPanel {
     public void printtickets(String fromjob, String tojob ) {
         
        try {
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             
                 HashMap hm = new HashMap();
                 hm.put("REPORT_TITLE", "CUT TICKET");
@@ -590,7 +596,12 @@ public class Scheduler extends javax.swing.JPanel {
     public void printticket(String jobid, String bustitle) {
         
        try {
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             
                 String jasperfile = "jobticket.jasper";  // need to make this changeable via site_mstr
 
@@ -722,7 +733,12 @@ public class Scheduler extends javax.swing.JPanel {
       
         try {
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -813,7 +829,12 @@ public class Scheduler extends javax.swing.JPanel {
         ArrayList<String[]> arr = new ArrayList<String[]>();
         try {
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -1372,7 +1393,12 @@ public class Scheduler extends javax.swing.JPanel {
         labelcount.setText("0");
 
         try {
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {

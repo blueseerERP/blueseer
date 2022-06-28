@@ -53,7 +53,7 @@ public class schData {
           // assume it's false i.e. hasn't been scanned.
         String x = "";
         String sql = "select plan_item from plan_mstr where plan_nbr = ? ;";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
             PreparedStatement ps = con.prepareStatement(sql);) {
             ps.setString(1, serialno);  
             try (ResultSet res = ps.executeQuery();) {
@@ -74,7 +74,12 @@ public class schData {
       double myreturn = 0;
 
       try {
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -108,7 +113,12 @@ public class schData {
       double myreturn = 0;
 
       try {
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -145,7 +155,12 @@ public class schData {
           int myreturn = 0;
           
           try {
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -211,7 +226,12 @@ public class schData {
           try {
 
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             try {
                  st.executeUpdate("update plan_mstr set plan_status = " + "'" + value + "'" + " where plan_nbr = " + "'" + serialno + "'" 
@@ -231,7 +251,12 @@ public class schData {
       
     public static void updatePlanQty(String serialno, double qty) {
           try {
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             try {
                  st.executeUpdate("update plan_mstr set plan_qty_comp = " + "'" + qty + "'" + " where plan_nbr = " + "'" + serialno + "'" 
@@ -251,7 +276,12 @@ public class schData {
       
     public static void updatePlanQtyByOp(String serialno, int qty, String op, String ref, String cell) {
           try {
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             try {
                  st.executeUpdate("update plan_mstr set plan_qty_comp = " + "'" + qty + "'" + " where plan_nbr = " + "'" + serialno + "'" 
@@ -277,7 +307,12 @@ public class schData {
           int i = 0;
           
           try {
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -374,7 +409,12 @@ public class schData {
            if (status.equals(getGlobalProgTag("void"))) { status = "-1"; }
 
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {

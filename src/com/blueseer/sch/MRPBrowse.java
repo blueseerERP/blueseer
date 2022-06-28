@@ -27,6 +27,7 @@ package com.blueseer.sch;
 
 import bsmf.MainFrame;
 import static bsmf.MainFrame.db;
+import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
@@ -141,7 +142,12 @@ public class MRPBrowse extends javax.swing.JPanel {
          
         try {
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -228,7 +234,12 @@ public class MRPBrowse extends javax.swing.JPanel {
          
         try {
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -294,7 +305,12 @@ public class MRPBrowse extends javax.swing.JPanel {
          
         try {
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -349,7 +365,12 @@ public class MRPBrowse extends javax.swing.JPanel {
        Double opcost = 0.00;
        Double prevcost = 0.00;
         try {
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -990,7 +1011,12 @@ public class MRPBrowse extends javax.swing.JPanel {
         
         
         try {
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             Statement st2 = con.createStatement();

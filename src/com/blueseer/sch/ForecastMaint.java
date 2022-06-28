@@ -28,6 +28,7 @@ package com.blueseer.sch;
 import bsmf.MainFrame;
 import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.defaultDecimalSeparator;
+import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
@@ -457,7 +458,12 @@ public class ForecastMaint extends javax.swing.JPanel implements IBlueSeer {
      
      try {
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -570,7 +576,12 @@ public class ForecastMaint extends javax.swing.JPanel implements IBlueSeer {
             java.util.Date now = new java.util.Date();
             DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
             boolean proceed = true;
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             try {
                      st.executeUpdate("update fct_mstr "
@@ -661,7 +672,12 @@ public class ForecastMaint extends javax.swing.JPanel implements IBlueSeer {
         if (proceed) {
         try {
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             try {
                 
@@ -700,7 +716,12 @@ public class ForecastMaint extends javax.swing.JPanel implements IBlueSeer {
        
         try {
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
