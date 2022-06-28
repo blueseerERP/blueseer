@@ -141,7 +141,11 @@ public class invData {
         }
         Connection con = null;
         try { 
-            con = DriverManager.getConnection(url + db, user, pass);
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             int rows = _addItemMstr(x, con, false);  
             if (rows > 0) {
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
@@ -345,7 +349,11 @@ public class invData {
         }
         Connection con = null;
         try { 
-            con = DriverManager.getConnection(url + db, user, pass);
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             int rows = _updateItemMstr(x, con);  
             if (rows > 0) {
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
@@ -426,7 +434,11 @@ public class invData {
         }
         Connection con = null;
         try { 
-            con = DriverManager.getConnection(url + db, user, pass);
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             _deleteItemMstr(x, con);  
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
         } catch (SQLException s) {
@@ -527,7 +539,11 @@ public class invData {
         Connection con = null;
         int rows = 0;
         try { 
-            con = DriverManager.getConnection(url + db, user, pass);
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             if (addBomID) {
              rows = _addBomMstr(y, con);   
             }
@@ -630,7 +646,11 @@ public class invData {
         Connection con = null;
         int rows = 0;
         try { 
-            con = DriverManager.getConnection(url + db, user, pass);
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             _updateBomMstr(y, con); // the bom_mstr gets updated every time a component is updated
                                     // where a change to bom_mstr has occurred or not
             
@@ -707,7 +727,11 @@ public class invData {
         }
         Connection con = null;
         try { 
-            con = DriverManager.getConnection(url + db, user, pass);
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             if (pbmRecsRemaining == 1) { // if only 1 pbm_mstr remaining for this bom id...delete bom id
                 _deleteBomMstr(y, con);                
             }
@@ -790,7 +814,7 @@ public class invData {
                         + " wc_cc, wc_run_rate, wc_setup_rate, " 
                         + " wc_bdn_rate, wc_run_crew, wc_setup, wc_remarks ) " 
                         + " values (?,?,?,?,?,?,?,?,?,?); "; 
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
              PreparedStatement ps = con.prepareStatement(sqlSelect);) {
              ps.setString(1, x.wc_cell);
           try (ResultSet res = ps.executeQuery();
@@ -828,7 +852,7 @@ public class invData {
                         + " wc_cc = ?, wc_run_rate = ?, wc_setup_rate = ?, " 
                         + " wc_bdn_rate = ?, wc_run_crew = ?, wc_setup = ?, wc_remarks = ? " 
                         + " where wc_cell = ? ;"; 
-         try (Connection con = DriverManager.getConnection(url + db, user, pass);
+         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
 	PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(10, x.wc_cell);
             ps.setString(1, x.wc_desc);
@@ -884,7 +908,7 @@ public class invData {
     public static String[] deleteWorkCenterMstr(wc_mstr x) {
         String[] m;
         String sqlDelete = "delete from wc_mstr where wc_cell = ? ;"; 
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
              PreparedStatement ps = con.prepareStatement(sqlDelete);) {
              ps.setString(1, x.wc_cell);
              int rows = ps.executeUpdate();
@@ -908,7 +932,7 @@ public class invData {
         String sqlInsert = "insert into loc_mstr (loc_loc, loc_desc, loc_site, "
                         + " loc_wh, loc_active ) "
                         + " values (?,?,?,?,?); "; 
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
              PreparedStatement ps = con.prepareStatement(sqlSelect);) {
              ps.setString(1, x.loc_loc);
           try (ResultSet res = ps.executeQuery();
@@ -940,7 +964,7 @@ public class invData {
         String sql = "update loc_mstr set loc_desc = ?, loc_site = ?, "
                         + " loc_wh = ?, loc_active = ? " 
                         + " where loc_loc = ? ;"; 
-         try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
 	PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(5, x.loc_loc);
             ps.setString(1, x.loc_desc);
@@ -959,7 +983,7 @@ public class invData {
     public static String[] deleteLocationMstr(loc_mstr x) { 
        String[] m = new String[2];
         String sql = "delete from loc_mstr where loc_loc = ?; ";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
 	PreparedStatement ps = con.prepareStatement(sql)) {
         ps.setString(1, x.loc_loc);
         int rows = ps.executeUpdate();
@@ -1010,7 +1034,7 @@ public class invData {
                         + " wf_op, wf_assert, wf_op_desc, wf_cell, " +
                           " wf_setup_hours, wf_run_hours ) " 
                         + " values (?,?,?,?,?,?,?,?,?); "; 
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
              PreparedStatement ps = con.prepareStatement(sqlSelect);) {
              ps.setString(1, x.wf_id);
              ps.setString(2, x.wf_op);
@@ -1048,7 +1072,7 @@ public class invData {
                         + " wf_assert = ?, wf_op_desc = ?, wf_cell = ?, " +
                           " wf_setup_hours = ?, wf_run_hours = ? " 
                         + " where wf_id = ? and wf_op = ? ;"; 
-         try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
 	PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(8, x.wf_id);
             ps.setString(9, x.wf_op);
@@ -1109,7 +1133,7 @@ public class invData {
     public static String[] deleteRoutingMstr(wf_mstr x) {
         String[] m;
         String sqlDelete = "delete from wf_mstr where wf_id = ? and wf_op = ? ;"; 
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
              PreparedStatement ps = con.prepareStatement(sqlDelete);) {
              ps.setString(1, x.wf_id);
              ps.setString(2, x.wf_op);
@@ -1132,7 +1156,7 @@ public class invData {
         String sqlSelect = "SELECT * FROM  uom_mstr where uom_id = ?";
         String sqlInsert = "insert into uom_mstr (uom_id, uom_desc ) "
                         + " values (?,?); "; 
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
              PreparedStatement ps = con.prepareStatement(sqlSelect);) {
              ps.setString(1, x.uom_id);
           try (ResultSet res = ps.executeQuery();
@@ -1160,7 +1184,7 @@ public class invData {
         String[] m = new String[2];
         String sql = "update uom_mstr set uom_desc = ? "
                         + " where uom_id = ? ;"; 
-         try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
 	PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(2, x.uom_id);
             ps.setString(1, x.uom_desc);
@@ -1202,7 +1226,7 @@ public class invData {
     public static String[] deleteUOMMstr(uom_mstr x) {
         String[] m;
         String sqlDelete = "delete from uom_mstr where uom_id = ? ;"; 
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
              PreparedStatement ps = con.prepareStatement(sqlDelete);) {
              ps.setString(1, x.uom_id);
              int rows = ps.executeUpdate();
@@ -1225,7 +1249,7 @@ public class invData {
         String sqlInsert = "insert into wh_mstr (wh_id, wh_site, wh_name, "
                         + " wh_addr1, wh_addr2, wh_city, wh_state, wh_zip, wh_country ) "
                         + " values (?,?,?,?,?,?,?,?,?); "; 
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
              PreparedStatement ps = con.prepareStatement(sqlSelect);) {
              ps.setString(1, x.wh_id);
           try (ResultSet res = ps.executeQuery();
@@ -1262,7 +1286,7 @@ public class invData {
                         + " wh_addr1 = ?, wh_addr2 = ?, wh_city = ?, wh_state = ?, "
                         + " wh_zip = ?, wh_country = ? "
                         + " where wh_id = ? ;"; 
-         try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
 	PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(9, x.wh_id);
             ps.setString(1, x.wh_site);
@@ -1285,7 +1309,7 @@ public class invData {
     public static String[] deleteWareHouseMstr(wh_mstr x) { 
        String[] m = new String[2];
         String sql = "delete from wh_mstr where wh_id = ?; ";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
 	PreparedStatement ps = con.prepareStatement(sql)) {
         ps.setString(1, x.wh_id);
         int rows = ps.executeUpdate();
@@ -1343,7 +1367,7 @@ public class invData {
             + "pl_purchases, pl_po_rcpt, pl_po_ovh, pl_po_pricevar, pl_ap_usage, pl_ap_ratevar, "
             + "pl_job_stock, pl_mtl_usagevar, pl_mtl_ratevar, pl_mix_var, pl_cop, pl_out_usagevar, pl_out_ratevar )"
                         + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
              PreparedStatement ps = con.prepareStatement(sqlSelect);) {
              ps.setString(1, x.pl_line);
           try (ResultSet res = ps.executeQuery();
@@ -1403,7 +1427,7 @@ public class invData {
         "pl_ap_ratevar = ?,  pl_job_stock = ?,  pl_mtl_usagevar = ?,  pl_mtl_ratevar = ?," +
         "pl_mix_var = ?,  pl_cop = ?,  pl_out_usagevar = ?,  pl_out_ratevar = ? " +
         " where pl_line = ? ;"; 
-         try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
 	PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(28, x.pl_line);
             ps.setString(1, x.pl_desc);
@@ -1445,7 +1469,7 @@ public class invData {
     public static String[] deletePLMstr(pl_mstr x) { 
        String[] m = new String[2];
         String sql = "delete from pl_mstr where pl_line = ?; ";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
 	PreparedStatement ps = con.prepareStatement(sql)) {
         ps.setString(1, x.pl_line);
         int rows = ps.executeUpdate();
@@ -1519,7 +1543,7 @@ public class invData {
         String sqlInsert = "insert into inv_ctrl (planmultiscan, demdtoplan, printsubticket, autoitem, serialize) "
                         + " values (?,?,?,?,?); "; 
         String sqlUpdate = "update inv_ctrl set planmultiscan = ?, demdtoplan = ?, printsubticket = ?, autoitem = ?, serialize = ?; ";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
              PreparedStatement ps = con.prepareStatement(sqlSelect);) {
           try (ResultSet res = ps.executeQuery();
                PreparedStatement psi = con.prepareStatement(sqlInsert);
