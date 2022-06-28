@@ -27,6 +27,7 @@ package com.blueseer.hrm;
 
 import bsmf.MainFrame;
 import static bsmf.MainFrame.db;
+import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
@@ -56,7 +57,7 @@ public class hrmData {
                             + " emp_vac_days, emp_vac_taken, emp_addrline1, emp_addrline2, emp_city, "
                             + " emp_state, emp_country, emp_zip, emp_phone, emp_emer_contact, emp_emer_phone, emp_dob, emp_termdate, emp_clockin, emp_supervisor) " +
                 " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
              PreparedStatement ps = con.prepareStatement(sqlSelect);) {
              ps.setString(1, x.emp_nbr);
           try (ResultSet res = ps.executeQuery();
@@ -123,7 +124,7 @@ public class hrmData {
                             + " emp_vac_days = ?, emp_vac_taken = ?, emp_addrline1 = ?, emp_addrline2 = ?, emp_city = ?, "
                             + " emp_state = ?, emp_country = ?, emp_zip = ?, emp_phone = ?, emp_emer_contact = ?, emp_emer_phone = ?, emp_dob = ?, emp_termdate = ?, emp_supervisor = ? " +
                               " where emp_nbr = ? ";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(34, x.emp_nbr);
             ps.setString(1, x.emp_lname);
@@ -172,7 +173,7 @@ public class hrmData {
     public static String[] deleteEmployeeMstr(emp_mstr x) { 
        String[] m = new String[2];
         String sql = "delete from emp_mstr where emp_nbr = ?; ";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql)) {
         ps.setString(1, x.emp_nbr);
         int rows = ps.executeUpdate();
@@ -188,7 +189,7 @@ public class hrmData {
         emp_mstr r = null;
         String[] m = new String[2];
         String sql = "select * from emp_mstr where emp_nbr = ? ;";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, x[0]);
              try (ResultSet res = ps.executeQuery();) {
@@ -251,7 +252,7 @@ public class hrmData {
         emp_exception r = null;
         String[] m = new String[2];
         String sql = "select * from emp_exception where empx_nbr = ? ;";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, x[0]);
              try (ResultSet res = ps.executeQuery();) {
@@ -287,7 +288,12 @@ public class hrmData {
         ArrayList myarray = new ArrayList();
         try {
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {

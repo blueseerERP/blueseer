@@ -29,6 +29,7 @@ package com.blueseer.eng;
 import bsmf.MainFrame;
 import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.defaultDecimalSeparator;
+import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.pass;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.reinitpanels;
@@ -917,7 +918,12 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeerT  {
             int nextsequence = 0;
             boolean islast = false;
             boolean isEmail = false;
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
             ResultSet res = null;
             
@@ -1031,7 +1037,12 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeerT  {
         
        int i = 0;
         try{
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -1079,7 +1090,12 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeerT  {
      
             int i = 0;
            
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -1111,7 +1127,12 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeerT  {
         tanotes.setText("");
         try {
             int i = 0;
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
             ResultSet res = null;
             
@@ -1145,7 +1166,12 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeerT  {
        
         try {
             int i = 0;
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
             try {
                

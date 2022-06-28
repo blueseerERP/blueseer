@@ -28,6 +28,7 @@ package com.blueseer.eng;
 import bsmf.MainFrame;
 import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.driver;
+import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
@@ -369,7 +370,7 @@ public class engData {
         ecn_mstr r = null;
         String[] m = new String[2];
         String sql = "select * from ecn_mstr where ecn_nbr = ? ;";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, x[0]);
              try (ResultSet res = ps.executeQuery();) {
@@ -399,7 +400,7 @@ public class engData {
         String[] m = new String[2];
         ArrayList<ecn_task> list = new ArrayList<ecn_task>();
         String sql = "select * from ecn_task where ecnt_nbr = ? ;";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, code);
              try (ResultSet res = ps.executeQuery();) {
@@ -429,7 +430,7 @@ public class engData {
         ecn_task r = null;
         String[] m = new String[2];
         String sql = "select * from ecn_task where ecnt_nbr = ? and ecnt_mstrid = ? and ecnt_seq = ? ;";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, nbr);
         ps.setString(2, masterid);
@@ -816,7 +817,7 @@ public class engData {
         task_mstr r = null;
         String[] m = new String[2];
         String sql = "select * from task_mstr where task_id = ? ;";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, x[0]);
              try (ResultSet res = ps.executeQuery();) {
@@ -843,7 +844,7 @@ public class engData {
         String[] m = new String[2];
         ArrayList<task_det> list = new ArrayList<task_det>();
         String sql = "select * from task_det where taskd_id = ? ;";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, code);
              try (ResultSet res = ps.executeQuery();) {
@@ -871,7 +872,7 @@ public class engData {
         task_det r = null;
         String[] m = new String[2];
         String sql = "select * from task_det where taskd_id = ? and taskd_sequence = ? ;";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, id);
         ps.setString(2, sequence);
@@ -975,8 +976,12 @@ public class engData {
     public static ArrayList<String> getECNSequences(String nbr) {
         ArrayList<String> lines = new ArrayList<String>();
         try{
-        Class.forName(driver).newInstance();
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
         try{
             Statement st = con.createStatement();
             ResultSet res = null;
@@ -1001,8 +1006,12 @@ public class engData {
     public static ArrayList<String> getTaskSequences(String nbr) {
         ArrayList<String> lines = new ArrayList<String>();
         try{
-        Class.forName(driver).newInstance();
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
         try{
             Statement st = con.createStatement();
             ResultSet res = null;
@@ -1028,7 +1037,12 @@ public class engData {
         ArrayList myarray = new ArrayList();
         try{
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {

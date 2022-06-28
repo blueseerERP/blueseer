@@ -28,6 +28,7 @@ package com.blueseer.edi;
 import bsmf.MainFrame;
 import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.driver;
+import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
@@ -53,7 +54,7 @@ public class ediData {
                 " and exr_ovaddr = ? and exr_gsid = ? and exr_type = ?";
         String sqlInsert = "insert into edi_xref (exr_tpid, exr_tpaddr, exr_ovaddr, exr_gsid, exr_type) " 
                         + " values (?,?,?,?,?); "; 
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
              PreparedStatement ps = con.prepareStatement(sqlSelect);) {
              ps.setString(1, x.exr_tpid);
              ps.setString(2, x.exr_tpaddr);
@@ -92,7 +93,7 @@ public class ediData {
                         + " values (?,?,?,?,?); "; 
         String sqlUpdate = "update edi_xref set exr_tpid = ?, exr_tpaddr = ?, exr_ovaddr = ?, " +
                            " exr_gsid = ?, exr_type = ? ; "; 
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
              PreparedStatement ps = con.prepareStatement(sqlSelect);) {
              ps.setString(1, x.exr_tpid);
              ps.setString(2, x.exr_tpaddr);
@@ -134,7 +135,7 @@ public class ediData {
         String[] m = new String[2];
         String sqlUpdate = "update edi_xref set exr_tpid = ?, exr_tpaddr = ?, exr_ovaddr = ?, " +
                            " exr_gsid = ?, exr_type = ? ; "; 
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sqlUpdate)) {
         ps.setString(1, x.exr_tpid);
              ps.setString(2, x.exr_tpaddr);
@@ -155,7 +156,7 @@ public class ediData {
        String[] m = new String[2];
         String sql = "delete from edi_xref where exr_tpid = ? and exr_tpaddr = ? " +
                 " and exr_ovaddr = ? and exr_gsid = ? and exr_type = ?";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql)) {
          ps.setString(1, x.exr_tpid);
          ps.setString(2, x.exr_tpaddr);
@@ -177,7 +178,7 @@ public class ediData {
         String sqlSelect = "SELECT * FROM  edi_xref where exr_tpid = ? and exr_gsid = ? " +
                 " and exr_type = ? and exr_tpaddr = ? and exr_ovaddr = ?";
         
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sqlSelect);) {
         ps.setString(1, x[0]);
         ps.setString(2, x[1]);
@@ -217,7 +218,7 @@ public class ediData {
         String sqlInsert = "insert into map_mstr (map_id, map_desc, map_version, map_ifs, map_ofs, "
                 + " map_indoctype, map_infiletype, map_outdoctype, map_outfiletype )  " +
                 " values (?,?,?,?,?,?,?,?,?); "; 
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
              PreparedStatement ps = con.prepareStatement(sqlSelect);) {
              ps.setString(1, x.map_id);
           try (ResultSet res = ps.executeQuery();
@@ -251,7 +252,7 @@ public class ediData {
         String sql = "update map_mstr set map_desc = ?, map_version = ?, map_ifs = ?, " +
                 " map_ofs = ?, map_indoctype = ?, map_infiletype = ?, map_outdoctype = ?, map_outfiletype = ?" +
                 " where map_id = ? ";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql)) {
         ps.setString(1, x.map_desc);
         ps.setString(2, x.map_version);
@@ -274,7 +275,7 @@ public class ediData {
     public static String[] deleteMapMstr(map_mstr x) { 
        String[] m = new String[2];
         String sql = "delete from map_mstr where map_id = ?; ";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql)) {
         ps.setString(1, x.map_id);
         int rows = ps.executeUpdate();
@@ -290,7 +291,7 @@ public class ediData {
         map_mstr r = null;
         String[] m = new String[2];
         String sql = "select * from map_mstr where map_id = ? ;";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, x[0]);
              try (ResultSet res = ps.executeQuery();) {
@@ -328,7 +329,7 @@ public class ediData {
         String sqlInsert = "insert into map_struct (mps_id, mps_desc, mps_version "
                 + "  )  " +
                 " values (?,?,?); "; 
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
              PreparedStatement ps = con.prepareStatement(sqlSelect);) {
              ps.setString(1, x.mps_id);
           try (ResultSet res = ps.executeQuery();
@@ -355,7 +356,7 @@ public class ediData {
         String[] m = new String[2];
         String sql = "update map_struct set mps_desc = ?, mps_version = ? " +
                 "  where mps_id = ? ";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+       try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql)) {
         ps.setString(1, x.mps_desc);
         ps.setString(2, x.mps_version);
@@ -372,7 +373,7 @@ public class ediData {
     public static String[] deleteMapStruct(map_struct x) { 
        String[] m = new String[2];
         String sql = "delete from map_struct where mps_id = ?; ";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql)) {
         ps.setString(1, x.mps_id);
         int rows = ps.executeUpdate();
@@ -388,7 +389,7 @@ public class ediData {
         map_struct r = null;
         String[] m = new String[2];
         String sql = "select * from map_struct where mps_id = ? ;";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, x[0]);
              try (ResultSet res = ps.executeQuery();) {
@@ -421,7 +422,7 @@ public class ediData {
         " api_url, api_port, api_path, api_user, " +
         " api_pass, api_key, api_protocol, api_class, api_encrypted, api_signed, api_cert ) " +
                 " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
              PreparedStatement ps = con.prepareStatement(sqlSelect);) {
              ps.setString(1, x.api_id);
           try (ResultSet res = ps.executeQuery();
@@ -573,7 +574,7 @@ public class ediData {
                 " api_path = ?, api_user = ?, api_pass = ?, api_key = ?, api_protocol = ?, api_class = ?,  " +
                 " api_encrypted = ?, api_signed = ?, api_cert = ? " +
                 "  where api_id = ? ";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql)) {
         ps.setString(1, x.api_desc);
         ps.setString(2, x.api_version);
@@ -730,7 +731,7 @@ public class ediData {
     public static String[] deleteAPIMstr(api_mstr x) { 
        String[] m = new String[2];
         String sql = "delete from api_mstr where api_id = ?; ";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql)) {
         ps.setString(1, x.api_id);
         int rows = ps.executeUpdate();
@@ -756,7 +757,7 @@ public class ediData {
         api_mstr r = null;
         String[] m = new String[2];
         String sql = "select * from api_mstr where api_id = ? ;";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, x[0]);
              try (ResultSet res = ps.executeQuery();) {
@@ -797,7 +798,7 @@ public class ediData {
         String[] m = new String[2];
         ArrayList<api_det> list = new ArrayList<api_det>();
         String sql = "select * from api_det where apid_id = ? ;";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, code);
              try (ResultSet res = ps.executeQuery();) {
@@ -835,7 +836,7 @@ public class ediData {
         api_det r = null;
         String[] m = new String[2];
         String sql = "select * from api_det where apid_id = ? and apid_method = ? ;";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, id);
         ps.setString(2, method);
@@ -871,8 +872,12 @@ public class ediData {
     public static ArrayList<String> getAPIMethodsList(String nbr) {
         ArrayList<String> lines = new ArrayList<String>();
         try{
-        Class.forName(driver).newInstance();
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         try{
             Statement st = con.createStatement();
             ResultSet res = null;
@@ -900,8 +905,12 @@ public class ediData {
     public static ArrayList getMapMstrList() {
        ArrayList mylist = new ArrayList();
         try{
-            Class.forName(driver);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -928,8 +937,12 @@ public class ediData {
     public static ArrayList getMapStructList() {
        ArrayList mylist = new ArrayList();
         try{
-            Class.forName(driver);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -956,7 +969,7 @@ public class ediData {
     public static boolean isAPIMethodUnique(String api, String method) {
         boolean x = false;
          String sql = "select * from api_det where apid_id = ? and apid_method = ? ;";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, api);
         ps.setString(2, method);
@@ -976,7 +989,7 @@ public class ediData {
         String sql = "select api_id, api_url, api_port, api_path, api_user, edic_as2id, edic_as2url, " +
                 " api_encrypted, api_signed, api_cert " +
                 " from api_mstr inner join edi_ctrl where api_class = 'AS2' and api_id = ?;";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, id);
              try (ResultSet res = ps.executeQuery();) {

@@ -26,8 +26,9 @@ SOFTWARE.
 package com.blueseer.edi;
 
 import bsmf.MainFrame;
-import com.blueseer.utl.BlueSeerUtils;
 import static bsmf.MainFrame.db;
+import com.blueseer.utl.BlueSeerUtils;
+import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
@@ -365,7 +366,12 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
      
      try {
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -444,7 +450,12 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
      
      try {
             boolean proceed = true;
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             try {
                    
@@ -511,7 +522,12 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
         if (proceed) {
         try {
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             try {
                   
@@ -545,7 +561,12 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
        
         try {
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {

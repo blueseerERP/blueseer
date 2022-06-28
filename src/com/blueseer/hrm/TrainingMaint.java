@@ -44,6 +44,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import static bsmf.MainFrame.driver;
+import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.mydialog;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.reinitpanels;
@@ -420,7 +421,12 @@ public class TrainingMaint extends javax.swing.JPanel implements IBlueSeer {
      
      try {
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -477,7 +483,12 @@ public class TrainingMaint extends javax.swing.JPanel implements IBlueSeer {
          
             DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
             boolean proceed = true;
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             try {
                     for (int i = 0; i < emptable.getRowCount(); i++) {
@@ -519,7 +530,12 @@ public class TrainingMaint extends javax.swing.JPanel implements IBlueSeer {
         if (proceed) {
         try {
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             try {
                    int i =  st.executeUpdate("delete FROM  emp_train where emptrid = " + "'" + x[0] + "'" + ";");
@@ -552,7 +568,12 @@ public class TrainingMaint extends javax.swing.JPanel implements IBlueSeer {
        
         try {
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -914,7 +935,12 @@ public class TrainingMaint extends javax.swing.JPanel implements IBlueSeer {
             
             try {
 
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {

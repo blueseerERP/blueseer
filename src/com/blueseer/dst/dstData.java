@@ -28,6 +28,7 @@ package com.blueseer.dst;
 import bsmf.MainFrame;
 import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.driver;
+import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
@@ -373,7 +374,7 @@ public class dstData {
         do_mstr r = null;
         String[] m = new String[2];
         String sql = "select * from do_mstr where do_nbr = ? ;";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, x[0]);
              try (ResultSet res = ps.executeQuery();) {
@@ -405,7 +406,7 @@ public class dstData {
         String[] m = new String[2];
         ArrayList<dod_mstr> list = new ArrayList<dod_mstr>();
         String sql = "select * from dod_mstr where dod_nbr = ? ;";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, code);
              try (ResultSet res = ps.executeQuery();) {
@@ -435,7 +436,7 @@ public class dstData {
         dod_mstr r = null;
         String[] m = new String[2];
         String sql = "select * from dod_mstr where dod_nbr = ? and dod_line = ? ;";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, shipto);
         ps.setString(2, code);
@@ -543,7 +544,12 @@ public class dstData {
         ArrayList<String> lines = new ArrayList<String>();
         try{
         Class.forName(driver).newInstance();
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         try{
             Statement st = con.createStatement();
             ResultSet res = null;

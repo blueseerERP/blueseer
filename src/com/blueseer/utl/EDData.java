@@ -29,6 +29,7 @@ import bsmf.MainFrame;
 import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.dbtype;
 import static bsmf.MainFrame.driver;
+import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
@@ -69,8 +70,12 @@ public class EDData {
     public static boolean addEDIAttributeRecord(String sndid, String rcvid, String doc, String key, String value) {
         boolean myreturn = false;
           try {
-            Class.forName(driver);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -117,8 +122,12 @@ public class EDData {
     public static boolean addEDIPartner(ArrayList<String> list) {
                  boolean myreturn = false;
                   try {
-            Class.forName(driver).newInstance();
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -189,8 +198,12 @@ public class EDData {
     public static boolean addEDIDocumentStructures(ArrayList<String> list) {
                  boolean myreturn = false;
                   try {
-            Class.forName(driver).newInstance();
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -280,7 +293,12 @@ public class EDData {
                  boolean myreturn = false;
                   try {
             Class.forName(driver).newInstance();
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -356,7 +374,12 @@ public class EDData {
            
             try{
             Class.forName(driver);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -390,7 +413,12 @@ public class EDData {
         ArrayList<String[]> x = new ArrayList<String[]>();
             try{
             Class.forName(driver);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -437,7 +465,12 @@ public class EDData {
         ArrayList<String[]> x = new ArrayList<String[]>();
             try{
             Class.forName(driver);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -479,7 +512,12 @@ public class EDData {
              String x = "";
             try{
             Class.forName(driver);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -510,7 +548,12 @@ public class EDData {
              String x = "";
             try{
             Class.forName(driver);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -553,7 +596,12 @@ public class EDData {
              String[] mystring = new String[]{"","","","","","","0","0","0","","","","","","","","","","","",""};
         try{
             Class.forName(driver);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -609,7 +657,12 @@ public class EDData {
              ArrayList<String> x = new ArrayList<String>();
         try{
             Class.forName(driver);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -645,7 +698,12 @@ public class EDData {
              String[] mystring = new String[15];
         try{
             Class.forName(driver);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -692,7 +750,12 @@ public class EDData {
            String mystring = "";
         try{
             Class.forName(driver);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -728,7 +791,12 @@ public class EDData {
            String mystring = "";
         try{
             Class.forName(driver);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -763,7 +831,12 @@ public class EDData {
        String mystring = "";
         try{
             Class.forName(driver);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -797,7 +870,12 @@ public class EDData {
        ArrayList mylist = new ArrayList();
         try{
             Class.forName(driver);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -828,7 +906,12 @@ public class EDData {
        ArrayList mylist = new ArrayList();
         try{
             Class.forName(driver);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -859,7 +942,12 @@ public class EDData {
        ArrayList<String[]> mylist = new ArrayList<String[]>();
         try{
             Class.forName(driver);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -895,7 +983,12 @@ public class EDData {
        ArrayList mylist = new ArrayList();
         try{
             Class.forName(driver);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -942,7 +1035,12 @@ public class EDData {
        ArrayList mylist = new ArrayList();
         try{
             Class.forName(driver);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -989,7 +1087,12 @@ public class EDData {
        ArrayList mylist = new ArrayList();
         try{
             Class.forName(driver);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -1037,7 +1140,12 @@ public class EDData {
        ArrayList mylist = new ArrayList();
         try{
             Class.forName(driver);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -1085,7 +1193,12 @@ public class EDData {
     public static void updateEDIPOStatus(String po) {
        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd"); 
        try{
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         Statement st = con.createStatement();
         try{
            st.executeUpdate(
@@ -1111,7 +1224,12 @@ public class EDData {
     public static void updateEDIPOStatus(ArrayList<String> orders) {
        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd"); 
        try{
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         Statement st = con.createStatement();
         try{
             for (String x : orders) {
@@ -1140,7 +1258,12 @@ public class EDData {
     public static void updateEDIASNStatus(String shipper) {
        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd"); 
        try{
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         Statement st = con.createStatement();
         try{
            st.executeUpdate(
@@ -1166,7 +1289,12 @@ public class EDData {
     public static void updateEDIASNStatus(ArrayList<String> shippers) {
        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd"); 
        try{
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         Statement st = con.createStatement();
         try{
             for (String s : shippers) {
@@ -1195,7 +1323,12 @@ public class EDData {
     public static void updateEDIOrderStatus(String order) {
        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd"); 
        try{
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         Statement st = con.createStatement();
         try{
            st.executeUpdate(
@@ -1221,7 +1354,12 @@ public class EDData {
     public static void updateEDIOrderStatus(ArrayList<String> orders) {
        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd"); 
        try{
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         Statement st = con.createStatement();
         try{
             for (String x : orders) { 
@@ -1250,7 +1388,12 @@ public class EDData {
     public static void updateEDIInvoiceStatus(String shipper) {
        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd"); 
        try{
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         Statement st = con.createStatement();
         try{
            st.executeUpdate(
@@ -1275,7 +1418,12 @@ public class EDData {
     
     public static void updateEDIInvoiceStatus(ArrayList<String> shippers) {
        try{
-        Connection con = DriverManager.getConnection(url + db, user, pass);
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
         Statement st = con.createStatement();
         try{
            for (String s : shippers) { 
@@ -1304,7 +1452,12 @@ public class EDData {
        ArrayList mylist = new ArrayList();
         try{
             Class.forName(driver);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -1335,7 +1488,12 @@ public class EDData {
        String x = "";
         try{
             Class.forName(driver);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -1370,7 +1528,12 @@ public class EDData {
              String mystring = "";
         try{
             Class.forName(driver);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -1404,7 +1567,12 @@ public class EDData {
              String mystring[] = new String[]{"","","","",""};
         try{
             Class.forName(driver);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -1441,7 +1609,12 @@ public class EDData {
        String x = "??";
         try{
             Class.forName(driver);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -1474,7 +1647,12 @@ public class EDData {
        String x = "??";
         try{
             Class.forName(driver);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -1645,7 +1823,12 @@ public class EDData {
        String mystring = "";
         try{
             Class.forName(driver);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -1676,7 +1859,12 @@ public class EDData {
        String mystring = "";
         try{
             Class.forName(driver);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -1707,7 +1895,12 @@ public class EDData {
        String mystring = "";
         try{
             Class.forName(driver);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -1739,7 +1932,12 @@ public class EDData {
        String mystring = "";
         try{
             Class.forName(driver);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -1770,7 +1968,12 @@ public class EDData {
        String mystring = "";
         try{
             Class.forName(driver);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -1801,7 +2004,12 @@ public class EDData {
        String mystring = "";
         try{
             Class.forName(driver);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -1833,7 +2041,12 @@ public class EDData {
        String mystring = "";
         try{
             Class.forName(driver);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -1864,7 +2077,12 @@ public class EDData {
        String mystring = "";
         try{
             Class.forName(driver);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -1895,7 +2113,12 @@ public class EDData {
        String mystring = "";
         try{
             Class.forName(driver);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -1927,7 +2150,12 @@ public class EDData {
        String mystring = "";
         try{
             Class.forName(driver);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -1958,7 +2186,12 @@ public class EDData {
        boolean isArchive = true;
         try{
             Class.forName(driver);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -1989,7 +2222,12 @@ public class EDData {
        boolean isDelete = true;
         try{
             Class.forName(driver);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
@@ -2020,7 +2258,12 @@ public class EDData {
     public static void updateEDILogWith997(ArrayList<String> docs, String ackdoctype, String ackgsctrlnum, String[] control) {
           try {
             Class.forName(driver);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2054,7 +2297,12 @@ public class EDData {
     public static void writeEDILog(String[] control, String severity, String message) {
           try {
             Class.forName(driver);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             try {
                 
@@ -2093,7 +2341,12 @@ public class EDData {
     public static void writeEDILogMulti(String[] control, ArrayList<String[]> messages) {
           try {
             Class.forName(driver);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             try {
                 
@@ -2134,7 +2387,12 @@ public class EDData {
     public static void writeEDIFileLog(String[] control) {
           try {
             Class.forName(driver);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             try {
                 
@@ -2164,7 +2422,12 @@ public class EDData {
         String x = "success";  
         try {
             Class.forName(driver);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2203,7 +2466,12 @@ public class EDData {
     public static void updateEDIFileLogStatusManual(String comkey) {
         try {
             Class.forName(driver);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             try {
                 st.executeUpdate("update edi_file set " 
@@ -2226,7 +2494,12 @@ public class EDData {
         String x = "";
         try {
             Class.forName(driver);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2256,7 +2529,12 @@ public class EDData {
         String x = "";
         try {
             Class.forName(driver);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2286,7 +2564,12 @@ public class EDData {
         String[] x = new String[]{"","","","",""};
         try {
             Class.forName(driver);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2320,7 +2603,12 @@ public class EDData {
         String[] x = new String[]{"","","","",""};
         try {
             Class.forName(driver);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -2355,7 +2643,12 @@ public class EDData {
             int returnkey = 0;
           try {
             Class.forName(driver);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             try {
                 
@@ -2481,7 +2774,12 @@ public class EDData {
             
           try {
             Class.forName(driver);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             try {
                 
@@ -2540,7 +2838,12 @@ public class EDData {
             
           try {
             Class.forName(driver);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             try {
                 
@@ -2567,7 +2870,12 @@ public class EDData {
             // keys is a string[] with doctype, groupctrlnum, docctrlnum, ackfile 
           try {
             Class.forName(driver);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             try {
                 
@@ -2599,7 +2907,12 @@ public class EDData {
             // keys is a string[] with doctype, groupctrlnum, ackfile 
           try {
             Class.forName(driver);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             try {
                     st.executeUpdate("update edi_idx set " +
@@ -2730,7 +3043,12 @@ public class EDData {
           try {
 
             Class.forName(driver);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
           
@@ -2856,7 +3174,12 @@ public class EDData {
            try {
 
             Class.forName(driver);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
           
@@ -2914,7 +3237,12 @@ public class EDData {
            try {
 
             Class.forName(driver);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
           
@@ -2958,7 +3286,12 @@ public class EDData {
            try {
 
             Class.forName(driver);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
           
@@ -3015,7 +3348,12 @@ public class EDData {
            try {
 
             Class.forName(driver);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
           
@@ -3088,7 +3426,12 @@ public class EDData {
            try {
 
             Class.forName(driver);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
           
@@ -3136,7 +3479,12 @@ public class EDData {
            try {
 
             Class.forName(driver);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
           
@@ -3198,7 +3546,12 @@ public class EDData {
            try {
 
             Class.forName(driver);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
           
@@ -3266,7 +3619,12 @@ public class EDData {
            try {
 
             Class.forName(driver);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
           
@@ -3310,7 +3668,12 @@ public class EDData {
           try {
 
             Class.forName(driver);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
           
@@ -3435,7 +3798,12 @@ public class EDData {
            try {
 
             Class.forName(driver);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
           
@@ -3485,7 +3853,12 @@ public class EDData {
           try {
 
             Class.forName(driver);
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {

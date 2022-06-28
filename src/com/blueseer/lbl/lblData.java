@@ -27,6 +27,7 @@ package com.blueseer.lbl;
 
 import bsmf.MainFrame;
 import static bsmf.MainFrame.db;
+import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
@@ -55,7 +56,7 @@ public class lblData {
                         + "lbl_addrcode, lbl_addrname, lbl_addr1, lbl_addr2, lbl_addrcity, lbl_addrstate, lbl_addrzip, lbl_addrcountry, "
                         + "lbl_crt_date, lbl_ship_date, lbl_userid, lbl_printer, lbl_prog, lbl_site, lbl_loc, lbl_trantype)  " +
                 " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
              PreparedStatement ps = con.prepareStatement(sqlSelect);) {
              ps.setString(1, x.lbl_id);
           try (ResultSet res = ps.executeQuery();
@@ -111,7 +112,7 @@ public class lblData {
         String sqlSelect = "select * from label_zebra where lblz_code = ?";
         String sqlInsert = "insert into label_zebra (lblz_code, lblz_desc, lblz_type, lblz_file)  " +
                 " values (?,?,?,?); "; 
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
              PreparedStatement ps = con.prepareStatement(sqlSelect);) {
              ps.setString(1, x.lblz_code);
           try (ResultSet res = ps.executeQuery();
@@ -141,7 +142,7 @@ public class lblData {
         String[] m = new String[2];
         String sql = "update label_zebra set lblz_desc = ?, lblz_type = ?, lblz_file = ? " +
                 "  where lblz_code = ? ";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql)) {
         ps.setString(1, x.lblz_desc);
         ps.setString(2, x.lblz_type);
@@ -159,7 +160,7 @@ public class lblData {
     public static String[] deleteLabelZebraMstr(label_zebra x) { 
        String[] m = new String[2];
         String sql = "delete from label_zebra where lblz_code = ?; ";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql)) {
         ps.setString(1, x.lblz_code);
         int rows = ps.executeUpdate();
@@ -175,7 +176,7 @@ public class lblData {
         label_zebra r = null;
         String[] m = new String[2];
         String sql = "select * from label_zebra where lblz_code = ? ;";
-        try (Connection con = DriverManager.getConnection(url + db, user, pass);
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, x[0]);
              try (ResultSet res = ps.executeQuery();) {
@@ -209,7 +210,12 @@ public class lblData {
               String userid, String printer, String prog, String site, String loc, String trantype) {
           String shiptocode = "";
           try {
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -271,7 +277,12 @@ public class lblData {
       
     public static void updateLabelStatus(String serialno, String value) {
           try {
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
             try {
                  st.executeUpdate("update label_mstr set lbl_scan = " + "'" + value + "'" + " where lbl_id = " + "'" + serialno + "'" 
@@ -293,7 +304,12 @@ public class lblData {
           String myreturn = "";
           String delim = "+-+";
           try {
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -354,7 +370,12 @@ public class lblData {
           int i = 0;
           
           try {
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -381,7 +402,12 @@ public class lblData {
        ArrayList myarray = new ArrayList();
         try{
             
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -417,7 +443,12 @@ public class lblData {
       int myreturn = 0;
 
       try {
-            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
