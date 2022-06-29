@@ -533,7 +533,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
             if (s[0].equals("uoms")) {
               dduom.addItem(s[1]); 
             }
-            if (s[0].equals("taxecodes")) {
+            if (s[0].equals("taxcodes")) {
               ddtax.addItem(s[1]); 
             }
             if (s[0].equals("customers")) {
