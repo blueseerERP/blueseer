@@ -710,6 +710,9 @@ try {
                 double qty = 0;
                 double dol = 0;
                 double total = 0;
+                double tax = 0;
+                double disc = 0;
+                double charge = 0;
                 int i = 0;
                 String fromcust = "";
                 String tocust = "";
@@ -747,21 +750,27 @@ try {
                  DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
              
                  res = st.executeQuery("SELECT so_nbr, so_rmks, so_cust, so_curr, so_po, so_ord_date, so_due_date, so_status, " +
-                        " sum(sod_ord_qty) as totqty, sum(sod_ord_qty * sod_netprice) as totdol, coalesce(sos_amt,0) as taxamt " +
+                        " sum(sod_ord_qty) as totqty, sum(sod_ord_qty * sod_netprice) as totdol, " +
+                        " (select sum(case when sos_type = 'discount' and sos_amttype = 'percent' then sos_amt else '0' end) from sos_det where sos_nbr = so_nbr) as 'discountpercent', " +
+                        " (select sum(case when sos_type = 'charge' then sos_amt else '0' end) from sos_det where sos_nbr = so_nbr) as 'charge'," + 
+                        " (select sum(case when sos_type = 'tax' and sos_amttype = 'percent' then sos_amt end) from sos_det where sos_nbr = so_nbr)as 'taxpercent', " +
+                        " (select sum(case when sos_type = 'tax' and sos_amttype = 'amount' then sos_amt end) from sos_det where sos_nbr = so_nbr) as 'taxcharge' " +
                         " FROM  so_mstr left outer join sod_det on sod_nbr = so_nbr " +
-                        " left outer join sos_det on sos_nbr = so_nbr and sos_type = 'tax' and sos_amttype <> 'percent' " + 
                         " where so_ord_date >= " + "'" + dfdate.format(dcFrom.getDate())  + "'" + 
                         " AND so_ord_date <= " + "'" + dfdate.format(dcTo.getDate()) + "'" + 
                         " AND so_cust >= " + "'" + fromcust + "'" + 
                         " AND so_cust <= " + "'" + tocust + "'" + 
                         " AND so_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + 
                         " AND so_type = 'DISCRETE' " +
-                         " group by so_nbr, so_rmks, so_cust, so_curr, so_po, so_ord_date, so_due_date, so_status, sos_amt order by so_nbr desc ;");    
+                         " group by so_nbr, so_rmks, so_cust, so_curr, so_po, so_ord_date, so_due_date, so_status order by so_nbr desc ;");    
                  
                   
                 
-                       while (res.next()) {
-                       
+                    while (res.next()) {
+                    total = 0;
+                    tax = 0;
+                    disc = 0;
+                    charge = 0;
                            
                   // planstatus = schData.orderPlanStatus(res.getString("so_nbr"));
                     
@@ -775,7 +784,29 @@ try {
                         continue;                       
 
                    // total = getOrderTotal(res.getString("so_nbr"));
-                    dol = dol + (res.getDouble("totdol") + res.getDouble("taxamt"));
+                  
+                    // include charges in net amount before taxing
+                    // add discount / charge
+                    // NOTE:  all disc are implied in netprice at item level
+                    if (res.getDouble("discountpercent") != 0) {
+                      disc = res.getDouble("totdol") * (res.getDouble("discountpercent") / 100.0);
+                    } else {
+                      disc = 0;  
+                    }
+                    charge = res.getDouble("charge");
+                    total = res.getDouble("totdol") + charge;  // charges added to total before taxing
+                    
+                    // now do tax
+                    if (res.getDouble("taxpercent") != 0) {
+                      tax = total * (res.getDouble("taxpercent") / 100.0);
+                    } else {
+                      tax = 0;  
+                    }
+                    tax += res.getDouble("taxcharge");
+                                        
+                    total = total + tax;
+                    
+                    dol = dol + total;
                     qty = qty + res.getDouble("totqty");
                     i++;
                         mymodel.addRow(new Object[]{
@@ -788,7 +819,7 @@ try {
                                 res.getString("so_ord_date"),
                                 res.getString("so_due_date"),
                                 res.getDouble("totqty"),
-                                bsParseDouble(currformatDouble(dol)),
+                                bsParseDouble(currformatDouble(total)),
                                 res.getString("so_curr"),
                                 res.getString("so_status") 
                                // planstatus
