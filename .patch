@@ -16,3 +16,5 @@ patch=4
 # more validations; beta of enhancements #61, #62
 patch=5
 # perf mods for cust master loading; mods to patch loading utility
+patch=6
+# additions of pooling library for performance improvements with mysql remote conn
