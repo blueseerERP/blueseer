@@ -3521,16 +3521,12 @@ public class OVData {
         try {
             
             Connection con = null;
-        if (ds != null) {
-          con = ds.getConnection();
-        } else {
-          con = DriverManager.getConnection(url + db, user, pass);  
-        }
             if (ds != null) {
-                  con = ds.getConnection();
+              con = ds.getConnection();
             } else {
-                  con = DriverManager.getConnection(url + db, user, pass);  
+              con = DriverManager.getConnection(url + db, user, pass);  
             }
+            
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -3582,11 +3578,7 @@ public class OVData {
             } else {
               con = DriverManager.getConnection(url + db, user, pass);  
             }
-            if (ds != null) {
-              con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
+           
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
@@ -4114,9 +4106,8 @@ public class OVData {
                 if (st != null) {
                     st.close();
                 }
-                if (con != null) {
                     con.close();
-                }
+               
             }
         } catch (Exception e) {
             MainFrame.bslog(e);

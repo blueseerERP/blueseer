@@ -531,10 +531,13 @@ public class BOMMaint extends javax.swing.JPanel {
         if (key.length > 1 && key[1].isEmpty() && ! BomID.isEmpty()) {
             key[1] = BomID;
         }
+        
         bom_mstr z = getBOMMstr(key);
+        
         x = z;     
         
         boolean hasRouting =  getRouting(key[0]);
+        
         String[] message = x.m();
         if (! hasRouting) {
           message[0] = "-1";
@@ -700,15 +703,22 @@ public class BOMMaint extends javax.swing.JPanel {
           ddcomp.removeItem(key);  // remove parent from component list
       }  else {
           tbkey.setText(x.bom_item());
+          
           getOPs(x.bom_item());
+          
           parent = x.bom_item();
           tblotsize.setText(invData.getItemLotSize(x.bom_item()));
           ddcomp.removeItem(tbkey.getText());  // remove parent from component list
           tbbomid.setText(BomID);
+          
           getComponents(x.bom_item(), BomID);
+          
           bind_tree(x.bom_item(), BomID);
+          
           callSimulateCost();
+          
           getCostSets(x.bom_item());
+          
           cbdefault.setSelected(BlueSeerUtils.ConvertStringToBool(x.bom_primary()));
           cbenabled.setSelected(BlueSeerUtils.ConvertStringToBool(x.bom_enabled()));
           tbbomdesc.setText(x.bom_desc());
@@ -934,7 +944,7 @@ public class BOMMaint extends javax.swing.JPanel {
                             });
               
                 }
-                res.close();
+                
                tbtotmaterial.setText(String.valueOf(bsFormatDouble5(matlcost)));
             } catch (SQLException s) {
                 MainFrame.bslog(s);
