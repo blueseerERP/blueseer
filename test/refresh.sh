@@ -17,7 +17,7 @@ echo "adding data directory..."
 cp -R ../sf/data data
 
 echo "creating bs.cfg file for sqlite data connection"
-cp ../scripts/bs.cfg bs.cfg
+cp ../scripts/bs.cfg.sqlite.linux bs.cfg
 
 echo "NOTE!!  you will need to adjust the property name 'JDK17dir' in the build.xml file for your JDK17 path"
 echo "assign the path to the parameter as (example) /some/path/to/jdk-17  "
