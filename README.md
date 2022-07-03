@@ -14,7 +14,7 @@
 
 
 <img src="https://github.com/blueseerERP/blueseer/blob/master/src/images/market2.png" alt="Free ERP image 2">
-'''BlueSeer ERP''' is a Free open source ERP software package.  It was designed to meet the needs of
+'''BlueSeer ERP''' is a Free open source multilingual ERP software package.  It was designed to meet the needs of
 the manufacturing community for an ERP system that is easily customizable and
 extendable while providing generic functionality that is typically observed in
 most manufacturing environments.  BlueSeer also provides a fully functional EDI mapping tool for EDI translations and file traffic monitoring. 
