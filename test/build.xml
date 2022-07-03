@@ -7,7 +7,7 @@
     <property name="dist.dir" location="../dist" />
     <property name="test.dir" location="../test" />
     <property name="lib.dir" location="../lib" />
-    <property name="JDK17dir" location="C:\java\jdk-17" />
+    <property name="JDK17dir" location="/path/to/your/jdk17..." />
     <property name="javac17" location="${JDK17dir}/bin/javac" />
     <property name="java17" location="${JDK17dir}/bin/java" />
     <property name="classpath.property" 
