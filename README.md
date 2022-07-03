@@ -19,8 +19,8 @@ the manufacturing community for an ERP system that is easily customizable and
 extendable while providing generic functionality that is typically observed in
 most manufacturing environments.  BlueSeer also provides a fully functional EDI mapping tool for EDI translations and file traffic monitoring. 
 BlueSeer is released for free use under the MIT License.   The application and source code
-are available for download at github.com.  The development of BlueSeer
-began in 2005, and the latest 'stable' release of version 6.2 was released on 2022-05-08.</br>
+are available for download at github.com. BlueSeer was originally launched in 2017 and continues to evolve to meet user demands.
+The latest 'stable' release of version 6.2 was released on 2022-05-08.</br>
 
 <h1>Functionality</h1>
 
