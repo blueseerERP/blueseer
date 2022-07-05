@@ -2,14 +2,13 @@ These instructions are for the jaronly zip file.   This is an easier patch
 install for core code changes that are specific to the application itself (the
 core blueseer.jar file).
 
-There are three files in the blueseer.jaronly.zip file, including this
-instructions.txt file.   
 
-1)  extract the blueseer.jar file from the zip and overwrite the
-BlueSeer/dist/blueseer.jar file with the extracted file.
+1)  extract all files of type .jar from the zip and copy into the
+blueseer/dist directory...overwriting what may already be there. 
 
-2)  extract the .patch file from the zip and overwrite the BlueSeer/.patch
-file with the extracted file.
+2)  extract the .patch file from the zip and overwrite the blueseer/.patch
+file with the extracted file.  This should be placed in the root path of
+blueseer...i.e. blueseer/.patch
 
 3)  Restart the application
 
