@@ -18753,8 +18753,15 @@ MainFrame.bslog(e);
             } catch (SQLException s) {
                 s.printStackTrace();
                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -18795,8 +18802,15 @@ MainFrame.bslog(e);
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -18849,8 +18863,15 @@ MainFrame.bslog(e);
     catch (SQLException s){
          MainFrame.bslog(s);
 
-    }
-    con.close();
+    } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
 }
 catch (Exception e){
     MainFrame.bslog(e);
@@ -18883,8 +18904,15 @@ return mylist;
     catch (SQLException s){
          MainFrame.bslog(s);
 
-    }
-    con.close();
+    } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
 }
 catch (Exception e){
     MainFrame.bslog(e);
@@ -18917,8 +18945,15 @@ return mylist;
     catch (SQLException s){
          MainFrame.bslog(s);
 
-    }
-    con.close();
+    } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
 }
 catch (Exception e){
     MainFrame.bslog(e);
@@ -18952,8 +18987,15 @@ return mylist;
            }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -18984,8 +19026,15 @@ return mylist;
             }
             catch (SQLException s) {
                  MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
