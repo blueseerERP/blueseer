@@ -18032,8 +18032,15 @@ MainFrame.bslog(e);
                 } // if i == 0
             } catch (SQLException s) {
                 MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -18056,8 +18063,12 @@ MainFrame.bslog(e);
             }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -18081,8 +18092,12 @@ MainFrame.bslog(e);
             }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -18106,8 +18121,12 @@ MainFrame.bslog(e);
             }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -18131,8 +18150,12 @@ MainFrame.bslog(e);
             }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -18156,8 +18179,12 @@ MainFrame.bslog(e);
             }
             catch (SQLException s){
                  MainFrame.bslog(s);
+            } finally {
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            con.close();
         }
         catch (Exception e){
             MainFrame.bslog(e);
@@ -18181,8 +18208,12 @@ MainFrame.bslog(e);
         }
         catch (SQLException s){
              MainFrame.bslog(s);
-        }
-        con.close();
+        } finally {
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -18234,7 +18265,11 @@ MainFrame.bslog(e);
             try {
            String item = "";
            String site = "";
+           
              int k = 0;
+            ArrayList a_part = new ArrayList();
+           ArrayList a_qty =   new ArrayList();
+           ArrayList a_duedate =   new ArrayList(); 
 
              if (fromitem.isEmpty()) {
                  fromitem = bsmf.MainFrame.lowchar;
@@ -18282,30 +18317,55 @@ MainFrame.bslog(e);
                              k++;
                          }
                          if (k == 0) {
-                             recnumber++;
-                                int nbr = OVData.getNextNbr("plan");
-                                st3.executeUpdate("insert into plan_mstr "
-                                    + "(plan_nbr, plan_item, plan_qty_req, plan_date_create, plan_date_due, plan_type, plan_site ) "
+                             a_part.add(item);
+                             a_qty.add(qty);
+                             a_duedate.add(df.format(dates.get(j - 1)));
+                         }
+                  }  // for 1 to 13
+
+                }  // while res
+
+                 // adjustment for sqlite
+                for (int z = 0 ; z < a_part.size(); z++) {
+                    int nbr = OVData.getNextNbr("plan");
+                    recnumber++;
+                                st.executeUpdate("insert into plan_mstr "
+                                    + "(plan_nbr, plan_order, plan_line, plan_item, plan_qty_req, plan_date_create, plan_date_due, plan_type, plan_site ) "
                                     + " values ( " + "'" + nbr + "'" + ","
-                                    + "'" + item + "'" + ","
-                                    + "'" + qty + "'" + ","
+                                    + "''" + ","
+                                    + "''" + ","
+                                    + "'" + a_part.get(z) + "'" + ","
+                                    + "'" + a_qty.get(z) + "'" + ","
                                     + "'" + df.format(cal.getTime()) + "'" + ","
-                                    + "'" + df.format(dates.get(j - 1)) + "'" + ","
+                                    + "'" + a_duedate.get(z) + "'" + ","
                                     + "'FCST'" + ","
                                     + "'" + site + "'"
                                     + ")"
                                     + ";");
-                         }
-                  }  
-
                 }
-
+                
        }
         catch (SQLException s){
              MainFrame.bslog(s);
 
+        } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (res2 != null) {
+                    res2.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (st2 != null) {
+                    st2.close();
+                }
+                if (st3 != null) {
+                    st3.close();
+                }
+                con.close();
         }
-        con.close();
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -18501,8 +18561,24 @@ MainFrame.bslog(e);
         catch (SQLException s){
              MainFrame.bslog(s);
 
+        } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (res2 != null) {
+                    res2.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (st2 != null) {
+                    st2.close();
+                }
+                if (st3 != null) {
+                    st3.close();
+                }
+                con.close();
         }
-        con.close();
     }
     catch (Exception e){
         MainFrame.bslog(e);
@@ -18616,6 +18692,9 @@ MainFrame.bslog(e);
                 }
                 if (st != null) {
                     st.close();
+                }
+                if (st2 != null) {
+                    st2.close();
                 }
                 con.close();
         }
