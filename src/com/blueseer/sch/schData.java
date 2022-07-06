@@ -32,7 +32,9 @@ import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -45,6 +47,38 @@ import java.sql.Statement;
  * @author terryva
  */
 public class schData {
+    
+    public static plan_mstr getPlanMstr(String[] x) {
+        plan_mstr r = null;
+        String[] m = new String[2];
+        String sql = "select * from plan_mstr where plan_nbr = ? ;";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());   
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, x[0]);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new plan_mstr(m);  // minimum return
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new plan_mstr(m, res.getString("plan_nbr"), res.getString("plan_item"), res.getString("plan_site"),
+                    res.getString("plan_qty_req").replace('.',defaultDecimalSeparator), res.getString("plan_qty_comp").replace('.',defaultDecimalSeparator), res.getString("plan_qty_comp").replace('.',defaultDecimalSeparator), 
+                    res.getString("plan_date_create"), res.getString("plan_date_due"), res.getString("plan_date_sched"),
+                    res.getString("plan_status"), res.getString("plan_rmks"), res.getString("plan_order"), res.getString("plan_line"), 
+                    res.getString("plan_type"), res.getString("plan_cell"), res.getString("plan_is_sched")
+        );
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getClassName() + "." + Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new plan_mstr(m);
+        }
+        return r;
+    }
+    
     
     // misc functions 
     public static String getPlanItem(String serialno) {
@@ -66,7 +100,7 @@ public class schData {
         } 
       return x;
   }
-
+    
     public static double getPlanSchedQty(String serialno) {
 
       // From perspective of "has it been scanned...or is there a 1 in lbl_scan which is set when label is scanned
@@ -145,7 +179,7 @@ public class schData {
     }
       return myreturn;
   }
-
+       
     public static int getPlanStatus(String serialno) {
           
           // -1 plan_status is void
@@ -453,5 +487,18 @@ public class schData {
       return myreturn;
   }
 
+    
+     public record plan_mstr(String[] m, String plan_nbr, String plan_item,
+        String plan_site, String plan_qty_req, String plan_qty_comp, String plan_qty_sched,
+        String plan_date_create, String plan_date_due, String plan_date_sched, String plan_status,
+        String plan_rmks, String plan_order, String plan_line, String plan_type, String plan_cell,
+        String plan_is_sched) {
+        public plan_mstr(String[] m) {
+            this(m, "", "", "", "", "", "", "", "", "", "",
+                    "", "", "", "", "", "");
+        }
+    }
+     
+    
     
 }

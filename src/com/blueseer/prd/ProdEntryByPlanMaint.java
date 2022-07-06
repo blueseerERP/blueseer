@@ -53,6 +53,7 @@ import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.inv.invData;
 import com.blueseer.sch.schData;
+import com.blueseer.sch.schData.plan_mstr;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.awt.Component;
@@ -402,23 +403,27 @@ String sitecitystatezip = "";
 
     private void btcommitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcommitActionPerformed
        
-        
+        plan_mstr pm = schData.getPlanMstr(new String[]{tbscan.getText()});
+        boolean isPlan = true;
+        if (pm.plan_nbr().isBlank()) {
+            isPlan = false;
+        }
         double qty = Double.valueOf(tbqty.getText());
         
-        if (! schData.isPlan(tbscan.getText())) {
+        if (! isPlan) {
             lblmessage.setText(getMessageTag(1070,tbscan.getText()));
             lblmessage.setForeground(Color.red);
             initvars(null);
             return;
         }
         
-        if (schData.isPlan(tbscan.getText()) &&  schData.getPlanStatus(tbscan.getText()) > 0 ) {
+        if (isPlan &&  Integer.valueOf(pm.plan_status()) > 0 ) {
             lblmessage.setText(getMessageTag(1071,tbscan.getText()));
             lblmessage.setForeground(Color.red);
             initvars(null);
             return;
         }
-        if (schData.isPlan(tbscan.getText()) &&  schData.getPlanStatus(tbscan.getText()) < 0 ) {
+        if (isPlan &&  Integer.valueOf(pm.plan_status()) < 0 ) {
             lblmessage.setText(getMessageTag(1072,tbscan.getText()));
             lblmessage.setForeground(Color.red);
             initvars(null);
@@ -439,7 +444,7 @@ String sitecitystatezip = "";
         // qty field is not greater than qty previous + qty scheduled
         // this should work for multiscan and nonmultican conditions
         double prevscanned = schData.getPlanDetTotQtyByOp(tbscan.getText(), ddop.getSelectedItem().toString());
-        double schedqty = schData.getPlanSchedQty(tbscan.getText());
+        double schedqty = pm.plan_qty_sched().isBlank() ? 0 : Double.valueOf(pm.plan_qty_sched());
         if ( qty > (schedqty - prevscanned) ) {
              lblmessage.setText("Qty Exceeds limit (Already Scanned Qty: " + String.valueOf(prevscanned) + " out of SchedQty: " + String.valueOf(schedqty) + ")");
             lblmessage.setForeground(Color.red);
@@ -450,46 +455,33 @@ String sitecitystatezip = "";
         
        
         
-        if (schData.isPlan(tbscan.getText()) &&  schData.getPlanStatus(tbscan.getText()) == 0 ) {
+        if (isPlan &&  Integer.valueOf(pm.plan_status()) == 0 ) {
             
             //OK ...if here..we should be prepared to commit.... Let's commit the transaction with OVData.loadTranHistByTable
+            
             JTable mytable = new JTable();
             javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
                 "Part", "Type", "Operation", "Qty", "Date", "Location", "SerialNo", "Reference", "Site", "Userid", "ProdLine", "AssyCell", "Rmks", "PackCell", "PackDate", "AssyDate", "ExpireDate", "Program", "Warehouse", "BOM"
             });
-            
-            // get necessary info from plan_mstr for this scan and store into mytable(mymodel)
-        try{
-            Connection con = null;
-            if (ds != null) {
-              con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try{
-                 java.util.Date now = new java.util.Date();
-                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-                 
-                res = st.executeQuery("select * from plan_mstr where plan_nbr = " + "'" + tbscan.getText() + "'" + ";" );
-                    while (res.next()) {
-                  String[] detail = invData.getItemDetail(res.getString("plan_item"));
-                  String prodline = detail[3];
-                  String loc = detail[8];
-                  String wh = detail[9];
-                  String expire = detail[10];
-                mymodel.addRow(new Object[]{
-                res.getString("plan_item"),
+             // get necessary info from plan_mstr for this scan and store into mytable(mymodel)
+             String[] detail = invData.getItemDetail(pm.plan_item());
+              String prodline = detail[3];
+              String loc = detail[8];
+              String wh = detail[9];
+              String expire = detail[10];
+              java.util.Date now = new java.util.Date();
+              DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+             mymodel.addRow(new Object[]{
+                pm.plan_item(),
                 "ISS-WIP",
                 ddop.getSelectedItem().toString(),
                 tbqty.getText(),
                 dfdate.format(now),
                 loc, // location
-                tbscan.getText(),  // serialno  ...using JOBID from tubtraveler
-                res.getString("plan_type"),  // reference -- tr_ref holds the scrap code
-                res.getString("plan_site"),
+                tbscan.getText(),  // serialno  
+                pm.plan_type(),  // reference 
+                pm.plan_site(),
                 bsmf.MainFrame.userid,
                 prodline,
                 "",   //  tr_actcell
@@ -502,25 +494,9 @@ String sitecitystatezip = "";
                 wh,
                 ""  // bom will grab default
             });
-                    }
-           }
-            catch (SQLException s){
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-                 
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
+            
+           
+       
             mytable.setModel(mymodel);
             
             
