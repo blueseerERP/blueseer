@@ -13551,9 +13551,11 @@ return mystring;
                  MainFrame.bslog(s);
                  myerror = true;
             } finally {
-            if (st != null) st.close();
-            con.close();
-        }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
         }
         catch (Exception e){
             MainFrame.bslog(e);

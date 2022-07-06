@@ -520,9 +520,7 @@ String sitecitystatezip = "";
         }
         catch (Exception e){
             MainFrame.bslog(e);
-            
         }
-        
             mytable.setModel(mymodel);
             
             
