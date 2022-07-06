@@ -52,6 +52,7 @@ import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.inv.invData;
+import com.blueseer.inv.invData.inv_ctrl;
 import com.blueseer.sch.schData;
 import com.blueseer.sch.schData.plan_mstr;
 import com.blueseer.utl.BlueSeerUtils;
@@ -404,6 +405,11 @@ String sitecitystatezip = "";
     private void btcommitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcommitActionPerformed
        
         plan_mstr pm = schData.getPlanMstr(new String[]{tbscan.getText()});
+        inv_ctrl ic = invData.getINVCtrl(new String[]{tbscan.getText()});
+        double prevscanned = schData.getPlanDetTotQtyByOp(tbscan.getText(), ddop.getSelectedItem().toString());
+        String[] detail = invData.getItemDetail(pm.plan_item());
+        
+        
         boolean isPlan = true;
         if (pm.plan_nbr().isBlank()) {
             isPlan = false;
@@ -432,7 +438,8 @@ String sitecitystatezip = "";
         
          // check inventory control flag... "Plan Multiple Scan Issues"
         // if false...only one scan per plan ticket per operation
-        if (! OVData.isInvCtrlPlanMultiScan() && OVData.isPlanDetByOp(tbscan.getText(), ddop.getSelectedItem().toString())) {
+        
+        if (! BlueSeerUtils.ConvertStringToBool(ic.planmultiscan()) && (prevscanned > 0)) {
             lblmessage.setText("Ticket Already Reported for this Operation " + tbscan.getText() + " / " + ddop.getSelectedItem().toString());
             lblmessage.setForeground(Color.red);
                 initvars(null);
@@ -443,7 +450,7 @@ String sitecitystatezip = "";
         // now lets sum up qtys posted previously (if any) for this OP and this Ticket and make sure
         // qty field is not greater than qty previous + qty scheduled
         // this should work for multiscan and nonmultican conditions
-        double prevscanned = schData.getPlanDetTotQtyByOp(tbscan.getText(), ddop.getSelectedItem().toString());
+       // bsmf.MainFrame.show(pm.plan_qty_sched());
         double schedqty = pm.plan_qty_sched().isBlank() ? 0 : Double.valueOf(pm.plan_qty_sched());
         if ( qty > (schedqty - prevscanned) ) {
              lblmessage.setText("Qty Exceeds limit (Already Scanned Qty: " + String.valueOf(prevscanned) + " out of SchedQty: " + String.valueOf(schedqty) + ")");
@@ -453,7 +460,7 @@ String sitecitystatezip = "";
         }
         
         
-       
+        
         
         if (isPlan &&  Integer.valueOf(pm.plan_status()) == 0 ) {
             
@@ -465,7 +472,7 @@ String sitecitystatezip = "";
                 "Part", "Type", "Operation", "Qty", "Date", "Location", "SerialNo", "Reference", "Site", "Userid", "ProdLine", "AssyCell", "Rmks", "PackCell", "PackDate", "AssyDate", "ExpireDate", "Program", "Warehouse", "BOM"
             });
              // get necessary info from plan_mstr for this scan and store into mytable(mymodel)
-             String[] detail = invData.getItemDetail(pm.plan_item());
+             
               String prodline = detail[3];
               String loc = detail[8];
               String wh = detail[9];
@@ -511,7 +518,7 @@ String sitecitystatezip = "";
                  int key = OVData.CreatePlanDet(mytable);
                  lblmessage.setText("Scan Complete");
                  lblmessage.setForeground(Color.blue);
-                if (OVData.isPrintTicketFromPlanScan()) {               
+                if (BlueSeerUtils.ConvertStringToBool(ic.printsubticket())) {               
                      try {
                         printTubTicket(tbscan.getText(), String.valueOf(key));
                     } catch (PrinterException ex) {

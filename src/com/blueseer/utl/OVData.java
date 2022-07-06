@@ -17817,15 +17817,12 @@ MainFrame.bslog(e);
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
-            boolean proceed = true;
+            
             String _part = "";
             String _parent = "";
             String _op = "";
             double _qty = 0;
-
-
-            DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-            Date now = new Date();
+         
               for (int i = 0; i < mytable.getRowCount(); i++) {
                   _parent = mytable.getValueAt(i, 6).toString();
                   _part = mytable.getValueAt(i, 0).toString();

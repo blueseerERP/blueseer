@@ -63,7 +63,7 @@ public class schData {
                     while(res.next()) {
                         m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
                         r = new plan_mstr(m, res.getString("plan_nbr"), res.getString("plan_item"), res.getString("plan_site"),
-                    res.getString("plan_qty_req").replace('.',defaultDecimalSeparator), res.getString("plan_qty_comp").replace('.',defaultDecimalSeparator), res.getString("plan_qty_comp").replace('.',defaultDecimalSeparator), 
+                    res.getString("plan_qty_req").replace('.',defaultDecimalSeparator), res.getString("plan_qty_comp").replace('.',defaultDecimalSeparator), res.getString("plan_qty_sched").replace('.',defaultDecimalSeparator), 
                     res.getString("plan_date_create"), res.getString("plan_date_due"), res.getString("plan_date_sched"),
                     res.getString("plan_status"), res.getString("plan_rmks"), res.getString("plan_order"), res.getString("plan_line"), 
                     res.getString("plan_type"), res.getString("plan_cell"), res.getString("plan_is_sched")
@@ -144,7 +144,7 @@ public class schData {
 
       // From perspective of "has it been scanned...or is there a 1 in lbl_scan which is set when label is scanned
       // assume it's false i.e. hasn't been scanned.
-      double myreturn = 0;
+      double x = 0;
 
       try {
             Connection con = null;
@@ -160,7 +160,7 @@ public class schData {
                      + " AND pland_op = " + "'" + op + "'"
                      + " ;");
            while (res.next()) {
-               myreturn = res.getDouble("mysum");
+               x = res.getDouble("mysum");
            }
 
         } catch (SQLException s) {
@@ -177,7 +177,7 @@ public class schData {
     } catch (Exception e) {
         MainFrame.bslog(e);
     }
-      return myreturn;
+      return x;
   }
        
     public static int getPlanStatus(String serialno) {
