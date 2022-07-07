@@ -501,8 +501,6 @@ String sitecitystatezip = "";
                 wh,
                 ""  // bom will grab default
             });
-            
-           
        
             mytable.setModel(mymodel);
             
@@ -549,11 +547,13 @@ String sitecitystatezip = "";
 
     private void tbscanFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbscanFocusGained
        tbscan.setBackground(Color.yellow);
+       
     }//GEN-LAST:event_tbscanFocusGained
 
     private void tbscanFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbscanFocusLost
         tbscan.setBackground(Color.white);
         validateScan(tbscan.getText());
+        lblmessage.setText("");
     }//GEN-LAST:event_tbscanFocusLost
 
     private void tbscanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbscanActionPerformed

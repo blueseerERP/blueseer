@@ -395,6 +395,60 @@ public class OVData {
         
     }
     
+    public static int getNextNbr(String countername, int fwdnbr) {
+       int nbr = 0;
+        try{
+           
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                
+                con.setAutoCommit(false);
+                if (dbtype.equals("sqlite")) {
+               res = st.executeQuery("select max(counter_id) as 'num' from counter where " +
+                       " counter_name = " + "'" + countername + "'" + ";");
+                } else {
+                res = st.executeQuery("select max(counter_id) as 'num' from counter where " +
+                       " counter_name = " + "'" + countername + "'" + " for update;");    
+                }
+                while (res.next()) {
+                   nbr = res.getInt("num") + 1;
+                }
+                if (fwdnbr > 0) {
+                st.executeUpdate(
+                       " update counter set counter_id = " + "'" + (nbr + fwdnbr - 1) + "'" +
+                       " where counter_name = " + "'" + countername + "'" + ";" );
+                } else {
+                st.executeUpdate(
+                       " update counter set counter_id = " + "'" + nbr + "'" +
+                       " where counter_name = " + "'" + countername + "'" + ";" );    
+                }
+                con.setAutoCommit(true);
+               
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            }
+            finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return nbr;
+        
+    }
+    
+    
     public static int setNextNbr(String countername, int nbr) {
         try{
             Connection con = null;
@@ -5324,7 +5378,7 @@ public class OVData {
                 }
                 String sduedate = duedate[0].format(DateTimeFormatter.ofPattern("yyyy-MM-dd")); ;
                 int j = 0;
-                int indexnbr = OVData.getNextNbr("order");
+                int indexnbr = OVData.getNextNbr("order", 366); // one more than the max ...when <= ...else the max
                 for (int i = 0; i <= 365; i++) {
                     if ((i % 7) == 0) {
                       sduedate = duedate[i / 7].format(DateTimeFormatter.ofPattern("yyyy-MM-dd")); 
@@ -5396,7 +5450,7 @@ public class OVData {
                     indexnbr++;  // next order number
                 } // for each sales order 
              
-               OVData.setNextNbr("order", indexnbr); 
+               
                 
             } // if proceed
             catch (SQLException s) {
@@ -5450,7 +5504,7 @@ public class OVData {
                 // Now lets do Purchase Orders
                 items = invData.getItemsAndPriceByType("RAW");
                 int j = 0;
-                int indexnbr = OVData.getNextNbr("po");
+                int indexnbr = OVData.getNextNbr("po", 366); // one more than the max ...when <= ...else the max
                 for (int i = 0; i <= 365; i++) {
                     if ((i % 7) == 0) {
                       sduedate = duedate[i / 7].format(DateTimeFormatter.ofPattern("yyyy-MM-dd")); 
@@ -5531,7 +5585,7 @@ public class OVData {
                 indexnbr++;    
                 } // for each purchase order 
               
-             OVData.setNextNbr("po", indexnbr);   
+             
                 
             } // if proceed
             catch (SQLException s) {
@@ -18365,8 +18419,13 @@ MainFrame.bslog(e);
                 }  // while res
 
                  // adjustment for sqlite
+                 int nbr = 0;
                 for (int z = 0 ; z < a_part.size(); z++) {
-                    int nbr = OVData.getNextNbr("plan");
+                    if (z == 0) {
+                      nbr = OVData.getNextNbr("plan", a_part.size()); // skip ahead numbering to reduce db calls
+                    } else {
+                      nbr++;  
+                    }
                     recnumber++;
                                 st.executeUpdate("insert into plan_mstr "
                                     + "(plan_nbr, plan_order, plan_line, plan_item, plan_qty_req, plan_date_create, plan_date_due, plan_type, plan_site ) "
@@ -18576,9 +18635,15 @@ MainFrame.bslog(e);
                              if (makeqty % min > 0) {
                                  qty += 1;
                              }
-                             for (int j = 0; j < qty; j++) {
+                             int roundqty = (int) Math.round(qty);
+                             int nbr = 0;
+                             for (int j = 0; j < roundqty; j++) {
                              recnumber++;
-                                int nbr = OVData.getNextNbr("plan");
+                                if (j == 0) {
+                                  nbr = OVData.getNextNbr("plan", roundqty); // skip ahead numbering to reduce db calls
+                                } else {
+                                  nbr++;  
+                                }
                                 st3.executeUpdate("insert into plan_mstr "
                                     + "(plan_nbr, plan_item, plan_qty_req, plan_date_create, plan_date_due, plan_type, plan_site, plan_rmks ) "
                                     + " values ( " + "'" + nbr + "'" + ","
@@ -18629,7 +18694,7 @@ MainFrame.bslog(e);
     public static int createPlanFromDemand(String site) {
 
     int recnumber = 0;
-
+    
     DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
     Calendar cal = Calendar.getInstance();
     cal.getTime();
@@ -18659,7 +18724,7 @@ MainFrame.bslog(e);
            ArrayList a_qty =   new ArrayList();
            ArrayList a_duedate =   new ArrayList();
 
-
+           
 
             double qty = 0;
 
@@ -18703,8 +18768,13 @@ MainFrame.bslog(e);
 
 
                 // adjustment for sqlite
+                int nbr = 0;
                 for (int z = 0 ; z < a_part.size(); z++) {
-                    int nbr = OVData.getNextNbr("plan");
+                    if (z == 0) {
+                      nbr = OVData.getNextNbr("plan", a_part.size()); // skip ahead numbering to reduce db calls
+                    } else {
+                      nbr++;  
+                    }
                     recnumber++;
                                 st.executeUpdate("insert into plan_mstr "
                                     + "(plan_nbr, plan_order, plan_line, plan_item, plan_qty_req, plan_date_create, plan_date_due, plan_type, plan_site ) "

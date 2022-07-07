@@ -1301,7 +1301,7 @@ public class MRPBrowse extends javax.swing.JPanel {
                " plan_item = " + "'" + item + "'" + " ) s " +
                " inner join item_mstr on it_item = plan_item " +
                " left outer join in_mstr on in_item = it_item and in_loc = it_loc " +
-                       " group by plan_item ; ");
+                       " group by plan_item, in_qoh ; ");
                    z = 0; 
                    while (res2.next()) {
                        z++;
@@ -1379,7 +1379,7 @@ public class MRPBrowse extends javax.swing.JPanel {
                " pod_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +
                " ) s on s.pod_item = it_item" +
                " left outer join in_mstr on in_item = it_item and in_loc = it_loc " +
-               " where it_item = " + "'" + item + "'" + " group by pod_item ; ");
+               " where it_item = " + "'" + item + "'" + " group by pod_item, in_qoh ; ");
                     
                    z = 0;         
                    while (res2.next()) {
@@ -1457,7 +1457,7 @@ public class MRPBrowse extends javax.swing.JPanel {
                " pod_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +
                " ) s on s.pod_item = it_item" +
                " left outer join in_mstr on in_item = it_item and in_loc = it_loc " +
-               " where it_item = " + "'" + item + "'" + " group by pod_item ; ");
+               " where it_item = " + "'" + item + "'" + " group by pod_item, in_qoh ; ");
                     
                    z = 0;         
                    while (res2.next()) {
