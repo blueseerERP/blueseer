@@ -394,7 +394,42 @@ public class OVData {
         return nbr;
         
     }
-      
+    
+    public static int setNextNbr(String countername, int nbr) {
+        try{
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                
+                con.setAutoCommit(false);
+                st.executeUpdate(
+                       " update counter set counter_id = " + "'" + nbr + "'" +
+                       " where counter_name = " + "'" + countername + "'" + ";" );
+                con.setAutoCommit(true);
+               
+            } catch (SQLException s){
+                 MainFrame.bslog(s);
+            }
+            finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return nbr;
+        
+    }
+    
+    
     public static void copyUserPerms(String fromuser, String touser) {
          try {
 
@@ -5289,14 +5324,14 @@ public class OVData {
                 }
                 String sduedate = duedate[0].format(DateTimeFormatter.ofPattern("yyyy-MM-dd")); ;
                 int j = 0;
-                int indexnbr = 0;
+                int indexnbr = OVData.getNextNbr("order");
                 for (int i = 0; i <= 365; i++) {
                     if ((i % 7) == 0) {
                       sduedate = duedate[i / 7].format(DateTimeFormatter.ofPattern("yyyy-MM-dd")); 
                     } 
                     custpos = (int) (Math.random() * (5 - 0)) + 0;
                     j = 0;
-                    indexnbr = OVData.getNextNbr("order");
+                     
                     res =  st.executeQuery("select so_nbr from so_mstr where " +
                                     " so_nbr = " + "'" + String.valueOf(indexnbr) + "'" + ";");
                     
@@ -5358,8 +5393,10 @@ public class OVData {
                    );    
                 } // for each sales order det random z
                 } // if j == 0
+                    indexnbr++;  // next order number
                 } // for each sales order 
              
+               OVData.setNextNbr("order", indexnbr); 
                 
             } // if proceed
             catch (SQLException s) {
@@ -5381,6 +5418,7 @@ public class OVData {
     public static boolean createTestDataPO() {
             boolean myreturn = true;
             ArrayList<String[]> items = invData.getItemsAndPriceByType("FG");
+            String curr = OVData.getDefaultCurrency();
             try {
             
             Connection con = null;
@@ -5412,13 +5450,13 @@ public class OVData {
                 // Now lets do Purchase Orders
                 items = invData.getItemsAndPriceByType("RAW");
                 int j = 0;
-                int indexnbr = 0;
+                int indexnbr = OVData.getNextNbr("po");
                 for (int i = 0; i <= 365; i++) {
                     if ((i % 7) == 0) {
                       sduedate = duedate[i / 7].format(DateTimeFormatter.ofPattern("yyyy-MM-dd")); 
                     } 
                     j = 0;
-                    indexnbr = OVData.getNextNbr("po");
+                    
                     res =  st.executeQuery("select po_nbr from po_mstr where " +
                                     " po_nbr = " + "'" + String.valueOf(indexnbr) + "'" + ";");
                     
@@ -5438,7 +5476,7 @@ public class OVData {
                     "'" +  "1000" + "'" + "," +  
                     "'" +  "site" + "'" + "," + 
                     "'" +  "1000" + "'" + "," +        
-                    "'" +  OVData.getDefaultCurrency() + "'" + "," +   
+                    "'" +  curr + "'" + "," +   
                     "'" +  "admin" + "'" + "," +  
                     "'" +  sduedate + "'" + "," +  
                     "'" +  now + "'" + "," +  
@@ -5490,8 +5528,10 @@ public class OVData {
                    );    
                 } // for each purchase order det random z
                 } // j == 0
+                indexnbr++;    
                 } // for each purchase order 
-                
+              
+             OVData.setNextNbr("po", indexnbr);   
                 
             } // if proceed
             catch (SQLException s) {
