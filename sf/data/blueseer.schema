@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS `ac_mstr` (
-  `ac_id` varchar(12) NOT NULL  DEFAULT '',
+  `ac_id` varchar(12) NOT NULL PRIMARY KEY  DEFAULT '',
   `ac_desc` varchar(50)  NOT NULL DEFAULT '',
   `ac_type` varchar(1)  NOT NULL DEFAULT '',
   `ac_cur` varchar(10)  NOT NULL DEFAULT '',
@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS `acb_mstr` (
   `acb_site` varchar(10) NOT NULL  DEFAULT '') 
 ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `exp_mstr` (
-  `exp_id` varchar(10)  NOT NULL DEFAULT '',
+  `exp_id` varchar(10)  NOT NULL PRIMARY KEY DEFAULT '',
   `exp_site` varchar(10)  NOT NULL DEFAULT '',
   `exp_entity` varchar(20)  NOT NULL DEFAULT '',
   `exp_name` varchar(50)  NOT NULL DEFAULT '',
@@ -803,7 +803,9 @@ CREATE TABLE IF NOT EXISTS `gl_hist` (
   `glh_base_curr` varchar(3)  NOT NULL DEFAULT '',
   `glh_desc` varchar(30)  NOT NULL DEFAULT '',
   `glh_userid` varchar(8)  NOT NULL DEFAULT '',
-  `glh_recon` tinyint(1)  NOT NULL DEFAULT '0'
+  `glh_recon` tinyint(1)  NOT NULL DEFAULT '0',
+  index acctcc (`glh_acct`, `glh_cc`),
+  index acctdate (`glh_acct`, `glh_effdate`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `gl_tran` (
   `glt_id` int(12) NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -879,7 +881,7 @@ CREATE TABLE IF NOT EXISTS `item_image` (
   `iti_dir` varchar(120)  NOT NULL DEFAULT '',
   `iti_path` varchar(120)  NOT NULL DEFAULT '') ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `item_mstr` (
-  `it_item` varchar(36) NOT NULL  DEFAULT '',
+  `it_item` varchar(36) NOT NULL PRIMARY KEY DEFAULT '',
   `it_desc` varchar(50)  NOT NULL DEFAULT '',
   `it_uom` varchar(10)  NOT NULL DEFAULT '',
   `it_prodline` varchar(4)  NOT NULL DEFAULT '',
@@ -1044,7 +1046,9 @@ CREATE TABLE IF NOT EXISTS `pbm_mstr` (
   `ps_userid` varchar(8)  NOT NULL DEFAULT '',
   `ps_misc1` varchar(30)  NOT NULL DEFAULT '',
   `ps_ref` varchar(30) NOT NULL  DEFAULT '',
-  `ps_bom` varchar(36) NOT NULL  DEFAULT ''
+  `ps_bom` varchar(36) NOT NULL  DEFAULT '',
+  index parentchild (`ps_parent`, `ps_child`),
+  index parentbom (`ps_parent`, `ps_bom`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `perm_mstr` (
   `perm_user` varchar(30) NOT NULL  DEFAULT '',
@@ -1082,8 +1086,8 @@ CREATE TABLE IF NOT EXISTS `pl_mstr` (
   `pl_out_usagevar` varchar(10)  NOT NULL DEFAULT '',
   `pl_out_ratevar` varchar(10)  NOT NULL DEFAULT '') ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `plan_mstr` (
-  `plan_nbr` int(8) NOT NULL,
-  `plan_item` varchar(36) NOT NULL,
+  `plan_nbr` int(8) NOT NULL DEFAULT '0',
+  `plan_item` varchar(36) NOT NULL DEFAULT '',
   `plan_site` varchar(10) NOT NULL  DEFAULT '',
   `plan_qty_req` int(9)  NOT NULL DEFAULT '0',
   `plan_qty_comp` int(9)  NOT NULL DEFAULT '0',
@@ -1097,7 +1101,10 @@ CREATE TABLE IF NOT EXISTS `plan_mstr` (
   `plan_line` int(11) NOT NULL DEFAULT '0',
   `plan_type` varchar(10) NOT NULL  DEFAULT '',
   `plan_cell` varchar(30) NOT NULL  DEFAULT '',
-  `plan_is_sched` tinyint(1) NOT NULL DEFAULT '0') ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `plan_is_sched` tinyint(1) NOT NULL DEFAULT '0',
+  index itemsite (`plan_item`,`plan_site`),
+  index itemsiteorder (`plan_item`,`plan_site`,`plan_order`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `pland_mstr` (
   `pland_id` int(8) NOT NULL DEFAULT '0',
   `pland_parent` int(8) NOT NULL DEFAULT '0',
@@ -1106,7 +1113,8 @@ CREATE TABLE IF NOT EXISTS `pland_mstr` (
   `pland_qty` int(9) NOT NULL DEFAULT '0',
   `pland_cell` varchar(30) NOT NULL  DEFAULT '',
   `pland_date` date  DEFAULT NULL,
-  `pland_ref` varchar(30) NOT NULL  DEFAULT ''
+  `pland_ref` varchar(30) NOT NULL  DEFAULT '',
+  index parentitemop (`pland_parent`, `pland_item`, `pland_op`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `po_ctrl` (
   `poc_rcpt_acct` varchar(12)  NOT NULL DEFAULT '',
@@ -1737,7 +1745,7 @@ CREATE TABLE IF NOT EXISTS `ord_meta` (
   `ordm_value` varchar(80) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `so_mstr` (
-  `so_nbr` varchar(8) NOT NULL,
+  `so_nbr` varchar(8) NOT NULL PRIMARY KEY,
   `so_cust` varchar(30)  NOT NULL DEFAULT '',
   `so_ship` varchar(8) NOT NULL  DEFAULT '',
   `so_po` varchar(30)  NOT NULL DEFAULT '',
@@ -1764,7 +1772,11 @@ CREATE TABLE IF NOT EXISTS `so_mstr` (
   `so_isallocated` varchar(1) NOT NULL  DEFAULT '',
   `so_export_855` tinyint(1) NOT NULL DEFAULT '0',
   `so_entrytype` varchar(10)  NOT NULL DEFAULT '',
-  `so_confirm` tinyint(1)  NOT NULL DEFAULT '0'
+  `so_confirm` tinyint(1)  NOT NULL DEFAULT '0',
+  index cust (`so_cust`),
+  index sitestatus (`so_site`, `so_status`),
+  index custstatus(`so_cust`, `so_status`),
+  index custduedate(`so_cust`, `so_due_date`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `so_tax` (
   `sot_nbr` varchar(8) NOT NULL,
@@ -1819,7 +1831,8 @@ CREATE TABLE IF NOT EXISTS `sod_det` (
   `sod_custline` varchar(50) NOT NULL  DEFAULT '',
   `sod_custuom` varchar(50) NOT NULL  DEFAULT '',
   `sod_custprice` varchar(50) NOT NULL  DEFAULT '',
-  `sod_edikv` varchar(100) NOT NULL  DEFAULT ''
+  `sod_edikv` varchar(100) NOT NULL  DEFAULT '',
+  index nbrlineitem (`sod_nbr`, `sod_line`, `sod_item`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `sod_tax` (
   `sodt_nbr` varchar(8) NOT NULL,
