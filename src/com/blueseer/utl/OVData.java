@@ -18710,8 +18710,7 @@ MainFrame.bslog(e);
             }
             Statement st = con.createStatement();
             ResultSet res = null;
-            Statement st2 = con.createStatement();
-            ResultSet res2 = null;
+           
             try {
            String item = "";
            String order = "";
@@ -18730,13 +18729,16 @@ MainFrame.bslog(e);
 
              int k = 0;
 
-              res = st.executeQuery("select sod_site, sod_nbr, sod_due_date, sod_item, sod_ord_qty, sod_shipped_qty, sod_line from so_mstr " +
-                      " inner join sod_det on sod_nbr = so_nbr and sod_status = " + "'" + getGlobalProgTag("open") + "'" + " and (sod_ord_qty - sod_shipped_qty) > 0 " +
-                      " inner join item_mstr on it_item = sod_item " +
-                      " where so_site = " + "'" + site + "'" +
-                      " and so_status = " + "'" + getGlobalProgTag("open") + "'" +
-                      " and it_plan = '1' " + 
-                                     ";" );
+          res = st.executeQuery("select sod_site, sod_nbr, sod_due_date, sod_item, " +
+                  " sod_ord_qty, sod_shipped_qty, sod_line, coalesce(plan_nbr,0) as 'plan_nbr' from sod_det " +
+                  " inner join so_mstr on sod_nbr = so_nbr and sod_status = so_status and (sod_ord_qty - sod_shipped_qty) > 0 " +
+                  " inner join item_mstr on it_item = sod_item " +
+                  " left outer join plan_mstr on plan_site = so_site and plan_item = sod_item and plan_order = sod_nbr and plan_line = sod_line " +
+                  " where so_site = " + "'" + site + "'" +
+                  " and so_status = " + "'" + getGlobalProgTag("open") + "'" +
+                  " and it_plan = '1' " + 
+                                 ";" );
+              
                 while (res.next()) {
 
                     // for this part, this site, this order, this line ....see what plan_mstr records exist
@@ -18746,24 +18748,16 @@ MainFrame.bslog(e);
                  line = res.getString("sod_line");
                  qty = res.getDouble("sod_ord_qty") - res.getDouble("sod_shipped_qty");
                  duedate = res.getString("sod_due_date");
-                 k = 0;
+                 
 
-
-                      res2 = st2.executeQuery("select * from plan_mstr where plan_item = " + "'" + item + "'" +
-                               " AND plan_site = " + "'" + site + "'" + 
-                               " AND plan_order = " + "'" + order + "'" +
-                              " AND plan_line = " + "'" + line + "'" + ";");
-
-                         while (res2.next()) {
-                             k++;
-                         }
-                         if (k == 0) {
+                if (res.getString("plan_nbr").equals("0")) {
                              a_part.add(item);
                              a_order.add(order);
                              a_line.add(line);
                              a_qty.add(qty);
                              a_duedate.add(duedate);
-                         }
+                }
+               
                 }  
 
 
@@ -18796,15 +18790,10 @@ MainFrame.bslog(e);
                 if (res != null) {
                     res.close();
                 }
-                if (res2 != null) {
-                    res2.close();
-                }
                 if (st != null) {
                     st.close();
                 }
-                if (st2 != null) {
-                    st2.close();
-                }
+               
                 con.close();
         }
     } catch (SQLException e){
