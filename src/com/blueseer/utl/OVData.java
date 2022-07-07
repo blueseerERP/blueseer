@@ -18698,8 +18698,8 @@ MainFrame.bslog(e);
     DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
     Calendar cal = Calendar.getInstance();
     cal.getTime();
-    int wk = getForecastWeek(cal.getTime());
-    ArrayList<Date> dates = OVData.getForecastDates(String.valueOf(cal.get(Calendar.YEAR)));
+   // int wk = getForecastWeek(cal.getTime());
+   // ArrayList<Date> dates = OVData.getForecastDates(String.valueOf(cal.get(Calendar.YEAR)));
      try{
 
             Connection con = null;
