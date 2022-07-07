@@ -18,3 +18,5 @@ patch=5
 # perf mods for cust master loading; mods to patch loading utility
 patch=6
 # additions of pooling library for performance improvements with mysql remote conn
+patch=7
+# further db call reductions and forecast to plan bug fix
