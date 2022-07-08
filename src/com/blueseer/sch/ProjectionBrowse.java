@@ -309,7 +309,7 @@ public class ProjectionBrowse extends javax.swing.JPanel {
                         " inner join item_cost on it_item = itc_item and itc_set = 'standard' and itc_site = " + "'" + site + "'" +
                         " where mrp_item >= " + "'" + fromitem + "'" +
                         " and mrp_item <= " + "'" + toitem + "'" +
-                        " group by w, mrp_item;"); 
+                        " group by w, mrp_item, it_code, itc_total;"); 
                 }
                 
                 Map<String, String> hm = new HashMap<>();
@@ -349,7 +349,7 @@ public class ProjectionBrowse extends javax.swing.JPanel {
                         " where pod_item >= " + "'" + fromitem + "'" +
                         " and pod_item <= " + "'" + toitem + "'" +
                         " and pod_status <> 'closed' " +
-                        " group by w, pod_item;");   
+                        " group by w, pod_item, it_code;");   
                     }
                     
                     while (res.next()) {

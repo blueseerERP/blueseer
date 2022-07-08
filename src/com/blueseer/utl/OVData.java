@@ -3265,7 +3265,7 @@ public class OVData {
                         + " where it_mrp = '1' and it_level = ? " 
                         + " AND ps_child >= ? " 
                         + " AND ps_child <= ? "
-                        + " group by ps_child, mrp_date order by ps_child, mrp_date; ";
+                        + " group by ps_child, mrp_date, it_leadtime order by ps_child, mrp_date; ";
                     } 
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql)) {
