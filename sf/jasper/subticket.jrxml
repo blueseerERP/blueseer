@@ -29,6 +29,7 @@
      plan_date_due,
      pland_date,
      pland_cell,
+     pland_op,
      plan_date_sched,
      plan_date_create,
      plan_order,
@@ -81,6 +82,7 @@ where plan_nbr = $P{myid} and
 	<field name="plan_cell" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
+	<field name="pland_op" class="java.lang.String"/>
 	<field name="it_item" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
@@ -100,14 +102,22 @@ where plan_nbr = $P{myid} and
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="39" splitType="Stretch">
+		<band height="41" splitType="Stretch">
 			<staticText>
-				<reportElement x="338" y="3" width="229" height="36" uuid="40005f77-30de-4bc9-bf2a-5a5097b52235"/>
+				<reportElement x="140" y="1" width="229" height="36" uuid="40005f77-30de-4bc9-bf2a-5a5097b52235"/>
 				<textElement>
 					<font size="24"/>
 				</textElement>
 				<text><![CDATA[Operation Ticket]]></text>
 			</staticText>
+			<staticText>
+				<reportElement x="410" y="9" width="80" height="20" uuid="366a599d-85f1-4967-9cb4-f03d691c5f5f"/>
+				<text><![CDATA[Operation:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="490" y="9" width="70" height="21" uuid="65a371f0-e82c-4cbe-bc53-034bb6bd2a5d"/>
+				<textFieldExpression><![CDATA[$F{pland_op}]]></textFieldExpression>
+			</textField>
 		</band>
 	</title>
 	<pageHeader>
@@ -209,7 +219,7 @@ where plan_nbr = $P{myid} and
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<text><![CDATA[Part:]]></text>
+				<text><![CDATA[Item:]]></text>
 			</staticText>
 			<textField>
 				<reportElement x="28" y="48" width="121" height="19" uuid="a3899a5b-3288-4594-979c-39242c078717"/>
