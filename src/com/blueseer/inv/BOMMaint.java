@@ -536,10 +536,9 @@ public class BOMMaint extends javax.swing.JPanel {
         
         x = z;     
         
-        boolean hasRouting =  getRouting(key[0]);
         
         String[] message = x.m();
-        if (! hasRouting) {
+        if (invData.getItemRouting(key[0]).isBlank()) {
           message[0] = "-1";
           message[1] = "No Routing found";
         } 
@@ -737,18 +736,7 @@ public class BOMMaint extends javax.swing.JPanel {
         callSimulateCost();
         updateCurrentItemCost(tbkey.getText());
         getCostSets(tbkey.getText().toString());
-      /*  
-        String[] message = new String[2];
-        message[0] = "";
-        message[1] = "";
-        message = x.m();
-       boolean hasRouting =  getRouting(x.bom_item());
-        if (! hasRouting) {
-          message[0] = "-1";
-          message[1] = "No BOM found";
-        } 
-        */
-       setAction(x.m());
+        setAction(x.m());
         
     }
     
@@ -853,16 +841,7 @@ public class BOMMaint extends javax.swing.JPanel {
         tbparentcostsim.setText(String.valueOf(bsFormatDouble5(totalcost)));
                 
     }
-    
-    public boolean getRouting(String item) {
-        boolean hasRouting = false;
-        String routing = "";
-        routing = invData.getItemRouting(item);
-        hasRouting = OVData.isValidRouting(routing);
-        return hasRouting;
-    }
-    
-    
+        
     public void getOPs(String parent) {
         ddop.removeAllItems();
          ArrayList<String> ops = new ArrayList<String>();
