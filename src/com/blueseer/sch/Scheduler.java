@@ -84,11 +84,13 @@ import java.awt.event.FocusListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.sql.Connection;
+import javax.swing.AbstractCellEditor;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.table.TableCellEditor;
 
 /**
  *
@@ -116,6 +118,19 @@ public class Scheduler extends javax.swing.JPanel {
                             getGlobalColumnTag("update"), 
                             getGlobalColumnTag("void")})
                {
+                   @Override
+                public void setValueAt(Object aValue, int row, int column) {
+                    super.setValueAt(aValue, row, column);
+                    if (column == 5) {
+                       // String value = aValue == null ? null : aValue.toString();
+                        if (aValue == null) {
+                            super.setValueAt(null, row, 1);
+                        } else {
+                            super.setValueAt(cellsonly.indexOf(aValue), row, 1);
+                        }
+                    }
+                }
+                   
                       @Override  
                       public Class getColumnClass(int col) {  
                         if (col == 13 || col == 14 || col == 15  ) {      
@@ -172,31 +187,7 @@ public class Scheduler extends javax.swing.JPanel {
     double reqtot = 0;
     double sumOfAllCells = 0;
     
-  class ComboBoxRenderer extends JComboBox implements TableCellRenderer {
-  public ComboBoxRenderer(String[] items) {
-    super(items);
-  }
-
-  public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
-      boolean hasFocus, int row, int column) {
-    if (isSelected) {
-      setForeground(table.getSelectionForeground());
-      super.setBackground(table.getSelectionBackground());
-    } else {
-      setForeground(table.getForeground());
-      setBackground(table.getBackground());
-    }
-    setSelectedItem(value);
-    return this;
-  }
-}
-
-  class ComboBoxEditor extends DefaultCellEditor {
-  public ComboBoxEditor(String[] items) {
-    super(new JComboBox(items));
-  }
-} 
-      
+   
   class CheckBoxRenderer extends JCheckBox implements TableCellRenderer {
 
           CheckBoxRenderer() {
@@ -351,7 +342,7 @@ public class Scheduler extends javax.swing.JPanel {
               setForeground(table.getForeground());
               }
         }
-        
+        /*
             boolean issched = (Boolean) mytable.getModel().getValueAt(table.convertRowIndexToModel(row), 4);
             if (( column == 5 || column == 6) && ! issched ) {
             c.setBackground(Color.green);
@@ -360,7 +351,7 @@ public class Scheduler extends javax.swing.JPanel {
             else {
                 c.setBackground(table.getBackground());
             }
-        
+        */
            
             
             return c;
@@ -717,6 +708,7 @@ public class Scheduler extends javax.swing.JPanel {
            sumOfAllCells += Double.valueOf(code[1]);
           }
         } 
+        cellsonly.add(0, "");
         ddcellchoice.insertItemAt("ALL", 0);
         ddcellchoice.setSelectedIndex(0);
         
@@ -1437,9 +1429,11 @@ public class Scheduler extends javax.swing.JPanel {
                 //  mytable.getColumnModel().getColumn(5).setCellRenderer(comboBoxRenderer);
                 
                 TableColumn col = mytable.getColumnModel().getColumn(5);
-                col.setCellEditor(new ComboBoxEditor(cellsonly.toArray(new String[cellsonly.size()])));
-                col.setCellRenderer(new ComboBoxRenderer(cellsonly.toArray(new String[cellsonly.size()])));
-
+               // col.setCellEditor(new ComboBoxEditor(cellsonly.toArray(new String[cellsonly.size()])));
+              //  col.setCellEditor(new TestCellEditor(cellsonly.toArray(new String[cellsonly.size()])));
+              col.setCellEditor(new DefaultCellEditor(new JComboBox(cellsonly.toArray(new String[cellsonly.size()]))));
+             // col.setCellRenderer(new ComboBoxRenderer(cellsonly.toArray(new String[cellsonly.size()])));
+                
                 Enumeration<TableColumn> en = mytable.getColumnModel().getColumns();
                 while (en.hasMoreElements()) {
                     TableColumn tc = en.nextElement();
@@ -1603,7 +1597,11 @@ public class Scheduler extends javax.swing.JPanel {
 
             // now remove rows that have blank cell and QtySched
             for (int i = 0 ; i < mymodel.getRowCount(); i++) {
-                if ( mymodel.getValueAt(i, 5).toString().isEmpty() || mymodel.getValueAt(i, 5).toString() == null || mymodel.getValueAt(i, 6).toString().isEmpty() || mymodel.getValueAt(i, 6).toString() == null  ) {
+                if ( mymodel.getValueAt(i, 5).toString().isEmpty() || 
+                        mymodel.getValueAt(i, 5).toString() == null || 
+                        mymodel.getValueAt(i, 6).toString().isEmpty() || 
+                        mymodel.getValueAt(i, 6).toString() == null ||
+                        mymodel.getValueAt(i, 6).toString().equals("0") ) {
                     //    bsmf.MainFrame.show("yep2:" + mymodel.getValueAt(i, 0).toString());
                     mymodel.removeRow(i);
                     i--;
