@@ -1341,7 +1341,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
             JceKeyTransRecipientInfoGenerator jceKey = new JceKeyTransRecipientInfoGenerator(encryptionCertificate);
             gen.addRecipientInfoGenerator(jceKey); 
             OutputEncryptor encryptor
-              = new JceCMSContentEncryptorBuilder(CMSAlgorithm.AES128_CBC)
+              = new JceCMSContentEncryptorBuilder(CMSAlgorithm.SHA256)
               .setProvider("BC").build();
            // MimeBodyPart msg = new MimeBodyPart();
            MimeBodyPart dataPart = new MimeBodyPart();
@@ -1366,7 +1366,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
 			    certs = new JcaCertStore(certList);
 
 			    CMSSignedDataGenerator cmsGenerator = new CMSSignedDataGenerator();
-			    ContentSigner contentSigner = new JcaContentSignerBuilder("SHA256WithRSA").build(signingKey);
+			    ContentSigner contentSigner = new JcaContentSignerBuilder("SHA1WithRSA").build(signingKey);
 			    cmsGenerator.addSignerInfoGenerator(new JcaSignerInfoGeneratorBuilder(
 			      new JcaDigestCalculatorProviderBuilder().setProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider())
 			      .build()).build(contentSigner, signingCertificate));

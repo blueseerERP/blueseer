@@ -26,6 +26,8 @@ SOFTWARE.
 package com.blueseer.edi;
 
 import static bsmf.MainFrame.bslog;
+import static com.blueseer.edi.APIMaint.encryptDataSMIME;
+import static com.blueseer.edi.APIMaint.signData;
 import static com.blueseer.edi.APIMaint.signDataSimple;
 import java.io.BufferedReader;
 import java.io.File;
@@ -162,7 +164,12 @@ public class apiUtils {
         // need signed, signed+enc, enc, none ....condition logic here
         if (filecontent != null) {    
                 try {
-                    mbp = signDataSimple(filecontent.getBytes(StandardCharsets.UTF_8),certificate,key);
+                   // mbp = signDataSimple(filecontent.getBytes(StandardCharsets.UTF_8),certificate,key);
+                   // the above works fine with just signing
+                   
+                   // now try with signing followed by encryption
+                    byte[] signeddata = signData(filecontent.getBytes(StandardCharsets.UTF_8),certificate,key);
+                    mbp = encryptDataSMIME(signeddata, certificate);
                 } catch (Exception ex) {
                     bslog(ex);
                     continue;
