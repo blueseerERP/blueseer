@@ -482,7 +482,7 @@ public class ediData {
             ps.setString(11, x.api_class);
             ps.setString(12, x.api_encrypted);
             ps.setString(13, x.api_signed);
-            ps.setString(13, x.api_cert);
+            ps.setString(14, x.api_cert);
             rows = ps.executeUpdate();
             } 
             return rows;
