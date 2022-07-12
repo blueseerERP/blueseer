@@ -1968,6 +1968,19 @@ CREATE TABLE IF NOT EXISTS `tran_mstr` (
   `tr_base_qty` decimal(14,5)  DEFAULT '0.00000',
   `tr_bom` varchar(36) NOT NULL DEFAULT '' 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `key_mstr` (
+  `key_id` varchar(50) NOT NULL  DEFAULT '',
+  `key_type` varchar(10)  DEFAULT '',
+  `key_storefile` varchar(80)  DEFAULT '',
+  `key_user` varchar(50)  DEFAULT '',
+  `key_pass` varchar(50)  DEFAULT '')
+ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `key_det` (
+  `keyd_id` varchar(50) NOT NULL  DEFAULT '',
+  `keyd_type` varchar(10)  DEFAULT '',
+  `keyd_user` varchar(50)  DEFAULT '',
+  `keyd_pass` varchar(50)  DEFAULT '')
+ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `user_mstr` (
   `user_id` varchar(10) NOT NULL  DEFAULT '',
   `user_site` varchar(10)  DEFAULT '',
@@ -1981,7 +1994,8 @@ CREATE TABLE IF NOT EXISTS `user_mstr` (
   `user_cell` varchar(15)  DEFAULT '',
   `user_root` tinyint(1) NOT NULL DEFAULT '0',
   `user_rmks` varchar(500) NOT NULL  DEFAULT '',
-  `user_role` varchar(30) NOT NULL  DEFAULT '') ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `user_role` varchar(30) NOT NULL  DEFAULT '') 
+ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `vd_mstr` (
   `vd_addr` varchar(30) NOT NULL  DEFAULT '',
   `vd_site` varchar(10)  DEFAULT '',

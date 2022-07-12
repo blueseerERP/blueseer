@@ -29,6 +29,9 @@ import static bsmf.MainFrame.bslog;
 import static com.blueseer.edi.APIMaint.encryptDataSMIME;
 import static com.blueseer.edi.APIMaint.signData;
 import static com.blueseer.edi.APIMaint.signDataSimple;
+import static com.blueseer.edi.ediData.getKeyStore;
+import static com.blueseer.edi.ediData.getKeyStorePass;
+import static com.blueseer.edi.ediData.getKeyUserPass;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -112,7 +115,7 @@ public class apiUtils {
     
     public static String postAS2( String as2id, String sourceDir, String as2From, String internalURL) throws MessagingException, MalformedURLException, URISyntaxException, IOException, CertificateException, NoSuchProviderException, KeyStoreException, NoSuchAlgorithmException, UnrecoverableKeyException  {
         
-        StringBuilder r = null;
+        StringBuilder r = new StringBuilder();
         
      //   Path as2filepath = FileSystems.getDefault().getPath(as2file);
      //   if (! Files.exists(as2filepath)) {
@@ -121,18 +124,22 @@ public class apiUtils {
        
         
         // gather pertinent info for this AS2 ID / Partner
-        // api_id, api_url, api_port, api_path, api_user, edic_as2id, edic_as2url, api_encrypted, api_signed, api_cert
+        // api_id, api_url, api_port, api_path, api_user, edic_as2id, edic_as2url, api_encrypted, api_signed, api_cert, api_protocol
         String[] tp = ediData.getAS2Info(as2id);
-        String url = tp[1];
+        String url = tp[10] + "://" + tp[1] + ":" + tp[2] + "/" + tp[3];
         String as2To = tp[4];
         
+        String storeid = "terry";
+        String user = "terry";
         X509Certificate certificate = getCert(tp[9]);
-        
-        char[] keystorePassword = "terry".toCharArray();
-        char[] keyPassword = "terry".toCharArray();
+        String[] k = getKeyStore(storeid);
+        FileInputStream fis = new FileInputStream(FileSystems.getDefault().getPath(k[0]).toString());
+       // char[] keystorePassword = k[1].toCharArray(); // getKeyStorePass("terry").toCharArray(); // "terry".toCharArray();
+        char[] keyPassword = getKeyUserPass(storeid, user).toCharArray();  // "terry".toCharArray();
         KeyStore keystore = KeyStore.getInstance("PKCS12");
-        keystore.load(new FileInputStream("c:\\junk\\terryp12.p12"), keystorePassword);
-        PrivateKey key = (PrivateKey) keystore.getKey("terry", keyPassword);
+        keystore.load(fis, k[1].toCharArray());
+        // keystore.load(new FileInputStream("c:\\junk\\terryp12.p12"), keystorePassword);
+        PrivateKey key = (PrivateKey) keystore.getKey(user, keyPassword);
         
         
         Path as2filepath = null;
@@ -164,12 +171,12 @@ public class apiUtils {
         // need signed, signed+enc, enc, none ....condition logic here
         if (filecontent != null) {    
                 try {
-                   // mbp = signDataSimple(filecontent.getBytes(StandardCharsets.UTF_8),certificate,key);
+                    mbp = signDataSimple(filecontent.getBytes(StandardCharsets.UTF_8),certificate,key);
                    // the above works fine with just signing
                    
                    // now try with signing followed by encryption
-                    byte[] signeddata = signData(filecontent.getBytes(StandardCharsets.UTF_8),certificate,key);
-                    mbp = encryptDataSMIME(signeddata, certificate);
+                   // byte[] signeddata = signData(filecontent.getBytes(StandardCharsets.UTF_8),certificate,key);
+                  //  mbp = encryptDataSMIME(signeddata, certificate);
                 } catch (Exception ex) {
                     bslog(ex);
                     continue;
@@ -183,7 +190,7 @@ public class apiUtils {
             
   
           
-        URL urlObj = new URL(url.toString());
+        URL urlObj = new URL(url);
         RequestBuilder rb = RequestBuilder.post();
         rb.setUri(urlObj.toURI());
         

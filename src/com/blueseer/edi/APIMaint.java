@@ -1341,7 +1341,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
             JceKeyTransRecipientInfoGenerator jceKey = new JceKeyTransRecipientInfoGenerator(encryptionCertificate);
             gen.addRecipientInfoGenerator(jceKey); 
             OutputEncryptor encryptor
-              = new JceCMSContentEncryptorBuilder(CMSAlgorithm.SHA256)
+              = new JceCMSContentEncryptorBuilder(CMSAlgorithm.AES128_CBC)
               .setProvider("BC").build();
            // MimeBodyPart msg = new MimeBodyPart();
            MimeBodyPart dataPart = new MimeBodyPart();

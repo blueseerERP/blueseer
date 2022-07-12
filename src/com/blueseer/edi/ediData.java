@@ -985,9 +985,9 @@ public class ediData {
     }
     
     public static String[] getAS2Info(String id) {
-        String[] info = new String[]{"","","","","","","", "",""};
+        String[] info = new String[]{"","","","","","","","","","",""};
         String sql = "select api_id, api_url, api_port, api_path, api_user, edic_as2id, edic_as2url, " +
-                " api_encrypted, api_signed, api_cert " +
+                " api_encrypted, api_signed, api_cert, api_protocol " +
                 " from api_mstr inner join edi_ctrl where api_class = 'AS2' and api_id = ?;";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
@@ -1004,6 +1004,7 @@ public class ediData {
                info[7] = res.getString("api_encrypted");
                info[8] = res.getString("api_signed");
                info[9] = res.getString("api_cert");
+               info[10] = res.getString("api_protocol");
                }
             }
         }
@@ -1011,6 +1012,63 @@ public class ediData {
             MainFrame.bslog(s);
         }
         return info;
+    }
+    
+    public static String getKeyStorePass(String id) {
+        String x = "";
+        String sql = "select key_pass from key_mstr where key_type = 'store' and key_id = ?";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, id);
+             try (ResultSet res = ps.executeQuery();) {
+               while (res.next()) {
+               x = res.getString("key_pass");
+               }
+            }
+        }
+        catch (SQLException s){
+            MainFrame.bslog(s);
+        }
+        return x;
+    }
+    
+    public static String[] getKeyStore(String id) {
+        String[] x = new String[]{"",""};
+        String sql = "select key_storefile, key_pass from key_mstr where key_type = 'store' and key_id = ?";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, id);
+             try (ResultSet res = ps.executeQuery();) {
+               while (res.next()) {
+               x[0] = res.getString("key_storefile");
+               x[1] = res.getString("key_pass");
+               }
+            }
+        }
+        catch (SQLException s){
+            MainFrame.bslog(s);
+        }
+        return x;
+    }
+    
+    
+    public static String getKeyUserPass(String store, String user) {
+        String x = "";
+        String sql = "select keyd_pass from key_det where keyd_id = ? and keyd_user = ?";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, store);
+        ps.setString(2, user);
+             try (ResultSet res = ps.executeQuery();) {
+               while (res.next()) {
+               x = res.getString("keyd_pass");
+               }
+            }
+        }
+        catch (SQLException s){
+            MainFrame.bslog(s);
+        }
+        return x;
     }
     
     
