@@ -566,7 +566,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                 tabledetail.getValueAt(j, 5).toString(),
                 tabledetail.getValueAt(j, 6).toString(),
                 tabledetail.getValueAt(j, 7).toString(),
-                tabledetail.getValueAt(j, 8).toString()
+                String.valueOf(BlueSeerUtils.boolToInt(Boolean.valueOf(tabledetail.getValueAt(j, 8).toString())))
                 );
        
         list.add(x);
