@@ -168,6 +168,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
     // global variable declarations
                 boolean isLoad = false;
                 public static Store certs = null;
+                public static api_mstr x = null;
     // global datatablemodel declarations   
      javax.swing.table.DefaultTableModel detailmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
@@ -238,9 +239,8 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
             BlueSeerUtils.endTask(message);
            if (this.type.equals("delete")) {
              initvars(null);  
-           } else if (this.type.equals("get") && message[0].equals("1")) {
-             tbkey.requestFocus();
-           } else if (this.type.equals("get") && message[0].equals("0")) {
+           } else if (this.type.equals("get")) {
+             updateForm();
              tbkey.requestFocus();
            } else {
              initvars(null);  
@@ -503,32 +503,9 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
      }
       
     public String[] getRecord(String[] key) {
-       
-        api_mstr x = getAPIMstr(key); 
-        tbkey.setText(x.api_id());
-        tbdesc.setText(x.api_desc());
-        tburl.setText(x.api_url());
-        tbport.setText(x.api_port());
-        tbpath.setText(x.api_path());
-        tbuser.setText(x.api_user());
-        tbpass.setText(bsmf.MainFrame.PassWord("1", x.api_pass().toCharArray()));
-        tbapikey.setText(x.api_key());
-        ddprotocol.setSelectedItem(x.api_protocol());
-        ddclass.setSelectedItem(x.api_class());
-        tbcert.setText(x.api_cert());
-        cboutputsign.setSelected(BlueSeerUtils.ConvertStringToBool(String.valueOf(x.api_signed())));
-        cboutputencryption.setSelected(BlueSeerUtils.ConvertStringToBool(String.valueOf(x.api_encrypted())));
-        // now detail
-        detailmodel.setRowCount(0);
-        ArrayList<api_det> z = getAPIDet(key[0]);
-        for (api_det d : z) {
-            detailmodel.addRow(new Object[]{d.apid_method(), d.apid_verb(), d.apid_type(),
-                 d.apid_seq(), d.apid_path(), d.apid_value(), d.apid_source(), d.apid_destination(), d.apid_enabled()});
-        }
-      
-        setAction(x.m());
+       api_mstr z = getAPIMstr(key);     
+        x = z;
         return x.m();
-       
     }
     
      public api_mstr createRecord() { 
@@ -615,6 +592,31 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         
     }
 
+     public void updateForm() {
+        
+        tbkey.setText(x.api_id());
+        tbdesc.setText(x.api_desc());
+        tburl.setText(x.api_url());
+        tbport.setText(x.api_port());
+        tbpath.setText(x.api_path());
+        tbuser.setText(x.api_user());
+        tbpass.setText(bsmf.MainFrame.PassWord("1", x.api_pass().toCharArray()));
+        tbapikey.setText(x.api_key());
+        ddprotocol.setSelectedItem(x.api_protocol());
+        ddclass.setSelectedItem(x.api_class());
+        tbcert.setText(x.api_cert());
+        cboutputsign.setSelected(BlueSeerUtils.ConvertStringToBool(String.valueOf(x.api_signed())));
+        cboutputencryption.setSelected(BlueSeerUtils.ConvertStringToBool(String.valueOf(x.api_encrypted())));
+        // now detail
+        detailmodel.setRowCount(0);
+        ArrayList<api_det> z = getAPIDet(x.api_id());
+        for (api_det d : z) {
+            detailmodel.addRow(new Object[]{d.apid_method(), d.apid_verb(), d.apid_type(),
+                 d.apid_seq(), d.apid_path(), d.apid_value(), d.apid_source(), d.apid_destination(), d.apid_enabled()});
+        }
+        setAction(x.m());
+    }
+    
    
     public void postAS2( URL url, String verb, String as2From, String as2To, String internalURL) {
         File textFile = new File(tbsourcedir.getText());

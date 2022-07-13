@@ -177,8 +177,7 @@ public class apiUtils {
         }
         
         MimeBodyPart mbp;
-        byte[] zz = null;
-        byte[] xx = null;
+        byte[] signedAndEncrypteddata = null;
         
         
         boolean isSignedAndEncrypted = true;
@@ -186,14 +185,7 @@ public class apiUtils {
         if (filecontent != null) {    
                 try {
                     mbp = signDataSimple(filecontent.getBytes(StandardCharsets.UTF_8),signcertificate,key);
-                    // the above works fine with just signing
-           
-                    zz = signDataPkcs7(filecontent.getBytes(StandardCharsets.UTF_8),signcertificate,key);
-                   // now try with signing followed by encryption
-                   // byte[] signeddata = signData(filecontent.getBytes(StandardCharsets.UTF_8),certificate,key);
-                 //   mbp = encryptDataSMIME(signeddata, certificate);
-                  
-              
+                    
                 } catch (Exception ex) {
                     bslog(ex);
                     continue;
@@ -222,7 +214,7 @@ public class apiUtils {
           mbp2.addHeader("Content-Type", "multipart/signed; protocol=\"application/pkcs7-signature\"; boundary=" + "\"" + newboundary + "\"" + "; micalg=sha1");
           mbp2.addHeader("Content-Disposition", "attachment; filename=smime.p7m");
         
-          xx = encryptData(mbp2.getInputStream().readAllBytes(), encryptcertificate);
+          signedAndEncrypteddata = encryptData(mbp2.getInputStream().readAllBytes(), encryptcertificate);
     
         }
         
@@ -263,7 +255,7 @@ public class apiUtils {
         rb.addHeader("Content-Disposition", "attachment; filename=smime.p7m");    
         }
         
-        InputStreamEntity ise = new InputStreamEntity(new ByteArrayInputStream(xx));
+        InputStreamEntity ise = new InputStreamEntity(new ByteArrayInputStream(signedAndEncrypteddata));
           
           rb.setEntity(new BufferedHttpEntity(ise));
           HttpUriRequest request = rb.build();
