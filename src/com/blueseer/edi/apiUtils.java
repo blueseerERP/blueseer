@@ -26,13 +26,16 @@ SOFTWARE.
 package com.blueseer.edi;
 
 import static bsmf.MainFrame.bslog;
+import static com.blueseer.edi.APIMaint.encryptData;
 import static com.blueseer.edi.APIMaint.encryptDataSMIME;
 import static com.blueseer.edi.APIMaint.signData;
+import static com.blueseer.edi.APIMaint.signDataPkcs7;
 import static com.blueseer.edi.APIMaint.signDataSimple;
 import static com.blueseer.edi.ediData.getKeyStore;
 import static com.blueseer.edi.ediData.getKeyStorePass;
 import static com.blueseer.edi.ediData.getKeyUserPass;
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -58,10 +61,13 @@ import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -103,6 +109,7 @@ public class apiUtils {
     }
     
     public static String getPackagedBoundary(MimeBodyPart mbp) throws MessagingException {
+        
         String[] mb = mbp.getContentType().split(";");
         for (String s : mb) {
             if (s.contains("boundary=")) {
@@ -113,7 +120,7 @@ public class apiUtils {
         return null;
     }
     
-    public static String postAS2( String as2id, String sourceDir, String as2From, String internalURL) throws MessagingException, MalformedURLException, URISyntaxException, IOException, CertificateException, NoSuchProviderException, KeyStoreException, NoSuchAlgorithmException, UnrecoverableKeyException  {
+    public static String postAS2( String as2id, String sourceDir, String as2From, String internalURL) throws MessagingException, MalformedURLException, URISyntaxException, IOException, CertificateException, NoSuchProviderException, KeyStoreException, NoSuchAlgorithmException, UnrecoverableKeyException, CertificateEncodingException, CMSException, SMIMEException, Exception  {
         
         StringBuilder r = new StringBuilder();
         
@@ -131,7 +138,8 @@ public class apiUtils {
         
         String storeid = "terry";
         String user = "terry";
-        X509Certificate certificate = getCert(tp[9]);
+        X509Certificate signcertificate = getCert(tp[9]);
+        X509Certificate encryptcertificate = getCert("natgyp.cer");
         String[] k = getKeyStore(storeid);
         FileInputStream fis = new FileInputStream(FileSystems.getDefault().getPath(k[0]).toString());
        // char[] keystorePassword = k[1].toCharArray(); // getKeyStorePass("terry").toCharArray(); // "terry".toCharArray();
@@ -145,6 +153,8 @@ public class apiUtils {
         Path as2filepath = null;
         File folder = new File(sourceDir);
         File[] listOfFiles = folder.listFiles();
+        
+        
         for (int i = 0; i < listOfFiles.length; i++) {
             if (! listOfFiles[i].isFile()) {
             continue;
@@ -166,17 +176,24 @@ public class apiUtils {
             continue;
         }
         
-        MimeBodyPart mbp;    
+        MimeBodyPart mbp;
+        byte[] zz = null;
+        byte[] xx = null;
         
+        
+        boolean isSignedAndEncrypted = true;
         // need signed, signed+enc, enc, none ....condition logic here
         if (filecontent != null) {    
                 try {
-                    mbp = signDataSimple(filecontent.getBytes(StandardCharsets.UTF_8),certificate,key);
-                   // the above works fine with just signing
-                   
+                    mbp = signDataSimple(filecontent.getBytes(StandardCharsets.UTF_8),signcertificate,key);
+                    // the above works fine with just signing
+           
+                    zz = signDataPkcs7(filecontent.getBytes(StandardCharsets.UTF_8),signcertificate,key);
                    // now try with signing followed by encryption
                    // byte[] signeddata = signData(filecontent.getBytes(StandardCharsets.UTF_8),certificate,key);
-                  //  mbp = encryptDataSMIME(signeddata, certificate);
+                 //   mbp = encryptDataSMIME(signeddata, certificate);
+                  
+              
                 } catch (Exception ex) {
                     bslog(ex);
                     continue;
@@ -185,15 +202,35 @@ public class apiUtils {
            bslog("file content is null in AS2Post");
            continue; 
         }
-          
-        String newboundary = getPackagedBoundary(mbp);
-            
-  
-          
+        
+        MimeBodyPart mbp2 = new MimeBodyPart();
+        MimeMultipart mp = new MimeMultipart();
+        String newboundary = getPackagedBoundary(mbp);  
+        if (isSignedAndEncrypted) {
+         // mbp.addHeader("Content-Type", "multipart/signed; protocol=\"application/pkcs7-signature\"; boundary=" + "\"" + newboundary + "\"" + "; micalg=sha1");
+         // mbp.addHeader("Content-Disposition", "attachment; filename=smime.p7m");
+           /*
+           mbp2 = encryptDataSMIME(mbp.getInputStream().readAllBytes(), encryptcertificate);
+           Enumeration<?> list = mbp2.getAllHeaders();
+            while (list.hasMoreElements()) {
+                javax.mail.Header head = (javax.mail.Header) list.nextElement();
+                System.out.println(head.getName() + ": " + head.getValue());
+            }
+           */ 
+          mp.addBodyPart(mbp);
+          mbp2.setContent(mp);
+          mbp2.addHeader("Content-Type", "multipart/signed; protocol=\"application/pkcs7-signature\"; boundary=" + "\"" + newboundary + "\"" + "; micalg=sha1");
+          mbp2.addHeader("Content-Disposition", "attachment; filename=smime.p7m");
+        
+          xx = encryptData(mbp2.getInputStream().readAllBytes(), encryptcertificate);
+    
+        }
+        
         URL urlObj = new URL(url);
         RequestBuilder rb = RequestBuilder.post();
         rb.setUri(urlObj.toURI());
         
+        if (! isSignedAndEncrypted) {
         rb.addHeader("User-Agent", "RPT-HTTPClient/0.3-3I (Windows Server 2016)"); 
         rb.addHeader("AS2-To", as2To);
         rb.addHeader("AS2-From", as2From); 
@@ -208,10 +245,29 @@ public class apiUtils {
         rb.addHeader("EDIINT-Features", "CEM, multiple-attachments, AS2-Reliability");
         rb.addHeader("Content-Type", "multipart/signed; protocol=\"application/pkcs7-signature\"; boundary=" + "\"" + newboundary + "\"" + "; micalg=sha1");
         rb.addHeader("Content-Disposition", "attachment; filename=smime.p7m");
-         
-          InputStreamEntity ise = new InputStreamEntity(mbp.getInputStream());
+        } else {
+        rb.addHeader("User-Agent", "RPT-HTTPClient/0.3-3I (Windows Server 2016)"); 
+        rb.addHeader("AS2-To", as2To);
+        rb.addHeader("AS2-From", as2From); 
+        rb.addHeader("AS2-Version", "1.2"); 
+        rb.addHeader("Mime-Version", "1.0");
+        rb.addHeader("Subject", "as2");
+        rb.addHeader("Accept-Encoding", "deflate, gzip, x-gzip, compress, x-compress");
+        rb.addHeader("Disposition-Notification-Options", "signed-receipt-protocol=optional, pkcs7-signature; signed-receipt-micalg=optional, sha1");
+        rb.addHeader("Disposition-Notification-To", internalURL);
+        rb.addHeader("Message-ID", messageid);
+        rb.addHeader("Recipient-Address", url.toString());
+        rb.addHeader("EDIINT-Features", "CEM, multiple-attachments, AS2-Reliability");
+        rb.addHeader("Content-Type", "application/pkcs7-mime; smime-type=enveloped-data; name=smime.p7m");
+        rb.addHeader("Content-Transfer-Encoding", "binary");
+        rb.addHeader("Content-Disposition", "attachment; filename=smime.p7m");    
+        }
+        
+        InputStreamEntity ise = new InputStreamEntity(new ByteArrayInputStream(xx));
+          
           rb.setEntity(new BufferedHttpEntity(ise));
           HttpUriRequest request = rb.build();
+          
           
         CloseableHttpResponse response = client.execute(request);
          

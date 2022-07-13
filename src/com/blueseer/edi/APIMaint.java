@@ -1335,6 +1335,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
       X509Certificate encryptionCertificate)
       throws CertificateEncodingException, CMSException, IOException, SMIMEException, MessagingException {
         MimeBodyPart envPart = null;
+        
        
         if (null != data && null != encryptionCertificate) {
             SMIMEEnvelopedGenerator gen = new SMIMEEnvelopedGenerator();
@@ -1389,7 +1390,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
 			    certs = new JcaCertStore(certList);
 
 			    CMSSignedDataGenerator cmsGenerator = new CMSSignedDataGenerator();
-			    ContentSigner signer = new JcaContentSignerBuilder("SHA256withRSA").setProvider("BC").
+			    ContentSigner signer = new JcaContentSignerBuilder("SHA1withRSA").setProvider("BC").
                 build(signingKey);
                        
                 cmsGenerator.addSignerInfoGenerator(new JcaSignerInfoGeneratorBuilder(new JcaDigestCalculatorProviderBuilder().setProvider("BC").
