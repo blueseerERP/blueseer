@@ -1142,7 +1142,11 @@ CREATE TABLE IF NOT EXISTS `po_mstr` (
   `po_import_856` tinyint(1) NOT NULL DEFAULT '0',
   `po_ship` varchar(10)  NOT NULL DEFAULT '',
   `po_edistatus` varchar(10)  NOT NULL DEFAULT '',
-  `po_confirm` tinyint(1) NOT NULL DEFAULT '0'
+  `po_confirm` tinyint(1) NOT NULL DEFAULT '0',
+  index cust (`po_vend`),
+  index sitestatus (`po_site`, `po_status`),
+  index custstatus(`po_vend`, `po_status`),
+  index custduedate(`po_vend`, `po_due_date`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `pod_mstr` (
   `pod_nbr` varchar(8)  NOT NULL DEFAULT '',
@@ -1159,7 +1163,8 @@ CREATE TABLE IF NOT EXISTS `pod_mstr` (
   `pod_site` varchar(10)  NOT NULL DEFAULT '',
   `pod_ord_date` date  DEFAULT NULL,
   `pod_uom` varchar(3)  NOT NULL DEFAULT '',
-  `pod_desc` varchar(50)  NOT NULL DEFAULT ''
+  `pod_desc` varchar(50)  NOT NULL DEFAULT '',
+  index nbrlineitem (`pod_nbr`, `pod_line`, `pod_item`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `po_addr` (
   `poa_code` varchar(10) NOT NULL  DEFAULT '',
