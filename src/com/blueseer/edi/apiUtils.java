@@ -131,26 +131,28 @@ public class apiUtils {
        
         
         // gather pertinent info for this AS2 ID / Partner
-        // api_id, api_url, api_port, api_path, api_user, edic_as2id, edic_as2url, api_encrypted, api_signed, api_cert, api_protocol, apid_source, apid_destination
+        // api_id, api_url, api_port, api_path, api_user, edic_as2id, edic_as2url, edic_signkey, edic_enckey,  api_encrypted, api_signed, api_cert, api_protocol, apid_source, apid_destination
         String[] tp = ediData.getAS2Info(as2id, as2method);
-        String url = tp[10] + "://" + tp[1] + ":" + tp[2] + "/" + tp[3];
+        String url = tp[12] + "://" + tp[1] + ":" + tp[2] + "/" + tp[3];
         String as2To = tp[4];
         String as2From = tp[5];
         String internalURL = tp[6];
-        String sourceDir = tp[11];
+        String sourceDir = tp[13];
+        String signkeyid = tp[7];
+        String user = tp[7];
         
-        String storeid = "terry";
-        String user = "terry";
-        X509Certificate signcertificate = getCert("terrycer.cer");
-        X509Certificate encryptcertificate = getCert(tp[9]);
-        String[] k = getKeyStore(storeid);
+        X509Certificate encryptcertificate = getCert(tp[11]);
+        String[] k = getKeyStore(signkeyid);
         FileInputStream fis = new FileInputStream(FileSystems.getDefault().getPath(k[0]).toString());
        // char[] keystorePassword = k[1].toCharArray(); // getKeyStorePass("terry").toCharArray(); // "terry".toCharArray();
-        char[] keyPassword = getKeyUserPass(storeid, user).toCharArray();  // "terry".toCharArray();
+        char[] keyPassword = getKeyUserPass(signkeyid, user).toCharArray();  // "terry".toCharArray();
         KeyStore keystore = KeyStore.getInstance("PKCS12");
+        
         keystore.load(fis, k[1].toCharArray());
         // keystore.load(new FileInputStream("c:\\junk\\terryp12.p12"), keystorePassword);
         PrivateKey key = (PrivateKey) keystore.getKey(user, keyPassword);
+        X509Certificate signcertificate = getCert(tp[7]);
+       // X509Certificate signcertificate = (X509Certificate) keystore.getCertificate(user);
         
         
         Path as2filepath = null;

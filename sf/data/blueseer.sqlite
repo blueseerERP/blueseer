@@ -473,7 +473,9 @@ CREATE TABLE "edi_ctrl" (
   "edic_tpid" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
   "edic_gsid" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
   "edic_as2id" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
-  "edic_as2url" varchar(100) NOT NULL COLLATE NOCASE DEFAULT ''
+  "edic_as2url" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edic_signkey" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edic_enckey" varchar(100) NOT NULL COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
