@@ -984,14 +984,17 @@ public class ediData {
         return x;
     }
     
-    public static String[] getAS2Info(String id) {
-        String[] info = new String[]{"","","","","","","","","","",""};
+    public static String[] getAS2Info(String id, String method) {
+        String[] info = new String[]{"","","","","","","","","","","", "", ""};
         String sql = "select api_id, api_url, api_port, api_path, api_user, edic_as2id, edic_as2url, " +
-                " api_encrypted, api_signed, api_cert, api_protocol " +
-                " from api_mstr inner join edi_ctrl where api_class = 'AS2' and api_id = ?;";
+                " api_encrypted, api_signed, api_cert, api_protocol, apid_source, apid_destination " +
+                " from api_mstr " +
+                " inner join api_det on apid_id = api_id " +
+                " inner join edi_ctrl where api_class = 'AS2' and api_id = ? and apid_method = ?;";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, id);
+        ps.setString(2, method);
              try (ResultSet res = ps.executeQuery();) {
                while (res.next()) {
                info[0] = res.getString("api_id");
@@ -1005,6 +1008,8 @@ public class ediData {
                info[8] = res.getString("api_signed");
                info[9] = res.getString("api_cert");
                info[10] = res.getString("api_protocol");
+               info[11] = res.getString("apid_source");
+               info[12] = res.getString("api_destination");
                }
             }
         }

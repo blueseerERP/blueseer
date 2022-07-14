@@ -2120,9 +2120,11 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                 lblurl.setText(urlstring);
                 URL url = new URL(urlstring);
                 
+                
+                // AS2 event...if so...execute and bail
                 if (ddclass.getSelectedItem().toString().equals("AS2")) {
                   //  String as2id, String as2file, String as2From, String internalURL
-                    String r = apiUtils.postAS2(tbkey.getText(), tbsourcedir.getText(), getAS2id(), getAS2url());
+                    String r = apiUtils.postAS2(tbkey.getText(), tbmethod.getText());
                     if (r != null) {
                      taoutput.append(r);
                     }

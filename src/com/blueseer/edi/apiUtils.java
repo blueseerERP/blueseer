@@ -120,7 +120,7 @@ public class apiUtils {
         return null;
     }
     
-    public static String postAS2( String as2id, String sourceDir, String as2From, String internalURL) throws MessagingException, MalformedURLException, URISyntaxException, IOException, CertificateException, NoSuchProviderException, KeyStoreException, NoSuchAlgorithmException, UnrecoverableKeyException, CertificateEncodingException, CMSException, SMIMEException, Exception  {
+    public static String postAS2( String as2id, String as2method) throws MessagingException, MalformedURLException, URISyntaxException, IOException, CertificateException, NoSuchProviderException, KeyStoreException, NoSuchAlgorithmException, UnrecoverableKeyException, CertificateEncodingException, CMSException, SMIMEException, Exception  {
         
         StringBuilder r = new StringBuilder();
         
@@ -131,15 +131,18 @@ public class apiUtils {
        
         
         // gather pertinent info for this AS2 ID / Partner
-        // api_id, api_url, api_port, api_path, api_user, edic_as2id, edic_as2url, api_encrypted, api_signed, api_cert, api_protocol
-        String[] tp = ediData.getAS2Info(as2id);
+        // api_id, api_url, api_port, api_path, api_user, edic_as2id, edic_as2url, api_encrypted, api_signed, api_cert, api_protocol, apid_source, apid_destination
+        String[] tp = ediData.getAS2Info(as2id, as2method);
         String url = tp[10] + "://" + tp[1] + ":" + tp[2] + "/" + tp[3];
         String as2To = tp[4];
+        String as2From = tp[5];
+        String internalURL = tp[6];
+        String sourceDir = tp[11];
         
         String storeid = "terry";
         String user = "terry";
-        X509Certificate signcertificate = getCert(tp[9]);
-        X509Certificate encryptcertificate = getCert("natgyp.cer");
+        X509Certificate signcertificate = getCert("terrycer.cer");
+        X509Certificate encryptcertificate = getCert(tp[9]);
         String[] k = getKeyStore(storeid);
         FileInputStream fis = new FileInputStream(FileSystems.getDefault().getPath(k[0]).toString());
        // char[] keystorePassword = k[1].toCharArray(); // getKeyStorePass("terry").toCharArray(); // "terry".toCharArray();
