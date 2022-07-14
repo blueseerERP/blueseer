@@ -55,8 +55,8 @@
 				<reportElement x="0" y="19" width="555" height="1" uuid="c9e36006-c5df-41ef-96b1-529b4e6ddb52"/>
 			</line>
 			<textField>
-				<reportElement x="432" y="0" width="123" height="20" uuid="0a7b0efd-4d41-4918-98db-a6a2e962eb37"/>
-				<textElement>
+				<reportElement x="432" y="0" width="96" height="20" uuid="0a7b0efd-4d41-4918-98db-a6a2e962eb37"/>
+				<textElement textAlignment="Right">
 					<font isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{jasper.incomestatement.lblamount}]]></textFieldExpression>
