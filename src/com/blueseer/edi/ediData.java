@@ -1024,13 +1024,13 @@ public class ediData {
     
     public static String getKeyStorePass(String id) {
         String x = "";
-        String sql = "select key_pass from key_mstr where key_type = 'store' and key_id = ?";
+        String sql = "select key_storepass from key_mstr where key_type = 'store' and key_id = ?";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, id);
              try (ResultSet res = ps.executeQuery();) {
                while (res.next()) {
-               x = res.getString("key_pass");
+               x = res.getString("key_storepass");
                }
             }
         }
@@ -1041,15 +1041,17 @@ public class ediData {
     }
     
     public static String[] getKeyStore(String id) {
-        String[] x = new String[]{"",""};
-        String sql = "select key_storefile, key_pass from key_mstr where key_type = 'store' and key_id = ?";
+        String[] x = new String[]{"","",""};
+        String sql = "select key_storeuser, key_storefile, key_storepass from key_mstr where key_type = 'store' and key_id = ? and key_user = ?";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, id);
+        ps.setString(2, user);
              try (ResultSet res = ps.executeQuery();) {
                while (res.next()) {
                x[0] = res.getString("key_storefile");
-               x[1] = res.getString("key_pass");
+               x[1] = res.getString("key_storeuser");
+               x[2] = res.getString("key_storepass");
                }
             }
         }
@@ -1059,16 +1061,16 @@ public class ediData {
         return x;
     }
         
-    public static String getKeyUserPass(String store, String user) {
+    public static String getKeyUserPass(String key, String user) {
         String x = "";
-        String sql = "select keyd_pass from key_det where keyd_id = ? and keyd_user = ?";
+        String sql = "select key_pass from key_mstr where key_id = ? and key_user = ?";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
-        ps.setString(1, store);
+        ps.setString(1, key);
         ps.setString(2, user);
              try (ResultSet res = ps.executeQuery();) {
                while (res.next()) {
-               x = res.getString("keyd_pass");
+               x = res.getString("key_pass");
                }
             }
         }
@@ -1096,14 +1098,14 @@ public class ediData {
         return x;
     }
     
-    public static ArrayList<String> getAllKeyDet() {
+    public static ArrayList<String> getAllPKSKeys() {
         ArrayList x = new ArrayList();
-        String sql = "select keyd_id from key_det;";
+        String sql = "select key_id from key_mstr;";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
              try (ResultSet res = ps.executeQuery();) {
                while (res.next()) {
-               x.add(res.getString("keyd_id"));
+               x.add(res.getString("key_id"));
                }
             }
         }

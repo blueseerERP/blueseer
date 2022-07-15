@@ -142,13 +142,13 @@ public class apiUtils {
         String user = tp[7];
         
         X509Certificate encryptcertificate = getCert(tp[11]);
-        String[] k = getKeyStore(signkeyid);
+        String[] k = getKeyStore(signkeyid); // store, user, pass
         FileInputStream fis = new FileInputStream(FileSystems.getDefault().getPath(k[0]).toString());
        // char[] keystorePassword = k[1].toCharArray(); // getKeyStorePass("terry").toCharArray(); // "terry".toCharArray();
         char[] keyPassword = getKeyUserPass(signkeyid, user).toCharArray();  // "terry".toCharArray();
         KeyStore keystore = KeyStore.getInstance("PKCS12");
         
-        keystore.load(fis, k[1].toCharArray());
+        keystore.load(fis, k[2].toCharArray());
         // keystore.load(new FileInputStream("c:\\junk\\terryp12.p12"), keystorePassword);
         PrivateKey key = (PrivateKey) keystore.getKey(user, keyPassword);
         X509Certificate signcertificate = getCert(tp[7]);
