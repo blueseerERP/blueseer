@@ -29,15 +29,22 @@ VendorMenu,VendPriceMaint,5,JMenuItem,Mantenimiento del precio del proveedor,,,,
 VendorMenu,VendPriceRpt1,6,JMenuItem,Búsqueda de precios de proveedores,,,,1,1
 VendorMenu,VenRptPicker,7,JMenuItem,Selector de informes de proveedores,,,,1,1
 VendorMenu,VendControl,8,JMenuItem,Control de proveedores,,,,1,1
-EDIMenu,EDILoad,1,JMenuItem,Carga EDI,,,,1,1
-EDIMenu,EDILog,2,JMenuItem,Registro EDI,,,,1,1
-EDIMenu,EDIPartnerMaint,3,JMenuItem,Mantenimiento de socios EDI,,,,1,1
-EDIMenu,EDIPartnerBrowse,4,JMenuItem,EDI Partner Exploración,,1,,1,1
-EDIMenu,EDIPartnerDocMaint,5,JMenuItem,Mantenimiento de transacciones de socios,,,,1,1
-EDIMenu,EDIPartnerDocBrowse,6,JMenuItem,Exploración de transacciones de socios de EDI,,1,,1,1
-EDIMenu,EDIDocumentMaint,7,JMenuItem,Mantenimiento de reconocimiento de documentos,,,,1,1
-EDIMenu,EDIXrefMaint,8,JMenuItem,EDI Xref Maintenance,,,,1,1
-EDIMenu,EDIControl,9,JMenuItem,Control EDI,,,,1,1
+EDIMenu,EDILoad,1,JMenuItem,EDI Load,,,,1,1
+EDIMenu,EDILog,2,JMenuItem,EDI Log,,,,1,1
+EDIMenu,APIMaint,3,JMenuItem,API Maintenance,,,,1,1
+EDIMenu,APIBrowse,4,JMenuItem,API Browse,,,,1,1
+EDIMenu,APILog,5,JMenuItem,API Log,,,,1,1
+EDIMenu,EDIPartnerMaint,6,JMenuItem,EDI Partner Maintenance,,,,1,1
+EDIMenu,EDIPartnerBrowse,7,JMenuItem,EDI Partner Browse,,1,,1,1
+EDIMenu,EDIPartnerDocMaint,8,JMenuItem,Partner Transaction Maintenance,,,,1,1
+EDIMenu,EDIPartnerDocBrowse,9,JMenuItem,EDI Partner Transaction Browse,,1,,1,1
+EDIMenu,EDIDocumentMaint,10,JMenuItem,Document Recognition Maintenance,,,,1,1
+EDIMenu,EDIXrefMaint,11,JMenuItem,EDI Xref Maintenance,,,,1,1
+EDIMenu,MapMaint,12,JMenuItem,Map Maintenance,,,,1,1
+EDIMenu,StructMaint,13,JMenuItem,Structure File Maintenance,,,,1,1
+EDIMenu,MapTester,14,JMenuItem,Map Tester,,,,1,1
+EDIMenu,EDIExport,15,JMenuItem,EDI Export,,,,1,1
+EDIMenu,EDIControl,16,JMenuItem,EDI Control,,,,1,1
 LabelMenu,LabelsContGeneric,1,JMenuItem,Etiquetas de contenedores,,,,1,1
 LabelMenu,AddrLabel,2,JMenuItem,Etiquetas de dirección,,,,1,1
 LabelMenu,LabelBrowse,3,JMenuItem,Exploración de etiquetas,,1,,1,1

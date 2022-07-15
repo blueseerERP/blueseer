@@ -209,7 +209,16 @@ EDIDocumentMaint,,com.blueseer.edi.EDIDocumentMaint,JMenuItem,eddm
 EDIPartnerDocMaint,,com.blueseer.edi.EDIPartnerDocMaint,JMenuItem,edpd
 EDIPartnerDocBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,edpb
 EDIControl,,com.blueseer.edi.EDIControl,JMenuItem,edic
+EDILoad,,com.blueseer.edi.EDILoadMaint,JMenuItem,edip
+EDILog,,com.blueseer.edi.EDITransactionBrowse,JMenuItem,edil
 EDIXrefMaint,,com.blueseer.edi.EDIXrefMaint,JMenuItem,edix
+EDIExport,,com.blueseer.edi.EDIExport,JMenuItem,edit
+MapMaint,,com.blueseer.edi.MapMaint,JMenuItem,mapm
+StructMaint,,com.blueseer.edi.StructMaint,JMenuItem,mpsm
+MapTester,,com.blueseer.edi.MapTester,JMenuItem,mapt
+APIMaint,,com.blueseer.edi.APIMaint,JMenuItem,apim
+APIBrowse,,com.blueseer.edi.APIBrowse,JMenuItem,apib
+APILog,,com.blueseer.edi.APILog,JMenuItem,apil
 ARAgingView,,com.blueseer.far.ARAgingView,JMenuItem,arav
 APAgingView,,com.blueseer.fap.APAgingView,JMenuItem,apav
 GLControl,,com.blueseer.fgl.GLControl,JMenuItem,glcc

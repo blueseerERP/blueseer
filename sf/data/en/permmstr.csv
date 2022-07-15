@@ -303,3 +303,5 @@ admin,StructMaint
 admin,MapTester
 admin,APIMaint
 admin,PKSMaint
+admin,APIBrowse
+admin,APILog

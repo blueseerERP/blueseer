@@ -29,15 +29,22 @@ VendorMenu,VendPriceMaint,5,JMenuItem,Satıcı Fiyatı Bakımı,,,,1,1
 VendorMenu,VendPriceRpt1,6,JMenuItem,Satıcı Fiyatına Göz Atın,,,,1,1
 VendorMenu,VenRptPicker,7,JMenuItem,Satıcı Raporu Seçici,,,,1,1
 VendorMenu,VendControl,8,JMenuItem,Satıcı Kontrolü,,,,1,1
-EDIMenu,EDILoad,1,JMenuItem,EDI Yükü,,,,1,1
-EDIMenu,EDILog,2,JMenuItem,EDI Günlüğü,,,,1,1
-EDIMenu,EDIPartnerMaint,3,JMenuItem,EDI İş Ortağı Bakımı,,,,1,1
-EDIMenu,EDIPartnerBrowse,4,JMenuItem,EDI İş Ortağı Gözat,,1,,1,1
-EDIMenu,EDIPartnerDocMaint,5,JMenuItem,İş Ortağı İşlem Bakımı,,,,1,1
-EDIMenu,EDIPartnerDocBrowse,6,JMenuItem,EDI İş Ortağı İşlemine Gözat,,1,,1,1
-EDIMenu,EDIDocumentMaint,7,JMenuItem,Belge Tanıma Bakımı,,,,1,1
-EDIMenu,EDIXrefMaint,8,JMenuItem,EDI Xref Maintenance,,,,1,1
-EDIMenu,EDIControl,9,JMenuItem,EDI Kontrolü,,,,1,1
+EDIMenu,EDILoad,1,JMenuItem,EDI Load,,,,1,1
+EDIMenu,EDILog,2,JMenuItem,EDI Log,,,,1,1
+EDIMenu,APIMaint,3,JMenuItem,API Maintenance,,,,1,1
+EDIMenu,APIBrowse,4,JMenuItem,API Browse,,,,1,1
+EDIMenu,APILog,5,JMenuItem,API Log,,,,1,1
+EDIMenu,EDIPartnerMaint,6,JMenuItem,EDI Partner Maintenance,,,,1,1
+EDIMenu,EDIPartnerBrowse,7,JMenuItem,EDI Partner Browse,,1,,1,1
+EDIMenu,EDIPartnerDocMaint,8,JMenuItem,Partner Transaction Maintenance,,,,1,1
+EDIMenu,EDIPartnerDocBrowse,9,JMenuItem,EDI Partner Transaction Browse,,1,,1,1
+EDIMenu,EDIDocumentMaint,10,JMenuItem,Document Recognition Maintenance,,,,1,1
+EDIMenu,EDIXrefMaint,11,JMenuItem,EDI Xref Maintenance,,,,1,1
+EDIMenu,MapMaint,12,JMenuItem,Map Maintenance,,,,1,1
+EDIMenu,StructMaint,13,JMenuItem,Structure File Maintenance,,,,1,1
+EDIMenu,MapTester,14,JMenuItem,Map Tester,,,,1,1
+EDIMenu,EDIExport,15,JMenuItem,EDI Export,,,,1,1
+EDIMenu,EDIControl,16,JMenuItem,EDI Control,,,,1,1
 LabelMenu,LabelsContGeneric,1,JMenuItem,Konteyner Etiketleri,,,,1,1
 LabelMenu,AddrLabel,2,JMenuItem,Adres Etiketleri,,,,1,1
 LabelMenu,LabelBrowse,3,JMenuItem,Etikete Gözat,,1,,1,1
