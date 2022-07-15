@@ -20,3 +20,5 @@ patch=6
 # additions of pooling library for performance improvements with mysql remote conn
 patch=7
 # further db call reductions and forecast to plan bug fix
+patch=8
+# bug fix for #66 and #67
