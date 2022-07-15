@@ -21,4 +21,4 @@ patch=6
 patch=7
 # further db call reductions and forecast to plan bug fix
 patch=8
-# bug fix for #66 and #67
+# bug fix for #66 and #67...and pks schema for later use
