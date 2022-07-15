@@ -44,7 +44,7 @@
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-            <TitledBorder title="EDITranBrowse"/>
+            <TitledBorder title="API Log"/>
           </Border>
         </Property>
         <Property name="name" type="java.lang.String" value="panelmain" noResource="true"/>
@@ -71,7 +71,7 @@
                       <Component id="jPanel3" pref="0" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="41" max="-2" attributes="0"/>
-                  <Component id="tablepanel" pref="365" max="32767" attributes="0"/>
+                  <Component id="tablepanel" pref="367" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -200,52 +200,20 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" attributes="0">
-                              <Component id="tbtradeid" min="-2" pref="120" max="-2" attributes="0"/>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="tbdoc" min="-2" pref="60" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="44" max="-2" attributes="0"/>
-                              <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="tbref" min="-2" pref="106" max="-2" attributes="0"/>
-                          </Group>
+                          <Component id="tbapiid" min="-2" pref="120" max="-2" attributes="0"/>
                           <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="dcfrom" alignment="0" min="-2" pref="148" max="-2" attributes="0"/>
                                   <Component id="dcto" alignment="0" min="-2" pref="148" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" attributes="0">
-                                      <Component id="rbFileLog" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                      <Component id="rbDocLog" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Component id="btRun" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="btdetail" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="bthidetext" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="btreprocess" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="btclearstatus" min="-2" max="-2" attributes="0"/>
-                                          <Group type="102" attributes="0">
-                                              <Component id="cbshowall" min="-2" max="-2" attributes="0"/>
-                                              <EmptySpace min="-2" pref="60" max="-2" attributes="0"/>
-                                              <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
-                                              <EmptySpace max="-2" attributes="0"/>
-                                              <Component id="tbsegdelim" min="-2" pref="41" max="-2" attributes="0"/>
-                                              <EmptySpace max="-2" attributes="0"/>
-                                              <Component id="lbsegdelim" min="-2" pref="19" max="-2" attributes="0"/>
-                                          </Group>
-                                      </Group>
-                                  </Group>
-                              </Group>
+                              <Component id="btRun" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="btdetail" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="bthidetext" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="371" max="-2" attributes="0"/>
+                              <Component id="lbsegdelim" min="-2" pref="19" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace pref="12" max="32767" attributes="0"/>
@@ -263,33 +231,18 @@
                               <Component id="btRun" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="btdetail" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="bthidetext" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="cbshowall" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="tbsegdelim" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="lbsegdelim" alignment="3" min="-2" pref="23" max="-2" attributes="0"/>
-                              <Component id="btreprocess" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="103" groupAlignment="1" attributes="0">
-                              <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
-                              <Component id="dcto" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="rbFileLog" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="rbDocLog" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
+                          <Component id="dcto" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="9" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="2" attributes="0">
-                          <Component id="tbtradeid" alignment="2" min="-2" max="-2" attributes="0"/>
-                          <Component id="tbdoc" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="tbapiid" alignment="2" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel3" alignment="2" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel4" alignment="2" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel7" alignment="2" min="-2" max="-2" attributes="0"/>
-                          <Component id="tbref" alignment="2" min="-2" max="-2" attributes="0"/>
-                          <Component id="btclearstatus" alignment="2" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -337,20 +290,12 @@
                 <Property name="dateFormatString" type="java.lang.String" value="yyyy-MM-dd"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JTextField" name="tbtradeid">
+            <Component class="javax.swing.JTextField" name="tbapiid">
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel3">
               <Properties>
-                <Property name="text" type="java.lang.String" value="TradeID"/>
+                <Property name="text" type="java.lang.String" value="API ID"/>
                 <Property name="name" type="java.lang.String" value="lbltpid" noResource="true"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JTextField" name="tbdoc">
-            </Component>
-            <Component class="javax.swing.JLabel" name="jLabel4">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="DocType"/>
-                <Property name="name" type="java.lang.String" value="lbldoctype" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JButton" name="bthidetext">
@@ -362,67 +307,7 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bthidetextActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JCheckBox" name="cbshowall">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Show Entire File"/>
-                <Property name="name" type="java.lang.String" value="cbshowentire" noResource="true"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JRadioButton" name="rbFileLog">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="FileLogView"/>
-                <Property name="name" type="java.lang.String" value="cbfilelog" noResource="true"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="rbFileLogActionPerformed"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JRadioButton" name="rbDocLog">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="DocLogView"/>
-                <Property name="name" type="java.lang.String" value="cbdoclog" noResource="true"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="rbDocLogActionPerformed"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JTextField" name="tbsegdelim">
-              <Events>
-                <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="tbsegdelimFocusLost"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JLabel" name="jLabel1">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="SegDelim (int)"/>
-                <Property name="name" type="java.lang.String" value="lblsegdelim" noResource="true"/>
-              </Properties>
-            </Component>
             <Component class="javax.swing.JLabel" name="lbsegdelim">
-            </Component>
-            <Component class="javax.swing.JTextField" name="tbref">
-            </Component>
-            <Component class="javax.swing.JLabel" name="jLabel7">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Reference"/>
-                <Property name="name" type="java.lang.String" value="lblref" noResource="true"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JButton" name="btreprocess">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Reprocess"/>
-                <Property name="name" type="java.lang.String" value="btreprocess" noResource="true"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btreprocessActionPerformed"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JButton" name="btclearstatus">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Clear Status"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btclearstatusActionPerformed"/>
-              </Events>
             </Component>
           </SubComponents>
         </Container>

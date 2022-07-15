@@ -227,47 +227,20 @@ public class APILog extends javax.swing.JPanel {
               
                //  tablereport.getColumnModel().getColumn(7).setCellRenderer(new EDITransactionBrowse.SomeRenderer()); 
                 
-                 
-              
-                    if (! tbtradeid.getText().isEmpty() && tbdoc.getText().isEmpty() ) {
-                    res = st.executeQuery("SELECT * FROM edi_idx  " +
-                    " where edx_sender >= " + "'" + tbtradeid.getText() + "'" +
-                    " AND edx_sender <= " + "'" + tbtradeid.getText() + "'" +
-                    " AND edx_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
-                    " AND edx_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 23:59:59" + "'" + " order by edx_id desc ;" ) ;
-                    }
                     
-                    if (! tbdoc.getText().isEmpty() && tbtradeid.getText().isEmpty()) {
-                    res = st.executeQuery("SELECT * FROM edi_idx  " +
-                    " where " +
-                    " edx_indoctype >= " + "'" + tbdoc.getText() + "'" +
-                    " AND edx_indoctype <= " + "'" + tbdoc.getText() + "'" +        
-                    " AND edx_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
-                    " AND edx_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 23:59:59" + "'" + " order by edx_id desc ;" ) ;
-                    }
-                    
-                    if (! tbdoc.getText().isEmpty() && ! tbtradeid.getText().isEmpty()) {
-                    res = st.executeQuery("SELECT * FROM edi_idx  " +
-                     " where edx_sender >= " + "'" + tbtradeid.getText() + "'" +
-                    " AND edx_sender <= " + "'" + tbtradeid.getText() + "'" +
-                    " AND edx_indoctype >= " + "'" + tbdoc.getText() + "'" +
-                    " AND edx_indoctype <= " + "'" + tbdoc.getText() + "'" +        
-                    " AND edx_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
-                    " AND edx_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 23:59:59" + "'" + " order by edx_id desc ;" ) ;
-                    }
-                    
-                    
-                    if (tbtradeid.getText().isEmpty() && tbdoc.getText().isEmpty()) {
+                    if (tbapiid.getText().isEmpty()) {
                     res = st.executeQuery("SELECT * FROM edi_idx  " +
                     " where edx_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
                     " AND edx_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 23:59:59" + "'" + " order by edx_id desc ;" ) ;
+                    } else {
+                     res = st.executeQuery("SELECT * FROM edi_idx  " +
+                    " where edx_sender >= " + "'" + tbapiid.getText() + "'" +
+                    " AND edx_sender <= " + "'" + tbapiid.getText() + "'" +
+                    " AND edx_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
+                    " AND edx_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 23:59:59" + "'" + " order by edx_id desc ;" ) ;
                     }
                     
-                    if (! tbref.getText().isEmpty()) {
-                    res = st.executeQuery("SELECT * FROM edi_idx  " +
-                    " where edx_ref like " + "'%" + tbref.getText() + "%'" +
-                    " order by edx_id desc ;" ) ;
-                    }
+                 
                     
                 
                 
@@ -372,42 +345,19 @@ public class APILog extends javax.swing.JPanel {
                  tablereport.getColumnModel().getColumn(9).setMaxWidth(50);
                  tablereport.getColumnModel().getColumn(10).setMaxWidth(50);
                  
-              
-                    if (! tbtradeid.getText().isEmpty() && tbdoc.getText().isEmpty() ) {
-                    res = st.executeQuery("SELECT * FROM edi_file  " +
-                    " where edf_partner >= " + "'" + tbtradeid.getText() + "'" +
-                    " AND edf_partner <= " + "'" + tbtradeid.getText() + "'" +        
-                    " AND edf_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
-                    " AND edf_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 23:59:59" + "'" + 
-                    " order by edf_id desc ;" ) ;
-                    }
                     
-                    if (! tbdoc.getText().isEmpty() && tbtradeid.getText().isEmpty()) {
-                    res = st.executeQuery("SELECT * FROM edi_file  " +
-                    " where " +
-                    " edf_doctype >= " + "'" + tbdoc.getText() + "'" +
-                    " AND edf_doctype <= " + "'" + tbdoc.getText() + "'" +        
-                    " AND edf_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
-                    " AND edf_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 23:59:59" + "'" + 
-                    " order by edf_id desc ;" ) ;
-                    }
-                    
-                    if (! tbdoc.getText().isEmpty() && ! tbtradeid.getText().isEmpty()) {
-                    res = st.executeQuery("SELECT * FROM edi_file  " +
-                     " where edf_partner >= " + "'" + tbtradeid.getText() + "'" +
-                    " AND edf_partner <= " + "'" + tbtradeid.getText() + "'" +
-                    " AND edf_doctype >= " + "'" + tbdoc.getText() + "'" +
-                    " AND edf_doctype <= " + "'" + tbdoc.getText() + "'" +        
-                    " AND edf_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
-                    " AND edf_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 23:59:59" + "'" + 
-                    " order by edf_id desc ;" ) ;
-                    }
-                    
-                    if (tbtradeid.getText().isEmpty() && tbdoc.getText().isEmpty()) {
+                    if (tbapiid.getText().isEmpty()) {
                     res = st.executeQuery("SELECT * FROM edi_file  " +
                     " where edf_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
                     " AND edf_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 23:59:59" + "'" + 
                     " order by edf_id desc ;" ) ;
+                    } else {
+                    res = st.executeQuery("SELECT * FROM edi_file  " +
+                    " where edf_partner >= " + "'" + tbapiid.getText() + "'" +
+                    " AND edf_partner <= " + "'" + tbapiid.getText() + "'" +        
+                    " AND edf_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
+                    " AND edf_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 23:59:59" + "'" + 
+                    " order by edf_id desc ;" ) ;    
                     }
                     
               
@@ -573,10 +523,6 @@ public class APILog extends javax.swing.JPanel {
     
     public void initvars(String[] arg) {
        
-        buttonGroup1.add(rbDocLog);
-        buttonGroup1.add(rbFileLog);
-        rbDocLog.setSelected(true);
-        
         
         tbtoterrors.setText("0");
         tbtot.setText("0");
@@ -611,11 +557,8 @@ public class APILog extends javax.swing.JPanel {
         
         btdetail.setEnabled(false);
         bthidetext.setEnabled(false);
-        cbshowall.setEnabled(false);
         detailpanel.setVisible(false);
         textpanel.setVisible(false);
-        btreprocess.setEnabled(false);
-        btclearstatus.setEnabled(false);
           
     }
     /**
@@ -647,21 +590,10 @@ public class APILog extends javax.swing.JPanel {
         jLabel6 = new javax.swing.JLabel();
         dcfrom = new com.toedter.calendar.JDateChooser();
         dcto = new com.toedter.calendar.JDateChooser();
-        tbtradeid = new javax.swing.JTextField();
+        tbapiid = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        tbdoc = new javax.swing.JTextField();
-        jLabel4 = new javax.swing.JLabel();
         bthidetext = new javax.swing.JButton();
-        cbshowall = new javax.swing.JCheckBox();
-        rbFileLog = new javax.swing.JRadioButton();
-        rbDocLog = new javax.swing.JRadioButton();
-        tbsegdelim = new javax.swing.JTextField();
-        jLabel1 = new javax.swing.JLabel();
         lbsegdelim = new javax.swing.JLabel();
-        tbref = new javax.swing.JTextField();
-        jLabel7 = new javax.swing.JLabel();
-        btreprocess = new javax.swing.JButton();
-        btclearstatus = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
         tbtoterrors = new javax.swing.JLabel();
@@ -672,7 +604,7 @@ public class APILog extends javax.swing.JPanel {
 
         setBackground(new java.awt.Color(0, 102, 204));
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("EDITranBrowse"));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("API Log"));
         jPanel1.setName("panelmain"); // NOI18N
 
         tablepanel.setLayout(new javax.swing.BoxLayout(tablepanel, javax.swing.BoxLayout.LINE_AXIS));
@@ -760,63 +692,14 @@ public class APILog extends javax.swing.JPanel {
 
         dcto.setDateFormatString("yyyy-MM-dd");
 
-        jLabel3.setText("TradeID");
+        jLabel3.setText("API ID");
         jLabel3.setName("lbltpid"); // NOI18N
-
-        jLabel4.setText("DocType");
-        jLabel4.setName("lbldoctype"); // NOI18N
 
         bthidetext.setText("Hide Text");
         bthidetext.setName("bthidetext"); // NOI18N
         bthidetext.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bthidetextActionPerformed(evt);
-            }
-        });
-
-        cbshowall.setText("Show Entire File");
-        cbshowall.setName("cbshowentire"); // NOI18N
-
-        rbFileLog.setText("FileLogView");
-        rbFileLog.setName("cbfilelog"); // NOI18N
-        rbFileLog.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rbFileLogActionPerformed(evt);
-            }
-        });
-
-        rbDocLog.setText("DocLogView");
-        rbDocLog.setName("cbdoclog"); // NOI18N
-        rbDocLog.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rbDocLogActionPerformed(evt);
-            }
-        });
-
-        tbsegdelim.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                tbsegdelimFocusLost(evt);
-            }
-        });
-
-        jLabel1.setText("SegDelim (int)");
-        jLabel1.setName("lblsegdelim"); // NOI18N
-
-        jLabel7.setText("Reference");
-        jLabel7.setName("lblref"); // NOI18N
-
-        btreprocess.setText("Reprocess");
-        btreprocess.setName("btreprocess"); // NOI18N
-        btreprocess.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btreprocessActionPerformed(evt);
-            }
-        });
-
-        btclearstatus.setText("Clear Status");
-        btclearstatus.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btclearstatusActionPerformed(evt);
             }
         });
 
@@ -832,45 +715,19 @@ public class APILog extends javax.swing.JPanel {
                     .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(tbtradeid, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tbdoc, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(44, 44, 44)
-                        .addComponent(jLabel7)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tbref, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(tbapiid, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(dcfrom, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(dcto, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(31, 31, 31)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(rbFileLog)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(rbDocLog))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(btRun)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btdetail)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(bthidetext)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btreprocess)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(btclearstatus)
-                                    .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addComponent(cbshowall)
-                                        .addGap(60, 60, 60)
-                                        .addComponent(jLabel1)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(tbsegdelim, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(lbsegdelim, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)))))))
+                        .addComponent(btRun)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btdetail)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(bthidetext)
+                        .addGap(371, 371, 371)
+                        .addComponent(lbsegdelim, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(12, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -884,28 +741,15 @@ public class APILog extends javax.swing.JPanel {
                         .addComponent(btRun)
                         .addComponent(btdetail)
                         .addComponent(bthidetext)
-                        .addComponent(cbshowall)
-                        .addComponent(tbsegdelim, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel1)
-                        .addComponent(lbsegdelim, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btreprocess)))
+                        .addComponent(lbsegdelim, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(jLabel6)
-                        .addComponent(dcto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(rbFileLog)
-                        .addComponent(rbDocLog)))
-                .addGap(5, 5, 5)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel6)
+                    .addComponent(dcto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(9, 9, 9)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(tbtradeid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tbdoc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel4)
-                    .addComponent(jLabel7)
-                    .addComponent(tbref, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btclearstatus))
+                    .addComponent(tbapiid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
                 .addContainerGap())
         );
 
@@ -965,9 +809,9 @@ public class APILog extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE))
+                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addGap(41, 41, 41)
-                .addComponent(tablepanel, javax.swing.GroupLayout.DEFAULT_SIZE, 365, Short.MAX_VALUE))
+                .addComponent(tablepanel, javax.swing.GroupLayout.DEFAULT_SIZE, 367, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -983,28 +827,15 @@ public class APILog extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRunActionPerformed
-      if (rbDocLog.isSelected()) {
-        getDocLogView();
-      } else {
-        getFileLogView();  
-      }
+              getFileLogView();
     }//GEN-LAST:event_btRunActionPerformed
-
-    private void btdetailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdetailActionPerformed
-       detailpanel.setVisible(false);
-       btdetail.setEnabled(false);
-    }//GEN-LAST:event_btdetailActionPerformed
 
     private void tablereportMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablereportMouseClicked
         
         int row = tablereport.rowAtPoint(evt.getPoint());
         int col = tablereport.columnAtPoint(evt.getPoint());
-        if ( col == 0 && rbDocLog.isSelected()) {
-                getdetail(tablereport.getValueAt(row, 2).toString(), tablereport.getValueAt(row, 1).toString());
-                btdetail.setEnabled(true);
-                detailpanel.setVisible(true);
-        }
-        if ( col == 0 && rbFileLog.isSelected()) {
+       
+        if ( col == 0) {
                 getdetail(tablereport.getValueAt(row, 2).toString(), "0");
                 btdetail.setEnabled(true);
                 detailpanel.setVisible(true);
@@ -1012,259 +843,45 @@ public class APILog extends javax.swing.JPanel {
         if ( col == 15) {
                 String ackfile = EDData.getEDIAckFileFromEDIIDX(tablereport.getValueAt(row, 1).toString());
                 if (! ackfile.isEmpty()) {
-                int k = 10;
-                      if (BlueSeerUtils.isParsableToInt(tbsegdelim.getText())) {
-                      k = Integer.valueOf(tbsegdelim.getText());
-                      }
-                     try {
-                         tafile.setText("");
-                         if (! tablereport.getValueAt(row, 7).toString().isEmpty()) {
-                         ArrayList<String> segments = EDData.readEDIRawFileByDoc(ackfile, 
-                                 EDData.getEDIBatchDir(),
-                                 cbshowall.isSelected(),
-                                 "0",
-                                 "0",
-                                 String.valueOf(k)
-                                 );  
-                            tafile.append(ackfile + ":" + "\n");
-                            for (String segment : segments ) {
-                                tafile.append(segment);
-                                tafile.append("\n");
-                            }
-                         }
-                     } catch (MalformedURLException ex) {
-                         MainFrame.bslog(ex);
-                     } catch (SmbException ex) {
-                         MainFrame.bslog(ex);
-                     } catch (IOException ex) {
-                         MainFrame.bslog(ex);
-                     }
+                 // read output or mdn here
+                     
+                    
                      tafile.setCaretPosition(0);
                      textpanel.setVisible(true);
                      bthidetext.setEnabled(true);
-                     cbshowall.setEnabled(true);
                 }
         }
         
-          if ( col == 9 && rbFileLog.isSelected()) {
-              int k = 10;
-              // try to get delimiter from edi_idx (edx_comkey)
-              String[] p = EDData.getEDIDocPositionEDIIDXcomkey(tablereport.getValueAt(row, 2).toString());
-              if (! p[4].isEmpty()) {
-               k = Integer.valueOf(p[4]);
-              }
-              
-              // if textbox segment is occupied...override lookup
-              if (! tbsegdelim.getText().isEmpty() && BlueSeerUtils.isParsableToInt(tbsegdelim.getText())) {
-              k = Integer.valueOf(tbsegdelim.getText());
-              }
-             try {
-                 tafile.setText("");
-                 if (! tablereport.getValueAt(row, 7).toString().isEmpty()) {
-                 ArrayList<String> segments = EDData.readEDIRawFileByDoc(tablereport.getValueAt(row, 7).toString(), 
-                         EDData.getEDIInArch(),
-                         cbshowall.isSelected(),
-                         "0",
-                         "0",
-                         String.valueOf(k)
-                         );  
-                    for (String segment : segments ) {
-                        tafile.append(segment);
-                        tafile.append("\n");
-                    }
-                 }
-             } catch (MalformedURLException ex) {
-                 MainFrame.bslog(ex);
-             } catch (SmbException ex) {
-                 MainFrame.bslog(ex);
-             } catch (IOException ex) {
-                 MainFrame.bslog(ex);
-             }
-             tafile.setCaretPosition(0);
-             textpanel.setVisible(true);
-             bthidetext.setEnabled(true);
-             cbshowall.setEnabled(true);
-             
-        }
-          if ( (col == 13) && rbDocLog.isSelected()) {
-              int k = 10;
-              String[] p = EDData.getEDIDocPositionEDIIDX(tablereport.getValueAt(row, 1).toString());
-              String end = p[3];  // doc end
-              if (tablereport.getValueAt(row, 6).toString().equals("FF")) {
-                  end = p[1];   // file end
-              }
-             // if (BlueSeerUtils.isParsableToInt(tbsegdelim.getText())) {
-            //  k = Integer.valueOf(tbsegdelim.getText());
-            //  }
-             try {
-                 tafile.setText("");
-                 if (! tablereport.getValueAt(row, 8).toString().isEmpty()) {
-                 ArrayList<String> segments = EDData.readEDIRawFileByDoc(tablereport.getValueAt(row, 8).toString(), 
-                         EDData.getEDIBatchDir(),
-                         cbshowall.isSelected(),
-                         p[2],
-                         end,
-                         p[4]
-                         );  
-                    for (String segment : segments ) {
-                        tafile.append(segment);
-                        tafile.append("\n");
-                    }
-                 }
-             } catch (MalformedURLException ex) {
-                 MainFrame.bslog(ex);
-             } catch (SmbException ex) {
-                 MainFrame.bslog(ex);
-             } catch (IOException ex) {
-                 MainFrame.bslog(ex);
-             }
-             tafile.setCaretPosition(0);
-             textpanel.setVisible(true);
-             bthidetext.setEnabled(true);
-             cbshowall.setEnabled(true);
-             
-        }
+       
           
-         if ( (col == 14) && rbDocLog.isSelected()) {
-              int k = 10;
-               String[] p = EDData.getEDIDocPositionEDIIDX(tablereport.getValueAt(row, 1).toString());
-             
-            //  if (BlueSeerUtils.isParsableToInt(tbsegdelim.getText())) {
-            //  k = Integer.valueOf(tbsegdelim.getText());
-            //  }
-             try {
-                 tafile.setText("");
-                 if (! tablereport.getValueAt(row, 12).toString().isEmpty()) {
-                 ArrayList<String> segments = EDData.readEDIRawFileByDoc(tablereport.getValueAt(row, 12).toString(), 
-                         EDData.getEDIBatchDir(),
-                         cbshowall.isSelected(),
-                         p[0],
-                         p[1],
-                         p[4]
-                         );  
-                    for (String segment : segments ) {
-                        tafile.append(segment);
-                        tafile.append("\n");
-                    }
-                 }
-             } catch (MalformedURLException ex) {
-                 MainFrame.bslog(ex);
-             } catch (SmbException ex) {
-                 MainFrame.bslog(ex);
-             } catch (IOException ex) {
-                 MainFrame.bslog(ex);
-             }
-             tafile.setCaretPosition(0);
-             textpanel.setVisible(true);
-             bthidetext.setEnabled(true);
-             cbshowall.setEnabled(true);
-             
-        }  
+       
       
     }//GEN-LAST:event_tablereportMouseClicked
 
     private void bthidetextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bthidetextActionPerformed
         textpanel.setVisible(false);
        bthidetext.setEnabled(false);
-       cbshowall.setSelected(false);
-       cbshowall.setEnabled(false);
     }//GEN-LAST:event_bthidetextActionPerformed
 
-    private void tbsegdelimFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbsegdelimFocusLost
-        if (BlueSeerUtils.isParsableToInt(tbsegdelim.getText())) {
-        int x = Integer.valueOf(tbsegdelim.getText());
-        lbsegdelim.setText(String.valueOf((char) x));
-        } else {
-            tbsegdelim.setText("10");
-        }
-    }//GEN-LAST:event_tbsegdelimFocusLost
-
-    private void rbDocLogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbDocLogActionPerformed
-        if (rbDocLog.isSelected()) {
-            tbref.setEnabled(true);
-            btreprocess.setEnabled(false);
-            btclearstatus.setEnabled(false);
-            getDocLogView();
-        } else {
-            tbref.setEnabled(false);
-            btreprocess.setEnabled(true);
-            btclearstatus.setEnabled(true);
-            getFileLogView();
-        }
-    }//GEN-LAST:event_rbDocLogActionPerformed
-
-    private void rbFileLogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbFileLogActionPerformed
-          if (rbDocLog.isSelected()) {
-            tbref.setEnabled(true);
-            btreprocess.setEnabled(false);
-            btclearstatus.setEnabled(false);
-            getDocLogView();
-        } else {
-            tbref.setEnabled(false);
-            btreprocess.setEnabled(true);
-            btclearstatus.setEnabled(true);
-            getFileLogView();
-        }
-    }//GEN-LAST:event_rbFileLogActionPerformed
-
-    private void btreprocessActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btreprocessActionPerformed
-        //bsmf.MainFrame.show("This functionality is not available yet");
-       // return;
-        
-        int[] rows = tablereport.getSelectedRows();
-        if (rows.length > 1) {
-            bsmf.MainFrame.show(getMessageTag(1162));
-            return;
-        }
-        for (int i : rows) {
-            if (tablereport.getValueAt(i, 1) != null && tablereport.getValueAt(i, 2) != null ) {
-                String batch = EDData.getEDIBatchFromedi_file(tablereport.getValueAt(i,2).toString());
-                if (! batch.isEmpty())
-                    try {
-                        batch = EDData.getEDIBatchDir() + "/" + batch; 
-                       String[] m = EDI.processFile(batch, "", "", "", false, true, Integer.valueOf(tablereport.getValueAt(i, 2).toString()), Integer.valueOf(tablereport.getValueAt(i, 1).toString()));
-                       String result = m[0] + " of " + m[1];
-                       bsmf.MainFrame.show(getMessageTag(1163,result));
-                    } catch (IOException ex) {
-                        MainFrame.bslog(ex);
-                    } catch (ClassNotFoundException ex) {
-                        MainFrame.bslog(ex);
-                    }
-            }
-        }
-        
-    }//GEN-LAST:event_btreprocessActionPerformed
-
-    private void btclearstatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearstatusActionPerformed
-         int[] rows = tablereport.getSelectedRows();
-        for (int i : rows) {
-            updateEDIFileLogStatusManual(tablereport.getValueAt(i,2).toString());
-        }
-        if (rows.length >= 1) {
-        getFileLogView();
-        }
-    }//GEN-LAST:event_btclearstatusActionPerformed
+    private void btdetailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdetailActionPerformed
+        detailpanel.setVisible(false);
+        btdetail.setEnabled(false);
+    }//GEN-LAST:event_btdetailActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btRun;
-    private javax.swing.JButton btclearstatus;
     private javax.swing.JButton btdetail;
     private javax.swing.JButton bthidetext;
-    private javax.swing.JButton btreprocess;
     private javax.swing.ButtonGroup buttonGroup1;
-    private javax.swing.JCheckBox cbshowall;
     private com.toedter.calendar.JDateChooser dcfrom;
     private com.toedter.calendar.JDateChooser dcto;
     private javax.swing.JPanel detailpanel;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
@@ -1273,19 +890,14 @@ public class APILog extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JLabel lbsegdelim;
-    private javax.swing.JRadioButton rbDocLog;
-    private javax.swing.JRadioButton rbFileLog;
     private javax.swing.JPanel summarypanel;
     private javax.swing.JTable tabledetail;
     private javax.swing.JPanel tablepanel;
     private javax.swing.JTable tablereport;
     private javax.swing.JTextArea tafile;
-    private javax.swing.JTextField tbdoc;
-    private javax.swing.JTextField tbref;
-    private javax.swing.JTextField tbsegdelim;
+    private javax.swing.JTextField tbapiid;
     private javax.swing.JLabel tbtot;
     private javax.swing.JLabel tbtoterrors;
-    private javax.swing.JTextField tbtradeid;
     private javax.swing.JPanel textpanel;
     // End of variables declaration//GEN-END:variables
 }
