@@ -94,16 +94,16 @@ public class APIBrowse extends javax.swing.JPanel {
      public Map<String, ArrayList<String>> map = new HashMap<String, ArrayList<String>>();
      
     javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{
+                    new String[]{
                             getGlobalColumnTag("select"), 
                             getGlobalColumnTag("detail"), 
                             getGlobalColumnTag("id"),
-                            getGlobalColumnTag("vendor"), 
-                            getGlobalColumnTag("packingslip"), 
-                            getGlobalColumnTag("recvdate"), 
-                            getGlobalColumnTag("status"), 
-                            getGlobalColumnTag("reference"), 
-                            getGlobalColumnTag("remarks")})
+                            getGlobalColumnTag("description"), 
+                            getGlobalColumnTag("class"), 
+                            getGlobalColumnTag("url"), 
+                            getGlobalColumnTag("port"), 
+                            getGlobalColumnTag("path"), 
+                            getGlobalColumnTag("protocol")})
             {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -115,14 +115,15 @@ public class APIBrowse extends javax.swing.JPanel {
                 
     javax.swing.table.DefaultTableModel modeldetail = new javax.swing.table.DefaultTableModel(new Object[][]{},
                         new String[]{getGlobalColumnTag("id"), 
-                            getGlobalColumnTag("po"),
-                            getGlobalColumnTag("line"), 
-                            getGlobalColumnTag("item"), 
-                            getGlobalColumnTag("packingslip"), 
-                            getGlobalColumnTag("recvdate"), 
-                            getGlobalColumnTag("netprice"), 
-                            getGlobalColumnTag("recvqty"), 
-                            getGlobalColumnTag("vouchqty")});
+                            getGlobalColumnTag("method"),
+                            getGlobalColumnTag("sequence"), 
+                            getGlobalColumnTag("verb"), 
+                            getGlobalColumnTag("type"), 
+                            getGlobalColumnTag("key"), 
+                            getGlobalColumnTag("value"), 
+                            getGlobalColumnTag("source"), 
+                            getGlobalColumnTag("destination"),
+                            getGlobalColumnTag("enabled")});
     
      class ButtonRenderer extends JButton implements TableCellRenderer {
 
@@ -157,47 +158,57 @@ public class APIBrowse extends javax.swing.JPanel {
         setLanguageTags(this);
     }
 
-     public void getdetail(String rvid) {
+     public void getdetail(String apiid) {
       
          modeldetail.setNumRows(0);
          double total = 0;
         
         try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            } 
+            Statement st = bsmf.MainFrame.con.createStatement();
+            ResultSet res = null;
             try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
+                
                 int i = 0;
                 String blanket = "";
                 
-                res = st.executeQuery("select rvd_id, rvd_po, rvd_poline, rvd_item, rvd_packingslip, rvd_date, rvd_netprice, rvd_qty, rvd_voqty " +
-                        " from recv_det " +
-                        " where rvd_id = " + "'" + rvid + "'" + ";");
+                res = st.executeQuery("select * " +
+                        " from api_det " +
+                        " where apid_id = " + "'" + apiid + "'" + ";");
                 while (res.next()) {
                    modeldetail.addRow(new Object[]{ 
-                      res.getString("rvd_id"), 
-                       res.getString("rvd_po"),
-                       res.getString("rvd_poline"),
-                       res.getString("rvd_item"),
-                       res.getString("rvd_packingslip"),
-                       res.getString("rvd_date"),
-                       currformatDouble(res.getDouble("rvd_netprice")),
-                      res.getInt("rvd_qty"), 
-                      res.getInt("rvd_voqty")});
+                      res.getString("apid_id"), 
+                       res.getString("apid_method"),
+                       res.getString("apid_seq"),
+                       res.getString("apid_verb"),
+                       res.getString("apid_type"),
+                       res.getString("apid_key"),
+                       res.getString("apid_value"),
+                       res.getString("apid_source"),
+                       res.getString("apid_destination"),
+                       res.getString("apid_enabled")
+                   });
                 }
-               
-              
                 tabledetail.setModel(modeldetail);
-                 tabledetail.getColumnModel().getColumn(6).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
-                this.repaint();
+                 this.repaint();
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
             }
-            bsmf.MainFrame.con.close();
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
@@ -261,9 +272,13 @@ public class APIBrowse extends javax.swing.JPanel {
         tablereport.setModel(mymodel);
         tabledetail.setModel(modeldetail);
         
-           tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
-           tablereport.getColumnModel().getColumn(1).setMaxWidth(100);
+        tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
+        tablereport.getColumnModel().getColumn(1).setMaxWidth(100);
          
+        tbfromid.setText("");
+        tbtoid.setText("");
+        tbfromdesc.setText("");
+        tbtodesc.setText("");
        
           
          
@@ -275,31 +290,6 @@ public class APIBrowse extends javax.swing.JPanel {
         
         btdetail.setEnabled(false);
         detailpanel.setVisible(false);
-        
-        ddsite.removeAllItems();
-        ArrayList sites = OVData.getSiteList();
-        for (Object site : sites) {
-            ddsite.addItem(site);
-        }
-        
-        ddvendfrom.removeAllItems();
-        ArrayList vends = venData.getVendMstrList();
-        for (Object vend : vends) {
-            ddvendfrom.addItem(vend);
-        }
-        ddvendto.removeAllItems();
-        for (Object vend : vends) {
-            ddvendto.addItem(vend);
-        }
-        
-        
-         if (ddvendfrom.getItemCount() > 0)
-        ddvendfrom.setSelectedIndex(0);
-        
-        if (ddvendto.getItemCount() > 0)
-        ddvendto.setSelectedIndex(ddvendto.getItemCount() - 1);
-        
-        
           
           
     }
@@ -324,20 +314,18 @@ public class APIBrowse extends javax.swing.JPanel {
         btdetail = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
         btRun = new javax.swing.JButton();
-        jLabel5 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        ddvendto = new javax.swing.JComboBox();
-        ddvendfrom = new javax.swing.JComboBox();
-        ddsite = new javax.swing.JComboBox();
         jLabel6 = new javax.swing.JLabel();
-        tbfrompo = new javax.swing.JTextField();
-        tbtopo = new javax.swing.JTextField();
+        tbfromid = new javax.swing.JTextField();
+        tbtoid = new javax.swing.JTextField();
+        tbfromdesc = new javax.swing.JTextField();
+        tbtodesc = new javax.swing.JTextField();
         jPanel3 = new javax.swing.JPanel();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Receiver Browse"));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("API Browse"));
         jPanel1.setName("panelmain"); // NOI18N
 
         tablepanel.setLayout(new javax.swing.BoxLayout(tablepanel, javax.swing.BoxLayout.LINE_AXIS));
@@ -395,8 +383,8 @@ public class APIBrowse extends javax.swing.JPanel {
             }
         });
 
-        jLabel4.setText("To Vend");
-        jLabel4.setName("lbltovend"); // NOI18N
+        jLabel4.setText("To Desc");
+        jLabel4.setName("lbltodesc"); // NOI18N
 
         btRun.setText("Run");
         btRun.setName("btrun"); // NOI18N
@@ -406,17 +394,14 @@ public class APIBrowse extends javax.swing.JPanel {
             }
         });
 
-        jLabel5.setText("Site");
-        jLabel5.setName("lblsite"); // NOI18N
+        jLabel1.setText("From Desc");
+        jLabel1.setName("lblfromdesc"); // NOI18N
 
-        jLabel1.setText("From Vend");
-        jLabel1.setName("lblfromvend"); // NOI18N
+        jLabel3.setText("To ID");
+        jLabel3.setName("lbltoid"); // NOI18N
 
-        jLabel3.setText("To Receiver");
-        jLabel3.setName("lbltoreceiver"); // NOI18N
-
-        jLabel6.setText("From Receiver");
-        jLabel6.setName("lblfromreceiver"); // NOI18N
+        jLabel6.setText("From ID");
+        jLabel6.setName("lblfromid"); // NOI18N
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -428,24 +413,18 @@ public class APIBrowse extends javax.swing.JPanel {
                     .addComponent(jLabel6)
                     .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(tbtopo, javax.swing.GroupLayout.DEFAULT_SIZE, 94, Short.MAX_VALUE)
-                            .addComponent(tbfrompo))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(ddvendfrom, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(ddvendto, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel5)
-                .addGap(4, 4, 4)
-                .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(tbtoid, javax.swing.GroupLayout.DEFAULT_SIZE, 94, Short.MAX_VALUE)
+                    .addComponent(tbfromid))
                 .addGap(18, 18, 18)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(tbfromdesc, javax.swing.GroupLayout.DEFAULT_SIZE, 111, Short.MAX_VALUE)
+                    .addComponent(tbtodesc))
+                .addGap(145, 145, 145)
                 .addComponent(btRun)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btdetail)
@@ -457,21 +436,20 @@ public class APIBrowse extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(ddvendfrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btRun)
                     .addComponent(btdetail)
-                    .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5)
-                    .addComponent(tbfrompo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6))
+                    .addComponent(tbfromid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6)
+                    .addComponent(tbfromdesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel4)
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(ddvendto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel4)
+                        .addComponent(tbtodesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel3)
-                        .addComponent(tbtopo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(tbtoid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(12, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -494,7 +472,7 @@ public class APIBrowse extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 126, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 158, Short.MAX_VALUE)
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(tablepanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
@@ -507,7 +485,7 @@ public class APIBrowse extends javax.swing.JPanel {
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tablepanel, javax.swing.GroupLayout.DEFAULT_SIZE, 377, Short.MAX_VALUE))
+                .addComponent(tablepanel, javax.swing.GroupLayout.DEFAULT_SIZE, 378, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -526,7 +504,7 @@ public class APIBrowse extends javax.swing.JPanel {
 
     
 try {
-            Connection con = null;
+        Connection con = null;
         if (ds != null) {
           con = ds.getConnection();
         } else {
@@ -535,54 +513,47 @@ try {
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
-                DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
-                int i = 0;
-               
-               mymodel.setNumRows(0);
-        
-            
-                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 
-                 String pofrom = tbfrompo.getText();
-                 String poto = tbtopo.getText();
+               mymodel.setNumRows(0);
+                
+                 String idfrom = tbfromid.getText();
+                 String idto = tbtoid.getText();
+                 String descfrom = tbfromdesc.getText();
+                 String descto = tbtodesc.getText();
                  
-                 if (pofrom.isEmpty()) {
-                     pofrom = bsmf.MainFrame.lownbr;
+                 if (idfrom.isEmpty()) {
+                     idfrom = bsmf.MainFrame.lownbr;
                  }
-                  if (poto.isEmpty()) {
-                     poto = bsmf.MainFrame.hinbr;
+                  if (idto.isEmpty()) {
+                     idto = bsmf.MainFrame.hinbr;
                  }
-                  
-                 String vendfrom = "";
-                 String vendto = "";
-                 if (ddvendfrom.getSelectedItem() != null)
-                     vendfrom = ddvendfrom.getSelectedItem().toString();
+              
+                   if (descfrom.isEmpty()) {
+                     descfrom = bsmf.MainFrame.lownbr;
+                 }
+                  if (descto.isEmpty()) {
+                     descto = bsmf.MainFrame.hinbr;
+                 }
                  
-                 if (ddvendto.getSelectedItem() != null)
-                     vendto = ddvendto.getSelectedItem().toString();
-                      
-                  
-                 
-         //     new String[]{"Detail", "PO", "Vend", "Line", "Part", "Type", "Status", "OrdQty", "RecvQty"});   
-             res = st.executeQuery("select rv_id, rv_vend, rv_packingslip, rv_recvdate, rv_status, rv_ref, rv_rmks " +
-                         " from recv_mstr where " +
-                        " rv_vend >= " + "'" + vendfrom + "'" + " AND " +
-                        " rv_vend <= " + "'" + vendto + "'" + " AND " +
-                     " rv_id >= " + "'" + pofrom + "'" + " AND " +
-                        " rv_id <= " + "'" + poto + "'" + 
-                        " order by rv_id ;");
+             res = st.executeQuery("select * " +
+                         " from api_mstr where " +
+                        " api_id >= " + "'" + idfrom + "'" + " AND " +
+                        " api_id <= " + "'" + idto + "'" + " AND " +
+                     " api_desc >= " + "'" + descfrom + "'" + " AND " +
+                        " api_desc <= " + "'" + descto + "'" + 
+                        " order by api_id ;");
                      
                   
                 
                        while (res.next()) {
                     mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, BlueSeerUtils.clickbasket, 
-                        res.getString("rv_id"),
-                        res.getString("rv_vend"),
-                        res.getString("rv_packingslip"),
-                        res.getString("rv_recvdate"),
-                        res.getString("rv_status"),
-                        res.getString("rv_ref"),
-                        res.getString("rv_rmks")
+                        res.getString("api_id"),
+                        res.getString("api_desc"),
+                        res.getString("api_class"),
+                        res.getString("api_url"),
+                        res.getString("api_port"),
+                        res.getString("api_path"),
+                        res.getString("api_protocol")
                     });
                
              
@@ -625,7 +596,7 @@ try {
               
         }
         if ( col == 0) {
-                String mypanel = "ReceiverMaintMenu";
+                String mypanel = "APIMaint";
                if (! checkperms(mypanel)) { return; }
               String[] args = new String[]{tablereport.getValueAt(row, 2).toString()};
                reinitpanels(mypanel, true, args);
@@ -637,14 +608,10 @@ try {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btRun;
     private javax.swing.JButton btdetail;
-    private javax.swing.JComboBox ddsite;
-    private javax.swing.JComboBox ddvendfrom;
-    private javax.swing.JComboBox ddvendto;
     private javax.swing.JPanel detailpanel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
@@ -655,7 +622,9 @@ try {
     private javax.swing.JTable tabledetail;
     private javax.swing.JPanel tablepanel;
     private javax.swing.JTable tablereport;
-    private javax.swing.JTextField tbfrompo;
-    private javax.swing.JTextField tbtopo;
+    private javax.swing.JTextField tbfromdesc;
+    private javax.swing.JTextField tbfromid;
+    private javax.swing.JTextField tbtodesc;
+    private javax.swing.JTextField tbtoid;
     // End of variables declaration//GEN-END:variables
 }
