@@ -173,6 +173,7 @@ CustReport1,,com.blueseer.utl.ReportPanel,JMenuItem,cus2
 MenuMaint,,com.blueseer.adm.MenuMaint,JMenuItem,menu
 PanelMaint,,com.blueseer.adm.PanelMaint,JMenuItem,panel
 KeyMaint,,com.blueseer.adm.KeyMaint,JMenuItem,keym
+PKSMaint,,com.blueseer.adm.PKSMaint,JMenuItem,pksm
 MenuBrowse,menu for browsing menu list,com.blueseer.utl.ReportPanel,JMenuItem,menub
 NavCodeBrowse,menu for browsing navcodes,com.blueseer.utl.ReportPanel,JMenuItem,navcodes
 PanelBrowse,used for browsing java jpanels,com.blueseer.utl.ReportPanel,JMenuItem,panelb

@@ -259,6 +259,7 @@ Admin,TreeMaint,19,JMenuItem,Menübaumpflege,,,,1,1
 Admin,FTPMaint,20,JMenuItem,FTP-Wartung,,,,1,1
 Admin,MassLoad,21,JMenuItem,Stammdatenimport,,,,1,1
 Admin,JasperRptMaint,22,JMenuItem,Wartung von Jasper-Berichten,,,,1,1
+Admin,PKSMaint,23,JMenuItem,PKS Maintenance,,,,1,1
 Hilfe,About,1,JMenuItem,Über,,,,1,1
 Hilfe,License,2,JMenuItem,Lizenz,,,,1,1
 Hilfe,Update,3,JMenuItem,Aktualisieren,,,,1,1

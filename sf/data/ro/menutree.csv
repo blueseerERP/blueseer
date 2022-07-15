@@ -260,6 +260,7 @@ Admin,TreeMaint,19,JMenuItem,Întreținerea arborelui de meniu,,,,1,1
 Admin,FTPMaint,20,JMenuItem,Întreținere FTP,,,,1,1
 Admin,MassLoad,21,JMenuItem,Import de date în masă,,,,1,1
 Admin,JasperRptMaint,22,JMenuItem,Întreținere raport Jasper,,,,1,1
+Admin,PKSMaint,23,JMenuItem,PKS Maintenance,,,,1,1
 Ajutor,About,1,JMenuItem,Despre,,,,1,1
 Ajutor,License,2,JMenuItem,Licență,,,,1,1
 Ajutor,Update,3,JMenuItem,Actualizați,,,,1,1

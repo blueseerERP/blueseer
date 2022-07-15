@@ -266,6 +266,7 @@ Admin,TreeMaint,19,JMenuItem,Menu Tree Maintenance,,,,1,1
 Admin,FTPMaint,20,JMenuItem,FTP Maintenance,,,,1,1
 Admin,MassLoad,21,JMenuItem,Master Data Import,,,,1,1
 Admin,JasperRptMaint,22,JMenuItem,Jasper Report Maintenance,,,,1,1
+Admin,PKSMaint,23,JMenuItem,PKS Maintenance,,,,1,1
 Help,About,1,JMenuItem,About,,,,1,1
 Help,License,2,JMenuItem,License,,,,1,1
 Help,Update,3,JMenuItem,Update,,,,1,1

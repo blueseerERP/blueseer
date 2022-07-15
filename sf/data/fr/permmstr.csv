@@ -300,3 +300,6 @@ admin,EDIXrefMaint
 admin,EDIExport
 admin,MapMaint
 admin,StructMaint
+admin,MapTester
+admin,APIMaint
+admin,PKSMaint

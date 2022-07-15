@@ -48,6 +48,8 @@ com.blueseer.edi.EDIXrefMaint,,1
 com.blueseer.edi.EDIExport,,1
 com.blueseer.edi.MapMaint,,1
 com.blueseer.edi.StructMaint,,1
+com.blueseer.edi.MapTester,,1
+com.blueseer.edi.APIMaint,,1
 com.blueseer.eng.ECNBrowse,,1
 com.blueseer.eng.ECNMaint,,1
 com.blueseer.eng.OVDevBrowse,,1
@@ -209,3 +211,4 @@ com.blueseer.vdr.VendPriceRpt,,1
 com.blueseer.vdr.VendXrefMaint,,1
 com.blueseer.vdr.VendXrefRpt,,1
 com.blueseer.inv.QPRBrowse,,1
+com.blueseer.adm.PKSMaint,,1

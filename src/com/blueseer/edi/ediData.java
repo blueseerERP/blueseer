@@ -1096,6 +1096,24 @@ public class ediData {
         return x;
     }
     
+    public static ArrayList<String> getAllKeyDet() {
+        ArrayList x = new ArrayList();
+        String sql = "select keyd_id from key_det;";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+	PreparedStatement ps = con.prepareStatement(sql);) {
+             try (ResultSet res = ps.executeQuery();) {
+               while (res.next()) {
+               x.add(res.getString("keyd_id"));
+               }
+            }
+        }
+        catch (SQLException s){
+            MainFrame.bslog(s);
+        }
+        return x;
+    }
+    
+    
     public record edi_xref(String[] m, String exr_tpid, String exr_tpaddr, String exr_ovaddr,
         String exr_gsid, String exr_type ) {
         public edi_xref(String[] m) {

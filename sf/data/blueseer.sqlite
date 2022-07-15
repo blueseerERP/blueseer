@@ -2719,17 +2719,16 @@ CREATE TABLE "web_verb" (
   "wbv_path" varchar(100) NOT NULL DEFAULT '',
   "wbv_active" tinyint(1) NOT NULL DEFAULT '0'
 );
-CREATE TABLE "key_mstr" (
-  "key_id" varchar(50) NOT NULL DEFAULT '',
-  "key_type" varchar(10) NOT NULL DEFAULT '',
-  "key_storefile" varchar(80) NOT NULL DEFAULT '',
-  "key_user" varchar(50) NOT NULL DEFAULT '',
-  "key_pass" varchar(50) NOT NULL DEFAULT ''
-);
-CREATE TABLE "key_det" (
-  "keyd_id" varchar(50) NOT NULL DEFAULT '',
-  "keyd_type" varchar(10) NOT NULL DEFAULT '',
-  "keyd_user" varchar(50) NOT NULL DEFAULT '',
-  "keyd_pass" varchar(50) NOT NULL DEFAULT ''
+CREATE TABLE "pks_mstr" (
+  "pks_id" varchar(50) NOT NULL DEFAULT '',
+  "pks_desc" varchar(100) NOT NULL DEFAULT '',
+  "pks_type" varchar(10) NOT NULL DEFAULT '',
+  "pks_user" varchar(50) NOT NULL DEFAULT '',
+  "pks_pass" varchar(50) NOT NULL DEFAULT '',
+  "pks_file" varchar(80) NOT NULL DEFAULT '',
+  "pks_storeuser" varchar(50) NOT NULL DEFAULT '',
+  "pks_storepass" varchar(50) NOT NULL DEFAULT '',
+  "pks_expire" varchar(50) NOT NULL DEFAULT '',
+  "pks_create" varchar(50) NOT NULL DEFAULT ''
 );
 End Transaction;

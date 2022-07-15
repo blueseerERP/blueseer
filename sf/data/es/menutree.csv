@@ -259,6 +259,7 @@ Admin,TreeMaint,19,JMenuItem,Mantenimiento del árbol de menús,,,,1,1
 Admin,FTPMaint,20,JMenuItem,Mantenimiento FTP,,,,1,1
 Admin,MassLoad,21,JMenuItem,Importación de datos maestros,,,,1,1
 Admin,JasperRptMaint,22,JMenuItem,Mantenimiento del informe Jasper,,,,1,1
+Admin,PKSMaint,23,JMenuItem,PKS Maintenance,,,,1,1
 Ayudar,About,1,JMenuItem,Sobre,,,,1,1
 Ayudar,License,2,JMenuItem,Licencia,,,,1,1
 Ayudar,Update,3,JMenuItem,Actualizar,,,,1,1
