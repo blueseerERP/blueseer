@@ -1024,13 +1024,13 @@ public class ediData {
     
     public static String getKeyStorePass(String id) {
         String x = "";
-        String sql = "select key_storepass from key_mstr where key_type = 'store' and key_id = ?";
+        String sql = "select pks_storepass from pks_mstr where pks_type = 'store' and pks_id = ?";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, id);
              try (ResultSet res = ps.executeQuery();) {
                while (res.next()) {
-               x = res.getString("key_storepass");
+               x = res.getString("pks_storepass");
                }
             }
         }
@@ -1042,16 +1042,16 @@ public class ediData {
     
     public static String[] getKeyStore(String id) {
         String[] x = new String[]{"","",""};
-        String sql = "select key_storeuser, key_storefile, key_storepass from key_mstr where key_type = 'store' and key_id = ? and key_user = ?";
+        String sql = "select pks_storeuser, pks_file, pks_storepass from pks_mstr where pks_type = 'store' and pks_id = ? and pks_user = ?";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, id);
         ps.setString(2, user);
              try (ResultSet res = ps.executeQuery();) {
                while (res.next()) {
-               x[0] = res.getString("key_storefile");
-               x[1] = res.getString("key_storeuser");
-               x[2] = res.getString("key_storepass");
+               x[0] = res.getString("pks_file");
+               x[1] = res.getString("pks_storeuser");
+               x[2] = res.getString("pks_storepass");
                }
             }
         }
@@ -1063,14 +1063,14 @@ public class ediData {
         
     public static String getKeyUserPass(String key, String user) {
         String x = "";
-        String sql = "select key_pass from key_mstr where key_id = ? and key_user = ?";
+        String sql = "select pks_pass from pks_mstr where pks_id = ? and pks_user = ?";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, key);
         ps.setString(2, user);
              try (ResultSet res = ps.executeQuery();) {
                while (res.next()) {
-               x = res.getString("key_pass");
+               x = res.getString("pks_pass");
                }
             }
         }
@@ -1082,13 +1082,13 @@ public class ediData {
     
     public static ArrayList<String> getKeyAllByType(String keytype) {
         ArrayList x = new ArrayList();
-        String sql = "select key_id from key_mstr where key_type = ?";
+        String sql = "select pks_id from pks_mstr where pks_type = ?";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, keytype);
              try (ResultSet res = ps.executeQuery();) {
                while (res.next()) {
-               x.add(res.getString("key_id"));
+               x.add(res.getString("pks_id"));
                }
             }
         }
