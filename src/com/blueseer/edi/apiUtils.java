@@ -31,7 +31,7 @@ import static com.blueseer.edi.APIMaint.encryptDataSMIME;
 import static com.blueseer.edi.APIMaint.signData;
 import static com.blueseer.edi.APIMaint.signDataPkcs7;
 import static com.blueseer.edi.APIMaint.signDataSimple;
-import static com.blueseer.edi.ediData.getKeyStore;
+import static com.blueseer.edi.ediData.getKeyStoreByUser;
 import static com.blueseer.edi.ediData.getKeyStorePass;
 import static com.blueseer.edi.ediData.getKeyUserPass;
 import java.io.BufferedReader;
@@ -96,6 +96,7 @@ public class apiUtils {
         Security.addProvider(new BouncyCastleProvider());
         CertificateFactory certFactory = CertificateFactory.getInstance("X.509", "BC");
         certificate = (X509Certificate) certFactory.generateCertificate(new FileInputStream(certfilepath.toFile()));
+        
         return certificate;
     }
     
@@ -129,7 +130,7 @@ public class apiUtils {
      //      return "source file does not exist"; 
       //  }
        
-        
+       
         // gather pertinent info for this AS2 ID / Partner
         // api_id, api_url, api_port, api_path, api_user, edic_as2id, edic_as2url, edic_signkey, edic_enckey,  api_encrypted, api_signed, api_cert, api_protocol, apid_source, apid_destination
         String[] tp = ediData.getAS2Info(as2id, as2method);
@@ -139,20 +140,23 @@ public class apiUtils {
         String internalURL = tp[6];
         String sourceDir = tp[13];
         String signkeyid = tp[7];
-        String user = tp[7];
+       // String user = tp[7];
         
         X509Certificate encryptcertificate = getCert(tp[11]);
-        String[] k = getKeyStore(signkeyid); // store, user, pass
+        String[] k = getKeyStoreByUser(signkeyid); // store, storeuser, storepass, user, pass
+        k[2] = bsmf.MainFrame.PassWord("1", k[2].toCharArray());
+        k[4] = bsmf.MainFrame.PassWord("1", k[4].toCharArray());
+        System.out.println("here->" + k[0] + "/" +  k[1] + "/" + k[2] + "/" + k[3] + "/" + k[4]);
         FileInputStream fis = new FileInputStream(FileSystems.getDefault().getPath(k[0]).toString());
        // char[] keystorePassword = k[1].toCharArray(); // getKeyStorePass("terry").toCharArray(); // "terry".toCharArray();
-        char[] keyPassword = getKeyUserPass(signkeyid, user).toCharArray();  // "terry".toCharArray();
+        char[] keyPassword = k[4].toCharArray();  // "terry".toCharArray();
         KeyStore keystore = KeyStore.getInstance("PKCS12");
         
         keystore.load(fis, k[2].toCharArray());
         // keystore.load(new FileInputStream("c:\\junk\\terryp12.p12"), keystorePassword);
-        PrivateKey key = (PrivateKey) keystore.getKey(user, keyPassword);
-        X509Certificate signcertificate = getCert(tp[7]);
-       // X509Certificate signcertificate = (X509Certificate) keystore.getCertificate(user);
+        PrivateKey key = (PrivateKey) keystore.getKey(k[3], keyPassword);
+        // X509Certificate signcertificate = getCert(tp[7]);
+        X509Certificate signcertificate = (X509Certificate) keystore.getCertificate(k[3]);
         
         
         Path as2filepath = null;

@@ -1189,16 +1189,14 @@ public class admData {
     
     public static String[] addPksMstr(pks_mstr x) {
         String[] m = new String[2];
-        String sqlSelect = "SELECT * FROM  pks_mstr where pks_id = ? and pks_type = ? and pks_user = ?";
+        String sqlSelect = "SELECT * FROM  pks_mstr where pks_id = ? ";
         String sqlInsert = "insert into pks_mstr (pks_id, pks_desc, pks_type, "
                         + " pks_user, pks_pass, pks_file, pks_storeuser, pks_storepass, " 
-                        + " pks_expire, pks_create ) "
-                        + " values (?,?,?,?,?,?,?,?,?,?); "; 
+                        + " pks_expire, pks_create, pks_parent ) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?); "; 
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
              PreparedStatement ps = con.prepareStatement(sqlSelect);) {
              ps.setString(1, x.pks_id);
-             ps.setString(2, x.pks_type);
-             ps.setString(3, x.pks_user);
           try (ResultSet res = ps.executeQuery();
                PreparedStatement psi = con.prepareStatement(sqlInsert);) {  
             if (! res.isBeforeFirst()) {
@@ -1212,6 +1210,7 @@ public class admData {
             psi.setString(8, x.pks_storepass);
             psi.setString(9, x.pks_expire);
             psi.setString(10, x.pks_create);
+            psi.setString(10, x.pks_parent);
             int rows = psi.executeUpdate();
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
             } else {
@@ -1230,22 +1229,23 @@ public class admData {
 
     public static String[] updatePksMstr(pks_mstr x) {
         String[] m = new String[2];
-        String sql = "update pks_mstr set pks_desc = ?, " +   
+        String sql = "update pks_mstr set pks_desc = ?, pks_type = ?, pks_user = ?,  " +   
                           " pks_pass = ? , pks_file = ?, pks_storeuser = ?, " +
-                          " pks_storepass = ?, pks_expire = ?, pks_create = ? " +
-                          " where pks_id = ? and pks_type = ? and pks_user = ? ; ";
+                          " pks_storepass = ?, pks_expire = ?, pks_create = ?, pks_parent = ? " +
+                          " where pks_id = ? ; ";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql)) {
         ps.setString(1, x.pks_desc);
-        ps.setString(2, x.pks_pass);
-        ps.setString(3, x.pks_file);
-        ps.setString(4, x.pks_storeuser);
-        ps.setString(5, x.pks_storepass);
-        ps.setString(6, x.pks_expire);
-        ps.setString(7, x.pks_create);
-        ps.setString(8, x.pks_id);
-        ps.setString(9, x.pks_type);
-        ps.setString(10, x.pks_user);
+        ps.setString(2, x.pks_type);
+        ps.setString(3, x.pks_user);
+        ps.setString(4, x.pks_pass);
+        ps.setString(5, x.pks_file);
+        ps.setString(6, x.pks_storeuser);
+        ps.setString(7, x.pks_storepass);
+        ps.setString(8, x.pks_expire);
+        ps.setString(9, x.pks_create);
+        ps.setString(10, x.pks_parent);
+        ps.setString(11, x.pks_id);
         int rows = ps.executeUpdate();
         m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
         } catch (SQLException s) {
@@ -1257,12 +1257,10 @@ public class admData {
     
     public static String[] deletePksMstr(pks_mstr x) { 
        String[] m = new String[2];
-        String sql = "delete from pks_mstr where pks_id = ? and pks_type = ? and pks_user = ? ; ";
+        String sql = "delete from pks_mstr where pks_id = ? ; ";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql)) {
         ps.setString(1, x.pks_id);
-        ps.setString(2, x.pks_type);
-        ps.setString(3, x.pks_user);
         int rows = ps.executeUpdate();
         m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
         } catch (SQLException s) {
@@ -1275,12 +1273,10 @@ public class admData {
     public static pks_mstr getPksMstr(String[] x) {
         pks_mstr r = null;
         String[] m = new String[2];
-        String sql = "select * from pks_mstr where pks_id = ? and pks_type = ? and pks_user = ? ;";
+        String sql = "select * from pks_mstr where pks_id = ? ;";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, x[0]);
-        ps.setString(2, x[1]);
-        ps.setString(3, x[2]);
              try (ResultSet res = ps.executeQuery();) {
                 if (! res.isBeforeFirst()) {
                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
@@ -1297,7 +1293,8 @@ public class admData {
                             res.getString("pks_storeuser"),
                             res.getString("pks_storepass"),
                             res.getString("pks_expire"),
-                            res.getString("pks_create")    
+                            res.getString("pks_create"),
+                            res.getString("pks_parent")
                         );
                     }
                 }
@@ -1642,9 +1639,9 @@ public class admData {
             
     public record pks_mstr(String[] m, String pks_id, String pks_desc, String pks_type, 
         String pks_user, String pks_pass, String pks_file, String pks_storeuser, String pks_storepass,
-        String pks_expire, String pks_create ) {
+        String pks_expire, String pks_create, String pks_parent ) {
         public pks_mstr(String[] m) {
-            this(m, "", "", "", "", "", "", "", "", "", "");
+            this(m, "", "", "", "", "", "", "", "", "", "", "");
         }
     }
     

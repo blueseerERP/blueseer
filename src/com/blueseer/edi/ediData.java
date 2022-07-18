@@ -1012,7 +1012,7 @@ public class ediData {
                info[11] = res.getString("api_cert");
                info[12] = res.getString("api_protocol");
                info[13] = res.getString("apid_source");
-               info[14] = res.getString("api_destination");
+               info[14] = res.getString("apid_destination");
                }
             }
         }
@@ -1040,18 +1040,19 @@ public class ediData {
         return x;
     }
     
-    public static String[] getKeyStore(String id) {
-        String[] x = new String[]{"","",""};
-        String sql = "select pks_storeuser, pks_file, pks_storepass from pks_mstr where pks_type = 'store' and pks_id = ? and pks_user = ?";
+    public static String[] getKeyStoreByUser(String userid) {
+        String[] x = new String[]{"","","","",""};
+        String sql = "select p.pks_storeuser as storeuser, p.pks_file as storefile, p.pks_storepass as storepass, u.pks_user as user, u.pks_pass as pass from pks_mstr p inner join pks_mstr u on u.pks_parent = p.pks_id where u.pks_id = ?";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
-        ps.setString(1, id);
-        ps.setString(2, user);
+        ps.setString(1, userid);
              try (ResultSet res = ps.executeQuery();) {
                while (res.next()) {
-               x[0] = res.getString("pks_file");
-               x[1] = res.getString("pks_storeuser");
-               x[2] = res.getString("pks_storepass");
+               x[0] = res.getString("storefile");
+               x[1] = res.getString("storeuser");
+               x[2] = res.getString("storepass");
+               x[3] = res.getString("user");
+               x[4] = res.getString("pass");
                }
             }
         }
@@ -1100,12 +1101,12 @@ public class ediData {
     
     public static ArrayList<String> getAllPKSKeys() {
         ArrayList x = new ArrayList();
-        String sql = "select key_id from key_mstr;";
+        String sql = "select pks_id from pks_mstr;";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
              try (ResultSet res = ps.executeQuery();) {
                while (res.next()) {
-               x.add(res.getString("key_id"));
+               x.add(res.getString("pks_id"));
                }
             }
         }

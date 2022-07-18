@@ -2725,6 +2725,7 @@ CREATE TABLE "pks_mstr" (
   "pks_type" varchar(10) NOT NULL DEFAULT '',
   "pks_user" varchar(50) NOT NULL DEFAULT '',
   "pks_pass" varchar(50) NOT NULL DEFAULT '',
+  "pks_parent" varchar(50) NOT NULL DEFAULT '',
   "pks_file" varchar(80) NOT NULL DEFAULT '',
   "pks_storeuser" varchar(50) NOT NULL DEFAULT '',
   "pks_storepass" varchar(50) NOT NULL DEFAULT '',

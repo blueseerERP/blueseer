@@ -52,6 +52,7 @@
                       <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel8" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabel9" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
@@ -69,7 +70,6 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="tbstorepass" alignment="0" min="-2" pref="111" max="-2" attributes="0"/>
                               <Component id="tbpass" alignment="0" min="-2" pref="111" max="-2" attributes="0"/>
-                              <Component id="ddtype" alignment="0" min="-2" pref="120" max="-2" attributes="0"/>
                               <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
                                   <Component id="tbfile" alignment="0" max="32767" attributes="0"/>
                                   <Component id="tbstoreuser" alignment="0" max="32767" attributes="0"/>
@@ -82,6 +82,10 @@
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="btupdate" min="-2" max="-2" attributes="0"/>
                                   </Group>
+                              </Group>
+                              <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
+                                  <Component id="tbparent" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="ddtype" alignment="0" pref="120" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                           <EmptySpace pref="27" max="32767" attributes="0"/>
@@ -118,6 +122,11 @@
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="ddtype" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel7" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbparent" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel9" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
@@ -266,9 +275,10 @@
         <Component class="javax.swing.JComboBox" name="ddtype">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="2">
+              <StringArray count="3">
                 <StringItem index="0" value="Store"/>
                 <StringItem index="1" value="File"/>
+                <StringItem index="2" value="User"/>
               </StringArray>
             </Property>
           </Properties>
@@ -307,6 +317,13 @@
             </Component>
           </SubComponents>
         </Container>
+        <Component class="javax.swing.JTextField" name="tbparent">
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel9">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="ParentStore:"/>
+          </Properties>
+        </Component>
       </SubComponents>
     </Container>
   </SubComponents>

@@ -1981,6 +1981,7 @@ CREATE TABLE IF NOT EXISTS `pks_mstr` (
   `pks_type` varchar(10)  DEFAULT '',
   `pks_user` varchar(50)  DEFAULT '',
   `pks_pass` varchar(50)  DEFAULT '',
+  `pks_parent` varchar(50)  DEFAULT '',
   `pks_file` varchar(80)  DEFAULT '',
   `pks_storeuser` varchar(50)  DEFAULT '',
   `pks_storepass` varchar(50)  DEFAULT '',
