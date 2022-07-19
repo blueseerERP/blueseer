@@ -87,15 +87,20 @@ import org.bouncycastle.mail.smime.SMIMEException;
  */
 public class apiUtils {
     
-    public static X509Certificate getCert(String certfile) throws CertificateException, NoSuchProviderException, FileNotFoundException {
+    public static X509Certificate getCert(String certfile) throws CertificateException, NoSuchProviderException {
         X509Certificate certificate = null;
         Path certfilepath = FileSystems.getDefault().getPath("edi/certs/" + certfile);
         if (! Files.exists(certfilepath)) {
              throw new RuntimeException("bad path to cert file");
         }
+        System.out.println("here->" + certfilepath.toString());
         Security.addProvider(new BouncyCastleProvider());
         CertificateFactory certFactory = CertificateFactory.getInstance("X.509", "BC");
-        certificate = (X509Certificate) certFactory.generateCertificate(new FileInputStream(certfilepath.toFile()));
+        try (FileInputStream fis = new FileInputStream(certfilepath.toFile())) {
+            certificate = (X509Certificate) certFactory.generateCertificate(fis);
+        } catch (IOException ex) {
+            bslog(ex);
+        }
         
         return certificate;
     }

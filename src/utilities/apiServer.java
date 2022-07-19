@@ -31,6 +31,7 @@ package utilities;
  */
 
 
+import com.blueseer.srv.AS2Serv;
 import com.blueseer.srv.CustomerServ;
 import com.blueseer.srv.ItemServ;
 import com.blueseer.srv.SalesOrdServ;
@@ -68,6 +69,7 @@ public class apiServer {
         String webdir = "src/web/WEB-INF/";
         context.setResourceBase(webdir);
        
+        context.addServlet(AS2Serv.class, "/as2/*");
         context.addServlet(WorkOrdServ.class, "/WorkOrder/*");
         context.addServlet(WorkOrdServ.class, "/WorkOrderList/*");
         context.addServlet(SalesOrdServ.class, "/SalesOrder/*");
