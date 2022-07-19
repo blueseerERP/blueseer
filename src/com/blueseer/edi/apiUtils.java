@@ -140,22 +140,23 @@ public class apiUtils {
         String internalURL = tp[6];
         String sourceDir = tp[13];
         String signkeyid = tp[7];
-       // String user = tp[7];
+       
         
         X509Certificate encryptcertificate = getCert(tp[11]);
         String[] k = getKeyStoreByUser(signkeyid); // store, storeuser, storepass, user, pass
         k[2] = bsmf.MainFrame.PassWord("1", k[2].toCharArray());
         k[4] = bsmf.MainFrame.PassWord("1", k[4].toCharArray());
-        System.out.println("here->" + k[0] + "/" +  k[1] + "/" + k[2] + "/" + k[3] + "/" + k[4]);
-        FileInputStream fis = new FileInputStream(FileSystems.getDefault().getPath(k[0]).toString());
-       // char[] keystorePassword = k[1].toCharArray(); // getKeyStorePass("terry").toCharArray(); // "terry".toCharArray();
-        char[] keyPassword = k[4].toCharArray();  // "terry".toCharArray();
+       // System.out.println("here->" + k[0] + "/" +  k[1] + "/" + k[2] + "/" + k[3] + "/" + k[4]);
+        
+       
+        char[] keyPassword = k[4].toCharArray();  
         KeyStore keystore = KeyStore.getInstance("PKCS12");
         
+        FileInputStream fis = new FileInputStream(FileSystems.getDefault().getPath(k[0]).toString());
         keystore.load(fis, k[2].toCharArray());
-        // keystore.load(new FileInputStream("c:\\junk\\terryp12.p12"), keystorePassword);
+        fis.close();
+        
         PrivateKey key = (PrivateKey) keystore.getKey(k[3], keyPassword);
-        // X509Certificate signcertificate = getCert(tp[7]);
         X509Certificate signcertificate = (X509Certificate) keystore.getCertificate(k[3]);
         
         
@@ -271,8 +272,7 @@ public class apiUtils {
           
           
         CloseableHttpResponse response = client.execute(request);
-         
-        
+        try {
         if (response.getStatusLine().getStatusCode() != 200) {
                 r.append(response.getStatusLine().getStatusCode() + ": " + response.getStatusLine().getReasonPhrase());
                 //throw new RuntimeException("Failed : HTTP error code : "
@@ -284,6 +284,11 @@ public class apiUtils {
         HttpEntity entity = response.getEntity();
         String result = EntityUtils.toString(entity); 
         r.append(result);
+        } finally {
+           response.close(); 
+        }
+        
+        
         
     } // for each file
         return r.toString();
