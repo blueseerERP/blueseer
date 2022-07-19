@@ -1059,6 +1059,106 @@ public class InvRptPicker extends javax.swing.JPanel {
                
     }
     
+     /* Item Stock range */
+    public void itemStockRange (boolean input) {
+        
+        if (input) { // input...draw variable input panel
+           resetVariables();
+           hidePanels();
+           showPanels(new String[]{"tb1"});
+           lbkey1.setText(getClassLabelTag("lblfromitem", this.getClass().getSimpleName()));
+           lbkey2.setText(getClassLabelTag("lbltoitem", this.getClass().getSimpleName()));
+          
+         } else { // output...fill report
+            // colect variables from input
+            String fromitem = tbkey1.getText();
+            String toitem = tbkey2.getText();
+            String site = OVData.getDefaultSite();
+            // cleanup variables
+          
+            if (fromitem.isEmpty()) {
+                  fromitem = bsmf.MainFrame.lownbr;
+            }
+            if (toitem.isEmpty()) {
+                  toitem = bsmf.MainFrame.hinbr;
+            }
+            
+             // create and fill tablemodel
+            // column 1 is always 'select' and always type ImageIcon
+            // the remaining columns are whatever you require
+               javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                        new String[]{
+                            getGlobalColumnTag("select"),
+                             getGlobalColumnTag("item"), 
+                             getGlobalColumnTag("description"), 
+                             getGlobalColumnTag("class"),
+                             getGlobalColumnTag("qoh"), 
+                             getGlobalColumnTag("safestock"), 
+                             getGlobalColumnTag("minordqty")})
+                   {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        };
+           
+           try{
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+              String qtyall = "";                  
+              res = st.executeQuery("select it_item, it_desc, it_code, it_safestock, it_minordqty, " + 
+                       "coalesce(sum(in_qoh),0) as qoh " +
+                        " from item_mstr left outer join in_mstr on in_item = it_item " +
+                       " where it_item >= " + "'" + fromitem + "'" +  " AND " 
+                       + " it_item <= " + "'" + toitem + "'" 
+                       + " group by it_item, it_desc, it_code, it_safestock, it_minordqty ;" );
+              
+              
+                while (res.next()) {
+                    if (res.getDouble("qoh") >= res.getDouble("it_safestock")) {
+                        continue;
+                    }
+                    mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, 
+                        res.getString("it_item"),
+                        res.getString("it_desc"),
+                        res.getString("it_code"),
+                        res.getString("qoh"),
+                        res.getString("it_safestock"),
+                        res.getString("it_minordqty")
+                                });
+                }
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+      
+      // now assign tablemodel to table
+            tablereport.setModel(mymodel);
+            tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
+            Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
+              while (en.hasMoreElements()) {
+                 TableColumn tc = en.nextElement();
+                 if (mymodel.getColumnClass(tc.getModelIndex()).getSimpleName().equals("ImageIcon")) { // select column
+                     continue;  
+                 }
+                 tc.setCellRenderer(new InvRptPicker.renderer1());
+             }
+        } // else run report
+               
+    }
+   
     /* CUSTOM FUNCTIONS END */
     
     /**
