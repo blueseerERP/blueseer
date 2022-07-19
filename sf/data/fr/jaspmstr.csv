@@ -18,6 +18,7 @@ InvRptGroup,Prix ??de vente de l'article par article,itemCustPriceRange,3,L8
 InvRptGroup,Article Inventaire par article,itemInventoryRange,4,L7
 InvRptGroup,Article QOH par article,itemQOHRange,5,L6
 InvRptGroup,Ordre des allocations par article,itemAllocatedToOrder,6,L7
+InvRptGroup,Articles inférieurs au stock de sécurité,itemStockRange,7,L6
 VenRptGroup,Maître du fournisseur par code de vente,vendAddrInfoByRange,0,L8
 VenRptGroup,Coordonnées du fournisseur par code,vendPhoneEmailByRange,1,L8
 VenRptGroup,Informations sur le financement du fournisseur par code,vendFinanceInfoByRange,2,L8

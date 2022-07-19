@@ -18,6 +18,7 @@ InvRptGroup,Artikel Kundenpreis nach Artikel,itemCustPriceRange,3,L8
 InvRptGroup,Artikelbestand nach Artikel,itemInventoryRange,4,L7
 InvRptGroup,Artikel-QOH nach Artikel,itemQOHRange,5,L6
 InvRptGroup,Zuordnungen nach Artikel bestellen,itemAllocatedToOrder,6,L7
+InvRptGroup,Artikel kleiner als Sicherheitsbestand,itemStockRange,7,L6
 VenRptGroup,Lieferantenstamm nach Lieferantencode,vendAddrInfoByRange,0,L8
 VenRptGroup,Kontaktdaten des Anbieters nach Code,vendPhoneEmailByRange,1,L8
 VenRptGroup,Informationen zur Kreditorenfinanzierung nach Code,vendFinanceInfoByRange,2,L8

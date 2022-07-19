@@ -18,6 +18,7 @@ InvRptGroup,Articol Preț personalizat după articol,itemCustPriceRange,3,L8
 InvRptGroup,Inventar de articole după articol,itemInventoryRange,4,L7
 InvRptGroup,Articol QOH după articol,itemQOHRange,5,L6
 InvRptGroup,Comandă alocările după articol,itemAllocatedToOrder,6,L7
+InvRptGroup,Articole mai puțin decât stocul de siguranță,itemStockRange,7,L6
 VenRptGroup,Vendor Master By Vend Code,vendAddrInfoByRange,0,L8
 VenRptGroup,Informații de contact ale vânzătorului prin cod,vendPhoneEmailByRange,1,L8
 VenRptGroup,Informații privind finanțarea furnizorului prin cod,vendFinanceInfoByRange,2,L8
