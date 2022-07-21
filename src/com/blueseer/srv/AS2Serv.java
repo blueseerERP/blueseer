@@ -40,6 +40,7 @@ import com.blueseer.sch.schData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.createMessage;
 import static com.blueseer.utl.BlueSeerUtils.createMessageJSON;
+import static com.blueseer.utl.EDData.getSystemEncKey;
 import com.blueseer.utl.OVData;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -59,6 +60,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -124,29 +126,45 @@ public class AS2Serv extends HttpServlet {
         if (request == null) {
             response.getWriter().println("no valid payload provided");
         } else {
-            response.getWriter().println(requestToFile(request));
+            response.getWriter().println(processRequest(request));
         }
     }
     
    
-    public static String requestToFile(HttpServletRequest request) throws FileNotFoundException, IOException {
+    public static String processRequest(HttpServletRequest request) throws IOException {
         String x = "";
         Path path = FileSystems.getDefault().getPath("temp" + "/" + "somefile");
         BufferedWriter output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path.toFile())));
-        try {
-            String line = "";
-            StringBuilder jb = new StringBuilder();
-            BufferedReader reader = request.getReader();
-            
-            while ((line = reader.readLine()) != null) {
-            jb.append(line);
-            }
-            reader.close();
         
+        // request to inputstream as bytes        
+        try {
+            byte[] content = null;
+            try (InputStream is = request.getInputStream()) {
+                content = is.readAllBytes();
+            }
+            
+        // if null content
+        if (content == null) {
+            return "unable to read Request content into bytes";
+        }
+        
+        // check headers
+        Enumeration<String> headerNames = request.getHeaderNames();
+        if (headerNames != null) {
+                while (headerNames.hasMoreElements()) {
+                        String key = (String) headerNames.nextElement();
+                        System.out.println("here--> Header: " + key +  "=" + request.getHeader(key));
+                }
+        }
+            
+            
+        System.out.println("here--> encoding:" + request.getCharacterEncoding());
          
-         byte[] data = APIMaint.decryptData(String.valueOf(jb).getBytes(), apiUtils.getPrivateKey("terry") );
-         String datastring = new String(data);   
+         byte[] decryptedContent = APIMaint.decryptData(content, apiUtils.getPrivateKey(getSystemEncKey()) );
+         String datastring = new String(decryptedContent);   
          output.write(datastring);
+         System.out.println("here--> decryption");
+         System.out.println(datastring);
           
         } catch (FileNotFoundException ex) {
             bslog(ex);
