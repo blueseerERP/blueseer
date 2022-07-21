@@ -27,6 +27,7 @@ SOFTWARE.
 package com.blueseer.adm;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.bslog;
 import static bsmf.MainFrame.tags;
 import static com.blueseer.adm.admData.addPksMstr;
 import com.blueseer.adm.admData.counter;
@@ -35,6 +36,8 @@ import static com.blueseer.adm.admData.getCounter;
 import static com.blueseer.adm.admData.getPksMstr;
 import com.blueseer.adm.admData.pks_mstr;
 import static com.blueseer.adm.admData.updatePksMstr;
+import com.blueseer.edi.APIMaint;
+import com.blueseer.edi.apiUtils;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
@@ -62,12 +65,36 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.nio.charset.Charset;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.security.NoSuchProviderException;
+import java.security.cert.CertificateEncodingException;
+import java.security.cert.CertificateException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JFileChooser;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JViewport;
+import org.apache.commons.io.Charsets;
+import org.bouncycastle.cms.CMSException;
+import org.bouncycastle.util.encoders.Base64;
 
 /**
  *
@@ -449,6 +476,99 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
     
     // custom functions
     
+    public File decryptFile() {
+        taoutput.removeAll();
+        File file = null;
+        fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        int returnVal = fc.showOpenDialog(this);
+        java.util.Date now = new java.util.Date();
+        DateFormat dfdate = new SimpleDateFormat("yyyyMMddHHmmss");
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            try {
+            file = fc.getSelectedFile();
+            
+            Path inpath = FileSystems.getDefault().getPath(file.getAbsolutePath());
+            
+            String myfile = file.getName() + "." + dfdate.format(now) + ".dec";
+            Path outpath = FileSystems.getDefault().getPath(bsmf.MainFrame.temp + "/" + myfile);
+            
+            byte[] indata = Files.readAllBytes(inpath);
+            
+            byte[] outdata = APIMaint.decryptData(indata, apiUtils.getPrivateKey("terry") );
+            BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(outpath.toFile()));
+            bos.write(outdata);
+            bos.flush();
+            bos.close();   
+           
+            taoutput.append(new String(outdata));
+            }
+            catch (Exception ex) {
+            ex.printStackTrace();
+            }
+           
+        } else {
+           System.out.println("cancelled");
+        }
+        return file;
+    }
+    
+    public File encryptFile() {
+        taoutput.removeAll();
+        File file = null;
+        fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        int returnVal = fc.showOpenDialog(this);
+        java.util.Date now = new java.util.Date();
+        DateFormat dfdate = new SimpleDateFormat("yyyyMMddHHmmss");
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            try {
+            file = fc.getSelectedFile();
+            Path inpath = FileSystems.getDefault().getPath(file.getAbsolutePath());
+            
+            String myfile = file.getName() + "." + dfdate.format(now) + ".enc";
+            Path outpath = FileSystems.getDefault().getPath(bsmf.MainFrame.temp + "/" + myfile);
+            
+            byte[] indata = Files.readAllBytes(inpath);
+            byte[] outdata = APIMaint.encryptData(indata, apiUtils.getCert("terrycer.cer") );
+           
+         //   Path path = FileSystems.getDefault().getPath("temp" + "/" + "beforefile");
+            BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(outpath.toFile()));
+            bos.write(outdata);
+            bos.flush();
+            bos.close();
+         
+            taoutput.append(new String(outdata));
+            taoutput.append("\n");
+           
+            }
+            catch (Exception ex) {
+            ex.printStackTrace();
+            }
+           
+        } else {
+           System.out.println("cancelled");
+        }
+        return file;
+    }
+    
+    public void test() throws CertificateException, NoSuchProviderException, CertificateEncodingException, CMSException, IOException {
+        taoutput.removeAll();
+        Path path = FileSystems.getDefault().getPath(bsmf.MainFrame.temp + "/" + "beforefile");
+        byte[] data = Files.readAllBytes(path);
+          
+            /*
+            byte[] data = APIMaint.encryptData(jb.toString().getBytes(Charsets.UTF_8), apiUtils.getCert("terrycer.cer") );
+            String datastring = new String(Base64.encode(data));
+            taoutput.append("--now encrypted" + "\n");
+            taoutput.append(datastring);
+            taoutput.append("\n");
+            taoutput.append("--now decrypted" + "\n");
+            */
+          //  byte[] data2 = APIMaint.decryptData(java.util.Base64.getDecoder().decode(datastring), apiUtils.getPrivateKey("terry") );
+           //   byte[] data2 = APIMaint.decryptData(jb.toString().getBytes(Charsets.UTF_8), apiUtils.getPrivateKey("terry") );
+            byte[] data2 = APIMaint.decryptData(data, apiUtils.getPrivateKey("terry") );
+           String datastring2 = new String(data2);
+            taoutput.append(datastring2);
+    }
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -460,6 +580,7 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
     private void initComponents() {
 
         jTextField1 = new javax.swing.JTextField();
+        fc = new javax.swing.JFileChooser();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -484,9 +605,11 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbstorepass = new javax.swing.JPasswordField();
         tbpass = new javax.swing.JPasswordField();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        taoutput = new javax.swing.JTextArea();
         tbparent = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
+        btdecrypt = new javax.swing.JButton();
+        btencrypt = new javax.swing.JButton();
 
         jTextField1.setText("jTextField1");
 
@@ -574,11 +697,25 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel8.setText("StorePass:");
         jLabel8.setName("lblstorepass"); // NOI18N
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        taoutput.setColumns(20);
+        taoutput.setRows(5);
+        jScrollPane1.setViewportView(taoutput);
 
         jLabel9.setText("ParentStore:");
+
+        btdecrypt.setText("decrypt");
+        btdecrypt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btdecryptActionPerformed(evt);
+            }
+        });
+
+        btencrypt.setText("encrypt");
+        btencrypt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btencryptActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -607,26 +744,33 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btclear)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(tbstorepass, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tbpass, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(tbfile, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(tbstoreuser, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(tbdesc, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 233, Short.MAX_VALUE)
-                                .addComponent(tbuser, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                                    .addComponent(btadd)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(btdelete)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(btupdate)))
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(tbparent, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(ddtype, javax.swing.GroupLayout.Alignment.LEADING, 0, 120, Short.MAX_VALUE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(btencrypt)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btdecrypt))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(tbstorepass, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(tbpass, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(tbfile, javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(tbstoreuser, javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(tbdesc, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 233, Short.MAX_VALUE)
+                                        .addComponent(tbuser, javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                                            .addComponent(btadd)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(btdelete)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(btupdate)))
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(tbparent, javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(ddtype, javax.swing.GroupLayout.Alignment.LEADING, 0, 120, Short.MAX_VALUE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(19, 19, 19))))
         );
         jPanel1Layout.setVerticalGroup(
@@ -681,7 +825,11 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
                             .addComponent(btdelete)
                             .addComponent(btupdate)))
                     .addComponent(jScrollPane1))
-                .addContainerGap(53, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btdecrypt)
+                    .addComponent(btencrypt))
+                .addContainerGap(24, Short.MAX_VALUE))
         );
 
         add(jPanel1);
@@ -729,15 +877,36 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
         lookUpFrame();
     }//GEN-LAST:event_btlookupActionPerformed
 
+    private void btdecryptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdecryptActionPerformed
+        decryptFile();
+    }//GEN-LAST:event_btdecryptActionPerformed
+
+    private void btencryptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btencryptActionPerformed
+            try {
+                test();
+            } catch (CertificateException ex) {
+                bslog(ex);
+            } catch (NoSuchProviderException ex) {
+                bslog(ex);
+            } catch (CMSException ex) {
+                bslog(ex);
+            } catch (IOException ex) {
+                bslog(ex);
+            }
+    }//GEN-LAST:event_btencryptActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
     private javax.swing.JButton btclear;
+    private javax.swing.JButton btdecrypt;
     private javax.swing.JButton btdelete;
+    private javax.swing.JButton btencrypt;
     private javax.swing.JButton btlookup;
     private javax.swing.JButton btnew;
     private javax.swing.JButton btupdate;
     private javax.swing.JComboBox<String> ddtype;
+    private javax.swing.JFileChooser fc;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -749,8 +918,8 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextArea taoutput;
     private javax.swing.JTextField tbdesc;
     private javax.swing.JTextField tbfile;
     private javax.swing.JTextField tbkey;

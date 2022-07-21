@@ -55,8 +55,6 @@ import static com.blueseer.utl.BlueSeerUtils.luinput;
 import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import com.blueseer.utl.DTData;
-import static com.blueseer.utl.EDData.getAS2id;
-import static com.blueseer.utl.EDData.getAS2url;
 import com.blueseer.utl.IBlueSeerT;
 import java.awt.Color;
 import java.awt.Component;
@@ -98,6 +96,7 @@ import java.security.cert.X509Certificate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collection;
 import org.bouncycastle.util.encoders.Base64;
 import java.util.List;
 import java.util.logging.Level;
@@ -142,10 +141,14 @@ import org.bouncycastle.cms.CMSProcessableByteArray;
 import org.bouncycastle.cms.CMSSignedData;
 import org.bouncycastle.cms.CMSSignedDataGenerator;
 import org.bouncycastle.cms.CMSTypedData;
+import org.bouncycastle.cms.KeyTransRecipientInformation;
+import org.bouncycastle.cms.RecipientInformation;
 import org.bouncycastle.cms.SignerInfoGenerator;
 import org.bouncycastle.cms.jcajce.JcaSignerInfoGeneratorBuilder;
 import org.bouncycastle.cms.jcajce.JcaSimpleSignerInfoGeneratorBuilder;
 import org.bouncycastle.cms.jcajce.JceCMSContentEncryptorBuilder;
+import org.bouncycastle.cms.jcajce.JceKeyTransEnvelopedRecipient;
+import org.bouncycastle.cms.jcajce.JceKeyTransRecipient;
 import org.bouncycastle.cms.jcajce.JceKeyTransRecipientInfoGenerator;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.mail.smime.SMIMEEnvelopedGenerator;
@@ -1307,6 +1310,26 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         } 
     }
     
+    
+    public static byte[] decryptData(
+          byte[] encryptedData, 
+          PrivateKey decryptionKey) 
+          throws CMSException {
+
+            byte[] decryptedData = null;
+            if (null != encryptedData && null != decryptionKey) {
+                CMSEnvelopedData envelopedData = new CMSEnvelopedData(encryptedData);
+                Collection<RecipientInformation> recipients
+                  = envelopedData.getRecipientInfos().getRecipients();
+                KeyTransRecipientInformation recipientInfo 
+                  = (KeyTransRecipientInformation) recipients.iterator().next();
+                JceKeyTransRecipient recipient
+                  = new JceKeyTransEnvelopedRecipient(decryptionKey);
+
+                return recipientInfo.getContent(recipient);
+            }
+            return decryptedData;
+}
     
     public static byte[] encryptData(byte[] data,
       X509Certificate encryptionCertificate)

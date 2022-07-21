@@ -34,12 +34,16 @@ import static com.blueseer.edi.APIMaint.signDataSimple;
 import static com.blueseer.edi.ediData.getKeyStoreByUser;
 import static com.blueseer.edi.ediData.getKeyStorePass;
 import static com.blueseer.edi.ediData.getKeyUserPass;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -68,6 +72,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import org.apache.commons.io.Charsets;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -80,6 +85,7 @@ import org.apache.http.util.EntityUtils;
 import org.bouncycastle.cms.CMSException;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.mail.smime.SMIMEException;
+import org.bouncycastle.util.encoders.Base64;
 
 /**
  *
@@ -87,13 +93,88 @@ import org.bouncycastle.mail.smime.SMIMEException;
  */
 public class apiUtils {
     
+    public static PrivateKey getPrivateKey(String user)  {
+        PrivateKey key = null;
+        FileInputStream fis = null;
+        try {
+            String[] k = getKeyStoreByUser(user); // store, storeuser, storepass, user, pass
+            k[2] = bsmf.MainFrame.PassWord("1", k[2].toCharArray());
+            k[4] = bsmf.MainFrame.PassWord("1", k[4].toCharArray());
+            char[] keyPassword = k[4].toCharArray();
+            KeyStore keystore = KeyStore.getInstance("PKCS12");
+             fis = new FileInputStream(FileSystems.getDefault().getPath(k[0]).toString());
+            keystore.load(fis, k[2].toCharArray());
+            key = (PrivateKey) keystore.getKey(k[3], keyPassword);
+            //System.out.println("key-->");
+            //System.out.println(key);
+        } catch (KeyStoreException ex) {
+            bslog(ex);
+        } catch (FileNotFoundException ex) {
+            bslog(ex);
+        } catch (IOException ex) {
+            bslog(ex);
+        } catch (NoSuchAlgorithmException ex) {
+            bslog(ex);
+        } catch (CertificateException ex) {
+            bslog(ex);
+        } catch (UnrecoverableKeyException ex) {
+            bslog(ex);
+        } finally {
+          if (fis != null ) {
+              try {
+                  fis.close();
+              } catch (IOException ex) {
+                  bslog(ex);
+              }
+          }
+          
+        }
+        return key;
+    }
+    
+    public static X509Certificate getPublicKey(String user)  {
+        X509Certificate cert = null;
+        FileInputStream fis = null;
+        try {
+            String[] k = getKeyStoreByUser(user); // store, storeuser, storepass, user, pass
+            k[2] = bsmf.MainFrame.PassWord("1", k[2].toCharArray());
+            k[4] = bsmf.MainFrame.PassWord("1", k[4].toCharArray());
+            KeyStore keystore = KeyStore.getInstance("PKCS12");
+             fis = new FileInputStream(FileSystems.getDefault().getPath(k[0]).toString());
+            keystore.load(fis, k[2].toCharArray());
+            cert = (X509Certificate) keystore.getCertificate(user);
+            //System.out.println("here-->" + cert.getSerialNumber());
+        } catch (KeyStoreException ex) {
+            bslog(ex);
+        } catch (FileNotFoundException ex) {
+            bslog(ex);
+        } catch (IOException ex) {
+            bslog(ex);
+        } catch (NoSuchAlgorithmException ex) {
+            bslog(ex);
+        } catch (CertificateException ex) {
+            bslog(ex);
+        } finally {
+          if (fis != null ) {
+              try {
+                  fis.close();
+              } catch (IOException ex) {
+                  bslog(ex);
+              }
+          }
+          
+        }
+        return cert;
+    }
+    
+    
     public static X509Certificate getCert(String certfile) throws CertificateException, NoSuchProviderException {
         X509Certificate certificate = null;
         Path certfilepath = FileSystems.getDefault().getPath("edi/certs/" + certfile);
         if (! Files.exists(certfilepath)) {
              throw new RuntimeException("bad path to cert file");
         }
-        System.out.println("here->" + certfilepath.toString());
+       // System.out.println("here->" + certfilepath.toString());
         Security.addProvider(new BouncyCastleProvider());
         CertificateFactory certFactory = CertificateFactory.getInstance("X.509", "BC");
         try (FileInputStream fis = new FileInputStream(certfilepath.toFile())) {
@@ -232,6 +313,18 @@ public class apiUtils {
           signedAndEncrypteddata = encryptData(mbp2.getInputStream().readAllBytes(), encryptcertificate);
     
         }
+        
+        
+       // BufferedWriter output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path.toFile())));
+       // output.write(new String(Base64.encode(signedAndEncrypteddata)));
+       // output.close();
+        /*
+        Path path = FileSystems.getDefault().getPath("temp" + "/" + "beforefile");
+        BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(path.toFile()));
+        bos.write(signedAndEncrypteddata);
+        bos.flush();
+        bos.close();
+        */
         
         URL urlObj = new URL(url);
         RequestBuilder rb = RequestBuilder.post();

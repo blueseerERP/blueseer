@@ -33,6 +33,8 @@ import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import com.blueseer.edi.APIMaint;
+import com.blueseer.edi.apiUtils;
 import com.blueseer.inv.invData;
 import com.blueseer.sch.schData;
 import com.blueseer.utl.BlueSeerUtils;
@@ -82,6 +84,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import java.util.LinkedHashMap;
+import org.bouncycastle.cms.CMSException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -134,15 +137,22 @@ public class AS2Serv extends HttpServlet {
             String line = "";
             StringBuilder jb = new StringBuilder();
             BufferedReader reader = request.getReader();
+            
             while ((line = reader.readLine()) != null) {
             jb.append(line);
             }
             reader.close();
-         output.write(jb.toString());
+        
+         
+         byte[] data = APIMaint.decryptData(String.valueOf(jb).getBytes(), apiUtils.getPrivateKey("terry") );
+         String datastring = new String(data);   
+         output.write(datastring);
           
         } catch (FileNotFoundException ex) {
             bslog(ex);
         } catch (IOException ex) {
+            bslog(ex);
+        } catch (CMSException ex) {
             bslog(ex);
         } finally {
            output.close();  
