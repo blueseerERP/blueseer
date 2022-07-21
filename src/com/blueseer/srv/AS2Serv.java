@@ -190,7 +190,7 @@ public class AS2Serv extends HttpServlet {
                for (int j = 0; j < mp2.getCount(); j++) {
                     BodyPart bodyPart2 = mp2.getBodyPart(j);
                     MimeBodyPart mbp = (MimeBodyPart) mp2.getBodyPart(j); // should use this
-                    // resume here
+                    // resume here  ...use MimeBodyPart instead of BodyPart...and spit out attributes for debug
                     String contentType2 = bodyPart2.getContentType();
                     System.out.println("here--> level 2 mp count: " + j + " contentType: " + contentType2);
                } 
