@@ -86,6 +86,12 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import java.util.LinkedHashMap;
+import javax.mail.BodyPart;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import javax.mail.util.ByteArrayDataSource;
 import org.bouncycastle.cms.CMSException;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -132,12 +138,22 @@ public class AS2Serv extends HttpServlet {
     
    
     public static String processRequest(HttpServletRequest request) throws IOException {
+       
+        /*
+        
+        This is a work in progress....  
+        
+        
+        */
+        
         String x = "";
         Path path = FileSystems.getDefault().getPath("temp" + "/" + "somefile");
         BufferedWriter output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path.toFile())));
         
         // request to inputstream as bytes        
         try {
+        
+            
             byte[] content = null;
             try (InputStream is = request.getInputStream()) {
                 content = is.readAllBytes();
@@ -148,6 +164,7 @@ public class AS2Serv extends HttpServlet {
             return "unable to read Request content into bytes";
         }
         
+        
         // check headers
         Enumeration<String> headerNames = request.getHeaderNames();
         if (headerNames != null) {
@@ -156,11 +173,30 @@ public class AS2Serv extends HttpServlet {
                         System.out.println("here--> Header: " + key +  "=" + request.getHeader(key));
                 }
         }
-            
-            
+        System.out.println("here--> Request Content Type: " + request.getContentType());    
+          
+        
         System.out.println("here--> encoding:" + request.getCharacterEncoding());
          
          byte[] decryptedContent = APIMaint.decryptData(content, apiUtils.getPrivateKey(getSystemEncKey()) );
+         
+        MimeMultipart mp = new MimeMultipart(new ByteArrayDataSource(decryptedContent, request.getContentType()));
+        for (int i = 0; i < mp.getCount(); i++) {
+            BodyPart bodyPart = mp.getBodyPart(i);
+            String contentType = bodyPart.getContentType();
+            System.out.println("here--> level 1 mp count: " + i + " contentType: " + contentType);
+            MimeMultipart mp2 = new MimeMultipart(new ByteArrayDataSource(decryptedContent, contentType));
+            if (mp2.getCount() > 1) {
+               for (int j = 0; j < mp2.getCount(); j++) {
+                    BodyPart bodyPart2 = mp2.getBodyPart(j);
+                    MimeBodyPart mbp = (MimeBodyPart) mp2.getBodyPart(j); // should use this
+                    // resume here
+                    String contentType2 = bodyPart2.getContentType();
+                    System.out.println("here--> level 2 mp count: " + j + " contentType: " + contentType2);
+               } 
+            }
+        }  
+         
          String datastring = new String(decryptedContent);   
          output.write(datastring);
          System.out.println("here--> decryption");
@@ -172,6 +208,8 @@ public class AS2Serv extends HttpServlet {
             bslog(ex);
         } catch (CMSException ex) {
             bslog(ex);
+        } catch (MessagingException ex) {
+            Logger.getLogger(AS2Serv.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
            output.close();  
         }
