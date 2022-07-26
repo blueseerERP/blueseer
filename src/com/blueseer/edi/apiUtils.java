@@ -67,12 +67,14 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.Charsets;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -369,7 +371,7 @@ public class apiUtils {
           rb.setEntity(new BufferedHttpEntity(ise));
           HttpUriRequest request = rb.build();
           
-          
+        
         CloseableHttpResponse response = client.execute(request);
         try {
         if (response.getStatusLine().getStatusCode() != 200) {
@@ -393,11 +395,42 @@ public class apiUtils {
         return r.toString();
     }
     
-    public static String createMDN(boolean success, String message, ArrayList<String> headers) {
-        String x = "";
+    public static MimeMultipart code1000(String sender, String receiver, String subject, String filename) {
+        MimeBodyPart mbp = new MimeBodyPart();
+        MimeMultipart mp = new MimeMultipart();
+        LocalDateTime localDateTime = LocalDateTime.now();
+        String now = localDateTime.format(DateTimeFormatter.ISO_DATE);
+        String z = """
+                The message <%s> sent to <%s>
+                on %s with Subject <%s> has been received,
+                the payload was successfully decrypted and its integrity was verified.
+                In addition, the sender of the message, <terry> was authenticated
+                as the originator of the message.
+                
+                There is no guarantee however that the payload was syntactically
+                correct, or was received by any applicable back-end processes.
+                """.formatted(filename, receiver, now, subject, sender);
+        try {
+            mbp.setText(z);
+            mp.addBodyPart(mbp);
+        } catch (MessagingException ex) {
+            bslog(ex);
+        }
         
-        if (success) {
-            x = """
+        return mp;
+    }
+    
+    public static mdn createMDN(String code, String[] e, ArrayList<String> headers) throws IOException, MessagingException {
+        mdn x = null;
+        MimeBodyPart mbp = new MimeBodyPart();
+        String z;
+        
+        switch (code) {
+            case "1000" :
+            mbp.setContent(code1000(e[0], e[1], e[2], e[3]));
+            break;        
+        default:
+            z = """
                 The message <test.txt> sent to <01089986319>
                 on Tue, 26 Jul 2022 14:12:31 GMT with Subject <as2> has been received,
                 the payload was successfully decrypted and its integrity was verified.
@@ -407,9 +440,22 @@ public class apiUtils {
                 There is no guarantee however that the payload was syntactically
                 correct, or was received by any applicable back-end processes.
                 """;
+        }        
+        
+        if (mbp != null) {
+            x = new mdn(HttpServletResponse.SC_OK, null, new String(mbp.getInputStream().readAllBytes()));
+        } else {
+            x = new mdn(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, null, "problem creating MIME structure for MDN");
         }
         
-        return x;
+        return x; 
     }
+    
+     public record mdn(int status, HashMap<String, String> headers, String message) {
+        public mdn(int i, HashMap<String, String> hm) {
+            this(i, hm, ""); 
+        }
+    }
+    
     
 }

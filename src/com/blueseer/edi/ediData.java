@@ -1022,6 +1022,46 @@ public class ediData {
         return info;
     }
     
+    public static String[] getAS2InfoByIDs(String sender, String receiver) {
+        String[] info = null;
+        String sql = "select api_id, api_url, api_port, api_path, api_user, edic_as2id, edic_as2url, " +
+                " api_encrypted, api_signed, api_cert, api_protocol, apid_source, apid_destination, " +
+                " edic_signkey, edic_enckey " +
+                " from api_mstr " +
+                " inner join api_det on apid_id = api_id " +
+                " inner join edi_ctrl where api_class = 'AS2' and api_user = ? and edic_as2id = ?;";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, sender);
+        ps.setString(2, receiver);
+             try (ResultSet res = ps.executeQuery();) {
+               while (res.next()) {
+               info = new String[15];     
+               info[0] = res.getString("api_id");
+               info[1] = res.getString("api_url");
+               info[2] = res.getString("api_port");
+               info[3] = res.getString("api_path");
+               info[4] = res.getString("api_user");
+               info[5] = res.getString("edic_as2id");
+               info[6] = res.getString("edic_as2url");
+               info[7] = res.getString("edic_signkey");
+               info[8] = res.getString("edic_enckey");
+               info[9] = res.getString("api_encrypted");
+               info[10] = res.getString("api_signed");
+               info[11] = res.getString("api_cert");
+               info[12] = res.getString("api_protocol");
+               info[13] = res.getString("apid_source");
+               info[14] = res.getString("apid_destination");
+               }
+            }
+        }
+        catch (SQLException s){
+            MainFrame.bslog(s);
+        }
+        return info;
+    }
+    
+    
     public static String getKeyStorePass(String id) {
         String x = "";
         String sql = "select pks_storepass from pks_mstr where pks_type = 'store' and pks_id = ?";

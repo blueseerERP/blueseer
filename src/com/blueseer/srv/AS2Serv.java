@@ -35,11 +35,15 @@ import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.edi.APIMaint;
 import com.blueseer.edi.apiUtils;
+import static com.blueseer.edi.apiUtils.createMDN;
+import com.blueseer.edi.apiUtils.mdn;
+import static com.blueseer.edi.ediData.getAS2InfoByIDs;
 import com.blueseer.inv.invData;
 import com.blueseer.sch.schData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.createMessage;
 import static com.blueseer.utl.BlueSeerUtils.createMessageJSON;
+import com.blueseer.utl.EDData;
 import static com.blueseer.utl.EDData.getSystemEncKey;
 import com.blueseer.utl.OVData;
 import java.io.BufferedReader;
@@ -136,13 +140,15 @@ public class AS2Serv extends HttpServlet {
             response.getWriter().println("no valid payload provided");
         } else {
             response.setContentType("text/plain");
-            response.setStatus(HttpServletResponse.SC_OK);
-            response.getWriter().println(processRequest(request));
+           // response.setStatus(HttpServletResponse.SC_OK);
+            mdn thismdn = processRequest(request);
+            response.setStatus(thismdn.status());
+            response.getWriter().println(thismdn.message());
         }
     }
     
    
-    public static String processRequest(HttpServletRequest request) throws IOException {
+    public static mdn processRequest(HttpServletRequest request) throws IOException {
        
         /*
         
@@ -154,7 +160,9 @@ public class AS2Serv extends HttpServlet {
         String x = "";
         Path path = FileSystems.getDefault().getPath("temp" + "/" + "somefile");
         BufferedWriter output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path.toFile())));
-        
+        String[] elementals = new String[]{"","","",""};
+        mdn mymdn = null;
+
         // request to inputstream as bytes        
         try {
         
@@ -166,23 +174,67 @@ public class AS2Serv extends HttpServlet {
             
         // if null content
         if (content == null) {
-            return "unable to read Request content into bytes";
+            return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "null content");
         }
         
         
         // check headers and fill HashMap
-        HashMap<String, String> hm = new HashMap<>();
+        HashMap<String, String> inHM = new HashMap<>();
+        HashMap<String, String> outHM = new HashMap<>();
+        
+       
+        
         Enumeration<String> headerNames = request.getHeaderNames();
         if (headerNames != null) {
                 while (headerNames.hasMoreElements()) {
                         String key = (String) headerNames.nextElement();
-                        hm.putIfAbsent(key, request.getHeader(key));
+                        inHM.putIfAbsent(key, request.getHeader(key));
                         System.out.println("here--> Header: " + key +  "=" + request.getHeader(key));
                 }
         } else {
             // header info unrecognizable...bail out
-            
+            return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "http header tags unrecognizable");
         }
+        
+        // check for sender / receiver
+        String sender = "";
+        String sysas2user = EDData.getAS2id();
+        String receiver = "";
+        String subject = "";
+        String filename = "";
+        String[] info = null;
+        
+        
+        if (inHM.containsKey("AS2-To")) {
+            if (inHM.get("AS2-To").equals(sysas2user)) {
+              receiver = sysas2user;  
+            } else {
+              return new mdn(HttpServletResponse.SC_OK, null, "AS2 receiver ID unknown");  
+            }
+        } else {
+            return new mdn(HttpServletResponse.SC_OK, null, "AS2 receiver ID unrecognized"); 
+        }
+        
+        if (inHM.containsKey("AS2-From")) {
+            sender = inHM.get("AS2-From");
+            info = getAS2InfoByIDs(sender , receiver);
+            if (info == null) {
+              return new mdn(HttpServletResponse.SC_OK, null, "AS2 sender ID unknown with keys: " + sender + "/" + receiver);    
+            } 
+        } else {
+            return new mdn(HttpServletResponse.SC_OK, null, "AS2 sender ID unrecognized"); 
+        }
+        
+        if (inHM.containsKey("Subject")) {
+            subject = inHM.get("Subject");
+        }
+        
+        // if here...should have as2 sender / receiver / info data required to create legitimate MDN
+        elementals[0] = sender;
+        elementals[1] = receiver;
+        elementals[2] = subject;
+        elementals[3] = filename;
+        
         System.out.println("here--> Request Content Type: " + request.getContentType());    
           
         
@@ -219,14 +271,23 @@ public class AS2Serv extends HttpServlet {
             MimeMultipart mp2 = new MimeMultipart(new ByteArrayDataSource(decryptedContent, contentType));
             if (mp2.getCount() > 1) {
                for (int j = 0; j < mp2.getCount(); j++) {
-                    MimeBodyPart mbp = (MimeBodyPart) mp2.getBodyPart(j); // should use this
+                    MimeBodyPart mbp = (MimeBodyPart) mp2.getBodyPart(j); 
                     // resume here  ...use MimeBodyPart instead of BodyPart...and spit out attributes for debug
-                    
-                    String contentType2 = mbp.getContentType();
-                    System.out.println("here--> level 2 mp count: " + j + " contentType: " + contentType2);
+                    String contentTypePayload = mbp.getContentType();
+                    if (! contentTypePayload.contains("pkcs7-signature") && contentTypePayload.contains("file=")) {
+                      String[] elements = contentTypePayload.split(";");
+                      for (String g : elements) {
+                          if (g.startsWith("file=")) {
+                              filename = g.substring(5);
+                          }
+                      }
+                    }
+                    System.out.println("here--> level 2 mp count: " + j + " contentType: " + contentTypePayload);
                } 
             }
         }  
+        
+        elementals[3] = filename;
          
          String datastring = new String(decryptedContent);   
          output.write(datastring);
@@ -245,7 +306,14 @@ public class AS2Serv extends HttpServlet {
            output.close();  
         }
         
-        return x;
+        
+        try {
+            mymdn = createMDN("1000", elementals, null);
+        } catch (MessagingException ex) {
+            bslog(ex);
+        }
+        
+        return mymdn; 
     }
    
 }
