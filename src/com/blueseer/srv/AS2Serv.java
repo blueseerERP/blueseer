@@ -61,6 +61,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -86,6 +87,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import java.util.LinkedHashMap;
+import java.util.Map;
 import javax.mail.BodyPart;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeBodyPart;
@@ -127,11 +129,14 @@ public class AS2Serv extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
        // BufferedReader reader = request.getReader();
-        response.setContentType("text/plain");
-        response.setStatus(HttpServletResponse.SC_OK);
+       
         if (request == null) {
+            response.setContentType("text/plain");
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.getWriter().println("no valid payload provided");
         } else {
+            response.setContentType("text/plain");
+            response.setStatus(HttpServletResponse.SC_OK);
             response.getWriter().println(processRequest(request));
         }
     }
@@ -165,33 +170,59 @@ public class AS2Serv extends HttpServlet {
         }
         
         
-        // check headers
+        // check headers and fill HashMap
+        HashMap<String, String> hm = new HashMap<>();
         Enumeration<String> headerNames = request.getHeaderNames();
         if (headerNames != null) {
                 while (headerNames.hasMoreElements()) {
                         String key = (String) headerNames.nextElement();
+                        hm.putIfAbsent(key, request.getHeader(key));
                         System.out.println("here--> Header: " + key +  "=" + request.getHeader(key));
                 }
+        } else {
+            // header info unrecognizable...bail out
+            
         }
         System.out.println("here--> Request Content Type: " + request.getContentType());    
           
         
         System.out.println("here--> encoding:" + request.getCharacterEncoding());
-         
-         byte[] decryptedContent = APIMaint.decryptData(content, apiUtils.getPrivateKey(getSystemEncKey()) );
+        
+        boolean isEncrypted = false;
+        boolean isSigned = false;
+        
+        byte[] decryptedContent = APIMaint.decryptData(content, apiUtils.getPrivateKey(getSystemEncKey()) );
          
         MimeMultipart mp = new MimeMultipart(new ByteArrayDataSource(decryptedContent, request.getContentType()));
+        
+        if (mp.getCount() > 1) {
+           BodyPart bp = mp.getBodyPart(0); 
+           if (bp.getContentType().contains("multipart/signed")) {
+              // if here...decryption must have occurred successfully...else bail out with failed MDN
+              isEncrypted = true;
+           }
+        }
+        
+        
+        if (! isEncrypted) {
+            
+        }
+        
+        
         for (int i = 0; i < mp.getCount(); i++) {
             BodyPart bodyPart = mp.getBodyPart(i);
             String contentType = bodyPart.getContentType();
+            if (contentType.contains("multipart/signed")) {
+                
+            }
             System.out.println("here--> level 1 mp count: " + i + " contentType: " + contentType);
             MimeMultipart mp2 = new MimeMultipart(new ByteArrayDataSource(decryptedContent, contentType));
             if (mp2.getCount() > 1) {
                for (int j = 0; j < mp2.getCount(); j++) {
-                    BodyPart bodyPart2 = mp2.getBodyPart(j);
                     MimeBodyPart mbp = (MimeBodyPart) mp2.getBodyPart(j); // should use this
                     // resume here  ...use MimeBodyPart instead of BodyPart...and spit out attributes for debug
-                    String contentType2 = bodyPart2.getContentType();
+                    
+                    String contentType2 = mbp.getContentType();
                     System.out.println("here--> level 2 mp count: " + j + " contentType: " + contentType2);
                } 
             }

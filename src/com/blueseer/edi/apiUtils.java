@@ -65,6 +65,7 @@ import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -390,6 +391,25 @@ public class apiUtils {
         
     } // for each file
         return r.toString();
+    }
+    
+    public static String createMDN(boolean success, String message, ArrayList<String> headers) {
+        String x = "";
+        
+        if (success) {
+            x = """
+                The message <test.txt> sent to <01089986319>
+                on Tue, 26 Jul 2022 14:12:31 GMT with Subject <as2> has been received,
+                the payload was successfully decrypted and its integrity was verified.
+                In addition, the sender of the message, <terry> was authenticated
+                as the originator of the message.
+                
+                There is no guarantee however that the payload was syntactically
+                correct, or was received by any applicable back-end processes.
+                """;
+        }
+        
+        return x;
     }
     
 }
