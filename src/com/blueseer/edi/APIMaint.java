@@ -64,6 +64,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -131,6 +132,9 @@ import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.bouncycastle.asn1.ASN1InputStream;
+import org.bouncycastle.asn1.cms.ContentInfo;
+import org.bouncycastle.cert.X509CertificateHolder;
 
 
 import org.bouncycastle.cert.jcajce.JcaCertStore;
@@ -145,8 +149,11 @@ import org.bouncycastle.cms.CMSTypedData;
 import org.bouncycastle.cms.KeyTransRecipientInformation;
 import org.bouncycastle.cms.RecipientInformation;
 import org.bouncycastle.cms.SignerInfoGenerator;
+import org.bouncycastle.cms.SignerInformation;
+import org.bouncycastle.cms.SignerInformationStore;
 import org.bouncycastle.cms.jcajce.JcaSignerInfoGeneratorBuilder;
 import org.bouncycastle.cms.jcajce.JcaSimpleSignerInfoGeneratorBuilder;
+import org.bouncycastle.cms.jcajce.JcaSimpleSignerInfoVerifierBuilder;
 import org.bouncycastle.cms.jcajce.JceCMSContentEncryptorBuilder;
 import org.bouncycastle.cms.jcajce.JceKeyTransEnvelopedRecipient;
 import org.bouncycastle.cms.jcajce.JceKeyTransRecipient;
@@ -1482,7 +1489,25 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
             return tmpBody;
 	}
 
-     
+    
+    public static boolean verifSignedData(byte[] signedData)
+  throws Exception {
+ 
+    X509Certificate signCert = null;
+    ByteArrayInputStream inputStream = new ByteArrayInputStream(signedData);
+    ASN1InputStream asnInputStream = new ASN1InputStream(inputStream);
+    CMSSignedData cmsSignedData = new CMSSignedData(ContentInfo.getInstance(asnInputStream.readObject()));
+    
+    SignerInformationStore signers = cmsSignedData.getSignerInfos();
+    SignerInformation signer = signers.getSigners().iterator().next();
+    Collection<X509CertificateHolder> certCollection = certs.getMatches(signer.getSID());
+    X509CertificateHolder certHolder = certCollection.iterator().next();
+    
+    return signer
+      .verify(new JcaSimpleSignerInfoVerifierBuilder()
+      .build(certHolder));
+}
+    
     
      CMSSignedDataGenerator setUpProvider(final KeyStore keystore, String KEY_ALIAS_IN_KEYSTORE, String KEYSTORE_PASSWORD) throws Exception {
 
