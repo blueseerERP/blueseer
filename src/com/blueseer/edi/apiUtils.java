@@ -397,7 +397,7 @@ public class apiUtils {
     }
     
     
-    public static MimeMultipart bundleit(String z, String receiver, String messageid) {
+    public static MimeMultipart bundleit(String z, String receiver, String messageid, String mic) {
         MimeBodyPart mbp = new MimeBodyPart();
         MimeBodyPart mbp2 = new MimeBodyPart();
         MimeMultipart mp = new MimeMultipart();
@@ -412,8 +412,8 @@ public class apiUtils {
                        Final-Recipient: rfc822; %s
                        Original-Message-ID: %s
                        Disposition: automatic-action/MDN-sent-automatically; processed
-                       Received-Content-MIC: yRjnm6ZlHKm0p7AYyTnVKYqAv8Y=, sha
-                       """.formatted(receiver, receiver, messageid);
+                       Received-Content-MIC: %s, sha
+                       """.formatted(receiver, receiver, messageid, mic);
             
             mbp2.setText(y);
             mbp2.setHeader("Content-Type", "message/disposition-notification");
@@ -429,7 +429,7 @@ public class apiUtils {
         return mp;
     }
     
-    public static MimeMultipart code1000(String sender, String receiver, String subject, String filename, String messageid) {
+    public static MimeMultipart code1000(String sender, String receiver, String subject, String filename, String messageid, String mic) {
         MimeBodyPart mbp = new MimeBodyPart();
         MimeMultipart mp = new MimeMultipart();
         LocalDateTime localDateTime = LocalDateTime.now();
@@ -446,7 +446,7 @@ public class apiUtils {
                 """.formatted(filename, receiver, now, subject, sender);
         try {
            // mbp.setText(z);
-           MimeMultipart mpInner = bundleit(z, receiver, messageid);
+           MimeMultipart mpInner = bundleit(z, receiver, messageid, mic);
            ContentType ct = new ContentType(mpInner.getContentType());
            String boundary = ct.getParameter("boundary");
             mbp.setContent(mpInner);
@@ -467,7 +467,7 @@ public class apiUtils {
         
         switch (code) {
             case "1000" :
-            mbp.setContent(code1000(e[0], e[1], e[2], e[3], e[4]));
+            mbp.setContent(code1000(e[0], e[1], e[2], e[3], e[4], e[5]));
             break;        
         default:
             z = """

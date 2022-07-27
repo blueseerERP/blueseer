@@ -83,6 +83,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
@@ -1311,6 +1312,20 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
     
     
+    public static String hashdigest(byte[] indata) {
+        String x;
+        
+        MessageDigest messageDigest = null;
+                    try {
+                        messageDigest = MessageDigest.getInstance("SHA-1");
+                    } catch (NoSuchAlgorithmException ex) {
+                        bslog(ex);
+                    }
+        byte[] hashedbytes = messageDigest.digest(indata);
+        x = new String(Base64.encode(hashedbytes));
+        return x;
+    }
+    
     public static byte[] decryptData(
           byte[] encryptedData, 
           PrivateKey decryptionKey) 
@@ -1378,6 +1393,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
 	
 }
 
+    
     
     
     public static byte[] signData(

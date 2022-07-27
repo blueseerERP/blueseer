@@ -34,6 +34,7 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.edi.APIMaint;
+import static com.blueseer.edi.APIMaint.hashdigest;
 import com.blueseer.edi.apiUtils;
 import static com.blueseer.edi.apiUtils.createMDN;
 import com.blueseer.edi.apiUtils.mdn;
@@ -160,7 +161,7 @@ public class AS2Serv extends HttpServlet {
         String x = "";
         Path path = FileSystems.getDefault().getPath("temp" + "/" + "somefile");
         BufferedWriter output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path.toFile())));
-        String[] elementals = new String[]{"","","","",""};
+        String[] elementals = new String[]{"","","","","",""};
         mdn mymdn = null;
 
         // request to inputstream as bytes        
@@ -234,12 +235,7 @@ public class AS2Serv extends HttpServlet {
             messageid = inHM.get("Message-ID");
         }
         
-        // if here...should have as2 sender / receiver / info data required to create legitimate MDN
-        elementals[0] = sender;
-        elementals[1] = receiver;
-        elementals[2] = subject;
-        elementals[3] = filename;
-        elementals[4] = messageid;
+        
         
         System.out.println("here--> Request Content Type: " + request.getContentType());    
           
@@ -250,7 +246,21 @@ public class AS2Serv extends HttpServlet {
         boolean isSigned = false;
         
         byte[] decryptedContent = APIMaint.decryptData(content, apiUtils.getPrivateKey(getSystemEncKey()) );
-         
+        
+        String mic = hashdigest(decryptedContent);
+        if (mic == null) {
+            mic = "";
+        }
+        
+        // if here...should have as2 sender / receiver / info data required to create legitimate MDN
+        elementals[0] = sender;
+        elementals[1] = receiver;
+        elementals[2] = subject;
+        elementals[3] = filename;
+        elementals[4] = messageid;
+        elementals[5] = mic;
+        
+        
         MimeMultipart mp = new MimeMultipart(new ByteArrayDataSource(decryptedContent, request.getContentType()));
         
         if (mp.getCount() > 1) {
