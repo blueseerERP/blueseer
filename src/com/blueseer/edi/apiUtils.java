@@ -71,6 +71,7 @@ import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.mail.MessagingException;
+import javax.mail.internet.ContentType;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
@@ -379,7 +380,7 @@ public class apiUtils {
                 //throw new RuntimeException("Failed : HTTP error code : "
                 //		+ conn.getResponseCode());
         } else {
-            r.append("SUCCESS: " + response.getStatusLine().getStatusCode() + ": " + response.getStatusLine().getReasonPhrase());
+            r.append("SUCCESS: " + response.getStatusLine().getStatusCode() + ": " + response.getStatusLine().getReasonPhrase() + "\n");
         }
         
         HttpEntity entity = response.getEntity();
@@ -395,7 +396,40 @@ public class apiUtils {
         return r.toString();
     }
     
-    public static MimeMultipart code1000(String sender, String receiver, String subject, String filename) {
+    
+    public static MimeMultipart bundleit(String z, String receiver, String messageid) {
+        MimeBodyPart mbp = new MimeBodyPart();
+        MimeBodyPart mbp2 = new MimeBodyPart();
+        MimeMultipart mp = new MimeMultipart();
+        try {
+            mbp.setText(z);
+            mbp.setHeader("Content-Type", "text/plain; charset=us-ascii");
+            mbp.setHeader("Content-Transfer-Encoding", "7bit");
+            
+            String y = """
+                       Reporting-UA: BlueSeer Software
+                       Original-Recipient: rfc822; %s
+                       Final-Recipient: rfc822; %s
+                       Original-Message-ID: %s
+                       Disposition: automatic-action/MDN-sent-automatically; processed
+                       Received-Content-MIC: yRjnm6ZlHKm0p7AYyTnVKYqAv8Y=, sha
+                       """.formatted(receiver, receiver, messageid);
+            
+            mbp2.setText(y);
+            mbp2.setHeader("Content-Type", "message/disposition-notification");
+            mbp2.setHeader("Content-Transfer-Encoding", "7bit");
+            
+            mp.addBodyPart(mbp);
+            mp.addBodyPart(mbp2);
+            
+            
+        } catch (MessagingException ex) {
+            bslog(ex);
+        }
+        return mp;
+    }
+    
+    public static MimeMultipart code1000(String sender, String receiver, String subject, String filename, String messageid) {
         MimeBodyPart mbp = new MimeBodyPart();
         MimeMultipart mp = new MimeMultipart();
         LocalDateTime localDateTime = LocalDateTime.now();
@@ -411,8 +445,14 @@ public class apiUtils {
                 correct, or was received by any applicable back-end processes.
                 """.formatted(filename, receiver, now, subject, sender);
         try {
-            mbp.setText(z);
+           // mbp.setText(z);
+           MimeMultipart mpInner = bundleit(z, receiver, messageid);
+           ContentType ct = new ContentType(mpInner.getContentType());
+           String boundary = ct.getParameter("boundary");
+            mbp.setContent(mpInner);
+            mbp.setHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
             mp.addBodyPart(mbp);
+            
         } catch (MessagingException ex) {
             bslog(ex);
         }
@@ -427,7 +467,7 @@ public class apiUtils {
         
         switch (code) {
             case "1000" :
-            mbp.setContent(code1000(e[0], e[1], e[2], e[3]));
+            mbp.setContent(code1000(e[0], e[1], e[2], e[3], e[4]));
             break;        
         default:
             z = """

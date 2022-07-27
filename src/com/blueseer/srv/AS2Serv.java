@@ -160,7 +160,7 @@ public class AS2Serv extends HttpServlet {
         String x = "";
         Path path = FileSystems.getDefault().getPath("temp" + "/" + "somefile");
         BufferedWriter output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path.toFile())));
-        String[] elementals = new String[]{"","","",""};
+        String[] elementals = new String[]{"","","","",""};
         mdn mymdn = null;
 
         // request to inputstream as bytes        
@@ -201,6 +201,7 @@ public class AS2Serv extends HttpServlet {
         String sysas2user = EDData.getAS2id();
         String receiver = "";
         String subject = "";
+        String messageid = "";
         String filename = "";
         String[] info = null;
         
@@ -229,11 +230,16 @@ public class AS2Serv extends HttpServlet {
             subject = inHM.get("Subject");
         }
         
+        if (inHM.containsKey("Message-ID")) {
+            messageid = inHM.get("Message-ID");
+        }
+        
         // if here...should have as2 sender / receiver / info data required to create legitimate MDN
         elementals[0] = sender;
         elementals[1] = receiver;
         elementals[2] = subject;
         elementals[3] = filename;
+        elementals[4] = messageid;
         
         System.out.println("here--> Request Content Type: " + request.getContentType());    
           
