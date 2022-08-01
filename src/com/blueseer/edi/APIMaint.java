@@ -65,11 +65,13 @@ import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -90,15 +92,20 @@ import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.Security;
 import java.security.UnrecoverableKeyException;
+import java.security.cert.CertStore;
+import java.security.cert.CertStoreException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateException;
+import java.security.cert.CertificateExpiredException;
 import java.security.cert.CertificateFactory;
+import java.security.cert.CertificateNotYetValidException;
 import java.security.cert.X509Certificate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import org.bouncycastle.util.encoders.Base64;
 import java.util.List;
 import java.util.logging.Level;
@@ -145,12 +152,16 @@ import org.bouncycastle.cms.CMSException;
 import org.bouncycastle.cms.CMSProcessableByteArray;
 import org.bouncycastle.cms.CMSSignedData;
 import org.bouncycastle.cms.CMSSignedDataGenerator;
+import org.bouncycastle.cms.CMSSignedDataParser;
+import org.bouncycastle.cms.CMSSignerDigestMismatchException;
 import org.bouncycastle.cms.CMSTypedData;
+import org.bouncycastle.cms.CMSTypedStream;
 import org.bouncycastle.cms.KeyTransRecipientInformation;
 import org.bouncycastle.cms.RecipientInformation;
 import org.bouncycastle.cms.SignerInfoGenerator;
 import org.bouncycastle.cms.SignerInformation;
 import org.bouncycastle.cms.SignerInformationStore;
+import org.bouncycastle.cms.SignerInformationVerifier;
 import org.bouncycastle.cms.jcajce.JcaSignerInfoGeneratorBuilder;
 import org.bouncycastle.cms.jcajce.JcaSimpleSignerInfoGeneratorBuilder;
 import org.bouncycastle.cms.jcajce.JcaSimpleSignerInfoVerifierBuilder;
@@ -163,6 +174,7 @@ import org.bouncycastle.mail.smime.SMIMEEnvelopedGenerator;
 import org.bouncycastle.mail.smime.SMIMEException;
 import org.bouncycastle.mail.smime.SMIMESignedGenerator;
 import org.bouncycastle.operator.ContentSigner;
+import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.operator.OutputEncryptor;
 import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
 import org.bouncycastle.operator.jcajce.JcaDigestCalculatorProviderBuilder;
@@ -1507,8 +1519,49 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
       .verify(new JcaSimpleSignerInfoVerifierBuilder()
       .build(certHolder));
 }
+
+    public static boolean verifySignature(final byte[] plaintext, final byte[] signedData)  {
+        boolean x = false;
+        try {
+            CMSSignedData s = new CMSSignedData(new CMSProcessableByteArray(plaintext), signedData);
+            Store certstore = s.getCertificates();
+            SignerInformationStore signers = s.getSignerInfos();
+            Collection<SignerInformation> c = signers.getSigners();
+            SignerInformation signer = c.iterator().next();
+            Collection<X509CertificateHolder> certCollection = certstore.getMatches(signer.getSID());
+            Iterator<X509CertificateHolder> certIt = certCollection.iterator();
+            if (! certIt.hasNext()) {
+                return x;
+            }
+            X509CertificateHolder certHolder = certIt.next();
+            x = signer.verify(new JcaSimpleSignerInfoVerifierBuilder().build(certHolder));
+        } catch ( CMSException | OperatorCreationException | CertificateException ex) {
+            bslog(ex);
+        }
+        return x;
+}
     
-    
+    public static boolean verifSignData(final byte[] signedData) throws CMSException, IOException, OperatorCreationException, CertificateException {
+    ByteArrayInputStream bIn = new ByteArrayInputStream(signedData);
+    ASN1InputStream aIn = new ASN1InputStream(bIn);
+    CMSSignedData s = new CMSSignedData(ContentInfo.getInstance(aIn.readObject()));
+    aIn.close();
+    bIn.close();
+    Store certs = s.getCertificates();
+    SignerInformationStore signers = s.getSignerInfos();
+    Collection<SignerInformation> c = signers.getSigners();
+    SignerInformation signer = c.iterator().next();
+    Collection<X509CertificateHolder> certCollection = certs.getMatches(signer.getSID());
+    Iterator<X509CertificateHolder> certIt = certCollection.iterator();
+    X509CertificateHolder certHolder = certIt.next();
+    boolean verifResult = signer.verify(new JcaSimpleSignerInfoVerifierBuilder().build(certHolder));
+    if (!verifResult) {
+        return false;
+    }
+    return true;
+}
+   
+     
      CMSSignedDataGenerator setUpProvider(final KeyStore keystore, String KEY_ALIAS_IN_KEYSTORE, String KEYSTORE_PASSWORD) throws Exception {
 
         Security.addProvider(new BouncyCastleProvider());

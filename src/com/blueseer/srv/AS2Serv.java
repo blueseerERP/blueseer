@@ -35,6 +35,8 @@ import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.edi.APIMaint;
 import static com.blueseer.edi.APIMaint.hashdigest;
+import static com.blueseer.edi.APIMaint.verifSignData;
+import static com.blueseer.edi.APIMaint.verifySignature;
 import com.blueseer.edi.apiUtils;
 import static com.blueseer.edi.apiUtils.createMDN;
 import com.blueseer.edi.apiUtils.mdn;
@@ -50,14 +52,17 @@ import com.blueseer.utl.OVData;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
+import java.security.cert.CertificateException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -99,7 +104,10 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.util.ByteArrayDataSource;
+import org.apache.commons.io.IOUtils;
 import org.bouncycastle.cms.CMSException;
+import org.bouncycastle.operator.OperatorCreationException;
+import org.bouncycastle.util.encoders.Base64;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -161,6 +169,9 @@ public class AS2Serv extends HttpServlet {
         String x = "";
         Path path = FileSystems.getDefault().getPath("temp" + "/" + "somefile");
         BufferedWriter output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path.toFile())));
+        
+        
+        
         String[] elementals = new String[]{"","","","","",""};
         mdn mymdn = null;
 
@@ -177,6 +188,8 @@ public class AS2Serv extends HttpServlet {
         if (content == null) {
             return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "null content");
         }
+        
+       
         
         
         // check headers and fill HashMap
@@ -247,10 +260,21 @@ public class AS2Serv extends HttpServlet {
         
         byte[] decryptedContent = APIMaint.decryptData(content, apiUtils.getPrivateKey(getSystemEncKey()) );
         
+        
+         // send content to file for testing
+        Path pathinput = FileSystems.getDefault().getPath("temp" + "/" + "input");
+        try (FileOutputStream stream = new FileOutputStream(pathinput.toFile())) {
+        stream.write(decryptedContent);
+        }
+        
+        // perform Digest on decrypted Data
         String mic = hashdigest(decryptedContent);
         if (mic == null) {
             mic = "";
         }
+        
+       
+        
         
         // if here...should have as2 sender / receiver / info data required to create legitimate MDN
         elementals[0] = sender;
@@ -272,6 +296,8 @@ public class AS2Serv extends HttpServlet {
         }
         
         
+        
+        
         if (! isEncrypted) {
             
         }
@@ -283,14 +309,37 @@ public class AS2Serv extends HttpServlet {
             if (contentType.contains("multipart/signed")) {
                 
             }
+            
+       
+            
+           
             System.out.println("here--> level 1 mp count: " + i + " contentType: " + contentType);
             MimeMultipart mp2 = new MimeMultipart(new ByteArrayDataSource(decryptedContent, contentType));
             if (mp2.getCount() > 1) {
                for (int j = 0; j < mp2.getCount(); j++) {
                     MimeBodyPart mbp = (MimeBodyPart) mp2.getBodyPart(j); 
+                    
                     // resume here  ...use MimeBodyPart instead of BodyPart...and spit out attributes for debug
+                    
+                    if (j == 1) {
+                      MimeBodyPart plain_mbp = (MimeBodyPart) mp2.getBodyPart(0);  
+                      ByteArrayOutputStream aos = new ByteArrayOutputStream();
+                      mp2.getBodyPart(0).writeTo(aos);
+                      aos.close();
+                      
+                        boolean validSignature = false;
+                        
+                       // validSignature = verifySignature(aos.toByteArray(), IOUtils.toByteArray((InputStream) mbp.getContent()));
+                        validSignature = verifySignature(plain_mbp.getInputStream().readAllBytes(), IOUtils.toByteArray((InputStream) mbp.getContent()));
+                            
+                        System.out.println("validSignature: " + validSignature);    
+                    }
+                    
                     String contentTypePayload = mbp.getContentType();
                     if (! contentTypePayload.contains("pkcs7-signature") && contentTypePayload.contains("file=")) {
+                    
+                            
+                        
                       String[] elements = contentTypePayload.split(";");
                       for (String g : elements) {
                           if (g.startsWith("file=")) {
