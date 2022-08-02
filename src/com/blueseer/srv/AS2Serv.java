@@ -273,23 +273,30 @@ public class AS2Serv extends HttpServlet {
         }
         
         // check for encryption if forced usage
-        if (APIMaint.isEncrypted(content) == null && info[9].equals("1")) {
+        boolean isEncrypted = APIMaint.isEncrypted(content);
+        
+        if (! isEncrypted && info[9].equals("1")) {
            return new mdn(HttpServletResponse.SC_OK, null, "Encryption is required for this partner " + sender + "/" + receiver);  
         }
          
-         // now decrypt
-        byte[] decryptedContent = APIMaint.decryptData(content, apiUtils.getPrivateKey(getSystemEncKey()) );
-        
-        System.out.println("Encrypted=" + APIMaint.isEncrypted(decryptedContent)); 
+        byte[] finalContent = null;
+         // now decrypt as necessary
+         if (isEncrypted) {
+          finalContent = APIMaint.decryptData(content, apiUtils.getPrivateKey(getSystemEncKey()) );
+         } else {
+          finalContent = content;
+         }
+         
+         
          // send content to file for testing
         if (isDebug) { 
             Path pathinput = FileSystems.getDefault().getPath("temp" + "/" + "afterdecrypt.txt");
             try (FileOutputStream stream = new FileOutputStream(pathinput.toFile())) {
-            stream.write(decryptedContent);
+            stream.write(finalContent);
             }
         }
         // perform Digest on decrypted Data
-        String mic = hashdigest(decryptedContent);
+        String mic = hashdigest(finalContent);
         if (mic == null) {
             mic = "";
         }
@@ -306,7 +313,7 @@ public class AS2Serv extends HttpServlet {
         elementals[5] = mic;
         
         // establish mimemultipart format of decrypted data
-        MimeMultipart mp  = new MimeMultipart(new ByteArrayDataSource(decryptedContent, request.getContentType()));
+        MimeMultipart mp  = new MimeMultipart(new ByteArrayDataSource(finalContent, request.getContentType()));
            
         
         if (mp.getContentType().isEmpty()) {
@@ -324,15 +331,7 @@ public class AS2Serv extends HttpServlet {
            BodyPart bp = mp.getBodyPart(0); 
            if (bp.getContentType().contains("multipart/signed")) {
               // if here...decryption must have occurred successfully...else bail out with failed MDN
-              isEncrypted = true;
            }
-        }
-        
-        
-        
-        
-        if (! isEncrypted) {
-            
         }
         
         
@@ -346,7 +345,7 @@ public class AS2Serv extends HttpServlet {
             if (isDebug)
             System.out.println("here--> level 1 mp count: " + i + " contentType: " + contentType);
             
-            MimeMultipart mp2 = new MimeMultipart(new ByteArrayDataSource(decryptedContent, contentType));
+            MimeMultipart mp2 = new MimeMultipart(new ByteArrayDataSource(finalContent, contentType));
             if (mp2.getCount() > 1) {
                for (int j = 0; j < mp2.getCount(); j++) {
                     MimeBodyPart mbp = (MimeBodyPart) mp2.getBodyPart(j); 
@@ -384,7 +383,7 @@ public class AS2Serv extends HttpServlet {
         
         elementals[3] = filename;
          
-         String datastring = new String(decryptedContent);   
+         String datastring = new String(finalContent);   
          output.write(datastring);
          
          if (isDebug)

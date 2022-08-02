@@ -1361,7 +1361,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
 }
     
     
-    public static String isEncrypted(byte[] encryptedData) {
+    public static boolean isEncrypted(byte[] encryptedData) {
             CMSEnvelopedData envelopedData;
             String x = null;
                     try {
@@ -1370,7 +1370,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                     } catch (CMSException ex) {
                         x = null;
                     }
-            return x;
+            return ! (x == null);
 }
     
     public static byte[] encryptData(byte[] data,
