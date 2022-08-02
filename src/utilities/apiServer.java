@@ -61,14 +61,23 @@ public class apiServer {
     
      public static void main(String[] args) throws Exception {
          
+        
+        
         bsmf.MainFrame.setConfig();
-         
+        
+        
+        
         Server server = new Server(8088);
 	ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.setContextPath("/bsapi"); 
         String webdir = "src/web/WEB-INF/";
         context.setResourceBase(webdir);
-       
+        
+        for (String s : args) {
+             if (s.equalsIgnoreCase("-debug"))
+                 context.setAttribute("debug", "true");
+        }
+        
         context.addServlet(AS2Serv.class, "/as2/*");
         context.addServlet(WorkOrdServ.class, "/WorkOrder/*");
         context.addServlet(WorkOrdServ.class, "/WorkOrderList/*");

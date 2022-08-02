@@ -118,6 +118,7 @@ import org.json.JSONObject;
  */
 public class AS2Serv extends HttpServlet {
     
+    
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
@@ -142,6 +143,8 @@ public class AS2Serv extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
        // BufferedReader reader = request.getReader();
+        
+        boolean isDebug = (this.getServletContext().getAttribute("debug") != null) ? true : false;
        
         if (request == null) {
             response.setContentType("text/plain");
@@ -150,21 +153,18 @@ public class AS2Serv extends HttpServlet {
         } else {
             response.setContentType("text/plain");
            // response.setStatus(HttpServletResponse.SC_OK);
-            mdn thismdn = processRequest(request);
+            mdn thismdn = processRequest(request, isDebug);
             response.setStatus(thismdn.status());
             response.getWriter().println(thismdn.message());
         }
     }
     
    
-    public static mdn processRequest(HttpServletRequest request) throws IOException {
+    public static mdn processRequest(HttpServletRequest request, boolean isDebug) throws IOException {
        
-        /*
-        
-        This is a work in progress....  
+       
         
         
-        */
         
         String x = "";
         Path path = FileSystems.getDefault().getPath("temp" + "/" + "somefile");
@@ -181,7 +181,7 @@ public class AS2Serv extends HttpServlet {
             
             byte[] content = null;
             try (InputStream is = request.getInputStream()) {
-                content = is.readAllBytes();
+                content = is.readAllBytes(); 
             }
             
         // if null content
@@ -203,6 +203,8 @@ public class AS2Serv extends HttpServlet {
                 while (headerNames.hasMoreElements()) {
                         String key = (String) headerNames.nextElement();
                         inHM.putIfAbsent(key, request.getHeader(key));
+                        
+                        if (isDebug)
                         System.out.println("here--> Header: " + key +  "=" + request.getHeader(key));
                 }
         } else {
@@ -240,6 +242,10 @@ public class AS2Serv extends HttpServlet {
             return new mdn(HttpServletResponse.SC_OK, null, "AS2 sender ID unrecognized"); 
         }
         
+        if (info == null) { 
+              return new mdn(HttpServletResponse.SC_OK, null, "unable to find sender / receiver keys: " + sender + "/" + receiver);    
+        }
+        
         if (inHM.containsKey("Subject")) {
             subject = inHM.get("Subject");
         }
@@ -250,23 +256,38 @@ public class AS2Serv extends HttpServlet {
         
         
         
+        
+        if (isDebug)
         System.out.println("here--> Request Content Type: " + request.getContentType());    
           
-        
+        if (isDebug)
         System.out.println("here--> encoding:" + request.getCharacterEncoding());
         
-        boolean isEncrypted = false;
         boolean isSigned = false;
         
-        byte[] decryptedContent = APIMaint.decryptData(content, apiUtils.getPrivateKey(getSystemEncKey()) );
-        
-        
-         // send content to file for testing
-        Path pathinput = FileSystems.getDefault().getPath("temp" + "/" + "input");
-        try (FileOutputStream stream = new FileOutputStream(pathinput.toFile())) {
-        stream.write(decryptedContent);
+         if (isDebug) { 
+            Path pathinput = FileSystems.getDefault().getPath("temp" + "/" + "beforedecrypt.txt");
+            try (FileOutputStream stream = new FileOutputStream(pathinput.toFile())) {
+            stream.write(content);
+            }
         }
         
+        // check for encryption if forced usage
+        if (APIMaint.isEncrypted(content) == null && info[9].equals("1")) {
+           return new mdn(HttpServletResponse.SC_OK, null, "Encryption is required for this partner " + sender + "/" + receiver);  
+        }
+         
+         // now decrypt
+        byte[] decryptedContent = APIMaint.decryptData(content, apiUtils.getPrivateKey(getSystemEncKey()) );
+        
+        System.out.println("Encrypted=" + APIMaint.isEncrypted(decryptedContent)); 
+         // send content to file for testing
+        if (isDebug) { 
+            Path pathinput = FileSystems.getDefault().getPath("temp" + "/" + "afterdecrypt.txt");
+            try (FileOutputStream stream = new FileOutputStream(pathinput.toFile())) {
+            stream.write(decryptedContent);
+            }
+        }
         // perform Digest on decrypted Data
         String mic = hashdigest(decryptedContent);
         if (mic == null) {
@@ -284,10 +305,22 @@ public class AS2Serv extends HttpServlet {
         elementals[4] = messageid;
         elementals[5] = mic;
         
+        // establish mimemultipart format of decrypted data
+        MimeMultipart mp  = new MimeMultipart(new ByteArrayDataSource(decryptedContent, request.getContentType()));
+           
         
-        MimeMultipart mp = new MimeMultipart(new ByteArrayDataSource(decryptedContent, request.getContentType()));
+        if (mp.getContentType().isEmpty()) {
+            if (isDebug) 
+            System.out.println("MimeMultipart is incomplete!!!");
+        } else {
+            System.out.println("MimeMultipart type=" + mp.getContentType());
+        }
         
-        if (mp.getCount() > 1) {
+        if (isDebug) 
+        System.out.println("MimeMultipart count=" + mp.getCount());
+        
+        
+        if (mp.getCount() > 0) {
            BodyPart bp = mp.getBodyPart(0); 
            if (bp.getContentType().contains("multipart/signed")) {
               // if here...decryption must have occurred successfully...else bail out with failed MDN
@@ -309,29 +342,24 @@ public class AS2Serv extends HttpServlet {
             if (contentType.contains("multipart/signed")) {
                 
             }
-            
-       
-            
            
+            if (isDebug)
             System.out.println("here--> level 1 mp count: " + i + " contentType: " + contentType);
+            
             MimeMultipart mp2 = new MimeMultipart(new ByteArrayDataSource(decryptedContent, contentType));
             if (mp2.getCount() > 1) {
                for (int j = 0; j < mp2.getCount(); j++) {
                     MimeBodyPart mbp = (MimeBodyPart) mp2.getBodyPart(j); 
                     
-                    // resume here  ...use MimeBodyPart instead of BodyPart...and spit out attributes for debug
-                    
                     if (j == 1) {
-                      MimeBodyPart plain_mbp = (MimeBodyPart) mp2.getBodyPart(0);  
                       ByteArrayOutputStream aos = new ByteArrayOutputStream();
                       mp2.getBodyPart(0).writeTo(aos);
                       aos.close();
                       
-                        boolean validSignature = false;
+                       boolean validSignature = false;
+                       validSignature = verifySignature(aos.toByteArray(), IOUtils.toByteArray((InputStream) mbp.getContent()));
                         
-                       // validSignature = verifySignature(aos.toByteArray(), IOUtils.toByteArray((InputStream) mbp.getContent()));
-                        validSignature = verifySignature(plain_mbp.getInputStream().readAllBytes(), IOUtils.toByteArray((InputStream) mbp.getContent()));
-                            
+                        if (isDebug)
                         System.out.println("validSignature: " + validSignature);    
                     }
                     
@@ -347,6 +375,8 @@ public class AS2Serv extends HttpServlet {
                           }
                       }
                     }
+                    
+                    if (isDebug)
                     System.out.println("here--> level 2 mp count: " + j + " contentType: " + contentTypePayload);
                } 
             }
@@ -356,27 +386,36 @@ public class AS2Serv extends HttpServlet {
          
          String datastring = new String(decryptedContent);   
          output.write(datastring);
+         
+         if (isDebug)
          System.out.println("here--> decryption");
+         
+         if (isDebug)
          System.out.println(datastring);
           
         } catch (FileNotFoundException ex) {
             bslog(ex);
+            return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, " File Not Found Error occurred");
         } catch (IOException ex) {
             bslog(ex);
+            return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, " IOException Error occurred");
         } catch (CMSException ex) {
             bslog(ex);
+            return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, " Decryption Error occurred");
         } catch (MessagingException ex) {
-            Logger.getLogger(AS2Serv.class.getName()).log(Level.SEVERE, null, ex);
+                bslog(ex);
+                return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, " Malformed MIME Message");
         } finally {
-           output.close();  
-        }
-        
-        
-        try {
+           output.close(); 
+           try {
             mymdn = createMDN("1000", elementals, null);
-        } catch (MessagingException ex) {
-            bslog(ex);
+            } catch (MessagingException ex) {
+                bslog(ex);
+            }
         }
+        
+        
+        
         
         return mymdn; 
     }

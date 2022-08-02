@@ -577,6 +577,27 @@ CREATE TABLE "edi_file" (
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
+CREATE TABLE "as2_mstr" (
+  "as2_id" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "as2_desc" varchar(130) NOT NULL COLLATE NOCASE DEFAULT '',
+  "as2_version" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
+  "as2_url" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
+  "as2_port" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
+  "as2_path" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
+  "as2_user" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
+  "as2_pass" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
+  "as2_key" varchar(120) NOT NULL COLLATE NOCASE DEFAULT '',
+  "as2_protocol" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "as2_class" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "as2_indir" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
+  "as2_outdir" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
+  "as2_encrypted" tinyint(1) NOT NULL COLLATE NOCASE DEFAULT '0',
+  "as2_signed" tinyint(1) NOT NULL COLLATE NOCASE DEFAULT '0',
+  "as2_cert" varchar(120) NOT NULL COLLATE NOCASE DEFAULT ''
+);
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "api_mstr" (
   "api_id" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "api_desc" varchar(130) NOT NULL COLLATE NOCASE DEFAULT '',

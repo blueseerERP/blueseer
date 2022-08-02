@@ -1349,20 +1349,28 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
           byte[] encryptedData, 
           PrivateKey decryptionKey) 
           throws CMSException {
-
             byte[] decryptedData = null;
             if (null != encryptedData && null != decryptionKey) {
                 CMSEnvelopedData envelopedData = new CMSEnvelopedData(encryptedData);
-                Collection<RecipientInformation> recipients
-                  = envelopedData.getRecipientInfos().getRecipients();
-                KeyTransRecipientInformation recipientInfo 
-                  = (KeyTransRecipientInformation) recipients.iterator().next();
-                JceKeyTransRecipient recipient
-                  = new JceKeyTransEnvelopedRecipient(decryptionKey);
-
+                Collection<RecipientInformation> recipients = envelopedData.getRecipientInfos().getRecipients();
+                KeyTransRecipientInformation recipientInfo = (KeyTransRecipientInformation) recipients.iterator().next();
+                JceKeyTransRecipient recipient = new JceKeyTransEnvelopedRecipient(decryptionKey);
                 return recipientInfo.getContent(recipient);
             }
             return decryptedData;
+}
+    
+    
+    public static String isEncrypted(byte[] encryptedData) {
+            CMSEnvelopedData envelopedData;
+            String x = null;
+                    try {
+                        envelopedData = new CMSEnvelopedData(encryptedData);
+                        x = envelopedData.getEncryptionAlgOID();
+                    } catch (CMSException ex) {
+                        x = null;
+                    }
+            return x;
 }
     
     public static byte[] encryptData(byte[] data,

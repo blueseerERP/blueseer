@@ -397,7 +397,7 @@ public class apiUtils {
     }
     
     
-    public static MimeMultipart bundleit(String z, String receiver, String messageid, String mic) {
+    public static MimeMultipart bundleit(String z, String receiver, String messageid, String mic, String status) {
         MimeBodyPart mbp = new MimeBodyPart();
         MimeBodyPart mbp2 = new MimeBodyPart();
         MimeMultipart mp = new MimeMultipart();
@@ -411,9 +411,9 @@ public class apiUtils {
                        Original-Recipient: rfc822; %s
                        Final-Recipient: rfc822; %s
                        Original-Message-ID: %s
-                       Disposition: automatic-action/MDN-sent-automatically; processed
+                       Disposition: automatic-action/MDN-sent-automatically; %s
                        Received-Content-MIC: %s, sha
-                       """.formatted(receiver, receiver, messageid, mic);
+                       """.formatted(receiver, receiver, messageid, status, mic);
             
             mbp2.setText(y);
             mbp2.setHeader("Content-Type", "message/disposition-notification");
@@ -446,7 +446,7 @@ public class apiUtils {
                 """.formatted(filename, receiver, now, subject, sender);
         try {
            // mbp.setText(z);
-           MimeMultipart mpInner = bundleit(z, receiver, messageid, mic);
+           MimeMultipart mpInner = bundleit(z, receiver, messageid, mic, "processed");
            ContentType ct = new ContentType(mpInner.getContentType());
            String boundary = ct.getParameter("boundary");
             mbp.setContent(mpInner);
@@ -459,6 +459,35 @@ public class apiUtils {
         
         return mp;
     }
+    
+    public static MimeMultipart code2000(String sender, String receiver, String subject, String filename, String messageid, String mic) {
+        MimeBodyPart mbp = new MimeBodyPart();
+        MimeMultipart mp = new MimeMultipart();
+        LocalDateTime localDateTime = LocalDateTime.now();
+        String now = localDateTime.format(DateTimeFormatter.ISO_DATE);
+        String z = """
+                The message <%s> sent to <%s>
+                on %s with Subject <%s> was not signed,
+                the payload was successfully decrypted and its integrity was verified.
+                In addition, the sender of the message, <terry> was authenticated
+                as the originator of the message.
+                """.formatted(filename, receiver, now, subject, sender);
+        try {
+           // mbp.setText(z);
+           MimeMultipart mpInner = bundleit(z, receiver, messageid, mic, "failed");
+           ContentType ct = new ContentType(mpInner.getContentType());
+           String boundary = ct.getParameter("boundary");
+            mbp.setContent(mpInner);
+            mbp.setHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
+            mp.addBodyPart(mbp);
+            
+        } catch (MessagingException ex) {
+            bslog(ex);
+        }
+        
+        return mp;
+    }
+    
     
     public static mdn createMDN(String code, String[] e, ArrayList<String> headers) throws IOException, MessagingException {
         mdn x = null;
