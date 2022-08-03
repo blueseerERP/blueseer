@@ -61,6 +61,7 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.nio.file.FileSystems;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.cert.CertificateException;
 import java.sql.Connection;
@@ -162,16 +163,7 @@ public class AS2Serv extends HttpServlet {
    
     public static mdn processRequest(HttpServletRequest request, boolean isDebug) throws IOException {
        
-       
-        
-        
-        
-        String x = "";
-        Path path = FileSystems.getDefault().getPath("temp" + "/" + "somefile");
-        BufferedWriter output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path.toFile())));
-        
-        
-        
+        BufferedWriter output = null;
         String[] elementals = new String[]{"","","","","",""};
         mdn mymdn = null;
 
@@ -220,30 +212,34 @@ public class AS2Serv extends HttpServlet {
         String messageid = "";
         String filename = "";
         String[] info = null;
-        
+        boolean validSignature = false;
+        byte[] FileWHeadersBytes = null;
+        byte[] FileBytes = null;
+        byte[] Signature = null;
+        InputStream is = null;
         
         if (inHM.containsKey("AS2-To")) {
             if (inHM.get("AS2-To").equals(sysas2user)) {
               receiver = sysas2user;  
             } else {
-              return new mdn(HttpServletResponse.SC_OK, null, "AS2 receiver ID unknown");  
+              return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "AS2 receiver ID unknown");  
             }
         } else {
-            return new mdn(HttpServletResponse.SC_OK, null, "AS2 receiver ID unrecognized"); 
+            return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "AS2 receiver ID unrecognized"); 
         }
         
         if (inHM.containsKey("AS2-From")) {
             sender = inHM.get("AS2-From");
             info = getAS2InfoByIDs(sender , receiver);
             if (info == null) {
-              return new mdn(HttpServletResponse.SC_OK, null, "AS2 sender ID unknown with keys: " + sender + "/" + receiver);    
+              return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "AS2 sender ID unknown with keys: " + sender + "/" + receiver);    
             } 
         } else {
-            return new mdn(HttpServletResponse.SC_OK, null, "AS2 sender ID unrecognized"); 
+            return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "AS2 sender ID unrecognized"); 
         }
         
         if (info == null) { 
-              return new mdn(HttpServletResponse.SC_OK, null, "unable to find sender / receiver keys: " + sender + "/" + receiver);    
+              return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "unable to find sender / receiver keys: " + sender + "/" + receiver);    
         }
         
         if (inHM.containsKey("Subject")) {
@@ -276,7 +272,7 @@ public class AS2Serv extends HttpServlet {
         boolean isEncrypted = APIMaint.isEncrypted(content);
         
         if (! isEncrypted && info[9].equals("1")) {
-           return new mdn(HttpServletResponse.SC_OK, null, "Encryption is required for this partner " + sender + "/" + receiver);  
+           return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "Encryption is required for this partner " + sender + "/" + receiver);  
         }
          
         byte[] finalContent = null;
@@ -317,57 +313,46 @@ public class AS2Serv extends HttpServlet {
            
         
         if (mp.getContentType().isEmpty()) {
-            if (isDebug) 
-            System.out.println("MimeMultipart is incomplete!!!");
-        } else {
-            System.out.println("MimeMultipart type=" + mp.getContentType());
+            return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "MimeMultipart is incomplete " + sender + "/" + receiver);  
         }
         
         if (isDebug) 
-        System.out.println("MimeMultipart count=" + mp.getCount());
+        System.out.println("MimeMultipart count=" + mp.getCount() + "/" + mp.getContentType());
         
-        
-        if (mp.getCount() > 0) {
-           BodyPart bp = mp.getBodyPart(0); 
-           if (bp.getContentType().contains("multipart/signed")) {
-              // if here...decryption must have occurred successfully...else bail out with failed MDN
-           }
-        }
-        
-        
+        // if signed...should have a parent mp with two sub-mps (one the file and the other the sig)
         for (int i = 0; i < mp.getCount(); i++) {
             BodyPart bodyPart = mp.getBodyPart(i);
             String contentType = bodyPart.getContentType();
-            if (contentType.contains("multipart/signed")) {
-                
-            }
-           
+                      
             if (isDebug)
             System.out.println("here--> level 1 mp count: " + i + " contentType: " + contentType);
             
-            MimeMultipart mp2 = new MimeMultipart(new ByteArrayDataSource(finalContent, contentType));
-            if (mp2.getCount() > 1) {
-               for (int j = 0; j < mp2.getCount(); j++) {
-                    MimeBodyPart mbp = (MimeBodyPart) mp2.getBodyPart(j); 
+            // if signed...mpsub should have two parts (one the file and the other the sig)
+            MimeMultipart mpsub = new MimeMultipart(new ByteArrayDataSource(finalContent, contentType));
+            
+            if (mpsub.getCount() < 2 && info[10].equals("1") ) { // info[10] sig required
+              return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "Signature is required for this partner " + sender + "/" + receiver);    
+            }
+            
+               
+               for (int j = 0; j < mpsub.getCount(); j++) {
+                    MimeBodyPart mbp = (MimeBodyPart) mpsub.getBodyPart(j); 
                     
-                    if (j == 1) {
+                    if (mbp.getContentType().matches("application/")) { // must be file
+                      // writing mpbsub part 0 (file) out to byte_stream is necessary to verify sig
+                      // because the headers in mpbsub part 0 are used during the creation of the sig
+                      //  .getContent apparently drops the headers so the entire byte stream must be 'verfied'
                       ByteArrayOutputStream aos = new ByteArrayOutputStream();
-                      mp2.getBodyPart(0).writeTo(aos);
-                      aos.close();
+                      mpsub.getBodyPart(0).writeTo(aos);
+                      aos.close(); 
+                      FileWHeadersBytes = aos.toByteArray();
                       
-                       boolean validSignature = false;
-                       validSignature = verifySignature(aos.toByteArray(), IOUtils.toByteArray((InputStream) mbp.getContent()));
-                        
-                        if (isDebug)
-                        System.out.println("validSignature: " + validSignature);    
-                    }
-                    
-                    String contentTypePayload = mbp.getContentType();
-                    if (! contentTypePayload.contains("pkcs7-signature") && contentTypePayload.contains("file=")) {
-                    
-                            
-                        
-                      String[] elements = contentTypePayload.split(";");
+                      // now get file without headers into byte array
+                      is = mbp.getInputStream();
+                      FileBytes = is.readAllBytes();
+                      is.close();
+                      
+                      String[] elements = mbp.getContentType().split(";");
                       for (String g : elements) {
                           if (g.startsWith("file=")) {
                               filename = g.substring(5);
@@ -375,22 +360,49 @@ public class AS2Serv extends HttpServlet {
                       }
                     }
                     
+                    if (mbp.getContentType().matches("name=smime.p7s")) { // must be sig
+                        Signature = IOUtils.toByteArray((InputStream) mbp.getContent());
+                    }
+                    
+                  
                     if (isDebug)
-                    System.out.println("here--> level 2 mp count: " + j + " contentType: " + contentTypePayload);
-               } 
-            }
-        }  
+                    System.out.println("here--> level 2 mp count: " + j + " contentType: " + mbp.getContentType());
+               
+               } // for each mpsub (should be two if signed) 
+               
+           if (FileWHeadersBytes == null || FileBytes == null) {
+              return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "unable to retrieve contents of File " + sender + "/" + receiver); 
+           }
+
+           if (Signature == null) {
+               return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "Signature content is null" + sender + "/" + receiver);
+           } else {
+             validSignature = verifySignature(FileWHeadersBytes, Signature);  
+           }
+
+
+           if (isDebug)
+            System.out.println("validSignature: " + validSignature);    
+
+           if (! validSignature) {
+              return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "Signature could not be validated " + sender + "/" + receiver); 
+           } 
+              
+        }  // for parent mp ...should be just one
         
+        // now save file
         elementals[3] = filename;
-         
-         String datastring = new String(finalContent);   
-         output.write(datastring);
-         
-         if (isDebug)
-         System.out.println("here--> decryption");
-         
-         if (isDebug)
-         System.out.println(datastring);
+        if (info[14].isBlank()) {
+            info[14] = "edi/in";
+        }
+        Path path = FileSystems.getDefault().getPath(info[14] + "/" + filename);
+        if (Files.exists(path)) {
+            filename = filename + "_" + Long.toHexString(System.currentTimeMillis());
+            path = FileSystems.getDefault().getPath(info[14] + "/" + filename);
+        }
+        output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path.toFile())));
+        String datastring = new String(FileBytes);   
+        output.write(datastring);
           
         } catch (FileNotFoundException ex) {
             bslog(ex);
@@ -405,7 +417,9 @@ public class AS2Serv extends HttpServlet {
                 bslog(ex);
                 return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, " Malformed MIME Message");
         } finally {
-           output.close(); 
+            if (output != null) {
+             output.close(); 
+            }
            try {
             mymdn = createMDN("1000", elementals, null);
             } catch (MessagingException ex) {
