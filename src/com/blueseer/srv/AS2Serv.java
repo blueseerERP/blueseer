@@ -338,7 +338,7 @@ public class AS2Serv extends HttpServlet {
                for (int j = 0; j < mpsub.getCount(); j++) {
                     MimeBodyPart mbp = (MimeBodyPart) mpsub.getBodyPart(j); 
                     
-                    if (mbp.getContentType().matches("application/")) { // must be file
+                    if (! mbp.getFileName().equals("smime.p7s")) { // must be non sig file
                       // writing mpbsub part 0 (file) out to byte_stream is necessary to verify sig
                       // because the headers in mpbsub part 0 are used during the creation of the sig
                       //  .getContent apparently drops the headers so the entire byte stream must be 'verfied'
@@ -352,21 +352,24 @@ public class AS2Serv extends HttpServlet {
                       FileBytes = is.readAllBytes();
                       is.close();
                       
+                      filename = mbp.getFileName();
+                      /*
                       String[] elements = mbp.getContentType().split(";");
                       for (String g : elements) {
                           if (g.startsWith("file=")) {
                               filename = g.substring(5);
                           }
                       }
+                      */
                     }
                     
-                    if (mbp.getContentType().matches("name=smime.p7s")) { // must be sig
+                    if (mbp.getFileName().equals("smime.p7s")) { // must be sig
                         Signature = IOUtils.toByteArray((InputStream) mbp.getContent());
                     }
                     
                   
                     if (isDebug)
-                    System.out.println("here--> level 2 mp count: " + j + " contentType: " + mbp.getContentType());
+                    System.out.println("here--> level 2 mp count: " + j + " contentType: " + mbp.getContentType() + "/" + mbp.getFileName());
                
                } // for each mpsub (should be two if signed) 
                

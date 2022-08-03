@@ -211,7 +211,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
     public APIMaint() {
         initComponents();
         setLanguageTags(this);
-        bsmf.MainFrame.show("this is a work-in-progress...not for production");
+       // bsmf.MainFrame.show("this is a work-in-progress...not for production");
     }
 
     // interface functions implemented

@@ -203,7 +203,7 @@ public class AS2Maint extends javax.swing.JPanel implements IBlueSeerT {
     public AS2Maint() {
         initComponents();
         setLanguageTags(this);
-        bsmf.MainFrame.show("this is a work-in-progress...not for production");
+        
     }
 
     // interface functions implemented
