@@ -134,7 +134,7 @@
                           </Group>
                           <Component id="tbindir" min="-2" pref="223" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="172" max="32767" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>

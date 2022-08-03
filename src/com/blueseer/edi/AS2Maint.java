@@ -579,6 +579,8 @@ public class AS2Maint extends javax.swing.JPanel implements IBlueSeerT {
         tbapikey.setText(x.as2_key());
         ddprotocol.setSelectedItem(x.as2_protocol());
         ddclass.setSelectedItem(x.as2_class());
+        tbindir.setText(x.as2_indir());
+        tboutdir.setText(x.as2_outdir());
         tbcert.setText(x.as2_cert());
         cboutputsign.setSelected(BlueSeerUtils.ConvertStringToBool(String.valueOf(x.as2_signed())));
         cboutputencryption.setSelected(BlueSeerUtils.ConvertStringToBool(String.valueOf(x.as2_encrypted())));

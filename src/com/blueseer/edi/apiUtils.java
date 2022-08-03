@@ -222,7 +222,6 @@ public class apiUtils {
        
        
         // gather pertinent info for this AS2 ID / Partner
-        // api_id, api_url, api_port, api_path, api_user, edic_as2id, edic_as2url, edic_signkey, edic_enckey,  api_encrypted, api_signed, api_cert, api_protocol, apid_source, apid_destination
         String[] tp = ediData.getAS2Info(as2id);
         String url = tp[12] + "://" + tp[1] + ":" + tp[2] + "/" + tp[3];
         String as2To = tp[4];
@@ -231,12 +230,13 @@ public class apiUtils {
         String sourceDir = tp[13];
         String signkeyid = tp[7];
        
+    //    System.out.println("here->" + as2To + "/" +  as2From + "/" + internalURL + "/" + sourceDir + "/" + signkeyid);
         
         X509Certificate encryptcertificate = getCert(tp[11]);
         String[] k = getKeyStoreByUser(signkeyid); // store, storeuser, storepass, user, pass
         k[2] = bsmf.MainFrame.PassWord("1", k[2].toCharArray());
         k[4] = bsmf.MainFrame.PassWord("1", k[4].toCharArray());
-       // System.out.println("here->" + k[0] + "/" +  k[1] + "/" + k[2] + "/" + k[3] + "/" + k[4]);
+    //    System.out.println("here->" + k[0] + "/" +  k[1] + "/" + k[2] + "/" + k[3] + "/" + k[4]);
         
        
         char[] keyPassword = k[4].toCharArray();  

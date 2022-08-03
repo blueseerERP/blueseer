@@ -1210,7 +1210,7 @@ public class admData {
             psi.setString(8, x.pks_storepass);
             psi.setString(9, x.pks_expire);
             psi.setString(10, x.pks_create);
-            psi.setString(10, x.pks_parent);
+            psi.setString(11, x.pks_parent);
             int rows = psi.executeUpdate();
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
             } else {

@@ -1317,12 +1317,11 @@ public class ediData {
     
     public static String[] getAS2InfoByIDs(String sender, String receiver) {
         String[] info = null;
-        String sql = "select api_id, api_url, api_port, api_path, api_user, edic_as2id, edic_as2url, " +
-                " api_encrypted, api_signed, api_cert, api_protocol, apid_source, apid_destination, " +
+        String sql = "select as2_id, as2_url, as2_port, as2_path, as2_user, edic_as2id, edic_as2url, " +
+                " as2_encrypted, as2_signed, as2_cert, as2_protocol, as2_indir, as2_outdir, " +
                 " edic_signkey, edic_enckey " +
-                " from api_mstr " +
-                " inner join api_det on apid_id = api_id " +
-                " inner join edi_ctrl where api_class = 'AS2' and api_user = ? and edic_as2id = ?;";
+                " from as2_mstr " +
+                " inner join edi_ctrl where as2_user = ? and edic_as2id = ?;";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, sender);
@@ -1330,21 +1329,21 @@ public class ediData {
              try (ResultSet res = ps.executeQuery();) {
                while (res.next()) {
                info = new String[15];     
-               info[0] = res.getString("api_id");
-               info[1] = res.getString("api_url");
-               info[2] = res.getString("api_port");
-               info[3] = res.getString("api_path");
-               info[4] = res.getString("api_user");
+               info[0] = res.getString("as2_id");
+               info[1] = res.getString("as2_url");
+               info[2] = res.getString("as2_port");
+               info[3] = res.getString("as2_path");
+               info[4] = res.getString("as2_user");
                info[5] = res.getString("edic_as2id");
                info[6] = res.getString("edic_as2url");
                info[7] = res.getString("edic_signkey");
                info[8] = res.getString("edic_enckey");
-               info[9] = res.getString("api_encrypted");
-               info[10] = res.getString("api_signed");
-               info[11] = res.getString("api_cert");
-               info[12] = res.getString("api_protocol");
-               info[13] = res.getString("apid_source");
-               info[14] = res.getString("apid_destination");
+               info[9] = res.getString("as2_encrypted");
+               info[10] = res.getString("as2_signed");
+               info[11] = res.getString("as2_cert");
+               info[12] = res.getString("as2_protocol");
+               info[13] = res.getString("as2_indir");
+               info[14] = res.getString("as2_outdir");
                }
             }
         }
