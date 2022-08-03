@@ -215,6 +215,7 @@ EDIExport,,com.blueseer.edi.EDIExport,JMenuItem,edit
 MapMaint,,com.blueseer.edi.MapMaint,JMenuItem,mapm
 StructMaint,,com.blueseer.edi.StructMaint,JMenuItem,mpsm
 MapTester,,com.blueseer.edi.MapTester,JMenuItem,mapt
+AS2Maint,,com.blueseer.edi.AS2Maint,JMenuItem,as2m
 APIMaint,,com.blueseer.edi.APIMaint,JMenuItem,apim
 APIBrowse,,com.blueseer.edi.APIBrowse,JMenuItem,apib
 APILog,,com.blueseer.edi.APILog,JMenuItem,apil

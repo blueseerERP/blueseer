@@ -456,6 +456,50 @@ public class ediData {
         return m;
     }
 
+    public static String[] addAS2Maint(as2_mstr x) {
+        String[] m = new String[2];
+        String sqlSelect = "select * from as2_mstr where as2_id = ?";
+        String sqlInsert = "insert into as2_mstr (as2_id, as2_desc, as2_version," +
+        " as2_url, as2_port, as2_path, as2_user, " +
+        " as2_pass, as2_key, as2_protocol, as2_class, as2_indir, as2_outdir, as2_encrypted, as2_signed, as2_cert ) " +
+                " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+             PreparedStatement ps = con.prepareStatement(sqlSelect);) {
+             ps.setString(1, x.as2_id);
+          try (ResultSet res = ps.executeQuery();
+               PreparedStatement psi = con.prepareStatement(sqlInsert);) {  
+            if (! res.isBeforeFirst()) {
+            psi.setString(1, x.as2_id);
+            psi.setString(2, x.as2_desc);
+            psi.setString(3, x.as2_version);
+            psi.setString(4, x.as2_url);
+            psi.setString(5, x.as2_port);
+            psi.setString(6, x.as2_path);
+            psi.setString(7, x.as2_user);
+            psi.setString(8, x.as2_pass);
+            psi.setString(9, x.as2_key);
+            psi.setString(10, x.as2_protocol);
+            psi.setString(11, x.as2_class);
+            psi.setString(12, x.as2_indir);
+            psi.setString(13, x.as2_outdir);
+            ps.setString(14, x.as2_encrypted);
+            ps.setString(15, x.as2_signed);
+            ps.setString(16, x.as2_cert);
+            
+            int rows = psi.executeUpdate();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+            } else {
+            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists};    
+            }
+          }
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+
+    
     private static int _addAPIMstr(api_mstr x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
         int rows = 0;
         String sqlSelect = "select * from api_mstr where api_id = ?";
@@ -487,6 +531,41 @@ public class ediData {
             } 
             return rows;
     }
+    
+    private static int _addAS2Mstr(as2_mstr x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+        int rows = 0;
+        String sqlSelect = "select * from as2_mstr where as2_id = ?";
+        String sqlInsert = "insert into as2_mstr (as2_id, as2_desc, as2_version," +
+        " as2_url, as2_port, as2_path, as2_user, " +
+        " as2_pass, as2_key, as2_protocol, as2_class, as2_indir, as2_outdir, as2_encrypted, as2_signed, as2_cert ) " +
+                " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
+       
+          ps = con.prepareStatement(sqlSelect); 
+          ps.setString(1, x.as2_id);
+          res = ps.executeQuery();
+          ps = con.prepareStatement(sqlInsert);
+            if (! res.isBeforeFirst()) {
+            ps.setString(1, x.as2_id);
+            ps.setString(2, x.as2_desc);
+            ps.setString(3, x.as2_version);
+            ps.setString(4, x.as2_url);
+            ps.setString(5, x.as2_port);
+            ps.setString(6, x.as2_path);
+            ps.setString(7, x.as2_user);
+            ps.setString(8, x.as2_pass);
+            ps.setString(9, x.as2_key);
+            ps.setString(10, x.as2_protocol);
+            ps.setString(11, x.as2_class);
+            ps.setString(12, x.as2_indir);
+            ps.setString(13, x.as2_outdir);
+            ps.setString(14, x.as2_encrypted);
+            ps.setString(15, x.as2_signed);
+            ps.setString(16, x.as2_cert);
+            rows = ps.executeUpdate();
+            } 
+            return rows;
+    }
+    
     
     private static int _addAPIDet(api_det x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
         int rows = 0;
@@ -567,6 +646,52 @@ public class ediData {
     return m;
     }
         
+    public static String[] addAS2Transaction(as2_mstr as2) {
+        String[] m = new String[2];
+        Connection bscon = null;
+        PreparedStatement ps = null;
+        ResultSet res = null;
+        try { 
+            bscon = DriverManager.getConnection(url + db, user, pass);
+            bscon.setAutoCommit(false);
+            _addAS2Mstr(as2, bscon, ps, res); 
+            bscon.commit();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             try {
+                 bscon.rollback();
+                 m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordError};
+             } catch (SQLException rb) {
+                 MainFrame.bslog(rb);
+             }
+        } finally {
+            if (res != null) {
+                try {
+                    res.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (bscon != null) {
+                try {
+                    bscon.setAutoCommit(true);
+                    bscon.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
+    }
+    
     
     public static String[] updateAPIMaint(api_mstr x) {
         String[] m = new String[2];
@@ -599,6 +724,41 @@ public class ediData {
         return m;
     }
     
+    public static String[] updateAS2Maint(as2_mstr x) {
+        String[] m = new String[2];
+        String sql = "update as2_mstr set as2_desc = ?, as2_version = ?, as2_url = ?, as2_port = ?, " +
+                " as2_path = ?, as2_user = ?, as2_pass = ?, as2_key = ?, as2_protocol = ?, as2_class = ?,  " +
+                " as2_indir = ?, as2_outdir = ?, " +
+                " as2_encrypted = ?, as2_signed = ?, as2_cert = ? " +
+                "  where as2_id = ? ";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+	PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, x.as2_desc);
+        ps.setString(2, x.as2_version);
+        ps.setString(3, x.as2_url);
+        ps.setString(4, x.as2_port);
+        ps.setString(5, x.as2_path);
+        ps.setString(6, x.as2_user);
+        ps.setString(7, x.as2_pass);
+        ps.setString(8, x.as2_key);
+        ps.setString(9, x.as2_protocol);
+        ps.setString(10, x.as2_class);
+        ps.setString(11, x.as2_indir);
+        ps.setString(12, x.as2_outdir);
+        ps.setString(13, x.as2_encrypted);
+        ps.setString(14, x.as2_signed);
+        ps.setString(15, x.as2_cert);
+        ps.setString(16, x.as2_id);
+        int rows = ps.executeUpdate();
+        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+    
+    
     private static int _updateAPIMstr(api_mstr x, Connection con, PreparedStatement ps) throws SQLException {
         int rows = 0;
         String sql = "update api_mstr set api_desc = ?, api_version = ?, api_url = ?, api_port = ?, " +
@@ -623,6 +783,35 @@ public class ediData {
             rows = ps.executeUpdate();
         return rows;
     }
+    
+    private static int _updateAS2Mstr(as2_mstr x, Connection con, PreparedStatement ps) throws SQLException {
+        int rows = 0;
+        String sql = "update as2_mstr set as2_desc = ?, as2_version = ?, as2_url = ?, as2_port = ?, " +
+                " as2_path = ?, as2_user = ?, as2_pass = ?, as2_key = ?, as2_protocol = ?, as2_class = ?,  " +
+                " as2_indir = ?, as2_outdir = ?, " +
+                " as2_encrypted = ?, as2_signed = ?, as2_cert = ? " +
+                "  where as2_id = ? ";
+	ps = con.prepareStatement(sql) ;
+        ps.setString(1, x.as2_desc);
+        ps.setString(2, x.as2_version);
+        ps.setString(3, x.as2_url);
+        ps.setString(4, x.as2_port);
+        ps.setString(5, x.as2_path);
+        ps.setString(6, x.as2_user);
+        ps.setString(7, x.as2_pass);
+        ps.setString(8, x.as2_key);
+        ps.setString(9, x.as2_protocol);
+        ps.setString(10, x.as2_class);
+        ps.setString(11, x.as2_indir);
+        ps.setString(12, x.as2_outdir);
+        ps.setString(13, x.as2_encrypted);
+        ps.setString(14, x.as2_signed);
+         ps.setString(15, x.as2_cert);
+        ps.setString(16, x.as2_id);
+            rows = ps.executeUpdate();
+        return rows;
+    }
+    
     
     private static int _updateAPIdet(api_det x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
         int rows = 0;
@@ -727,6 +916,53 @@ public class ediData {
     return m;
     }
     
+    public static String[] updateAS2Transaction(String x, as2_mstr as2) {
+        String[] m = new String[2];
+        Connection bscon = null;
+        PreparedStatement ps = null;
+        ResultSet res = null;
+        try { 
+            bscon = DriverManager.getConnection(url + db, user, pass);
+            bscon.setAutoCommit(false);
+             _updateAS2Mstr(as2, bscon, ps);  // update so_mstr
+            bscon.commit();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             try {
+                 bscon.rollback();
+                 m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordError};
+             } catch (SQLException rb) {
+                 MainFrame.bslog(rb);
+             }
+        } finally {
+            if (res != null) {
+                try {
+                    res.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (bscon != null) {
+                try {
+                    bscon.setAutoCommit(true);
+                    bscon.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
+    }
+    
+    
     
     public static String[] deleteAPIMstr(api_mstr x) { 
        String[] m = new String[2];
@@ -743,6 +979,22 @@ public class ediData {
         return m;
     }
       
+    public static String[] deleteAS2Mstr(as2_mstr x) { 
+       String[] m = new String[2];
+        String sql = "delete from as2_mstr where as2_id = ?; ";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+	PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, x.as2_id);
+        int rows = ps.executeUpdate();
+        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+    
+    
     private static void _deleteAPILines(String x, String line, Connection con) throws SQLException { 
         PreparedStatement ps = null; 
         String sql = "delete from api_det where apid_id = ? and apid_method = ?; ";
@@ -792,6 +1044,49 @@ public class ediData {
         }
         return r;
     }
+    
+    public static as2_mstr getAS2Mstr(String[] x) {
+        as2_mstr r = null;
+        String[] m = new String[2];
+        String sql = "select * from as2_mstr where as2_id = ? ;";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, x[0]);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new as2_mstr(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new as2_mstr(m, res.getString("as2_id"), 
+                            res.getString("as2_desc"),
+                            res.getString("as2_version"),
+                            res.getString("as2_url"),
+                            res.getString("as2_port"),
+                            res.getString("as2_path"),
+                            res.getString("as2_user"),
+                            res.getString("as2_pass"),
+                            res.getString("as2_key"),
+                            res.getString("as2_protocol"),
+                            res.getString("as2_class"),
+                            res.getString("as2_indir"),
+                            res.getString("as2_outdir"),
+                            res.getString("as2_encrypted"),
+                            res.getString("as2_signed"),
+                            res.getString("as2_cert")
+                        );
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new as2_mstr(m);
+        }
+        return r;
+    }
+    
     
     public static ArrayList<api_det> getAPIDet(String code) {
         api_det r = null;
@@ -984,35 +1279,33 @@ public class ediData {
         return x;
     }
     
-    public static String[] getAS2Info(String id, String method) {
+    public static String[] getAS2Info(String id) {
         String[] info = new String[]{"","","","","","","","","","","", "", "", "", ""};
-        String sql = "select api_id, api_url, api_port, api_path, api_user, edic_as2id, edic_as2url, " +
-                " api_encrypted, api_signed, api_cert, api_protocol, apid_source, apid_destination, " +
+        String sql = "select as2_id, as2_url, as2_port, as2_path, as2_user, edic_as2id, edic_as2url, " +
+                " as2_encrypted, as2_signed, as2_cert, as2_protocol, as2_indir, as2_outdir, " +
                 " edic_signkey, edic_enckey " +
-                " from api_mstr " +
-                " inner join api_det on apid_id = api_id " +
-                " inner join edi_ctrl where api_class = 'AS2' and api_id = ? and apid_method = ?;";
+                " from as2_mstr " +
+                " inner join edi_ctrl where as2_id = ?;";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, id);
-        ps.setString(2, method);
              try (ResultSet res = ps.executeQuery();) {
                while (res.next()) {
-               info[0] = res.getString("api_id");
-               info[1] = res.getString("api_url");
-               info[2] = res.getString("api_port");
-               info[3] = res.getString("api_path");
-               info[4] = res.getString("api_user");
+               info[0] = res.getString("as2_id");
+               info[1] = res.getString("as2_url");
+               info[2] = res.getString("as2_port");
+               info[3] = res.getString("as2_path");
+               info[4] = res.getString("as2_user");
                info[5] = res.getString("edic_as2id");
                info[6] = res.getString("edic_as2url");
                info[7] = res.getString("edic_signkey");
                info[8] = res.getString("edic_enckey");
-               info[9] = res.getString("api_encrypted");
-               info[10] = res.getString("api_signed");
-               info[11] = res.getString("api_cert");
-               info[12] = res.getString("api_protocol");
-               info[13] = res.getString("apid_source");
-               info[14] = res.getString("apid_destination");
+               info[9] = res.getString("as2_encrypted");
+               info[10] = res.getString("as2_signed");
+               info[11] = res.getString("as2_cert");
+               info[12] = res.getString("as2_protocol");
+               info[13] = res.getString("as2_indir");
+               info[14] = res.getString("as2_outdir");
                }
             }
         }
@@ -1175,6 +1468,16 @@ public class ediData {
     public record map_struct(String[] m, String mps_id, String mps_desc, String mps_version) {
         public map_struct(String[] m) {
             this(m, "", "", "");
+        }
+    }
+    
+    public record as2_mstr(String[] m, String as2_id, String as2_desc, String as2_version,
+        String as2_url, String as2_port, String as2_path, String as2_user ,
+        String as2_pass, String as2_key, String as2_protocol, String as2_class,
+        String as2_indir, String as2_outdir, String as2_encrypted, String as2_signed, String as2_cert) {
+        public as2_mstr(String[] m) {
+            this(m, "", "", "", "", "", "", "", "", "", "", 
+                    "", "", "", "", "", "");
         }
     }
     

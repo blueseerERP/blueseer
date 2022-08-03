@@ -216,6 +216,7 @@ MapMaint,,com.blueseer.edi.MapMaint,JMenuItem,mapm
 StructMaint,,com.blueseer.edi.StructMaint,JMenuItem,mpsm
 MapTester,,com.blueseer.edi.MapTester,JMenuItem,mapt
 APIMaint,,com.blueseer.edi.APIMaint,JMenuItem,apim
+AS2Maint,,com.blueseer.edi.AS2Maint,JMenuItem,as2m
 APIBrowse,,com.blueseer.edi.APIBrowse,JMenuItem,apib
 APILog,,com.blueseer.edi.APILog,JMenuItem,apil
 ARAgingView,,com.blueseer.far.ARAgingView,JMenuItem,arav

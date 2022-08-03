@@ -302,6 +302,7 @@ admin,MapMaint
 admin,StructMaint
 admin,MapTester
 admin,APIMaint
+admin,AS2Maint
 admin,PKSMaint
 admin,APIBrowse
 admin,APILog

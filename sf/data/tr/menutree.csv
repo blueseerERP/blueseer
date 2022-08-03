@@ -46,6 +46,7 @@ EDIMenu,APIMenu,14,JMenu,API Menu,,,,1,1
 APIMenu,APIMaint,1,JMenuItem,API Maintenance,,,,1,1
 APIMenu,APIBrowse,2,JMenuItem,API Browse,,,,1,1
 APIMenu,APILog,3,JMenuItem,API Log,,,,1,1
+APIMenu,AS2Maint,4,JMenuItem,AS2 Maintenance,,,,1,1
 LabelMenu,LabelsContGeneric,1,JMenuItem,Konteyner Etiketleri,,,,1,1
 LabelMenu,AddrLabel,2,JMenuItem,Adres Etiketleri,,,,1,1
 LabelMenu,LabelBrowse,3,JMenuItem,Etikete Gözat,,1,,1,1

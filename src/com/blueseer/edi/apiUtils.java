@@ -211,7 +211,7 @@ public class apiUtils {
         return null;
     }
     
-    public static String postAS2( String as2id, String as2method) throws MessagingException, MalformedURLException, URISyntaxException, IOException, CertificateException, NoSuchProviderException, KeyStoreException, NoSuchAlgorithmException, UnrecoverableKeyException, CertificateEncodingException, CMSException, SMIMEException, Exception  {
+    public static String postAS2( String as2id) throws MessagingException, MalformedURLException, URISyntaxException, IOException, CertificateException, NoSuchProviderException, KeyStoreException, NoSuchAlgorithmException, UnrecoverableKeyException, CertificateEncodingException, CMSException, SMIMEException, Exception  {
         
         StringBuilder r = new StringBuilder();
         
@@ -223,7 +223,7 @@ public class apiUtils {
        
         // gather pertinent info for this AS2 ID / Partner
         // api_id, api_url, api_port, api_path, api_user, edic_as2id, edic_as2url, edic_signkey, edic_enckey,  api_encrypted, api_signed, api_cert, api_protocol, apid_source, apid_destination
-        String[] tp = ediData.getAS2Info(as2id, as2method);
+        String[] tp = ediData.getAS2Info(as2id);
         String url = tp[12] + "://" + tp[1] + ":" + tp[2] + "/" + tp[3];
         String as2To = tp[4];
         String as2From = tp[5];
