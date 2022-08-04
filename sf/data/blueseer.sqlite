@@ -633,6 +633,19 @@ CREATE TABLE "api_det" (
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
+CREATE TABLE "as2_log" (
+  "as2l_logid" INTEGER PRIMARY KEY,
+  "as2l_parent" int(12) NOT NULL COLLATE NOCASE DEFAULT '0',
+  "as2l_id" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "as2l_dir" varchar(3) NOT NULL COLLATE NOCASE DEFAULT '',
+  "as2l_status" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
+  "as2l_messg" varchar(200) NOT NULL COLLATE NOCASE DEFAULT '',
+  "as2l_datetime" varchar(16) NOT NULL COLLATE NOCASE DEFAULT '',
+  "as2l_mdn" varchar(100) NOT NULL COLLATE NOCASE DEFAULT ''
+);
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "api_log" (
   "apil_logid" INTEGER PRIMARY KEY,
   "apil_comkey" int(12) NOT NULL COLLATE NOCASE DEFAULT '0',

@@ -553,6 +553,16 @@ CREATE TABLE IF NOT EXISTS `edi_file` (
   `edf_doctype` varchar(15) NOT NULL  DEFAULT '',
   `edf_status` varchar(15) NOT NULL  DEFAULT '')
 ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `as2_log` (
+  `as2l_logid` int(12) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  `as2l_parent` int(12) NOT NULL DEFAULT '0',
+  `as2l_id` varchar(30) NOT NULL  DEFAULT '',
+  `as2l_dir` varchar(3) NOT NULL  DEFAULT '',
+  `as2l_status` varchar(10) NOT NULL  DEFAULT '',
+  `as2l_messg` varchar(200) NOT NULL  DEFAULT '',
+  `as2l_datetime` varchar(16) NOT NULL DEFAULT '',
+  `as2l_mdn` varchar(100) NOT NULL  DEFAULT '')
+ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `api_log` (
   `apil_logid` int(12) NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `apil_comkey` int(12) NOT NULL DEFAULT '0',

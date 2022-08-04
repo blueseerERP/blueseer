@@ -2706,6 +2706,129 @@ public class EDData {
         return x;
     }
     
+    public static int writeAS2Log(String[] c) {
+            int returnkey = 0;
+          try {
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            try {
+                
+                
+                      if (dbtype.equals("sqlite")) {
+                        st.executeUpdate("insert into as2_log ( as2l_parent, as2l_id, as2l_dir, " +
+                                " as2l_status, as2l_messg, as2l_datetime, as2l_mdn ) " 
+                            + " values ( " 
+                            + "'" + c[0] + "'" + ","  // parent master...master record has '0'
+                            + "'" + c[1] + "'" + ","  // partner id
+                            + "'" + c[2] + "'" + ","        // dir
+                            + "'" + c[3] + "'" + "," // status
+                            + "'" + c[4] + "'" + ","  // messg
+                            + "'" + c[5] + "'" + ","  // ts
+                            + "'" + c[6] + "'" // mdn
+                            + ")"
+                            + ";");
+                      } else {
+                          st.executeUpdate("insert into as2_log ( as2l_parent, as2l_id, as2l_dir, " +
+                                " as2l_status, as2l_messg, as2l_datetime, as2l_mdn ) " 
+                            + " values ( " 
+                            + "'" + c[0] + "'" + ","  // parent master...master record has '0'...else has master record as2l_logid
+                            + "'" + c[1] + "'" + ","  // partner id
+                            + "'" + c[2] + "'" + ","        // dir
+                            + "'" + c[3] + "'" + "," // status
+                            + "'" + c[4] + "'" + ","  // messg
+                            + "'" + c[5] + "'" + ","  // ts
+                            + "'" + c[6] + "'" // mdn
+                            + ")"
+                            + ";", Statement.RETURN_GENERATED_KEYS);
+                      }
+                        ResultSet rs = st.getGeneratedKeys();
+                        while (rs.next()) {
+                         returnkey = rs.getInt(1);
+                        }
+                        
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+               if (st != null) st.close();
+               con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+          return returnkey;
+      }
+    
+    public static int writeAS2LogDetail(ArrayList<String[]> x) {
+            int returnkey = 0;
+          try {
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            try {
+                for (String[] c : x) {
+                st.executeUpdate("insert into as2_log ( as2l_parent, as2l_status, as2l_messg ) " 
+                    + " values ( " 
+                    + "'" + c[0] + "'" + ","  // as2l_logid of parent record
+                    + "'" + c[1] + "'" + ","  // status
+                    + "'" + c[2] + "'"        // message
+                    + ")"
+                    + ";");
+                }   
+                        
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+               if (st != null) st.close();
+               con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+          return returnkey;
+      }
+    
+    
+    public static void updateAS2LogStatus(int key, String status) {
+            
+          try {
+            Class.forName(driver);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            try {
+                
+                
+                     
+                    st.executeUpdate("update as2_log set " +
+                            " as2l_status = " + "'" + status + "'" +
+                            " where as2l_logid = " + "'" + key + "'" +        
+                            ";");
+                        
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+               if (st != null) st.close();
+               con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+         
+      }
+    
     
     public static int writeEDIIDX(String[] c) {
             int returnkey = 0;

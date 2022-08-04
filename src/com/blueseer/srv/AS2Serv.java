@@ -48,6 +48,8 @@ import static com.blueseer.utl.BlueSeerUtils.createMessage;
 import static com.blueseer.utl.BlueSeerUtils.createMessageJSON;
 import com.blueseer.utl.EDData;
 import static com.blueseer.utl.EDData.getSystemEncKey;
+import static com.blueseer.utl.EDData.writeAS2Log;
+import static com.blueseer.utl.EDData.writeAS2LogDetail;
 import com.blueseer.utl.OVData;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -70,6 +72,8 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -166,7 +170,9 @@ public class AS2Serv extends HttpServlet {
         BufferedWriter output = null;
         String[] elementals = new String[]{"","","","","",""};
         mdn mymdn = null;
-
+        String  now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+        ArrayList<String[]> logdet = new ArrayList<String[]>(); 
+        
         // request to inputstream as bytes        
         try {
         
@@ -178,6 +184,7 @@ public class AS2Serv extends HttpServlet {
             
         // if null content
         if (content == null) {
+            writeAS2Log(new String[]{"0","unknown","in","error","null content",now,""});
             return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "null content");
         }
         
@@ -201,6 +208,7 @@ public class AS2Serv extends HttpServlet {
                 }
         } else {
             // header info unrecognizable...bail out
+            writeAS2Log(new String[]{"0","unknown","in","error","http header tags unrecognizable",now,""});
             return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "http header tags unrecognizable");
         }
         
@@ -222,9 +230,11 @@ public class AS2Serv extends HttpServlet {
             if (inHM.get("AS2-To").equals(sysas2user)) {
               receiver = sysas2user;  
             } else {
+              writeAS2Log(new String[]{"0","unknown","in","error","AS2 receiver ID unknown",now,""});  
               return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "AS2 receiver ID unknown");  
             }
         } else {
+            writeAS2Log(new String[]{"0","unknown","in","error","AS2 receiver ID unrecognized",now,""});
             return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "AS2 receiver ID unrecognized"); 
         }
         
@@ -232,13 +242,16 @@ public class AS2Serv extends HttpServlet {
             sender = inHM.get("AS2-From");
             info = getAS2InfoByIDs(sender , receiver);
             if (info == null) {
+              writeAS2Log(new String[]{"0","unknown","in","error","AS2 sender ID unknown with keys: " + sender + "/" + receiver,now,""});  
               return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "AS2 sender ID unknown with keys: " + sender + "/" + receiver);    
             } 
         } else {
+            writeAS2Log(new String[]{"0","unknown","in","error","AS2 sender ID unrecognized",now,""});
             return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "AS2 sender ID unrecognized"); 
         }
         
         if (info == null) { 
+              writeAS2Log(new String[]{"0","unknown","in","error","unable to find sender / receiver keys: " + sender + "/" + receiver,now,""});
               return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "unable to find sender / receiver keys: " + sender + "/" + receiver);    
         }
         
@@ -272,6 +285,7 @@ public class AS2Serv extends HttpServlet {
         boolean isEncrypted = APIMaint.isEncrypted(content);
         
         if (! isEncrypted && info[9].equals("1")) {
+           writeAS2Log(new String[]{"0","unknown","in","error","Encryption is required for this partner " + sender + "/" + receiver,now,""}); 
            return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "Encryption is required for this partner " + sender + "/" + receiver);  
         }
          
@@ -297,16 +311,19 @@ public class AS2Serv extends HttpServlet {
             mic = "";
         }
         
-       
-        
-        
         // if here...should have as2 sender / receiver / info data required to create legitimate MDN
+        // write original master log record...retrieve log key for parent of detail to follow
         elementals[0] = sender;
         elementals[1] = receiver;
         elementals[2] = subject;
         elementals[3] = filename;
         elementals[4] = messageid;
         elementals[5] = mic;
+        int parent = writeAS2Log(new String[]{"0",sender,"in","info"," Init as2 inbound for partner: " + info[0] + "/" + sender + "/" + receiver,now,""}); 
+        String parentkey = String.valueOf(parent);
+        logdet.add(new String[]{parentkey, "info", "processing as2 for relationship " + sender + "/" + receiver});
+        logdet.add(new String[]{parentkey, "info", "Incoming AS2 Message ID = " + messageid});
+        logdet.add(new String[]{parentkey, "info", "calculated MIC = " + mic});
         
         // establish mimemultipart format of decrypted data
         MimeMultipart mp  = new MimeMultipart(new ByteArrayDataSource(finalContent, request.getContentType()));
@@ -428,10 +445,11 @@ public class AS2Serv extends HttpServlet {
             } catch (MessagingException ex) {
                 bslog(ex);
             }
+           if (! logdet.isEmpty()) {
+           writeAS2LogDetail(logdet);
+           }
+           
         }
-        
-        
-        
         
         return mymdn; 
     }
