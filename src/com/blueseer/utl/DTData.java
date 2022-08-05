@@ -7340,6 +7340,58 @@ return mymodel;
 
  }
 
+    public static DefaultTableModel getAS2All() {
+      javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+              new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("description"), getGlobalColumnTag("url"), getGlobalColumnTag("port"), getGlobalColumnTag("path"), getGlobalColumnTag("user"), getGlobalColumnTag("enabled") })
+              {
+              @Override  
+              public Class getColumnClass(int col) {  
+                if (col == 0)       
+                    return ImageIcon.class;  
+                else return String.class;  //other columns accept String values  
+              }  
+                }; 
+
+try{
+
+    Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+    Statement st = con.createStatement();
+    ResultSet res = null;
+    try{
+              res = st.executeQuery("select * from as2_mstr;");
+            while (res.next()) {
+                mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("as2_id"),
+                           res.getString("as2_desc"),
+                           res.getString("as2_url"),
+                           res.getString("as2_port"),
+                           res.getString("as2_path"),
+                           res.getString("as2_user"),
+                           res.getString("as2_enabled")
+                });
+            }
+   }
+    catch (SQLException s){
+         MainFrame.bslog(s);
+   } finally {
+       if (res != null) res.close();
+       if (st != null) st.close();
+       if (con != null) con.close();
+    }
+}
+catch (Exception e){
+    MainFrame.bslog(e);
+
+}
+return mymodel;
+
+ }
+
+    
     public static DefaultTableModel getFreightAll() {
           javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                   new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("code"), getGlobalColumnTag("description"), getGlobalColumnTag("enabled")})

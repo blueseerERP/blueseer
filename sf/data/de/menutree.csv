@@ -48,7 +48,8 @@ APIMenu,APIMaint,1,JMenuItem,API Maintenance,,,,1,1
 APIMenu,APIBrowse,2,JMenuItem,API Browse,,,,1,1
 APIMenu,APILog,3,JMenuItem,API Log,,,,1,1
 AS2Menu,AS2Maint,1,JMenuItem,AS2 Maintenance,,,,1,1
-AS2Menu,AS2Log,2,JMenuItem,AS2 Log,,,,1,1
+AS2Menu,AS2Browse,2,JMenuItem,AS2 Browse,,,,1,1
+AS2Menu,AS2Log,3,JMenuItem,AS2 Log,,,,1,1
 LabelMenu,LabelsContGeneric,1,JMenuItem,Behälteretiketten,,,,1,1
 LabelMenu,AddrLabel,2,JMenuItem,Adressetiketten,,,,1,1
 LabelMenu,LabelBrowse,3,JMenuItem,Label-Durchsuchen,,1,,1,1

@@ -288,14 +288,12 @@ public class AS2Log extends javax.swing.JPanel {
        }
     }
     
-    public void getdetail(String comkey, String idxkey) {
+    public void getdetail(String parentkey) {
       
          modeldetail.setNumRows(0);
         
-         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
         
         try {
-
             Connection con = null;
             if (ds != null) {
               con = ds.getConnection();
@@ -306,25 +304,15 @@ public class AS2Log extends javax.swing.JPanel {
             ResultSet res = null;
             try {
                 int i = 0;
-                String blanket = "";
-                if (idxkey.equals("0")) {
-                 res = st.executeQuery("select elg_id, elg_comkey, elg_idxnbr, elg_severity, elg_desc, elg_ts from edi_log " +
-                        " where elg_comkey = " + "'" + comkey + "'" +
-                        ";");   
-                } else {
-                 res = st.executeQuery("select elg_id, elg_comkey, elg_idxnbr, elg_severity, elg_desc, elg_ts from edi_log " +
-                        " where elg_comkey = " + "'" + comkey + "'" +
-                        " and elg_idxnbr = " + "'" + idxkey + "'" +
-                        ";");   
-                }
-                
+                     res = st.executeQuery("SELECT * FROM as2_log  " +     
+                    " where as2l_parent = " + "'" + parentkey + "'" +
+                    " order by as2l_logid;" ) ;
                 while (res.next()) {
                    modeldetail.addRow(new Object[]{ 
-                      res.getString("elg_id"), 
-                      res.getString("elg_comkey"),
-                      res.getString("elg_severity"),
-                      res.getString("elg_desc"),
-                      res.getString("elg_ts")
+                      res.getString("as2l_logid"), 
+                      res.getString("as2l_parent"),
+                      res.getString("as2l_messg"),
+                      res.getString("as2l_status")
                       });
                 }
                
@@ -379,7 +367,7 @@ public class AS2Log extends javax.swing.JPanel {
          tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
          tabledetail.getColumnModel().getColumn(0).setMaxWidth(100);
          tabledetail.getColumnModel().getColumn(1).setMaxWidth(100);
-         tabledetail.getColumnModel().getColumn(2).setMaxWidth(100);
+         tabledetail.getColumnModel().getColumn(3).setMaxWidth(100);
        
         
         btdetail.setEnabled(false);
@@ -663,26 +651,10 @@ public class AS2Log extends javax.swing.JPanel {
         int col = tablereport.columnAtPoint(evt.getPoint());
        
         if ( col == 0) {
-                getdetail(tablereport.getValueAt(row, 2).toString(), "0");
+                getdetail(tablereport.getValueAt(row, 1).toString());
                 btdetail.setEnabled(true);
                 detailpanel.setVisible(true);
         }
-        if ( col == 15) {
-                String ackfile = EDData.getEDIAckFileFromEDIIDX(tablereport.getValueAt(row, 1).toString());
-                if (! ackfile.isEmpty()) {
-                 // read output or mdn here
-                     
-                    
-                     tafile.setCaretPosition(0);
-                     textpanel.setVisible(true);
-                     bthidetext.setEnabled(true);
-                }
-        }
-        
-       
-          
-       
-      
     }//GEN-LAST:event_tablereportMouseClicked
 
     private void bthidetextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bthidetextActionPerformed

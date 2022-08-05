@@ -219,6 +219,7 @@ MapTester,,com.blueseer.edi.MapTester,JMenuItem,mapt
 APIMaint,,com.blueseer.edi.APIMaint,JMenuItem,apim
 AS2Maint,,com.blueseer.edi.AS2Maint,JMenuItem,as2m
 AS2Log,,com.blueseer.edi.AS2Log,JMenuItem,as2l
+AS2Browse,,com.blueseer.utl.ReportPanel,JMenuItem,as2b
 APIBrowse,,com.blueseer.edi.APIBrowse,JMenuItem,apib
 APILog,,com.blueseer.edi.APILog,JMenuItem,apil
 ARAgingView,,com.blueseer.far.ARAgingView,JMenuItem,arav

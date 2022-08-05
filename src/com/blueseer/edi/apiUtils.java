@@ -34,6 +34,8 @@ import static com.blueseer.edi.APIMaint.signDataSimple;
 import static com.blueseer.edi.ediData.getKeyStoreByUser;
 import static com.blueseer.edi.ediData.getKeyStorePass;
 import static com.blueseer.edi.ediData.getKeyUserPass;
+import static com.blueseer.utl.EDData.writeAS2Log;
+import static com.blueseer.utl.EDData.writeAS2LogDetail;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -176,7 +178,8 @@ public class apiUtils {
         X509Certificate certificate = null;
         Path certfilepath = FileSystems.getDefault().getPath("edi/certs/" + certfile);
         if (! Files.exists(certfilepath)) {
-             throw new RuntimeException("bad path to cert file");
+             // throw new RuntimeException("bad path to cert file: " + certfile);
+             return certificate; // return null
         }
        // System.out.println("here->" + certfilepath.toString());
         Security.addProvider(new BouncyCastleProvider());
@@ -214,6 +217,11 @@ public class apiUtils {
     public static String postAS2( String as2id) throws MessagingException, MalformedURLException, URISyntaxException, IOException, CertificateException, NoSuchProviderException, KeyStoreException, NoSuchAlgorithmException, UnrecoverableKeyException, CertificateEncodingException, CMSException, SMIMEException, Exception  {
         
         StringBuilder r = new StringBuilder();
+        String  now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+        ArrayList<String[]> logdet = new ArrayList<String[]>(); 
+        
+        
+        
         
      //   Path as2filepath = FileSystems.getDefault().getPath(as2file);
      //   if (! Files.exists(as2filepath)) {
@@ -229,10 +237,27 @@ public class apiUtils {
         String internalURL = tp[6];
         String sourceDir = tp[13];
         String signkeyid = tp[7];
+        
+        
+        int parent = writeAS2Log(new String[]{"0",as2From,"out","success"," Init as2 outbound for partner: " + as2id + "/" + as2From + "/" + as2To,now,""}); 
+        String parentkey = String.valueOf(parent);
+        logdet.add(new String[]{parentkey, "info", "processing as2 for relationship " + as2From + "/" + as2To});
+        logdet.add(new String[]{parentkey, "info", "Sending to URL / Port / Path = " + url});
+        logdet.add(new String[]{parentkey, "info", "Source Directory: " + sourceDir});
+        logdet.add(new String[]{parentkey, "info", "Encryption Cert file: " + tp[11]});
+        logdet.add(new String[]{parentkey, "info", "Signing Key ID: " + signkeyid});
+        
        
     //    System.out.println("here->" + as2To + "/" +  as2From + "/" + internalURL + "/" + sourceDir + "/" + signkeyid);
         
         X509Certificate encryptcertificate = getCert(tp[11]);
+        if (encryptcertificate == null) {
+          logdet.add(new String[]{parentkey, "error", "Unable to retrieve cert file " + tp[11]}); 
+          writeAS2LogDetail(logdet);
+          return "Unable to retrieve cert file " + tp[11];
+        }
+        
+        
         String[] k = getKeyStoreByUser(signkeyid); // store, storeuser, storepass, user, pass
         k[2] = bsmf.MainFrame.PassWord("1", k[2].toCharArray());
         k[4] = bsmf.MainFrame.PassWord("1", k[4].toCharArray());
@@ -261,7 +286,7 @@ public class apiUtils {
             }
             
             as2filepath = FileSystems.getDefault().getPath(sourceDir + "/" + listOfFiles[i].getName()); 
-            
+            logdet.add(new String[]{parentkey, "info", "Transmitting file: " + listOfFiles[i].getName()});
        
         
         String messageid = setMessageID();
@@ -393,6 +418,7 @@ public class apiUtils {
         
         
     } // for each file
+        writeAS2LogDetail(logdet);
         return r.toString();
     }
     
