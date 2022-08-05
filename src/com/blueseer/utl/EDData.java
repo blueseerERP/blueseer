@@ -2783,6 +2783,20 @@ public class EDData {
                     + ")"
                     + ";");
                 }   
+                
+               // now update parent status
+               // if last entry = 'error'...then parent status = error...otherwise 'success'
+               if (x.get(x.size() - 1)[1].equals("error")) {
+               st.executeUpdate("update as2_log set " +
+                            " as2l_status = " + "'" + "error" + "'" +
+                            " where as2l_logid = " + "'" + x.get(0)[0] + "'" +        
+                            ";");
+               } else {
+                st.executeUpdate("update as2_log set " +
+                            " as2l_status = " + "'" + "success" + "'" +
+                            " where as2l_logid = " + "'" + x.get(0)[0] + "'" +        
+                            ";");   
+               }
                         
             } catch (SQLException s) {
                 MainFrame.bslog(s);

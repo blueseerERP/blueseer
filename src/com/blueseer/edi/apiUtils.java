@@ -83,6 +83,8 @@ import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.conn.ConnectTimeoutException;
+import org.apache.http.conn.HttpHostConnectException;
 import org.apache.http.entity.BufferedHttpEntity;
 import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -239,7 +241,7 @@ public class apiUtils {
         String signkeyid = tp[7];
         
         
-        int parent = writeAS2Log(new String[]{"0",as2From,"out","success"," Init as2 outbound for partner: " + as2id + "/" + as2From + "/" + as2To,now,""}); 
+        int parent = writeAS2Log(new String[]{"0",as2From,"out",""," Init as2 outbound for partner: " + as2id + "/" + as2From + "/" + as2To,now,""}); 
         String parentkey = String.valueOf(parent);
         logdet.add(new String[]{parentkey, "info", "processing as2 for relationship " + as2From + "/" + as2To});
         logdet.add(new String[]{parentkey, "info", "Sending to URL / Port / Path = " + url});
@@ -398,8 +400,7 @@ public class apiUtils {
           HttpUriRequest request = rb.build();
           
         
-        CloseableHttpResponse response = client.execute(request);
-        try {
+        try (CloseableHttpResponse response = client.execute(request)) {
         if (response.getStatusLine().getStatusCode() != 200) {
                 r.append(response.getStatusLine().getStatusCode() + ": " + response.getStatusLine().getReasonPhrase());
                 //throw new RuntimeException("Failed : HTTP error code : "
@@ -411,9 +412,11 @@ public class apiUtils {
         HttpEntity entity = response.getEntity();
         String result = EntityUtils.toString(entity); 
         r.append(result);
-        } finally {
-           response.close(); 
-        }
+        } catch (HttpHostConnectException | ConnectTimeoutException ex) {
+          logdet.add(new String[]{parentkey, "error", " Connection refused or timeout from server "}); 
+          writeAS2LogDetail(logdet);
+          return "Connection refused or timeout from server ";
+        } 
         
         
         
