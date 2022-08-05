@@ -14,6 +14,7 @@ CustomerReports,,,JMenu,
 VendorMenu,,,JMenu, 
 EDIMenu,,,JMenu, 
 APIMenu,,,JMenu,
+AS2Menu,,,JMenu,
 LabelMenu,,,JMenu, 
 RequisitionMenu,,,JMenu, 
 ReqChartsMenu,,,JMenu, 
@@ -216,6 +217,7 @@ MapMaint,,com.blueseer.edi.MapMaint,JMenuItem,mapm
 StructMaint,,com.blueseer.edi.StructMaint,JMenuItem,mpsm
 MapTester,,com.blueseer.edi.MapTester,JMenuItem,mapt
 AS2Maint,,com.blueseer.edi.AS2Maint,JMenuItem,as2m
+AS2Log,,com.blueseer.edi.AS2Log,JMenuItem,as2l
 APIMaint,,com.blueseer.edi.APIMaint,JMenuItem,apim
 APIBrowse,,com.blueseer.edi.APIBrowse,JMenuItem,apib
 APILog,,com.blueseer.edi.APILog,JMenuItem,apil

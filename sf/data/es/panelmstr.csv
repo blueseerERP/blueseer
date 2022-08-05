@@ -51,6 +51,7 @@ com.blueseer.edi.StructMaint,,1
 com.blueseer.edi.MapTester,,1
 com.blueseer.edi.APIMaint,,1
 com.blueseer.edi.AS2Maint,,1
+com.blueseer.edi.AS2Log,,1
 com.blueseer.edi.APIBrowse,,1
 com.blueseer.edi.APILog,,1
 com.blueseer.eng.ECNBrowse,,1

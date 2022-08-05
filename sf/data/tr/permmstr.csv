@@ -303,7 +303,9 @@ admin,StructMaint
 admin,MapTester
 admin,APIMaint
 admin,AS2Maint
+admin,AS2Log
 admin,PKSMaint
 admin,APIBrowse
 admin,APILog
 admin,APIMenu
+admin,AS2Menu
