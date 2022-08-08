@@ -256,10 +256,14 @@ public class apiUtils {
         
         X509Certificate encryptcertificate = getCert(tp[11]);
         if (encryptcertificate == null) {
-          logdet.add(new String[]{parentkey, "error", "Unable to retrieve cert file " + tp[11]}); 
+          logdet.add(new String[]{parentkey, "error", "Unable to retrieve encryption cert file " + tp[11]}); 
           writeAS2LogDetail(logdet);
-          return "Unable to retrieve cert file " + tp[11];
+          return "Unable to retrieve encryption cert file " + tp[11];
         }
+        
+        logdet.add(new String[]{parentkey, "info", "Encryption with: " + encryptcertificate.getIssuerX500Principal().getName() + "/" + encryptcertificate.getSigAlgName()});
+        logdet.add(new String[]{parentkey, "info", "Encryption Serial#: " + encryptcertificate.getSerialNumber().toString(16)});
+        logdet.add(new String[]{parentkey, "info", "Encryption Expiration Window: " + encryptcertificate.getNotBefore() + "/" + encryptcertificate.getNotAfter()});
         
         
         String[] k = getKeyStoreByUser(signkeyid); // store, storeuser, storepass, user, pass
@@ -277,6 +281,17 @@ public class apiUtils {
         
         PrivateKey key = (PrivateKey) keystore.getKey(k[3], keyPassword);
         X509Certificate signcertificate = (X509Certificate) keystore.getCertificate(k[3]);
+        
+        if (signcertificate == null) {
+          logdet.add(new String[]{parentkey, "error", "Unable to retrieve signing cert " + k[3]}); 
+          writeAS2LogDetail(logdet);
+          return "Unable to retrieve signing cert " + k[3];
+        }
+        
+        logdet.add(new String[]{parentkey, "info", "Signing with: " + signcertificate.getIssuerX500Principal().getName() + "/" + signcertificate.getSigAlgName()});
+        logdet.add(new String[]{parentkey, "info", "Signing Serial#: " + signcertificate.getSerialNumber().toString(16)});
+        logdet.add(new String[]{parentkey, "info", "Signing Expiration Window: " + signcertificate.getNotBefore() + "/" + signcertificate.getNotAfter()});
+        
         
         
         Path as2filepath = null;
@@ -344,7 +359,7 @@ public class apiUtils {
           mbp2.addHeader("Content-Disposition", "attachment; filename=smime.p7m");
         
           signedAndEncrypteddata = encryptData(mbp2.getInputStream().readAllBytes(), encryptcertificate);
-    
+          
         }
         
         
