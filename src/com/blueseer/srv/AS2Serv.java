@@ -34,12 +34,11 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.edi.APIMaint;
-import static com.blueseer.edi.APIMaint.hashdigest;
-import static com.blueseer.edi.APIMaint.verifSignData;
-import static com.blueseer.edi.APIMaint.verifySignature;
 import com.blueseer.edi.apiUtils;
 import static com.blueseer.edi.apiUtils.createMDN;
+import static com.blueseer.edi.apiUtils.hashdigest;
 import com.blueseer.edi.apiUtils.mdn;
+import static com.blueseer.edi.apiUtils.verifySignature;
 import static com.blueseer.edi.ediData.getAS2InfoByIDs;
 import com.blueseer.inv.invData;
 import com.blueseer.sch.schData;
@@ -291,9 +290,11 @@ public class AS2Serv extends HttpServlet {
          
         byte[] finalContent = null;
          // now decrypt as necessary
+         String systemEncKey = null;
          if (isEncrypted) {
-          finalContent = APIMaint.decryptData(content, apiUtils.getPrivateKey(getSystemEncKey()) );
-         } else {
+          systemEncKey = getSystemEncKey();   
+          finalContent = apiUtils.decryptData(content, apiUtils.getPrivateKey(getSystemEncKey()) );
+           } else {
           finalContent = content;
          }
          
@@ -323,6 +324,7 @@ public class AS2Serv extends HttpServlet {
         String parentkey = String.valueOf(parent);
         logdet.add(new String[]{parentkey, "info", "processing as2 for relationship " + sender + "/" + receiver});
         logdet.add(new String[]{parentkey, "info", "Incoming AS2 Message ID = " + messageid});
+        logdet.add(new String[]{parentkey, "info", "Decryption system key = " + systemEncKey});
         logdet.add(new String[]{parentkey, "info", "calculated MIC = " + mic});
         
         // establish mimemultipart format of decrypted data

@@ -26,11 +26,7 @@ SOFTWARE.
 package com.blueseer.edi;
 
 import static bsmf.MainFrame.bslog;
-import static com.blueseer.edi.APIMaint.encryptData;
-import static com.blueseer.edi.APIMaint.encryptDataSMIME;
-import static com.blueseer.edi.APIMaint.signData;
-import static com.blueseer.edi.APIMaint.signDataPkcs7;
-import static com.blueseer.edi.APIMaint.signDataSimple;
+import static com.blueseer.edi.AS2Maint.certs;
 import static com.blueseer.edi.ediData.getKeyStoreByUser;
 import static com.blueseer.edi.ediData.getKeyStorePass;
 import static com.blueseer.edi.ediData.getKeyUserPass;
@@ -57,6 +53,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
@@ -69,8 +66,11 @@ import java.security.cert.X509Certificate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.mail.MessagingException;
@@ -92,9 +92,37 @@ import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.bouncycastle.cert.X509CertificateHolder;
+import org.bouncycastle.cert.jcajce.JcaCertStore;
+import org.bouncycastle.cms.CMSAlgorithm;
+import org.bouncycastle.cms.CMSEnvelopedData;
+import org.bouncycastle.cms.CMSEnvelopedDataGenerator;
 import org.bouncycastle.cms.CMSException;
+import org.bouncycastle.cms.CMSProcessableByteArray;
+import org.bouncycastle.cms.CMSSignedData;
+import org.bouncycastle.cms.CMSSignedDataGenerator;
+import org.bouncycastle.cms.CMSTypedData;
+import org.bouncycastle.cms.KeyTransRecipientInformation;
+import org.bouncycastle.cms.RecipientInformation;
+import org.bouncycastle.cms.SignerInfoGenerator;
+import org.bouncycastle.cms.SignerInformation;
+import org.bouncycastle.cms.SignerInformationStore;
+import org.bouncycastle.cms.jcajce.JcaSignerInfoGeneratorBuilder;
+import org.bouncycastle.cms.jcajce.JcaSimpleSignerInfoGeneratorBuilder;
+import org.bouncycastle.cms.jcajce.JcaSimpleSignerInfoVerifierBuilder;
+import org.bouncycastle.cms.jcajce.JceCMSContentEncryptorBuilder;
+import org.bouncycastle.cms.jcajce.JceKeyTransEnvelopedRecipient;
+import org.bouncycastle.cms.jcajce.JceKeyTransRecipient;
+import org.bouncycastle.cms.jcajce.JceKeyTransRecipientInfoGenerator;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.mail.smime.SMIMEException;
+import org.bouncycastle.mail.smime.SMIMESignedGenerator;
+import org.bouncycastle.operator.ContentSigner;
+import org.bouncycastle.operator.OperatorCreationException;
+import org.bouncycastle.operator.OutputEncryptor;
+import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
+import org.bouncycastle.operator.jcajce.JcaDigestCalculatorProviderBuilder;
+import org.bouncycastle.util.Store;
 import org.bouncycastle.util.encoders.Base64;
 
 /**
@@ -176,6 +204,111 @@ public class apiUtils {
         }
         return cert;
     }
+    
+    public static String hashdigest(byte[] indata) {
+        String x;
+        
+        MessageDigest messageDigest = null;
+                    try {
+                        messageDigest = MessageDigest.getInstance("SHA-1");
+                    } catch (NoSuchAlgorithmException ex) {
+                        bslog(ex);
+                    }
+        byte[] hashedbytes = messageDigest.digest(indata);
+        x = new String(Base64.encode(hashedbytes));
+        return x;
+    }
+    
+    public static byte[] encryptData(byte[] data, X509Certificate encryptionCertificate) throws CertificateEncodingException, CMSException, IOException {
+
+        byte[] encryptedData = null;
+        if (null != data && null != encryptionCertificate) {
+            CMSEnvelopedDataGenerator cmsEnvelopedDataGenerator
+              = new CMSEnvelopedDataGenerator();
+
+            JceKeyTransRecipientInfoGenerator jceKey 
+              = new JceKeyTransRecipientInfoGenerator(encryptionCertificate);
+            cmsEnvelopedDataGenerator.addRecipientInfoGenerator(jceKey);
+            CMSTypedData msg = new CMSProcessableByteArray(data);
+            OutputEncryptor encryptor
+              = new JceCMSContentEncryptorBuilder(CMSAlgorithm.AES128_CBC)
+              .setProvider("BC").build();
+           // MimeBodyPart msg = new MimeBodyPart();
+            CMSEnvelopedData cmsEnvelopedData = cmsEnvelopedDataGenerator
+              .generate(msg,encryptor);
+            encryptedData = cmsEnvelopedData.getEncoded();
+        }
+			    return encryptedData;
+	
+}
+    
+    public static byte[] decryptData(byte[] encryptedData,PrivateKey decryptionKey)throws CMSException {
+            byte[] decryptedData = null;
+            if (null != encryptedData && null != decryptionKey) {
+                CMSEnvelopedData envelopedData = new CMSEnvelopedData(encryptedData);
+                Collection<RecipientInformation> recipients = envelopedData.getRecipientInfos().getRecipients();
+                KeyTransRecipientInformation recipientInfo = (KeyTransRecipientInformation) recipients.iterator().next();
+                JceKeyTransRecipient recipient = new JceKeyTransEnvelopedRecipient(decryptionKey);
+                return recipientInfo.getContent(recipient);
+            }
+            return decryptedData;
+}
+    
+    public static boolean verifySignature(final byte[] plaintext, final byte[] signedData)  {
+        boolean x = false;
+        try {
+            CMSSignedData s = new CMSSignedData(new CMSProcessableByteArray(plaintext), signedData);
+            Store certstore = s.getCertificates();
+            SignerInformationStore signers = s.getSignerInfos();
+            Collection<SignerInformation> c = signers.getSigners();
+            SignerInformation signer = c.iterator().next();
+            Collection<X509CertificateHolder> certCollection = certstore.getMatches(signer.getSID());
+            Iterator<X509CertificateHolder> certIt = certCollection.iterator();
+            if (! certIt.hasNext()) {
+                return x;
+            }
+            X509CertificateHolder certHolder = certIt.next();
+            x = signer.verify(new JcaSimpleSignerInfoVerifierBuilder().build(certHolder));
+        } catch ( CMSException | OperatorCreationException | CertificateException ex) {
+            bslog(ex);
+        }
+        return x;
+}
+    
+  
+     public static MimeBodyPart signData(
+          byte[] data, 
+          X509Certificate signingCertificate,
+          PrivateKey signingKey) throws Exception {
+            byte[] signedMessage = null;
+            List<X509Certificate> certList = new ArrayList<X509Certificate>();
+            CMSTypedData cmsData= new CMSProcessableByteArray(data);
+            certList.add(signingCertificate);
+            certs = new JcaCertStore(certList);
+
+            SMIMESignedGenerator sGen = new SMIMESignedGenerator(false ? SMIMESignedGenerator.RFC3851_MICALGS : SMIMESignedGenerator.RFC5751_MICALGS);
+            JcaSimpleSignerInfoGeneratorBuilder jSig = new JcaSimpleSignerInfoGeneratorBuilder().setProvider("BC");
+             SignerInfoGenerator sig = jSig.build("SHA1withRSA", signingKey, signingCertificate);
+            sGen.addSignerInfoGenerator(sig);
+            sGen.addCertificates(certs);
+            MimeBodyPart dataPart = new MimeBodyPart();
+            dataPart.removeHeader("Content-Type");
+            dataPart.removeHeader("Content-Disposition");
+            
+            dataPart.setText(new String(data));
+            dataPart.setHeader("Content-Type", "application/edi-x12; file=test.txt");
+            dataPart.setHeader("Content-Disposition", "attachment; filename=test.txt");
+            MimeMultipart signedData = sGen.generate(dataPart);
+            MimeBodyPart tmpBody = new MimeBodyPart();
+            tmpBody.setContent(signedData);
+            
+        // Content-type header is required, unit tests fail badly on async MDNs if not set.
+            tmpBody.setHeader("Content-Type", signedData.getContentType());
+            
+           
+            return tmpBody;
+	}
+
     
     
     public static X509Certificate getCert(String certfile) throws CertificateException, NoSuchProviderException {
@@ -328,7 +461,7 @@ public class apiUtils {
         // need signed, signed+enc, enc, none ....condition logic here
         if (filecontent != null) {    
                 try {
-                    mbp = signDataSimple(filecontent.getBytes(StandardCharsets.UTF_8),signcertificate,key);
+                    mbp = signData(filecontent.getBytes(StandardCharsets.UTF_8),signcertificate,key);
                     
                 } catch (Exception ex) {
                     bslog(ex);
@@ -503,7 +636,7 @@ public class apiUtils {
                 The message <%s> sent to <%s>
                 on %s with Subject <%s> has been received,
                 the payload was successfully decrypted and its integrity was verified.
-                In addition, the sender of the message, <terry> was authenticated
+                In addition, the sender of the message, <%s> was authenticated
                 as the originator of the message.
                 
                 There is no guarantee however that the payload was syntactically
@@ -532,10 +665,8 @@ public class apiUtils {
         String now = localDateTime.format(DateTimeFormatter.ISO_DATE);
         String z = """
                 The message <%s> sent to <%s>
-                on %s with Subject <%s> was not signed,
-                the payload was successfully decrypted and its integrity was verified.
-                In addition, the sender of the message, <terry> was authenticated
-                as the originator of the message.
+                on %s with Subject <%s> was not signed.
+                The message was transmitted by <%s>.
                 """.formatted(filename, receiver, now, subject, sender);
         try {
            // mbp.setText(z);
@@ -558,6 +689,8 @@ public class apiUtils {
         mdn x = null;
         MimeBodyPart mbp = new MimeBodyPart();
         String z;
+        LocalDateTime localDateTime = LocalDateTime.now();
+        String now = localDateTime.format(DateTimeFormatter.ISO_DATE);
         
         switch (code) {
             case "1000" :
@@ -565,15 +698,9 @@ public class apiUtils {
             break;        
         default:
             z = """
-                The message <test.txt> sent to <01089986319>
-                on Tue, 26 Jul 2022 14:12:31 GMT with Subject <as2> has been received,
-                the payload was successfully decrypted and its integrity was verified.
-                In addition, the sender of the message, <terry> was authenticated
-                as the originator of the message.
-                
-                There is no guarantee however that the payload was syntactically
-                correct, or was received by any applicable back-end processes.
-                """;
+                The message <unknown> sent to <unknown>
+                on %s with Subject <unknown> has been rejected.
+                """.formatted( now);
         }        
         
         if (mbp != null) {

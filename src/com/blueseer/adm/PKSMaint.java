@@ -494,7 +494,7 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
             
             byte[] indata = Files.readAllBytes(inpath);
             
-            byte[] outdata = APIMaint.decryptData(indata, apiUtils.getPrivateKey(tbkey.getText()) );
+            byte[] outdata = apiUtils.decryptData(indata, apiUtils.getPrivateKey(tbkey.getText()) );
             BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(outpath.toFile()));
             bos.write(outdata);
             bos.flush();
@@ -565,7 +565,7 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
             */
           //  byte[] data2 = APIMaint.decryptData(java.util.Base64.getDecoder().decode(datastring), apiUtils.getPrivateKey("terry") );
            //   byte[] data2 = APIMaint.decryptData(jb.toString().getBytes(Charsets.UTF_8), apiUtils.getPrivateKey("terry") );
-            byte[] data2 = APIMaint.decryptData(data, apiUtils.getPrivateKey("terry") );
+            byte[] data2 = apiUtils.decryptData(data, apiUtils.getPrivateKey("terry") );
            String datastring2 = new String(data2);
             taoutput.append(datastring2);
     }
