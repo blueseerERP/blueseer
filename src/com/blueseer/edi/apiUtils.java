@@ -45,6 +45,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
@@ -77,6 +78,7 @@ import javax.mail.internet.ContentType;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import javax.mail.util.ByteArrayDataSource;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.Charsets;
 import org.apache.http.HttpEntity;
@@ -410,7 +412,26 @@ public class apiUtils {
         }
         
         HttpEntity entity = response.getEntity();
-        String result = EntityUtils.toString(entity); 
+        byte[] indata = EntityUtils.toByteArray(entity);
+        String result = new String(indata); 
+        
+        // save MDN file if present
+        MimeMultipart mpr  = new MimeMultipart(new ByteArrayDataSource(indata, entity.getContentType().getValue()));
+        for (int z = 0; z < mpr.getCount(); z++) {
+            MimeBodyPart mbpr = (MimeBodyPart) mpr.getBodyPart(z);
+            if (mbpr.getContentType().contains("disposition")) {
+                String filename = "mdn." + now + "." + Long.toHexString(System.currentTimeMillis());
+                Path path = FileSystems.getDefault().getPath("edi/mdn" + "/" + filename);
+                BufferedWriter output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path.toFile())));
+                String datastring = new String(mbpr.getInputStream().readAllBytes());   
+                output.write(datastring);
+                output.close();
+                logdet.add(new String[]{parentkey, "info", "MDN file received: " + filename});
+            }
+        }
+            
+        
+        
         r.append(result);
         } catch (HttpHostConnectException | ConnectTimeoutException ex) {
           logdet.add(new String[]{parentkey, "error", " Connection refused or timeout from server "}); 

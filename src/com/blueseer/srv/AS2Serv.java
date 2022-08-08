@@ -340,6 +340,7 @@ public class AS2Serv extends HttpServlet {
         for (int i = 0; i < mp.getCount(); i++) {
             BodyPart bodyPart = mp.getBodyPart(i);
             String contentType = bodyPart.getContentType();
+           
                       
             if (isDebug)
             System.out.println("here--> level 1 mp count: " + i + " contentType: " + contentType);
