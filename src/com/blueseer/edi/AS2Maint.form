@@ -25,7 +25,7 @@
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-            <TitledBorder title="API Maintenance"/>
+            <TitledBorder title="AS2 Maintenance"/>
           </Border>
         </Property>
         <Property name="name" type="java.lang.String" value="panelmain" noResource="true"/>
@@ -34,33 +34,43 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" attributes="0">
-                  <EmptySpace min="22" pref="22" max="-2" attributes="0"/>
-                  <Component id="lblurl" min="-2" pref="554" max="-2" attributes="0"/>
+              <Group type="102" alignment="1" attributes="0">
+                  <Group type="103" groupAlignment="1" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="jPanel2" max="32767" attributes="0"/>
+                      </Group>
+                      <Group type="102" attributes="0">
+                          <EmptySpace min="10" pref="10" max="-2" attributes="0"/>
+                          <Component id="jPanel3" alignment="0" max="32767" attributes="0"/>
+                      </Group>
+                  </Group>
+                  <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Component id="jPanel4" max="32767" attributes="0"/>
+                      <Component id="jScrollPane2" max="32767" attributes="0"/>
+                  </Group>
               </Group>
               <Group type="102" attributes="0">
-                  <EmptySpace min="10" pref="10" max="-2" attributes="0"/>
-                  <Component id="jPanel3" alignment="0" max="32767" attributes="0"/>
-                  <EmptySpace min="8" pref="8" max="-2" attributes="0"/>
-                  <Component id="jPanel4" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <Group type="102" attributes="0">
-                  <EmptySpace min="10" pref="10" max="-2" attributes="0"/>
-                  <Component id="jPanel2" alignment="0" max="32767" attributes="0"/>
-                  <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
-                  <Component id="jScrollPane2" min="-2" pref="335" max="-2" attributes="0"/>
-              </Group>
-              <Group type="102" attributes="0">
-                  <EmptySpace min="383" pref="383" max="-2" attributes="0"/>
-                  <Component id="btdelete" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
-                  <Component id="btupdate" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
-                  <Component id="btadd" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="231" pref="231" max="-2" attributes="0"/>
-                  <Component id="cbfile" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="18" pref="18" max="-2" attributes="0"/>
-                  <Component id="btrun" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" attributes="0">
+                          <EmptySpace min="22" pref="22" max="-2" attributes="0"/>
+                          <Component id="lblurl" min="-2" pref="554" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="102" attributes="0">
+                          <EmptySpace min="383" pref="383" max="-2" attributes="0"/>
+                          <Component id="btdelete" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
+                          <Component id="btupdate" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
+                          <Component id="btadd" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="231" pref="231" max="-2" attributes="0"/>
+                          <Component id="cbfile" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="18" pref="18" max="-2" attributes="0"/>
+                          <Component id="btrun" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+                  <EmptySpace min="0" pref="65" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -110,7 +120,7 @@
           <Properties>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                <TitledBorder title="API Methods Detail"/>
+                <TitledBorder title="Additional Info"/>
               </Border>
             </Property>
             <Property name="name" type="java.lang.String" value="paneldetail" noResource="true"/>
@@ -186,7 +196,7 @@
           <Properties>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                <TitledBorder title="API Header Maintenance"/>
+                <TitledBorder title="AS2 Header Maintenance"/>
               </Border>
             </Property>
             <Property name="name" type="java.lang.String" value="panelmaster" noResource="true"/>
@@ -327,7 +337,7 @@
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel5">
               <Properties>
-                <Property name="text" type="java.lang.String" value="API ID"/>
+                <Property name="text" type="java.lang.String" value="AS2 ID"/>
                 <Property name="name" type="java.lang.String" value="lblid" noResource="true"/>
               </Properties>
             </Component>
@@ -508,7 +518,7 @@
           <Properties>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                <TitledBorder title="AS2 Details"/>
+                <TitledBorder title="Cert Details"/>
               </Border>
             </Property>
           </Properties>
@@ -517,14 +527,35 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <Component id="jLabel18" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="cboutputsign" min="-2" max="-2" attributes="0"/>
-                          <Component id="cboutputencryption" max="32767" attributes="0"/>
-                          <Component id="tbcert" alignment="0" max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Component id="jLabel18" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel12" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="212" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="cboutputsign" min="-2" max="-2" attributes="0"/>
+                                  <Component id="cboutputencryption" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="cbforceencryption" min="-2" max="-2" attributes="0"/>
+                                  <Component id="cbforcesigning" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
+                          <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
+                              <Component id="ddsignalgo" alignment="0" max="32767" attributes="0"/>
+                              <Component id="tbenccert" alignment="0" max="32767" attributes="0"/>
+                              <Component id="tbsigncert" alignment="0" max="32767" attributes="0"/>
+                              <Component id="ddencalgo" alignment="0" pref="130" max="32767" attributes="0"/>
+                              <Component id="ddmicalgo" alignment="1" max="32767" attributes="0"/>
+                          </Group>
+                      </Group>
+                      <EmptySpace pref="10" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -532,15 +563,41 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="cboutputencryption" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="cboutputencryption" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="cbforceencryption" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="cboutputsign" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="cboutputsign" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="cbforcesigning" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="tbcert" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="tbenccert" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel18" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="100" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="tbsigncert" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="ddencalgo" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="ddsignalgo" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="ddmicalgo" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel12" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -556,11 +613,85 @@
                 <Property name="text" type="java.lang.String" value="Output Sign"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JTextField" name="tbcert">
+            <Component class="javax.swing.JTextField" name="tbenccert">
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel18">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Cert"/>
+                <Property name="text" type="java.lang.String" value="Encryption Cert"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="tbsigncert">
+            </Component>
+            <Component class="javax.swing.JLabel" name="jLabel2">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Signing Cert"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JCheckBox" name="cbforceencryption">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Force Inbound Encryption"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JCheckBox" name="cbforcesigning">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Force Inbound Signing"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="ddencalgo">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="5">
+                    <StringItem index="0" value="AES128_CBC"/>
+                    <StringItem index="1" value="AES192_CBC"/>
+                    <StringItem index="2" value="AES256_CBC"/>
+                    <StringItem index="3" value="DES_CBC"/>
+                    <StringItem index="4" value="DES_EDE3_CBC"/>
+                  </StringArray>
+                </Property>
+              </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+              </AuxValues>
+            </Component>
+            <Component class="javax.swing.JLabel" name="jLabel3">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Encryption Algorithm"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="ddsignalgo">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="1">
+                    <StringItem index="0" value="RSA"/>
+                  </StringArray>
+                </Property>
+              </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+              </AuxValues>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="ddmicalgo">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="3">
+                    <StringItem index="0" value="SHA-1"/>
+                    <StringItem index="1" value="SHA-256"/>
+                    <StringItem index="2" value="MD5"/>
+                  </StringArray>
+                </Property>
+              </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+              </AuxValues>
+            </Component>
+            <Component class="javax.swing.JLabel" name="jLabel4">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Signing Algorithm"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="jLabel12">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="MIC Algorithm"/>
               </Properties>
             </Component>
           </SubComponents>

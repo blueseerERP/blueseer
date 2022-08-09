@@ -92,6 +92,7 @@ import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.cert.jcajce.JcaCertStore;
 import org.bouncycastle.cms.CMSAlgorithm;
@@ -205,12 +206,12 @@ public class apiUtils {
         return cert;
     }
     
-    public static String hashdigest(byte[] indata) {
+    public static String hashdigest(byte[] indata, String algo) {
         String x;
         
         MessageDigest messageDigest = null;
                     try {
-                        messageDigest = MessageDigest.getInstance("SHA-1");
+                        messageDigest = MessageDigest.getInstance(algo);  // SHA-1, etc
                     } catch (NoSuchAlgorithmException ex) {
                         bslog(ex);
                     }
@@ -219,8 +220,21 @@ public class apiUtils {
         return x;
     }
     
-    public static byte[] encryptData(byte[] data, X509Certificate encryptionCertificate) throws CertificateEncodingException, CMSException, IOException {
-
+    public static byte[] encryptData(byte[] data, X509Certificate encryptionCertificate, String algo) throws CertificateEncodingException, CMSException, IOException {
+        ASN1ObjectIdentifier x = null;
+        if (algo.equals("AES128_CBC")) {
+            x = CMSAlgorithm.AES128_CBC;
+        } else if (algo.equals("AES192_CBC")) {
+            x = CMSAlgorithm.AES192_CBC;
+        } else if (algo.equals("AES256_CBC")) {
+            x = CMSAlgorithm.AES256_CBC;
+        } else if (algo.equals("DES_CBC")) {
+            x = CMSAlgorithm.DES_CBC;  
+        } else if (algo.equals("DES_EDE3_CBC")) {
+            x = CMSAlgorithm.DES_EDE3_CBC;    
+        } else {
+           x = CMSAlgorithm.AES128_CBC;  
+        }
         byte[] encryptedData = null;
         if (null != data && null != encryptionCertificate) {
             CMSEnvelopedDataGenerator cmsEnvelopedDataGenerator
@@ -230,10 +244,8 @@ public class apiUtils {
               = new JceKeyTransRecipientInfoGenerator(encryptionCertificate);
             cmsEnvelopedDataGenerator.addRecipientInfoGenerator(jceKey);
             CMSTypedData msg = new CMSProcessableByteArray(data);
-            OutputEncryptor encryptor
-              = new JceCMSContentEncryptorBuilder(CMSAlgorithm.AES128_CBC)
+            OutputEncryptor encryptor = new JceCMSContentEncryptorBuilder(x)
               .setProvider("BC").build();
-           // MimeBodyPart msg = new MimeBodyPart();
             CMSEnvelopedData cmsEnvelopedData = cmsEnvelopedDataGenerator
               .generate(msg,encryptor);
             encryptedData = cmsEnvelopedData.getEncoded();
@@ -368,11 +380,11 @@ public class apiUtils {
        
         // gather pertinent info for this AS2 ID / Partner
         String[] tp = ediData.getAS2Info(as2id);
-        String url = tp[12] + "://" + tp[1] + ":" + tp[2] + "/" + tp[3];
+        String url = tp[15] + "://" + tp[1] + ":" + tp[2] + "/" + tp[3];
         String as2To = tp[4];
         String as2From = tp[5];
         String internalURL = tp[6];
-        String sourceDir = tp[13];
+        String sourceDir = tp[16];
         String signkeyid = tp[7];
         
         
@@ -385,7 +397,7 @@ public class apiUtils {
         logdet.add(new String[]{parentkey, "info", "Signing Key ID: " + signkeyid});
         
        
-    //    System.out.println("here->" + as2To + "/" +  as2From + "/" + internalURL + "/" + sourceDir + "/" + signkeyid);
+        System.out.println("here->" + as2To + "/" +  as2From + "/" + internalURL + "/" + sourceDir + "/" + signkeyid);
         
         X509Certificate encryptcertificate = getCert(tp[11]);
         if (encryptcertificate == null) {
@@ -491,7 +503,7 @@ public class apiUtils {
           mbp2.addHeader("Content-Type", "multipart/signed; protocol=\"application/pkcs7-signature\"; boundary=" + "\"" + newboundary + "\"" + "; micalg=sha1");
           mbp2.addHeader("Content-Disposition", "attachment; filename=smime.p7m");
         
-          signedAndEncrypteddata = encryptData(mbp2.getInputStream().readAllBytes(), encryptcertificate);
+          signedAndEncrypteddata = encryptData(mbp2.getInputStream().readAllBytes(), encryptcertificate, tp[18]);
           
         }
         

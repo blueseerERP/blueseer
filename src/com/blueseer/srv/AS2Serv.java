@@ -307,7 +307,7 @@ public class AS2Serv extends HttpServlet {
             }
         }
         // perform Digest on decrypted Data
-        String mic = hashdigest(finalContent);
+        String mic = hashdigest(finalContent, info[20]);
         if (mic == null) {
             mic = "";
         }
@@ -415,13 +415,13 @@ public class AS2Serv extends HttpServlet {
         
         // now save file
         elementals[3] = filename;
-        if (info[14].isBlank()) {
-            info[14] = "edi/in";
+        if (info[17].isBlank()) {
+            info[17] = "edi/in";
         }
-        Path path = FileSystems.getDefault().getPath(info[14] + "/" + filename);
+        Path path = FileSystems.getDefault().getPath(info[17] + "/" + filename);
         if (Files.exists(path)) {
             filename = filename + "_" + Long.toHexString(System.currentTimeMillis());
-            path = FileSystems.getDefault().getPath(info[14] + "/" + filename);
+            path = FileSystems.getDefault().getPath(info[17] + "/" + filename);
         }
         output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path.toFile())));
         String datastring = new String(FileBytes);   
