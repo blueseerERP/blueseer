@@ -538,7 +538,7 @@ CREATE TABLE IF NOT EXISTS `change_log` (
   `chg_type` varchar(30) NOT NULL  DEFAULT '',
   `chg_ref` varchar(30) NOT NULL  DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-CREATE TABLE IF NOT EXISTS `cron_maint` (
+CREATE TABLE IF NOT EXISTS `cron_mstr` (
   `cron_jobid` varchar(30) NOT NULL DEFAULT '',
   `cron_desc` varchar(200) NOT NULL  DEFAULT '',
   `cron_group` varchar(30) NOT NULL  DEFAULT '',
