@@ -549,15 +549,30 @@ CREATE TABLE "change_log" (
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE "cron_log" (
-  "cron_id" INTEGER PRIMARY KEY,
-  "cron_prog" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "cron_sys" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "cron_severity" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
+CREATE TABLE "cron_maint" (
+  "cron_jobid" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "cron_desc" varchar(200) NOT NULL COLLATE NOCASE DEFAULT '',
-  "cron_ts" timestamp NOT NULL DEFAULT (datetime('now','localtime')),
-  "cron_ref" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "cron_status" varchar(10) NOT NULL COLLATE NOCASE DEFAULT ''
+  "cron_group" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cron_prog" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cron_expression" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cron_enabled" tinyint(1) NOT NULL COLLATE NOCASE DEFAULT '0',
+  "cron_modflag" tinyint(1) NOT NULL COLLATE NOCASE DEFAULT '0',
+  "cron_lastrun" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cron_lastmod" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cron_userid" varchar(30) NOT NULL COLLATE NOCASE DEFAULT ''
+);
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE "cron_log" (
+  "crl_id" INTEGER PRIMARY KEY,
+  "crl_jobid" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "crl_sys" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "crl_severity" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
+  "crl_desc" varchar(200) NOT NULL COLLATE NOCASE DEFAULT '',
+  "crl_ts" timestamp NOT NULL DEFAULT (datetime('now','localtime')),
+  "crl_ref" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "crl_status" varchar(10) NOT NULL COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
