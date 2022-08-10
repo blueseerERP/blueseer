@@ -30,13 +30,10 @@ import bsmf.MainFrame;
 import static bsmf.MainFrame.bslog;
 import static bsmf.MainFrame.tags;
 import static com.blueseer.adm.admData.addPksMstr;
-import com.blueseer.adm.admData.counter;
 import static com.blueseer.adm.admData.deletePksMstr;
-import static com.blueseer.adm.admData.getCounter;
 import static com.blueseer.adm.admData.getPksMstr;
 import com.blueseer.adm.admData.pks_mstr;
 import static com.blueseer.adm.admData.updatePksMstr;
-import com.blueseer.edi.APIMaint;
 import com.blueseer.edi.apiUtils;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
@@ -528,7 +525,7 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
             Path outpath = FileSystems.getDefault().getPath(bsmf.MainFrame.temp + "/" + myfile);
             
             byte[] indata = Files.readAllBytes(inpath);
-            byte[] outdata = APIMaint.encryptData(indata, apiUtils.getPublicKey(tbkey.getText()) );
+            byte[] outdata = apiUtils.encryptData(indata, apiUtils.getPublicKey(tbkey.getText()), "" );
            
          //   Path path = FileSystems.getDefault().getPath("temp" + "/" + "beforefile");
             BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(outpath.toFile()));

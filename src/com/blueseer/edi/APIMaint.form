@@ -595,10 +595,9 @@
             <Component class="javax.swing.JComboBox" name="ddclass">
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                  <StringArray count="3">
-                    <StringItem index="0" value="AS2"/>
-                    <StringItem index="1" value="HTTPS"/>
-                    <StringItem index="2" value="SOAP"/>
+                  <StringArray count="2">
+                    <StringItem index="0" value="REST"/>
+                    <StringItem index="1" value="SOAP"/>
                   </StringArray>
                 </Property>
               </Properties>
@@ -671,7 +670,7 @@
           <Properties>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                <TitledBorder title="AS2 Details"/>
+                <TitledBorder title="Cert Details"/>
               </Border>
             </Property>
           </Properties>

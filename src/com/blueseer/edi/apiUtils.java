@@ -321,7 +321,17 @@ public class apiUtils {
             return tmpBody;
 	}
 
-    
+    public static boolean isEncrypted(byte[] encryptedData) {
+            CMSEnvelopedData envelopedData;
+            String x = null;
+                    try {
+                        envelopedData = new CMSEnvelopedData(encryptedData);
+                        x = envelopedData.getEncryptionAlgOID();
+                    } catch (CMSException ex) {
+                        x = null;
+                    }
+            return ! (x == null);
+    }
     
     public static X509Certificate getCert(String certfile) throws CertificateException, NoSuchProviderException {
         X509Certificate certificate = null;

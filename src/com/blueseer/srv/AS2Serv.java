@@ -281,7 +281,7 @@ public class AS2Serv extends HttpServlet {
         }
         
         // check for encryption if forced usage
-        boolean isEncrypted = APIMaint.isEncrypted(content);
+        boolean isEncrypted = apiUtils.isEncrypted(content);
         
         if (! isEncrypted && info[9].equals("1")) {
            writeAS2Log(new String[]{"0","unknown","in","error","Encryption is required for this partner " + sender + "/" + receiver,now,""}); 
