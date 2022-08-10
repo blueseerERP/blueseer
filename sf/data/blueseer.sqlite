@@ -554,6 +554,8 @@ CREATE TABLE "cron_maint" (
   "cron_desc" varchar(200) NOT NULL COLLATE NOCASE DEFAULT '',
   "cron_group" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "cron_prog" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cron_param" varchar(200) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cron_priority" int(3) NOT NULL COLLATE NOCASE DEFAULT '0',
   "cron_expression" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "cron_enabled" tinyint(1) NOT NULL COLLATE NOCASE DEFAULT '0',
   "cron_modflag" tinyint(1) NOT NULL COLLATE NOCASE DEFAULT '0',
