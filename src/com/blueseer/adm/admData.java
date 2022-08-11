@@ -1645,4 +1645,12 @@ public class admData {
         }
     }
     
+    public record cron_mstr(String[] m, String cron_jobid, String cron_desc, String cron_group, 
+        String cron_prog, String cron_param, String cron_priority, String cron_expression, String cron_enabled,
+        String cron_modflag, String cron_lastrun, String cron_lastmod, String cron_userid ) {
+        public cron_mstr(String[] m) {
+            this(m, "", "", "", "", "", "", "", "", "", "", "", "");
+        }
+    }
+    
 }
