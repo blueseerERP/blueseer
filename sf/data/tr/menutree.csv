@@ -272,6 +272,7 @@ yönetici,FTPMaint,20,JMenuItem,FTP Bakımı,,,,1,1
 yönetici,MassLoad,21,JMenuItem,Ana Verileri İçe Aktarma,,,,1,1
 yönetici,JasperRptMaint,22,JMenuItem,Jasper Rapor Bakımı,,,,1,1
 yönetici,PKSMaint,23,JMenuItem,PKS Maintenance,,,,1,1
+yönetici,CronMaint,24,JMenuItem,Cron Maintenance,,,,1,1
 Yardım,About,1,JMenuItem,Hakkında,,,,1,1
 Yardım,License,2,JMenuItem,Lisans,,,,1,1
 Yardım,Update,3,JMenuItem,Güncelleme,,,,1,1

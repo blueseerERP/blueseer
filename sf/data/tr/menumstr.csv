@@ -144,6 +144,7 @@ ShipMaint,,com.blueseer.shp.ShipperMaint,JMenuItem,shpm
 ShipMaintSerial,,com.blueseer.shp.ShipperMaintSerial,JMenuItem,shps
 InvoiceMaint,,com.blueseer.far.InvoiceMaint,JMenuItem,invv
 SiteMaint,,com.blueseer.adm.SiteMaint,JMenuItem,site
+CronMaint,,com.blueseer.adm.CronMaint,JMenuItem,cron
 TermsMaint,,com.blueseer.ctr.TermsMaint,JMenuItem,term
 TrainingRpt1,,com.blueseer.hrm.TrainingRpt,JMenuItem,trnr
 UnPostedTransRpt,,com.blueseer.utl.ReportPanel,JMenuItem,ungl

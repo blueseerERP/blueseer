@@ -272,6 +272,7 @@ Admin,FTPMaint,20,JMenuItem,Maintenance FTP,,,,1,1
 Admin,MassLoad,21,JMenuItem,Importation des données de base,,,,1,1
 Admin,JasperRptMaint,22,JMenuItem,Maintenance du rapport Jasper,,,,1,1
 Admin,PKSMaint,23,JMenuItem,PKS Maintenance,,,,1,1
+Admin,CronMaint,24,JMenuItem,Cron Maintenance,,,,1,1
 Aider,About,1,JMenuItem,Sur,,,,1,1
 Aider,License,2,JMenuItem,Licence,,,,1,1
 Aider,Update,3,JMenuItem,Mettre à jour,,,,1,1
