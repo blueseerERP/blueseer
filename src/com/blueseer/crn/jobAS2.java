@@ -56,6 +56,11 @@ public class jobAS2 implements Job {
         
         // The as2ID must be passed to this job in order to schedule push AS2 comm of this id.
         // must be passed in 'param' key with 'value' = as2id of as2_mstr table
+        
+        // NOTE:  this job only 'pushes' AS2 transmissions from source directory of as2id
+        // inbounds are pushed from partner...and must be collected/processed via another mechanism
+                
+                
 		JobDataMap dataMap = context.getJobDetail().getJobDataMap();
 		String as2id = dataMap.getString("param");
                 
