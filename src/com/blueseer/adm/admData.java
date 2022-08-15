@@ -53,6 +53,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Currency;
 import java.util.HashMap;
 import java.util.Locale;
@@ -1599,6 +1600,84 @@ public class admData {
                 System.out.println("SERVER: " + aReply);
             }
         }
+    }
+    
+    public static ArrayList<cron_mstr> getCronMstrEnabled() {
+        cron_mstr r = null;
+        ArrayList<cron_mstr> list = new ArrayList<cron_mstr>();
+        String[] m = new String[2];
+        String sql = "select * from cron_mstr where cron_enabled = '1' ;";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+	PreparedStatement ps = con.prepareStatement(sql);) {
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new cron_mstr(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new cron_mstr(m, res.getString("cron_jobid"), 
+                            res.getString("cron_desc"),
+                            res.getString("cron_group"),
+                            res.getString("cron_prog"),    
+                            res.getString("cron_param"),
+                            res.getString("cron_priority"),
+                            res.getString("cron_expression"),
+                            res.getString("cron_enabled"),
+                            res.getString("cron_modflag"),
+                            res.getString("cron_lastrun"),
+                            res.getString("cron_lastmod"),
+                            res.getString("cron_userid")
+                        );
+                        list.add(r);
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new cron_mstr(m);
+        }
+        return list;
+    }
+    
+    public static ArrayList<cron_mstr> getCronMstrMod() {
+        cron_mstr r = null;
+        ArrayList<cron_mstr> list = new ArrayList<cron_mstr>();
+        String[] m = new String[2];
+        String sql = "select * from cron_mstr where cron_enabled = '1' and cron_modflag = '1' ;";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+	PreparedStatement ps = con.prepareStatement(sql);) {
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new cron_mstr(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new cron_mstr(m, res.getString("cron_jobid"), 
+                            res.getString("cron_desc"),
+                            res.getString("cron_group"),
+                            res.getString("cron_prog"),    
+                            res.getString("cron_param"),
+                            res.getString("cron_priority"),
+                            res.getString("cron_expression"),
+                            res.getString("cron_enabled"),
+                            res.getString("cron_modflag"),
+                            res.getString("cron_lastrun"),
+                            res.getString("cron_lastmod"),
+                            res.getString("cron_userid")
+                        );
+                        list.add(r);
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new cron_mstr(m);
+        }
+        return list;
     }
     
     
