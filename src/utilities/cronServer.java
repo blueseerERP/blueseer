@@ -24,11 +24,19 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
 package utilities;
+import com.blueseer.adm.admData;
+import com.blueseer.adm.admData.cron_mstr;
 import com.blueseer.crn.TestJob;
 import com.blueseer.crn.jobWD;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.quartz.JobBuilder;
 import org.quartz.JobDetail;
+import org.quartz.JobKey;
 import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
 import org.quartz.impl.StdSchedulerFactory;
 import org.quartz.impl.triggers.CronTriggerImpl; 
 /**
@@ -48,32 +56,47 @@ public class cronServer {
 		// build watchdog job
 		
 		
-		
-		JobDetail jobwd = JobBuilder.newJob(jobWD.class)
-    		    .withIdentity("job1", "group1")
-    		    .usingJobData("prog", "...in jobwd")
-    		    .build();
-    		    
-		
-    	JobDetail job = JobBuilder.newJob(TestJob.class)
-    		    .withIdentity("job2", "group1")
-    		    .usingJobData("prog", "...in hellojob")
-    		    .build();
+	// first...build and trigger WatchDog class for cron job updates	
+        JobDetail jobwd = JobBuilder.newJob(jobWD.class)
+            .withIdentity("jobWD", "groupWD")
+            .build();
+    	CronTriggerImpl triggerWD = new CronTriggerImpl();
+    	triggerWD.setName("triggerWD");
+    	triggerWD.setCronExpression("* * * * * ?");  // set to run every 1 minute...could also use 0/1 * * * * ?
     	
-    	CronTriggerImpl trigger1 = new CronTriggerImpl();
-    	trigger1.setName("dummyTriggerName1");
-    	trigger1.setCronExpression("0/5 * * * * ?");
-    	
-    	CronTriggerImpl trigger2 = new CronTriggerImpl();
-    	trigger2.setName("dummyTriggerName2");
-    	trigger2.setCronExpression("0/10 * * * * ?");
-    	
-    	
-    	//schedule it
+        //schedule it
     	scheduler = new StdSchedulerFactory().getScheduler();
     	scheduler.start();
-    	scheduler.scheduleJob(jobwd, trigger1);
-    	scheduler.scheduleJob(job, trigger2);
+    	scheduler.scheduleJob(jobwd, triggerWD);
+        
+        
+        // now...deploy all 'enabled' tasks in cron_mstr
+	ArrayList<cron_mstr> list = admData.getCronMstrEnabled();
+        for (cron_mstr cm : list) {
+            try {
+                JobKey jk = new JobKey(cm.cron_jobid(), cm.cron_group());
+                if (! scheduler.checkExists(jk)) {
+                 continue;
+                }
+                scheduler.deleteJob(jk);
+                Class cls = Class.forName(cm.cron_prog());
+                JobDetail job = JobBuilder.newJob(cls)
+                        .withIdentity(jk)
+                        .usingJobData("param", cm.cron_param())
+                        .build();
+                CronTriggerImpl trigger = new CronTriggerImpl();
+                trigger.setName(cm.cron_jobid()); 
+                trigger.setCronExpression(cm.cron_expression());  
+                scheduler.scheduleJob(job, trigger);
+            } catch (SchedulerException ex) {
+                Logger.getLogger(jobWD.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ParseException ex) {
+                Logger.getLogger(jobWD.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ClassNotFoundException ex) {
+                        Logger.getLogger(jobWD.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
     	
         }	
 }
