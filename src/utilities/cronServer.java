@@ -26,7 +26,7 @@ SOFTWARE.
 package utilities;
 import com.blueseer.adm.admData;
 import com.blueseer.adm.admData.cron_mstr;
-import com.blueseer.crn.TestJob;
+import com.blueseer.crn.jobAS2;
 import com.blueseer.crn.jobWD;
 import java.text.ParseException;
 import java.util.ArrayList;

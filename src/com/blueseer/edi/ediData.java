@@ -1233,6 +1233,23 @@ public class ediData {
     
     
     //misc
+    public static boolean isValidAS2id(String id) {
+        boolean x = false;
+         String sql = "select * from as2_mstr where as2_id = ?;";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, id);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                x = true;
+                } 
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s); 
+        }
+        return x;
+    }
+    
     
     public static ArrayList getMapMstrList() {
        ArrayList mylist = new ArrayList();
