@@ -75,11 +75,13 @@ public class cronServer {
         
         // now...deploy all 'enabled' tasks in cron_mstr
 	ArrayList<cron_mstr> list = admData.getCronMstrEnabled();
+        System.out.println("Number of initial cron jobs: " + list.size() );
         if (list.size() > 0) {
             for (cron_mstr cm : list) {
                 try {
                     JobKey jk = new JobKey(cm.cron_jobid(), cm.cron_group());
-                    if (! scheduler.checkExists(jk)) {
+                    System.out.println("JobKey: " + jk );
+                    if (scheduler.checkExists(jk)) {
                      continue;
                     }
                     scheduler.deleteJob(jk);
@@ -90,7 +92,8 @@ public class cronServer {
                             .build();
                     CronTriggerImpl trigger = new CronTriggerImpl();
                     trigger.setName(cm.cron_jobid()); 
-                    trigger.setCronExpression(cm.cron_expression());  
+                    trigger.setCronExpression(cm.cron_expression()); 
+                    System.out.println("starting cron job: " + jk );
                     scheduler.scheduleJob(job, trigger);
                 } catch (SchedulerException ex) {
                     Logger.getLogger(jobWD.class.getName()).log(Level.SEVERE, null, ex);
