@@ -319,14 +319,6 @@ public class CronMaint extends javax.swing.JPanel implements IBlueSeerT  {
      
     public boolean validateInput(dbaction x) {
         
-        String z = BlueSeerUtils.bsformat("", tbkey.getText(), "0");
-        if (z.equals("error")) {
-            bsmf.MainFrame.show(getMessageTag(1000));
-            tbkey.requestFocus();
-            return false;
-        } 
-
-      
 
         Map<String,Integer> f = OVData.getTableInfo("cron_mstr");
         int fc;
@@ -374,12 +366,18 @@ public class CronMaint extends javax.swing.JPanel implements IBlueSeerT  {
             return false;
         }
         
-        if (! BlueSeerUtils.isClassFile("com.blueseer.crn." + tbprog.getText())) {
+        if (! BlueSeerUtils.isClassFile(tbprog.getText())) {
                     bsmf.MainFrame.show(getMessageTag(1145,tbprog.getText()));
                     tbprog.requestFocus();
                     return false;
         }
         
+        String z = BlueSeerUtils.bsformat("", tbpriority.getText(), "0");
+        if (z.equals("error")) {
+            bsmf.MainFrame.show(getMessageTag(1000));
+            tbpriority.requestFocus();
+            return false;
+        } 
         
       return true;
     }
@@ -548,6 +546,7 @@ public class CronMaint extends javax.swing.JPanel implements IBlueSeerT  {
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -625,7 +624,7 @@ public class CronMaint extends javax.swing.JPanel implements IBlueSeerT  {
         jLabel1.setText("Group");
         jLabel1.setName("lblgroup"); // NOI18N
 
-        jLabel2.setText("Program");
+        jLabel2.setText("Job Class");
         jLabel2.setName("lblprog"); // NOI18N
 
         jLabel3.setText("Parameters");
@@ -646,6 +645,9 @@ public class CronMaint extends javax.swing.JPanel implements IBlueSeerT  {
         jLabel8.setText("Userid");
         jLabel8.setName("lbluserid"); // NOI18N
 
+        jLabel9.setForeground(new java.awt.Color(0, 0, 255));
+        jLabel9.setText("Ex:  0 */2 * * * ?   ...every 2 hours");
+
         javax.swing.GroupLayout panelmaintLayout = new javax.swing.GroupLayout(panelmaint);
         panelmaint.setLayout(panelmaintLayout);
         panelmaintLayout.setHorizontalGroup(
@@ -665,7 +667,6 @@ public class CronMaint extends javax.swing.JPanel implements IBlueSeerT  {
                     .addComponent(jLabel8))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(tbprog, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(panelmaintLayout.createSequentialGroup()
                         .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -689,9 +690,12 @@ public class CronMaint extends javax.swing.JPanel implements IBlueSeerT  {
                                 .addComponent(tblastrun, javax.swing.GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE)
                                 .addComponent(tbuserid, javax.swing.GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE)
                                 .addComponent(tbexpression))
-                            .addGap(195, 195, 195)))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(26, 26, 26)))
                     .addComponent(tbgroup, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(tbprog, javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(tbparam, javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(tbdesc, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 269, Short.MAX_VALUE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -731,7 +735,8 @@ public class CronMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbexpression, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5))
+                    .addComponent(jLabel5)
+                    .addComponent(jLabel9))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cbenabled)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -820,6 +825,7 @@ public class CronMaint extends javax.swing.JPanel implements IBlueSeerT  {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JLabel lbldesc;
     private javax.swing.JLabel lblid;
     private javax.swing.JPanel panelmaint;
