@@ -24,12 +24,14 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
 package utilities;
+import static bsmf.MainFrame.tags;
 import com.blueseer.adm.admData;
 import com.blueseer.adm.admData.cron_mstr;
-import com.blueseer.crn.jobAS2;
 import com.blueseer.crn.jobWD;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.quartz.JobBuilder;
@@ -53,9 +55,10 @@ public class cronServer {
     //	job.setName("dummyJobName");
     //	job.setJobClass(HelloJob.class);
     	
-		// build watchdog job
 		
-		
+	bsmf.MainFrame.setConfig();	
+	tags = ResourceBundle.getBundle("resources.bs", Locale.getDefault());
+        
 	// first...build and trigger WatchDog class for cron job updates	
         JobDetail jobwd = JobBuilder.newJob(jobWD.class)
             .withIdentity("jobWD", "groupWD")
@@ -72,31 +75,32 @@ public class cronServer {
         
         // now...deploy all 'enabled' tasks in cron_mstr
 	ArrayList<cron_mstr> list = admData.getCronMstrEnabled();
-        for (cron_mstr cm : list) {
-            try {
-                JobKey jk = new JobKey(cm.cron_jobid(), cm.cron_group());
-                if (! scheduler.checkExists(jk)) {
-                 continue;
+        if (list.size() > 0) {
+            for (cron_mstr cm : list) {
+                try {
+                    JobKey jk = new JobKey(cm.cron_jobid(), cm.cron_group());
+                    if (! scheduler.checkExists(jk)) {
+                     continue;
+                    }
+                    scheduler.deleteJob(jk);
+                    Class cls = Class.forName(cm.cron_prog());
+                    JobDetail job = JobBuilder.newJob(cls)
+                            .withIdentity(jk)
+                            .usingJobData("param", cm.cron_param())
+                            .build();
+                    CronTriggerImpl trigger = new CronTriggerImpl();
+                    trigger.setName(cm.cron_jobid()); 
+                    trigger.setCronExpression(cm.cron_expression());  
+                    scheduler.scheduleJob(job, trigger);
+                } catch (SchedulerException ex) {
+                    Logger.getLogger(jobWD.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ParseException ex) {
+                    Logger.getLogger(jobWD.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ClassNotFoundException ex) {
+                            Logger.getLogger(jobWD.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                scheduler.deleteJob(jk);
-                Class cls = Class.forName(cm.cron_prog());
-                JobDetail job = JobBuilder.newJob(cls)
-                        .withIdentity(jk)
-                        .usingJobData("param", cm.cron_param())
-                        .build();
-                CronTriggerImpl trigger = new CronTriggerImpl();
-                trigger.setName(cm.cron_jobid()); 
-                trigger.setCronExpression(cm.cron_expression());  
-                scheduler.scheduleJob(job, trigger);
-            } catch (SchedulerException ex) {
-                Logger.getLogger(jobWD.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (ParseException ex) {
-                Logger.getLogger(jobWD.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (ClassNotFoundException ex) {
-                        Logger.getLogger(jobWD.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        
     	
         }	
 }
