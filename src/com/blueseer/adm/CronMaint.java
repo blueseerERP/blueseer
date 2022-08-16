@@ -646,7 +646,7 @@ public class CronMaint extends javax.swing.JPanel implements IBlueSeerT  {
         jLabel8.setName("lbluserid"); // NOI18N
 
         jLabel9.setForeground(new java.awt.Color(0, 0, 255));
-        jLabel9.setText("Ex:  0 */2 * * * ?   ...every 2 hours");
+        jLabel9.setText("Ex:  0 0 0/2 * * ?   ...every 2 hours");
 
         javax.swing.GroupLayout panelmaintLayout = new javax.swing.GroupLayout(panelmaint);
         panelmaint.setLayout(panelmaintLayout);

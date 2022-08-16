@@ -1085,7 +1085,7 @@ public class DTData {
     
     public static DefaultTableModel getCronBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("job"), getGlobalColumnTag("description"), getGlobalColumnTag("group"), getGlobalColumnTag("enabled")})
+                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("description"), getGlobalColumnTag("group"), getGlobalColumnTag("enabled")})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  

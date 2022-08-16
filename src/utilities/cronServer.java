@@ -65,7 +65,7 @@ public class cronServer {
             .build();
     	CronTriggerImpl triggerWD = new CronTriggerImpl();
     	triggerWD.setName("triggerWD");
-    	triggerWD.setCronExpression("* * * * * ?");  // set to run every 1 minute...could also use 0/1 * * * * ?
+    	triggerWD.setCronExpression("0 0/1 * * * ?");  // set to run every 1 minute
     	
         //schedule it
     	scheduler = new StdSchedulerFactory().getScheduler();

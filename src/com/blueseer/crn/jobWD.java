@@ -25,6 +25,7 @@ SOFTWARE.
  */
 package com.blueseer.crn;
 
+import static bsmf.MainFrame.bslog;
 import com.blueseer.adm.admData;
 import com.blueseer.adm.admData.cron_mstr;
 import java.io.BufferedReader;
@@ -90,26 +91,32 @@ public class jobWD implements Job {
                 trigger.setCronExpression(cm.cron_expression());  
                 myscheduler.scheduleJob(job, trigger);
             } catch (SchedulerException ex) {
-                Logger.getLogger(jobWD.class.getName()).log(Level.SEVERE, null, ex);
+                bslog(ex);
             } catch (ParseException ex) {
-                Logger.getLogger(jobWD.class.getName()).log(Level.SEVERE, null, ex);
+                bslog(ex);
             } catch (ClassNotFoundException ex) {
-                        Logger.getLogger(jobWD.class.getName()).log(Level.SEVERE, null, ex);
+                bslog(ex);
             }
         }
-        /*
-        for (String groupName : myscheduler.getJobGroupNames()) {
-				     for (JobKey jobKey : myscheduler.getJobKeys(GroupMatcher.jobGroupEquals(groupName))) {
-					  String jobName = jobKey.getName();
-					  String jobGroup = jobKey.getGroup();
-					  //get job's trigger
-					  List<Trigger> triggers = (List<Trigger>) myscheduler.getTriggersOfJob(jobKey);
-					  Date nextFireTime = triggers.get(0).getNextFireTime(); 
-						System.out.println("[jobName] : " + jobName + " [groupName] : "
-							+ jobGroup + " - " + nextFireTime);
-					  }
-				 }
-        */
+        
+        System.out.println("List of current Jobs and Triggers: ");
+        
+        try {
+            System.out.println("List of current Jobs and Triggers: ");
+            for (String groupName : myscheduler.getJobGroupNames()) {
+                for (JobKey jobKey : myscheduler.getJobKeys(GroupMatcher.jobGroupEquals(groupName))) {
+                    String jobName = jobKey.getName();
+                    String jobGroup = jobKey.getGroup();
+                    List<Trigger> triggers = (List<Trigger>) myscheduler.getTriggersOfJob(jobKey);
+                    Date nextFireTime = triggers.get(0).getNextFireTime();
+                    System.out.println("[jobName] : " + jobName + " [groupName] : "
+                            + jobGroup + " - " + nextFireTime);
+                }
+            }
+        } catch (SchedulerException ex) {
+            bslog(ex);
+        }
+        
        
     }
 
