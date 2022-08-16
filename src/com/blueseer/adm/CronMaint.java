@@ -374,7 +374,11 @@ public class CronMaint extends javax.swing.JPanel implements IBlueSeerT  {
             return false;
         }
         
-        
+        if (! BlueSeerUtils.isClassFile("com.blueseer.crn." + tbprog.getText())) {
+                    bsmf.MainFrame.show(getMessageTag(1145,tbprog.getText()));
+                    tbprog.requestFocus();
+                    return false;
+        }
         
         
       return true;
