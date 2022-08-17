@@ -362,7 +362,10 @@ public class OVData {
             ResultSet res = null;
             try{
                 
+              //  if (! dbtype.equals("sqlite")) {
                 con.setAutoCommit(false);
+               // }
+                
                 if (dbtype.equals("sqlite")) {
                res = st.executeQuery("select max(counter_id) as 'num' from counter where " +
                        " counter_name = " + "'" + countername + "'" + ";");
@@ -376,7 +379,10 @@ public class OVData {
                 st.executeUpdate(
                        " update counter set counter_id = " + "'" + nbr + "'" +
                        " where counter_name = " + "'" + countername + "'" + ";" );
+                
+              //  if (! dbtype.equals("sqlite")) {
                 con.setAutoCommit(true);
+              //  }
                
            }
             catch (SQLException s){

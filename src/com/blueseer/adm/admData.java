@@ -1680,6 +1680,66 @@ public class admData {
         return list;
     }
     
+    public static void updateCronJobID(String jobid, String modflag) {
+         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd"); 
+       try{
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
+        Statement st = con.createStatement();
+        try{
+            st.executeUpdate("update cron_mstr set cron_modflag = " + "'" + modflag + "'" + 
+                    " where cron_jobid = " + "'" + jobid + "'" + ";" );
+        }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+            if (st != null) {
+                st.close();
+            }
+            con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+
+    }
+    
+    public static void updateCronJobIDMulti(ArrayList<String> list, String modflag) {
+         
+       try{
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
+        Statement st = con.createStatement();
+        try{
+            for (String x : list) {
+            st.executeUpdate("update cron_mstr set cron_modflag = " + "'" + modflag + "'" + 
+                    " where cron_jobid = " + "'" + x + "'" + ";" );
+            }
+        }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+            if (st != null) {
+                st.close();
+            }
+            con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+
+    }
+    
     
     public static void updateDefaultCurrency(String x) {
          DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd"); 

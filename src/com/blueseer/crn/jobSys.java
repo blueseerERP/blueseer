@@ -26,9 +26,13 @@ SOFTWARE.
 package com.blueseer.crn;
 
 import static bsmf.MainFrame.bslog;
+import com.blueseer.edi.EDI;
+import static com.blueseer.edi.EDI.packageEnvelopes;
 import com.blueseer.edi.apiUtils;
 import static com.blueseer.edi.ediData.isValidAS2id;
 import com.blueseer.fgl.fglData;
+import com.blueseer.utl.BlueSeerUtils;
+import com.blueseer.utl.EDData;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.security.KeyStoreException;
@@ -36,6 +40,9 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -52,28 +59,65 @@ import org.quartz.JobExecutionException;
  * @author terryva
  */
 public class jobSys implements Job {
-    public void execute(JobExecutionContext context)
-	throws JobExecutionException {
+    public void execute(JobExecutionContext context) throws JobExecutionException {
         
         // The as2ID must be passed to this job in order to schedule push AS2 comm of this id.
         // must be passed in 'param' key with 'value' = as2id of as2_mstr table
         
         // NOTE:  this job only 'pushes' AS2 transmissions from source directory of as2id
         // inbounds are pushed from partner...and must be collected/processed via another mechanism
-                
+        String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"));        
                 
         JobDataMap dataMap = context.getJobDetail().getJobDataMap();
         String param = dataMap.getString("param");
-
-        switch (param.toLowerCase()) {
-            case "postgl" :
+        System.out.println("jobSys parameter used: " + param + " time: " + now);
+                
+        switch (param) {
+            case "postgl":  {
                 fglData.PostGL();
                 break;
-            default:
-                System.out.println("Unkown paramter: " + param);
-        }
+            }
                 
+            case "edi810o":  {
+                ArrayList<String> invoices = EDData.getEDIInvoicesAutoExport();
+                exportInvoices(invoices);
+                break;
+            }
+                
+            case "edi856o": {
+                ArrayList<String> asns = EDData.getEDIASNsAutoExport();
+                exportASNs(asns);
+                break;
+            }
+            
+            default: 
+                System.out.println("Unkown paramter: " + param + " time: " + now);
+        }
+               
 			
 		
 	}
+    
+    public void exportInvoices(ArrayList<String> list) {
+        int l_error;
+        for (String x : list) {
+          l_error = EDI.Create810(x); 
+          if (l_error == 0) { // success
+            EDData.updateEDIInvoiceStatus(x);  // set export success 
+          } 
+        }
+        packageEnvelopes();
+    }
+    
+    public void exportASNs(ArrayList<String> list) {
+        int l_error;
+        for (String x : list) {
+          l_error = EDI.Create856(x); 
+          if (l_error == 0) { // success
+            EDData.updateEDIASNStatus(x);  // set export success 
+          } 
+        }
+        packageEnvelopes();
+    }
+    
 }

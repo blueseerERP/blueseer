@@ -2179,6 +2179,9 @@ public class EDI {
         int idxnbr = EDData.writeEDIIDX(c);
         c[16] = String.valueOf(idxnbr);
         
+        
+        
+        
         messages.add(new String[]{"info","searching for map with: " + c[1] + "/" + defaults[2] + "/" + defaults[5]});
         map = EDData.getEDIMap(c[1], defaults[2], defaults[5]);
         

@@ -1031,6 +1031,48 @@ public class EDData {
         
     }
     
+    public static ArrayList<String> getEDIInvoicesAutoExport() {
+       ArrayList mylist = new ArrayList();
+        try{
+            Class.forName(driver);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                
+                
+                 res = st.executeQuery("select sh_id from ship_mstr  " +
+                        " inner join cm_mstr on cm_code = sh_cust " + 
+                        " where sh_export_810 = '0' and " + 
+                        " sh_status = '1' and " +
+                        " cm_is810export = '1' ;");   
+                
+                
+               while (res.next()) {
+                   mylist.add(res.getString("sh_id"));
+                }
+           }
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return mylist;
+        
+    }
+    
+    
     public static ArrayList<String> getEDIASNs(String fromnbr, String tonbr, String fromdate, String todate, boolean override) {
        ArrayList mylist = new ArrayList();
         try{
@@ -1083,6 +1125,48 @@ public class EDData {
         
     }
         
+    public static ArrayList<String> getEDIASNsAutoExport() {
+       ArrayList mylist = new ArrayList();
+        try{
+            Class.forName(driver);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                
+               
+                 res = st.executeQuery("select sh_id from ship_mstr  " +
+                        " inner join cm_mstr on cm_code = sh_cust " +  
+                        " where sh_export_856 = '0'  "  + 
+                        " and sh_status = '1' and cm_is856export = '1'  " +
+                        ";");   
+                
+                
+               while (res.next()) {
+                   mylist.add(res.getString("sh_id"));
+                }
+           }
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return mylist;
+        
+    }
+    
+    
     public static ArrayList<String> getEDIPOs(String fromnbr, String tonbr, String fromdate, String todate, boolean override) {
        ArrayList mylist = new ArrayList();
         try{
@@ -2987,9 +3071,6 @@ public class EDData {
             }
             Statement st = con.createStatement();
             try {
-                
-                
-                     
                     st.executeUpdate("update edi_idx set " +
                             " edx_sender = " + "'" + c[0] + "'" + "," +
                             " edx_receiver = " + "'" + c[21] + "'" + "," +

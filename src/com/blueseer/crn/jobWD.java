@@ -33,6 +33,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.text.ParseException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -62,7 +64,7 @@ public class jobWD implements Job {
 
         Scheduler myscheduler = context.getScheduler();
         
-				
+	String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmm")); 		
 	/*			
         JobKey key = context.getJobDetail().getKey();  
         JobDataMap dataMap = context.getJobDetail().getJobDataMap();
@@ -80,6 +82,7 @@ public class jobWD implements Job {
                 if (! myscheduler.checkExists(jk)) {
                  continue;
                 }
+                System.out.println("cron job has been modified: " + jk.getName() + " time: " + now);
                 myscheduler.deleteJob(jk);
                 Class cls = Class.forName(cm.cron_prog());
                 JobDetail job = JobBuilder.newJob(cls)
@@ -90,6 +93,9 @@ public class jobWD implements Job {
                 trigger.setName(cm.cron_jobid()); 
                 trigger.setCronExpression(cm.cron_expression());  
                 myscheduler.scheduleJob(job, trigger);
+                
+                admData.updateCronJobID(cm.cron_jobid(), "0");
+                
             } catch (SchedulerException ex) {
                 bslog(ex);
             } catch (ParseException ex) {
@@ -99,10 +105,10 @@ public class jobWD implements Job {
             }
         }
         
-        System.out.println("List of current Jobs and Triggers: ");
+        System.out.println("List of current Jobs and Triggers: " + " time: " + now);
         
         try {
-            System.out.println("List of current Jobs and Triggers: ");
+            
             for (String groupName : myscheduler.getJobGroupNames()) {
                 for (JobKey jobKey : myscheduler.getJobKeys(GroupMatcher.jobGroupEquals(groupName))) {
                     String jobName = jobKey.getName();

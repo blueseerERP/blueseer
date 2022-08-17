@@ -29,6 +29,8 @@ import com.blueseer.adm.admData;
 import com.blueseer.adm.admData.cron_mstr;
 import com.blueseer.crn.jobWD;
 import java.text.ParseException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -49,38 +51,27 @@ public class cronServer {
     public static Scheduler scheduler = null;
 	
 	public static void main(String[] args) throws Exception {
-		// TODO Auto-generated method stub
-
-	//	JobDetailImpl job = new JobDetailImpl();  
-    //	job.setName("dummyJobName");
-    //	job.setJobClass(HelloJob.class);
-    	
+	
 		
 	bsmf.MainFrame.setConfig();	
 	tags = ResourceBundle.getBundle("resources.bs", Locale.getDefault());
         
-	// first...build and trigger WatchDog class for cron job updates	
-        JobDetail jobwd = JobBuilder.newJob(jobWD.class)
-            .withIdentity("jobWD", "groupWD")
-            .build();
-    	CronTriggerImpl triggerWD = new CronTriggerImpl();
-    	triggerWD.setName("triggerWD");
-    	triggerWD.setCronExpression("0 0/1 * * * ?");  // set to run every 1 minute
-    	
-        //schedule it
-    	scheduler = new StdSchedulerFactory().getScheduler();
-    	scheduler.start();
-    	scheduler.scheduleJob(jobwd, triggerWD);
+        String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"));
+        
+        scheduler = new StdSchedulerFactory().getScheduler();
         
         
-        // now...deploy all 'enabled' tasks in cron_mstr
+        // ...deploy all 'enabled' tasks in cron_mstr
 	ArrayList<cron_mstr> list = admData.getCronMstrEnabled();
-        System.out.println("Number of initial cron jobs: " + list.size() );
+        ArrayList<String> jobids = new ArrayList<String>();
+        
+        System.out.println("Number of initial cron jobs: " + list.size() + " time: " + now );
         if (list.size() > 0) {
             for (cron_mstr cm : list) {
+                jobids.add(cm.cron_jobid());
                 try {
                     JobKey jk = new JobKey(cm.cron_jobid(), cm.cron_group());
-                    System.out.println("JobKey: " + jk );
+                    System.out.println("JobKey: " + jk + " time: " + now);
                     if (scheduler.checkExists(jk)) {
                      continue;
                     }
@@ -93,7 +84,7 @@ public class cronServer {
                     CronTriggerImpl trigger = new CronTriggerImpl();
                     trigger.setName(cm.cron_jobid()); 
                     trigger.setCronExpression(cm.cron_expression()); 
-                    System.out.println("starting cron job: " + jk );
+                    System.out.println("starting cron job: " + jk + " time: " + now );
                     scheduler.scheduleJob(job, trigger);
                 } catch (SchedulerException ex) {
                     Logger.getLogger(jobWD.class.getName()).log(Level.SEVERE, null, ex);
@@ -103,7 +94,23 @@ public class cronServer {
                             Logger.getLogger(jobWD.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
+            
+            admData.updateCronJobIDMulti(jobids, "0");
+            
         }
     	
+        
+        // now...build and trigger WatchDog class for cron job updates	
+        JobDetail jobwd = JobBuilder.newJob(jobWD.class)
+            .withIdentity("jobWD", "groupWD")
+            .build();
+    	CronTriggerImpl triggerWD = new CronTriggerImpl();
+    	triggerWD.setName("triggerWD");
+    	triggerWD.setCronExpression("0 0/1 * * * ?");  // set to run every 1 minute
+        scheduler.scheduleJob(jobwd, triggerWD);
+        
+        
+    	scheduler.start();
+        
         }	
 }
