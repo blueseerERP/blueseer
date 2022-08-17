@@ -4765,7 +4765,7 @@ return myarray;
             */
             
             // now get group by sums of those IDs
-            res = st.executeQuery("select glt_id, glt_site, glt_acct, glt_cc, " +
+            res = st.executeQuery("select glt_site, glt_acct, glt_cc, " +
                     " sum(glt_base_amt) as 'sum', glc_per, glc_year from gl_tran " +
                     " inner join gl_cal on glc_start <= glt_effdate " +
                     " and glc_end >= glt_effdate " +
