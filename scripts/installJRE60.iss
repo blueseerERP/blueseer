@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "BlueSeer"
-#define MyAppVersion "6.2"
+#define MyAppVersion "6.3"
 #define MyAppPublisher 
 #define MyAppURL "http://www.blueseer.com/"
 #define MyAppExeName "javaw"
@@ -23,7 +23,7 @@ AppUpdatesURL={#MyAppURL}
 UsePreviousAppDir=no
 DefaultDirName={sd}\{#MyAppName}
 DisableProgramGroupPage=yes
-OutputBaseFilename=blueseer.sqlite.win.v62
+OutputBaseFilename=blueseer.sqlite.win.v63
 Compression=lzma
 SolidCompression=yes
 PrivilegesRequired=poweruser

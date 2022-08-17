@@ -1,24 +1,8 @@
-# Version 6.2 Patch file
+# Version 6.3 Patch file
 #
 # bszip.ps1 maintains a running account of patches.   All lines in the patch file will be commented out except the
 # current patch.   There can only be one line starting with 'patch=' in the .patch file rolling forward.
 # Once a new patch is added with comments...the previous patch= is commented out
 #
 patch=0
-# First release of 6.2
-patch=1
-# bug fix #57 as well as updates to EDI labels and auto loading mechanics
-patch=2
-# EDI mods to ST doc id and envelope multi packaging
-patch=3
-# more menu validations; perf improvement on order maint load; bug fix for #60
-patch=4
-# more validations; beta of enhancements #61, #62
-patch=5
-# perf mods for cust master loading; mods to patch loading utility
-patch=6
-# additions of pooling library for performance improvements with mysql remote conn
-patch=7
-# further db call reductions and forecast to plan bug fix
-patch=8
-# bug fix for #66 and #67...and pks schema for later use
+# First release of 6.3

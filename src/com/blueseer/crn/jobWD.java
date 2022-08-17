@@ -79,20 +79,25 @@ public class jobWD implements Job {
         for (cron_mstr cm : list) {
             try {
                 JobKey jk = new JobKey(cm.cron_jobid(), cm.cron_group());
-                if (! myscheduler.checkExists(jk)) {
-                 continue;
-                }
+                
                 System.out.println("cron job has been modified: " + jk.getName() + " time: " + now);
-                myscheduler.deleteJob(jk);
-                Class cls = Class.forName(cm.cron_prog());
-                JobDetail job = JobBuilder.newJob(cls)
-                        .withIdentity(jk)
-                        .usingJobData("param", cm.cron_param())
-                        .build();
-                CronTriggerImpl trigger = new CronTriggerImpl();
-                trigger.setName(cm.cron_jobid()); 
-                trigger.setCronExpression(cm.cron_expression());  
-                myscheduler.scheduleJob(job, trigger);
+                
+                // delete if it already exists
+                if (myscheduler.checkExists(jk)) {
+                    myscheduler.deleteJob(jk);
+                    System.out.println("deleting old cron job: " + jk.getName() + " time: " + now);
+                }
+                
+                    Class cls = Class.forName(cm.cron_prog());
+                    JobDetail job = JobBuilder.newJob(cls)
+                            .withIdentity(jk)
+                            .usingJobData("param", cm.cron_param())
+                            .build();
+                    CronTriggerImpl trigger = new CronTriggerImpl();
+                    trigger.setName(cm.cron_jobid()); 
+                    trigger.setCronExpression(cm.cron_expression());  
+                    myscheduler.scheduleJob(job, trigger);
+                    System.out.println("adding new cron job: " + jk.getName() + " time: " + now);
                 
                 admData.updateCronJobID(cm.cron_jobid(), "0");
                 
