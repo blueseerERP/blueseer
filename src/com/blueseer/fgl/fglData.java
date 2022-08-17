@@ -4726,93 +4726,110 @@ return myarray;
             if (ds != null) {
             con = ds.getConnection();
             } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
+              con = DriverManager.getConnection(url + db, user, pass); 
             }
             Statement st = con.createStatement();
-            Statement st2 = con.createStatement();
-            Statement st3 = con.createStatement();
             ResultSet res = null;
-            ResultSet res2 = null;
             try {
-            int i = 0;
-            int per = 0;
-            int year = 0;
-            String acct = "";
-            String cc = "";
-            String site = "";
-            String curr = "";
-            String basecurr = "";
             double amt = 0.00;
             double newamt = 0.00;
+            int i = 0;
+            ArrayList acct_list = new ArrayList();
+            ArrayList cc_list =   new ArrayList();
+            ArrayList site_list =   new ArrayList();
+            ArrayList amt_list =  new ArrayList();   
+            ArrayList per_list =  new ArrayList();
+            ArrayList year_list =  new ArrayList();
+            
+            
 
-            if (dbtype.equals("sqlite")) {
-             st.executeUpdate("begin transaction;");
-            } else {
-             st.executeUpdate("start transaction;");  
+            // get IDs to move to gl_hist
+            res = st.executeQuery("select glt_id " +
+                    "  from gl_tran " +
+                    " inner join gl_cal on glc_start <= glt_effdate " +
+                    " and glc_end >= glt_effdate " +
+                    " ;");
+            while (res.next()) {
+                i++;
+                gltran.add(res.getInt("glt_id"));
             }
-
-            res = st.executeQuery("select glt_id, glt_site, glt_acct, glt_cc, glt_amt, glt_base_amt, glc_per, glc_year from gl_tran inner join gl_cal on glc_start <= glt_effdate and glc_end >= glt_effdate ;");
-           while (res.next()) {
-               i++;
-            gltran.add(res.getInt("glt_id"));
-            acct = res.getString("glt_acct");
-            cc = res.getString("glt_cc");
-            amt = res.getDouble("glt_base_amt");
-            per = res.getInt("glc_per");
-            year = res.getInt("glc_year");
-            site = res.getString("glt_site");
-
-
-            if (i > 0 && per != 0 && year != 0) {
-
-               int j = 0;
-
-               res2 = st2.executeQuery("select * from acb_mstr where acb_year = " +
-                    "'" + year + "'" + 
+            res.close();
+            /*
+            if (i > 0) {            
+                if (dbtype.equals("sqlite")) {
+                 st.executeUpdate("begin transaction;");
+                } else {
+                 st.executeUpdate("start transaction;");  
+                }
+            }
+            */
+            
+            // now get group by sums of those IDs
+            res = st.executeQuery("select glt_id, glt_site, glt_acct, glt_cc, " +
+                    " sum(glt_base_amt) as 'sum', glc_per, glc_year from gl_tran " +
+                    " inner join gl_cal on glc_start <= glt_effdate " +
+                    " and glc_end >= glt_effdate " +
+                    " group by glt_acct, glt_cc, glc_per, glc_year, glt_site ;");
+            
+            while (res.next()) {
+                acct_list.add(res.getString("glt_acct"));
+                cc_list.add(res.getString("glt_cc"));
+                per_list.add(res.getString("glc_per"));
+                year_list.add(res.getString("glc_year"));
+                site_list.add(res.getString("glt_site"));
+                amt_list.add(res.getString("sum"));
+            }
+            res.close();
+            
+            int j = 0;
+            for (int k = 0; k < acct_list.size(); k++) {
+               j = 0;
+               res = st.executeQuery("select * from acb_mstr where acb_year = " +
+                    "'" + year_list.get(k) + "'" + 
                     " AND acb_per = " +
-                    "'" + per + "'" +
+                    "'" + per_list.get(k) + "'" +
                     " AND acb_site = " +
-                    "'" + site + "'" +
+                    "'" + site_list.get(k) + "'" +
                     " AND acb_acct = " +
-                    "'" + acct + "'" +
+                    "'" + acct_list.get(k) + "'" +
                     " AND acb_cc = " +
-                    "'" + cc + "'" +
+                    "'" + cc_list.get(k) + "'" +
                     ";");
-
-                   while (res2.next()) {
+                   while (res.next()) {
                       j++;
-                      newamt = amt + res2.getDouble(("acb_amt"));
+                      newamt = res.getDouble(("acb_amt")) + Double.valueOf(amt_list.get(k).toString());
                    }
+                   res.close();
 
                  if (j > 0) {
-                 st3.executeUpdate("update acb_mstr set "
+                 st.executeUpdate("update acb_mstr set "
                         + " acb_amt = " + "'" + currformatDoubleUS(newamt).replace(defaultDecimalSeparator, '.') + "'"
-                        + " where acb_acct = " + "'" + res.getString("glt_acct") + "'" 
-                        + " AND acb_cc = " + "'" + res.getString("glt_cc") + "'" 
-                         + " AND acb_site = " + "'" + res.getString("glt_site") + "'" 
-                         + " AND acb_year = " + "'" + year + "'"
-                         + " AND acb_per = " + "'" + per + "'"
+                        + " where acb_acct = " + "'" + acct_list.get(k) + "'" 
+                        + " AND acb_cc = " + "'" + cc_list.get(k) + "'" 
+                         + " AND acb_site = " + "'" + site_list.get(k) + "'" 
+                         + " AND acb_year = " + "'" + year_list.get(k) + "'"
+                         + " AND acb_per = " + "'" + per_list.get(k) + "'"
                             + ";");
                  } else {
-                     newamt = amt;
-                     st3.executeUpdate("insert into acb_mstr values ( "
-                              + "'" + res.getString("glt_acct") + "'" + "," 
-                              + "'" + res.getString("glt_cc") + "'" + "," 
-                              + "'" + per + "'" + "," 
-                              + "'" + year + "'" + "," 
+                     newamt = Double.valueOf(amt_list.get(k).toString());
+                     st.executeUpdate("insert into acb_mstr values ( "
+                              + "'" + acct_list.get(k) + "'" + "," 
+                              + "'" + cc_list.get(k) + "'" + "," 
+                              + "'" + per_list.get(k) + "'" + "," 
+                              + "'" + year_list.get(k) + "'" + "," 
                               + "'" + currformatDoubleUS(newamt).replace(defaultDecimalSeparator, '.') + "'" + ","
-                              + "'" + site + "'" 
+                              + "'" + site_list.get(k) + "'" 
                               + ");");
-
                  }   
-           }
-
-           }
-
-             st.executeUpdate("commit;");
-
-           glCopyTranToHist(gltran);
-
+            }
+            
+             if (i > 0) {
+                 /*
+                st.executeUpdate("commit;");
+                */
+                glCopyTranToHist(gltran);
+             }
+             
         } catch (SQLException s) {
             MainFrame.bslog(s);
             bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
