@@ -706,6 +706,142 @@ public class apiUtils {
         return mp;
     }
     
+    public static MimeMultipart code2005(String sender, String receiver, String subject, String filename, String messageid, String mic) {
+        MimeBodyPart mbp = new MimeBodyPart();
+        MimeMultipart mp = new MimeMultipart();
+        LocalDateTime localDateTime = LocalDateTime.now();
+        String now = localDateTime.format(DateTimeFormatter.ISO_DATE);
+        String z = """
+                The message <%s> sent to <%s>
+                on %s with Subject <%s> failed and has been rejected.
+                The message was transmitted by <%s>.
+                   Error: MimeMultipart is incomplete
+                """.formatted(filename, receiver, now, subject, sender);
+        try {
+           // mbp.setText(z);
+           MimeMultipart mpInner = bundleit(z, receiver, messageid, mic, "failed");
+           ContentType ct = new ContentType(mpInner.getContentType());
+           String boundary = ct.getParameter("boundary");
+            mbp.setContent(mpInner);
+            mbp.setHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
+            mp.addBodyPart(mbp);
+            
+        } catch (MessagingException ex) {
+            bslog(ex);
+        }
+        
+        return mp;
+    }
+    
+    public static MimeMultipart code2010(String sender, String receiver, String subject, String filename, String messageid, String mic) {
+        MimeBodyPart mbp = new MimeBodyPart();
+        MimeMultipart mp = new MimeMultipart();
+        LocalDateTime localDateTime = LocalDateTime.now();
+        String now = localDateTime.format(DateTimeFormatter.ISO_DATE);
+        String z = """
+                The message <%s> sent to <%s>
+                on %s with Subject <%s> failed and has been rejected.
+                The message was transmitted by <%s>.
+                   Error: unable to retrieve contents of File
+                   Error:  FileBytesRead is null
+                """.formatted(filename, receiver, now, subject, sender);
+        try {
+           // mbp.setText(z);
+           MimeMultipart mpInner = bundleit(z, receiver, messageid, mic, "failed");
+           ContentType ct = new ContentType(mpInner.getContentType());
+           String boundary = ct.getParameter("boundary");
+            mbp.setContent(mpInner);
+            mbp.setHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
+            mp.addBodyPart(mbp);
+            
+        } catch (MessagingException ex) {
+            bslog(ex);
+        }
+        
+        return mp;
+    }
+    
+    public static MimeMultipart code2015(String sender, String receiver, String subject, String filename, String messageid, String mic) {
+        MimeBodyPart mbp = new MimeBodyPart();
+        MimeMultipart mp = new MimeMultipart();
+        LocalDateTime localDateTime = LocalDateTime.now();
+        String now = localDateTime.format(DateTimeFormatter.ISO_DATE);
+        String z = """
+                The message <%s> sent to <%s>
+                on %s with Subject <%s> failed and has been rejected.
+                The message was transmitted by <%s>.
+                   Error: Signature content is null
+                """.formatted(filename, receiver, now, subject, sender);
+        try {
+           // mbp.setText(z);
+           MimeMultipart mpInner = bundleit(z, receiver, messageid, mic, "failed");
+           ContentType ct = new ContentType(mpInner.getContentType());
+           String boundary = ct.getParameter("boundary");
+            mbp.setContent(mpInner);
+            mbp.setHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
+            mp.addBodyPart(mbp);
+            
+        } catch (MessagingException ex) {
+            bslog(ex);
+        }
+        
+        return mp;
+    }
+    
+    public static MimeMultipart code2020(String sender, String receiver, String subject, String filename, String messageid, String mic) {
+        MimeBodyPart mbp = new MimeBodyPart();
+        MimeMultipart mp = new MimeMultipart();
+        LocalDateTime localDateTime = LocalDateTime.now();
+        String now = localDateTime.format(DateTimeFormatter.ISO_DATE);
+        String z = """
+                The message <%s> sent to <%s>
+                on %s with Subject <%s> failed and has been rejected.
+                The message was transmitted by <%s>.
+                   Error: Invalid Signature
+                """.formatted(filename, receiver, now, subject, sender);
+        try {
+           // mbp.setText(z);
+           MimeMultipart mpInner = bundleit(z, receiver, messageid, mic, "failed");
+           ContentType ct = new ContentType(mpInner.getContentType());
+           String boundary = ct.getParameter("boundary");
+            mbp.setContent(mpInner);
+            mbp.setHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
+            mp.addBodyPart(mbp);
+            
+        } catch (MessagingException ex) {
+            bslog(ex);
+        }
+        
+        return mp;
+    }
+        
+    public static MimeMultipart code9999(String sender, String receiver, String subject, String filename, String messageid, String mic) {
+        MimeBodyPart mbp = new MimeBodyPart();
+        MimeMultipart mp = new MimeMultipart();
+        LocalDateTime localDateTime = LocalDateTime.now();
+        String now = localDateTime.format(DateTimeFormatter.ISO_DATE);
+        String z = """
+                The message <%s> sent to <%s>
+                on %s with Subject <%s> failed and has been rejected.
+                The message was transmitted by <%s>.
+                Internal server case 9999.
+                """.formatted(filename, receiver, now, subject, sender);
+        try {
+           // mbp.setText(z);
+           MimeMultipart mpInner = bundleit(z, receiver, messageid, mic, "failed");
+           ContentType ct = new ContentType(mpInner.getContentType());
+           String boundary = ct.getParameter("boundary");
+            mbp.setContent(mpInner);
+            mbp.setHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
+            mp.addBodyPart(mbp);
+            
+        } catch (MessagingException ex) {
+            bslog(ex);
+        }
+        
+        return mp;
+    }
+    
     
     public static mdn createMDN(String code, String[] e, ArrayList<String> headers) throws IOException, MessagingException {
         mdn x = null;
@@ -717,12 +853,31 @@ public class apiUtils {
         switch (code) {
             case "1000" :
             mbp.setContent(code1000(e[0], e[1], e[2], e[3], e[4], e[5]));
-            break;        
-        default:
-            z = """
-                The message <unknown> sent to <unknown>
-                on %s with Subject <unknown> has been rejected.
-                """.formatted( now);
+            break;     
+            
+            case "2000" :
+            mbp.setContent(code2000(e[0], e[1], e[2], e[3], e[4], e[5]));
+            break;
+            
+            case "2005" :
+            mbp.setContent(code2005(e[0], e[1], e[2], e[3], e[4], e[5]));
+            break;
+            
+            case "2010" :
+            mbp.setContent(code2010(e[0], e[1], e[2], e[3], e[4], e[5]));
+            break;
+            
+            case "2015" :
+            mbp.setContent(code2015(e[0], e[1], e[2], e[3], e[4], e[5]));
+            break;
+            
+            case "2020" :
+            mbp.setContent(code2020(e[0], e[1], e[2], e[3], e[4], e[5]));
+            break;
+                        
+            default:
+            mbp.setContent(code9999(e[0], e[1], e[2], e[3], e[4], e[5]));
+            
         }        
         
         if (mbp != null) {

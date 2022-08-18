@@ -332,7 +332,8 @@ public class AS2Serv extends HttpServlet {
            
         
         if (mp.getContentType().isEmpty()) {
-            return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "MimeMultipart is incomplete " + sender + "/" + receiver);  
+            //return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "MimeMultipart is incomplete " + sender + "/" + receiver);  
+            return createMDN("2005", elementals, null);
         }
         
         if (isDebug) 
@@ -351,7 +352,8 @@ public class AS2Serv extends HttpServlet {
             MimeMultipart mpsub = new MimeMultipart(new ByteArrayDataSource(finalContent, contentType));
             
             if (mpsub.getCount() < 2 && info[10].equals("1") ) { // info[10] sig required
-              return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "Signature is required for this partner " + sender + "/" + receiver);    
+            //  return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "Signature is required for this partner " + sender + "/" + receiver);    
+              return createMDN("2000", elementals, null);
             }
             
                
@@ -394,11 +396,13 @@ public class AS2Serv extends HttpServlet {
                } // for each mpsub (should be two if signed) 
                
            if (FileWHeadersBytes == null || FileBytes == null) {
-              return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "unable to retrieve contents of File " + sender + "/" + receiver); 
+            //  return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "unable to retrieve contents of File " + sender + "/" + receiver); 
+              return createMDN("2010", elementals, null);
            }
 
            if (Signature == null) {
-               return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "Signature content is null" + sender + "/" + receiver);
+               // return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "Signature content is null" + sender + "/" + receiver);
+               return createMDN("2015", elementals, null);
            } else {
              validSignature = verifySignature(FileWHeadersBytes, Signature);  
            }
@@ -408,7 +412,8 @@ public class AS2Serv extends HttpServlet {
             System.out.println("validSignature: " + validSignature);    
 
            if (! validSignature) {
-              return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "Signature could not be validated " + sender + "/" + receiver); 
+             // return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "Signature could not be validated " + sender + "/" + receiver); 
+              return createMDN("2020", elementals, null);
            } 
               
         }  // for parent mp ...should be just one
@@ -444,7 +449,7 @@ public class AS2Serv extends HttpServlet {
              output.close(); 
             }
            try {
-            mymdn = createMDN("1000", elementals, null);
+            mymdn = createMDN("1000", elementals, null);  // success assumes encryption and signed
             } catch (MessagingException ex) {
                 bslog(ex);
             }
