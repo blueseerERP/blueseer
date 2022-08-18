@@ -573,9 +573,9 @@ public class ediData {
             ps.setString(17, x.as2_forceencrypted);
             ps.setString(18, x.as2_forcesigned);
             ps.setString(19, x.as2_signcert);
-            ps.setString(19, x.as2_encalgo);
-            ps.setString(19, x.as2_signalgo);
-            ps.setString(19, x.as2_micalgo);
+            ps.setString(20, x.as2_encalgo);
+            ps.setString(21, x.as2_signalgo);
+            ps.setString(22, x.as2_micalgo);
             rows = ps.executeUpdate();
             } 
             return rows;
