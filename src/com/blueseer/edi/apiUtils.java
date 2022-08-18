@@ -307,7 +307,7 @@ public class apiUtils {
             dataPart.removeHeader("Content-Type");
             dataPart.removeHeader("Content-Disposition");
             
-            dataPart.setText(new String(data));
+            dataPart.setText(new String(data, "UTF-8"));
             dataPart.setHeader("Content-Type", "application/edi-x12; file=test.txt");
             dataPart.setHeader("Content-Disposition", "attachment; filename=test.txt");
             MimeMultipart signedData = sGen.generate(dataPart);
