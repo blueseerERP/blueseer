@@ -1829,6 +1829,7 @@ CREATE TABLE IF NOT EXISTS `so_mstr` (
   `so_export_855` tinyint(1) NOT NULL DEFAULT '0',
   `so_entrytype` varchar(10)  NOT NULL DEFAULT '',
   `so_confirm` tinyint(1)  NOT NULL DEFAULT '0',
+  `so_plan` tinyint(1)  NOT NULL DEFAULT '0',
   index cust (`so_cust`),
   index sitestatus (`so_site`, `so_status`),
   index custstatus(`so_cust`, `so_status`),

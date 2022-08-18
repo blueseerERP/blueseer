@@ -440,6 +440,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         cbissourced.setSelected(false);
         cbisallocated.setSelected(false);
         cbconfirm.setSelected(false);
+        cbplan.setSelected(false);
         
         listprice.setText("0");
         netprice.setText("0");
@@ -618,6 +619,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         cbissourced.setSelected(false);
         cbisallocated.setSelected(false);
         cbconfirm.setSelected(false);
+        cbplan.setSelected(false);
         
         listprice.setText("0");
         netprice.setText("0");
@@ -1052,7 +1054,8 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
            ordertype = "DISCRETE";
         }
                 
-        so_mstr x = new so_mstr(null, tbkey.getText().toString(),
+        so_mstr x = new so_mstr(null, 
+                 tbkey.getText().toString(),
                  ddcust.getSelectedItem().toString(),
                  ddship.getSelectedItem().toString(),
                  ddsite.getSelectedItem().toString(),
@@ -1072,8 +1075,9 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
                  remarks.getText(),
                  ordertype,
                  ddtax.getSelectedItem().toString(),
+                String.valueOf(BlueSeerUtils.boolToInt(cbconfirm.isSelected())),
                 String.valueOf(BlueSeerUtils.boolToInt(cbissourced.isSelected())),
-                String.valueOf(BlueSeerUtils.boolToInt(cbconfirm.isSelected()))
+                String.valueOf(BlueSeerUtils.boolToInt(cbplan.isSelected()))
                 );
         return x;
     }
@@ -1356,6 +1360,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         ddcust.setEnabled(false);
         cbissourced.setSelected(BlueSeerUtils.ConvertStringToBool(so.so_issourced()));
         cbconfirm.setSelected(BlueSeerUtils.ConvertStringToBool(so.so_confirm()));
+        cbplan.setSelected(BlueSeerUtils.ConvertStringToBool(so.so_plan()));
         ddstatus.setSelectedItem(so.so_status());
         ddcurr.setSelectedItem(so.so_curr());
         ddshipvia.setSelectedItem(so.so_shipvia());
@@ -2047,6 +2052,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel98 = new javax.swing.JLabel();
         cbisallocated = new javax.swing.JCheckBox();
         cbconfirm = new javax.swing.JCheckBox();
+        cbplan = new javax.swing.JCheckBox();
         btdelete = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jLabel11 = new javax.swing.JLabel();
@@ -2303,6 +2309,10 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         cbisallocated.setName("cballocation"); // NOI18N
 
         cbconfirm.setText("Confirmed");
+        cbconfirm.setName("cbconfirm"); // NOI18N
+
+        cbplan.setText("Plan");
+        cbplan.setName("cbplan"); // NOI18N
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -2357,8 +2367,10 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addComponent(cbissourced)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(cbconfirm)))))
-                .addContainerGap(191, Short.MAX_VALUE))
+                                .addComponent(cbconfirm)))
+                        .addGap(18, 18, 18)
+                        .addComponent(cbplan)))
+                .addContainerGap(128, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2416,7 +2428,8 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(cbisallocated)
                             .addComponent(cbissourced)
-                            .addComponent(cbconfirm))
+                            .addComponent(cbconfirm)
+                            .addComponent(cbplan))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(remarks, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -3861,6 +3874,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JCheckBox cbconfirm;
     private javax.swing.JCheckBox cbisallocated;
     private javax.swing.JCheckBox cbissourced;
+    private javax.swing.JCheckBox cbplan;
     private javax.swing.JTextField custnumber;
     private javax.swing.JComboBox<String> ddbom;
     private javax.swing.JComboBox<String> ddcurr;

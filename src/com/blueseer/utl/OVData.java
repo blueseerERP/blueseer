@@ -18742,6 +18742,7 @@ MainFrame.bslog(e);
                   " left outer join plan_mstr on plan_site = so_site and plan_item = sod_item and plan_order = sod_nbr and plan_line = sod_line " +
                   " where so_site = " + "'" + site + "'" +
                   " and so_status = " + "'" + getGlobalProgTag("open") + "'" +
+                  " and so_plan = '1' " +        
                   " and it_plan = '1' " + 
                                  ";" );
               

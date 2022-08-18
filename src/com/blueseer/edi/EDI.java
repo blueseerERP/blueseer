@@ -1854,7 +1854,8 @@ public class EDI {
                  "DISCRETE",
                  "", // tax
                 "0", // isSourced
-                "0" // isConfirmed
+                "0", // isConfirmed
+                "0" // isPlanned
                 );
         // detail
         ArrayList<ordData.sod_det> detail = new ArrayList<ordData.sod_det>();

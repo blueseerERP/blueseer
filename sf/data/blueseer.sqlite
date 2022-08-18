@@ -2166,7 +2166,8 @@ CREATE TABLE "so_mstr" (
   "so_isallocated" varchar(1) NOT NULL COLLATE NOCASE DEFAULT '',
   "so_export_855" tinyint(1) NOT NULL DEFAULT '0',
   "so_entrytype" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
-  "so_confirm" tinyint(1) NOT NULL DEFAULT '0'
+  "so_confirm" tinyint(1) NOT NULL DEFAULT '0',
+  "so_plan" tinyint(1) NOT NULL DEFAULT '0'
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
