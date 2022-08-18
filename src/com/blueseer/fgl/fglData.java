@@ -53,6 +53,7 @@ import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -4754,6 +4755,10 @@ return myarray;
                 gltran.add(res.getInt("glt_id"));
             }
             res.close();
+            
+            Collections.sort(gltran);
+
+            
             /*
             if (i > 0) {            
                 if (dbtype.equals("sqlite")) {
@@ -4769,6 +4774,8 @@ return myarray;
                     " sum(glt_base_amt) as 'sum', glc_per, glc_year from gl_tran " +
                     " inner join gl_cal on glc_start <= glt_effdate " +
                     " and glc_end >= glt_effdate " +
+                    " and glt_id >= " + "'" + gltran.get(0) + "'" +
+                    " and glt_id <= " + "'" + gltran.get(gltran.size() - 1) + "'" +
                     " group by glt_acct, glt_cc, glc_per, glc_year, glt_site ;");
             
             while (res.next()) {
