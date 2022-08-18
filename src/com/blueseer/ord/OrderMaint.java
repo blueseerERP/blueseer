@@ -440,7 +440,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         cbissourced.setSelected(false);
         cbisallocated.setSelected(false);
         cbconfirm.setSelected(false);
-        cbplan.setSelected(false);
+        cbplan.setSelected(true);
         
         listprice.setText("0");
         netprice.setText("0");
