@@ -1388,7 +1388,7 @@ public class ediData {
         ps.setString(2, receiver);
              try (ResultSet res = ps.executeQuery();) {
                while (res.next()) {
-               info = new String[15];     
+               info = new String[21];     
                info[0] = res.getString("as2_id");
                info[1] = res.getString("as2_url");
                info[2] = res.getString("as2_port");
@@ -1400,7 +1400,7 @@ public class ediData {
                info[8] = res.getString("edic_enckey");
                info[9] = res.getString("as2_encrypted");
                info[10] = res.getString("as2_signed");
-               info[11] = res.getString("as2_endcert");
+               info[11] = res.getString("as2_enccert");
                info[12] = res.getString("as2_forceencrypted");
                info[13] = res.getString("as2_forcesigned");
                info[14] = res.getString("as2_signcert");
