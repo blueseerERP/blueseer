@@ -540,6 +540,7 @@ public class AS2Maint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel17 = new javax.swing.JLabel();
         ddclass = new javax.swing.JComboBox<>();
         jLabel16 = new javax.swing.JLabel();
+        cbdebug = new javax.swing.JCheckBox();
         btadd = new javax.swing.JButton();
         btdelete = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -579,7 +580,7 @@ public class AS2Maint extends javax.swing.JPanel implements IBlueSeerT {
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Additional Info"));
         jPanel2.setName("paneldetail"); // NOI18N
 
-        cbenabled.setText("Enabled?");
+        cbenabled.setText("Enabled");
         cbenabled.setName("cbenabled"); // NOI18N
 
         jLabel13.setText("InDir");
@@ -599,12 +600,11 @@ public class AS2Maint extends javax.swing.JPanel implements IBlueSeerT {
                     .addComponent(jLabel14))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(tboutdir, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(45, 45, 45)
-                        .addComponent(cbenabled))
+                    .addComponent(tboutdir, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tbindir, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(45, 45, 45)
+                .addComponent(cbenabled)
+                .addContainerGap(149, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -686,6 +686,8 @@ public class AS2Maint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel16.setText("Class");
         jLabel16.setName("lblclass"); // NOI18N
 
+        cbdebug.setText("Debug");
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -724,7 +726,8 @@ public class AS2Maint extends javax.swing.JPanel implements IBlueSeerT {
                         .addComponent(btnew)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btclear)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(cbdebug))
                     .addComponent(tbdesc)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -752,7 +755,8 @@ public class AS2Maint extends javax.swing.JPanel implements IBlueSeerT {
                         .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btnew)
-                        .addComponent(btclear))
+                        .addComponent(btclear)
+                        .addComponent(cbdebug))
                     .addComponent(btlookup))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -1014,7 +1018,7 @@ public class AS2Maint extends javax.swing.JPanel implements IBlueSeerT {
          
         String r = null;
             try {
-                r = apiUtils.postAS2(tbkey.getText());
+                r = apiUtils.postAS2(tbkey.getText(), cbdebug.isSelected());
             } catch (URISyntaxException ex) {
                 bslog(ex);
             } catch (IOException ex) {
@@ -1053,6 +1057,7 @@ public class AS2Maint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JButton btnew;
     private javax.swing.JButton btrun;
     private javax.swing.JButton btupdate;
+    private javax.swing.JCheckBox cbdebug;
     private javax.swing.JCheckBox cbenabled;
     private javax.swing.JCheckBox cbfile;
     private javax.swing.JCheckBox cbforceencryption;

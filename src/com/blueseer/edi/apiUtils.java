@@ -73,6 +73,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.mail.MessagingException;
 import javax.mail.internet.ContentType;
 import javax.mail.internet.MimeBodyPart;
@@ -81,6 +83,7 @@ import javax.mail.internet.MimeMultipart;
 import javax.mail.util.ByteArrayDataSource;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.Charsets;
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -370,7 +373,7 @@ public class apiUtils {
         return null;
     }
     
-    public static String postAS2( String as2id) throws MessagingException, MalformedURLException, URISyntaxException, IOException, CertificateException, NoSuchProviderException, KeyStoreException, NoSuchAlgorithmException, UnrecoverableKeyException, CertificateEncodingException, CMSException, SMIMEException, Exception  {
+    public static String postAS2( String as2id, boolean isDebug) throws MessagingException, MalformedURLException, URISyntaxException, IOException, CertificateException, NoSuchProviderException, KeyStoreException, NoSuchAlgorithmException, UnrecoverableKeyException, CertificateEncodingException, CMSException, SMIMEException, Exception  {
         
         StringBuilder r = new StringBuilder();
         String  now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
@@ -510,6 +513,14 @@ public class apiUtils {
           mbp2.addHeader("Content-Type", "multipart/signed; protocol=\"application/pkcs7-signature\"; boundary=" + "\"" + newboundary + "\"" + "; micalg=sha1");
           mbp2.addHeader("Content-Disposition", "attachment; filename=smime.p7m");
         
+          if (isDebug) { 
+            String debugfile = "debugAS2post." + now + "." + Long.toHexString(System.currentTimeMillis());
+            Path pathinput = FileSystems.getDefault().getPath("temp" + "/" + debugfile);
+            try (FileOutputStream stream = new FileOutputStream(pathinput.toFile())) {
+            stream.write(mbp2.getInputStream().readAllBytes());
+            }
+        }
+          
           signedAndEncrypteddata = encryptData(mbp2.getInputStream().readAllBytes(), encryptcertificate, tp[18]);
           
         }
@@ -531,7 +542,7 @@ public class apiUtils {
         rb.setUri(urlObj.toURI());
         
         if (! isSignedAndEncrypted) {
-        rb.addHeader("User-Agent", "RPT-HTTPClient/0.3-3I (Windows Server 2016)"); 
+        rb.addHeader("User-Agent", "java/app (BlueSeer Software; +http://www.blueseer.com/)"); 
         rb.addHeader("AS2-To", as2To);
         rb.addHeader("AS2-From", as2From); 
         rb.addHeader("AS2-Version", "1.2"); 
@@ -546,7 +557,7 @@ public class apiUtils {
         rb.addHeader("Content-Type", "multipart/signed; protocol=\"application/pkcs7-signature\"; boundary=" + "\"" + newboundary + "\"" + "; micalg=sha1");
         rb.addHeader("Content-Disposition", "attachment; filename=smime.p7m");
         } else {
-        rb.addHeader("User-Agent", "RPT-HTTPClient/0.3-3I (Windows Server 2016)"); 
+        rb.addHeader("User-Agent", "java/app (BlueSeer Software; +http://www.blueseer.com/)"); 
         rb.addHeader("AS2-To", as2To);
         rb.addHeader("AS2-From", as2From); 
         rb.addHeader("AS2-Version", "1.2"); 
@@ -567,7 +578,18 @@ public class apiUtils {
           
           rb.setEntity(new BufferedHttpEntity(ise));
           HttpUriRequest request = rb.build();
-          
+        
+        if (isDebug) { 
+            String debugfile = "debugAS2http." + now + "." + Long.toHexString(System.currentTimeMillis());
+            Path pathinput = FileSystems.getDefault().getPath("temp" + "/" + debugfile);
+            Header[] headers = request.getAllHeaders();
+            try (FileOutputStream stream = new FileOutputStream(pathinput.toFile())) {
+                for (Header x : headers) {
+                    String h = x.getName() + ": " + x.getValue() + "\n";
+                    stream.write(h.getBytes());
+                }
+            }  
+        }
         
         try (CloseableHttpResponse response = client.execute(request)) {
         if (response.getStatusLine().getStatusCode() != 200) {
@@ -593,7 +615,14 @@ public class apiUtils {
                 String datastring = new String(mbpr.getInputStream().readAllBytes());   
                 output.write(datastring);
                 output.close();
-                logdet.add(new String[]{parentkey, "info", "MDN file received: " + filename});
+                
+                Pattern p = Pattern.compile("Disposition:.*(error|failed).*");
+		Matcher m = p.matcher(datastring);
+		if (m.find()) {
+                    logdet.add(new String[]{parentkey, "error", "MDN error: " + filename});
+                } else {
+                   logdet.add(new String[]{parentkey, "info", "MDN processed: " + filename}); 
+                }
             }
         }
             

@@ -66,7 +66,7 @@ public class jobAS2 implements Job {
                 
                 if (! as2id.isBlank() && isValidAS2id(as2id)) {
                     try {   
-                        apiUtils.postAS2(as2id);
+                        apiUtils.postAS2(as2id, false);
                     } catch (URISyntaxException ex) {
                         bslog(ex);
                     } catch (IOException ex) {

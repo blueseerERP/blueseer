@@ -274,7 +274,8 @@ public class AS2Serv extends HttpServlet {
         boolean isSigned = false;
         
          if (isDebug) { 
-            Path pathinput = FileSystems.getDefault().getPath("temp" + "/" + "beforedecrypt.txt");
+            String debugfile = "debugAS2enc." + now + "." + Long.toHexString(System.currentTimeMillis()); 
+            Path pathinput = FileSystems.getDefault().getPath("temp" + "/" + debugfile);
             try (FileOutputStream stream = new FileOutputStream(pathinput.toFile())) {
             stream.write(content);
             }
@@ -301,7 +302,8 @@ public class AS2Serv extends HttpServlet {
          
          // send content to file for testing
         if (isDebug) { 
-            Path pathinput = FileSystems.getDefault().getPath("temp" + "/" + "afterdecrypt.txt");
+            String debugfile = "debugAS2dec." + now + "." + Long.toHexString(System.currentTimeMillis());
+            Path pathinput = FileSystems.getDefault().getPath("temp" + "/" + debugfile);
             try (FileOutputStream stream = new FileOutputStream(pathinput.toFile())) {
             stream.write(finalContent);
             }
