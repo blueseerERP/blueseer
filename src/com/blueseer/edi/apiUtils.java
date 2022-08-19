@@ -291,7 +291,7 @@ public class apiUtils {
      public static MimeBodyPart signData(
           byte[] data, 
           X509Certificate signingCertificate,
-          PrivateKey signingKey) throws Exception {
+          PrivateKey signingKey, String filename) throws Exception {
             byte[] signedMessage = null;
             List<X509Certificate> certList = new ArrayList<X509Certificate>();
             CMSTypedData cmsData= new CMSProcessableByteArray(data);
@@ -308,8 +308,8 @@ public class apiUtils {
             dataPart.removeHeader("Content-Disposition");
             
             dataPart.setText(new String(data, "UTF-8"));
-            dataPart.setHeader("Content-Type", "application/edi-x12; file=test.txt");
-            dataPart.setHeader("Content-Disposition", "attachment; filename=test.txt");
+            dataPart.setHeader("Content-Type", "application/edi-x12; file=" + filename);
+            dataPart.setHeader("Content-Disposition", "attachment; filename=" + filename);
             dataPart.setHeader("Content-Transfer-Encoding", "binary");
             MimeMultipart signedData = sGen.generate(dataPart);
             MimeBodyPart tmpBody = new MimeBodyPart();
@@ -480,7 +480,7 @@ public class apiUtils {
         // need signed, signed+enc, enc, none ....condition logic here
         if (filecontent != null) {    
                 try {
-                    mbp = signData(filecontent.getBytes(StandardCharsets.UTF_8),signcertificate,key);
+                    mbp = signData(filecontent.getBytes(StandardCharsets.UTF_8),signcertificate,key,listOfFiles[i].getName());
                     
                 } catch (Exception ex) {
                     bslog(ex);
