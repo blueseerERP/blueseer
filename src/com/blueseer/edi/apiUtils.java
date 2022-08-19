@@ -310,14 +310,11 @@ public class apiUtils {
             dataPart.setText(new String(data, "UTF-8"));
             dataPart.setHeader("Content-Type", "application/edi-x12; file=test.txt");
             dataPart.setHeader("Content-Disposition", "attachment; filename=test.txt");
+            dataPart.setHeader("Content-Transfer-Encoding", "binary");
             MimeMultipart signedData = sGen.generate(dataPart);
             MimeBodyPart tmpBody = new MimeBodyPart();
             tmpBody.setContent(signedData);
-            
-        // Content-type header is required, unit tests fail badly on async MDNs if not set.
             tmpBody.setHeader("Content-Type", signedData.getContentType());
-            
-           
             return tmpBody;
 	}
 
