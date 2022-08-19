@@ -300,6 +300,7 @@ public class AS2Maint extends javax.swing.JPanel implements IBlueSeerT {
            cboutputsign.setSelected(false);
            cbforceencryption.setSelected(false);
            cbforcesigning.setSelected(false);
+           cbdebug.setSelected(false);
        isLoad = false;
     }
     
