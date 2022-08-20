@@ -80,13 +80,12 @@ Vânzări,ServiceOrderBrowse,4,JMenuItem,Răsfoire comanda de servicii,,,,1,1
 Vânzări,OrderSourceBrowse,5,JMenuItem,Răsfoire sursă de comandă,,1,,1,1
 Vânzări,OrdLineBrowse,6,JMenuItem,Răsfoire în linia de comandă,,1,,1,1
 Vânzări,SchedOrdBrowse,7,JMenuItem,Răsfoire comanda programată,,1,,1,1
-Vânzări,FileOrderLoad,8,JMenuItem,Comandă Încărcare după fișier CSV,,,,1,1
-Vânzări,OrdRptPicker,9,JMenuItem,Selector de rapoarte de comandă,,,,1,1
-Vânzări,OrderReports,10,JMenu,Alte Rapoarte,,,,1,1
-Vânzări,POSMenu,11,JMenu,Meniul POS,,,,1,1
-Vânzări,DOMenu,12,JMenu,Meniul de distribuție,,,,1,1
-Vânzări,OrderSource,13,JMenuItem,Sursa comenzii,,,,1,1
-Vânzări,OrderControl,14,JMenuItem,Controlul comenzii,,,,1,1
+Vânzări,OrdRptPicker,8,JMenuItem,Selector de rapoarte de comandă,,,,1,1
+Vânzări,OrderReports,9,JMenu,Alte Rapoarte,,,,1,1
+Vânzări,POSMenu,10,JMenu,Meniul POS,,,,1,1
+Vânzări,DOMenu,11,JMenu,Meniul de distribuție,,,,1,1
+Vânzări,OrderSource,12,JMenuItem,Sursa comenzii,,,,1,1
+Vânzări,OrderControl,13,JMenuItem,Controlul comenzii,,,,1,1
 OrderReports,pcOpenOrdersByCust,1,JMenuItem,Comenzi deschise după client după data scadenței (PieChart),,1,,1,1
 OrderReports,DiscreteOrderPerWeekUnits,2,JMenuItem,Comandă unitățile pe săptămână (Grafic cu bare),,1,,1,1
 OrderReports,DiscreteOrderPerWeekDollars,3,JMenuItem,Vânzări de comandă pe săptămână (Grafic cu bare),,1,,1,1

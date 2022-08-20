@@ -80,13 +80,12 @@ Order,ServiceOrderBrowse,4,JMenuItem,Service Order Browse,,,,1,1
 Order,OrderSourceBrowse,5,JMenuItem,Order Source Browse,,1,,1,1
 Order,OrdLineBrowse,6,JMenuItem,Order Line Browse,,1,,1,1
 Order,SchedOrdBrowse,7,JMenuItem,Sched Order Browse,,1,,1,1
-Order,FileOrderLoad,8,JMenuItem,Order Load By CSV File,,,,1,1
-Order,OrdRptPicker,9,JMenuItem,Order Report Selector,,,,1,1
-Order,OrderReports,10,JMenu,Other Reports,,,,1,1
-Order,POSMenu,11,JMenu,POS Menu,,,,1,1
-Order,DOMenu,12,JMenu,Distribution Menu,,,,1,1
-Order,OrderSource,13,JMenuItem,Order Source,,,,1,1
-Order,OrderControl,14,JMenuItem,Order Control,,,,1,1
+Order,OrdRptPicker,8,JMenuItem,Order Report Selector,,,,1,1
+Order,OrderReports,9,JMenu,Other Reports,,,,1,1
+Order,POSMenu,10,JMenu,POS Menu,,,,1,1
+Order,DOMenu,11,JMenu,Distribution Menu,,,,1,1
+Order,OrderSource,12,JMenuItem,Order Source,,,,1,1
+Order,OrderControl,13,JMenuItem,Order Control,,,,1,1
 OrderReports,pcOpenOrdersByCust,1,JMenuItem,Open Orders By Cust By DueDate (PieChart),,1,,1,1
 OrderReports,DiscreteOrderPerWeekUnits,2,JMenuItem,Order Units By Week (BarChart),,1,,1,1
 OrderReports,DiscreteOrderPerWeekDollars,3,JMenuItem,Order Sales By Week (BarChart),,1,,1,1

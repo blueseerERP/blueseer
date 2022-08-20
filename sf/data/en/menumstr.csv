@@ -83,7 +83,6 @@ CustXrefBrowse,,com.blueseer.ctr.CustXrefRpt,JMenuItem,cuxb
 DefaultMaint,,com.blueseer.adm.DefaultMaint,JMenuItem,defm
 DeptBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,depb
 DeptMaint,,com.blueseer.fgl.DeptMaint,JMenuItem,depm
-FileOrderLoad,,com.blueseer.adm.FileOrderLoadMaint,JMenuItem,orlo
 FreightMaint,,com.blueseer.ctr.FreightMaint,JMenuItem,frtm
 GenCodeBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,genb
 InventoryAdjustment,,com.blueseer.inv.InventoryMaint,JMenuItem,inva

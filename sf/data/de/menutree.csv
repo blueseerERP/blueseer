@@ -80,13 +80,12 @@ Befehl,ServiceOrderBrowse,4,JMenuItem,Durchsuchen von Serviceaufträgen,,,,1,1
 Befehl,OrderSourceBrowse,5,JMenuItem,Bestellquelle Durchsuchen,,1,,1,1
 Befehl,OrdLineBrowse,6,JMenuItem,Bestellzeile Durchsuchen,,1,,1,1
 Befehl,SchedOrdBrowse,7,JMenuItem,Geplante Bestellung Durchsuchen,,1,,1,1
-Befehl,FileOrderLoad,8,JMenuItem,Bestellung per CSV-Datei laden,,,,1,1
-Befehl,OrdRptPicker,9,JMenuItem,Bestellbericht-Selektor,,,,1,1
-Befehl,OrderReports,10,JMenu,Andere Berichte,,,,1,1
-Befehl,POSMenu,11,JMenu,POS-Menü,,,,1,1
-Befehl,DOMenu,12,JMenu,Verteilungsmenü,,,,1,1
-Befehl,OrderSource,13,JMenuItem,Bestellquelle,,,,1,1
-Befehl,OrderControl,14,JMenuItem,Auftragssteuerung,,,,1,1
+Befehl,OrdRptPicker,8,JMenuItem,Bestellbericht-Selektor,,,,1,1
+Befehl,OrderReports,9,JMenu,Andere Berichte,,,,1,1
+Befehl,POSMenu,10,JMenu,POS-Menü,,,,1,1
+Befehl,DOMenu,11,JMenu,Verteilungsmenü,,,,1,1
+Befehl,OrderSource,12,JMenuItem,Bestellquelle,,,,1,1
+Befehl,OrderControl,13,JMenuItem,Auftragssteuerung,,,,1,1
 OrderReports,pcOpenOrdersByCust,1,JMenuItem,Offene Bestellungen nach Kunden bis Fälligkeitsdatum,,1,,1,1
 OrderReports,DiscreteOrderPerWeekUnits,2,JMenuItem,Bestelleinheiten nach Woche (BarChart),,1,,1,1
 OrderReports,DiscreteOrderPerWeekDollars,3,JMenuItem,Bestellumsatz nach Woche (BarChart),,1,,1,1
