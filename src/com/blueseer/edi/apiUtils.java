@@ -26,6 +26,8 @@ SOFTWARE.
 package com.blueseer.edi;
 
 import static bsmf.MainFrame.bslog;
+import com.blueseer.adm.admData;
+import com.blueseer.adm.admData.pks_mstr;
 import static com.blueseer.edi.AS2Maint.certs;
 import static com.blueseer.edi.ediData.getKeyStoreByUser;
 import static com.blueseer.edi.ediData.getKeyStorePass;
@@ -40,6 +42,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
@@ -51,6 +54,7 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.KeyFactory;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.MessageDigest;
@@ -63,6 +67,8 @@ import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -96,6 +102,9 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
+import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
+import org.bouncycastle.asn1.pkcs.RSAPrivateKey;
+import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
 import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.cert.jcajce.JcaCertStore;
 import org.bouncycastle.cms.CMSAlgorithm;
@@ -121,6 +130,8 @@ import org.bouncycastle.cms.jcajce.JceKeyTransRecipientInfoGenerator;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.mail.smime.SMIMEException;
 import org.bouncycastle.mail.smime.SMIMESignedGenerator;
+import org.bouncycastle.openssl.PEMParser;
+import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
 import org.bouncycastle.operator.ContentSigner;
 import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.operator.OutputEncryptor;
@@ -128,6 +139,8 @@ import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
 import org.bouncycastle.operator.jcajce.JcaDigestCalculatorProviderBuilder;
 import org.bouncycastle.util.Store;
 import org.bouncycastle.util.encoders.Base64;
+import org.bouncycastle.util.io.pem.PemObject;
+import org.bouncycastle.util.io.pem.PemReader;
 
 /**
  *
@@ -173,7 +186,7 @@ public class apiUtils {
         }
         return key;
     }
-    
+        
     public static X509Certificate getPublicKey(String user)  {
         X509Certificate cert = null;
         FileInputStream fis = null;
@@ -208,6 +221,27 @@ public class apiUtils {
         }
         return cert;
     }
+        
+    public static PrivateKey readPrivateKeyFromPem(File file) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
+    KeyFactory factory = KeyFactory.getInstance("RSA");
+    try (FileReader keyReader = new FileReader(file);
+      PemReader pemReader = new PemReader(keyReader)) {
+        PemObject pemObject = pemReader.readPemObject();
+        byte[] content = pemObject.getContent();
+        PKCS8EncodedKeySpec privKeySpec = new PKCS8EncodedKeySpec(content);
+        return (PrivateKey) factory.generatePrivate(privKeySpec);
+    }
+    
+}
+    
+    public static X509Certificate readPublicKeyFromPem(File file) throws IOException {
+    try (FileReader keyReader = new FileReader(file)) {
+        PEMParser pemParser = new PEMParser(keyReader);
+        JcaPEMKeyConverter converter = new JcaPEMKeyConverter();
+        SubjectPublicKeyInfo publicKeyInfo = SubjectPublicKeyInfo.getInstance(pemParser.readObject());
+        return (X509Certificate) converter.getPublicKey(publicKeyInfo);
+    }
+}
     
     public static String hashdigest(byte[] indata, String algo) {
         String x;
@@ -271,6 +305,11 @@ public class apiUtils {
     
     public static boolean verifySignature(final byte[] plaintext, final byte[] signedData)  {
         boolean x = false;
+        
+        if (plaintext == null || signedData == null) {
+            return x;
+        }
+        
         try {
             CMSSignedData s = new CMSSignedData(new CMSProcessableByteArray(plaintext), signedData);
             Store certstore = s.getCertificates();
@@ -295,9 +334,7 @@ public class apiUtils {
           byte[] data, 
           X509Certificate signingCertificate,
           PrivateKey signingKey, String filename) throws Exception {
-            byte[] signedMessage = null;
             List<X509Certificate> certList = new ArrayList<X509Certificate>();
-            CMSTypedData cmsData= new CMSProcessableByteArray(data);
             certList.add(signingCertificate);
             certs = new JcaCertStore(certList);
 
@@ -420,22 +457,41 @@ public class apiUtils {
         logdet.add(new String[]{parentkey, "info", "Encryption Serial#: " + encryptcertificate.getSerialNumber().toString(16)});
         logdet.add(new String[]{parentkey, "info", "Encryption Expiration Window: " + encryptcertificate.getNotBefore() + "/" + encryptcertificate.getNotAfter()});
         
+        pks_mstr pks = admData.getPksMstr(new String[]{signkeyid});
+        String[] k = new String[]{"","","","",""};
+        X509Certificate signcertificate = null; 
+        PrivateKey key = null;
         
-        String[] k = getKeyStoreByUser(signkeyid); // store, storeuser, storepass, user, pass
+        if ( pks.pks_type().equals("Store") || pks.pks_type().equals("File") ) {
+          logdet.add(new String[]{parentkey, "error", "Using non-user signing key " + signkeyid}); 
+          writeAS2LogDetail(logdet);
+          return "Using non-user signing key  " + signkeyid; 
+        } else {
+        k = getKeyStoreByUser(signkeyid); // store, storeuser, storepass, user, pass
         k[2] = bsmf.MainFrame.PassWord("1", k[2].toCharArray());
         k[4] = bsmf.MainFrame.PassWord("1", k[4].toCharArray());
-    //    System.out.println("here->" + k[0] + "/" +  k[1] + "/" + k[2] + "/" + k[3] + "/" + k[4]);
-        
        
         char[] keyPassword = k[4].toCharArray();  
         KeyStore keystore = KeyStore.getInstance("PKCS12");
         
         FileInputStream fis = new FileInputStream(FileSystems.getDefault().getPath(k[0]).toString());
-        keystore.load(fis, k[2].toCharArray());
+        if (k[2].isBlank()) {
+            keystore.load(fis, null);
+        } else {
+            keystore.load(fis, k[2].toCharArray());
+        }
+        
         fis.close();
         
-        PrivateKey key = (PrivateKey) keystore.getKey(k[3], keyPassword);
-        X509Certificate signcertificate = (X509Certificate) keystore.getCertificate(k[3]);
+        key = (PrivateKey) keystore.getKey(k[3], keyPassword);
+        signcertificate = (X509Certificate) keystore.getCertificate(k[3]);
+    }
+        
+        if (key == null) {
+          logdet.add(new String[]{parentkey, "error", "Unable to retrieve private key for signing " + signkeyid}); 
+          writeAS2LogDetail(logdet);
+          return "Unable to retrieve private key for signing " + signkeyid;
+        }
         
         if (signcertificate == null) {
           logdet.add(new String[]{parentkey, "error", "Unable to retrieve signing cert " + k[3]}); 

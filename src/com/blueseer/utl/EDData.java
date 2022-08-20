@@ -2858,12 +2858,18 @@ public class EDData {
             }
             Statement st = con.createStatement();
             try {
+                String messg;
                 for (String[] c : x) {
+                    if (c[2].length()>= 200) {
+                        messg = c[2].substring(0,200);
+                    } else {
+                        messg = c[2];
+                    }
                 st.executeUpdate("insert into as2_log ( as2l_parent, as2l_status, as2l_messg ) " 
                     + " values ( " 
                     + "'" + c[0] + "'" + ","  // as2l_logid of parent record
                     + "'" + c[1] + "'" + ","  // status
-                    + "'" + c[2] + "'"        // message
+                    + "'" + messg + "'"        // message
                     + ")"
                     + ";");
                 }   
