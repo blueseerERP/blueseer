@@ -1867,7 +1867,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
          // now lets get summary tax
          // now add trailer/summary charges if any
          for (int j = 0; j < sactable.getRowCount(); j++) {
-            if (sactable.getValueAt(j,0).toString().equals("charge")) {
+            if (! sactable.getValueAt(j,0).toString().equals("tax")) {
             dol += bsParseDouble(sactable.getValueAt(j,3).toString());  // add charges to total net charge
             }
             if (sactable.getValueAt(j,0).toString().equals("tax") && sactable.getValueAt(j,2).toString().equals("percent")) {

@@ -5391,6 +5391,7 @@ public class OVData {
                  int m = 0;
                  String BillToCode;
                  String nbr = "";
+                 double disc = 0;
                  String[] custinfo = new String[]{"","","","","","","", ""};
                  for (String[] g : k) {
                      // create sales order header from first element of ArrayList
@@ -5430,13 +5431,14 @@ public class OVData {
                         
                      // now discount info ...only applicable at header level
                     if (! g[5].isBlank() && ! g[5].isBlank() && ! g[5].equals("0") && ! g[5].equals("0.00")) {
+                    disc = -1 * bsParseDouble(g[5]);
                     st.executeUpdate("insert into sos_det (sos_nbr, sos_desc, sos_type, " 
                         + "sos_amttype, sos_amt ) "
                         + " values ( " + "'" + nbr + "'" + ","
                     + "'" + "discount summary" + "'" + ","
                     + "'" + "discount" + "'" + ","
                     + "'" + "amount" + "'" + ","
-                    + "'" + g[5].replace(defaultDecimalSeparator, '.') + "'"
+                    + "'" + String.valueOf(disc).replace(defaultDecimalSeparator, '.') + "'"
                             + ")"
                     + ";");
                     }    

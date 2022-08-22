@@ -451,7 +451,7 @@ where shd_id =  $P{myid}]]>
 		<band height="28" splitType="Stretch"/>
 	</pageFooter>
 	<lastPageFooter>
-		<band height="98" splitType="Stretch">
+		<band height="122" splitType="Stretch">
 			<textField>
 				<reportElement x="19" y="0" width="120" height="20" uuid="99df5d08-50a6-448a-bfa3-f081a565b7ab"/>
 				<textElement>
@@ -460,12 +460,12 @@ where shd_id =  $P{myid}]]>
 				<textFieldExpression><![CDATA[$R{jasper.invoice.lblsummary}]]></textFieldExpression>
 			</textField>
 			<textField pattern="¤ #,##0.00">
-				<reportElement x="444" y="78" width="123" height="20" uuid="378a8a9d-5625-4e24-8803-f36c873089fe"/>
+				<reportElement x="444" y="100" width="123" height="20" uuid="378a8a9d-5625-4e24-8803-f36c873089fe"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$V{totalamount}]]></textFieldExpression>
 			</textField>
 			<subreport>
-				<reportElement x="344" y="20" width="221" height="40" uuid="be4e81b6-fece-4304-86cb-d0c966c9c89e"/>
+				<reportElement x="344" y="20" width="221" height="80" uuid="be4e81b6-fece-4304-86cb-d0c966c9c89e"/>
 				<subreportParameter name="myid">
 					<subreportParameterExpression><![CDATA[$F{shd_id}]]></subreportParameterExpression>
 				</subreportParameter>
@@ -482,7 +482,7 @@ where shd_id =  $P{myid}]]>
 				<textFieldExpression><![CDATA[$V{gross}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="344" y="78" width="100" height="20" uuid="811834f6-d14f-48bb-bf9f-6ec299e0d5b0"/>
+				<reportElement x="340" y="100" width="100" height="20" uuid="811834f6-d14f-48bb-bf9f-6ec299e0d5b0"/>
 				<textFieldExpression><![CDATA[$R{jasper.invoice.lblnettotal} + "(" +  $F{sh_curr} + "):"]]></textFieldExpression>
 			</textField>
 			<textField>
