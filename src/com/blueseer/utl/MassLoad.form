@@ -51,6 +51,10 @@
                               <Group type="102" attributes="0">
                                   <Component id="cboverride" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="32767" attributes="0"/>
+                                  <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="tbdelimiter" min="-2" pref="21" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="77" max="-2" attributes="0"/>
                                   <Component id="btdescribe" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="btupload" min="-2" max="-2" attributes="0"/>
@@ -78,6 +82,8 @@
                       <Component id="btupload" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="btdescribe" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="cboverride" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="tbdelimiter" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="bttestdata" min="-2" max="-2" attributes="0"/>
@@ -105,7 +111,7 @@
         <Component class="javax.swing.JComboBox" name="ddtable">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="18">
+              <StringArray count="19">
                 <StringItem index="0" value="Item Master"/>
                 <StringItem index="1" value="BOM Master"/>
                 <StringItem index="2" value="Customer Master"/>
@@ -124,6 +130,7 @@
                 <StringItem index="15" value="Carrier Master"/>
                 <StringItem index="16" value="Routing Master"/>
                 <StringItem index="17" value="WorkCenter Master"/>
+                <StringItem index="18" value="Order - Shopify"/>
               </StringArray>
             </Property>
           </Properties>
@@ -169,6 +176,14 @@
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bttestdataActionPerformed"/>
           </Events>
+        </Component>
+        <Component class="javax.swing.JTextField" name="tbdelimiter">
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel2">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Delimiter:"/>
+            <Property name="name" type="java.lang.String" value="lbdelim" noResource="true"/>
+          </Properties>
         </Component>
       </SubComponents>
     </Container>

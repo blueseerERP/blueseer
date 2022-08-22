@@ -1694,7 +1694,7 @@ public class OVData {
     /* Customer Related functions */
     
     
-    public static boolean addCustMstr(ArrayList<String> list) {
+    public static boolean addCustMstr(ArrayList<String> list, String delim) {
         boolean myreturn = false;
         try {
             
@@ -1714,7 +1714,7 @@ public class OVData {
                 // now loop through comma delimited list and insert into item master table
                 // skip if already in table.....keys are cust (cup_cust) and custitem (cup_citem)
                 for (String rec : list) {
-                    ld = rec.split(":", -1);
+                    ld = rec.split(delim, -1);
 
                     res = st.executeQuery("select cm_code from cm_mstr where "
                             + " cm_code = " + "'" + ld[0] + "'" + ";");
@@ -1892,7 +1892,7 @@ public class OVData {
         return x;
     }
     
-    public static boolean addCustMstrWShipTo(ArrayList<String> list) {
+    public static boolean addCustMstrWShipTo(ArrayList<String> list, String delim) {
         boolean myreturn = false;
         try {
             
@@ -1912,7 +1912,7 @@ public class OVData {
                 // now loop through comma delimited list and insert into item master table
                 // skip if already in table.....keys are cust (cup_cust) and custitem (cup_citem)
                 for (String rec : list) {
-                    ld = rec.split(":", -1);
+                    ld = rec.split(delim, -1);
 
                     res = st.executeQuery("select cm_code from cm_mstr where "
                             + " cm_code = " + "'" + ld[0] + "'" + ";");
@@ -2009,7 +2009,7 @@ public class OVData {
         return myreturn;
     }
 
-    public static boolean addCustShipToMstr(ArrayList<String> list) {
+    public static boolean addCustShipToMstr(ArrayList<String> list, String delim) {
         boolean myreturn = false;
         try {
             
@@ -2029,7 +2029,7 @@ public class OVData {
                 // now loop through comma delimited list and insert into item master table
                 // skip if already in table.....keys are cust (cup_cust) and custitem (cup_citem)
                 for (String rec : list) {
-                    ld = rec.split(":", -1);
+                    ld = rec.split(delim, -1);
 
                     res = st.executeQuery("select cms_code from cms_det where "
                             + " cms_code = " + "'" + ld[0] + "'" + " AND cms_shipto = " + "'" + ld[1] + "'" + ";");
@@ -4294,7 +4294,7 @@ public class OVData {
     }
 
             
-    public static boolean addItemMaster(ArrayList<String> list) {
+    public static boolean addItemMaster(ArrayList<String> list, String delim) {
                  boolean myreturn = false;
                  
                  java.util.Date now = new java.util.Date();
@@ -4317,7 +4317,7 @@ public class OVData {
                  
                 // now loop through comma delimited list and insert into item master table
                 for (String rec : list) {
-                    ld = rec.split(":", -1);
+                    ld = rec.split(delim, -1);
                     
                     
                     
@@ -4510,7 +4510,7 @@ public class OVData {
                   return myreturn;
              }
              
-    public static boolean addGenericCode(ArrayList<String> list) {
+    public static boolean addGenericCode(ArrayList<String> list, String delim) {
                  boolean myreturn = false;
                   try {
             
@@ -4529,7 +4529,7 @@ public class OVData {
                                
               
                 for (String rec : list) {
-                    ld = rec.split(":", -1);
+                    ld = rec.split(delim, -1);
                     
                    res =  st.executeQuery("select code_code from code_mstr where " +
                                     " code_code = " + "'" + ld[0] + "'" +
@@ -4567,7 +4567,7 @@ public class OVData {
              } 
              
     
-    public static boolean addCarrier(ArrayList<String> list) {
+    public static boolean addCarrier(ArrayList<String> list, String delim) {
                  boolean myreturn = false;
                   try {
             
@@ -4588,7 +4588,7 @@ public class OVData {
                 // now loop through comma delimited list and insert into item master table
                 // skip if already in table.....keys are cust (cup_cust) and custitem (cup_citem)
                 for (String rec : list) {
-                    ld = rec.split(":", -1);
+                    ld = rec.split(delim, -1);
                     
                    res =  st.executeQuery("select car_code from car_mstr where " +
                                            " car_code = " + "'" + ld[0] + "'" + ";");
@@ -4630,7 +4630,7 @@ public class OVData {
                   return myreturn;
              } 
    
-    public static boolean addBOMMstrRecord(ArrayList<String> list) {
+    public static boolean addBOMMstrRecord(ArrayList<String> list, String delim) {
         boolean myreturn = false;
         try {
             
@@ -4649,7 +4649,7 @@ public class OVData {
 
              
                 for (String rec : list) {
-                    ld = rec.split(":", -1);
+                    ld = rec.split(delim, -1);
 
                     // do bom_mstr first
                     res = st.executeQuery("select bom_id from bom_mstr where "
@@ -4722,7 +4722,7 @@ public class OVData {
     }
 
 
-    public static boolean addCustXref(ArrayList<String> list) {
+    public static boolean addCustXref(ArrayList<String> list, String delim) {
                  boolean myreturn = false;
                   try {
             
@@ -4743,7 +4743,7 @@ public class OVData {
                 // now loop through comma delimited list and insert into item master table
                 // skip if already in table.....keys are cust (cup_cust) and custitem (cup_citem)
                 for (String rec : list) {
-                    ld = rec.split(":", -1);
+                    ld = rec.split(delim, -1);
                     
                    res =  st.executeQuery("select cup_item from cup_mstr where " +
                                     " cup_cust = " + "'" + ld[0] + "'" +
@@ -4796,7 +4796,7 @@ public class OVData {
                   return myreturn;
              } 
              
-    public static boolean addVendXref(ArrayList<String> list) {
+    public static boolean addVendXref(ArrayList<String> list, String delim) {
                    boolean myreturn = false;
                   try {
             
@@ -4817,7 +4817,7 @@ public class OVData {
                 // now loop through comma delimited list and insert into item master table
                 // skip if already in table.....keys are cust (cup_cust) and custitem (cup_citem)
                 for (String rec : list) {
-                    ld = rec.split(":", -1);
+                    ld = rec.split(delim, -1);
                     
                    res =  st.executeQuery("select vdp_item from vdp_mstr where " +
                                     " vdp_vend = " + "'" + ld[0] + "'" +
@@ -4859,7 +4859,7 @@ public class OVData {
                   return myreturn;
              } 
            
-    public static boolean addGLAcctBalances(ArrayList<String> list) {
+    public static boolean addGLAcctBalances(ArrayList<String> list, String delim) {
             boolean myreturn = false;
                   
             
@@ -4883,7 +4883,7 @@ public class OVData {
                                
              // order of delimited elements in file:   acct, cc, site, amount
                 for (String rec : list) {
-                    ld = rec.split(":", -1);
+                    ld = rec.split(delim, -1);
                       st.executeUpdate(" insert into acb_mstr " 
                       + "(acb_acct, acb_cc, acb_year, acb_per, acb_site, acb_amt ) "
                    + " values ( " + 
@@ -4911,7 +4911,7 @@ public class OVData {
                   return myreturn;
        } 
                
-    public static boolean addInvAdjustments(ArrayList<String> list) {
+    public static boolean addInvAdjustments(ArrayList<String> list, String delim) {
                    boolean myreturn = false;
                    boolean isError = false;
                    
@@ -4931,7 +4931,7 @@ public class OVData {
                                
              // 0=issue/receipt,1=part,2=site,3=location,4=acct,5=cc,6=qty,7=date,8=serial,9=ref,10=remarks,11=warehouse,12=expire
                 for (String rec : list) {
-                    ld = rec.split(":", -1);
+                    ld = rec.split(delim, -1);
                     
                     if (ld[0].toString().toLowerCase().equals("issue")) {
                         type = "ISS-MISC";
@@ -4986,7 +4986,7 @@ public class OVData {
                   return myreturn;
              } 
              
-    public static boolean addCustPriceList(ArrayList<String> list) {
+    public static boolean addCustPriceList(ArrayList<String> list, String delim) {
                   boolean myreturn = false;
                   try {
             
@@ -5007,7 +5007,7 @@ public class OVData {
                 // now loop through comma delimited list and insert into item master table
                 // skip if already in table.....keys are cust (cup_cust) and custitem (cup_citem)
                 for (String rec : list) {
-                    ld = rec.split(":", -1);
+                    ld = rec.split(delim, -1);
                     
                    res =  st.executeQuery("select cpr_item from cpr_mstr where " +
                                     " cpr_cust = " + "'" + ld[0] + "'" +
@@ -5069,7 +5069,7 @@ public class OVData {
                   return myreturn;
              } 
               
-    public static boolean addVendPriceList(ArrayList<String> list) {
+    public static boolean addVendPriceList(ArrayList<String> list, String delim) {
                    boolean myreturn = false;
                   try {
             
@@ -5090,7 +5090,7 @@ public class OVData {
                 // now loop through comma delimited list and insert into item master table
                 // skip if already in table.....keys are cust (cup_cust) and custitem (cup_citem)
                 for (String rec : list) {
-                    ld = rec.split(":", -1);
+                    ld = rec.split(delim, -1);
                     
                    res =  st.executeQuery("select vpr_item from vpr_mstr where " +
                                     " vpr_vend = " + "'" + ld[0] + "'" +
@@ -5135,7 +5135,7 @@ public class OVData {
                   return myreturn;
              } 
               
-    public static boolean addVendMstr(ArrayList<String> list) {
+    public static boolean addVendMstr(ArrayList<String> list, String delim) {
         boolean myreturn = false;
         try {
             
@@ -5155,7 +5155,7 @@ public class OVData {
                 // now loop through comma delimited list and insert into item master table
                 // skip if already in table.....keys are cust (cup_cust) and custitem (cup_citem)
                 for (String rec : list) {
-                    ld = rec.split(":", -1);
+                    ld = rec.split(delim, -1);
 
                     res = st.executeQuery("select vd_addr from vd_mstr where "
                             + " vd_addr = " + "'" + ld[0] + "'" + ";");
@@ -5226,7 +5226,7 @@ public class OVData {
         return myreturn;
     }
 
-    public static boolean addRoutingMaster(ArrayList<String> list) {
+    public static boolean addRoutingMaster(ArrayList<String> list, String delim) {
                  boolean myreturn = false;
                   try {
             
@@ -5247,7 +5247,7 @@ public class OVData {
                 // now loop through colon delimited list and insert into routing master table
                 // skip if already in table.....keys are wf_id and wf_op
                 for (String rec : list) {
-                    ld = rec.split(":", -1);
+                    ld = rec.split(delim, -1);
                     
                    res =  st.executeQuery("select wf_id from wf_mstr where " +
                                     " wf_id = " + "'" + ld[0] + "'" +
@@ -5289,7 +5289,7 @@ public class OVData {
                   return myreturn;
              } 
    
-    public static boolean addWorkCenterMaster(ArrayList<String> list) {
+    public static boolean addWorkCenterMaster(ArrayList<String> list, String delim) {
                  boolean myreturn = false;
                   try {
             
@@ -5310,7 +5310,7 @@ public class OVData {
                 // now loop through colon delimited list and insert into workcenter master table
                 // skip if already in table.....keys are wf_id and wf_op
                 for (String rec : list) {
-                    ld = rec.split(":", -1);
+                    ld = rec.split(delim, -1);
                     
                    res =  st.executeQuery("select wc_cell from wc_mstr where " +
                                     " wc_cell = " + "'" + ld[0] + "'" + ";");
@@ -5352,6 +5352,130 @@ public class OVData {
                   return myreturn;
              } 
    
+    public static boolean addShopifyOrderCSV(ArrayList<String> list, String delim) {
+         boolean myreturn = false;
+         Map<String, ArrayList<String[]>> orders = new  HashMap<String, ArrayList<String[]>>();
+          try {
+            
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+                
+                int i = 0;
+                String[] ld = null;
+                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+                java.util.Date now = new java.util.Date();             
+                // loop through list and separate unique orders with item(s) and place in a HashMap
+                // with order id as key ...column 2 ...order id will be used for Purchase Order Number
+                for (String rec : list) {
+                    ld = rec.split(delim, -1);
+                    ArrayList<String[]> x = new ArrayList<String[]>();
+                    if (orders.containsKey(ld[1])) {
+                       x = orders.get(ld[1]);
+                       x.add(ld);
+                       orders.put(ld[1], x);
+                    } else {
+                       x.add(ld);
+                       orders.put(ld[1], x);
+                    }
+                }
+               
+                for (Map.Entry<String, ArrayList<String[]>> z : orders.entrySet()) {
+                 ArrayList<String[]> k = z.getValue();
+                 int m = 0;
+                 String BillToCode;
+                 String nbr = "";
+                 String[] custinfo = new String[]{"","","","","","","", ""};
+                 for (String[] g : k) {
+                     // create sales order header from first element of ArrayList
+                     if (m == 0) {
+                        // create billto/shipto on the fly and assign return to custcode
+                        BillToCode = String.valueOf(OVData.getNextNbr("customer"));
+                        // set String array of address info for creation of billto/shipto
+                        String[] addr = new String[]{BillToCode, g[25], g[27], g[28], g[26], g[30], g[32], g[31], g[33], g[2], g[34], g[35], g[37], g[38], g[36], g[40], g[42], g[41], g[43]};  
+                        custinfo = OVData.addCustMstrWShipToMinimal(addr);
+
+                        nbr = String.valueOf(OVData.getNextNbr("order")); 
+                    
+                        bsmf.MainFrame.show(g[48] + "/" + g[49] + "/" + g[50]);
+                        st.executeUpdate("insert into so_mstr "
+                    + "(so_nbr, so_cust, so_ship, so_po, so_ord_date, so_due_date, "
+                    + "so_create_date, so_userid, so_status,"
+                    + "so_rmks, so_terms, so_ar_acct, so_ar_cc, so_shipvia, so_type, so_site, so_onhold ) "
+                    + " values ( " + "'" + nbr + "'" + ","
+                    + "'" + BillToCode + "'" + ","
+                    + "'" + BillToCode + "'" + ","
+                    + "'" + g[1] + "'" + ","
+                    + "'" + dfdate.format(now) + "'" + ","
+                    + "'" + dfdate.format(now) + "'" + ","
+                    + "'" + dfdate.format(now) + "'" + ","
+                    + "'" + "shopify" + "'" + ","
+                    + "'" + getGlobalProgTag("open") + "'" + ","
+                    + "'" + g[48] + "'" + ","
+                    + "'" + custinfo[4] + "'" + ","
+                    + "'" + custinfo[0] + "'" + ","
+                    + "'" + custinfo[1] + "'" + ","
+                    + "'" + custinfo[5] + "'" + ","
+                    + "'DISCRETE'" + ","
+                    + "'" + custinfo[7] + "'" + ","
+                    + "'" + custinfo[6] + "'"
+                    + ")"
+                    + ";");
+                        
+                    } // if m == 0 ...first line creates Sales Order Header
+                     
+                    // now do detail for m == 0 and all subsequent values of m
+                    
+                    st.executeUpdate("insert into sod_det "
+                        + "(sod_nbr, sod_item, sod_site, sod_po, sod_ord_qty, sod_netprice, sod_listprice, sod_disc, sod_due_date, "
+                        + "sod_shipped_qty, sod_custitem, sod_status, sod_line) "
+                        + " values ( " + "'" + nbr + "'" + ","
+                        + "'" + g[16] + "'" + ","
+                        + "'" + custinfo[7] + "'" + ","
+                        + "'" + g[1] + "'" + ","
+                        + "'" + g[15].replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "'" + g[19].replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "'" + g[17].replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "'" + g[18].replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "'" + now + "'" + ","
+                        + '0' + "," + "'" + g[20] + "'" +  "," 
+                        + "'" + getGlobalProgTag("open") + "'" + ","
+                        + "'" + String.valueOf(m + 1) + "'"
+                        + ")"
+                        + ";");
+                    
+                    m++;     
+                 }
+    			 
+    		 
+    	        }
+               
+               
+               
+                
+            } // if proceed
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+                myreturn = true;
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
+        } catch (SQLException e) {
+            MainFrame.bslog(e);
+        }  
+                  return myreturn;
+             } 
+   
+    
     public static boolean createTestDataSO() {
             boolean myreturn = true;
             ArrayList<String[]> items = invData.getItemsAndPriceByType("FG");
@@ -5668,7 +5792,7 @@ public class OVData {
              } 
    
     
-    public static boolean addSalesOrderDetail(ArrayList<String> list) {
+    public static boolean addSalesOrderDetail(ArrayList<String> list, String delim) { 
                  boolean myreturn = false;
                   try {
             
@@ -5686,7 +5810,7 @@ public class OVData {
                 String[] ld = null;
                
                 for (String rec : list) {
-                    ld = rec.split(":", -1);
+                    ld = rec.split(delim, -1);
                     st.executeUpdate("insert into sod_det "
                             + "(sod_nbr, sod_item, sod_site, sod_po, sod_ord_qty, sod_netprice, "
                             + " sod_listprice, sod_disc, sod_due_date, "

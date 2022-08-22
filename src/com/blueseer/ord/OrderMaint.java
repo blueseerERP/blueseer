@@ -3609,6 +3609,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         } else {
             ArrayList<String> st = new ArrayList<String>();
             String list = "";
+            
             list = ddcust.getSelectedItem().toString() + ":" +
                    tbshiptocode.getText() + ":" + 
                    tbname.getText().replace("'", "") + ":" + 
@@ -3627,7 +3628,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
             
             st.add(list);
            
-           error = OVData.addCustShipToMstr(st);
+           error = OVData.addCustShipToMstr(st, ":");
            if (! error) {
             bsmf.MainFrame.show(getMessageTag(1007));
             reinitCustandShip(ddcust.getSelectedItem().toString(), tbshiptocode.getText()); 

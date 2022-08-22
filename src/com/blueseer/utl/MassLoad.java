@@ -201,7 +201,9 @@ public class MassLoad extends javax.swing.JPanel {
     public void setComponentDefaultValues() {
        isLoad = true;
         tacomments.setText("");
+        tbdelimiter.setText(":");
        isLoad = false;
+       
     }
     
     public void setState() {
@@ -261,7 +263,7 @@ public class MassLoad extends javax.swing.JPanel {
       if (! ddtable.getItemAt(0).equals("")) {
           ddtable.insertItemAt("", 0);
       }  
-      
+      tbdelimiter.setText(":");
       tacomments.setText("");
     }
     
@@ -385,7 +387,7 @@ public class MassLoad extends javax.swing.JPanel {
             while ((line = fsr.readLine()) != null) {
                 i++;
                 list.add(line);
-               String[] recs = line.split(":", -1);
+               String[] recs = line.split(tbdelimiter.getText().trim(), -1);
                if (ddtable.getSelectedItem().toString().compareTo("Item Master") == 0) {
                    temp = checkItemMaster(recs, i);
                    if (! temp) {
@@ -487,7 +489,7 @@ public class MassLoad extends javax.swing.JPanel {
             while ((line = fsr.readLine()) != null) {
                 i++;
                 list.add(line);
-               String[] recs = line.split(":", -1);
+               String[] recs = line.split(tbdelimiter.getText().trim(), -1);
                temp = checkBOMMaster(recs, i);
                    if (! temp) {
                        proceed = false;
@@ -497,7 +499,7 @@ public class MassLoad extends javax.swing.JPanel {
             }
             fsr.close();
              if (proceed) {
-                   if(! OVData.addBOMMstrRecord(list))
+                   if(! OVData.addBOMMstrRecord(list, tbdelimiter.getText().trim()))
                        m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151,String.valueOf(i))};
                    } else {
                   m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
@@ -571,7 +573,7 @@ public class MassLoad extends javax.swing.JPanel {
             while ((line = fsr.readLine()) != null) {
                 i++;
                 list.add(line);
-               String[] recs = line.split(":", -1);
+               String[] recs = line.split(tbdelimiter.getText().trim(), -1);
                if (ddtable.getSelectedItem().toString().compareTo("GL Account Balances") == 0) {
                    temp = checkGLAcctBalances(recs, i);
                    if (! temp) {
@@ -582,7 +584,7 @@ public class MassLoad extends javax.swing.JPanel {
             }
             fsr.close();
              if (proceed) {
-                   if(! OVData.addGLAcctBalances(list))
+                   if(! OVData.addGLAcctBalances(list, tbdelimiter.getText().trim()))
                        m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151,String.valueOf(i))};
                    } else {
                   m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
@@ -647,7 +649,7 @@ public class MassLoad extends javax.swing.JPanel {
             while ((line = fsr.readLine()) != null) {
                 i++;
                 list.add(line);
-               String[] recs = line.split(":", -1);
+               String[] recs = line.split(tbdelimiter.getText().trim(), -1);
                if (ddtable.getSelectedItem().toString().compareTo("Generic Code") == 0) {
                    temp = checkGenericCode(recs, i);
                    if (! temp) {
@@ -658,7 +660,7 @@ public class MassLoad extends javax.swing.JPanel {
             }
             fsr.close();
             if (proceed) {
-                   if(! OVData.addGenericCode(list))
+                   if(! OVData.addGenericCode(list, tbdelimiter.getText().trim()))
                        m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151,String.valueOf(i))};
                    } else {
                   m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
@@ -748,7 +750,7 @@ public class MassLoad extends javax.swing.JPanel {
             while ((line = fsr.readLine()) != null) {
                 i++;
                 list.add(line);
-               String[] recs = line.split(":", -1);
+               String[] recs = line.split(tbdelimiter.getText().trim(), -1);
                temp = checkCustXref(recs, i);
                    if (! temp) {
                        proceed = false;
@@ -758,7 +760,7 @@ public class MassLoad extends javax.swing.JPanel {
             }
             fsr.close();
             if (proceed) {
-                   if(! OVData.addCustXref(list))
+                   if(! OVData.addCustXref(list, tbdelimiter.getText().trim()))
                        m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151,String.valueOf(i))};
                    } else {
                   m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
@@ -820,7 +822,7 @@ public class MassLoad extends javax.swing.JPanel {
             while ((line = fsr.readLine()) != null) {
                 i++;
                 list.add(line);
-               String[] recs = line.split(":", -1);
+               String[] recs = line.split(tbdelimiter.getText().trim(), -1);
                temp = checkCarrier(recs, i);
                    if (! temp) {
                        proceed = false;
@@ -830,7 +832,7 @@ public class MassLoad extends javax.swing.JPanel {
             }
             fsr.close();
             if (proceed) {
-                   if(! OVData.addCarrier(list))
+                   if(! OVData.addCarrier(list, tbdelimiter.getText().trim()))
                        m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151,String.valueOf(i))};
                    } else {
                   m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
@@ -891,7 +893,7 @@ public class MassLoad extends javax.swing.JPanel {
             while ((line = fsr.readLine()) != null) {
                 i++;
                 list.add(line);
-               String[] recs = line.split(":", -1);
+               String[] recs = line.split(tbdelimiter.getText().trim(), -1);
                temp = checkEDIPartners(recs, i);
                    if (! temp) {
                        proceed = false;
@@ -976,7 +978,7 @@ public class MassLoad extends javax.swing.JPanel {
             while ((line = fsr.readLine()) != null) {
                 i++;
                 list.add(line);
-               String[] recs = line.split(":", -1);
+               String[] recs = line.split(tbdelimiter.getText().trim(), -1);
                temp = checkEDIDocumentStructures(recs, i);
                    if (! temp) {
                        proceed = false;
@@ -1067,7 +1069,7 @@ public class MassLoad extends javax.swing.JPanel {
             while ((line = fsr.readLine()) != null) {
                 i++;
                 list.add(line);
-               String[] recs = line.split(":", -1);
+               String[] recs = line.split(tbdelimiter.getText().trim(), -1);
                temp = checkEDIPartnerTransactions(recs, i);
                    if (! temp) {
                        proceed = false;
@@ -1166,7 +1168,7 @@ public class MassLoad extends javax.swing.JPanel {
             while ((line = fsr.readLine()) != null) {
                 i++;
                 list.add(line);
-               String[] recs = line.split(":", -1);
+               String[] recs = line.split(tbdelimiter.getText().trim(), -1);
                temp = checkVendXref(recs, i);
                    if (! temp) {
                        proceed = false;
@@ -1176,7 +1178,7 @@ public class MassLoad extends javax.swing.JPanel {
             }
            fsr.close();
             if (proceed) {
-                   if(! OVData.addVendXref(list))
+                   if(! OVData.addVendXref(list, tbdelimiter.getText().trim()))
                        m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151,String.valueOf(i))};
                    } else {
                   m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
@@ -1292,7 +1294,7 @@ public class MassLoad extends javax.swing.JPanel {
             while ((line = fsr.readLine()) != null) {
                 i++;
                 list.add(line);
-               String[] recs = line.split(":", -1);
+               String[] recs = line.split(tbdelimiter.getText().trim(), -1);
                temp = checkInvAdjustment(recs, i);
                    if (! temp) {
                        proceed = false;
@@ -1302,7 +1304,7 @@ public class MassLoad extends javax.swing.JPanel {
             }
             fsr.close();
             if (proceed) {
-                   if(! OVData.addInvAdjustments(list))
+                   if(! OVData.addInvAdjustments(list, tbdelimiter.getText().trim()))
                        m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151,String.valueOf(i))};
                    } else {
                   m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
@@ -1394,7 +1396,7 @@ public class MassLoad extends javax.swing.JPanel {
             while ((line = fsr.readLine()) != null) {
                 i++;
                 list.add(line);
-               String[] recs = line.split(":", -1);
+               String[] recs = line.split(tbdelimiter.getText().trim(), -1);
                temp = checkCustPriceList(recs, i);
                    if (! temp) {
                        proceed = false;
@@ -1404,7 +1406,7 @@ public class MassLoad extends javax.swing.JPanel {
             }
             fsr.close();
              if (proceed) {
-                   if(! OVData.addCustPriceList(list))
+                   if(! OVData.addCustPriceList(list, tbdelimiter.getText().trim()))
                        m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151,String.valueOf(i))};
                    } else {
                   m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
@@ -1493,7 +1495,7 @@ public class MassLoad extends javax.swing.JPanel {
             while ((line = fsr.readLine()) != null) {
                 i++;
                 list.add(line);
-               String[] recs = line.split(":", -1);
+               String[] recs = line.split(tbdelimiter.getText().trim(), -1);
                temp = checkVendPriceList(recs, i);
                    if (! temp) {
                        proceed = false;
@@ -1503,7 +1505,7 @@ public class MassLoad extends javax.swing.JPanel {
             }
             fsr.close();
              if (proceed) {
-                   if(! OVData.addVendPriceList(list))
+                   if(! OVData.addVendPriceList(list, tbdelimiter.getText().trim()))
                        m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151,String.valueOf(i))};
                    } else {
                   m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
@@ -1624,7 +1626,7 @@ public class MassLoad extends javax.swing.JPanel {
             while ((line = fsr.readLine()) != null) {
                 i++;
                 list.add(line);
-               String[] recs = line.split(":", -1);
+               String[] recs = line.split(tbdelimiter.getText().trim(), -1);
                temp = checkVendMstr(recs, i);
                    if (! temp) {
                        proceed = false;
@@ -1763,7 +1765,7 @@ public class MassLoad extends javax.swing.JPanel {
             while ((line = fsr.readLine()) != null) {
                 i++;
                 list.add(line);
-               String[] recs = line.split(":", -1);
+               String[] recs = line.split(tbdelimiter.getText().trim(), -1);
                temp = checkCustMstr(recs, i);
                    if (! temp) {
                        proceed = false;
@@ -1866,7 +1868,7 @@ public class MassLoad extends javax.swing.JPanel {
             while ((line = fsr.readLine()) != null) {
                 i++;
                 list.add(line);
-               String[] recs = line.split(":", -1);
+               String[] recs = line.split(tbdelimiter.getText().trim(), -1);
                temp = checkCustShipToMstr(recs, i);
                    if (! temp) {
                        proceed = false;
@@ -1876,7 +1878,7 @@ public class MassLoad extends javax.swing.JPanel {
             }
             fsr.close();
             if (proceed) {
-                   if(! OVData.addCustShipToMstr(list))
+                   if(! OVData.addCustShipToMstr(list, tbdelimiter.getText().trim()))
                        m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151,String.valueOf(i))};
                    } else {
                   m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
@@ -1963,7 +1965,7 @@ public class MassLoad extends javax.swing.JPanel {
             while ((line = fsr.readLine()) != null) {
                 i++;
                 list.add(line);
-               String[] recs = line.split(":", -1);
+               String[] recs = line.split(tbdelimiter.getText().trim(), -1);
                if (ddtable.getSelectedItem().toString().compareTo("Routing Master") == 0) {
                    temp = checkRoutingMaster(recs, i);
                    if (! temp) {
@@ -1974,7 +1976,7 @@ public class MassLoad extends javax.swing.JPanel {
             }
             fsr.close();
              if (proceed) {
-                   if(! OVData.addRoutingMaster(list)) { 
+                   if(! OVData.addRoutingMaster(list, tbdelimiter.getText().trim())) { 
                        m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151, String.valueOf(i))};
                    } else {
                        m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
@@ -2062,7 +2064,7 @@ public class MassLoad extends javax.swing.JPanel {
             while ((line = fsr.readLine()) != null) {
                 i++;
                 list.add(line);
-               String[] recs = line.split(":", -1);
+               String[] recs = line.split(tbdelimiter.getText().trim(), -1);
                if (ddtable.getSelectedItem().toString().compareTo("WorkCenter Master") == 0) {
                    temp = checkWorkCenterMaster(recs, i);
                    if (! temp) {
@@ -2073,7 +2075,7 @@ public class MassLoad extends javax.swing.JPanel {
             }
             fsr.close();
              if (proceed) {
-                   if(! OVData.addWorkCenterMaster(list)) { 
+                   if(! OVData.addWorkCenterMaster(list, tbdelimiter.getText().trim())) { 
                        m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151, String.valueOf(i))};
                    } else {
                        m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
@@ -2082,6 +2084,156 @@ public class MassLoad extends javax.swing.JPanel {
              return m;
     }
     
+    // Shopify - Order Load
+    public ArrayList<String> defineShopifyOrderCSV() {
+        ArrayList<String> list = new ArrayList<String>();
+        list.add("Name,s,30,optional,unvalidated");
+        list.add("OrderID,s,30,mandatory,unvalidated");
+        list.add("Email,s,50,optional,unvalidated");
+        list.add("Status,s,30,mandatory,validated");
+        list.add("Currency,s,3,mandatory,validated");
+        list.add("Discount,d,30,optional,unvalidated");
+        list.add("Subtotal,d,30,optional,unvalidated");
+        list.add("Shipping,d,30,optional,unvalidated");
+        list.add("Taxes,d,30,optional,unvalidated");
+        list.add("TaxesIncluded,b,1,optional,unvalidated");
+        list.add("Total,d,30,mandatory,unvalidated");
+        list.add("ShippingMethod,s,50,optional,unvalidated");
+        list.add("CustomShipping,s,50,optional,unvalidated");
+        list.add("TotalWeight,d,30,optional,unvalidated");
+        list.add("CreateDate,s,30,optional,unvalidated");
+        list.add("ItemQuantity,d,30,optional,unvalidated");
+        list.add("ItemName,s,30,optional,unvalidated");
+        list.add("ItemPrice,d,30,optional,unvalidated");
+        list.add("ItemTotalDiscount,d,30,optional,unvalidated");
+        list.add("ItemTotalPrice,d,30,optional,unvalidated");
+        list.add("ItemSku,s,30,optional,unvalidated");
+        list.add("ItemRequiresShipping,b,1,optional,unvalidated");
+        list.add("ItemTaxable,b,1,optional,unvalidated");
+        list.add("ItemVendor,s,30,optional,unvalidated");
+        list.add("ItemProperties,s,30,optional,unvalidated");
+        list.add("BillingName,s,30,optional,unvalidated");
+        list.add("BillingStreet,s,30,optional,unvalidated");
+        list.add("BillingAddress1,s,30,optional,unvalidated");
+        list.add("BillingAddress2,s,30,optional,unvalidated");
+        list.add("BillingCompany,s,30,optional,unvalidated");
+        list.add("BillingCity,s,30,optional,unvalidated");
+        list.add("BillingZip,s,30,optional,unvalidated");
+        list.add("BillingProvince,s,30,optional,unvalidated");
+        list.add("BillingCountry,s,30,optional,unvalidated");
+        list.add("BillingPhone,s,30,optional,unvalidated");
+        list.add("ShippingName,s,30,optional,unvalidated");
+        list.add("ShippingStreet,s,30,optional,unvalidated");
+        list.add("ShippingAddress1,s,30,optional,unvalidated");
+        list.add("ShippingAddress2,s,30,optional,unvalidated");
+        list.add("ShippingCompany,s,30,optional,unvalidated");
+        list.add("ShippingCity,s,30,optional,unvalidated");
+        list.add("ShippingZip,s,30,optional,unvalidated");
+        list.add("ShippingProvince,s,30,optional,unvalidated");
+        list.add("ShippingCountry,s,30,optional,unvalidated");
+        list.add("ShippingPhone,s,30,optional,unvalidated");
+        list.add("InvoiceSentDate,s,30,optional,unvalidated");
+        list.add("CompletedAtDate,s,30,optional,unvalidated");
+        list.add("OrderIDAux,s,30,optional,unvalidated");
+        list.add("Notes,s,30,optional,unvalidated");
+        list.add("NotesAttributes,s,30,optional,unvalidated");
+        list.add("Tags,s,30,optional,unvalidated");
+        list.add("Tax1Name,s,30,optional,unvalidated");
+        list.add("Tax1Value,d,10,optional,unvalidated");
+        list.add("Tax2Name,s,30,optional,unvalidated");
+        list.add("Tax2Value,d,10,optional,unvalidated");
+        list.add("Tax3Name,s,30,optional,unvalidated");
+        list.add("Tax3Value,d,10,optional,unvalidated");
+        list.add("Tax4Name,s,30,optional,unvalidated");
+        list.add("Tax4Value,d,10,optional,unvalidated");
+        list.add("Tax5Name,s,30,optional,unvalidated");
+        list.add("Tax5Value,d,10,optional,unvalidated");
+        list.add("BillingProvinceName,s,30,optional,unvalidated");
+        list.add("ShippingProvinceName,s,30,optional,unvalidated");
+        list.add("PaymentTermsName,s,30,optional,unvalidated");
+        list.add("NextPaymentDueDate,s,30,optional,unvalidated");
+        return list;
+    }
+    
+    public boolean checkShopifyOrderCSV(String[] rs, int i) {
+        boolean proceed = true;
+        
+        ArrayList<String> list = defineShopifyOrderCSV();
+        if (rs.length != list.size()) {
+                   tacomments.append("line " + i + " does not have correct number of fields. " + String.valueOf(rs.length) + "\n" );
+                   proceed = false;
+        }
+        
+       
+        
+         if (rs.length == list.size()) {
+            
+            String[] ld = null;
+            int j = 0;
+            for (String rec : list) {
+            ld = rec.split(",", -1);
+                if (rs[j].length() > Integer.valueOf(ld[2])) {
+                    tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " field length too long" + "\n" );
+                       proceed = false;
+                }
+                if (ld[1].compareTo("i") == 0 && ! BlueSeerUtils.isParsableToInt(rs[j])) {
+                    tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " field must be of type integer" + "\n" );
+                       proceed = false;
+                }
+                if (ld[1].compareTo("b") == 0 && ! BlueSeerUtils.isParsableToInt(rs[j])) {
+                    tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " must be integer 1 or 0...(true or false)" + "\n" );
+                       proceed = false;
+                }
+                if (ld[1].compareTo("d") == 0 && ! BlueSeerUtils.isParsableToDouble(rs[j])) {
+                    tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " field must be of type double" + "\n" );
+                       proceed = false;
+                }
+               
+               
+                // bsmf.MainFrame.show(rs[j] + " " + String.valueOf(proceed));
+                j++;
+                
+               
+            }
+           
+                   
+        }
+        
+        
+        return proceed;
+    }
+   
+    public String[] processShopifyOrderCSV (File myfile) throws FileNotFoundException, IOException {
+            String[] m = new String[2];
+            
+            boolean proceed = true;
+            boolean temp = true;
+            ArrayList<String> list = new ArrayList<String>();
+            BufferedReader fsr = new BufferedReader(new FileReader(myfile));
+            String line = "";
+            int i = 0;
+            while ((line = fsr.readLine()) != null) {
+                i++;
+                list.add(line);
+               String[] recs = line.split(tbdelimiter.getText().trim(), -1);
+               if (ddtable.getSelectedItem().toString().compareTo("Order - Shopify") == 0) {
+                   temp = checkShopifyOrderCSV(recs, i);
+                   if (! temp) {
+                       proceed = false;
+                       m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
+                   }
+               }
+            }
+            fsr.close();
+             if (proceed) {
+                   if(! OVData.addShopifyOrderCSV(list, tbdelimiter.getText().trim())) { 
+                       m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151, String.valueOf(i))};
+                   } else {
+                       m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
+                   }
+             }
+             return m;
+    }
     
     
     
@@ -2101,7 +2253,7 @@ public class MassLoad extends javax.swing.JPanel {
             while ((line = fsr.readLine()) != null) {
                 i++;
                 list.add(line);
-               String[] recs = line.split(":", -1);
+               String[] recs = line.split(tbdelimiter.getText().trim(), -1);
                if (ddtable.getSelectedItem().toString().compareTo("Item Master") == 0) {
                    temp = checkItemMaster(recs, i);
                    if (! temp) {
@@ -2271,6 +2423,9 @@ public class MassLoad extends javax.swing.JPanel {
                if (x.compareTo("GL Account Balances") == 0) {
                  m = processGLAcctBalances(myfile);
                }
+               if (x.compareTo("Order - Shopify") == 0) {
+                 m = processShopifyOrderCSV(myfile);
+               }
               
          }
          
@@ -2361,7 +2516,9 @@ public class MassLoad extends javax.swing.JPanel {
         if (key.compareTo("GL Account Balances") == 0) { 
              list = defineGLAcctBalances();
         }
-       
+        if (key.compareTo("Order - Shopify") == 0) { 
+             list = defineShopifyOrderCSV();
+         }
        
         
         for (String rec : list) {
@@ -2491,6 +2648,8 @@ public class MassLoad extends javax.swing.JPanel {
         btdescribe = new javax.swing.JButton();
         cboverride = new javax.swing.JCheckBox();
         bttestdata = new javax.swing.JButton();
+        tbdelimiter = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -2507,7 +2666,7 @@ public class MassLoad extends javax.swing.JPanel {
         jLabel1.setText("Master Table:");
         jLabel1.setName("lblid"); // NOI18N
 
-        ddtable.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item Master", "BOM Master", "Customer Master", "Customer ShipTo Master", "Customer Xref", "Customer Price List", "Vendor Master", "Vendor Xref", "Vendor Price List", "Inventory Adjustment", "GL Account Balances", "Generic Code", "EDI Partners", "EDI Partner Transactions", "EDI Document Structures", "Carrier Master", "Routing Master", "WorkCenter Master" }));
+        ddtable.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item Master", "BOM Master", "Customer Master", "Customer ShipTo Master", "Customer Xref", "Customer Price List", "Vendor Master", "Vendor Xref", "Vendor Price List", "Inventory Adjustment", "GL Account Balances", "Generic Code", "EDI Partners", "EDI Partner Transactions", "EDI Document Structures", "Carrier Master", "Routing Master", "WorkCenter Master", "Order - Shopify" }));
         ddtable.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ddtableActionPerformed(evt);
@@ -2537,6 +2696,9 @@ public class MassLoad extends javax.swing.JPanel {
             }
         });
 
+        jLabel2.setText("Delimiter:");
+        jLabel2.setName("lbdelim"); // NOI18N
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -2557,6 +2719,10 @@ public class MassLoad extends javax.swing.JPanel {
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(cboverride)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tbdelimiter, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(77, 77, 77)
                                 .addComponent(btdescribe)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btupload))
@@ -2576,7 +2742,9 @@ public class MassLoad extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btupload)
                     .addComponent(btdescribe)
-                    .addComponent(cboverride))
+                    .addComponent(cboverride)
+                    .addComponent(tbdelimiter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(bttestdata)
                 .addContainerGap())
@@ -2618,8 +2786,10 @@ public class MassLoad extends javax.swing.JPanel {
     private javax.swing.JComboBox ddtable;
     private javax.swing.JFileChooser fc;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea tacomments;
+    private javax.swing.JTextField tbdelimiter;
     // End of variables declaration//GEN-END:variables
 }

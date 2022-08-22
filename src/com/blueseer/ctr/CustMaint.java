@@ -965,7 +965,7 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
         String[] m = new String[2];
         cms_det k = getCMSDet(x[0], x[1]);
         tbshipcode.setText(k.cms_shipto());
-        tbshipname.setText(k.cms_code());
+        tbshipname.setText(k.cms_name());
         tbshipline1.setText(k.cms_line1());
         tbshipline2.setText(k.cms_line2());
         tbshipline3.setText(k.cms_line3());
