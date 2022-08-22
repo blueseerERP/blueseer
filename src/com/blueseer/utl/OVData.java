@@ -5403,7 +5403,7 @@ public class OVData {
 
                         nbr = String.valueOf(OVData.getNextNbr("order")); 
                     
-                        bsmf.MainFrame.show(g[48] + "/" + g[49] + "/" + g[50]);
+                       // bsmf.MainFrame.show(g[48] + "/" + g[49] + "/" + g[50]);
                         st.executeUpdate("insert into so_mstr "
                     + "(so_nbr, so_cust, so_ship, so_po, so_ord_date, so_due_date, "
                     + "so_create_date, so_userid, so_status,"

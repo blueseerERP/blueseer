@@ -956,6 +956,16 @@ public class BlueSeerUtils {
         }
     }
     
+    public static boolean isParsableToBoolean(String i) {
+        try {
+            Boolean.parseBoolean(i);
+            return true;
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+    }
+    
+    
     public static Date parseDate(String indate) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date r = null;
