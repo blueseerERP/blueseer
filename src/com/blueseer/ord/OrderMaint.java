@@ -1854,6 +1854,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
     public void sumdollars() {
         double dol = 0;
         double summaryTaxPercent = 0;
+        double summaryTaxAmount = 0;
         double headertaxamt = 0;
         double matltax = 0;
         double totaltax = 0;
@@ -1869,14 +1870,19 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
             if (sactable.getValueAt(j,0).toString().equals("charge")) {
             dol += bsParseDouble(sactable.getValueAt(j,3).toString());  // add charges to total net charge
             }
-            if (sactable.getValueAt(j,0).toString().equals("tax")) {
+            if (sactable.getValueAt(j,0).toString().equals("tax") && sactable.getValueAt(j,2).toString().equals("percent")) {
             summaryTaxPercent += bsParseDouble(sactable.getValueAt(j,3).toString());
+            }
+            if (sactable.getValueAt(j,0).toString().equals("tax") && sactable.getValueAt(j,2).toString().equals("amount")) {
+            summaryTaxAmount += bsParseDouble(sactable.getValueAt(j,3).toString());
             }
         }
          
          if (summaryTaxPercent > 0) {
               headertaxamt = (dol * (summaryTaxPercent / 100) );
          }
+         headertaxamt += summaryTaxAmount; // header tax amount is percent tax plus non-percent fixed amount
+         
          totaltax = headertaxamt + matltax;  // combine header tax and matl tax
          
          

@@ -5428,6 +5428,56 @@ public class OVData {
                     + ")"
                     + ";");
                         
+                     // now discount info ...only applicable at header level
+                    if (! g[5].isBlank() && ! g[5].isBlank() && ! g[5].equals("0") && ! g[5].equals("0.00")) {
+                    st.executeUpdate("insert into sos_det (sos_nbr, sos_desc, sos_type, " 
+                        + "sos_amttype, sos_amt ) "
+                        + " values ( " + "'" + nbr + "'" + ","
+                    + "'" + "discount summary" + "'" + ","
+                    + "'" + "discount" + "'" + ","
+                    + "'" + "amount" + "'" + ","
+                    + "'" + g[5].replace(defaultDecimalSeparator, '.') + "'"
+                            + ")"
+                    + ";");
+                    }    
+                    
+                    // now tax info ...can only do 3 of the 5 shopify provides
+                    if (! g[51].isBlank() && ! g[52].isBlank() && ! g[52].equals("0")) {
+                    st.executeUpdate("insert into sos_det (sos_nbr, sos_desc, sos_type, " 
+                        + "sos_amttype, sos_amt ) "
+                        + " values ( " + "'" + nbr + "'" + ","
+                    + "'" + g[51] + "'" + ","
+                    + "'" + "tax" + "'" + ","
+                    + "'" + "amount" + "'" + ","
+                    + "'" + g[52].replace(defaultDecimalSeparator, '.') + "'"
+                            + ")"
+                    + ";");
+                    }
+                    
+                    if (! g[53].isBlank() && ! g[54].isBlank() && ! g[54].equals("0")) {
+                    st.executeUpdate("insert into sos_det (sos_nbr, sos_desc, sos_type, " 
+                        + "sos_amttype, sos_amt ) "
+                        + " values ( " + "'" + nbr + "'" + ","
+                    + "'" + g[53] + "'" + ","
+                    + "'" + "tax" + "'" + ","
+                    + "'" + "amount" + "'" + ","
+                    + "'" + g[54].replace(defaultDecimalSeparator, '.') + "'"
+                            + ")"
+                    + ";");
+                    }
+                    
+                    if (! g[55].isBlank() && ! g[56].isBlank() && ! g[56].equals("0")) {
+                    st.executeUpdate("insert into sos_det (sos_nbr, sos_desc, sos_type, " 
+                        + "sos_amttype, sos_amt ) "
+                        + " values ( " + "'" + nbr + "'" + ","
+                    + "'" + g[55] + "'" + ","
+                    + "'" + "tax" + "'" + ","
+                    + "'" + "amount" + "'" + ","
+                    + "'" + g[56].replace(defaultDecimalSeparator, '.') + "'"
+                            + ")"
+                    + ";");
+                    }
+                        
                     } // if m == 0 ...first line creates Sales Order Header
                      
                     // now do detail for m == 0 and all subsequent values of m
