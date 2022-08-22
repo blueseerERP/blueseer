@@ -1867,7 +1867,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
          // now lets get summary tax
          // now add trailer/summary charges if any
          for (int j = 0; j < sactable.getRowCount(); j++) {
-            if (! sactable.getValueAt(j,0).toString().equals("tax")) {
+            if (! sactable.getValueAt(j,0).toString().equals("tax") && ! sactable.getValueAt(j,2).toString().equals("percent") ) {
             dol += bsParseDouble(sactable.getValueAt(j,3).toString());  // add charges to total net charge
             }
             if (sactable.getValueAt(j,0).toString().equals("tax") && sactable.getValueAt(j,2).toString().equals("percent")) {
@@ -1909,14 +1909,13 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         double newtax = 0;
         double listprice = 0;
          //"Line", "Part", "CustPart", "SO", "PO", "Qty", "ListPrice", "Discount", "NetPrice", "QtyShip", "Status", "WH", "LOC", "Desc"
-        for (int j = 0; j < sactable.getRowCount(); j++) {
-            if (sactable.getValueAt(j,0).toString().equals("discount")) {
-            newdisc += bsParseDouble(sactable.getValueAt(j,3).toString());
-            
-            }
-        }
         
-       
+         for (int j = 0; j < sactable.getRowCount(); j++) {
+            if (sactable.getValueAt(j,0).toString().equals("discount") &&
+                sactable.getValueAt(j,2).toString().equals("percent")) {
+            newdisc += bsParseDouble(sactable.getValueAt(j,3).toString());
+            }
+         }
         
          for (int j = 0; j < orddet.getRowCount(); j++) {
              listprice = bsParseDouble(orddet.getValueAt(j, 7).toString());
@@ -1927,10 +1926,8 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
              newprice = listprice;    
              }
              orddet.setValueAt(currformatDouble(newprice), j, 9);
-              
-             
          }
-                
+               
          
     }
     
@@ -3663,6 +3660,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
 
     private void btsacaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btsacaddActionPerformed
         boolean proceed = true;
+        double amount = 0;
         Pattern p = Pattern.compile("^[0-9]\\d*(\\.\\d+)?$");
         Matcher m = p.matcher(tbsacamt.getText());
         if (!m.find() || tbsacamt.getText() == null) {
@@ -3679,8 +3677,15 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
             return;
         }
         
+        if (ddsactype.getSelectedItem().toString().equals("discount") &&
+                ddsacamttype.getSelectedItem().toString().equals("amount")) {
+            amount = -1 * bsParseDouble(tbsacamt.getText());
+        } else {
+            amount = bsParseDouble(tbsacamt.getText());
+        }
+        
         if (proceed)
-        sacmodel.addRow(new Object[]{ ddsactype.getSelectedItem().toString(), tbsacdesc.getText(), ddsacamttype.getSelectedItem().toString(), tbsacamt.getText()});
+        sacmodel.addRow(new Object[]{ ddsactype.getSelectedItem().toString(), tbsacdesc.getText(), ddsacamttype.getSelectedItem().toString(), String.valueOf(amount)});
         retotal();
         refreshDisplayTotals();
     }//GEN-LAST:event_btsacaddActionPerformed
