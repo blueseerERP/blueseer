@@ -2139,6 +2139,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         btsacadd = new javax.swing.JButton();
         btsacdelete = new javax.swing.JButton();
         ddsactype = new javax.swing.JComboBox<>();
+        ddsacamttype = new javax.swing.JComboBox<>();
         jPanel6 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         totlines = new javax.swing.JTextField();
@@ -3164,9 +3165,11 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         });
 
         ddsactype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "discount", "charge" }));
-        ddsactype.addActionListener(new java.awt.event.ActionListener() {
+
+        ddsacamttype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "amount", "percent" }));
+        ddsacamttype.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ddsactypeActionPerformed(evt);
+                ddsacamttypeActionPerformed(evt);
             }
         });
 
@@ -3188,7 +3191,10 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
                         .addComponent(btsacadd)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btsacdelete))
-                    .addComponent(ddsactype, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(ddsactype, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(ddsacamttype, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 106, Short.MAX_VALUE)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 362, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -3197,7 +3203,9 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(ddsactype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ddsactype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ddsacamttype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbsacdesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -3672,18 +3680,10 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         }
         
         if (proceed)
-        sacmodel.addRow(new Object[]{ ddsactype.getSelectedItem().toString(), tbsacdesc.getText(), percentlabel.getText(), tbsacamt.getText()});
+        sacmodel.addRow(new Object[]{ ddsactype.getSelectedItem().toString(), tbsacdesc.getText(), ddsacamttype.getSelectedItem().toString(), tbsacamt.getText()});
         retotal();
         refreshDisplayTotals();
     }//GEN-LAST:event_btsacaddActionPerformed
-
-    private void ddsactypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddsactypeActionPerformed
-        if (ddsactype.getSelectedItem().toString().equals("discount")) {
-            percentlabel.setText("percent");
-        } else {
-            percentlabel.setText("amount");
-        }
-    }//GEN-LAST:event_ddsactypeActionPerformed
 
     private void orddetMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_orddetMouseClicked
         int row = orddet.rowAtPoint(evt.getPoint());
@@ -3857,6 +3857,14 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         // TODO add your handling code here:
     }//GEN-LAST:event_ddbomActionPerformed
 
+    private void ddsacamttypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddsacamttypeActionPerformed
+         if (ddsacamttype.getSelectedItem().toString().equals("percent")) {
+            percentlabel.setText("percent");
+        } else {
+            percentlabel.setText("amount");
+        }
+    }//GEN-LAST:event_ddsacamttypeActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btLookUpBillTo;
     private javax.swing.JButton btLookUpCustItem;
@@ -3888,6 +3896,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
     private static javax.swing.JComboBox ddcust;
     private javax.swing.JComboBox<String> ddloc;
     private static javax.swing.JComboBox ddpart;
+    private javax.swing.JComboBox<String> ddsacamttype;
     private javax.swing.JComboBox<String> ddsactype;
     private static javax.swing.JComboBox ddship;
     private javax.swing.JComboBox ddshipvia;
