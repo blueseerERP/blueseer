@@ -2363,6 +2363,184 @@ public class MassLoad extends javax.swing.JPanel {
     }
     
     
+     // Shopify - Fulfillment Load
+    public ArrayList<String> defineShopifyFulfillmentCSV() {
+        ArrayList<String> list = new ArrayList<String>();
+        list.add("Name,s,30,optional,unvalidated");
+        list.add("Email,s,50,optional,unvalidated");
+        list.add("FinancialStatus,s,30,mandatory,validated");
+        list.add("PaidDateTime,s,30,mandatory,validated");
+        list.add("FulfillmentStatus,s,30,mandatory,validated");
+        list.add("FulfillmentDateTime,s,30,mandatory,validated");
+        list.add("AcceptsMarketing,s,30,mandatory,validated");
+        list.add("Currency,s,3,mandatory,validated");
+        list.add("Subtotal,d,30,optional,unvalidated");
+        list.add("Shipping,d,30,optional,unvalidated");
+        list.add("Taxes,d,30,optional,unvalidated");
+        list.add("Total,d,30,mandatory,unvalidated");
+        list.add("DiscountCode,s,30,mandatory,unvalidated");
+        list.add("DiscountAmount,d,30,mandatory,unvalidated");
+        list.add("ShippingMethod,s,50,optional,unvalidated");
+        list.add("CreateDate,s,30,optional,unvalidated");
+        list.add("ItemQuantity,d,30,optional,unvalidated");
+        list.add("ItemName,s,30,optional,unvalidated");
+        list.add("ItemPrice,d,30,optional,unvalidated");
+        list.add("ItemComparePrice,d,30,optional,unvalidated");
+        list.add("ItemSku,s,30,optional,unvalidated");
+        list.add("ItemRequiresShipping,b,5,optional,unvalidated");
+        list.add("ItemTaxable,b,5,optional,unvalidated");
+        list.add("ItemFulfillmentStatus,s,30,optional,unvalidated");
+        list.add("BillingName,s,30,optional,unvalidated");
+        list.add("BillingStreet,s,30,optional,unvalidated");
+        list.add("BillingAddress1,s,30,optional,unvalidated");
+        list.add("BillingAddress2,s,30,optional,unvalidated");
+        list.add("BillingCompany,s,30,optional,unvalidated");
+        list.add("BillingCity,s,30,optional,unvalidated");
+        list.add("BillingZip,s,30,optional,unvalidated");
+        list.add("BillingProvince,s,30,optional,unvalidated");
+        list.add("BillingCountry,s,30,optional,unvalidated");
+        list.add("BillingPhone,s,30,optional,unvalidated");
+        list.add("ShippingName,s,30,optional,unvalidated");
+        list.add("ShippingStreet,s,30,optional,unvalidated");
+        list.add("ShippingAddress1,s,30,optional,unvalidated");
+        list.add("ShippingAddress2,s,30,optional,unvalidated");
+        list.add("ShippingCompany,s,30,optional,unvalidated");
+        list.add("ShippingCity,s,30,optional,unvalidated");
+        list.add("ShippingZip,s,30,optional,unvalidated");
+        list.add("ShippingProvince,s,30,optional,unvalidated");
+        list.add("ShippingCountry,s,30,optional,unvalidated");
+        list.add("ShippingPhone,s,30,optional,unvalidated");
+        list.add("Notes,s,30,optional,unvalidated");
+        list.add("NotesAttributes,s,30,optional,unvalidated");
+        list.add("CancelDateTime,s,30,optional,unvalidated");
+        list.add("PaymentMethod,s,30,optional,unvalidated");
+        list.add("PaymentReference,s,30,optional,unvalidated");
+        list.add("RefundAmount,d,30,optional,unvalidated");
+        list.add("Vendor,s,30,optional,unvalidated");
+        list.add("OutstandingBalance,d,15,optional,unvalidated");
+        list.add("Employee,s,30,optional,unvalidated");
+        list.add("Location,s,30,optional,unvalidated");
+        list.add("DeviceID,s,30,optional,unvalidated");
+        list.add("OrderID,s,30,optional,unvalidated");
+        list.add("Tags,s,30,optional,unvalidated");
+        list.add("RiskLevel,s,30,optional,unvalidated");
+        list.add("Source,s,30,optional,unvalidated");
+        list.add("LineItemDiscount,d,15,optional,unvalidated");
+        list.add("Tax1Name,s,30,optional,unvalidated");
+        list.add("Tax1Value,d,10,optional,unvalidated");
+        list.add("Tax2Name,s,30,optional,unvalidated");
+        list.add("Tax2Value,d,10,optional,unvalidated");
+        list.add("Tax3Name,s,30,optional,unvalidated");
+        list.add("Tax3Value,d,10,optional,unvalidated");
+        list.add("Tax4Name,s,30,optional,unvalidated");
+        list.add("Tax4Value,d,10,optional,unvalidated");
+        list.add("Tax5Name,s,30,optional,unvalidated");
+        list.add("Tax5Value,d,10,optional,unvalidated");
+        list.add("Phone,s,30,optional,unvalidated");
+        list.add("ReceiptNumber,s,30,optional,unvalidated");
+        list.add("Duties,s,30,optional,unvalidated");
+        list.add("BillingProvinceName,s,30,optional,unvalidated");
+        list.add("ShippingProvinceName,s,30,optional,unvalidated");
+        list.add("PaymentID,s,30,optional,unvalidated");
+        list.add("PaymentTermsName,s,30,optional,unvalidated");
+        list.add("NextPaymentDueDate,s,30,optional,unvalidated");
+        list.add("PaymentReferences,s,30,optional,unvalidated");
+       
+        return list;
+    }
+    
+    public boolean checkShopifyFulfillmentCSV(String[] rs, int i, ArrayList<String> list) {
+        boolean proceed = true;
+        
+        
+        if (rs.length != list.size()) {
+                   tacomments.append("line " + i + " does not have correct number of fields. " + String.valueOf(rs.length) + "\n" );
+                   proceed = false;
+        }
+        
+       
+        
+         if (rs.length == list.size()) {
+            
+            String[] ld = null;
+            int j = 0;
+            for (String rec : list) {
+            ld = rec.split(",", -1);
+                if (rs[j].length() > Integer.valueOf(ld[2])) {
+                    tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " field length too long" + "\n" );
+                       proceed = false;
+                }
+                if (ld[1].compareTo("i") == 0 && ! rs[j].isBlank() && ! BlueSeerUtils.isParsableToInt(rs[j])) {
+                    tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " field must be of type integer" + "\n" );
+                       proceed = false;
+                }
+                if (ld[1].compareTo("b") == 0 && ! BlueSeerUtils.isParsableToBoolean(rs[j])) {
+                    tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " must be boolean...(true or false)" + "\n" );
+                       proceed = false;
+                }
+                if (ld[1].compareTo("d") == 0 && ! rs[j].isBlank() && ! BlueSeerUtils.isParsableToDouble(rs[j])) {
+                    tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " field must be of type double" + "\n" );
+                       proceed = false;
+                }
+               
+               
+                // bsmf.MainFrame.show(rs[j] + " " + String.valueOf(proceed));
+                j++;
+                
+               
+            }
+           
+                   
+        }
+        
+        
+        return proceed;
+    }
+   
+    public String[] processShopifyFulfillmentCSV (File myfile) throws FileNotFoundException, IOException {
+            String[] m = new String[2];
+            
+            boolean proceed = true;
+            boolean temp = true;
+            ArrayList<String> checklist = defineShopifyFulfillmentCSV();
+            ArrayList<String> list = new ArrayList<String>();
+            
+            BufferedReader fsr = new BufferedReader(new FileReader(myfile));
+            String line = "";
+            int i = 0;
+            while ((line = fsr.readLine()) != null) {
+                if (cbignoreheader.isSelected() && i == 0) {
+                    i++;
+                    continue;
+                }                
+                list.add(line);
+               String[] recs = line.split(tbdelimiter.getText().trim(), -1);
+               if (ddtable.getSelectedItem().toString().compareTo("Fulfillment - Shopify") == 0) {
+                   temp = checkShopifyFulfillmentCSV(recs, i, checklist);
+                   if (! temp) {
+                       proceed = false;
+                       m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
+                   }
+               }
+               i++;
+            }
+            fsr.close();
+             if (proceed) {
+                 if (cbignoreheader.isSelected()) {
+                    i--; // reduce line count by 1 if ignore header
+                   } 
+                   ArrayList<String> newlist = cleanList(list, checklist, tbdelimiter.getText().trim());
+                   if(! OVData.addShopifyFulfillmentCSV(newlist, tbdelimiter.getText().trim())) { 
+                       m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151, String.valueOf(i))};
+                   } else {
+                       m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
+                   }
+             }
+             return m;
+    }
+    
+    
+    
     public static ArrayList<String> cleanList(ArrayList<String> list, ArrayList<String> checklist, String delim) {
         ArrayList<String> newlist = new ArrayList<String>();
         int j = 0;
@@ -2388,7 +2566,8 @@ public class MassLoad extends javax.swing.JPanel {
                 }
                 j++;
             }
-           String result = newstring.deleteCharAt(newstring.length() - 1).toString();
+           String result = newstring.deleteCharAt(newstring.length() - 1).toString().replace("'", "");
+          
            newlist.add(result);
         }
         return newlist;
@@ -2583,6 +2762,9 @@ public class MassLoad extends javax.swing.JPanel {
                if (x.compareTo("Order - Shopify") == 0) {
                  m = processShopifyOrderCSV(myfile);
                }
+               if (x.compareTo("Fulfillment - Shopify") == 0) {
+                 m = processShopifyFulfillmentCSV(myfile);
+               }
               
          }
          
@@ -2675,6 +2857,10 @@ public class MassLoad extends javax.swing.JPanel {
         }
         if (key.compareTo("Order - Shopify") == 0) { 
              list = defineShopifyOrderCSV();
+         }
+        
+        if (key.compareTo("Fulfillment - Shopify") == 0) { 
+             list = defineShopifyFulfillmentCSV();
          }
        
         
@@ -2824,7 +3010,7 @@ public class MassLoad extends javax.swing.JPanel {
         jLabel1.setText("Master Table:");
         jLabel1.setName("lblid"); // NOI18N
 
-        ddtable.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item Master", "BOM Master", "Customer Master", "Customer ShipTo Master", "Customer Xref", "Customer Price List", "Vendor Master", "Vendor Xref", "Vendor Price List", "Inventory Adjustment", "GL Account Balances", "Generic Code", "EDI Partners", "EDI Partner Transactions", "EDI Document Structures", "Carrier Master", "Routing Master", "WorkCenter Master", "Order - Shopify" }));
+        ddtable.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item Master", "BOM Master", "Customer Master", "Customer ShipTo Master", "Customer Xref", "Customer Price List", "Vendor Master", "Vendor Xref", "Vendor Price List", "Inventory Adjustment", "GL Account Balances", "Generic Code", "EDI Partners", "EDI Partner Transactions", "EDI Document Structures", "Carrier Master", "Routing Master", "WorkCenter Master", "Order - Shopify", "Fulfillment - Shopify" }));
         ddtable.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ddtableActionPerformed(evt);

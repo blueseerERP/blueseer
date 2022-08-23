@@ -970,6 +970,7 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbshipline2.setText(k.cms_line2());
         tbshipline3.setText(k.cms_line3());
         tbshipcity.setText(k.cms_city());
+        tbshipzip.setText(k.cms_zip());
         ddshipstate.setSelectedItem(k.cms_state());
         ddshipcountry.setSelectedItem(k.cms_country());
         if (k.m()[0].equals("0")) {

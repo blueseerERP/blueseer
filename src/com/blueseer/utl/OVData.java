@@ -5527,6 +5527,181 @@ public class OVData {
                   return myreturn;
              } 
    
+    public static boolean addShopifyFulfillmentCSV(ArrayList<String> list, String delim) {
+         boolean myreturn = false;
+         Map<String, ArrayList<String[]>> orders = new  HashMap<String, ArrayList<String[]>>();
+          try {
+            
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+                
+                int i = 0;
+                String[] ld = null;
+                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+                java.util.Date now = new java.util.Date();             
+                // loop through list and separate unique orders with item(s) and place in a HashMap
+                // with order id as key ...column 55 ...order id will be used for Purchase Order Number
+                for (String rec : list) {
+                    ld = rec.split(delim, -1);
+                    ArrayList<String[]> x = new ArrayList<String[]>();
+                    if (orders.containsKey(ld[55])) {
+                       x = orders.get(ld[55]);
+                       x.add(ld);
+                       orders.put(ld[55], x);
+                    } else {
+                       x.add(ld);
+                       orders.put(ld[55], x);
+                    }
+                }
+               
+                for (Map.Entry<String, ArrayList<String[]>> z : orders.entrySet()) {
+                 ArrayList<String[]> k = z.getValue();
+                 int m = 0;
+                 String BillToCode;
+                 String nbr = "";
+                 double disc = 0;
+                 String[] custinfo = new String[]{"","","","","","","", ""};
+                 for (String[] g : k) {
+                     // create sales order header from first element of ArrayList
+                     if (m == 0) {
+                        // create billto/shipto on the fly and assign return to custcode
+                        BillToCode = String.valueOf(OVData.getNextNbr("customer"));
+                        // set String array of address info for creation of billto/shipto
+                        String[] addr = new String[]{BillToCode, g[24], g[26], g[27], g[25], g[29], g[31], g[30], g[32], g[33], g[1], g[34], g[36], g[37], g[35], g[39], g[41], g[40], g[42]};  
+                        custinfo = OVData.addCustMstrWShipToMinimal(addr);
+
+                        nbr = String.valueOf(OVData.getNextNbr("order")); 
+                    
+                       // bsmf.MainFrame.show(g[48] + "/" + g[49] + "/" + g[50]);
+                        st.executeUpdate("insert into so_mstr "
+                    + "(so_nbr, so_cust, so_ship, so_po, so_ord_date, so_due_date, "
+                    + "so_create_date, so_userid, so_status,"
+                    + "so_rmks, so_terms, so_ar_acct, so_ar_cc, so_shipvia, so_type, so_site, so_onhold ) "
+                    + " values ( " + "'" + nbr + "'" + ","
+                    + "'" + BillToCode + "'" + ","
+                    + "'" + BillToCode + "'" + ","
+                    + "'" + g[55] + "'" + ","
+                    + "'" + dfdate.format(now) + "'" + ","
+                    + "'" + dfdate.format(now) + "'" + ","
+                    + "'" + dfdate.format(now) + "'" + ","
+                    + "'" + "shopify" + "'" + ","
+                    + "'" + getGlobalProgTag("open") + "'" + ","
+                    + "'" + g[44] + "'" + ","
+                    + "'" + custinfo[4] + "'" + ","
+                    + "'" + custinfo[0] + "'" + ","
+                    + "'" + custinfo[1] + "'" + ","
+                    + "'" + custinfo[5] + "'" + ","
+                    + "'DISCRETE'" + ","
+                    + "'" + custinfo[7] + "'" + ","
+                    + "'" + custinfo[6] + "'"
+                    + ")"
+                    + ";");
+                        
+                     // now discount info ...only applicable at header level
+                    if (! g[13].isBlank() && ! g[13].isBlank() && ! g[13].equals("0") && ! g[13].equals("0.00")) {
+                    disc = -1 * bsParseDouble(g[13]);
+                    st.executeUpdate("insert into sos_det (sos_nbr, sos_desc, sos_type, " 
+                        + "sos_amttype, sos_amt ) "
+                        + " values ( " + "'" + nbr + "'" + ","
+                    + "'" + "discount summary" + "'" + ","
+                    + "'" + "discount" + "'" + ","
+                    + "'" + "amount" + "'" + ","
+                    + "'" + String.valueOf(disc).replace(defaultDecimalSeparator, '.') + "'"
+                            + ")"
+                    + ";");
+                    }    
+                    
+                    // now tax info ...can only do 3 of the 5 shopify provides
+                    if (! g[60].isBlank() && ! g[61].isBlank() && ! g[61].equals("0") && ! g[61].equals("0.00")) {
+                    st.executeUpdate("insert into sos_det (sos_nbr, sos_desc, sos_type, " 
+                        + "sos_amttype, sos_amt ) "
+                        + " values ( " + "'" + nbr + "'" + ","
+                    + "'" + g[60] + "'" + ","
+                    + "'" + "tax" + "'" + ","
+                    + "'" + "amount" + "'" + ","
+                    + "'" + g[61].replace(defaultDecimalSeparator, '.') + "'"
+                            + ")"
+                    + ";");
+                    }
+                    
+                    if (! g[62].isBlank() && ! g[63].isBlank() && ! g[63].equals("0")) {
+                    st.executeUpdate("insert into sos_det (sos_nbr, sos_desc, sos_type, " 
+                        + "sos_amttype, sos_amt ) "
+                        + " values ( " + "'" + nbr + "'" + ","
+                    + "'" + g[62] + "'" + ","
+                    + "'" + "tax" + "'" + ","
+                    + "'" + "amount" + "'" + ","
+                    + "'" + g[63].replace(defaultDecimalSeparator, '.') + "'"
+                            + ")"
+                    + ";");
+                    }
+                    
+                    if (! g[64].isBlank() && ! g[65].isBlank() && ! g[65].equals("0")) {
+                    st.executeUpdate("insert into sos_det (sos_nbr, sos_desc, sos_type, " 
+                        + "sos_amttype, sos_amt ) "
+                        + " values ( " + "'" + nbr + "'" + ","
+                    + "'" + g[64] + "'" + ","
+                    + "'" + "tax" + "'" + ","
+                    + "'" + "amount" + "'" + ","
+                    + "'" + g[65].replace(defaultDecimalSeparator, '.') + "'"
+                            + ")"
+                    + ";");
+                    }
+                        
+                    } // if m == 0 ...first line creates Sales Order Header
+                     
+                    // now do detail for m == 0 and all subsequent values of m
+                    
+                    st.executeUpdate("insert into sod_det "
+                        + "(sod_nbr, sod_item, sod_site, sod_po, sod_ord_qty, sod_netprice, sod_listprice, sod_disc, sod_due_date, "
+                        + "sod_shipped_qty, sod_custitem, sod_status, sod_line) "
+                        + " values ( " + "'" + nbr + "'" + ","
+                        + "'" + g[17] + "'" + ","
+                        + "'" + custinfo[7] + "'" + ","
+                        + "'" + g[55] + "'" + ","
+                        + "'" + g[16].replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "'" + g[18].replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "'" + g[18].replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "'" + "0" + "'" + ","
+                        + "'" + now + "'" + ","
+                        + '0' + "," + "'" + g[20] + "'" +  "," 
+                        + "'" + getGlobalProgTag("open") + "'" + ","
+                        + "'" + String.valueOf(m + 1) + "'"
+                        + ")"
+                        + ";");
+                    
+                    m++;     
+                 }
+    			 
+    		 
+    	        }
+               
+               
+               
+                
+            } // if proceed
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+                myreturn = true;
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
+        } catch (SQLException e) {
+            MainFrame.bslog(e);
+        }  
+                  return myreturn;
+             } 
+   
     
     public static boolean createTestDataSO() {
             boolean myreturn = true;

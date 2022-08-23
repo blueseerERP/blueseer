@@ -116,7 +116,7 @@
         <Component class="javax.swing.JComboBox" name="ddtable">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="19">
+              <StringArray count="20">
                 <StringItem index="0" value="Item Master"/>
                 <StringItem index="1" value="BOM Master"/>
                 <StringItem index="2" value="Customer Master"/>
@@ -136,6 +136,7 @@
                 <StringItem index="16" value="Routing Master"/>
                 <StringItem index="17" value="WorkCenter Master"/>
                 <StringItem index="18" value="Order - Shopify"/>
+                <StringItem index="19" value="Fulfillment - Shopify"/>
               </StringArray>
             </Property>
           </Properties>
