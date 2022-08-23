@@ -66,3 +66,5 @@ insert into task_det (taskd_id, taskd_owner, taskd_desc, taskd_sequence) values 
 .import mapmstr.csv map_mstr
 .import apimstr.csv api_mstr
 .import apidet.csv api_det
+.import as2mstr.csv as2_mstr
+.import pksmstr.csv pks_mstr

@@ -148,6 +148,8 @@ import org.bouncycastle.util.io.pem.PemReader;
  */
 public class apiUtils {
     
+    
+    
     public static PrivateKey getPrivateKey(String user)  {
         PrivateKey key = null;
         FileInputStream fis = null;
@@ -190,7 +192,27 @@ public class apiUtils {
     public static X509Certificate getPublicKey(String user)  {
         X509Certificate cert = null;
         FileInputStream fis = null;
+        pks_mstr pks = admData.getPksMstr(new String[]{user});
         try {
+            // File type
+            if (pks.pks_type().equals("File") ) {
+                Path certfilepath = FileSystems.getDefault().getPath(pks.pks_file());
+                if (! Files.exists(certfilepath)) {
+                     // throw new RuntimeException("bad path to cert file: " + certfile);
+                     return cert; // return null
+                }
+               // System.out.println("here->" + certfilepath.toString());
+                Security.addProvider(new BouncyCastleProvider());
+                CertificateFactory certFactory = CertificateFactory.getInstance("X.509", "BC");
+                try (FileInputStream fiscert = new FileInputStream(certfilepath.toFile())) {
+                    cert = (X509Certificate) certFactory.generateCertificate(fiscert);
+                    return cert;
+                } catch (IOException ex) {
+                    bslog(ex);
+                }
+            }
+            
+            if (pks.pks_type().equals("User") ) {
             String[] k = getKeyStoreByUser(user); // store, storeuser, storepass, user, pass
             k[2] = bsmf.MainFrame.PassWord("1", k[2].toCharArray());
             k[4] = bsmf.MainFrame.PassWord("1", k[4].toCharArray());
@@ -198,6 +220,10 @@ public class apiUtils {
              fis = new FileInputStream(FileSystems.getDefault().getPath(k[0]).toString());
             keystore.load(fis, k[2].toCharArray());
             cert = (X509Certificate) keystore.getCertificate(user);
+            fis.close();
+            return cert;
+            }
+            
             //System.out.println("here-->" + cert.getSerialNumber());
         } catch (KeyStoreException ex) {
             bslog(ex);
@@ -209,16 +235,10 @@ public class apiUtils {
             bslog(ex);
         } catch (CertificateException ex) {
             bslog(ex);
-        } finally {
-          if (fis != null ) {
-              try {
-                  fis.close();
-              } catch (IOException ex) {
-                  bslog(ex);
-              }
-          }
-          
-        }
+        } catch (NoSuchProviderException ex) {
+            bslog(ex);
+        } 
+        
         return cert;
     }
         
@@ -340,7 +360,7 @@ public class apiUtils {
 
             SMIMESignedGenerator sGen = new SMIMESignedGenerator(false ? SMIMESignedGenerator.RFC3851_MICALGS : SMIMESignedGenerator.RFC5751_MICALGS);
             JcaSimpleSignerInfoGeneratorBuilder jSig = new JcaSimpleSignerInfoGeneratorBuilder().setProvider("BC");
-             SignerInfoGenerator sig = jSig.build("SHA1withRSA", signingKey, signingCertificate);
+            SignerInfoGenerator sig = jSig.build("SHA1withRSA", signingKey, signingCertificate);
             sGen.addSignerInfoGenerator(sig);
             sGen.addCertificates(certs);
             MimeBodyPart dataPart = new MimeBodyPart();
@@ -415,7 +435,7 @@ public class apiUtils {
         StringBuilder r = new StringBuilder();
         String  now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
         ArrayList<String[]> logdet = new ArrayList<String[]>(); 
-        
+        Security.addProvider(new BouncyCastleProvider());
         
         
         
@@ -446,11 +466,11 @@ public class apiUtils {
        
         System.out.println("here->" + as2To + "/" +  as2From + "/" + internalURL + "/" + sourceDir + "/" + signkeyid);
         
-        X509Certificate encryptcertificate = getCert(tp[11]);
+        X509Certificate encryptcertificate = getPublicKey(tp[11]);
         if (encryptcertificate == null) {
-          logdet.add(new String[]{parentkey, "error", "Unable to retrieve encryption cert file " + tp[11]}); 
+          logdet.add(new String[]{parentkey, "error", "Unable to retrieve encryption cert for " + tp[11]}); 
           writeAS2LogDetail(logdet);
-          return "Unable to retrieve encryption cert file " + tp[11];
+          return "Unable to retrieve encryption cert for " + tp[11];
         }
         
         logdet.add(new String[]{parentkey, "info", "Encryption with: " + encryptcertificate.getIssuerX500Principal().getName() + "/" + encryptcertificate.getSigAlgName()});
@@ -480,7 +500,6 @@ public class apiUtils {
         } else {
             keystore.load(fis, k[2].toCharArray());
         }
-        
         fis.close();
         
         key = (PrivateKey) keystore.getKey(k[3], keyPassword);
@@ -509,7 +528,11 @@ public class apiUtils {
         File folder = new File(sourceDir);
         File[] listOfFiles = folder.listFiles();
         
-        
+        if (listOfFiles == null) {
+            logdet.add(new String[]{parentkey, "error", "No Files in output directory " + sourceDir}); 
+            writeAS2LogDetail(logdet);
+            return "No Files in output directory " + sourceDir;
+        }
         for (int i = 0; i < listOfFiles.length; i++) {
             if (! listOfFiles[i].isFile()) {
             continue;
