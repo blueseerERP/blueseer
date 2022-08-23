@@ -202,6 +202,7 @@ public class MassLoad extends javax.swing.JPanel {
        isLoad = true;
         tacomments.setText("");
         tbdelimiter.setText(":");
+        cbignoreheader.setSelected(false);
        isLoad = false;
        
     }
@@ -264,6 +265,7 @@ public class MassLoad extends javax.swing.JPanel {
           ddtable.insertItemAt("", 0);
       }  
       tbdelimiter.setText(":");
+      cbignoreheader.setSelected(false);
       tacomments.setText("");
     }
     
@@ -385,7 +387,10 @@ public class MassLoad extends javax.swing.JPanel {
             String line = "";
             int i = 0;
             while ((line = fsr.readLine()) != null) {
-                i++;
+                if (cbignoreheader.isSelected() && i == 0) {
+                    i++;
+                    continue;
+                } 
                 list.add(line);
                String[] recs = line.split(tbdelimiter.getText().trim(), -1);
                if (ddtable.getSelectedItem().toString().compareTo("Item Master") == 0) {
@@ -395,9 +400,13 @@ public class MassLoad extends javax.swing.JPanel {
                        m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
                    }
                }
+               i++;
             }
             fsr.close();
              if (proceed) {
+                   if (cbignoreheader.isSelected()) {
+                    i--; // reduce line count by 1 if ignore header
+                   } 
                    ArrayList<String> newlist = cleanList(list, checklist, tbdelimiter.getText().trim());
                    if(! addItemMasterMass(newlist)) {
                        m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151, String.valueOf(i))};
@@ -488,7 +497,10 @@ public class MassLoad extends javax.swing.JPanel {
             String line = "";
             int i = 0;
             while ((line = fsr.readLine()) != null) {
-                i++;
+                if (cbignoreheader.isSelected() && i == 0) {
+                    i++;
+                    continue;
+                } 
                 list.add(line);
                String[] recs = line.split(tbdelimiter.getText().trim(), -1);
                temp = checkBOMMaster(recs, i);
@@ -496,10 +508,13 @@ public class MassLoad extends javax.swing.JPanel {
                        proceed = false;
                        m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
                    }
-               
+               i++;
             }
             fsr.close();
              if (proceed) {
+                 if (cbignoreheader.isSelected()) {
+                    i--; // reduce line count by 1 if ignore header
+                   } 
                    if(! OVData.addBOMMstrRecord(list, tbdelimiter.getText().trim()))
                        m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151,String.valueOf(i))};
                    } else {
@@ -572,7 +587,10 @@ public class MassLoad extends javax.swing.JPanel {
             String line = "";
             int i = 0;
             while ((line = fsr.readLine()) != null) {
-                i++;
+                if (cbignoreheader.isSelected() && i == 0) {
+                    i++;
+                    continue;
+                } 
                 list.add(line);
                String[] recs = line.split(tbdelimiter.getText().trim(), -1);
                if (ddtable.getSelectedItem().toString().compareTo("GL Account Balances") == 0) {
@@ -582,9 +600,13 @@ public class MassLoad extends javax.swing.JPanel {
                        m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
                    }
                }
+               i++;
             }
             fsr.close();
              if (proceed) {
+                 if (cbignoreheader.isSelected()) {
+                    i--; // reduce line count by 1 if ignore header
+                   } 
                    if(! OVData.addGLAcctBalances(list, tbdelimiter.getText().trim()))
                        m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151,String.valueOf(i))};
                    } else {
@@ -648,7 +670,10 @@ public class MassLoad extends javax.swing.JPanel {
             String line = "";
             int i = 0;
             while ((line = fsr.readLine()) != null) {
-                i++;
+                if (cbignoreheader.isSelected() && i == 0) {
+                    i++;
+                    continue;
+                } 
                 list.add(line);
                String[] recs = line.split(tbdelimiter.getText().trim(), -1);
                if (ddtable.getSelectedItem().toString().compareTo("Generic Code") == 0) {
@@ -658,9 +683,13 @@ public class MassLoad extends javax.swing.JPanel {
                        m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
                    }
                }
+               i++;
             }
             fsr.close();
             if (proceed) {
+                if (cbignoreheader.isSelected()) {
+                    i--; // reduce line count by 1 if ignore header
+                   } 
                    if(! OVData.addGenericCode(list, tbdelimiter.getText().trim()))
                        m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151,String.valueOf(i))};
                    } else {
@@ -749,7 +778,10 @@ public class MassLoad extends javax.swing.JPanel {
             String line = "";
             int i = 0;
             while ((line = fsr.readLine()) != null) {
-                i++;
+                if (cbignoreheader.isSelected() && i == 0) {
+                    i++;
+                    continue;
+                } 
                 list.add(line);
                String[] recs = line.split(tbdelimiter.getText().trim(), -1);
                temp = checkCustXref(recs, i);
@@ -757,10 +789,13 @@ public class MassLoad extends javax.swing.JPanel {
                        proceed = false;
                        m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
                    }
-               
+              i++; 
             }
             fsr.close();
             if (proceed) {
+                if (cbignoreheader.isSelected()) {
+                    i--; // reduce line count by 1 if ignore header
+                   } 
                    if(! OVData.addCustXref(list, tbdelimiter.getText().trim()))
                        m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151,String.valueOf(i))};
                    } else {
@@ -821,7 +856,10 @@ public class MassLoad extends javax.swing.JPanel {
             String line = "";
             int i = 0;
             while ((line = fsr.readLine()) != null) {
-                i++;
+                if (cbignoreheader.isSelected() && i == 0) {
+                    i++;
+                    continue;
+                } 
                 list.add(line);
                String[] recs = line.split(tbdelimiter.getText().trim(), -1);
                temp = checkCarrier(recs, i);
@@ -829,10 +867,13 @@ public class MassLoad extends javax.swing.JPanel {
                        proceed = false;
                        m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
                    }
-               
+              i++; 
             }
             fsr.close();
             if (proceed) {
+                if (cbignoreheader.isSelected()) {
+                    i--; // reduce line count by 1 if ignore header
+                   } 
                    if(! OVData.addCarrier(list, tbdelimiter.getText().trim()))
                        m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151,String.valueOf(i))};
                    } else {
@@ -892,7 +933,10 @@ public class MassLoad extends javax.swing.JPanel {
             String line = "";
             int i = 0;
             while ((line = fsr.readLine()) != null) {
-                i++;
+                if (cbignoreheader.isSelected() && i == 0) {
+                    i++;
+                    continue;
+                } 
                 list.add(line);
                String[] recs = line.split(tbdelimiter.getText().trim(), -1);
                temp = checkEDIPartners(recs, i);
@@ -900,10 +944,13 @@ public class MassLoad extends javax.swing.JPanel {
                        proceed = false;
                        m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
                    }
-               
+              i++; 
             }
             fsr.close();
             if (proceed) {
+                if (cbignoreheader.isSelected()) {
+                    i--; // reduce line count by 1 if ignore header
+                   } 
                    if(! EDData.addEDIPartner(list))
                        m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151,String.valueOf(i))};
                    } else {
@@ -977,7 +1024,10 @@ public class MassLoad extends javax.swing.JPanel {
             String line = "";
             int i = 0;
             while ((line = fsr.readLine()) != null) {
-                i++;
+                if (cbignoreheader.isSelected() && i == 0) {
+                    i++;
+                    continue;
+                } 
                 list.add(line);
                String[] recs = line.split(tbdelimiter.getText().trim(), -1);
                temp = checkEDIDocumentStructures(recs, i);
@@ -985,10 +1035,13 @@ public class MassLoad extends javax.swing.JPanel {
                        proceed = false;
                        m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
                    }
-               
+               i++;
             }
             fsr.close();
             if (proceed) {
+                if (cbignoreheader.isSelected()) {
+                    i--; // reduce line count by 1 if ignore header
+                   } 
                    if(! EDData.addEDIDocumentStructures(list))
                        m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151,String.valueOf(i))};
                    } else {
@@ -1068,7 +1121,10 @@ public class MassLoad extends javax.swing.JPanel {
             String line = "";
             int i = 0;
             while ((line = fsr.readLine()) != null) {
-                i++;
+                if (cbignoreheader.isSelected() && i == 0) {
+                    i++;
+                    continue;
+                } 
                 list.add(line);
                String[] recs = line.split(tbdelimiter.getText().trim(), -1);
                temp = checkEDIPartnerTransactions(recs, i);
@@ -1076,10 +1132,13 @@ public class MassLoad extends javax.swing.JPanel {
                        proceed = false;
                        m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
                    }
-               
+               i++;
             }
             fsr.close();
             if (proceed) {
+                if (cbignoreheader.isSelected()) {
+                    i--; // reduce line count by 1 if ignore header
+                   } 
                    if(! EDData.addEDIMstrRecord(list))
                        m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151,String.valueOf(i))};
                    } else {
@@ -1167,7 +1226,10 @@ public class MassLoad extends javax.swing.JPanel {
             String line = "";
             int i = 0;
             while ((line = fsr.readLine()) != null) {
-                i++;
+                if (cbignoreheader.isSelected() && i == 0) {
+                    i++;
+                    continue;
+                } 
                 list.add(line);
                String[] recs = line.split(tbdelimiter.getText().trim(), -1);
                temp = checkVendXref(recs, i);
@@ -1175,10 +1237,13 @@ public class MassLoad extends javax.swing.JPanel {
                        proceed = false;
                        m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
                    }
-               
+              i++; 
             }
            fsr.close();
             if (proceed) {
+                if (cbignoreheader.isSelected()) {
+                    i--; // reduce line count by 1 if ignore header
+                   } 
                    if(! OVData.addVendXref(list, tbdelimiter.getText().trim()))
                        m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151,String.valueOf(i))};
                    } else {
@@ -1293,7 +1358,10 @@ public class MassLoad extends javax.swing.JPanel {
             String line = "";
             int i = 0;
             while ((line = fsr.readLine()) != null) {
-                i++;
+                if (cbignoreheader.isSelected() && i == 0) {
+                    i++;
+                    continue;
+                } 
                 list.add(line);
                String[] recs = line.split(tbdelimiter.getText().trim(), -1);
                temp = checkInvAdjustment(recs, i);
@@ -1301,10 +1369,13 @@ public class MassLoad extends javax.swing.JPanel {
                        proceed = false;
                        m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
                    }
-               
+               i++;
             }
             fsr.close();
             if (proceed) {
+                if (cbignoreheader.isSelected()) {
+                    i--; // reduce line count by 1 if ignore header
+                   } 
                    if(! OVData.addInvAdjustments(list, tbdelimiter.getText().trim()))
                        m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151,String.valueOf(i))};
                    } else {
@@ -1395,7 +1466,10 @@ public class MassLoad extends javax.swing.JPanel {
             String line = "";
             int i = 0;
             while ((line = fsr.readLine()) != null) {
-                i++;
+                if (cbignoreheader.isSelected() && i == 0) {
+                    i++;
+                    continue;
+                } 
                 list.add(line);
                String[] recs = line.split(tbdelimiter.getText().trim(), -1);
                temp = checkCustPriceList(recs, i);
@@ -1403,10 +1477,13 @@ public class MassLoad extends javax.swing.JPanel {
                        proceed = false;
                        m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
                    }
-               
+               i++;
             }
             fsr.close();
              if (proceed) {
+                 if (cbignoreheader.isSelected()) {
+                    i--; // reduce line count by 1 if ignore header
+                   } 
                    if(! OVData.addCustPriceList(list, tbdelimiter.getText().trim()))
                        m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151,String.valueOf(i))};
                    } else {
@@ -1494,7 +1571,10 @@ public class MassLoad extends javax.swing.JPanel {
             String line = "";
             int i = 0;
             while ((line = fsr.readLine()) != null) {
-                i++;
+                if (cbignoreheader.isSelected() && i == 0) {
+                    i++;
+                    continue;
+                } 
                 list.add(line);
                String[] recs = line.split(tbdelimiter.getText().trim(), -1);
                temp = checkVendPriceList(recs, i);
@@ -1502,10 +1582,13 @@ public class MassLoad extends javax.swing.JPanel {
                        proceed = false;
                        m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
                    }
-               
+               i++;
             }
             fsr.close();
              if (proceed) {
+                 if (cbignoreheader.isSelected()) {
+                    i--; // reduce line count by 1 if ignore header
+                   } 
                    if(! OVData.addVendPriceList(list, tbdelimiter.getText().trim()))
                        m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151,String.valueOf(i))};
                    } else {
@@ -1625,7 +1708,10 @@ public class MassLoad extends javax.swing.JPanel {
             String line = "";
             int i = 0;
             while ((line = fsr.readLine()) != null) {
-                i++;
+                if (cbignoreheader.isSelected() && i == 0) {
+                    i++;
+                    continue;
+                } 
                 list.add(line);
                String[] recs = line.split(tbdelimiter.getText().trim(), -1);
                temp = checkVendMstr(recs, i);
@@ -1633,10 +1719,13 @@ public class MassLoad extends javax.swing.JPanel {
                        proceed = false;
                        m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
                    }
-               
+               i++;
             }
             fsr.close();
              if (proceed) {
+                 if (cbignoreheader.isSelected()) {
+                    i--; // reduce line count by 1 if ignore header
+                   } 
                    if(! venData.addVendMstrMass(list))
                        m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151,String.valueOf(i))};
                    } else {
@@ -1763,8 +1852,12 @@ public class MassLoad extends javax.swing.JPanel {
             BufferedReader fsr = new BufferedReader(new FileReader(myfile));
             String line = "";
             int i = 0;
+            
             while ((line = fsr.readLine()) != null) {
-                i++;
+                if (cbignoreheader.isSelected() && i == 0) {
+                    i++;
+                    continue;
+                } 
                 list.add(line);
                String[] recs = line.split(tbdelimiter.getText().trim(), -1);
                temp = checkCustMstr(recs, i);
@@ -1772,10 +1865,13 @@ public class MassLoad extends javax.swing.JPanel {
                        proceed = false;
                        m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
                    }
-               
+               i++;
             }
             fsr.close();
              if (proceed) {
+                 if (cbignoreheader.isSelected()) {
+                    i--; // reduce line count by 1 if ignore header
+                   } 
                    if(! addCustMstrMass(list))
                        m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151,String.valueOf(i))};
                    } else {
@@ -1867,7 +1963,10 @@ public class MassLoad extends javax.swing.JPanel {
             String line = "";
             int i = 0;
             while ((line = fsr.readLine()) != null) {
-                i++;
+                if (cbignoreheader.isSelected() && i == 0) {
+                    i++;
+                    continue;
+                } 
                 list.add(line);
                String[] recs = line.split(tbdelimiter.getText().trim(), -1);
                temp = checkCustShipToMstr(recs, i);
@@ -1875,10 +1974,13 @@ public class MassLoad extends javax.swing.JPanel {
                        proceed = false;
                        m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
                    }
-               
+               i++;
             }
             fsr.close();
             if (proceed) {
+                if (cbignoreheader.isSelected()) {
+                    i--; // reduce line count by 1 if ignore header
+                   } 
                    if(! OVData.addCustShipToMstr(list, tbdelimiter.getText().trim()))
                        m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151,String.valueOf(i))};
                    } else {
@@ -1964,7 +2066,10 @@ public class MassLoad extends javax.swing.JPanel {
             String line = "";
             int i = 0;
             while ((line = fsr.readLine()) != null) {
-                i++;
+                if (cbignoreheader.isSelected() && i == 0) {
+                    i++;
+                    continue;
+                } 
                 list.add(line);
                String[] recs = line.split(tbdelimiter.getText().trim(), -1);
                if (ddtable.getSelectedItem().toString().compareTo("Routing Master") == 0) {
@@ -1974,9 +2079,13 @@ public class MassLoad extends javax.swing.JPanel {
                        m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
                    }
                }
+               i++;
             }
             fsr.close();
              if (proceed) {
+                 if (cbignoreheader.isSelected()) {
+                    i--; // reduce line count by 1 if ignore header
+                   } 
                    if(! OVData.addRoutingMaster(list, tbdelimiter.getText().trim())) { 
                        m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151, String.valueOf(i))};
                    } else {
@@ -2063,7 +2172,10 @@ public class MassLoad extends javax.swing.JPanel {
             String line = "";
             int i = 0;
             while ((line = fsr.readLine()) != null) {
-                i++;
+                if (cbignoreheader.isSelected() && i == 0) {
+                    i++;
+                    continue;
+                } 
                 list.add(line);
                String[] recs = line.split(tbdelimiter.getText().trim(), -1);
                if (ddtable.getSelectedItem().toString().compareTo("WorkCenter Master") == 0) {
@@ -2073,9 +2185,13 @@ public class MassLoad extends javax.swing.JPanel {
                        m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
                    }
                }
+               i++;
             }
             fsr.close();
              if (proceed) {
+                 if (cbignoreheader.isSelected()) {
+                    i--; // reduce line count by 1 if ignore header
+                   } 
                    if(! OVData.addWorkCenterMaster(list, tbdelimiter.getText().trim())) { 
                        m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151, String.valueOf(i))};
                    } else {
@@ -2216,7 +2332,10 @@ public class MassLoad extends javax.swing.JPanel {
             String line = "";
             int i = 0;
             while ((line = fsr.readLine()) != null) {
-                i++;
+                if (cbignoreheader.isSelected() && i == 0) {
+                    i++;
+                    continue;
+                }                
                 list.add(line);
                String[] recs = line.split(tbdelimiter.getText().trim(), -1);
                if (ddtable.getSelectedItem().toString().compareTo("Order - Shopify") == 0) {
@@ -2226,9 +2345,13 @@ public class MassLoad extends javax.swing.JPanel {
                        m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
                    }
                }
+               i++;
             }
             fsr.close();
              if (proceed) {
+                 if (cbignoreheader.isSelected()) {
+                    i--; // reduce line count by 1 if ignore header
+                   } 
                    ArrayList<String> newlist = cleanList(list, checklist, tbdelimiter.getText().trim());
                    if(! OVData.addShopifyOrderCSV(newlist, tbdelimiter.getText().trim())) { 
                        m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151, String.valueOf(i))};
@@ -2684,6 +2807,7 @@ public class MassLoad extends javax.swing.JPanel {
         bttestdata = new javax.swing.JButton();
         tbdelimiter = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
+        cbignoreheader = new javax.swing.JCheckBox();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -2722,7 +2846,7 @@ public class MassLoad extends javax.swing.JPanel {
         cboverride.setText("Menu Integrity Override");
         cboverride.setName("cboverride"); // NOI18N
 
-        bttestdata.setText("Test Data");
+        bttestdata.setText("Test Data Load");
         bttestdata.setName("bttestdata"); // NOI18N
         bttestdata.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -2733,6 +2857,8 @@ public class MassLoad extends javax.swing.JPanel {
         jLabel2.setText("Delimiter:");
         jLabel2.setName("lbdelim"); // NOI18N
 
+        cbignoreheader.setText("Ignore Header Row");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -2740,7 +2866,7 @@ public class MassLoad extends javax.swing.JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 106, Short.MAX_VALUE)
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(ddtable, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -2748,11 +2874,8 @@ public class MassLoad extends javax.swing.JPanel {
                         .addGap(20, 20, 20)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(bttestdata)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(cboverride)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
                                 .addComponent(jLabel2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(tbdelimiter, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -2760,7 +2883,12 @@ public class MassLoad extends javax.swing.JPanel {
                                 .addComponent(btdescribe)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btupload))
-                            .addComponent(jScrollPane1))))
+                            .addComponent(jScrollPane1)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(cbignoreheader)
+                                    .addComponent(bttestdata))
+                                .addGap(0, 0, Short.MAX_VALUE)))))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -2779,7 +2907,9 @@ public class MassLoad extends javax.swing.JPanel {
                     .addComponent(cboverride)
                     .addComponent(tbdelimiter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(cbignoreheader)
+                .addGap(9, 9, 9)
                 .addComponent(bttestdata)
                 .addContainerGap())
         );
@@ -2816,6 +2946,7 @@ public class MassLoad extends javax.swing.JPanel {
     private javax.swing.JButton btdescribe;
     private javax.swing.JButton bttestdata;
     private javax.swing.JButton btupload;
+    private javax.swing.JCheckBox cbignoreheader;
     private javax.swing.JCheckBox cboverride;
     private javax.swing.JComboBox ddtable;
     private javax.swing.JFileChooser fc;

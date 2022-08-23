@@ -36,7 +36,7 @@
               <Group type="102" attributes="0">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
-                          <EmptySpace min="0" pref="106" max="32767" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="ddtable" min="-2" pref="290" max="-2" attributes="0"/>
@@ -45,12 +45,8 @@
                           <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" attributes="0">
-                                  <Component id="bttestdata" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                              </Group>
-                              <Group type="102" attributes="0">
                                   <Component id="cboverride" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="32767" attributes="0"/>
+                                  <EmptySpace pref="24" max="32767" attributes="0"/>
                                   <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="tbdelimiter" min="-2" pref="21" max="-2" attributes="0"/>
@@ -60,6 +56,13 @@
                                   <Component id="btupload" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <Component id="jScrollPane1" max="32767" attributes="0"/>
+                              <Group type="102" attributes="0">
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="cbignoreheader" min="-2" max="-2" attributes="0"/>
+                                      <Component id="bttestdata" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                              </Group>
                           </Group>
                       </Group>
                   </Group>
@@ -85,7 +88,9 @@
                       <Component id="tbdelimiter" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Component id="cbignoreheader" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="9" max="-2" attributes="0"/>
                   <Component id="bttestdata" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -170,7 +175,7 @@
         </Component>
         <Component class="javax.swing.JButton" name="bttestdata">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Test Data"/>
+            <Property name="text" type="java.lang.String" value="Test Data Load"/>
             <Property name="name" type="java.lang.String" value="bttestdata" noResource="true"/>
           </Properties>
           <Events>
@@ -183,6 +188,11 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Delimiter:"/>
             <Property name="name" type="java.lang.String" value="lbdelim" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JCheckBox" name="cbignoreheader">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Ignore Header Row"/>
           </Properties>
         </Component>
       </SubComponents>
