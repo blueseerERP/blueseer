@@ -464,7 +464,7 @@ public class apiUtils {
         logdet.add(new String[]{parentkey, "info", "Signing Key ID: " + signkeyid});
         
        
-        System.out.println("here->" + as2To + "/" +  as2From + "/" + internalURL + "/" + sourceDir + "/" + signkeyid);
+       // System.out.println("here->" + as2To + "/" +  as2From + "/" + internalURL + "/" + sourceDir + "/" + signkeyid);
         
         X509Certificate encryptcertificate = getPublicKey(tp[11]);
         if (encryptcertificate == null) {
@@ -527,6 +527,7 @@ public class apiUtils {
         Path as2filepath = null;
         File folder = new File(sourceDir);
         File[] listOfFiles = folder.listFiles();
+        boolean isSuccess = false;
         
         if (listOfFiles == null) {
             logdet.add(new String[]{parentkey, "error", "No Files in output directory " + sourceDir}); 
@@ -534,6 +535,9 @@ public class apiUtils {
             return "No Files in output directory " + sourceDir;
         }
         for (int i = 0; i < listOfFiles.length; i++) {
+            
+            isSuccess = false;
+            
             if (! listOfFiles[i].isFile()) {
             continue;
             }
@@ -683,6 +687,7 @@ public class apiUtils {
         byte[] indata = EntityUtils.toByteArray(entity);
         String result = new String(indata); 
         
+        
         // save MDN file if present
         MimeMultipart mpr  = new MimeMultipart(new ByteArrayDataSource(indata, entity.getContentType().getValue()));
         for (int z = 0; z < mpr.getCount(); z++) {
@@ -701,6 +706,7 @@ public class apiUtils {
                     logdet.add(new String[]{parentkey, "error", "MDN error: " + filename});
                 } else {
                    logdet.add(new String[]{parentkey, "info", "MDN processed: " + filename}); 
+                   isSuccess = true;
                 }
             }
         }
@@ -714,7 +720,10 @@ public class apiUtils {
           return "Connection refused or timeout from server ";
         } 
         
-        
+      // remove file if successful
+      if (isSuccess) {
+        Files.deleteIfExists(as2filepath);
+      }
         
     } // for each file
         writeAS2LogDetail(logdet);
