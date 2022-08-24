@@ -349,6 +349,12 @@ public class apiUtils {
             keystore.load(fis, passphrase.toCharArray());
             keystore.setKeyEntry(alias, pair.getPrivate(), userpass.toCharArray(), new Certificate[] {cert});
         }
+        
+         // --- now save back to .p12 file
+        Path filepath = FileSystems.getDefault().getPath(filename);
+        try (FileOutputStream p12 = new FileOutputStream(filepath.toFile())) {
+            keystore.store(p12, passphrase.toCharArray());
+        }
       
         } catch (NoSuchAlgorithmException ex) {
             bslog(ex);

@@ -1435,6 +1435,113 @@ public class admData {
     
     
     // misc
+    
+    public static boolean isValidPKSStore(String pksid) {
+             
+       boolean x = false;
+        try{
+           
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                res = st.executeQuery("select pks_id from pks_mstr where pks_id = " + "'" + pksid + "'" +
+                        " and pks_type = 'Store' "+ ";");
+               while (res.next()) {
+                    x = true;
+                }
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return x;
+        
+    }
+    
+    public static String getPKSStoreFileName(String pksid) {
+             
+       String x = "";
+        try{
+           
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                res = st.executeQuery("select pks_file from pks_mstr where pks_id = " + "'" + pksid + "'" +
+                        " and pks_type = 'Store' "+ ";");
+               while (res.next()) {
+                    x = res.getString("pks_file");
+                }
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return x;
+        
+    }
+    
+    
+    public static String getPKSStorePWD(String pksid) {
+             
+       String x = "";
+        try{
+           
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                res = st.executeQuery("select pks_storepass from pks_mstr where pks_id = " + "'" + pksid + "'" +
+                        " and pks_type = 'Store' "+ ";");
+               while (res.next()) {
+                    x = bsmf.MainFrame.PassWord("1", res.getString("pks_storepass").toCharArray());
+                }
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return x;
+        
+    }
+    
     public static void runClient(String c) {
         ftp_mstr fm = admData.getFTPMstr(new String[]{c});
         

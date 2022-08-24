@@ -31,7 +31,10 @@ import static bsmf.MainFrame.bslog;
 import static bsmf.MainFrame.tags;
 import static com.blueseer.adm.admData.addPksMstr;
 import static com.blueseer.adm.admData.deletePksMstr;
+import static com.blueseer.adm.admData.getPKSStoreFileName;
+import static com.blueseer.adm.admData.getPKSStorePWD;
 import static com.blueseer.adm.admData.getPksMstr;
+import static com.blueseer.adm.admData.isValidPKSStore;
 import com.blueseer.adm.admData.pks_mstr;
 import static com.blueseer.adm.admData.updatePksMstr;
 import com.blueseer.edi.apiUtils;
@@ -349,6 +352,34 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
                     return b;
                 }
                 
+                if (cbgenerate.isSelected() && ddtype.getSelectedItem().toString().equals("User") && tbparent.getText().isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show("Parent Store cannot be empty when generating user cert");
+                    tbparent.requestFocus();
+                    return b;
+                }
+                
+                if (cbgenerate.isSelected() && ddtype.getSelectedItem().toString().equals("User") && ! isValidPKSStore(tbparent.getText())) {
+                    b = false;
+                    bsmf.MainFrame.show("Parent Store must be a valid entry when generating user cert");
+                    tbparent.requestFocus();
+                    return b;
+                }
+                
+                if (cbgenerate.isSelected() && ddtype.getSelectedItem().toString().equals("User") && tbuser.getText().isBlank()) {
+                    b = false;
+                    bsmf.MainFrame.show("User (alias) cannot be empty when generating user cert");
+                    tbuser.requestFocus();
+                    return b;
+                }
+                
+                if (cbgenerate.isSelected() && ddtype.getSelectedItem().toString().equals("User") && String.valueOf(tbpass.getPassword()).isBlank()) {
+                    b = false;
+                    bsmf.MainFrame.show("User password cannot be empty when generating user cert");
+                    tbpass.requestFocus();
+                    return b;
+                }
+                
                
         return b;
     }
@@ -384,8 +415,8 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
      if (cbgenerate.isSelected() && ddtype.getSelectedItem().toString().equals("User")) {
          if (! createNewKeyPair(tbuser.getText(), 
                  String.valueOf(tbpass.getPassword()), 
-                 String.valueOf(tbstorepass.getPassword()), 
-                 tbfile.getText(),
+                 getPKSStorePWD(tbparent.getText()), 
+                 getPKSStoreFileName(tbparent.getText()),
                  Integer.valueOf(ddstrength.getSelectedItem().toString()),
                  Integer.valueOf(ddyears.getSelectedItem().toString())
                  )) {
