@@ -46,6 +46,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
+import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -55,6 +56,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.KeyFactory;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.MessageDigest;
@@ -63,6 +66,7 @@ import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.Security;
 import java.security.UnrecoverableKeyException;
+import java.security.cert.Certificate;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
@@ -72,7 +76,9 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -104,9 +110,13 @@ import org.apache.http.util.EntityUtils;
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
 import org.bouncycastle.asn1.pkcs.RSAPrivateKey;
+import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
+import org.bouncycastle.cert.CertIOException;
 import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.cert.jcajce.JcaCertStore;
+import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter;
+import org.bouncycastle.cert.jcajce.JcaX509v3CertificateBuilder;
 import org.bouncycastle.cms.CMSAlgorithm;
 import org.bouncycastle.cms.CMSEnvelopedData;
 import org.bouncycastle.cms.CMSEnvelopedDataGenerator;
@@ -262,6 +272,72 @@ public class apiUtils {
         return (X509Certificate) converter.getPublicKey(publicKeyInfo);
     }
 }
+    
+    public static boolean createKeyStoreWithNewKeyPair(String alias, String userpass, String passphrase, String filename) {
+        
+       
+        // --- generate a key pair (you did this already it seems)
+        KeyPairGenerator rsaGen;
+        try {
+            rsaGen = KeyPairGenerator.getInstance("RSA");
+        
+        final KeyPair pair = rsaGen.generateKeyPair();
+
+        // --- create the self signed cert
+        Certificate cert = createSelfSigned(pair);
+
+        // --- create a new pkcs12 key store in memory
+        KeyStore pkcs12 = KeyStore.getInstance("PKCS12");
+        pkcs12.load(null, null);
+
+        // --- create entry in PKCS12
+        pkcs12.setKeyEntry(alias, pair.getPrivate(), userpass.toCharArray(), new Certificate[] {cert});
+
+         // --- store PKCS#12 as file
+        Path filepath = FileSystems.getDefault().getPath(filename);
+        try (FileOutputStream p12 = new FileOutputStream(filepath.toFile())) {
+            pkcs12.store(p12, passphrase.toCharArray());
+        }
+
+        } catch (NoSuchAlgorithmException ex) {
+            bslog(ex);
+            return false;
+        } catch (OperatorCreationException ex) {
+            bslog(ex);
+            return false;
+        } catch (CertIOException ex) {
+            bslog(ex);
+            return false;
+        } catch (CertificateException ex) {
+            bslog(ex);
+            return false;
+        } catch (KeyStoreException ex) {
+            bslog(ex);
+            return false;
+        } catch (IOException ex) {
+            bslog(ex);
+            return false;
+        }
+        
+        return true;
+    }
+    
+    public static X509Certificate createSelfSigned(KeyPair pair) throws OperatorCreationException, CertIOException, CertificateException {
+        X500Name dnName = new X500Name("CN=publickeystorageonly");
+        BigInteger certSerialNumber = BigInteger.ONE;
+
+        Date startDate = new Date(); // now
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(startDate);
+        calendar.add(Calendar.YEAR, 1);
+        Date endDate = calendar.getTime();
+
+        ContentSigner contentSigner = new JcaContentSignerBuilder("SHA256WithRSA").build(pair.getPrivate());
+        JcaX509v3CertificateBuilder certBuilder = new JcaX509v3CertificateBuilder(dnName, certSerialNumber, startDate, endDate, dnName, pair.getPublic());
+
+        return new JcaX509CertificateConverter().getCertificate(certBuilder.build(contentSigner));
+    }
     
     public static String hashdigest(byte[] indata, String algo) {
         String x;

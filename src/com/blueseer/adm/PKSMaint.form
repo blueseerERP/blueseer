@@ -69,38 +69,39 @@
                           <EmptySpace max="32767" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="1" attributes="0">
-                          <Group type="103" groupAlignment="1" attributes="0">
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Component id="tbstorepass" alignment="0" min="-2" pref="111" max="-2" attributes="0"/>
+                              <Component id="tbpass" alignment="0" min="-2" pref="111" max="-2" attributes="0"/>
+                              <Component id="tbfile" alignment="0" max="32767" attributes="0"/>
+                              <Component id="tbstoreuser" alignment="0" max="32767" attributes="0"/>
+                              <Component id="tbdesc" alignment="0" pref="233" max="32767" attributes="0"/>
+                              <Component id="tbuser" alignment="0" max="32767" attributes="0"/>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="btadd" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="btdelete" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="btupdate" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                      <Component id="tbparent" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="ddtype" alignment="0" pref="120" max="32767" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace max="32767" attributes="0"/>
+                                  <Component id="cbgenerate" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
+                          <EmptySpace pref="27" max="32767" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" attributes="0">
-                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                  <Component id="btpublickey" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="74" max="-2" attributes="0"/>
                                   <Component id="btencrypt" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="btdecrypt" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <Group type="102" attributes="0">
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="tbstorepass" alignment="0" min="-2" pref="111" max="-2" attributes="0"/>
-                                      <Component id="tbpass" alignment="0" min="-2" pref="111" max="-2" attributes="0"/>
-                                      <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
-                                          <Component id="tbfile" alignment="0" max="32767" attributes="0"/>
-                                          <Component id="tbstoreuser" alignment="0" max="32767" attributes="0"/>
-                                          <Component id="tbdesc" alignment="0" pref="233" max="32767" attributes="0"/>
-                                          <Component id="tbuser" alignment="0" max="32767" attributes="0"/>
-                                          <Group type="102" alignment="0" attributes="0">
-                                              <Component id="btadd" min="-2" max="-2" attributes="0"/>
-                                              <EmptySpace max="-2" attributes="0"/>
-                                              <Component id="btdelete" min="-2" max="-2" attributes="0"/>
-                                              <EmptySpace max="-2" attributes="0"/>
-                                              <Component id="btupdate" min="-2" max="-2" attributes="0"/>
-                                          </Group>
-                                      </Group>
-                                      <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
-                                          <Component id="tbparent" alignment="0" max="32767" attributes="0"/>
-                                          <Component id="ddtype" alignment="0" pref="120" max="32767" attributes="0"/>
-                                      </Group>
-                                  </Group>
-                                  <EmptySpace pref="27" max="32767" attributes="0"/>
-                                  <Component id="jScrollPane1" min="-2" pref="291" max="-2" attributes="0"/>
-                              </Group>
+                              <Component id="jScrollPane1" min="-2" pref="291" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
                       </Group>
@@ -134,6 +135,7 @@
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="ddtype" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel7" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="cbgenerate" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
@@ -178,6 +180,7 @@
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="btdecrypt" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="btencrypt" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btpublickey" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace pref="24" max="32767" attributes="0"/>
               </Group>
@@ -355,6 +358,19 @@
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btencryptActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JCheckBox" name="cbgenerate">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Generate"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="btpublickey">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Public Key"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btpublickeyActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>
