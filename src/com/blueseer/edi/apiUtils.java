@@ -34,6 +34,7 @@ import static com.blueseer.edi.ediData.getKeyStorePass;
 import static com.blueseer.edi.ediData.getKeyUserPass;
 import static com.blueseer.utl.EDData.writeAS2Log;
 import static com.blueseer.utl.EDData.writeAS2LogDetail;
+import com.blueseer.utl.OVData;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -64,6 +65,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
+import java.security.SecureRandom;
 import java.security.Security;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
@@ -111,6 +113,8 @@ import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
 import org.bouncycastle.asn1.pkcs.RSAPrivateKey;
 import org.bouncycastle.asn1.x500.X500Name;
+import org.bouncycastle.asn1.x500.X500NameBuilder;
+import org.bouncycastle.asn1.x500.style.RFC4519Style;
 import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
 import org.bouncycastle.cert.CertIOException;
 import org.bouncycastle.cert.X509CertificateHolder;
@@ -229,7 +233,7 @@ public class apiUtils {
             KeyStore keystore = KeyStore.getInstance("PKCS12");
              fis = new FileInputStream(FileSystems.getDefault().getPath(k[0]).toString());
             keystore.load(fis, k[2].toCharArray());
-            cert = (X509Certificate) keystore.getCertificate(user);
+            cert = (X509Certificate) keystore.getCertificate(pks.pks_user());
             fis.close();
             return cert;
             }
@@ -273,18 +277,19 @@ public class apiUtils {
     }
 }
     
-    public static boolean createKeyStoreWithNewKeyPair(String alias, String userpass, String passphrase, String filename) {
+    public static boolean createKeyStoreWithNewKeyPair(String alias, String userpass, String passphrase, String filename, int strength, int years) {
         
-       
+        Security.addProvider(new BouncyCastleProvider());
         // --- generate a key pair (you did this already it seems)
         KeyPairGenerator rsaGen;
         try {
-            rsaGen = KeyPairGenerator.getInstance("RSA");
+        rsaGen = KeyPairGenerator.getInstance("RSA", "BC");
+        rsaGen.initialize(strength, new SecureRandom());
         
         final KeyPair pair = rsaGen.generateKeyPair();
 
         // --- create the self signed cert
-        Certificate cert = createSelfSigned(pair);
+        Certificate cert = createSelfSigned(pair, years);
 
         // --- create a new pkcs12 key store in memory
         KeyStore pkcs12 = KeyStore.getInstance("PKCS12");
@@ -317,24 +322,84 @@ public class apiUtils {
         } catch (IOException ex) {
             bslog(ex);
             return false;
+        } catch (NoSuchProviderException ex) {
+            bslog(ex);
+            return false;
         }
         
         return true;
     }
     
-    public static X509Certificate createSelfSigned(KeyPair pair) throws OperatorCreationException, CertIOException, CertificateException {
-        X500Name dnName = new X500Name("CN=publickeystorageonly");
-        BigInteger certSerialNumber = BigInteger.ONE;
+    public static boolean createNewKeyPair(String alias, String userpass, String passphrase, String filename, int strength, int years) {
+        
+        Security.addProvider(new BouncyCastleProvider());
+        // --- generate a key pair (you did this already it seems)
+        KeyPairGenerator rsaGen;
+        try {
+        rsaGen = KeyPairGenerator.getInstance("RSA", "BC");
+        rsaGen.initialize(strength, new SecureRandom());
+        
+        final KeyPair pair = rsaGen.generateKeyPair();
+
+        // --- create the self signed cert
+        Certificate cert = createSelfSigned(pair, years);
+
+        KeyStore keystore = KeyStore.getInstance("PKCS12");
+        try (FileInputStream fis = new FileInputStream(FileSystems.getDefault().getPath(filename).toString()))  {
+            keystore.load(fis, passphrase.toCharArray());
+            keystore.setKeyEntry(alias, pair.getPrivate(), userpass.toCharArray(), new Certificate[] {cert});
+        }
+      
+        } catch (NoSuchAlgorithmException ex) {
+            bslog(ex);
+            return false;
+        } catch (OperatorCreationException ex) {
+            bslog(ex);
+            return false;
+        } catch (CertIOException ex) {
+            bslog(ex);
+            return false;
+        } catch (CertificateException ex) {
+            bslog(ex);
+            return false;
+        } catch (KeyStoreException ex) {
+            bslog(ex);
+            return false;
+        } catch (IOException ex) {
+            bslog(ex);
+            return false;
+        } catch (NoSuchProviderException ex) {
+            bslog(ex);
+            return false;
+        }
+        
+        return true;
+    }
+    
+    
+    public static X509Certificate createSelfSigned(KeyPair pair, int years) throws OperatorCreationException, CertIOException, CertificateException {
+        
+        KeyPairGenerator rsaGen;
+        
+        String[] siteinfo = OVData.getSiteAddressArray(OVData.getDefaultSite());
+        X500Name dnName = new X500Name("CN=BlueSeer Software"); 
+        BigInteger certSerialNumber = new BigInteger(Long.toString(System.currentTimeMillis()));
 
         Date startDate = new Date(); // now
-
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(startDate);
-        calendar.add(Calendar.YEAR, 1);
+        calendar.add(Calendar.YEAR, years);
         Date endDate = calendar.getTime();
 
+        X500NameBuilder builder = new X500NameBuilder(RFC4519Style.INSTANCE);
+        
+        builder.addRDN(RFC4519Style.c, siteinfo[8]);  // site country
+        builder.addRDN(RFC4519Style.o, siteinfo[1]);  // site ID
+        builder.addRDN(RFC4519Style.l, siteinfo[5]);  // site city
+        builder.addRDN(RFC4519Style.st, siteinfo[6]);  // site state
+        
         ContentSigner contentSigner = new JcaContentSignerBuilder("SHA256WithRSA").build(pair.getPrivate());
-        JcaX509v3CertificateBuilder certBuilder = new JcaX509v3CertificateBuilder(dnName, certSerialNumber, startDate, endDate, dnName, pair.getPublic());
+        JcaX509v3CertificateBuilder certBuilder = new JcaX509v3CertificateBuilder(dnName, certSerialNumber, startDate, endDate, builder.build(), pair.getPublic());
 
         return new JcaX509CertificateConverter().getCertificate(certBuilder.build(contentSigner));
     }

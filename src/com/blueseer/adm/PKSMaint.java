@@ -36,6 +36,7 @@ import com.blueseer.adm.admData.pks_mstr;
 import static com.blueseer.adm.admData.updatePksMstr;
 import com.blueseer.edi.apiUtils;
 import static com.blueseer.edi.apiUtils.createKeyStoreWithNewKeyPair;
+import static com.blueseer.edi.apiUtils.createNewKeyPair;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
@@ -369,9 +370,26 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
     
     public String[] addRecord(String[] x) {
-     if (cbgenerate.isSelected()) {
-         if (! createKeyStoreWithNewKeyPair(tbuser.getText(), String.valueOf(tbpass.getPassword()), String.valueOf(tbstorepass.getPassword()), tbfile.getText())) {
-             return new String[]{BlueSeerUtils.ErrorBit, "Unable to generate new keypair"};
+     if (cbgenerate.isSelected() && ddtype.getSelectedItem().toString().equals("Store")) {
+         if (! createKeyStoreWithNewKeyPair(tbuser.getText(), 
+                 String.valueOf(tbpass.getPassword()), 
+                 String.valueOf(tbstorepass.getPassword()), 
+                 tbfile.getText(),
+                 Integer.valueOf(ddstrength.getSelectedItem().toString()),
+                 Integer.valueOf(ddyears.getSelectedItem().toString())
+                 )) {
+             return new String[]{BlueSeerUtils.ErrorBit, "Unable to generate new Store / keypair"};
+         }
+     }
+     if (cbgenerate.isSelected() && ddtype.getSelectedItem().toString().equals("User")) {
+         if (! createNewKeyPair(tbuser.getText(), 
+                 String.valueOf(tbpass.getPassword()), 
+                 String.valueOf(tbstorepass.getPassword()), 
+                 tbfile.getText(),
+                 Integer.valueOf(ddstrength.getSelectedItem().toString()),
+                 Integer.valueOf(ddyears.getSelectedItem().toString())
+                 )) {
+             return new String[]{BlueSeerUtils.ErrorBit, "Unable to generate new User / keypair"};
          }
      }
      String[] m = addPksMstr(createRecord()); 
@@ -615,6 +633,10 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
         btencrypt = new javax.swing.JButton();
         cbgenerate = new javax.swing.JCheckBox();
         btpublickey = new javax.swing.JButton();
+        ddyears = new javax.swing.JComboBox<>();
+        jLabel10 = new javax.swing.JLabel();
+        ddstrength = new javax.swing.JComboBox<>();
+        jLabel11 = new javax.swing.JLabel();
 
         jTextField1.setText("jTextField1");
 
@@ -731,6 +753,14 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
             }
         });
 
+        ddyears.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2", "3", "4", "5" }));
+
+        jLabel10.setText("Years Valid:");
+
+        ddstrength.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1024", "2048" }));
+
+        jLabel11.setText("Strength:");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -746,7 +776,9 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
                     .addComponent(jLabel4)
                     .addComponent(jLabel7)
                     .addComponent(jLabel8)
-                    .addComponent(jLabel9))
+                    .addComponent(jLabel9)
+                    .addComponent(jLabel10)
+                    .addComponent(jLabel11))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -759,25 +791,28 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
                         .addComponent(btclear)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(tbstorepass, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tbpass, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tbfile)
-                            .addComponent(tbstoreuser)
-                            .addComponent(tbdesc, javax.swing.GroupLayout.DEFAULT_SIZE, 233, Short.MAX_VALUE)
-                            .addComponent(tbuser)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(btadd)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btdelete)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btupdate))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(tbparent, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(ddtype, javax.swing.GroupLayout.Alignment.LEADING, 0, 120, Short.MAX_VALUE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(cbgenerate)))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(tbstorepass, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(tbpass, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(tbfile)
+                                .addComponent(tbstoreuser)
+                                .addComponent(tbdesc, javax.swing.GroupLayout.DEFAULT_SIZE, 233, Short.MAX_VALUE)
+                                .addComponent(tbuser)
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addComponent(btadd)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(btdelete)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(btupdate))
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(tbparent, javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(ddtype, javax.swing.GroupLayout.Alignment.LEADING, 0, 120, Short.MAX_VALUE))
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(cbgenerate)))
+                            .addComponent(ddyears, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(ddstrength, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
@@ -836,6 +871,14 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel8)
                             .addComponent(tbstorepass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(ddyears, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel10))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(ddstrength, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel11))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btadd)
@@ -936,9 +979,13 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JButton btpublickey;
     private javax.swing.JButton btupdate;
     private javax.swing.JCheckBox cbgenerate;
+    private javax.swing.JComboBox<String> ddstrength;
     private javax.swing.JComboBox<String> ddtype;
+    private javax.swing.JComboBox<String> ddyears;
     private javax.swing.JFileChooser fc;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
