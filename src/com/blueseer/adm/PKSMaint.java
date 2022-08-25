@@ -401,7 +401,7 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
     
     public String[] addRecord(String[] x) {
-     if (cbgenerate.isSelected() && ddtype.getSelectedItem().toString().equals("Store")) {
+     if (cbgenerate.isSelected() && ddtype.getSelectedItem().toString().equals("store")) {
          if (! createKeyStoreWithNewKeyPair(tbuser.getText(), 
                  String.valueOf(tbpass.getPassword()), 
                  String.valueOf(tbstorepass.getPassword()), 
@@ -412,7 +412,7 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
              return new String[]{BlueSeerUtils.ErrorBit, "Unable to generate new Store / keypair"};
          }
      }
-     if (cbgenerate.isSelected() && ddtype.getSelectedItem().toString().equals("User")) {
+     if (cbgenerate.isSelected() && ddtype.getSelectedItem().toString().equals("user")) {
          if (! createNewKeyPair(tbuser.getText(), 
                  String.valueOf(tbpass.getPassword()), 
                  getPKSStorePWD(tbparent.getText()), 
@@ -747,7 +747,7 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel4.setText("File:");
         jLabel4.setName("lblfile"); // NOI18N
 
-        ddtype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Store", "File", "User" }));
+        ddtype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "pem", "store", "user" }));
 
         jLabel7.setText("Type:");
         jLabel7.setName("lbltype"); // NOI18N

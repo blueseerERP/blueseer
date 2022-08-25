@@ -209,7 +209,7 @@ public class apiUtils {
         pks_mstr pks = admData.getPksMstr(new String[]{user});
         try {
             // File type
-            if (pks.pks_type().equals("File") ) {
+            if (pks.pks_type().equals("pem") ) {
                 Path certfilepath = FileSystems.getDefault().getPath(pks.pks_file());
                 if (! Files.exists(certfilepath)) {
                      // throw new RuntimeException("bad path to cert file: " + certfile);
@@ -226,7 +226,7 @@ public class apiUtils {
                 }
             }
             
-            if (pks.pks_type().equals("User") ) {
+            if (pks.pks_type().equals("user") ) {
             String[] k = getKeyStoreByUser(user); // store, storeuser, storepass, user, pass
             k[2] = bsmf.MainFrame.PassWord("1", k[2].toCharArray());
             k[4] = bsmf.MainFrame.PassWord("1", k[4].toCharArray());
@@ -629,7 +629,7 @@ public class apiUtils {
         X509Certificate signcertificate = null; 
         PrivateKey key = null;
         
-        if ( pks.pks_type().equals("Store") || pks.pks_type().equals("File") ) {
+        if ( pks.pks_type().equals("store") || pks.pks_type().equals("pem") ) {
           logdet.add(new String[]{parentkey, "error", "Using non-user signing key " + signkeyid}); 
           writeAS2LogDetail(logdet);
           return "Using non-user signing key  " + signkeyid; 

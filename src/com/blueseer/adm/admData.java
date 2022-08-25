@@ -1451,7 +1451,7 @@ public class admData {
             ResultSet res = null;
             try{
                 res = st.executeQuery("select pks_id from pks_mstr where pks_id = " + "'" + pksid + "'" +
-                        " and pks_type = 'Store' "+ ";");
+                        " and pks_type = 'store' "+ ";");
                while (res.next()) {
                     x = true;
                 }
@@ -1486,7 +1486,7 @@ public class admData {
             ResultSet res = null;
             try{
                 res = st.executeQuery("select pks_file from pks_mstr where pks_id = " + "'" + pksid + "'" +
-                        " and pks_type = 'Store' "+ ";");
+                        " and pks_type = 'store' "+ ";");
                while (res.next()) {
                     x = res.getString("pks_file");
                 }
@@ -1522,7 +1522,7 @@ public class admData {
             ResultSet res = null;
             try{
                 res = st.executeQuery("select pks_storepass from pks_mstr where pks_id = " + "'" + pksid + "'" +
-                        " and pks_type = 'Store' "+ ";");
+                        " and pks_type = 'store' "+ ";");
                while (res.next()) {
                     x = bsmf.MainFrame.PassWord("1", res.getString("pks_storepass").toCharArray());
                 }

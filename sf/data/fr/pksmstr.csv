@@ -1,2 +1,2 @@
-bskeystore,BlueSeer Key Store .p12 for Testing,Store,,,,edi/certs/bstest.p12,,?oONoO,,
-bstest,BlueSeer Test PublicKey/Cert for Testing,User,bstest,?oONoO,bskeystore,,,,,
+bskeystore,BlueSeer Key Store .p12 for Testing,store,,,,edi/certs/bstest.p12,,?oONoO,,
+bstest,BlueSeer Test PublicKey/Cert for Testing,user,bstest,?oONoO,bskeystore,,,,,
