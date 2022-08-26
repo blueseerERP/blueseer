@@ -1044,10 +1044,14 @@ public class AS2Maint extends javax.swing.JPanel implements IBlueSeerT {
         File folder = new File(folderpath.toString());
         File[] listOfFiles = folder.listFiles();
         taoutput.append("number of files to transmit: ");
-        taoutput.append(String.valueOf(listOfFiles.length));
+        if (listOfFiles != null) {
+         taoutput.append(String.valueOf(listOfFiles.length));
+        } else {
+         taoutput.append("null source directory");   
+        }
         taoutput.append("\n");
         
-        if (listOfFiles.length > 0) {        
+        if (listOfFiles != null && listOfFiles.length > 0) {        
             try {
                 r = apiUtils.postAS2(tbkey.getText(), cbdebug.isSelected());
             } catch (URISyntaxException ex) {

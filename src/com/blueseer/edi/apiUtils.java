@@ -737,14 +737,16 @@ public class apiUtils {
             as2filepath = FileSystems.getDefault().getPath(sourceDir + "/" + listOfFiles[i].getName()); 
             logdet.add(new String[]{parentkey, "info", "Transmitting file: " + listOfFiles[i].getName()});
        
-        
+                    
         String messageid = setMessageID();
         
         CloseableHttpClient client = HttpClients.createDefault();
            
-        String filecontent;
+        byte[] filecontent;
+        // String filecontent;
         try {
-            filecontent = Files.readString(as2filepath);
+            filecontent = Files.readAllBytes(as2filepath);
+           // filecontent = Files.readString(as2filepath);
         } catch (IOException ex) {
             bslog(ex);
             continue;
@@ -758,7 +760,8 @@ public class apiUtils {
         // need signed, signed+enc, enc, none ....condition logic here
         if (filecontent != null) {    
                 try {
-                    mbp = signData(filecontent.getBytes(StandardCharsets.UTF_8),signcertificate,key,listOfFiles[i].getName());
+                    // mbp = signData(filecontent.getBytes(StandardCharsets.UTF_8),signcertificate,key,listOfFiles[i].getName());
+                    mbp = signData(filecontent,signcertificate,key,listOfFiles[i].getName());
                     
                 } catch (Exception ex) {
                     bslog(ex);

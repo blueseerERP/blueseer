@@ -32,6 +32,7 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.adm.admData.getAllPKSKeysExceptStore;
 import static com.blueseer.edi.ediData.getAllPKSKeys;
 import static com.blueseer.edi.ediData.getKeyAllByType;
 import com.blueseer.utl.BlueSeerUtils;
@@ -243,7 +244,7 @@ public class EDIControl extends javax.swing.JPanel {
         
         ddsigncert.removeAllItems();
         ddenccert.removeAllItems();
-        ArrayList<String> certs = getAllPKSKeys(); 
+        ArrayList<String> certs = getAllPKSKeysExceptStore(); 
         for (int i = 0; i < certs.size(); i++) {
             ddsigncert.addItem(certs.get(i));
             ddenccert.addItem(certs.get(i));
