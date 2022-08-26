@@ -226,7 +226,7 @@ public class apiUtils {
                 }
             }
             
-            if (pks.pks_type().equals("user") ) {
+            if (pks.pks_type().equals("keypair") ) {
             String[] k = getKeyStoreByUser(user); // store, storeuser, storepass, user, pass
             k[2] = bsmf.MainFrame.PassWord("1", k[2].toCharArray());
             k[4] = bsmf.MainFrame.PassWord("1", k[4].toCharArray());
@@ -277,7 +277,7 @@ public class apiUtils {
     }
 }
     
-    public static boolean createKeyStoreWithNewKeyPair(String alias, String userpass, String passphrase, String filename, int strength, int years) {
+    public static boolean createKeyStoreWithNewKeyPair(String alias, String userpass, String passphrase, String filename, String sigalgo, int strength, int years) {
         
         Security.addProvider(new BouncyCastleProvider());
         // --- generate a key pair (you did this already it seems)
@@ -289,7 +289,7 @@ public class apiUtils {
         final KeyPair pair = rsaGen.generateKeyPair();
 
         // --- create the self signed cert
-        Certificate cert = createSelfSigned(pair, years);
+        Certificate cert = createSelfSigned(sigalgo, pair, years);
 
         // --- create a new pkcs12 key store in memory
         KeyStore pkcs12 = KeyStore.getInstance("PKCS12");
@@ -330,7 +330,41 @@ public class apiUtils {
         return true;
     }
     
-    public static boolean createNewKeyPair(String alias, String userpass, String passphrase, String filename, int strength, int years) {
+    public static boolean createKeyStore(String passphrase, String filename) {
+       
+        try {
+        // --- create a new pkcs12 key store in memory
+        KeyStore pkcs12 = KeyStore.getInstance("PKCS12");
+        pkcs12.load(null, null);
+
+         // --- store PKCS#12 as file
+        Path filepath = FileSystems.getDefault().getPath(filename);
+        try (FileOutputStream p12 = new FileOutputStream(filepath.toFile())) {
+            pkcs12.store(p12, passphrase.toCharArray());
+        }
+
+        } catch (NoSuchAlgorithmException ex) {
+            bslog(ex);
+            return false;
+        } catch (CertIOException ex) {
+            bslog(ex);
+            return false;
+        } catch (CertificateException ex) {
+            bslog(ex);
+            return false;
+        } catch (KeyStoreException ex) {
+            bslog(ex);
+            return false;
+        } catch (IOException ex) {
+            bslog(ex);
+            return false;
+        } 
+        
+        return true;
+    }
+    
+    
+    public static boolean createNewKeyPair(String alias, String userpass, String passphrase, String filename, String sigalgo, int strength, int years) {
         
         Security.addProvider(new BouncyCastleProvider());
         // --- generate a key pair (you did this already it seems)
@@ -342,7 +376,7 @@ public class apiUtils {
         final KeyPair pair = rsaGen.generateKeyPair();
 
         // --- create the self signed cert
-        Certificate cert = createSelfSigned(pair, years);
+        Certificate cert = createSelfSigned(sigalgo, pair, years);
 
         KeyStore keystore = KeyStore.getInstance("PKCS12");
         try (FileInputStream fis = new FileInputStream(FileSystems.getDefault().getPath(filename).toString()))  {
@@ -383,7 +417,18 @@ public class apiUtils {
     }
     
     
-    public static X509Certificate createSelfSigned(KeyPair pair, int years) throws OperatorCreationException, CertIOException, CertificateException {
+    public static X509Certificate createSelfSigned(String sigalgo, KeyPair pair, int years) throws OperatorCreationException, CertIOException, CertificateException {
+        String x = "";
+        
+        if (sigalgo.equals("SHA-256")) {
+            x = "SHA256WithRSA";
+        } else if (sigalgo.equals("SHA-1")) {
+            x = "SHA1WithRSA";
+        } else if (sigalgo.equals("MD-5")) {
+            x = "MD5WithRSA";    
+        } else {
+           x = "SHA256WithRSA";  
+        }
         
         KeyPairGenerator rsaGen;
         
@@ -404,7 +449,7 @@ public class apiUtils {
         builder.addRDN(RFC4519Style.l, siteinfo[5]);  // site city
         builder.addRDN(RFC4519Style.st, siteinfo[6]);  // site state
         
-        ContentSigner contentSigner = new JcaContentSignerBuilder("SHA256WithRSA").build(pair.getPrivate());
+        ContentSigner contentSigner = new JcaContentSignerBuilder(x).build(pair.getPrivate());
         JcaX509v3CertificateBuilder certBuilder = new JcaX509v3CertificateBuilder(dnName, certSerialNumber, startDate, endDate, builder.build(), pair.getPublic());
 
         return new JcaX509CertificateConverter().getCertificate(certBuilder.build(contentSigner));

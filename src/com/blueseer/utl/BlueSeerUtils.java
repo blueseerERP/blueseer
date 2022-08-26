@@ -867,6 +867,15 @@ public class BlueSeerUtils {
             }
     }
     
+    public static boolean isFile(String filepath) {
+        Path mypath = FileSystems.getDefault().getPath(filepath);
+            if (! mypath.toFile().exists()) {
+                return false;
+            } else {
+                return true;
+            }
+    }
+    
     public static boolean isSet(ArrayList list, Integer index) {
      return index != null && index >=0 && index < list.size() && list.get(index) != null;
      }
