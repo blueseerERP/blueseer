@@ -552,9 +552,9 @@
                               </Group>
                           </Group>
                           <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
+                              <Component id="ddsigncert" alignment="0" max="32767" attributes="0"/>
+                              <Component id="ddenccert" alignment="0" max="32767" attributes="0"/>
                               <Component id="ddsignalgo" alignment="0" max="32767" attributes="0"/>
-                              <Component id="tbenccert" alignment="0" max="32767" attributes="0"/>
-                              <Component id="tbsigncert" alignment="0" max="32767" attributes="0"/>
                               <Component id="ddencalgo" alignment="0" pref="130" max="32767" attributes="0"/>
                               <Component id="ddmicalgo" alignment="1" max="32767" attributes="0"/>
                           </Group>
@@ -578,13 +578,13 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="tbenccert" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel18" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="ddenccert" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="tbsigncert" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="ddsigncert" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
@@ -617,14 +617,10 @@
                 <Property name="text" type="java.lang.String" value="Output Sign"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JTextField" name="tbenccert">
-            </Component>
             <Component class="javax.swing.JLabel" name="jLabel18">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Encryption Cert"/>
               </Properties>
-            </Component>
-            <Component class="javax.swing.JTextField" name="tbsigncert">
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel2">
               <Properties>
@@ -697,6 +693,26 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="MIC Algorithm"/>
               </Properties>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="ddenccert">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="0"/>
+                </Property>
+              </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+              </AuxValues>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="ddsigncert">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="0"/>
+                </Property>
+              </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+              </AuxValues>
             </Component>
           </SubComponents>
         </Container>

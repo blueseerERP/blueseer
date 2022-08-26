@@ -1506,6 +1506,57 @@ public class admData {
         
     }
     
+    public static ArrayList<String> getPKSStores() {
+             
+       ArrayList<String> x = new ArrayList<String>();
+        try{
+           
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                res = st.executeQuery("select pks_id from pks_mstr where pks_type = 'store' " + ";");
+               while (res.next()) {
+                    x.add(res.getString("pks_id"));
+                }
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return x;
+        
+    }
+    
+    public static ArrayList<String> getAllPKSKeysExceptStore() {
+        ArrayList x = new ArrayList();
+        String sql = "select pks_id from pks_mstr where pks_type <> 'store' ;";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+	PreparedStatement ps = con.prepareStatement(sql);) {
+             try (ResultSet res = ps.executeQuery();) {
+               while (res.next()) {
+               x.add(res.getString("pks_id"));
+               }
+            }
+        }
+        catch (SQLException s){
+            MainFrame.bslog(s);
+        }
+        return x;
+    }
+    
     
     public static String getPKSStorePWD(String pksid) {
              

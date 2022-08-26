@@ -1514,6 +1514,23 @@ public class ediData {
         return x;
     }
     
+    public static ArrayList<String> getAllPKSKeysExceptStore() {
+        ArrayList x = new ArrayList();
+        String sql = "select pks_id from pks_mstr where pks_type <> 'store' ;";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+	PreparedStatement ps = con.prepareStatement(sql);) {
+             try (ResultSet res = ps.executeQuery();) {
+               while (res.next()) {
+               x.add(res.getString("pks_id"));
+               }
+            }
+        }
+        catch (SQLException s){
+            MainFrame.bslog(s);
+        }
+        return x;
+    }
+    
     
     public record edi_xref(String[] m, String exr_tpid, String exr_tpaddr, String exr_ovaddr,
         String exr_gsid, String exr_type ) {

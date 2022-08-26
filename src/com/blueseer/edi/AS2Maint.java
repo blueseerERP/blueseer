@@ -33,6 +33,7 @@ import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import static bsmf.MainFrame.bslog;
 import static bsmf.MainFrame.tags;
+import com.blueseer.adm.admData;
 import static com.blueseer.edi.ediData.updateAS2Transaction;
 import static com.blueseer.edi.ediData.addAS2Transaction;
 import com.blueseer.edi.ediData.as2_mstr;
@@ -67,6 +68,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.BorderFactory;
@@ -301,13 +303,24 @@ public class AS2Maint extends javax.swing.JPanel implements IBlueSeerT {
            lblurl.setText("");
            lblstatus.setText("");
            lblstatus.setForeground(Color.black);
-           tbenccert.setText("");
-           tbsigncert.setText("");
            cboutputencryption.setSelected(false);
            cboutputsign.setSelected(false);
            cbforceencryption.setSelected(false);
            cbforcesigning.setSelected(false);
            cbdebug.setSelected(false);
+           
+           ddsigncert.removeAllItems();
+           ddenccert.removeAllItems();
+        ArrayList<String> keys = admData.getAllPKSKeysExceptStore();
+        for (String code : keys) {
+            ddsigncert.addItem(code);
+            ddenccert.addItem(code);
+        }
+        ddsigncert.insertItemAt("", 0);
+        ddenccert.insertItemAt("", 0);
+        ddsigncert.setSelectedIndex(0);
+        ddenccert.setSelectedIndex(0);   
+           
        isLoad = false;
     }
     
@@ -427,10 +440,10 @@ public class AS2Maint extends javax.swing.JPanel implements IBlueSeerT {
                 tboutdir.getText(),
                 String.valueOf(BlueSeerUtils.boolToInt(cboutputencryption.isSelected())),
                 String.valueOf(BlueSeerUtils.boolToInt(cboutputsign.isSelected())),
-                tbenccert.getText(),
+                ddenccert.getSelectedItem().toString(),
                 String.valueOf(BlueSeerUtils.boolToInt(cbforceencryption.isSelected())),
                 String.valueOf(BlueSeerUtils.boolToInt(cbforcesigning.isSelected())),
-                tbsigncert.getText(),
+                ddsigncert.getSelectedItem().toString(),
                 ddencalgo.getSelectedItem().toString(),
                 ddsignalgo.getSelectedItem().toString(),
                 ddmicalgo.getSelectedItem().toString()
@@ -494,10 +507,10 @@ public class AS2Maint extends javax.swing.JPanel implements IBlueSeerT {
         ddclass.setSelectedItem(x.as2_class());
         tbindir.setText(x.as2_indir());
         tboutdir.setText(x.as2_outdir());
-        tbenccert.setText(x.as2_enccert());
+        ddenccert.setSelectedItem(x.as2_enccert());
         cboutputsign.setSelected(BlueSeerUtils.ConvertStringToBool(String.valueOf(x.as2_signed())));
         cboutputencryption.setSelected(BlueSeerUtils.ConvertStringToBool(String.valueOf(x.as2_encrypted())));
-        tbsigncert.setText(x.as2_signcert());
+        ddsigncert.setSelectedItem(x.as2_signcert());
         cbforcesigning.setSelected(BlueSeerUtils.ConvertStringToBool(String.valueOf(x.as2_forcesigned())));
         cbforceencryption.setSelected(BlueSeerUtils.ConvertStringToBool(String.valueOf(x.as2_forceencrypted())));
         ddencalgo.setSelectedItem(x.as2_encalgo());
@@ -558,9 +571,7 @@ public class AS2Maint extends javax.swing.JPanel implements IBlueSeerT {
         jPanel4 = new javax.swing.JPanel();
         cboutputencryption = new javax.swing.JCheckBox();
         cboutputsign = new javax.swing.JCheckBox();
-        tbenccert = new javax.swing.JTextField();
         jLabel18 = new javax.swing.JLabel();
-        tbsigncert = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         cbforceencryption = new javax.swing.JCheckBox();
         cbforcesigning = new javax.swing.JCheckBox();
@@ -570,6 +581,8 @@ public class AS2Maint extends javax.swing.JPanel implements IBlueSeerT {
         ddmicalgo = new javax.swing.JComboBox<>();
         jLabel4 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
+        ddenccert = new javax.swing.JComboBox<>();
+        ddsigncert = new javax.swing.JComboBox<>();
         lblstatus = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(0, 102, 204));
@@ -873,9 +886,9 @@ public class AS2Maint extends javax.swing.JPanel implements IBlueSeerT {
                             .addComponent(cbforceencryption)
                             .addComponent(cbforcesigning)))
                     .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(ddsigncert, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(ddenccert, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(ddsignalgo, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(tbenccert, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(tbsigncert, javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(ddencalgo, javax.swing.GroupLayout.Alignment.LEADING, 0, 130, Short.MAX_VALUE)
                         .addComponent(ddmicalgo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap(10, Short.MAX_VALUE))
@@ -893,12 +906,12 @@ public class AS2Maint extends javax.swing.JPanel implements IBlueSeerT {
                     .addComponent(cbforcesigning))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tbenccert, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel18))
+                    .addComponent(jLabel18)
+                    .addComponent(ddenccert, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tbsigncert, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
+                    .addComponent(jLabel2)
+                    .addComponent(ddsigncert, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ddencalgo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1097,9 +1110,11 @@ public class AS2Maint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JCheckBox cboutputsign;
     private javax.swing.JComboBox<String> ddclass;
     private javax.swing.JComboBox<String> ddencalgo;
+    private javax.swing.JComboBox<String> ddenccert;
     private javax.swing.JComboBox<String> ddmicalgo;
     private javax.swing.JComboBox<String> ddprotocol;
     private javax.swing.JComboBox<String> ddsignalgo;
+    private javax.swing.JComboBox<String> ddsigncert;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -1127,14 +1142,12 @@ public class AS2Maint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JTextArea taoutput;
     private javax.swing.JTextField tbapikey;
     private javax.swing.JTextField tbdesc;
-    private javax.swing.JTextField tbenccert;
     private javax.swing.JTextField tbindir;
     private javax.swing.JTextField tbkey;
     private javax.swing.JTextField tboutdir;
     private javax.swing.JPasswordField tbpass;
     private javax.swing.JTextField tbpath;
     private javax.swing.JTextField tbport;
-    private javax.swing.JTextField tbsigncert;
     private javax.swing.JTextField tburl;
     private javax.swing.JTextField tbuser;
     // End of variables declaration//GEN-END:variables
