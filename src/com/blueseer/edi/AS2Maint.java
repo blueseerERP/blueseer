@@ -57,13 +57,18 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -294,6 +299,8 @@ public class AS2Maint extends javax.swing.JPanel implements IBlueSeerT {
            cbenabled.setSelected(false);
            taoutput.setText("");
            lblurl.setText("");
+           lblstatus.setText("");
+           lblstatus.setForeground(Color.black);
            tbenccert.setText("");
            tbsigncert.setText("");
            cboutputencryption.setSelected(false);
@@ -547,7 +554,6 @@ public class AS2Maint extends javax.swing.JPanel implements IBlueSeerT {
         jScrollPane2 = new javax.swing.JScrollPane();
         taoutput = new javax.swing.JTextArea();
         btrun = new javax.swing.JButton();
-        cbfile = new javax.swing.JCheckBox();
         lblurl = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         cboutputencryption = new javax.swing.JCheckBox();
@@ -564,6 +570,7 @@ public class AS2Maint extends javax.swing.JPanel implements IBlueSeerT {
         ddmicalgo = new javax.swing.JComboBox<>();
         jLabel4 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
+        lblstatus = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -818,8 +825,6 @@ public class AS2Maint extends javax.swing.JPanel implements IBlueSeerT {
             }
         });
 
-        cbfile.setText("File");
-
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Cert Details"));
 
         cboutputencryption.setText("Output Encryption");
@@ -913,8 +918,19 @@ public class AS2Maint extends javax.swing.JPanel implements IBlueSeerT {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(22, 22, 22)
+                .addComponent(lblurl, javax.swing.GroupLayout.PREFERRED_SIZE, 554, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 406, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btdelete)
+                        .addGap(6, 6, 6)
+                        .addComponent(btupdate)
+                        .addGap(6, 6, 6)
+                        .addComponent(btadd))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -926,46 +942,38 @@ public class AS2Maint extends javax.swing.JPanel implements IBlueSeerT {
                     .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jScrollPane2)))
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(22, 22, 22)
-                        .addComponent(lblurl, javax.swing.GroupLayout.PREFERRED_SIZE, 554, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(383, 383, 383)
-                        .addComponent(btdelete)
-                        .addGap(6, 6, 6)
-                        .addComponent(btupdate)
-                        .addGap(6, 6, 6)
-                        .addComponent(btadd)
-                        .addGap(231, 231, 231)
-                        .addComponent(cbfile)
-                        .addGap(18, 18, 18)
-                        .addComponent(btrun)))
-                .addGap(0, 65, Short.MAX_VALUE))
+                .addGap(714, 714, 714)
+                .addComponent(lblstatus, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btrun)
+                .addGap(64, 64, 64))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(lblurl, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(6, 6, 6)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btrun)
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(lblurl, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(6, 6, 6)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(3, 3, 3)
+                                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(2, 2, 2)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(10, 10, 10)
+                                .addComponent(jScrollPane2))
+                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(3, 3, 3)
-                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(2, 2, 2)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(6, 6, 6)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btdelete)
-                    .addComponent(btupdate)
-                    .addComponent(btadd)
-                    .addComponent(cbfile)
-                    .addComponent(btrun)))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(btdelete, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btupdate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btadd, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblstatus, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
 
         add(jPanel1);
@@ -1016,8 +1024,17 @@ public class AS2Maint extends javax.swing.JPanel implements IBlueSeerT {
       
         taoutput.setText("");
         lblurl.setText("");
+        lblstatus.setText("");
          
         String r = null;
+        Path folderpath = FileSystems.getDefault().getPath(tbindir.getText());
+        File folder = new File(folderpath.toString());
+        File[] listOfFiles = folder.listFiles();
+        taoutput.append("number of files to transmit: ");
+        taoutput.append(String.valueOf(listOfFiles.length));
+        taoutput.append("\n");
+        
+        if (listOfFiles.length > 0) {        
             try {
                 r = apiUtils.postAS2(tbkey.getText(), cbdebug.isSelected());
             } catch (URISyntaxException ex) {
@@ -1041,8 +1058,22 @@ public class AS2Maint extends javax.swing.JPanel implements IBlueSeerT {
             } catch (Exception ex) {
                 bslog(ex);
             }
+        }  
+            
         if (r != null) {
          taoutput.append(r);
+         Pattern p = Pattern.compile("status__pass");
+		Matcher m = p.matcher(r);
+		if (m.find()) {
+                    lblstatus.setText("PASS!");
+                    lblstatus.setForeground(Color.blue);
+                } else {
+                    lblstatus.setText("FAIL!");
+                    lblstatus.setForeground(Color.red);  
+                }
+        
+        } else {
+            taoutput.append("null return");
         }
          
        
@@ -1060,7 +1091,6 @@ public class AS2Maint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JButton btupdate;
     private javax.swing.JCheckBox cbdebug;
     private javax.swing.JCheckBox cbenabled;
-    private javax.swing.JCheckBox cbfile;
     private javax.swing.JCheckBox cbforceencryption;
     private javax.swing.JCheckBox cbforcesigning;
     private javax.swing.JCheckBox cboutputencryption;
@@ -1092,6 +1122,7 @@ public class AS2Maint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JLabel lblstatus;
     private javax.swing.JLabel lblurl;
     private javax.swing.JTextArea taoutput;
     private javax.swing.JTextField tbapikey;

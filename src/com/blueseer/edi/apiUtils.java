@@ -721,7 +721,7 @@ public class apiUtils {
         File[] listOfFiles = folder.listFiles();
         boolean isSuccess = false;
         
-        if (listOfFiles == null) {
+        if (listOfFiles == null || listOfFiles.length == 0) {
             logdet.add(new String[]{parentkey, "error", "No Files in output directory " + sourceDir}); 
             writeAS2LogDetail(logdet);
             return "No Files in output directory " + sourceDir;
@@ -915,7 +915,8 @@ public class apiUtils {
       // remove file if successful
       if (isSuccess) {
         Files.deleteIfExists(as2filepath);
-      }
+        r.append("\n").append("status__pass");
+      } 
         
     } // for each file
         writeAS2LogDetail(logdet);
