@@ -125,6 +125,8 @@ import java.util.LinkedHashSet;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.print.Doc;
 import javax.print.DocFlavor;
 import javax.print.DocPrintJob;
@@ -16016,6 +16018,31 @@ return mystring;
         }
                 
       }
+    
+    public static void exportStringToFile(String data) {
+          FileDialog fDialog;
+                fDialog = new FileDialog(new Frame(), "Save", FileDialog.SAVE);
+                fDialog.setVisible(true);
+                //fDialog.setFile("data.csv");
+                String path = fDialog.getDirectory() + fDialog.getFile();
+                File f = new File(path);
+                BufferedWriter output = null;
+        try {
+            output = new BufferedWriter(new FileWriter(f));
+            output.write(data);
+            
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } finally {
+              try {  
+                  output.close();
+              } catch (IOException ex) {
+                  ex.printStackTrace();
+              }
+        }
+                
+      }
+    
     
     public static void exportTable(String tablename, String filename) {
          

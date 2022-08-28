@@ -1336,7 +1336,7 @@ public class DTData {
          
     public static DefaultTableModel getPksBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("key"), getGlobalColumnTag("desc"), getGlobalColumnTag("type"), getGlobalColumnTag("user"), getGlobalColumnTag("storeuser"), getGlobalColumnTag("file")})
+                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("key"), getGlobalColumnTag("description"), getGlobalColumnTag("type"), getGlobalColumnTag("user"), getGlobalColumnTag("file")})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -1358,17 +1358,17 @@ public class DTData {
             ResultSet res = null;
             try{
                 if (state == 1) { // begins
-                    res = st.executeQuery("SELECT pks_id, pks_desc, pks_type, pks_user, pks_storeuser, pks_file  " +
+                    res = st.executeQuery("SELECT pks_id, pks_desc, pks_type, pks_user, pks_file  " +
                         " FROM  pks_mstr where " + myfield + " like " + "'" + str + "%'" +
                         " order by pks_id ;");
                 }
                 if (state == 2) { // ends
-                    res = st.executeQuery("SELECT pks_id, pks_desc, pks_type, pks_user, pks_storeuser, pks_file  " +
+                    res = st.executeQuery("SELECT pks_id, pks_desc, pks_type, pks_user, pks_file  " +
                         " FROM  pks_mstr where " + myfield + " like " + "'%" + str + "'" +
                         " order by pks_id ;");
                 }
                  if (state == 0) { // match
-                 res = st.executeQuery("SELECT pks_id, pks_desc, pks_type, pks_user, pks_storeuser, pks_file  " +
+                 res = st.executeQuery("SELECT pks_id, pks_desc, pks_type, pks_user, pks_file  " +
                         " FROM  pks_mstr where " + myfield + " like " + "'%" + str + "%'" +
                         " order by pks_id ;");
                  }
@@ -1377,7 +1377,6 @@ public class DTData {
                                    res.getString("pks_desc"),
                                    res.getString("pks_type"),
                                    res.getString("pks_user"),
-                                   res.getString("pks_storeuser"),
                                    res.getString("pks_file")
                                    
                         });

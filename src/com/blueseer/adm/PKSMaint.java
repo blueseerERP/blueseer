@@ -65,6 +65,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.SwingWorker;
 import com.blueseer.utl.IBlueSeerT;
+import static com.blueseer.utl.OVData.exportStringToFile;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -346,6 +347,8 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
         String[] m = new String[2];
         if (x[0].equals("0")) {
                    setPanelComponentState(this, true);
+                   // override for unique use case of ddtype field inits
+                   ddtype.setSelectedIndex(ddtype.getSelectedIndex());
                    btadd.setEnabled(false);
                    tbkey.setEditable(false);
                    tbkey.setForeground(Color.blue);
@@ -675,6 +678,7 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel11 = new javax.swing.JLabel();
         ddsigalgo = new javax.swing.JComboBox<>();
         ddparent = new javax.swing.JComboBox<>();
+        btexport = new javax.swing.JButton();
 
         jTextField1.setText("jTextField1");
 
@@ -788,6 +792,7 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
         });
 
         btpublickey.setText("Public Key");
+        btpublickey.setName("btpublickey"); // NOI18N
         btpublickey.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btpublickeyActionPerformed(evt);
@@ -805,6 +810,14 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel11.setName("lblstrength"); // NOI18N
 
         ddsigalgo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "MD-5", "SHA-1", "SHA-256", "SHA-512" }));
+
+        btexport.setText("Export");
+        btexport.setName("btexport"); // NOI18N
+        btexport.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btexportActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -859,15 +872,17 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
                                     .addComponent(ddstrength, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(ddparent, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(btexport)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(btencrypt))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                         .addComponent(btpublickey)
-                                        .addGap(74, 74, 74)
-                                        .addComponent(btencrypt)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(btdecrypt))
-                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(19, 19, 19))))))
+                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(27, 27, 27))))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -882,14 +897,7 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
                         .addComponent(btclear))
                     .addComponent(btlookup))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btdecrypt)
-                            .addComponent(btencrypt)
-                            .addComponent(btpublickey)))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -929,13 +937,20 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(ddstrength, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel11))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btadd)
-                            .addComponent(btdelete)
-                            .addComponent(btupdate))))
-                .addContainerGap(24, Short.MAX_VALUE))
+                            .addComponent(jLabel11)))
+                    .addComponent(jScrollPane1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btadd)
+                    .addComponent(btdelete)
+                    .addComponent(btupdate)
+                    .addComponent(btpublickey)
+                    .addComponent(btdecrypt))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btexport)
+                    .addComponent(btencrypt))
+                .addGap(0, 21, Short.MAX_VALUE))
         );
 
         add(jPanel1);
@@ -1024,6 +1039,8 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
                 tbstorepass.setEnabled(false);
                 tbfile.setEnabled(false);
                 ddparent.setEnabled(true);
+                btexport.setEnabled(true);
+                btpublickey.setEnabled(true);
             break;
             
             case "store" :
@@ -1035,6 +1052,8 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
                 tbstorepass.setEnabled(true);
                 tbfile.setEnabled(true);
                 ddparent.setEnabled(false);
+                btexport.setEnabled(false);
+                btpublickey.setEnabled(false);
             break; 
             
             case "pem" :
@@ -1046,12 +1065,18 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
                 tbstorepass.setEnabled(false);
                 tbfile.setEnabled(true);
                 ddparent.setEnabled(false);
+                btexport.setEnabled(false);
+                btpublickey.setEnabled(false);
             break; 
             
             default:
         } 
       } 
     }//GEN-LAST:event_ddtypeActionPerformed
+
+    private void btexportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btexportActionPerformed
+        exportStringToFile(taoutput.getText());
+    }//GEN-LAST:event_btexportActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -1060,6 +1085,7 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JButton btdecrypt;
     private javax.swing.JButton btdelete;
     private javax.swing.JButton btencrypt;
+    private javax.swing.JButton btexport;
     private javax.swing.JButton btlookup;
     private javax.swing.JButton btnew;
     private javax.swing.JButton btpublickey;
