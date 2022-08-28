@@ -65,7 +65,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.SwingWorker;
 import com.blueseer.utl.IBlueSeerT;
-import static com.blueseer.utl.OVData.exportStringToFile;
+import static com.blueseer.utl.OVData.exportCertToFile;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -1023,7 +1023,7 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
                 taoutput.append(new String(Base64.encode(apiUtils.getPublicKey(tbkey.getText()).getEncoded())).replaceAll("(.{64})", "$1\n"));
                 taoutput.append("\n-----END CERTIFICATE-----\n");
             } catch (CertificateEncodingException ex) {
-                bsmf.MainFrame.show("cannot show PEM formmated public key");
+                bsmf.MainFrame.show("cannot show PEM formatted public key");
             }
     }//GEN-LAST:event_btpublickeyActionPerformed
 
@@ -1041,6 +1041,8 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
                 ddparent.setEnabled(true);
                 btexport.setEnabled(true);
                 btpublickey.setEnabled(true);
+                btencrypt.setEnabled(true);
+                btdecrypt.setEnabled(true);
             break;
             
             case "store" :
@@ -1054,6 +1056,8 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
                 ddparent.setEnabled(false);
                 btexport.setEnabled(false);
                 btpublickey.setEnabled(false);
+                btencrypt.setEnabled(false);
+                btdecrypt.setEnabled(false);
             break; 
             
             case "pem" :
@@ -1067,6 +1071,8 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
                 ddparent.setEnabled(false);
                 btexport.setEnabled(false);
                 btpublickey.setEnabled(false);
+                btencrypt.setEnabled(false);
+                btdecrypt.setEnabled(false);
             break; 
             
             default:
@@ -1075,7 +1081,15 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
     }//GEN-LAST:event_ddtypeActionPerformed
 
     private void btexportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btexportActionPerformed
-        exportStringToFile(taoutput.getText());
+        StringBuilder s = new StringBuilder();
+        try {
+         s.append("-----BEGIN CERTIFICATE-----\n");
+         s.append(new String(Base64.encode(apiUtils.getPublicKey(tbkey.getText()).getEncoded())).replaceAll("(.{64})", "$1\n"));
+         s.append("\n-----END CERTIFICATE-----\n");
+        exportCertToFile(s.toString(), tbkey.getText());
+        } catch (CertificateEncodingException ex) {
+                bsmf.MainFrame.show("cannot export PEM formatted public key");
+        }
     }//GEN-LAST:event_btexportActionPerformed
 
 

@@ -16019,11 +16019,11 @@ return mystring;
                 
       }
     
-    public static void exportStringToFile(String data) {
+    public static void exportCertToFile(String data, String filename) {
           FileDialog fDialog;
                 fDialog = new FileDialog(new Frame(), "Save", FileDialog.SAVE);
+                fDialog.setFile(filename + ".cer");
                 fDialog.setVisible(true);
-                //fDialog.setFile("data.csv");
                 String path = fDialog.getDirectory() + fDialog.getFile();
                 File f = new File(path);
                 BufferedWriter output = null;
