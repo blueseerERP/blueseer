@@ -1093,8 +1093,8 @@ public class InvRptPicker extends javax.swing.JPanel {
                              getGlobalColumnTag("description"), 
                              getGlobalColumnTag("class"),
                              getGlobalColumnTag("qoh"), 
-                             getGlobalColumnTag("safestock"), 
-                             getGlobalColumnTag("minordqty")})
+                             getGlobalColumnTag("safetystock"), 
+                             getGlobalColumnTag("minorderqty")})
                    {
                       @Override  
                       public Class getColumnClass(int col) {  
