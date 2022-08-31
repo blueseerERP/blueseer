@@ -7032,7 +7032,17 @@ return mymodel;
 
     public static DefaultTableModel getUnPostedGLTrans() {
               javax.swing.table.DefaultTableModel mymodel =  new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("id"), getGlobalColumnTag("account"), getGlobalColumnTag("description"), getGlobalColumnTag("costcenter"), getGlobalColumnTag("type"), getGlobalColumnTag("reference"), getGlobalColumnTag("description"), getGlobalColumnTag("effectivedate"), getGlobalColumnTag("date"), getGlobalColumnTag("amount")}); 
+              new String[]{getGlobalColumnTag("id"), getGlobalColumnTag("account"), getGlobalColumnTag("description"), getGlobalColumnTag("costcenter"), getGlobalColumnTag("type"), getGlobalColumnTag("reference"), getGlobalColumnTag("description"), getGlobalColumnTag("effectivedate"), getGlobalColumnTag("date"), getGlobalColumnTag("amount")})
+                      {
+              @Override  
+              public Class getColumnClass(int col) {  
+                if (col == 9) {      
+                    return Double.class;
+                } else if ( col == 0) {
+                 return Integer.class;   
+                } else return String.class;  //other columns accept String values  
+              }  
+                };  
            
        try{
             

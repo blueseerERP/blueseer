@@ -800,14 +800,15 @@ public class InvRptPicker extends javax.swing.JPanel {
             try{
               String qtyall = "";                  
               res = st.executeQuery("select it_item, it_desc, " + 
-                      " in_qoh as qoh, in_loc as loc, in_wh as wh, in_serial as serial, in_expire as expire " +
-                      /*
-                       "case when in_qoh is null then 'na' else in_qoh end as qoh, " +
-                       "case when in_loc is null then 'na' else in_loc end as loc, " +
-                       "case when in_wh is null then 'na' else in_wh end as wh, " +
-                       "case when in_serial is null then 'na' else in_serial end as serial, " +
-                       "case when in_expire is null then 'na' else in_expire end as expire " +
-                      */ 
+                     // " in_qoh as qoh, in_loc as loc, in_wh as wh, " +
+                      " in_serial as serial, in_expire as expire, " +
+                      
+                       "case when in_qoh is null then '0' else in_qoh end as qoh, " +
+                       "case when in_loc is null then '0' else in_loc end as loc, " +
+                       "case when in_wh is null then '0' else in_wh end as wh " +
+                    //   "case when in_serial is null then '0' else in_serial end as serial, " +
+                    //   "case when in_expire is null then '0' else in_expire end as expire " +
+                       
                       " from item_mstr left outer join in_mstr on in_item = it_item " +
                        " where it_item >= " + "'" + fromitem + "'" +  " AND " 
                        + " it_item <= " + "'" + toitem + "'"         
@@ -906,9 +907,9 @@ public class InvRptPicker extends javax.swing.JPanel {
             try{
               String qtyall = "";                  
               res = st.executeQuery("select it_item, it_desc, " + 
-                       "case when in_qoh is null then 'na' else in_qoh end as qoh, " +
-                       "case when in_loc is null then 'na' else in_loc end as loc, " +
-                       "case when in_wh is null then 'na' else in_wh end as wh, " +
+                       "case when in_qoh is null then '0' else in_qoh end as qoh, " +
+                       "case when in_loc is null then '0' else in_loc end as loc, " +
+                       "case when in_wh is null then '0' else in_wh end as wh, " +
                        " (select sum(sod_all_qty - sod_shipped_qty) from sod_det where sod_item = it_item and sod_status <> 'close' group by sod_item) as qtyall " +
                        " from item_mstr left outer join in_mstr on in_item = it_item " +
                        " where it_item >= " + "'" + fromitem + "'" +  " AND " 
@@ -917,7 +918,7 @@ public class InvRptPicker extends javax.swing.JPanel {
               
               
                 while (res.next()) {
-                    qtyall = "na";
+                    qtyall = "0";
                     if (res.getString("qtyall") != null) {
                        qtyall = res.getString("qtyall");
                     } 
