@@ -75,42 +75,42 @@ public class ACME810 extends com.blueseer.edi.EDIMap {
 		    String addrtype = "";
 		    for (String key : addrloop) {
 		    	 j++;
-		    	 addrtype = getLoopInput(key,7,j);
+		    	 addrtype = getInput(j,key,7);
 		    	 if (addrtype.trim().equals("WE")) {
 		    		    mapSegment("N1","e01", "ST");
-		    		    mapSegment("N1","e02",getLoopInput(key,10,j));
+		    		    mapSegment("N1","e02",getInput(j,key,10));
 		    		    mapSegment("N1","e03","92");
-		    		    mapSegment("N1","e04",getLoopInput(key,8,j));
+		    		    mapSegment("N1","e04",getInput(j,key,8));
 		    		    commitSegment("N1");
-		    		    mapSegment("N3","e01",getLoopInput(key,14,j));
+		    		    mapSegment("N3","e01",getInput(j,key,14));
 		    		    commitSegment("N3");
-		    		    mapSegment("N4","e01",getLoopInput(key,17,j));
-		    		    mapSegment("N4","e02",getLoopInput(key,38,j));
-		    		    mapSegment("N4","e03",getLoopInput(key,19,j));
+		    		    mapSegment("N4","e01",getInput(j,key,17));
+		    		    mapSegment("N4","e02",getInput(j,key,38));
+		    		    mapSegment("N4","e03",getInput(j,key,19));
 		    		    commitSegment("N4");
 		    	 }
 		    	 if (addrtype.trim().equals("AG")) {
 		    		    mapSegment("N1","e01", "BT");
-		    		    mapSegment("N1","e02",getLoopInput(key,10,j));
+		    		    mapSegment("N1","e02",getInput(j,key,10));
 		    		    mapSegment("N1","e03","92");
-		    		    mapSegment("N1","e04",getLoopInput(key,8,j));
+		    		    mapSegment("N1","e04",getInput(j,key,8));
 		    		    commitSegment("N1");
-		    		    mapSegment("N3","e01",getLoopInput(key,14,j));
+		    		    mapSegment("N3","e01",getInput(j,key,14));
 		    		    commitSegment("N3");
-		    		    mapSegment("N4","e01",getLoopInput(key,17,j));
-		    		    mapSegment("N4","e02",getLoopInput(key,38,j));
-		    		    mapSegment("N4","e03",getLoopInput(key,19,j));
+		    		    mapSegment("N4","e01",getInput(j,key,17));
+		    		    mapSegment("N4","e02",getInput(j,key,38));
+		    		    mapSegment("N4","e03",getInput(j,key,19));
 		    		    commitSegment("N4");
 		    	 }
 		    	 if (addrtype.trim().equals("RS")) {
 		    		    mapSegment("N1","e01", "RE");
-		    		    mapSegment("N1","e02",getLoopInput(key,10,j));
+		    		    mapSegment("N1","e02",getInput(j,key,10));
 		    		    commitSegment("N1");
-		    		    mapSegment("N3","e01",getLoopInput(key,14,j));
+		    		    mapSegment("N3","e01",getInput(j,key,14));
 		    		    commitSegment("N3");
-		    		    mapSegment("N4","e01",getLoopInput(key,17,j));
-		    		    mapSegment("N4","e02",getLoopInput(key,38,j));
-		    		    mapSegment("N4","e03",getLoopInput(key,19,j));
+		    		    mapSegment("N4","e01",getInput(j,key,17));
+		    		    mapSegment("N4","e02",getInput(j,key,38));
+		    		    mapSegment("N4","e03",getInput(j,key,19));
 		    		    commitSegment("N4");
 		    	 }
 		    }
@@ -138,21 +138,21 @@ public class ACME810 extends com.blueseer.edi.EDIMap {
 		    
 		    for (i = 1; i <= itemcount; i++) {
 			    itemLoopCount++;
-			    totalqty += Double.valueOf(getInput("E2EDP01",11,i).trim());
+			    totalqty += Double.valueOf(getInput(i,"E2EDP01",11).trim());
 			    
 			    mapSegment("IT1","e01", String.valueOf(i));
-			    mapSegment("IT1","e02", decimalFormat.format(Double.valueOf(getInput("E2EDP01",11, i))));  // menge
-			    mapSegment("IT1","e03", getInput("E2EDP01",12, i));  // menee
-			    mapSegment("IT1","e04",decimalFormat.format(Double.valueOf(getInput("E2EDP26","qualf:001", 8, i))));  // price
+			    mapSegment("IT1","e02", decimalFormat.format(Double.valueOf(getInput(i, "E2EDP01",11))));  // menge
+			    mapSegment("IT1","e03", getInput(i, "E2EDP01",12));  // menee
+			    mapSegment("IT1","e04",decimalFormat.format(Double.valueOf(getInput(i, "E2EDP26","qualf:001", 8))));  // price
 			    mapSegment("IT1","e06","IN");
-			    mapSegment("IT1","e07",getInput("E2EDP19","qualf:002", 8, i));  // mfg item
+			    mapSegment("IT1","e07",getInput(i, "E2EDP19","qualf:002", 8));  // mfg item
 			    mapSegment("IT1","e08","UP");
-			    mapSegment("IT1","e09",getInput("E2EDP19","qualf:003", 8, i));  // upc item
+			    mapSegment("IT1","e09",getInput(i, "E2EDP19","qualf:003", 8));  // upc item
 			    commitSegment("IT1");
 			    
 			    
 			    mapSegment("PID","e01","F");
-			    mapSegment("PID","e05",getInput("E2EDP19","qualf:002", 9, i));
+			    mapSegment("PID","e05",getInput(i,"E2EDP19","qualf:002", 9));
 			    commitSegment("PID");
 		    
 		    }

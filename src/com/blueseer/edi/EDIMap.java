@@ -1235,7 +1235,8 @@ public abstract class EDIMap implements EDIMapi {
         return segexists;
     }
     
-    public static String getInput(String segment, String qual, Integer element) {
+    // non-looping getInput
+    public static String getInput(String segment, String qual, Integer elementNbr) {
         String x = "";
          int count = 0;
          String[] q = qual.split(":",-1);
@@ -1252,8 +1253,8 @@ public abstract class EDIMap implements EDIMapi {
                  }
              }
          }
-         if (k != null && k.length > element) {
-          x =  k[element].trim();
+         if (k != null && k.length > elementNbr) {
+          x =  k[elementNbr].trim();
          }
          
          return x;
@@ -1287,7 +1288,7 @@ public abstract class EDIMap implements EDIMapi {
          return x;
      }
         
-    public static String getInput(String segment, Integer element) {
+    public static String getInput(String segment, Integer elementNbr) {
          String x = "";
          int count = 0;
          String[] k = null;
@@ -1301,8 +1302,8 @@ public abstract class EDIMap implements EDIMapi {
         // for (String g : k) {
         //     System.out.println("getInput:" + segment + "/" + g);
         // }
-         if (k != null && k.length > element) {
-          x =  k[element];
+         if (k != null && k.length > elementNbr) {
+          x =  k[elementNbr];
          }
         // System.out.println("getInput:" + segment + "/" + x);
          return x;
@@ -1333,6 +1334,100 @@ public abstract class EDIMap implements EDIMapi {
          return x;
      }
     
+    // looping getInput
+    public static String getInput(Integer gloop, String segment, Integer elementNbr) {
+         String x = "";
+         String[] k = null;
+         segment = ":" + segment; // preprend blank
+         for (Map.Entry<String, String[]> z : mappedInput.entrySet()) {
+             String[] v = z.getKey().split("\\+");
+             if (v[0].equals(segment) && v[1].equals(String.valueOf(gloop))) {
+                 k = z.getValue();
+             }
+         }
+         if (k != null && k.length > elementNbr) {
+          x =  k[elementNbr];
+         }
+         return x;
+     }
+       
+    public static String getInput(Integer gloop, String segment, String elementName) {
+         String x = "";
+         int elementNbr = getElementNumber(segment, elementName); 
+         if (elementNbr == 0) {
+             return x;
+         }
+        
+         String[] k = null;
+         segment = ":" + segment; // preprend blank
+         for (Map.Entry<String, String[]> z : mappedInput.entrySet()) {
+             String[] v = z.getKey().split("\\+");
+             if (v[0].equals(segment) && v[1].equals(String.valueOf(gloop))) {
+                 k = z.getValue();
+             }
+         }
+         if (k != null && k.length > elementNbr) {
+          x =  k[elementNbr];
+         }
+         return x;
+     }
+    
+    public static String getInput(Integer gloop, String segment, String qual, Integer elementNbr) {
+         String x = "";
+         String[] k = null;
+         String[] q = qual.split(":",-1);
+         int qualNbr = getElementNumber(segment,q[0]);
+         if (qualNbr == 0) {
+             return x;
+         }
+         String[] t = null;
+         segment = ":" + segment; // preprend blank
+         for (Map.Entry<String, String[]> z : mappedInput.entrySet()) {
+             String[] v = z.getKey().split("\\+");
+             if (v[0].equals(segment) && v[1].equals(String.valueOf(gloop))) {
+                 t = z.getValue();
+                 if ( (t != null) && (t.length >= qualNbr) && (t[qualNbr].equals(q[1].toUpperCase())) ) {
+                     k = t;
+                 } 
+             }
+         }
+         if (k != null && k.length > elementNbr) {
+          x =  k[elementNbr];
+         }
+         return x;
+     }
+    
+    public static String getInput(Integer gloop, String segment, String qual, String elementName) {
+         String x = "";
+         String[] k = null;
+         int elementNbr = getElementNumber(segment, elementName); 
+         if (elementNbr == 0) {
+             return x;
+         }
+         String[] q = qual.split(":",-1);
+         int qualNbr = getElementNumber(segment,q[0]);
+         if (qualNbr == 0) {
+             return x;
+         }
+         String[] t = null;
+         segment = ":" + segment; // preprend blank
+         for (Map.Entry<String, String[]> z : mappedInput.entrySet()) {
+             String[] v = z.getKey().split("\\+");
+             if (v[0].equals(segment) && v[1].equals(String.valueOf(gloop))) {
+                 t = z.getValue();
+                 if ( (t != null) && (t.length >= qualNbr) && (t[qualNbr].equals(q[1].toUpperCase())) ) {
+                     k = t;
+                 } 
+             }
+         }
+         if (k != null && k.length > elementNbr) {
+          x =  k[elementNbr];
+         }
+         return x;
+     }
+    
+    
+    
     public static int getElementNumber(String segment, String element) {
          boolean inside = false;
          int x = 0;
@@ -1362,48 +1457,6 @@ public abstract class EDIMap implements EDIMapi {
          }
          return r;
      }
-        
-    public static String getInput(String segment, Integer element, Integer gloop) {
-         String x = "";
-         String[] k = null;
-         segment = ":" + segment; // preprend blank
-         for (Map.Entry<String, String[]> z : mappedInput.entrySet()) {
-             String[] v = z.getKey().split("\\+");
-             if (v[0].equals(segment) && v[1].equals(String.valueOf(gloop))) {
-                 k = z.getValue();
-             }
-         }
-         if (k != null && k.length > element) {
-          x =  k[element];
-         }
-         return x;
-     }
-    
-    public static String getInput(String segment, String qual, Integer element, Integer gloop) {
-         String x = "";
-         String[] k = null;
-         String[] q = qual.split(":",-1);
-         int qualNbr = getElementNumber(segment,q[0]);
-         if (qualNbr == 0) {
-             return x;
-         }
-         String[] t = null;
-         segment = ":" + segment; // preprend blank
-         for (Map.Entry<String, String[]> z : mappedInput.entrySet()) {
-             String[] v = z.getKey().split("\\+");
-             if (v[0].equals(segment) && v[1].equals(String.valueOf(gloop))) {
-                 t = z.getValue();
-                 if ( (t != null) && (t.length >= qualNbr) && (t[qualNbr].equals(q[1].toUpperCase())) ) {
-                     k = t;
-                 } 
-             }
-         }
-         if (k != null && k.length > element) {
-          x =  k[element];
-         }
-         return x;
-     }
-    
     
     public static int getGroupCount(String segment) {
          
@@ -1433,8 +1486,8 @@ public abstract class EDIMap implements EDIMapi {
          return count;
      }
     
-    
-    public static String getLoopInput(String key, Integer element, Integer i) {
+    /*
+    public static String getLoopInput2(String key, Integer element, Integer i) {
          String x = "";
          String[] k = null;
             k = mappedInput.get(key + "+" + i);
@@ -1443,7 +1496,7 @@ public abstract class EDIMap implements EDIMapi {
          }
          return x;
      }
-    
+    */
     public static String getGroupInput(String key, Integer element) {
          String x = "";
          String[] k = null;

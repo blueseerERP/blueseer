@@ -115,32 +115,32 @@ public class Generic856to850 extends com.blueseer.edi.EDIMap {
     int itemLoopCount = 0;
     for (i = 1; i <= itemcount; i++) {
         itemLoopCount++;
-    mapSegment("PO1","e01",getInput("E2EDP01",7, i));
-    mapSegment("PO1","e02",df.format(Double.valueOf(getInput("E2EDP01",11, i))));
-    mapSegment("PO1","e03",getInput("E2EDP01",14, i));
-    if (BlueSeerUtils.isParsableToDouble(getInput("E2EDP01",16, i))) {
-    mapSegment("PO1","e04",df.format(Double.valueOf(getInput("E2EDP01",16, i))));
+    mapSegment("PO1","e01",getInput(i,"E2EDP01",7));
+    mapSegment("PO1","e02",df.format(Double.valueOf(getInput(i,"E2EDP01",11))));
+    mapSegment("PO1","e03",getInput(i,"E2EDP01",14));
+    if (BlueSeerUtils.isParsableToDouble(getInput(i,"E2EDP01",16))) {
+    mapSegment("PO1","e04",df.format(Double.valueOf(getInput(i,"E2EDP01",16))));
     }
     mapSegment("PO1","e06","SK");
-    mapSegment("PO1","e07",getInput("E2EDP01:E2EDP19","7:001",8,i));
+    mapSegment("PO1","e07",getInput(i,"E2EDP01:E2EDP19","7:001",8));
     mapSegment("PO1","e08","VN");
-    mapSegment("PO1","e09",getInput("E2EDP01:E2EDP19","7:002",8,i));
+    mapSegment("PO1","e09",getInput(i,"E2EDP01:E2EDP19","7:002",8));
     commitSegment("PO1");
     
     mapSegment("PID","e01","F");
-    mapSegment("PID","e05",getInput("E2EDP01:E2EDP19","7:001",9,i));
+    mapSegment("PID","e05",getInput(i,"E2EDP01:E2EDP19","7:001",9));
     commitSegment("PID");
     
     mapSegment("SAC","e01","N");
     mapSegment("SAC","e02","B840");
-    if (BlueSeerUtils.isParsableToDouble(getInput("E2EDP01",18, i))) {
-    mapSegment("SAC","e05", df.format(Double.valueOf(getInput("E2EDP01",18, i)) * 100));
+    if (BlueSeerUtils.isParsableToDouble(getInput(i,"E2EDP01",18))) {
+    mapSegment("SAC","e05", df.format(Double.valueOf(getInput(i,"E2EDP01",18)) * 100));
     }
     commitSegment("SAC");
     
     
     mapSegment("DTM","e01","002");
-    mapSegment("DTM","e02",getInput("E2EDP01:E2EDP20",9,i));
+    mapSegment("DTM","e02",getInput(i,"E2EDP01:E2EDP20",9));
     commitSegment("DTM");
     
     mapSegment("N1","e01","ST");

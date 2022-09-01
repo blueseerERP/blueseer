@@ -91,19 +91,19 @@ public class Generic850i extends com.blueseer.edi.EDIMap {
     int n1count = getGroupCount("N1");
     boolean isN1ST = false;
     for (i = 1; i <= n1count; i++) {
-        if (getInput("N1",1,i).equals("ST")) {
+        if (getInput(i,"N1",1).equals("ST")) {
         isN1ST = true;
         } else {
         isN1ST = false;
         }
         if (isN1ST) {
-            e.setShipTo(getInput("N1",4,i));
-            e.setShipToName(getInput("N1",2,i));
-            e.setShipToLine1(getInput("N1:N3",1,i));
-            e.setShipToCity(getInput("N1:N4",1,i));
-            e.setShipToState(getInput("N1:N4",2,i));
-            e.setShipToZip(getInput("N1:N4",3,i));
-            e.setOVShipTo(EDData.getEDIXrefIn(getInputISA(6), getInputGS(2), "ST", getInput("N1",4,i)));
+            e.setShipTo(getInput(i,"N1",4));
+            e.setShipToName(getInput(i,"N1",2));
+            e.setShipToLine1(getInput(i,"N1:N3",1));
+            e.setShipToCity(getInput(i,"N1:N4",1));
+            e.setShipToState(getInput(i,"N1:N4",2));
+            e.setShipToZip(getInput(i,"N1:N4",3));
+            e.setOVShipTo(EDData.getEDIXrefIn(getInputISA(6), getInputGS(2), "ST", getInput(i,"N1",4)));
         }
     }  // shipto loop
 
@@ -128,22 +128,22 @@ public class Generic850i extends com.blueseer.edi.EDIMap {
     for (i = 1; i <= itemcount; i++) {
         e.addDetail();  // INITIATE An ArrayList for Each PO1 SEGMENT....variable i is set at bottom of loop as index  i == 0 is first PO1
         itemLoopCount++;
-        totalqty += Integer.valueOf(getInput("PO1",2,i));
-        e.setDetQty(i-1, getInput("PO1",2,i));
-        if (getInput("PO1",6,i).equals("VP") || getInput("PO1",6,i).equals("VN")) {
-         e.setDetItem(i-1,getInput("PO1",7,i));
-        } else if (getInput("PO1",8,i).equals("BP") || getInput("PO1",8,i).equals("SK")) {
-         e.setDetItem(i-1,getInput("PO1",9,i));   
+        totalqty += Integer.valueOf(getInput(i,"PO1",2));
+        e.setDetQty(i-1, getInput(i,"PO1",2));
+        if (getInput(i,"PO1",6).equals("VP") || getInput(i,"PO1",6).equals("VN")) {
+         e.setDetItem(i-1,getInput(i,"PO1",7));
+        } else if (getInput(i,"PO1",8).equals("BP") || getInput(i,"PO1",8).equals("SK")) {
+         e.setDetItem(i-1,getInput(i,"PO1",9));   
         } else {
          e.setDetItem(i-1,"UNKNOWN");   
         }
         item = e.getDetItem(i-1);
        // e.setDetCustItem(i,getInput("PO1",9,i));
         e.setDetPO(i-1,po);
-        e.setDetLine(i-1,getInput("PO1",1,i));
+        e.setDetLine(i-1,getInput(i,"PO1",1));
 
         //override incoming UOM with what is available in UOM Maintenance
-        if (getInput("P01",3,i).equals("CS")) {
+        if (getInput(i,"P01",3).equals("CS")) {
             uom = "CA";
         } else {
          uom = OVData.getUOMByItem(item);
@@ -160,9 +160,9 @@ public class Generic850i extends com.blueseer.edi.EDIMap {
         e.setDetListPrice(i-1,String.valueOf(currformatDouble(listprice)));
         e.setDetDisc(i-1,String.valueOf(currformatDouble(discount)));
         } else {
-         if (BlueSeerUtils.isParsableToDouble(getInput("PO1",4, i))) {
-            e.setDetNetPrice(i-1, df.format(Double.valueOf(getInput("PO1",4, i))));
-            e.setDetListPrice(i-1, df.format(Double.valueOf(getInput("PO1",4, i))));
+         if (BlueSeerUtils.isParsableToDouble(getInput(i,"PO1",4))) {
+            e.setDetNetPrice(i-1, df.format(Double.valueOf(getInput(i,"PO1",4))));
+            e.setDetListPrice(i-1, df.format(Double.valueOf(getInput(i,"PO1",4))));
          } else {
             e.setDetNetPrice(i-1, "0");
             e.setDetListPrice(i-1, "0");	
