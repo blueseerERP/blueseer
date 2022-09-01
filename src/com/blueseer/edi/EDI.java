@@ -1069,7 +1069,7 @@ public class EDI {
                     } catch (IllegalAccessException | ClassNotFoundException |
                              InstantiationException | NoSuchMethodException |
                             InvocationTargetException ex) {
-                        EDData.writeEDILog(control, "error", "unable to find map class for " + senderid + " / " + doctype);
+                        EDData.writeEDILog(control, "error", "XML: unable to find map class for " + senderid + " / " + doctype);
                         edilog(ex);
                     }
                }   else {
@@ -1139,7 +1139,7 @@ public class EDI {
                     } catch (IllegalAccessException | ClassNotFoundException |
                              InstantiationException | NoSuchMethodException |
                             InvocationTargetException ex) {
-                        EDData.writeEDILog(control, "error", "unable to find map class for " + senderid + " / " + doctype);
+                        EDData.writeEDILog(control, "error", "CSV: unable to find map class for " + senderid + " / " + doctype);
                         edilog(ex);
                     }
                }   else {
@@ -1249,7 +1249,7 @@ public class EDI {
                     } catch (IllegalAccessException | ClassNotFoundException |
                              InstantiationException | NoSuchMethodException |
                             InvocationTargetException ex) {
-                        EDData.writeEDILog(control, "error", "unable to find map class for " + senderid + " / " + doctype);
+                        EDData.writeEDILog(control, "error", "EDF: unable to find map class for " + senderid + " / " + doctype);
                         edilog(ex);
                     }
                }   else {
@@ -1450,8 +1450,10 @@ public class EDI {
            } 
 
            // if no map then bail
-           if ((map.isEmpty() || ! BlueSeerUtils.isClassFile(map)) && c[12].isEmpty()) {
-                messages.add(new String[]{"error","unable to find map class for parent/gs02/gs03/doc: " + parentPartner + "/" + gs02 + "/" + gs03 + " / " + c[1]});
+           if (map.isEmpty()) {
+                messages.add(new String[]{"error","X12:  map variable is empty for parent/gs02/gs03/doc: " + parentPartner + "/" + gs02 + "/" + gs03 + " / " + c[1]});
+           } else if (! BlueSeerUtils.isClassFile(map) && c[12].isEmpty()) {
+                messages.add(new String[]{"error","X12: unable to find map class for parent/gs02/gs03/doc: " + parentPartner + "/" + gs02 + "/" + gs03 + " / " + c[1]});
            } else {
                
             if (GlobalDebug)   
@@ -2188,13 +2190,23 @@ public class EDI {
         messages.add(new String[]{"info","searching for map with: " + c[1] + "/" + defaults[2] + "/" + defaults[5]});
         map = EDData.getEDIMap(c[1], defaults[2], defaults[5]);
         
-          if (map.isEmpty()) {
+        if (map.isEmpty()) {
             errorcode = 1;
-            messages.add(new String[]{"error","unable to find map class for billto/gs02/gs03/doc: " + billto + "/" + defaults[2] + "/" + defaults[5] + " / " + c[1]});
+            messages.add(new String[]{"error","856: map String is empty for billto/gs02/gs03/doc: " + billto + "/" + defaults[2] + "/" + defaults[5] + " / " + c[1]});
             EDData.writeEDILogMulti(c, messages);
             messages.clear();  // clear message here
             return errorcode;
         } 
+          
+        if (! BlueSeerUtils.isClassFile(map)) {
+            errorcode = 1;
+            messages.add(new String[]{"error","856: unable to find map class for billto/gs02/gs03/doc: " + billto + "/" + defaults[2] + "/" + defaults[5] + " / " + c[1]});
+            EDData.writeEDILogMulti(c, messages);
+            messages.clear();  // clear message here
+            return errorcode;
+        }   
+          
+          
         messages.add(new String[]{"info","using map: " + map});
        
         
@@ -2304,13 +2316,22 @@ public class EDI {
         messages.add(new String[]{"info","searching for map with: " + c[1] + "/" + defaults[2] + "/" + defaults[5]});
         map = EDData.getEDIMap(c[1], defaults[2], defaults[5]);
         
-          if (map.isEmpty()) {
+        if (map.isEmpty()) {
             errorcode = 1;
-            messages.add(new String[]{"error","unable to find map class for billto/gs02/gs03/doc: " + billto + "/" + defaults[2] + "/" + defaults[5] + " / " + c[1]});
+            messages.add(new String[]{"error","855 map string is empty for billto/gs02/gs03/doc: " + billto + "/" + defaults[2] + "/" + defaults[5] + " / " + c[1]});
             EDData.writeEDILogMulti(c, messages);
             messages.clear();  // clear message here
             return errorcode;
         } 
+          
+         if (! BlueSeerUtils.isClassFile(map)) {
+            errorcode = 1;
+            messages.add(new String[]{"error","855: unable to find map class for billto/gs02/gs03/doc: " + billto + "/" + defaults[2] + "/" + defaults[5] + " / " + c[1]});
+            EDData.writeEDILogMulti(c, messages);
+            messages.clear();  // clear message here
+            return errorcode;
+        }     
+          
         messages.add(new String[]{"info","using map: " + map});
        
         
@@ -2423,11 +2444,19 @@ public class EDI {
         
           if (map.isEmpty()) {
             errorcode = 1;
-            messages.add(new String[]{"error","unable to find map class for billto/gs02/gs03/doc: " + billto + "/" + defaults[2] + "/" + defaults[5] + " / " + c[1]});
+            messages.add(new String[]{"error","810: map variable is empty for billto/gs02/gs03/doc: " + billto + "/" + defaults[2] + "/" + defaults[5] + " / " + c[1]});
             EDData.writeEDILogMulti(c, messages);
             messages.clear();  // clear message here
             return errorcode;
         } 
+          
+        if (! BlueSeerUtils.isClassFile(map)) {
+            errorcode = 1;
+            messages.add(new String[]{"error","810: unable to find map class for billto/gs02/gs03/doc: " + billto + "/" + defaults[2] + "/" + defaults[5] + " / " + c[1]});
+            EDData.writeEDILogMulti(c, messages);
+            messages.clear();  // clear message here
+            return errorcode;
+        }     
         messages.add(new String[]{"info","using map: " + map});
        
         
@@ -2539,11 +2568,20 @@ public class EDI {
         
           if (map.isEmpty()) {
             errorcode = 1;
-            messages.add(new String[]{"error","unable to find map class for billto/gs02/gs03/doc: " + vendor + "/" + defaults[2] + "/" + defaults[5] + " / " + c[1]});
+            messages.add(new String[]{"error","850o: map variable is empty for billto/gs02/gs03/doc: " + vendor + "/" + defaults[2] + "/" + defaults[5] + " / " + c[1]});
             EDData.writeEDILogMulti(c, messages);
             messages.clear();  // clear message here
             return errorcode;
         } 
+        
+        if (! BlueSeerUtils.isClassFile(map)) {
+            errorcode = 1;
+            messages.add(new String[]{"error","850o: unable to find map class for billto/gs02/gs03/doc: " + vendor + "/" + defaults[2] + "/" + defaults[5] + " / " + c[1]});
+            EDData.writeEDILogMulti(c, messages);
+            messages.clear();  // clear message here
+            return errorcode;
+        }     
+          
         messages.add(new String[]{"info","using map: " + map});
        
         
