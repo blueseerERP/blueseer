@@ -1597,8 +1597,10 @@ public class EDI {
                } 
             
                // if no map then bail
-               if ((map.isEmpty() || ! BlueSeerUtils.isClassFile(map)) && c[12].isEmpty()) {
-                  EDData.writeEDILog(c, "error", "unable to find map class for: " + c[1] + " / " + c[0] + " / " + x[1]); 
+               if (map.isEmpty()) {
+                  EDData.writeEDILog(c, "error", "FF: map variable is empty for: " + c[1] + " / " + c[0] + " / " + x[1]); 
+               } else if (! BlueSeerUtils.isClassFile(map) && c[12].isEmpty()) { 
+                  EDData.writeEDILog(c, "error", "FF: unable to find map class for: " + c[1] + " / " + c[0] + " / " + x[1]); 
                } else {
                    
                    // at this point I should have a doc set (ST to SE) and a map ...now call map to operate on doc 

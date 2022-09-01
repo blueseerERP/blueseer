@@ -26,7 +26,6 @@ SOFTWARE.
 
 package EDIMaps;
 
-import com.blueseer.edi.EDIMap;
 import java.util.ArrayList;
 import java.io.IOException;
 import java.time.LocalDateTime;

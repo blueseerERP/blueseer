@@ -27,15 +27,11 @@ SOFTWARE.
 package EDIMaps;
 
 import java.util.ArrayList;
-import com.blueseer.edi.EDI;
 import com.blueseer.utl.BlueSeerUtils;
-import com.blueseer.utl.OVData;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.Map;
 
 
 /**
