@@ -1488,16 +1488,6 @@ public abstract class EDIMap implements EDIMapi {
         
          return count;
      }
-         
-    public static String getGroupInput(String key, Integer element) {
-         String x = "";
-         String[] k = null;
-            k = mappedInput.get(key + "+" + "1");
-         if (k != null && k.length >= element) {
-          x =  k[element];
-         }
-         return x;
-     }
      
     public static ArrayList<String> getLoopKeys(String segment) {
          ArrayList<String> k = new ArrayList<String>();
@@ -1522,8 +1512,7 @@ public abstract class EDIMap implements EDIMapi {
          }
          return k;
      }
-    
-    
+        
     public class UserDefinedException extends Exception  
     {  
         public UserDefinedException(String str)  
