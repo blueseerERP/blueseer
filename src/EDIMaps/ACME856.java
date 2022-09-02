@@ -118,45 +118,44 @@ public class ACME856 extends com.blueseer.edi.EDIMap {
         int j = 0;
         String addrtype = "";
         for (String key : addrloop) {
-             j++;
-             addrtype = getInput(j,key,7);
+             addrtype = getInput(key,7);
              if (addrtype.trim().equals("WE")) {
                         mapSegment("N1","e01", "ST");
-                        mapSegment("N1","e02",getInput(j,key,13));
+                        mapSegment("N1","e02",getInput(key,13));
                         mapSegment("N1","e03","92");
-                        mapSegment("N1","e04",getInput(j,key,9));
+                        mapSegment("N1","e04",getInput(key,9));
                         commitSegment("N1");
-                        mapSegment("N3","e01",getInput(j,key,23));
+                        mapSegment("N3","e01",getInput(key,23));
                         commitSegment("N3");
-                        mapSegment("N4","e01",getInput(j,key,31));
-                        mapSegment("N4","e02",getInput(j,key,43));
-                        mapSegment("N4","e03",getInput(j,key,28));
+                        mapSegment("N4","e01",getInput(key,31));
+                        mapSegment("N4","e02",getInput(key,43));
+                        mapSegment("N4","e03",getInput(key,28));
                         commitSegment("N4");
              }
              if (addrtype.trim().equals("OSO")) {
                         mapSegment("N1","e01", "SH");
-                        mapSegment("N1","e02",getInput(j,key,13));
+                        mapSegment("N1","e02",getInput(key,13));
                         mapSegment("N1","e03","92");
-                        mapSegment("N1","e04",getInput(j,key,9));
+                        mapSegment("N1","e04",getInput(key,9));
                         commitSegment("N1");
-                        mapSegment("N3","e01",getInput(j,key,23));
+                        mapSegment("N3","e01",getInput(key,23));
                         commitSegment("N3");
-                        mapSegment("N4","e01",getInput(j,key,31));
-                        mapSegment("N4","e02",getInput(j,key,43));
-                        mapSegment("N4","e03",getInput(j,key,28));
+                        mapSegment("N4","e01",getInput(key,31));
+                        mapSegment("N4","e02",getInput(key,43));
+                        mapSegment("N4","e03",getInput(key,28));
                         commitSegment("N4");
              }
              if (addrtype.trim().equals("OSP")) {
                         mapSegment("N1","e01", "SF");
-                        mapSegment("N1","e02",getInput(j,key,13));
+                        mapSegment("N1","e02",getInput(key,13));
                         mapSegment("N1","e03","92");
-                        mapSegment("N1","e04",getInput(j,key,9));
+                        mapSegment("N1","e04",getInput(key,9));
                         commitSegment("N1");
-                        mapSegment("N3","e01",getInput(j,key,23));
+                        mapSegment("N3","e01",getInput(key,23));
                         commitSegment("N3");
-                        mapSegment("N4","e01",getInput(j,key,31));
-                        mapSegment("N4","e02",getInput(j,key,43));
-                        mapSegment("N4","e03",getInput(j,key,28));
+                        mapSegment("N4","e01",getInput(key,31));
+                        mapSegment("N4","e02",getInput(key,43));
+                        mapSegment("N4","e03",getInput(key,28));
                         commitSegment("N4");
              }
         }
@@ -169,7 +168,7 @@ public class ACME856 extends com.blueseer.edi.EDIMap {
         String po = "";
         for (String key : loop) {
              j++;
-             po = getGroupInput(key,8);
+             po = getInput(key,8);
         }
         hlcounter++;
         mapSegment("HL","e01", String.valueOf(hlcounter));

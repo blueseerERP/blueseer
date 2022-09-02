@@ -71,10 +71,10 @@ public class ACME810 extends com.blueseer.edi.EDIMap {
 		    
 		    // addresses
 		    ArrayList<String> addrloop = getLoopKeys("E2EDKA1");
-		    int j = 0;
+		    
 		    String addrtype;
 		    for (String key : addrloop) {
-		    	 j++;
+		    	 
 		    	 addrtype = getInput(key,7);
 		    	 if (addrtype.trim().equals("WE")) {
 		    		    mapSegment("N1","e01", "ST");

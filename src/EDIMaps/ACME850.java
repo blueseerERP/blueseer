@@ -89,24 +89,25 @@ public class ACME850 extends com.blueseer.edi.EDIMap {
 
 
       // E2EDK14 loop
-      int n1count = getLoopCount("N1");
-       for (int i = 1; i <= n1count; i++) {
-      segnum++;
-      hlevel++;
-      mapSegment("E2EDK14","mandt",mandt);
-      mapSegment("E2EDK14","docnum",docnum);
-      mapSegment("E2EDK14", "segnum", String.format("%06d",segnum));
-      mapSegment("E2EDK14", "psgnum", String.format("%06d",psgnum));
-      mapSegment("E2EDK14", "hlevel", String.format("%02d",hlevel));
-      mapSegment("E2EDK14","qualf",getInput(i,"N1",1));
-      mapSegment("E2EDK14","orgid",getInput(i,"N1",4));
-      commitSegment("E2EDK14");  
-       }
+      ArrayList<String> addrloop = getLoopKeys("N1");
+      for (String key : addrloop) {
+          segnum++;
+          hlevel++;
+          mapSegment("E2EDK14","mandt",mandt);
+          mapSegment("E2EDK14","docnum",docnum);
+          mapSegment("E2EDK14", "segnum", String.format("%06d",segnum));
+          mapSegment("E2EDK14", "psgnum", String.format("%06d",psgnum));
+          mapSegment("E2EDK14", "hlevel", String.format("%02d",hlevel));
+          mapSegment("E2EDK14","qualf",getInput(key,1));
+          mapSegment("E2EDK14","orgid",getInput(key,4));
+          commitSegment("E2EDK14");  
+      }
+      
               
                
        // DTM Loop
-       int dtmcount = getLoopCount("DTM");
-       for (int i = 1; i <= dtmcount; i++) {
+       ArrayList<String> dtmloop = getLoopKeys("DTM");
+      for (String key : dtmloop) {
           segnum++;
           hlevel++;
           mapSegment("E2EDK03","mandt",mandt);
@@ -114,12 +115,14 @@ public class ACME850 extends com.blueseer.edi.EDIMap {
           mapSegment("E2EDK03", "segnum", String.format("%06d",segnum));
           mapSegment("E2EDK03", "psgnum", String.format("%06d",psgnum));
           mapSegment("E2EDK03", "hlevel", String.format("%02d",hlevel));
-          mapSegment("E2EDK03","iddat",getInput(i,"DTM",1));
-          mapSegment("E2EDK03","datum",getInput(i,"DTM",2));
+          mapSegment("E2EDK03","iddat",getInput(key,1));
+          mapSegment("E2EDK03","datum",getInput(key,2));
           commitSegment("E2EDK03");   
        }
+      
                
-       // N1 loop
+       // N1..N4 group loop for E2EDKA1 segments
+       int n1count = getGroupCount("N1");
        for (int i = 1; i <= n1count; i++) {
           segnum++;
           hlevel++;
@@ -139,6 +142,8 @@ public class ACME850 extends com.blueseer.edi.EDIMap {
           mapSegment("E2EDKA1","isoal",getInput(i,"N1:N4",4));
           commitSegment("E2EDKA1");
       }
+       
+       
       segnum++;
       hlevel++;         
       mapSegment("E2EDK17","mandt",mandt);
@@ -164,9 +169,9 @@ public class ACME850 extends com.blueseer.edi.EDIMap {
       mapSegment("E2EDKT1","tsspras_iso","EN");
       commitSegment("E2EDKT1");
 
-      int msgcount = getLoopCount("MSG");
-       
-       for (int i = 1; i <= msgcount; i++) {
+      // MSG segments
+      ArrayList<String> msgloop = getLoopKeys("MSG");
+      for (String key : msgloop) {
           segnum++;
           hlevel++;
           mapSegment("E2EDKT2","mandt",mandt);
@@ -174,12 +179,12 @@ public class ACME850 extends com.blueseer.edi.EDIMap {
           mapSegment("E2EDKT2", "segnum", String.format("%06d",segnum));
           mapSegment("E2EDKT2", "psgnum", String.format("%06d",psgnum));
           mapSegment("E2EDKT2", "hlevel", String.format("%02d",hlevel));
-          mapSegment("E2EDKT2","tdline",getInput(i,"MSG",2));
+          mapSegment("E2EDKT2","tdline",getInput(key,2));
           commitSegment("E2EDKT2");  
        } 
 
-    // line items
-    int po1count = getLoopCount("PO1");
+    // line items  PO1..PID group 
+    int po1count = getGroupCount("PO1");
     for (int i = 1; i <= po1count; i++) {
       segnum++;
       hlevel++;  
@@ -234,7 +239,6 @@ public class ACME850 extends com.blueseer.edi.EDIMap {
       }
       mapSegment("E2EDP19", "ktext", getInput(i,"PO1:PID",5));
       commitSegment("E2EDP19");
-
     }
    
     // end mapping

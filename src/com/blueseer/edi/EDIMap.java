@@ -1123,7 +1123,7 @@ public abstract class EDIMap implements EDIMapi {
                 // loop through integers
 
                 if (GlobalDebug) {
-                    System.out.println("OMD: " + z.getKey() + " : " + mapValues);
+                    System.out.println("OMD key/value: " + z.getKey() + " : " + mapValues);
                 }
                         segment = z.getKey().split(":")[0];  // start with landmark
                 
@@ -1170,11 +1170,14 @@ public abstract class EDIMap implements EDIMapi {
                 HashMap<String,String> mapValues = MD.get(z.getKey());
         //	System.out.println("loopentrycount:" + mapValuesLoops.keySet());
                 // loop through integers
-
+ 
+                if (GlobalDebug) {
+                    System.out.println("OMD: " + z.getKey() + " : " + mapValues);
+                }               
                         segment = z.getKey().split(":")[0];  // start with landmark
                       //  System.out.println(">:" + segment);
                         ArrayList<String[]> fields = OSF.get(segment);
-
+                        if (fields != null) { 
                         for (String[] f : fields) {
                                 if (f[9].equals("+")) {
                                         f[9] = "";
@@ -1193,6 +1196,12 @@ public abstract class EDIMap implements EDIMapi {
                                         segment += String.format(format, ""); // properly formatted
                                 }
                         }
+                        } // if fields not null
+                        
+                         if (GlobalDebug) {
+                            System.out.println("OMD segment: " + segment);
+                        }
+                        
                         content += segment + "\n";
                         segment = ""; // reset the segment string
  		}
@@ -1479,32 +1488,7 @@ public abstract class EDIMap implements EDIMapi {
         
          return count;
      }
-    
-    public static int getLoopCount(String segment) {
          
-         int count = 0;
-         String[] k = null;
-         segment = ":" + segment; // preprend blank
-         for (Map.Entry<String, String[]> z : mappedInput.entrySet()) {
-             if (z.getKey().split("\\+")[0].equals(segment)) {
-                 count++;
-             }
-         }
-        
-         return count;
-     }
-    
-    /*
-    public static String getLoopInput(String key, Integer element, Integer i) {
-         String x = "";
-         String[] k = null;
-            k = mappedInput.get(key + "+" + i);
-         if (k != null && k.length >= element) {
-          x =  k[element];
-         }
-         return x;
-     }
-    */
     public static String getGroupInput(String key, Integer element) {
          String x = "";
          String[] k = null;
