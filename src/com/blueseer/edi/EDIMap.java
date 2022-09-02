@@ -1292,20 +1292,26 @@ public abstract class EDIMap implements EDIMapi {
          String x = "";
          int count = 0;
          String[] k = null;
-         segment = ":" + segment; // preprend blank
-         for (Map.Entry<String, String[]> z : mappedInput.entrySet()) {
-             if (z.getKey().split("\\+")[0].equals(segment)) {
-                 count++;
-                 k = z.getValue();
+         
+         if (segment.startsWith(":") && segment.contains("+")) {  // overloading (again) as key type entry (used with getLoopKeys)
+           k = mappedInput.get(segment);  
+         } else { // else as actual segment entry
+             segment = ":" + segment; // preprend blank
+             for (Map.Entry<String, String[]> z : mappedInput.entrySet()) {
+                 if (z.getKey().split("\\+")[0].equals(segment)) {
+                     count++;
+                     k = z.getValue();
+                 }
              }
          }
-        // for (String g : k) {
-        //     System.out.println("getInput:" + segment + "/" + g);
-        // }
+       
          if (k != null && k.length > elementNbr) {
           x =  k[elementNbr];
          }
-        // System.out.println("getInput:" + segment + "/" + x);
+        
+         if (GlobalDebug)
+         System.out.println("getInput:" + segment + "/" + x);
+         
          return x;
      }
     
@@ -1316,10 +1322,14 @@ public abstract class EDIMap implements EDIMapi {
              return x;
          }
          String[] k = null;
-         segment = ":" + segment; // preprend blank
-         for (Map.Entry<String, String[]> z : mappedInput.entrySet()) {
-             if (z.getKey().split("\\+")[0].equals(segment)) {
-                 k = z.getValue();
+         if (segment.startsWith(":") && segment.contains("+")) {  // overloading (again) as key type entry (used with getLoopKeys)
+           k = mappedInput.get(segment);  
+         } else { // else as actual segment entry
+             segment = ":" + segment; // preprend blank
+             for (Map.Entry<String, String[]> z : mappedInput.entrySet()) {
+                 if (z.getKey().split("\\+")[0].equals(segment)) {
+                     k = z.getValue();
+                 }
              }
          }
         // for (String g : k) {
@@ -1425,9 +1435,7 @@ public abstract class EDIMap implements EDIMapi {
          }
          return x;
      }
-    
-    
-    
+        
     public static int getElementNumber(String segment, String element) {
          boolean inside = false;
          int x = 0;
@@ -1487,7 +1495,7 @@ public abstract class EDIMap implements EDIMapi {
      }
     
     /*
-    public static String getLoopInput2(String key, Integer element, Integer i) {
+    public static String getLoopInput(String key, Integer element, Integer i) {
          String x = "";
          String[] k = null;
             k = mappedInput.get(key + "+" + i);
@@ -1512,12 +1520,25 @@ public abstract class EDIMap implements EDIMapi {
          segment = ":" + segment; // preprend blank
          for (Map.Entry<String, String[]> z : mappedInput.entrySet()) {
              String[] v = z.getKey().split("\\+");
-             if (v[0].equals(segment)) {
-                 k.add(v[0] + "+" + v[1]);
+             if (v[0].equals(segment) && v.length == 3) {
+                 k.add(v[0] + "+" + v[1] + "+" + v[2]);
              }
          }
          return k;
      }
+    
+    public static ArrayList<String> getLoopKeys(String segment, Integer g) {
+         ArrayList<String> k = new ArrayList<String>();
+         segment = ":" + segment; // preprend blank
+         for (Map.Entry<String, String[]> z : mappedInput.entrySet()) {
+             String[] v = z.getKey().split("\\+");
+             if (v[0].equals(segment) && v[1].equals(String.valueOf(g)) && v.length == 3) {
+                 k.add(v[0] + "+" + v[1] + "+" + v[2]);
+             }
+         }
+         return k;
+     }
+    
     
     public class UserDefinedException extends Exception  
     {  
