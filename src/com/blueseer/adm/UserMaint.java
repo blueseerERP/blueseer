@@ -273,11 +273,9 @@ public class UserMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbemail.setText("");
         tbphone.setText("");
         tbcell.setText("");
+        
         ddsite.removeAllItems();
-        ArrayList<String> mylist = OVData.getSiteList();
-        for (String code : mylist) {
-            ddsite.addItem(code);
-        }
+        OVData.getSiteList().stream().forEach((s) -> ddsite.addItem(s));  
         ddsite.setSelectedItem(OVData.getDefaultSite());
         
        isLoad = false;

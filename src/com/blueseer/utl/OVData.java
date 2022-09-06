@@ -314,7 +314,7 @@ public class OVData {
        return r;
     }     
       
-    public static ArrayList getusermstrlist() {
+    public static ArrayList<String> getusermstrlist() {
         ArrayList myarray = new ArrayList();
       
         try{
@@ -1154,7 +1154,7 @@ public class OVData {
     }
 
     
-    public static ArrayList getmenulist() {
+    public static ArrayList<String> getmenulist() {
         ArrayList myarray = new ArrayList();
         try {
             
@@ -9403,7 +9403,7 @@ return outvalue;
         
     }
     
-    public static ArrayList getWorkCellList() {
+    public static ArrayList<String> getWorkCellList() {
            ArrayList myarray = new ArrayList();
          try{
             
@@ -9438,7 +9438,7 @@ return outvalue;
         
     }
         
-    public static ArrayList getRoutingList() {
+    public static ArrayList<String> getRoutingList() {
            ArrayList myarray = new ArrayList();
          try{
             
@@ -9474,8 +9474,8 @@ return outvalue;
         
     }
           
-    public static ArrayList getSiteList() {
-           ArrayList myarray = new ArrayList();
+    public static ArrayList<String> getSiteList() {
+           ArrayList<String> myarray = new ArrayList<String>();
          try{
             
             Connection con = null;
@@ -9510,7 +9510,7 @@ return outvalue;
         
     }
                 
-    public static ArrayList getUOMList() {
+    public static ArrayList<String> getUOMList() {
            ArrayList myarray = new ArrayList();
          try{
             
