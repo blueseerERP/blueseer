@@ -316,10 +316,7 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
         ddtype.setSelectedIndex(0);
         
         ddparent.removeAllItems();
-        ArrayList<String> stores = admData.getPKSStores();
-        for (String code : stores) {
-            ddparent.addItem(code);
-        }
+        admData.getPKSStores().stream().forEach((s) -> ddparent.addItem(s)); 
         ddparent.insertItemAt("", 0);
         ddparent.setSelectedIndex(0);
         
