@@ -199,7 +199,9 @@ public class AS2Log extends javax.swing.JPanel {
                     i++;
                   if (res.getString("as2l_status").equals("success")) {
                       statusImage = BlueSeerUtils.clickcheck;
-                  }  else {
+                  }  else if (res.getString("as2l_status").equals("passive")) {
+                      statusImage = BlueSeerUtils.clickcheckyellow;
+                  } else {
                       statusImage = BlueSeerUtils.clicknocheck;
                   }
                     modeltable.addRow(new Object[]{BlueSeerUtils.clickbasket,

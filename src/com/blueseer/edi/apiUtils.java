@@ -722,7 +722,7 @@ public class apiUtils {
         boolean isSuccess = false;
         
         if (listOfFiles == null || listOfFiles.length == 0) {
-            logdet.add(new String[]{parentkey, "error", "No Files in output directory " + sourceDir}); 
+            logdet.add(new String[]{parentkey, "passive", "No Files in output directory " + sourceDir}); 
             writeAS2LogDetail(logdet);
             return "No Files in output directory " + sourceDir;
         }

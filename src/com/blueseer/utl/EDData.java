@@ -2876,11 +2876,17 @@ public class EDData {
                 
                // now update parent status
                // if last entry = 'error'...then parent status = error...otherwise 'success'
+               // if last entry = 'passive'...then set parent to 'passive' mod date: 20220906 TEV
                if (x.get(x.size() - 1)[1].equals("error")) {
                st.executeUpdate("update as2_log set " +
                             " as2l_status = " + "'" + "error" + "'" +
                             " where as2l_logid = " + "'" + x.get(0)[0] + "'" +        
                             ";");
+               } else if (x.get(x.size() - 1)[1].equals("passive")) {
+                st.executeUpdate("update as2_log set " +
+                            " as2l_status = " + "'" + "passive" + "'" +
+                            " where as2l_logid = " + "'" + x.get(0)[0] + "'" +        
+                            ";");   
                } else {
                 st.executeUpdate("update as2_log set " +
                             " as2l_status = " + "'" + "success" + "'" +
