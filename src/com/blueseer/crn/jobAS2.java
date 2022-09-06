@@ -88,6 +88,8 @@ public class jobAS2 implements Job {
                     } catch (Exception ex) {
                         bslog(ex);
                     }
+                } else {
+                    System.out.println("Invalid or blank AS2 ID: " + as2id + " length: " + as2id.length());
                 }
                 
 			
