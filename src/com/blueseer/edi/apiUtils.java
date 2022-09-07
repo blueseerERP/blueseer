@@ -624,7 +624,7 @@ public class apiUtils {
         return null;
     }
     
-    public static String postAS2( String as2id, boolean isDebug) throws MessagingException, MalformedURLException, URISyntaxException, IOException, CertificateException, NoSuchProviderException, KeyStoreException, NoSuchAlgorithmException, UnrecoverableKeyException, CertificateEncodingException, CMSException, SMIMEException, Exception  {
+    public static String postAS2( String as2id, boolean isDebug) throws MalformedURLException, URISyntaxException, IOException, CertificateException, NoSuchProviderException, KeyStoreException, NoSuchAlgorithmException, UnrecoverableKeyException, CertificateEncodingException, CMSException, SMIMEException, Exception  {
         
         StringBuilder r = new StringBuilder();
         String  now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
@@ -886,6 +886,7 @@ public class apiUtils {
         
         
         // save MDN file if present
+        try {
         MimeMultipart mpr  = new MimeMultipart(new ByteArrayDataSource(indata, entity.getContentType().getValue()));
         for (int z = 0; z < mpr.getCount(); z++) {
             MimeBodyPart mbpr = (MimeBodyPart) mpr.getBodyPart(z);
@@ -910,7 +911,11 @@ public class apiUtils {
                 }
             }
         }
-            
+        } catch (MessagingException ex) {
+           logdet.add(new String[]{parentkey, "error", " Messaging error; Bad MDN Boundary"}); 
+          writeAS2LogDetail(logdet);
+          return "Messaging error; Bad MDN Boundary"; 
+        }   
         
         
         r.append(result);
@@ -972,17 +977,13 @@ public class apiUtils {
         MimeBodyPart mbp = new MimeBodyPart();
         MimeMultipart mp = new MimeMultipart();
         LocalDateTime localDateTime = LocalDateTime.now();
-        String now = localDateTime.format(DateTimeFormatter.ISO_DATE);
+        String now = localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         String z = """
-                The message <%s> sent to <%s>
-                on %s with Subject <%s> has been received,
-                the payload was successfully decrypted and its integrity was verified.
-                In addition, the sender of the message, <%s> was authenticated
-                as the originator of the message.
-                
-                There is no guarantee however that the payload was syntactically
-                correct, or was received by any applicable back-end processes.
-                """.formatted(filename, receiver, now, subject, sender);
+                The message <%s> with subject <%s> has been received.  
+                Message was sent from: <%s>  to:  <%s>
+                Message was received at <%s>
+                Note: The origin and integrity of the message have been verified.
+                """.formatted(filename, subject, sender, receiver, now);
         try {
            // mbp.setText(z);
            MimeMultipart mpInner = bundleit(z, receiver, messageid, mic, "processed");
@@ -1003,12 +1004,11 @@ public class apiUtils {
         MimeBodyPart mbp = new MimeBodyPart();
         MimeMultipart mp = new MimeMultipart();
         LocalDateTime localDateTime = LocalDateTime.now();
-        String now = localDateTime.format(DateTimeFormatter.ISO_DATE);
+        String now = localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         String z = """
-                The message <%s> sent to <%s>
-                on %s with Subject <%s> was not signed.
-                The message was transmitted by <%s>.
-                """.formatted(filename, receiver, now, subject, sender);
+                The message <%s> sent from: <%s> to: <%s>
+                at %s was not signed.
+                """.formatted(filename, sender, receiver, now);
         try {
            // mbp.setText(z);
            MimeMultipart mpInner = bundleit(z, receiver, messageid, mic, "failed");
@@ -1025,17 +1025,19 @@ public class apiUtils {
         return mp;
     }
     
+    
     public static MimeMultipart code2005(String sender, String receiver, String subject, String filename, String messageid, String mic) {
         MimeBodyPart mbp = new MimeBodyPart();
         MimeMultipart mp = new MimeMultipart();
         LocalDateTime localDateTime = LocalDateTime.now();
-        String now = localDateTime.format(DateTimeFormatter.ISO_DATE);
+        String now = localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         String z = """
-                The message <%s> sent to <%s>
-                on %s with Subject <%s> failed and has been rejected.
-                The message was transmitted by <%s>.
-                   Error: MimeMultipart is incomplete
-                """.formatted(filename, receiver, now, subject, sender);
+                The message <%s> sent from: <%s> to: <%s>
+                at %s failed.
+                Error: MimeMultipart is incomplete   
+                """.formatted(filename, sender, receiver, now);
+                   
+               
         try {
            // mbp.setText(z);
            MimeMultipart mpInner = bundleit(z, receiver, messageid, mic, "failed");
@@ -1056,14 +1058,13 @@ public class apiUtils {
         MimeBodyPart mbp = new MimeBodyPart();
         MimeMultipart mp = new MimeMultipart();
         LocalDateTime localDateTime = LocalDateTime.now();
-        String now = localDateTime.format(DateTimeFormatter.ISO_DATE);
+        String now = localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         String z = """
-                The message <%s> sent to <%s>
-                on %s with Subject <%s> failed and has been rejected.
-                The message was transmitted by <%s>.
+                The message <%s> sent from: <%s> to: <%s>
+                at %s failed.
                    Error: unable to retrieve contents of File
                    Error:  FileBytesRead is null
-                """.formatted(filename, receiver, now, subject, sender);
+                """.formatted(filename, sender, receiver, now);
         try {
            // mbp.setText(z);
            MimeMultipart mpInner = bundleit(z, receiver, messageid, mic, "failed");
@@ -1084,13 +1085,12 @@ public class apiUtils {
         MimeBodyPart mbp = new MimeBodyPart();
         MimeMultipart mp = new MimeMultipart();
         LocalDateTime localDateTime = LocalDateTime.now();
-        String now = localDateTime.format(DateTimeFormatter.ISO_DATE);
+        String now = localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         String z = """
-                The message <%s> sent to <%s>
-                on %s with Subject <%s> failed and has been rejected.
-                The message was transmitted by <%s>.
+                The message <%s> sent from: <%s> to: <%s>
+                at %s failed.
                    Error: Signature content is null
-                """.formatted(filename, receiver, now, subject, sender);
+                """.formatted(filename, sender, receiver, now);
         try {
            // mbp.setText(z);
            MimeMultipart mpInner = bundleit(z, receiver, messageid, mic, "failed");
@@ -1111,13 +1111,12 @@ public class apiUtils {
         MimeBodyPart mbp = new MimeBodyPart();
         MimeMultipart mp = new MimeMultipart();
         LocalDateTime localDateTime = LocalDateTime.now();
-        String now = localDateTime.format(DateTimeFormatter.ISO_DATE);
+        String now = localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         String z = """
-                The message <%s> sent to <%s>
-                on %s with Subject <%s> failed and has been rejected.
-                The message was transmitted by <%s>.
+                The message <%s> sent from: <%s> to: <%s>
+                at %s failed.
                    Error: Invalid Signature
-                """.formatted(filename, receiver, now, subject, sender);
+                """.formatted(filename, sender, receiver, now);
         try {
            // mbp.setText(z);
            MimeMultipart mpInner = bundleit(z, receiver, messageid, mic, "failed");
@@ -1133,7 +1132,105 @@ public class apiUtils {
         
         return mp;
     }
+    
+    public static MimeMultipart code3000(String sender, String receiver, String subject, String filename, String messageid, String mic) {
+        MimeBodyPart mbp = new MimeBodyPart();
+        MimeMultipart mp = new MimeMultipart();
+        LocalDateTime localDateTime = LocalDateTime.now();
+        String now = localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        String z = """
+                The message transmitted at <%s> was transmitted with null content.
+                """.formatted(now);
+        try {
+           // mbp.setText(z);
+           MimeMultipart mpInner = bundleit(z, receiver, messageid, mic, "failed");
+           ContentType ct = new ContentType(mpInner.getContentType());
+           String boundary = ct.getParameter("boundary");
+            mbp.setContent(mpInner);
+            mbp.setHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
+            mp.addBodyPart(mbp);
+            
+        } catch (MessagingException ex) {
+            bslog(ex);
+        }
         
+        return mp;
+    }
+    
+    public static MimeMultipart code3005(String sender, String receiver, String subject, String filename, String messageid, String mic) {
+        MimeBodyPart mbp = new MimeBodyPart();
+        MimeMultipart mp = new MimeMultipart();
+        LocalDateTime localDateTime = LocalDateTime.now();
+        String now = localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        String z = """
+                The message transmitted at <%s> had unrecognizable HTTP headers.
+                """.formatted(now);
+        try {
+           // mbp.setText(z);
+           MimeMultipart mpInner = bundleit(z, receiver, messageid, mic, "failed");
+           ContentType ct = new ContentType(mpInner.getContentType());
+           String boundary = ct.getParameter("boundary");
+            mbp.setContent(mpInner);
+            mbp.setHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
+            mp.addBodyPart(mbp);
+            
+        } catch (MessagingException ex) {
+            bslog(ex);
+        }
+        
+        return mp;
+    }
+    
+    
+    public static MimeMultipart code3100(String sender, String receiver, String subject, String filename, String messageid, String mic) {
+        MimeBodyPart mbp = new MimeBodyPart();
+        MimeMultipart mp = new MimeMultipart();
+        LocalDateTime localDateTime = LocalDateTime.now();
+        String now = localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        String z = """
+                The message <%s> transmitted at <%s> was transmitted to unknown receiver ID.
+                """.formatted(filename, now);
+        try {
+           // mbp.setText(z);
+           MimeMultipart mpInner = bundleit(z, receiver, messageid, mic, "failed");
+           ContentType ct = new ContentType(mpInner.getContentType());
+           String boundary = ct.getParameter("boundary");
+            mbp.setContent(mpInner);
+            mbp.setHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
+            mp.addBodyPart(mbp);
+            
+        } catch (MessagingException ex) {
+            bslog(ex);
+        }
+        
+        return mp;
+    }
+    
+    public static MimeMultipart code3200(String sender, String receiver, String subject, String filename, String messageid, String mic) {
+        MimeBodyPart mbp = new MimeBodyPart();
+        MimeMultipart mp = new MimeMultipart();
+        LocalDateTime localDateTime = LocalDateTime.now();
+        String now = localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        String z = """
+                The message <%s> transmitted at <%s> was transmitted by unknown sender ID.
+                """.formatted(filename, now);
+        try {
+           // mbp.setText(z);
+           MimeMultipart mpInner = bundleit(z, receiver, messageid, mic, "failed");
+           ContentType ct = new ContentType(mpInner.getContentType());
+           String boundary = ct.getParameter("boundary");
+            mbp.setContent(mpInner);
+            mbp.setHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
+            mp.addBodyPart(mbp);
+            
+        } catch (MessagingException ex) {
+            bslog(ex);
+        }
+        
+        return mp;
+    }
+    
+    
     public static MimeMultipart code9999(String sender, String receiver, String subject, String filename, String messageid, String mic) {
         MimeBodyPart mbp = new MimeBodyPart();
         MimeMultipart mp = new MimeMultipart();
@@ -1176,6 +1273,22 @@ public class apiUtils {
             
             case "2000" :
             mbp.setContent(code2000(e[0], e[1], e[2], e[3], e[4], e[5]));
+            break;
+            
+            case "3000" :
+            mbp.setContent(code3000(e[0], e[1], e[2], e[3], e[4], e[5]));
+            break;
+            
+            case "3005" :
+            mbp.setContent(code3000(e[0], e[1], e[2], e[3], e[4], e[5]));
+            break;
+            
+            case "3100" :
+            mbp.setContent(code3100(e[0], e[1], e[2], e[3], e[4], e[5]));
+            break;
+            
+            case "3200" :
+            mbp.setContent(code3200(e[0], e[1], e[2], e[3], e[4], e[5]));
             break;
             
             case "2005" :

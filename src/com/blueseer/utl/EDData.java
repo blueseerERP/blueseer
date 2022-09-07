@@ -2847,6 +2847,78 @@ public class EDData {
           return returnkey;
       }
     
+    public static int writeAS2LogStop(String[] c) {
+          // this method writes both the parent and detail records within as2_log
+          // for scenarios where the AS2 listening server has insufficient info and bails
+          // Detail is an unfortuanate reproduction of Parent
+          int returnkey = 0;
+          try {
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            try {
+                
+                
+                      if (dbtype.equals("sqlite")) {
+                        st.executeUpdate("insert into as2_log ( as2l_parent, as2l_id, as2l_dir, " +
+                                " as2l_status, as2l_messg, as2l_datetime, as2l_mdn ) " 
+                            + " values ( " 
+                            + "'" + c[0] + "'" + ","  // parent master...master record has '0'
+                            + "'" + c[1] + "'" + ","  // partner id
+                            + "'" + c[2] + "'" + ","        // dir
+                            + "'" + c[3] + "'" + "," // status
+                            + "'" + c[4] + "'" + ","  // messg
+                            + "'" + c[5] + "'" + ","  // ts
+                            + "'" + c[6] + "'" // mdn
+                            + ")"
+                            + ";");
+                      } else {
+                          st.executeUpdate("insert into as2_log ( as2l_parent, as2l_id, as2l_dir, " +
+                                " as2l_status, as2l_messg, as2l_datetime, as2l_mdn ) " 
+                            + " values ( " 
+                            + "'" + c[0] + "'" + ","  // parent master...master record has '0'...else has master record as2l_logid
+                            + "'" + c[1] + "'" + ","  // partner id
+                            + "'" + c[2] + "'" + ","        // dir
+                            + "'" + c[3] + "'" + "," // status
+                            + "'" + c[4] + "'" + ","  // messg
+                            + "'" + c[5] + "'" + ","  // ts
+                            + "'" + c[6] + "'" // mdn
+                            + ")"
+                            + ";", Statement.RETURN_GENERATED_KEYS);
+                      }
+                    ResultSet rs = st.getGeneratedKeys();
+                    while (rs.next()) {
+                     returnkey = rs.getInt(1);
+                    }
+                   
+                    // now detail reproduction with as2l_logid of above parent return key
+                    // browse report needs this parent/detail structure...sadly
+                    st.executeUpdate("insert into as2_log ( as2l_parent, as2l_status, as2l_messg ) " 
+                    + " values ( " 
+                    + "'" + String.valueOf(returnkey) + "'" + ","  // as2l_logid of parent record
+                    + "'" + c[3] + "'" + ","  // status
+                    + "'" + c[4] + "'"        // message
+                    + ")"
+                    + ";");    
+                        
+                        
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+               if (st != null) st.close();
+               con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+          return returnkey;
+      }
+    
+    
     public static int writeAS2LogDetail(ArrayList<String[]> x) {
             int returnkey = 0;
           try {

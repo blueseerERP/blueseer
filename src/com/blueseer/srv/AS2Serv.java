@@ -49,6 +49,7 @@ import com.blueseer.utl.EDData;
 import static com.blueseer.utl.EDData.getSystemEncKey;
 import static com.blueseer.utl.EDData.writeAS2Log;
 import static com.blueseer.utl.EDData.writeAS2LogDetail;
+import static com.blueseer.utl.EDData.writeAS2LogStop;
 import com.blueseer.utl.OVData;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -158,6 +159,7 @@ public class AS2Serv extends HttpServlet {
             response.setContentType("text/plain");
            // response.setStatus(HttpServletResponse.SC_OK);
             mdn thismdn = processRequest(request, isDebug);
+            
             response.setStatus(thismdn.status());
             response.getWriter().println(thismdn.message());
         }
@@ -183,8 +185,9 @@ public class AS2Serv extends HttpServlet {
             
         // if null content
         if (content == null) {
-            writeAS2Log(new String[]{"0","unknown","in","error","null content",now,""});
-            return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "null content");
+            writeAS2LogStop(new String[]{"0","unknown","in","error","null content",now,""});
+           // return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "null content");
+            return createMDN("3000", elementals, null);
         }
         
        
@@ -207,8 +210,9 @@ public class AS2Serv extends HttpServlet {
                 }
         } else {
             // header info unrecognizable...bail out
-            writeAS2Log(new String[]{"0","unknown","in","error","http header tags unrecognizable",now,""});
-            return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "http header tags unrecognizable");
+            writeAS2LogStop(new String[]{"0","unknown","in","error","http header tags unrecognizable",now,""});
+            // return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "http header tags unrecognizable");
+            return createMDN("3005", elementals, null);
         }
         
         // check for sender / receiver
@@ -229,28 +233,31 @@ public class AS2Serv extends HttpServlet {
             if (inHM.get("AS2-To").equals(sysas2user)) {
               receiver = sysas2user;  
             } else {
-              writeAS2Log(new String[]{"0","unknown","in","error","AS2 receiver ID unknown",now,""});  
-              return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "AS2 receiver ID unknown");  
+              writeAS2LogStop(new String[]{"0","unknown","in","error","AS2 receiver ID unknown",now,""});
+              return createMDN("3100", elementals, null);
+             // return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "AS2 receiver ID unknown");  
             }
         } else {
-            writeAS2Log(new String[]{"0","unknown","in","error","AS2 receiver ID unrecognized",now,""});
-            return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "AS2 receiver ID unrecognized"); 
+            writeAS2LogStop(new String[]{"0","unknown","in","error","AS2 receiver ID unrecognized",now,""});
+            return createMDN("3100", elementals, null); 
         }
         
         if (inHM.containsKey("AS2-From")) {
             sender = inHM.get("AS2-From");
             info = getAS2InfoByIDs(sender , receiver);
             if (info == null) {
-              writeAS2Log(new String[]{"0","unknown","in","error","AS2 sender ID unknown with keys: " + sender + "/" + receiver,now,""});  
-              return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "AS2 sender ID unknown with keys: " + sender + "/" + receiver);    
+              writeAS2LogStop(new String[]{"0","unknown","in","error","AS2 sender ID unknown with keys: " + sender + "/" + receiver,now,""});  
+              //return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "AS2 sender ID unknown with keys: " + sender + "/" + receiver);    
+            return createMDN("3200", elementals, null);
             } 
         } else {
-            writeAS2Log(new String[]{"0","unknown","in","error","AS2 sender ID unrecognized",now,""});
-            return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "AS2 sender ID unrecognized"); 
+            writeAS2LogStop(new String[]{"0","unknown","in","error","AS2 sender ID unrecognized",now,""});
+            // return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "AS2 sender ID unrecognized"); 
+            return createMDN("3200", elementals, null);
         }
         
         if (info == null) { 
-              writeAS2Log(new String[]{"0","unknown","in","error","unable to find sender / receiver keys: " + sender + "/" + receiver,now,""});
+              writeAS2LogStop(new String[]{"0","unknown","in","error","unable to find sender / receiver keys: " + sender + "/" + receiver,now,""});
               return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "unable to find sender / receiver keys: " + sender + "/" + receiver);    
         }
         
@@ -285,7 +292,7 @@ public class AS2Serv extends HttpServlet {
         boolean isEncrypted = apiUtils.isEncrypted(content);
         
         if (! isEncrypted && info[9].equals("1")) {
-           writeAS2Log(new String[]{"0","unknown","in","error","Encryption is required for this partner " + sender + "/" + receiver,now,""}); 
+           writeAS2LogStop(new String[]{"0","unknown","in","error","Encryption is required for this partner " + sender + "/" + receiver,now,""}); 
            return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "Encryption is required for this partner " + sender + "/" + receiver);  
         }
          
@@ -316,6 +323,7 @@ public class AS2Serv extends HttpServlet {
         
         // if here...should have as2 sender / receiver / info data required to create legitimate MDN
         // write original master log record...retrieve log key for parent of detail to follow
+        // also...from here on down use writeAS2Log instead of hard stop writeAS2LogStop
         elementals[0] = sender;
         elementals[1] = receiver;
         elementals[2] = subject;
