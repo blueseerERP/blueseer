@@ -7463,6 +7463,126 @@ return mymodel;
 
  }
 
+    public static DefaultTableModel getCronAll() {
+      javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+              new String[]{getGlobalColumnTag("select"), 
+                  getGlobalColumnTag("id"), 
+                  getGlobalColumnTag("description"), 
+                  getGlobalColumnTag("group"), 
+                  getGlobalColumnTag("program"), 
+                  getGlobalColumnTag("parameter"), 
+                  getGlobalColumnTag("expression"), 
+                  getGlobalColumnTag("enabled"),
+                  getGlobalColumnTag("modified"),
+                  getGlobalColumnTag("lastrun"),
+                  getGlobalColumnTag("lastmod")})
+              {
+              @Override  
+              public Class getColumnClass(int col) {  
+                if (col == 0)       
+                    return ImageIcon.class;  
+                else return String.class;  //other columns accept String values  
+              }  
+                }; 
+
+try{
+
+    Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+    Statement st = con.createStatement();
+    ResultSet res = null;
+    try{
+              res = st.executeQuery("select * from cron_mstr;");
+            while (res.next()) {
+                mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("cron_jobid"),
+                           res.getString("cron_desc"),
+                           res.getString("cron_group"),
+                           res.getString("cron_prog"),
+                           res.getString("cron_param"),
+                           res.getString("cron_expression"),
+                           res.getString("cron_enabled"),
+                           res.getString("cron_modflag"),
+                           res.getString("cron_lastrun"),
+                           res.getString("cron_lastmod")
+                });
+            }
+   }
+    catch (SQLException s){
+         MainFrame.bslog(s);
+   } finally {
+       if (res != null) res.close();
+       if (st != null) st.close();
+       if (con != null) con.close();
+    }
+}
+catch (Exception e){
+    MainFrame.bslog(e);
+
+}
+return mymodel;
+
+ }
+
+    public static DefaultTableModel getPKSAll() {
+      javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+              new String[]{getGlobalColumnTag("select"), 
+                  getGlobalColumnTag("id"), 
+                  getGlobalColumnTag("description"), 
+                  getGlobalColumnTag("type"), 
+                  getGlobalColumnTag("parent"), 
+                  getGlobalColumnTag("file"), 
+                  getGlobalColumnTag("user")})
+              {
+              @Override  
+              public Class getColumnClass(int col) {  
+                if (col == 0)       
+                    return ImageIcon.class;  
+                else return String.class;  //other columns accept String values  
+              }  
+                }; 
+
+try{
+
+    Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+    Statement st = con.createStatement();
+    ResultSet res = null;
+    try{
+              res = st.executeQuery("select * from pks_mstr;");
+            while (res.next()) {
+                mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("pks_id"),
+                           res.getString("pks_desc"),
+                           res.getString("pks_type"),
+                           res.getString("pks_parent"),
+                           res.getString("pks_file"),
+                           res.getString("pks_user")
+                });
+            }
+   }
+    catch (SQLException s){
+         MainFrame.bslog(s);
+   } finally {
+       if (res != null) res.close();
+       if (st != null) st.close();
+       if (con != null) con.close();
+    }
+}
+catch (Exception e){
+    MainFrame.bslog(e);
+
+}
+return mymodel;
+
+ }
+
     
     public static DefaultTableModel getFreightAll() {
           javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},

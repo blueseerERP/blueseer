@@ -211,6 +211,12 @@ public int[] mywidth;
         if (arg[0].equals("AS2Browse")) {
              mymodel = DTData.getAS2All();
         }
+        if (arg[0].equals("CronBrowse")) {
+             mymodel = DTData.getCronAll();
+        }
+        if (arg[0].equals("PKSBrowse")) {
+             mymodel = DTData.getPKSAll();
+        }
         if (arg[0].equals("FreightBrowse")) {
              mymodel = DTData.getFreightAll();
         }
@@ -459,6 +465,18 @@ public int[] mywidth;
             }
             if (TableReport.getName() != null && TableReport.getName().compareTo("AS2Browse") == 0) {
                 mypanel = "AS2Maint";
+                if (! checkperms(mypanel)) { return; }
+               args = new String[]{TableReport.getValueAt(row, 1).toString()};
+               reinitpanels(mypanel, true, args);
+            }
+            if (TableReport.getName() != null && TableReport.getName().compareTo("CronBrowse") == 0) {
+                mypanel = "CronMaint";
+                if (! checkperms(mypanel)) { return; }
+               args = new String[]{TableReport.getValueAt(row, 1).toString()};
+               reinitpanels(mypanel, true, args);
+            }
+            if (TableReport.getName() != null && TableReport.getName().compareTo("PKSBrowse") == 0) {
+                mypanel = "PKSMaint";
                 if (! checkperms(mypanel)) { return; }
                args = new String[]{TableReport.getValueAt(row, 1).toString()};
                reinitpanels(mypanel, true, args);
