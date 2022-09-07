@@ -2907,7 +2907,7 @@ public class EDData {
       }
     
     
-    public static void updateAS2LogStatus(int key, String status) {
+    public static void updateAS2LogStatus(String key, String status) {
             
           try {
             Class.forName(driver);
@@ -2924,6 +2924,38 @@ public class EDData {
                      
                     st.executeUpdate("update as2_log set " +
                             " as2l_status = " + "'" + status + "'" +
+                            " where as2l_logid = " + "'" + key + "'" +        
+                            ";");
+                        
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+               if (st != null) st.close();
+               con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+         
+      }
+    
+    public static void updateAS2LogMDNFile(String key, String mdn) {
+            
+          try {
+            Class.forName(driver);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            try {
+                
+                
+                     
+                    st.executeUpdate("update as2_log set " +
+                            " as2l_mdn = " + "'" + mdn + "'" +
                             " where as2l_logid = " + "'" + key + "'" +        
                             ";");
                         

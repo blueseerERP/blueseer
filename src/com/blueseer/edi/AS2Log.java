@@ -54,6 +54,9 @@ import javax.swing.JTable;
 import javax.swing.UIManager;
 import javax.swing.table.TableCellRenderer;
 import java.net.MalformedURLException;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.Connection;
 import java.text.DecimalFormatSymbols;
 import java.util.Calendar;
@@ -78,11 +81,11 @@ public class AS2Log extends javax.swing.JPanel {
  
                 
     javax.swing.table.DefaultTableModel modeltable = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"Select", "LogID", "PartnerID", "Description", "TimeStamp", "Dir", "Status"})
+                        new String[]{"Select", "LogID", "PartnerID", "Description", "TimeStamp", "Dir", "MDN", "Status"})
             {
                       @Override  
                       public Class getColumnClass(int col) {  
-                        if (col == 0 || col == 6 )  {     
+                        if (col == 0 || col == 7 )  {     
                             return ImageIcon.class; 
                         } else if (col == 1) {
                             return Integer.class;
@@ -94,7 +97,7 @@ public class AS2Log extends javax.swing.JPanel {
                     public boolean isCellEditable(int row, int column)
                     {
                         // make read only fields except column 0,13,14
-                        if (column == 0 || column == 6) {                            
+                        if (column == 0 || column == 7) {                            
                            return false;
                         } else {
                            return true; 
@@ -128,7 +131,23 @@ public class AS2Log extends javax.swing.JPanel {
         }
     }
     
-     
+    class SomeRenderer extends DefaultTableCellRenderer {
+         
+    public Component getTableCellRendererComponent(JTable table,
+            Object value, boolean isSelected, boolean hasFocus, int row,
+            int column) {
+        Component c = super.getTableCellRendererComponent(table,
+                value, isSelected, hasFocus, row, column);
+            if (column == 6 ) {
+            c.setForeground(Color.BLUE);
+            }
+            else {
+                c.setBackground(table.getBackground());
+            }
+            return c;
+    }
+    }
+   
        
     class FileViewRenderer extends DefaultTableCellRenderer {
         
@@ -172,11 +191,10 @@ public class AS2Log extends javax.swing.JPanel {
 
                
                 tablereport.setModel(modeltable);
-               //  tablereport.getColumnModel().getColumn(8).setCellRenderer(new EDITransactionBrowse.SomeRenderer()); 
-              //   tablereport.getColumnModel().getColumn(7).setCellRenderer(new EDITransactionBrowse.FileViewRenderer()); 
-                 tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
-                 tablereport.getColumnModel().getColumn(6).setMaxWidth(50);
-                    
+                tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
+                tablereport.getColumnModel().getColumn(7).setMaxWidth(50);
+                tablereport.getColumnModel().getColumn(6).setCellRenderer(new AS2Log.SomeRenderer()); 
+                 
                     if (tbas2id.getText().isEmpty()) {
                     res = st.executeQuery("SELECT * FROM as2_log  " +
                     " left outer join as2_mstr on as2_id = as2l_id " +        
@@ -210,6 +228,7 @@ public class AS2Log extends javax.swing.JPanel {
                         res.getString("as2_desc"),
                         res.getString("as2l_datetime"),
                         res.getString("as2l_dir"),
+                        res.getString("as2l_mdn"),
                         statusImage
                     });
                 }
@@ -657,6 +676,27 @@ public class AS2Log extends javax.swing.JPanel {
                 btdetail.setEnabled(true);
                 detailpanel.setVisible(true);
         }
+        
+        if ( col == 6 && ! tablereport.getValueAt(row, 6).toString().isBlank()) {
+                
+             try {
+                 tafile.setText("");
+                 Path mdnpath = FileSystems.getDefault().getPath("edi/mdn/" + tablereport.getValueAt(row, 6).toString()); 
+                 byte[] filecontent = Files.readAllBytes(mdnpath);
+                    tafile.setText(new String(filecontent) + "\n");
+             } catch (MalformedURLException ex) {
+                 MainFrame.bslog(ex);
+             } catch (SmbException ex) {
+                 MainFrame.bslog(ex);
+             } catch (IOException ex) {
+                 MainFrame.bslog(ex);
+             }
+             tafile.setCaretPosition(0);
+             textpanel.setVisible(true);
+             bthidetext.setEnabled(true);
+               
+        }
+        
     }//GEN-LAST:event_tablereportMouseClicked
 
     private void bthidetextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bthidetextActionPerformed

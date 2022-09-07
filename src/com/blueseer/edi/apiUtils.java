@@ -32,6 +32,7 @@ import static com.blueseer.edi.AS2Maint.certs;
 import static com.blueseer.edi.ediData.getKeyStoreByUser;
 import static com.blueseer.edi.ediData.getKeyStorePass;
 import static com.blueseer.edi.ediData.getKeyUserPass;
+import static com.blueseer.utl.EDData.updateAS2LogMDNFile;
 import static com.blueseer.utl.EDData.writeAS2Log;
 import static com.blueseer.utl.EDData.writeAS2LogDetail;
 import com.blueseer.utl.OVData;
@@ -894,6 +895,9 @@ public class apiUtils {
                 String datastring = new String(mbpr.getInputStream().readAllBytes());   
                 output.write(datastring);
                 output.close();
+                
+                // log mdn filename into parent log entry
+                updateAS2LogMDNFile(parentkey, filename);
                 
                 Pattern p = Pattern.compile("Disposition:.*(error|failed).*");
 		Matcher m = p.matcher(datastring);
