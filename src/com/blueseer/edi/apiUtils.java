@@ -52,6 +52,7 @@ import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -913,11 +914,15 @@ public class apiUtils {
         
         
         r.append(result);
-        } catch (HttpHostConnectException | ConnectTimeoutException ex) {
+        } catch (HttpHostConnectException | ConnectTimeoutException  ex) {
           logdet.add(new String[]{parentkey, "error", " Connection refused or timeout from server "}); 
           writeAS2LogDetail(logdet);
           return "Connection refused or timeout from server ";
-        } 
+        } catch ( UnknownHostException ex) {
+          logdet.add(new String[]{parentkey, "error", " Unknown host server " + request.getURI()}); 
+          writeAS2LogDetail(logdet);
+          return " Unknown host server " + request.getURI();
+        }
         
       // remove file if successful
       if (isSuccess) {
