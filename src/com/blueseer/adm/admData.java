@@ -1839,7 +1839,7 @@ public class admData {
     }
     
     public static void updateCronJobID(String jobid, String modflag) {
-         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd"); 
+         
        try{
         Connection con = null;
         if (ds != null) {
@@ -1898,6 +1898,34 @@ public class admData {
 
     }
     
+    public static void updateCronLastRun(String jobid, String ts) {
+         
+       try{
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
+        Statement st = con.createStatement();
+        try{
+            st.executeUpdate("update cron_mstr set cron_lastrun = " + "'" + ts + "'" + 
+                    " where cron_jobid = " + "'" + jobid + "'" + ";" );
+        }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+            if (st != null) {
+                st.close();
+            }
+            con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+
+    }
     
     public static void updateDefaultCurrency(String x) {
          DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd"); 

@@ -26,6 +26,7 @@ SOFTWARE.
 package com.blueseer.crn;
 
 import static bsmf.MainFrame.bslog;
+import com.blueseer.adm.admData;
 import com.blueseer.edi.apiUtils;
 import static com.blueseer.edi.ediData.isValidAS2id;
 import java.io.IOException;
@@ -35,6 +36,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -53,6 +56,11 @@ import org.quartz.JobExecutionException;
 public class jobAS2 implements Job {
     public void execute(JobExecutionContext context)
 	throws JobExecutionException {
+        
+        
+        // register last run event with cron_mstr...
+        String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"));
+        admData.updateCronLastRun(context.getJobDetail().getKey().getName(), now);
         
         // The as2ID must be passed to this job in order to schedule push AS2 comm of this id.
         // must be passed in 'param' key with 'value' = as2id of as2_mstr table
