@@ -304,3 +304,5 @@ InventoryCtrl,,com.blueseer.inv.InventoryCtrl,JMenuItem,inve
 MassLoad,,com.blueseer.utl.MassLoad,JMenuItem,load
 SchemaBrowse,Schema Details of Database BSDB,com.blueseer.utl.ReportPanel,JMenuItem,schema
 piechart_profitandloss,,com.blueseer.utl.ChartView,JMenuItem,palc
+CronBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,cronb
+PKSBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,pksb

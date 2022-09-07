@@ -311,3 +311,5 @@ admin,APIMenu
 admin,AS2Menu
 admin,AS2Browse
 admin,CronMaint
+admin,CronBrowse
+admin,PKSBrowse
