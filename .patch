@@ -8,3 +8,5 @@
 # First release of 6.3
 patch=1
 # EDI Mapping method overloading for getInput and bug fix for #70
+patch=2
+# AS2 related bug fixes #71, #72, #74 and cron update #73  
