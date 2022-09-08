@@ -4769,6 +4769,7 @@ return myarray;
             }
             */
             
+            if (i > 0) {
             // now get group by sums of those IDs
             res = st.executeQuery("select glt_site, glt_acct, glt_cc, " +
                     " sum(glt_base_amt) as 'sum', glc_per, glc_year from gl_tran " +
@@ -4830,7 +4831,7 @@ return myarray;
                  }   
             }
             
-             if (i > 0) {
+             
                  /*
                 st.executeUpdate("commit;");
                 */
