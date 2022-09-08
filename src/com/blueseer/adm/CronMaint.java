@@ -277,7 +277,7 @@ public class CronMaint extends javax.swing.JPanel implements IBlueSeerT  {
         tbkey.setText("");
         tbdesc.setText("");
         tbgroup.setText("");
-        tbprog.setText("");
+        
         tbparam.setText("");
         tbexpression.setText("");
         tbpriority.setText("");
@@ -286,6 +286,10 @@ public class CronMaint extends javax.swing.JPanel implements IBlueSeerT  {
         tbuserid.setText("");
         cbenabled.setSelected(false);
         
+        ddjobclass.removeAllItems();
+        ddjobclass.addItem("");
+        OVData.getCodeMstrKeyList("sys_job_class").stream().forEach((s) -> ddjobclass.addItem(s));
+        ddjobclass.setSelectedIndex(0);
         
        isLoad = false;
     }
@@ -346,9 +350,9 @@ public class CronMaint extends javax.swing.JPanel implements IBlueSeerT  {
         }
         
         fc = checkLength(f,"cron_prog");
-        if (tbprog.getText().length() > fc || tbprog.getText().isEmpty()) {
+        if (ddjobclass.getSelectedItem().toString().length() > fc || ddjobclass.getSelectedItem().toString().isEmpty()) {
             bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
-            tbprog.requestFocus();
+            ddjobclass.requestFocus();
             return false;
         }
         
@@ -372,9 +376,9 @@ public class CronMaint extends javax.swing.JPanel implements IBlueSeerT  {
             return false;
         }
         
-        if (! BlueSeerUtils.isClassFile(tbprog.getText())) {
-                    bsmf.MainFrame.show(getMessageTag(1145,tbprog.getText()));
-                    tbprog.requestFocus();
+        if (! BlueSeerUtils.isClassFile(ddjobclass.getSelectedItem().toString())) {
+                    bsmf.MainFrame.show(getMessageTag(1145,ddjobclass.getSelectedItem().toString()));
+                    ddjobclass.requestFocus();
                     return false;
         }
         
@@ -418,7 +422,7 @@ public class CronMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 tbkey.getText().toString(),
                 tbdesc.getText(),
                 tbgroup.getText(),
-                tbprog.getText(),
+                ddjobclass.getSelectedItem().toString(),
                 tbparam.getText(),
                 tbpriority.getText(),
                 tbexpression.getText(),
@@ -504,7 +508,7 @@ public class CronMaint extends javax.swing.JPanel implements IBlueSeerT  {
         tbkey.setText(x.cron_jobid());
         tbdesc.setText(x.cron_desc());
         tbgroup.setText(x.cron_group());
-        tbprog.setText(x.cron_prog());
+        ddjobclass.setSelectedItem(x.cron_prog());
         tbparam.setText(x.cron_param());
         tbpriority.setText(x.cron_priority());
         tbexpression.setText(x.cron_expression());
@@ -537,7 +541,6 @@ public class CronMaint extends javax.swing.JPanel implements IBlueSeerT  {
         btclear = new javax.swing.JButton();
         btlookup = new javax.swing.JButton();
         tbgroup = new javax.swing.JTextField();
-        tbprog = new javax.swing.JTextField();
         tbparam = new javax.swing.JTextField();
         tbpriority = new javax.swing.JTextField();
         tbexpression = new javax.swing.JTextField();
@@ -553,6 +556,7 @@ public class CronMaint extends javax.swing.JPanel implements IBlueSeerT  {
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
+        ddjobclass = new javax.swing.JComboBox<>();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -701,9 +705,9 @@ public class CronMaint extends javax.swing.JPanel implements IBlueSeerT  {
                             .addGap(26, 26, 26)))
                     .addComponent(tbgroup, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(tbprog, javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(tbparam, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(tbdesc, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 269, Short.MAX_VALUE)))
+                        .addComponent(tbdesc, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 269, Short.MAX_VALUE))
+                    .addComponent(ddjobclass, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panelmaintLayout.setVerticalGroup(
@@ -728,8 +732,8 @@ public class CronMaint extends javax.swing.JPanel implements IBlueSeerT  {
                     .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tbprog, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
+                    .addComponent(jLabel2)
+                    .addComponent(ddjobclass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbparam, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -823,6 +827,7 @@ public class CronMaint extends javax.swing.JPanel implements IBlueSeerT  {
     private javax.swing.JButton btnew;
     private javax.swing.JButton btupdate;
     private javax.swing.JCheckBox cbenabled;
+    private javax.swing.JComboBox<String> ddjobclass;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -843,7 +848,6 @@ public class CronMaint extends javax.swing.JPanel implements IBlueSeerT  {
     private javax.swing.JTextField tblastrun;
     private javax.swing.JTextField tbparam;
     private javax.swing.JTextField tbpriority;
-    private javax.swing.JTextField tbprog;
     private javax.swing.JTextField tbuserid;
     // End of variables declaration//GEN-END:variables
 }

@@ -370,3 +370,6 @@ country,ESH,Western Sahara,0
 country,YEM,Yemen,0
 country,ZMB,Zambia,0
 country,ZWE,Zimbabwe,0
+sys_job_class,com.blueseer.crn.jobAS2,,1
+sys_job_class,com.blueseer.crn.jobSys,,1
+sys_job_class,com.blueseer.crn.jobBatch,,1
