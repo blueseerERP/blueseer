@@ -1051,7 +1051,7 @@ public class AS2Maint extends javax.swing.JPanel implements IBlueSeerT {
         }
         taoutput.append("\n");
         
-        if (listOfFiles != null && listOfFiles.length > 0) {        
+        if (listOfFiles != null) {        
             try {
                 r = apiUtils.postAS2(tbkey.getText(), cbdebug.isSelected());
             } catch (URISyntaxException ex) {
