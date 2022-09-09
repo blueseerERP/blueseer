@@ -376,7 +376,7 @@ public class AS2Log extends javax.swing.JPanel {
        dcfrom.setDate(now);
         dcto.setDate(now);
                
-      
+        modeltable.setNumRows(0);
         modeldetail.setNumRows(0);
         tablereport.setModel(modeltable);
         tabledetail.setModel(modeldetail);
@@ -397,6 +397,8 @@ public class AS2Log extends javax.swing.JPanel {
         textpanel.setVisible(false);
           
     }
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
