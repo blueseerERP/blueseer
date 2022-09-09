@@ -627,7 +627,7 @@ public class apiUtils {
     public static String postAS2( String as2id, boolean isDebug) throws MalformedURLException, URISyntaxException, IOException, CertificateException, NoSuchProviderException, KeyStoreException, NoSuchAlgorithmException, UnrecoverableKeyException, CertificateEncodingException, CMSException, SMIMEException, Exception  {
         
         StringBuilder r = new StringBuilder();
-        String  now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+        String  now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS"));
         ArrayList<String[]> logdet = new ArrayList<String[]>(); 
         Security.addProvider(new BouncyCastleProvider());
         
