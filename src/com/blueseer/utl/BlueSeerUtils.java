@@ -29,6 +29,7 @@ import static bsmf.MainFrame.bslog;
 import static bsmf.MainFrame.defaultDecimalSeparator;
 import static bsmf.MainFrame.tags;
 import com.blueseer.adm.admData;
+import com.blueseer.adm.admData.change_log;
 import static com.blueseer.edi.EDI.edilog;
 
 import java.awt.Color;
@@ -1302,6 +1303,20 @@ public class BlueSeerUtils {
         return x;
     }
     
-     
+     public static change_log clog(String key, String table, String classname, String fieldname, String oldvalue, String newvalue) {
+         String desc = fieldname + "-> Old: " + oldvalue + " New: " + newvalue;
+         change_log x = new change_log(null, 
+                 "", // id <generated>
+                 key, 
+                 table, 
+                 classname, // class
+                 bsmf.MainFrame.userid, 
+                 desc, 
+                 "", // ts <generated>
+                 "", // type 
+                 ""  // ref
+         );
+         return x;
+     } 
      
 }

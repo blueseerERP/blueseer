@@ -36,12 +36,15 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.adm.admData.addChangeLog;
+import com.blueseer.adm.admData.change_log;
 import static com.blueseer.ctr.cusData.addTermsMstr;
 import com.blueseer.ctr.cusData.cust_term;
 import static com.blueseer.ctr.cusData.getTermsMstr;
 import static com.blueseer.ctr.cusData.updateTermsMstr;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.checkLength;
+import static com.blueseer.utl.BlueSeerUtils.clog;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
@@ -397,8 +400,12 @@ public class TermsMaint extends javax.swing.JPanel implements IBlueSeerT {
      }
      
     public String[] updateRecord(String[] x) {
-    String[] m = updateTermsMstr(createRecord());
-         return m;
+    ArrayList<change_log> c = logChange();
+       if (! c.isEmpty()) {
+           addChangeLog(c);
+       } 
+     String[] m = updateTermsMstr(createRecord());
+     return m;
      }
      
     public String[] deleteRecord(String[] x) {
@@ -531,6 +538,37 @@ public class TermsMaint extends javax.swing.JPanel implements IBlueSeerT {
         
     }
 
+    public ArrayList<change_log> logChange() {
+        
+        ArrayList<change_log> c = new ArrayList<change_log>();
+        
+        if (! tbdesc.getText().equals(x.cut_desc())) {
+          c.add(clog(tbkey.getText(), x.getClass().getSimpleName(), this.getClass().getSimpleName(), "description", x.cut_desc(), tbdesc.getText())); 
+        }
+        if (! duedays.getText().equals(x.cut_days())) {
+          c.add(clog(tbkey.getText(), x.getClass().getSimpleName(), this.getClass().getSimpleName(), "days", x.cut_days(), duedays.getText())); 
+        }
+        if (! discduedays.getText().equals(x.cut_discdays())) {
+          c.add(clog(tbkey.getText(), x.getClass().getSimpleName(), this.getClass().getSimpleName(), "discdays", x.cut_discdays(), discduedays.getText())); 
+        }
+        if (! discpercent.getText().equals(x.cut_discpercent())) {
+          c.add(clog(tbkey.getText(), x.getClass().getSimpleName(), this.getClass().getSimpleName(), "discpercent", x.cut_discpercent(), discpercent.getText())); 
+        }
+        if (! ddmfimonth.getSelectedItem().toString().equals(x.cut_mfimonth())) {
+          c.add(clog(tbkey.getText(), x.getClass().getSimpleName(), this.getClass().getSimpleName(), "mfimonth", x.cut_mfimonth(), ddmfimonth.getSelectedItem().toString())); 
+        }
+        if (! ddmfiday.getSelectedItem().toString().equals(x.cut_mfiday())) {
+          c.add(clog(tbkey.getText(), x.getClass().getSimpleName(), this.getClass().getSimpleName(), "mfiday", x.cut_mfiday(), ddmfiday.getSelectedItem().toString())); 
+        }
+        if (! String.valueOf(BlueSeerUtils.boolToInt(cbsystemcode.isSelected())).equals(x.cut_syscode())) {
+          c.add(clog(tbkey.getText(), x.getClass().getSimpleName(), this.getClass().getSimpleName(), "systemcode", x.cut_syscode(), String.valueOf(BlueSeerUtils.boolToInt(cbsystemcode.isSelected())))); 
+        } 
+        if (! String.valueOf(BlueSeerUtils.boolToInt(cbmfi.isSelected())).equals(x.cut_mfi())) {
+          c.add(clog(tbkey.getText(), x.getClass().getSimpleName(), this.getClass().getSimpleName(), "mfi", x.cut_mfi(), String.valueOf(BlueSeerUtils.boolToInt(cbmfi.isSelected())))); 
+        } 
+                
+        return c;
+    }
   
      
     /**

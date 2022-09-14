@@ -32,7 +32,6 @@ import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
-import com.blueseer.ord.ordData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.EDData;
@@ -1434,13 +1433,66 @@ public class admData {
         return r;
     }
     
-    public static String[] addChangeLog(change_log x) {
+    public static String[] addChangeLog(ArrayList<change_log> chg) {
         String[] m = new String[2];
+        Connection bscon = null;
+        PreparedStatement ps = null;
+        ResultSet res = null;
+        try { 
+            if (ds != null) {
+              bscon = ds.getConnection();
+            } else {
+              bscon = DriverManager.getConnection(url + db, user, pass);  
+            }
+            bscon.setAutoCommit(false); 
+            if (chg != null) {
+                for (change_log z : chg) {
+                    _addChangeLog(z, bscon, ps, res);
+                }
+            }
+            bscon.commit();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             try {
+                 bscon.rollback();
+                 m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordError};
+             } catch (SQLException rb) {
+                 MainFrame.bslog(rb);
+             }
+        } finally {
+            if (res != null) {
+                try {
+                    res.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (bscon != null) {
+                try {
+                    bscon.setAutoCommit(true);
+                    bscon.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
+    }
+    
+    public static int _addChangeLog(change_log x, Connection con, PreparedStatement psi, ResultSet res) throws SQLException {
+        int rows = 0;
         String sqlInsert = "insert into change_log (chg_key, chg_table, chg_class, " 
                         + " chg_userid, chg_desc, chg_type, chg_ref ) "
-                        + " values (?,?,?,?,?,?,?); "; 
-        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
-             PreparedStatement psi = con.prepareStatement(sqlInsert);) {
+                        + " values (?,?,?,?,?,?,?); ";
+            psi = con.prepareStatement(sqlInsert); 
             psi.setString(1, x.chg_key);
             psi.setString(2, x.chg_table);
             psi.setString(3, x.chg_class);
@@ -1448,14 +1500,8 @@ public class admData {
             psi.setString(5, x.chg_desc);
             psi.setString(6, x.chg_type);
             psi.setString(7, x.chg_ref);
-            int rows = psi.executeUpdate();
-            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
-            
-          } catch (SQLException s) {
-	       MainFrame.bslog(s);
-               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
-          }
-        return m;
+            rows = psi.executeUpdate();
+        return rows;
     }
 
     public static ArrayList<change_log> getChangeLog(String[] x) {
