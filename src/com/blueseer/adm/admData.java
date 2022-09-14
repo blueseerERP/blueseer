@@ -2102,5 +2102,14 @@ public class admData {
             this(m, "", "", "", "", "", "", "", "", "", "", "", "");
         }
     }
+   
+    public record change_log(String[] m, String chg_id, String chg_key, String chg_table, 
+        String chg_class, String chg_userid, String chg_desc, String chg_ts, String chg_type,
+        String chg_ref ) {
+        public change_log(String[] m) {
+            this(m, "", "", "", "", "", "", "", "", "");
+        }
+    }
+    
     
 }
