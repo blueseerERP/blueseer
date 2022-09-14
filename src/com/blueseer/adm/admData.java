@@ -32,6 +32,7 @@ import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import com.blueseer.ord.ordData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.EDData;
@@ -1431,6 +1432,68 @@ public class admData {
                r = new cron_mstr(m);
         }
         return r;
+    }
+    
+    public static String[] addChangeLog(change_log x) {
+        String[] m = new String[2];
+        String sqlInsert = "insert into change_log (chg_key, chg_table, chg_class, " 
+                        + " chg_userid, chg_desc, chg_type, chg_ref ) "
+                        + " values (?,?,?,?,?,?,?); "; 
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+             PreparedStatement psi = con.prepareStatement(sqlInsert);) {
+            psi.setString(1, x.chg_key);
+            psi.setString(2, x.chg_table);
+            psi.setString(3, x.chg_class);
+            psi.setString(4, x.chg_userid);
+            psi.setString(5, x.chg_desc);
+            psi.setString(6, x.chg_type);
+            psi.setString(7, x.chg_ref);
+            int rows = psi.executeUpdate();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+            
+          } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+          }
+        return m;
+    }
+
+    public static ArrayList<change_log> getChangeLog(String[] x) {
+         ArrayList<change_log> list = new ArrayList<change_log>();
+        change_log r = null;
+        String[] m = new String[2];
+        String sql = "select * from change_log where chg_key = ? and chg_table = ? ;";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, x[0]);
+        ps.setString(2, x[1]);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new change_log(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new change_log(m, res.getString("chg_id"), 
+                            res.getString("chg_key"),
+                            res.getString("chg_table"),
+                            res.getString("chg_class"),    
+                            res.getString("chg_userid"),
+                            res.getString("chg_desc"),
+                            res.getString("chg_ts"),
+                            res.getString("chg_type"),
+                            res.getString("chg_ref")
+                        );
+                        list.add(r);
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new change_log(m);
+        }
+        return list;
     }
     
     
