@@ -329,13 +329,11 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
         isLoad = true;
         rvdet.setModel(myrecvdetmodel);
         
-         java.util.Date now = new java.util.Date();
-                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-                DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
-                String clockdate = dfdate.format(now);
-                String clocktime = dftime.format(now);
-               
-                dcdate.setDate(now);
+        ArrayList<String[]> initDataSets = rcvData.getReceiverInit();
+        
+        java.util.Date now = new java.util.Date();
+        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+        dcdate.setDate(now);
         
         tbpackingslip.setBackground(Color.white);
         tbpackingslip.setText("");
@@ -350,10 +348,6 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
         
         tbcost.setDisabledTextColor(Color.black);
         tbcost.setText("");
-        
-        ddsite.setForeground(Color.black);
-       
-        cbautovoucher.setSelected(OVData.isAutoVoucher());
         
         duedate.setDisabledTextColor(Color.black);
         duedate.setText("");
@@ -380,45 +374,55 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
         
         orddate.setDisabledTextColor(Color.black);
         orddate.setText("");
+        ddsite.setForeground(Color.black);
+        
         
         ddpo.removeAllItems();
         ddline.removeAllItems();
-        
         ddwh.removeAllItems();
-        ArrayList<String> mywh = OVData.getWareHouseList();
-        for (String code : mywh) {
-            ddwh.addItem(code);
+        ddloc.removeAllItems();
+        ddvend.removeAllItems();
+        
+        String defaultsite = null;
+        
+         for (String[] s : initDataSets) {
+            
+            if (s[0].equals("voucher")) {
+              cbautovoucher.setSelected(bsmf.MainFrame.ConvertStringToBool(s[1]));  
+            }
+            
+            if (s[0].equals("site")) {
+              defaultsite = s[1]; 
+            }
+            
+            if (s[0].equals("sites")) {
+              ddsite.addItem(s[1]); 
+            }
+           
+            if (s[0].equals("warehouses")) {
+              ddwh.addItem(s[1]); 
+            }
+            if (s[0].equals("locations")) {
+              ddloc.addItem(s[1]); 
+            }
+           
+            if (s[0].equals("vendors")) {
+              ddvend.addItem(s[1]); 
+            }
+            
         }
+        
         ddwh.insertItemAt("", 0);
-         ddwh.setSelectedIndex(0);
+        ddwh.setSelectedIndex(0);
          
-         ddloc.removeAllItems();
-        ArrayList<String> myloc = OVData.getLocationList();
-        for (String code : myloc) {
-            ddloc.addItem(code);
-        }
         ddloc.insertItemAt("", 0);
         ddloc.setSelectedIndex(0);
-         
-         
         
-        ddsite.removeAllItems();
-        ArrayList<String>mylist = OVData.getSiteList();
-        for (String code : mylist) {
-            ddsite.addItem(code);
-        }
-         ddsite.setSelectedItem(OVData.getDefaultSite());
+        ddsite.setSelectedItem(defaultsite);
         
-        ddvend.removeAllItems();
-        ArrayList myvend = venData.getVendMstrList();
-        for (int i = 0; i < myvend.size(); i++) {
-            ddvend.addItem(myvend.get(i));
-        }
-            ddvend.insertItemAt("", 0);
-            ddvend.setSelectedIndex(0);
+        ddvend.insertItemAt("", 0);
+        ddvend.setSelectedIndex(0);
        
-        
-        
         myrecvdetmodel.setRowCount(0);
         
         isLoad = false;
