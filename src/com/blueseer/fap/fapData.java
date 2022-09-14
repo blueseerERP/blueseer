@@ -625,7 +625,7 @@ public class fapData {
     public static boolean APCheckRunUpdateVouchers(int batchid, Connection bscon) throws SQLException {
        boolean myreturn = false;
        ArrayList<String[]> mylist = new ArrayList<String[]>();
-       String[] rec = new String[5];
+       
         
             Statement st = bscon.createStatement();
             ResultSet res = null;
@@ -648,7 +648,7 @@ public class fapData {
                     checkamt = res.getDouble("apd_voamt");
                     applied = res.getDouble("ap_applied");
                     newamt = applied + checkamt;
-
+     
               if (apamt <= newamt) {
                 status = "c";
               } else {
@@ -656,6 +656,7 @@ public class fapData {
               }
 
                // now store record in arraylist
+            String[] rec = new String[5];
             rec[0] = voucher;
             rec[1] = currformatDoubleUS(newamt);
             rec[2] = status;
