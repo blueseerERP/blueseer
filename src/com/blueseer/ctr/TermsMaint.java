@@ -27,6 +27,7 @@ SOFTWARE.
 package com.blueseer.ctr;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.bslog;
 import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.pass;
@@ -62,6 +63,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.lang.reflect.Field;
+import java.lang.reflect.RecordComponent;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -70,6 +73,8 @@ import java.sql.Statement;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -100,6 +105,7 @@ public class TermsMaint extends javax.swing.JPanel implements IBlueSeerT {
 
     
     // interface functions implemented
+    @Override
     public void executeTask(BlueSeerUtils.dbaction x, String[] y) { 
       
         class Task extends SwingWorker<String[], Void> {
@@ -167,6 +173,7 @@ public class TermsMaint extends javax.swing.JPanel implements IBlueSeerT {
        
     }
    
+    @Override
     public void setPanelComponentState(Object myobj, boolean b) {
         JPanel panel = null;
         JTabbedPane tabpane = null;
@@ -274,6 +281,7 @@ public class TermsMaint extends javax.swing.JPanel implements IBlueSeerT {
        }
     }
     
+    @Override
     public void setComponentDefaultValues() {
        isLoad = true;
        
@@ -304,6 +312,7 @@ public class TermsMaint extends javax.swing.JPanel implements IBlueSeerT {
        isLoad = false;
     }
     
+    @Override
     public void newAction(String x) {
        setPanelComponentState(this, true);
         setComponentDefaultValues();
@@ -321,6 +330,7 @@ public class TermsMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbkey.requestFocus();
     }
     
+    @Override
     public void setAction(String[] x) {
         if (x[0].equals("0")) { 
                    setPanelComponentState(this, true);
@@ -333,6 +343,7 @@ public class TermsMaint extends javax.swing.JPanel implements IBlueSeerT {
         }
     }
     
+    @Override
     public boolean validateInput(BlueSeerUtils.dbaction x) {
         Map<String,Integer> f = OVData.getTableInfo("cust_term");
         int fc;
@@ -378,6 +389,7 @@ public class TermsMaint extends javax.swing.JPanel implements IBlueSeerT {
         return true;
     }
     
+    @Override
     public void initvars(String[] arg) {
        
        setPanelComponentState(this, false); 
@@ -394,20 +406,27 @@ public class TermsMaint extends javax.swing.JPanel implements IBlueSeerT {
         }
     }
     
+    @Override
     public String[] addRecord(String[] x) {
      String[] m = addTermsMstr(createRecord());
          return m;
      }
-     
+    
+    @Override
     public String[] updateRecord(String[] x) {
-    ArrayList<change_log> c = logChange();
+     cust_term t = this.x;
+     cust_term u = createRecord();
+     String[] m = updateTermsMstr(u);
+     if (m[0].equals("0")) {
+       ArrayList<change_log> c = logChange(t,u);
        if (! c.isEmpty()) {
            addChangeLog(c);
        } 
-     String[] m = updateTermsMstr(createRecord());
+     }
      return m;
      }
-     
+    
+    @Override
     public String[] deleteRecord(String[] x) {
      String[] m = new String[2];
         boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
@@ -463,12 +482,14 @@ public class TermsMaint extends javax.swing.JPanel implements IBlueSeerT {
         }
      return m;
      }
-      
+    
+    @Override
     public String[] getRecord(String[] key) {
        x = getTermsMstr(key);
         return x.m();
     }
     
+    @Override
     public cust_term createRecord() { 
         cust_term x = new cust_term(null, tbkey.getText().toString(),
                 tbdesc.getText().toUpperCase(),
@@ -538,35 +559,103 @@ public class TermsMaint extends javax.swing.JPanel implements IBlueSeerT {
         
     }
 
-    public ArrayList<change_log> logChange() {
-        
+    public ArrayList<change_log> oldlogChange(cust_term x)  {
+        Field[] fs = x.getClass().getDeclaredFields();
+        for (Field f : fs) {
+            f.setAccessible(true);
+            try {
+                System.out.println("Name: " + f.getName() + " Value: " + f.get(x));
+            } catch (IllegalArgumentException | IllegalAccessException ex) {
+                bslog(ex);
+            } 
+        }
+                   
         ArrayList<change_log> c = new ArrayList<change_log>();
         
         if (! tbdesc.getText().equals(x.cut_desc())) {
-          c.add(clog(tbkey.getText(), x.getClass().getSimpleName(), this.getClass().getSimpleName(), "description", x.cut_desc(), tbdesc.getText())); 
+          c.add(clog(tbkey.getText(), x.getClass().getSimpleName(), this.getClass().getSimpleName(), tags.getString(this.getClass().getSimpleName() +".label." + tbdesc.getName()), x.cut_desc(), tbdesc.getText())); 
         }
         if (! duedays.getText().equals(x.cut_days())) {
-          c.add(clog(tbkey.getText(), x.getClass().getSimpleName(), this.getClass().getSimpleName(), "days", x.cut_days(), duedays.getText())); 
+          c.add(clog(tbkey.getText(), x.getClass().getSimpleName(), this.getClass().getSimpleName(), tags.getString(this.getClass().getSimpleName() +".label." + duedays.getName()), x.cut_days(), duedays.getText())); 
         }
         if (! discduedays.getText().equals(x.cut_discdays())) {
-          c.add(clog(tbkey.getText(), x.getClass().getSimpleName(), this.getClass().getSimpleName(), "discdays", x.cut_discdays(), discduedays.getText())); 
+          c.add(clog(tbkey.getText(), x.getClass().getSimpleName(), this.getClass().getSimpleName(), tags.getString(this.getClass().getSimpleName() +".label." + discduedays.getName()), x.cut_discdays(), discduedays.getText())); 
         }
         if (! discpercent.getText().equals(x.cut_discpercent())) {
-          c.add(clog(tbkey.getText(), x.getClass().getSimpleName(), this.getClass().getSimpleName(), "discpercent", x.cut_discpercent(), discpercent.getText())); 
+          c.add(clog(tbkey.getText(), x.getClass().getSimpleName(), this.getClass().getSimpleName(), tags.getString(this.getClass().getSimpleName() +".label." + discpercent.getName()), x.cut_discpercent(), discpercent.getText())); 
         }
         if (! ddmfimonth.getSelectedItem().toString().equals(x.cut_mfimonth())) {
-          c.add(clog(tbkey.getText(), x.getClass().getSimpleName(), this.getClass().getSimpleName(), "mfimonth", x.cut_mfimonth(), ddmfimonth.getSelectedItem().toString())); 
+          c.add(clog(tbkey.getText(), x.getClass().getSimpleName(), this.getClass().getSimpleName(), tags.getString(this.getClass().getSimpleName() +".label." + ddmfimonth.getName()), x.cut_mfimonth(), ddmfimonth.getSelectedItem().toString())); 
         }
         if (! ddmfiday.getSelectedItem().toString().equals(x.cut_mfiday())) {
-          c.add(clog(tbkey.getText(), x.getClass().getSimpleName(), this.getClass().getSimpleName(), "mfiday", x.cut_mfiday(), ddmfiday.getSelectedItem().toString())); 
+          c.add(clog(tbkey.getText(), x.getClass().getSimpleName(), this.getClass().getSimpleName(), tags.getString(this.getClass().getSimpleName() +".label." + ddmfiday.getName()), x.cut_mfiday(), ddmfiday.getSelectedItem().toString())); 
         }
         if (! String.valueOf(BlueSeerUtils.boolToInt(cbsystemcode.isSelected())).equals(x.cut_syscode())) {
-          c.add(clog(tbkey.getText(), x.getClass().getSimpleName(), this.getClass().getSimpleName(), "systemcode", x.cut_syscode(), String.valueOf(BlueSeerUtils.boolToInt(cbsystemcode.isSelected())))); 
+          c.add(clog(tbkey.getText(), x.getClass().getSimpleName(), this.getClass().getSimpleName(), tags.getString(this.getClass().getSimpleName() +".label." + cbsystemcode.getName()), x.cut_syscode(), String.valueOf(BlueSeerUtils.boolToInt(cbsystemcode.isSelected())))); 
         } 
         if (! String.valueOf(BlueSeerUtils.boolToInt(cbmfi.isSelected())).equals(x.cut_mfi())) {
-          c.add(clog(tbkey.getText(), x.getClass().getSimpleName(), this.getClass().getSimpleName(), "mfi", x.cut_mfi(), String.valueOf(BlueSeerUtils.boolToInt(cbmfi.isSelected())))); 
+          c.add(clog(tbkey.getText(), x.getClass().getSimpleName(), this.getClass().getSimpleName(), tags.getString(this.getClass().getSimpleName() +".label." + cbmfi.getName()), x.cut_mfi(), String.valueOf(BlueSeerUtils.boolToInt(cbmfi.isSelected())))); 
         } 
                 
+        return c;
+    }
+  
+    public ArrayList<change_log> logChange(cust_term x, cust_term y)  {
+        
+        ArrayList<change_log> c = new ArrayList<change_log>();
+        
+        Field[] xfs = x.getClass().getDeclaredFields();
+        Field[] yfs = y.getClass().getDeclaredFields();
+        for (Field f : xfs) {
+            for (Field g : yfs) {
+                if (g.getName().equals(f.getName())) {
+                    f.setAccessible(true);
+                    g.setAccessible(true);
+                    try {
+                        if (f.get(x) != null && g.get(y) != null && ! g.get(y).equals(f.get(x))) {
+                         c.add(clog(tbkey.getText(), 
+                                 x.getClass().getSimpleName(), 
+                                 this.getClass().getSimpleName(), 
+                                 f.getName(), 
+                                 f.get(x).toString(), 
+                                 g.get(y).toString()));   
+                        }
+                        break;
+                      //  System.out.println("Name: " + f.getName() + " Value: " + f.get(x));
+                    } catch (IllegalArgumentException | IllegalAccessException ex) {
+                        bslog(ex);
+                    } 
+                }
+            }
+        }
+                   
+        
+        /*
+        if (! tbdesc.getText().equals(x.cut_desc())) {
+          c.add(clog(tbkey.getText(), x.getClass().getSimpleName(), this.getClass().getSimpleName(), tags.getString(this.getClass().getSimpleName() +".label." + tbdesc.getName()), x.cut_desc(), tbdesc.getText())); 
+        }
+        if (! duedays.getText().equals(x.cut_days())) {
+          c.add(clog(tbkey.getText(), x.getClass().getSimpleName(), this.getClass().getSimpleName(), tags.getString(this.getClass().getSimpleName() +".label." + duedays.getName()), x.cut_days(), duedays.getText())); 
+        }
+        if (! discduedays.getText().equals(x.cut_discdays())) {
+          c.add(clog(tbkey.getText(), x.getClass().getSimpleName(), this.getClass().getSimpleName(), tags.getString(this.getClass().getSimpleName() +".label." + discduedays.getName()), x.cut_discdays(), discduedays.getText())); 
+        }
+        if (! discpercent.getText().equals(x.cut_discpercent())) {
+          c.add(clog(tbkey.getText(), x.getClass().getSimpleName(), this.getClass().getSimpleName(), tags.getString(this.getClass().getSimpleName() +".label." + discpercent.getName()), x.cut_discpercent(), discpercent.getText())); 
+        }
+        if (! ddmfimonth.getSelectedItem().toString().equals(x.cut_mfimonth())) {
+          c.add(clog(tbkey.getText(), x.getClass().getSimpleName(), this.getClass().getSimpleName(), tags.getString(this.getClass().getSimpleName() +".label." + ddmfimonth.getName()), x.cut_mfimonth(), ddmfimonth.getSelectedItem().toString())); 
+        }
+        if (! ddmfiday.getSelectedItem().toString().equals(x.cut_mfiday())) {
+          c.add(clog(tbkey.getText(), x.getClass().getSimpleName(), this.getClass().getSimpleName(), tags.getString(this.getClass().getSimpleName() +".label." + ddmfiday.getName()), x.cut_mfiday(), ddmfiday.getSelectedItem().toString())); 
+        }
+        if (! String.valueOf(BlueSeerUtils.boolToInt(cbsystemcode.isSelected())).equals(x.cut_syscode())) {
+          c.add(clog(tbkey.getText(), x.getClass().getSimpleName(), this.getClass().getSimpleName(), tags.getString(this.getClass().getSimpleName() +".label." + cbsystemcode.getName()), x.cut_syscode(), String.valueOf(BlueSeerUtils.boolToInt(cbsystemcode.isSelected())))); 
+        } 
+        if (! String.valueOf(BlueSeerUtils.boolToInt(cbmfi.isSelected())).equals(x.cut_mfi())) {
+          c.add(clog(tbkey.getText(), x.getClass().getSimpleName(), this.getClass().getSimpleName(), tags.getString(this.getClass().getSimpleName() +".label." + cbmfi.getName()), x.cut_mfi(), String.valueOf(BlueSeerUtils.boolToInt(cbmfi.isSelected())))); 
+        } 
+         */       
         return c;
     }
   
@@ -615,6 +704,8 @@ public class TermsMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel2.setText("Description:");
         jLabel2.setName("lbldesc"); // NOI18N
 
+        tbdesc.setName("lbldesc"); // NOI18N
+
         btdelete.setText("delete");
         btdelete.setName("btdelete"); // NOI18N
         btdelete.addActionListener(new java.awt.event.ActionListener() {
@@ -645,11 +736,17 @@ public class TermsMaint extends javax.swing.JPanel implements IBlueSeerT {
             }
         });
 
+        duedays.setName("lblduedays"); // NOI18N
+
         jLabel3.setText("Due Days:");
         jLabel3.setName("lblduedays"); // NOI18N
 
+        discduedays.setName("lbldiscduedays"); // NOI18N
+
         jLabel4.setText("Disc Due Days:");
         jLabel4.setName("lbldiscduedays"); // NOI18N
+
+        discpercent.setName("lbldiscpercent"); // NOI18N
 
         jLabel5.setText("Disc Percent%");
         jLabel5.setName("lbldiscpercent"); // NOI18N
@@ -677,13 +774,21 @@ public class TermsMaint extends javax.swing.JPanel implements IBlueSeerT {
             }
         });
 
+        ddmfimonth.setName("lblmfimonth"); // NOI18N
+
         jLabel6.setText("MFI Month");
+        jLabel6.setName("lblmfimonth"); // NOI18N
+
+        ddmfiday.setName("lbimfiday"); // NOI18N
 
         jLabel7.setText("MFI Day");
+        jLabel7.setName("lbimfiday"); // NOI18N
 
         cbmfi.setText("use MFI?");
+        cbmfi.setName("cbusemfi"); // NOI18N
 
         cbsystemcode.setText("System Code");
+        cbsystemcode.setName("cbsyscode"); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);

@@ -157,6 +157,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="tbdesc">
+          <Properties>
+            <Property name="name" type="java.lang.String" value="lbldesc" noResource="true"/>
+          </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="btdelete">
           <Properties>
@@ -191,6 +194,9 @@
           </Events>
         </Component>
         <Component class="javax.swing.JTextField" name="duedays">
+          <Properties>
+            <Property name="name" type="java.lang.String" value="lblduedays" noResource="true"/>
+          </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel3">
           <Properties>
@@ -199,6 +205,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="discduedays">
+          <Properties>
+            <Property name="name" type="java.lang.String" value="lbldiscduedays" noResource="true"/>
+          </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel4">
           <Properties>
@@ -207,6 +216,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="discpercent">
+          <Properties>
+            <Property name="name" type="java.lang.String" value="lbldiscpercent" noResource="true"/>
+          </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel5">
           <Properties>
@@ -247,6 +259,7 @@
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
               <StringArray count="0"/>
             </Property>
+            <Property name="name" type="java.lang.String" value="lblmfimonth" noResource="true"/>
           </Properties>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
@@ -255,6 +268,7 @@
         <Component class="javax.swing.JLabel" name="jLabel6">
           <Properties>
             <Property name="text" type="java.lang.String" value="MFI Month"/>
+            <Property name="name" type="java.lang.String" value="lblmfimonth" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JComboBox" name="ddmfiday">
@@ -262,6 +276,7 @@
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
               <StringArray count="0"/>
             </Property>
+            <Property name="name" type="java.lang.String" value="lbimfiday" noResource="true"/>
           </Properties>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
@@ -270,16 +285,19 @@
         <Component class="javax.swing.JLabel" name="jLabel7">
           <Properties>
             <Property name="text" type="java.lang.String" value="MFI Day"/>
+            <Property name="name" type="java.lang.String" value="lbimfiday" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JCheckBox" name="cbmfi">
           <Properties>
             <Property name="text" type="java.lang.String" value="use MFI?"/>
+            <Property name="name" type="java.lang.String" value="cbusemfi" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JCheckBox" name="cbsystemcode">
           <Properties>
             <Property name="text" type="java.lang.String" value="System Code"/>
+            <Property name="name" type="java.lang.String" value="cbsyscode" noResource="true"/>
           </Properties>
         </Component>
       </SubComponents>
