@@ -560,7 +560,8 @@ public class TermsMaint extends javax.swing.JPanel implements IBlueSeerT {
         
     }
 
-    public ArrayList<change_log> oldlogChange(cust_term x)  {
+    // remove this when new changeLog is effective
+    public ArrayList<change_log> oldlogChangeExperimental(cust_term x)  {
         Field[] fs = x.getClass().getDeclaredFields();
         for (Field f : fs) {
             f.setAccessible(true);
