@@ -48,6 +48,7 @@ import static com.blueseer.utl.BlueSeerUtils.checkLength;
 import static com.blueseer.utl.BlueSeerUtils.clog;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import static com.blueseer.utl.BlueSeerUtils.logChange;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
 import static com.blueseer.utl.BlueSeerUtils.luTable;
 import static com.blueseer.utl.BlueSeerUtils.lual;
@@ -418,7 +419,7 @@ public class TermsMaint extends javax.swing.JPanel implements IBlueSeerT {
      cust_term u = createRecord();
      String[] m = updateTermsMstr(u);
      if (m[0].equals("0")) {
-       ArrayList<change_log> c = logChange(tbkey.getText(),t,u);
+       ArrayList<change_log> c = logChange(tbkey.getText(), this.getClass().getName(),t,u);
        if (! c.isEmpty()) {
            addChangeLog(c);
        } 
@@ -600,65 +601,7 @@ public class TermsMaint extends javax.swing.JPanel implements IBlueSeerT {
         return c;
     }
   
-    public <T> ArrayList<change_log> logChange(String key, T x, T y)  {
-        
-        ArrayList<change_log> c = new ArrayList<change_log>();
-        
-        Field[] xfs = x.getClass().getDeclaredFields();
-        Field[] yfs = y.getClass().getDeclaredFields();
-        for (Field f : xfs) {
-            for (Field g : yfs) {
-                if (g.getName().equals(f.getName())) {
-                    f.setAccessible(true);
-                    g.setAccessible(true);
-                    try {
-                        if (f.get(x) != null && g.get(y) != null && ! g.get(y).equals(f.get(x))) {
-                         c.add(clog(key, 
-                                 x.getClass().getSimpleName(), 
-                                 this.getClass().getSimpleName(), 
-                                 f.getName(), 
-                                 f.get(x).toString(), 
-                                 g.get(y).toString()));   
-                        }
-                        break;
-                      //  System.out.println("Name: " + f.getName() + " Value: " + f.get(x));
-                    } catch (IllegalArgumentException | IllegalAccessException ex) {
-                        bslog(ex);
-                    } 
-                }
-            }
-        }
-                   
-        
-        /*
-        if (! tbdesc.getText().equals(x.cut_desc())) {
-          c.add(clog(tbkey.getText(), x.getClass().getSimpleName(), this.getClass().getSimpleName(), tags.getString(this.getClass().getSimpleName() +".label." + tbdesc.getName()), x.cut_desc(), tbdesc.getText())); 
-        }
-        if (! duedays.getText().equals(x.cut_days())) {
-          c.add(clog(tbkey.getText(), x.getClass().getSimpleName(), this.getClass().getSimpleName(), tags.getString(this.getClass().getSimpleName() +".label." + duedays.getName()), x.cut_days(), duedays.getText())); 
-        }
-        if (! discduedays.getText().equals(x.cut_discdays())) {
-          c.add(clog(tbkey.getText(), x.getClass().getSimpleName(), this.getClass().getSimpleName(), tags.getString(this.getClass().getSimpleName() +".label." + discduedays.getName()), x.cut_discdays(), discduedays.getText())); 
-        }
-        if (! discpercent.getText().equals(x.cut_discpercent())) {
-          c.add(clog(tbkey.getText(), x.getClass().getSimpleName(), this.getClass().getSimpleName(), tags.getString(this.getClass().getSimpleName() +".label." + discpercent.getName()), x.cut_discpercent(), discpercent.getText())); 
-        }
-        if (! ddmfimonth.getSelectedItem().toString().equals(x.cut_mfimonth())) {
-          c.add(clog(tbkey.getText(), x.getClass().getSimpleName(), this.getClass().getSimpleName(), tags.getString(this.getClass().getSimpleName() +".label." + ddmfimonth.getName()), x.cut_mfimonth(), ddmfimonth.getSelectedItem().toString())); 
-        }
-        if (! ddmfiday.getSelectedItem().toString().equals(x.cut_mfiday())) {
-          c.add(clog(tbkey.getText(), x.getClass().getSimpleName(), this.getClass().getSimpleName(), tags.getString(this.getClass().getSimpleName() +".label." + ddmfiday.getName()), x.cut_mfiday(), ddmfiday.getSelectedItem().toString())); 
-        }
-        if (! String.valueOf(BlueSeerUtils.boolToInt(cbsystemcode.isSelected())).equals(x.cut_syscode())) {
-          c.add(clog(tbkey.getText(), x.getClass().getSimpleName(), this.getClass().getSimpleName(), tags.getString(this.getClass().getSimpleName() +".label." + cbsystemcode.getName()), x.cut_syscode(), String.valueOf(BlueSeerUtils.boolToInt(cbsystemcode.isSelected())))); 
-        } 
-        if (! String.valueOf(BlueSeerUtils.boolToInt(cbmfi.isSelected())).equals(x.cut_mfi())) {
-          c.add(clog(tbkey.getText(), x.getClass().getSimpleName(), this.getClass().getSimpleName(), tags.getString(this.getClass().getSimpleName() +".label." + cbmfi.getName()), x.cut_mfi(), String.valueOf(BlueSeerUtils.boolToInt(cbmfi.isSelected())))); 
-        } 
-         */       
-        return c;
-    }
-  
+    
      
     /**
      * This method is called from within the constructor to initialize the form.

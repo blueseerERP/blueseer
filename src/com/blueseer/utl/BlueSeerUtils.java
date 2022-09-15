@@ -46,6 +46,7 @@ import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.lang.reflect.Field;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.FileSystems;
@@ -1318,5 +1319,37 @@ public class BlueSeerUtils {
          );
          return x;
      } 
+     
+     public static <T> ArrayList<change_log> logChange(String key, String callclass, T x, T y)  {
+        
+        ArrayList<change_log> c = new ArrayList<change_log>();
+        
+        Field[] xfs = x.getClass().getDeclaredFields();
+        Field[] yfs = y.getClass().getDeclaredFields();
+        for (Field f : xfs) {
+            for (Field g : yfs) {
+                if (g.getName().equals(f.getName())) {
+                    f.setAccessible(true);
+                    g.setAccessible(true);
+                    try {
+                        if (f.get(x) != null && g.get(y) != null && ! g.get(y).equals(f.get(x))) {
+                         c.add(clog(key, 
+                                 x.getClass().getSimpleName(), 
+                                 callclass, 
+                                 f.getName(), 
+                                 f.get(x).toString(), 
+                                 g.get(y).toString()));   
+                        }
+                        break;
+                      //  System.out.println("Name: " + f.getName() + " Value: " + f.get(x));
+                    } catch (IllegalArgumentException | IllegalAccessException ex) {
+                        bslog(ex);
+                    } 
+                }
+            }
+        }
+        return c;
+    }
+  
      
 }
