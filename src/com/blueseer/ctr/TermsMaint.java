@@ -600,7 +600,7 @@ public class TermsMaint extends javax.swing.JPanel implements IBlueSeerT {
         return c;
     }
   
-    public ArrayList<change_log> logChange(String key, cust_term x, cust_term y)  {
+    public <T> ArrayList<change_log> logChange(String key, T x, T y)  {
         
         ArrayList<change_log> c = new ArrayList<change_log>();
         
