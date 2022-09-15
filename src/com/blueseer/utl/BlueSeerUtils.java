@@ -1305,7 +1305,15 @@ public class BlueSeerUtils {
     }
     
      public static change_log clog(String key, String table, String classname, String fieldname, String oldvalue, String newvalue) {
-         String desc = fieldname + "-> Old: " + oldvalue + " New: " + newvalue;
+         String desc;
+         String type;
+         if (fieldname.toLowerCase().equals("deletion")) {
+             desc = fieldname + " of record key: " + key;
+             type = "deletion";
+         } else {
+             desc = fieldname + "-> Old: " + oldvalue + " New: " + newvalue; 
+             type = "update";
+         }
          change_log x = new change_log(null, 
                  "", // id <generated>
                  key, 
@@ -1314,7 +1322,7 @@ public class BlueSeerUtils {
                  bsmf.MainFrame.userid, 
                  desc, 
                  "", // ts <generated>
-                 "", // type 
+                 type, // type 
                  ""  // ref
          );
          return x;
@@ -1323,7 +1331,7 @@ public class BlueSeerUtils {
      public static <T> ArrayList<change_log> logChange(String key, String callclass, T x, T y)  {
         
         ArrayList<change_log> c = new ArrayList<change_log>();
-        
+        if (x != null && y != null && ! x.equals(y)) {  // if x != y...proceed to compare...else return empty c
         Field[] xfs = x.getClass().getDeclaredFields();
         Field[] yfs = y.getClass().getDeclaredFields();
         for (Field f : xfs) {
@@ -1347,6 +1355,7 @@ public class BlueSeerUtils {
                     } 
                 }
             }
+        }
         }
         return c;
     }

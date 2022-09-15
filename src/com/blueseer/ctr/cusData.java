@@ -1868,7 +1868,45 @@ public class cusData {
         }
         return custinfo;
     }
-         
+    
+    public static ArrayList<String> getTermsUsage(String terms) {
+        ArrayList<String> usage = new ArrayList<String>();
+          try{
+        Connection con = null;
+        if (ds != null) {
+        con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try{
+                  
+            res = st.executeQuery("select cm_code from cm_mstr where cm_terms = " + "'" + terms + "'" + ";");
+            while (res.next()) {
+               usage.add(res.getString("cm_code"));
+            }
+           
+            res = st.executeQuery("select vd_addr from vd_mstr where vd_terms = " + "'" + terms + "'" + ";");
+            while (res.next()) {
+               usage.add(res.getString("vd_addr"));
+            }
+            
+        }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+        return usage;
+    }
+    
     
     public static String getCustSalesAcct(String cust) {
            String myitem = "";

@@ -41,7 +41,9 @@ import static com.blueseer.adm.admData.addChangeLog;
 import com.blueseer.adm.admData.change_log;
 import static com.blueseer.ctr.cusData.addTermsMstr;
 import com.blueseer.ctr.cusData.cust_term;
+import static com.blueseer.ctr.cusData.deleteTermsMstr;
 import static com.blueseer.ctr.cusData.getTermsMstr;
+import static com.blueseer.ctr.cusData.getTermsUsage;
 import static com.blueseer.ctr.cusData.updateTermsMstr;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.checkLength;
@@ -415,73 +417,49 @@ public class TermsMaint extends javax.swing.JPanel implements IBlueSeerT {
     
     @Override
     public String[] updateRecord(String[] x) {
-     cust_term t = this.x;
-     cust_term u = createRecord();
-     String[] m = updateTermsMstr(u);
+     cust_term _x = this.x;
+     cust_term _y = createRecord();
+     String[] m = updateTermsMstr(_y);
+     
+     // change log check
      if (m[0].equals("0")) {
-       ArrayList<change_log> c = logChange(tbkey.getText(), this.getClass().getName(),t,u);
+       ArrayList<change_log> c = logChange(tbkey.getText(), this.getClass().getSimpleName(),_x,_y);
        if (! c.isEmpty()) {
            addChangeLog(c);
        } 
      }
+     
      return m;
      }
     
     @Override
     public String[] deleteRecord(String[] x) {
-     String[] m = new String[2];
+        String[] m = new String[2];
         boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
         if (proceed) {
-        try {
-
-            Connection con = null;
-            if (ds != null) {
-            con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                 int k = 0;
-                    res = st.executeQuery("SELECT cm_code FROM  cm_mstr where cm_terms = " + "'" + tbkey.getText() + "'" + ";");
-                    while (res.next()) {
-                        k++;
-                    }
-                    res = st.executeQuery("SELECT vd_addr FROM  vd_mstr where vd_terms = " + "'" + tbkey.getText() + "'" + ";");
-                    while (res.next()) {
-                        k++;
-                    }
-                    if (k > 0) {
-                        bsmf.MainFrame.show(getMessageTag(1086));
-                        return new String[] {BlueSeerUtils.ErrorBit, "Cannot Delete"};
-                    }
-                
-                   int i = st.executeUpdate("delete from cust_term where cut_code = " + "'" + x[0] + "'" + ";");
-                    if (i > 0) {
-                    m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
-                    initvars(null);
-                    }
-                } catch (SQLException s) {
-                 MainFrame.bslog(s); 
-                m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};  
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1020, Thread.currentThread().getStackTrace()[1].getMethodName())};
-        }
+         if (! getTermsUsage(x[0]).isEmpty()) {
+             return m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1086)}; 
+         }   
+         m = deleteTermsMstr(createRecord()); 
+         initvars(null);
         } else {
            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
         }
-     return m;
+        // change log check
+        if (m[0].equals("0")) {
+            ArrayList<change_log> c = new ArrayList<change_log>();
+            c.add(clog(this.x.cut_code(), 
+                     this.x.getClass().getName(), 
+                     this.getClass().getSimpleName(), 
+                     "deletion", 
+                     "", 
+                     ""));
+            if (! c.isEmpty()) {
+               addChangeLog(c);
+            } 
+        }
+        
+        return m;  
      }
     
     @Override
