@@ -418,7 +418,7 @@ public class TermsMaint extends javax.swing.JPanel implements IBlueSeerT {
      cust_term u = createRecord();
      String[] m = updateTermsMstr(u);
      if (m[0].equals("0")) {
-       ArrayList<change_log> c = logChange(t,u);
+       ArrayList<change_log> c = logChange(tbkey.getText(),t,u);
        if (! c.isEmpty()) {
            addChangeLog(c);
        } 
@@ -600,7 +600,7 @@ public class TermsMaint extends javax.swing.JPanel implements IBlueSeerT {
         return c;
     }
   
-    public ArrayList<change_log> logChange(cust_term x, cust_term y)  {
+    public ArrayList<change_log> logChange(String key, cust_term x, cust_term y)  {
         
         ArrayList<change_log> c = new ArrayList<change_log>();
         
@@ -613,7 +613,7 @@ public class TermsMaint extends javax.swing.JPanel implements IBlueSeerT {
                     g.setAccessible(true);
                     try {
                         if (f.get(x) != null && g.get(y) != null && ! g.get(y).equals(f.get(x))) {
-                         c.add(clog(tbkey.getText(), 
+                         c.add(clog(key, 
                                  x.getClass().getSimpleName(), 
                                  this.getClass().getSimpleName(), 
                                  f.getName(), 
